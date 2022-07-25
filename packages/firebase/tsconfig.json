@@ -1,0 +1,22 @@
+{
+  "compilerOptions": {
+    "lib": ["es2017"],
+    "module": "commonjs",
+    "noImplicitReturns": true,
+    "outDir": "lib",
+    "sourceMap": true,
+    "target": "es2017",
+    "experimentalDecorators": true
+  },
+  "compileOnSave": true,
+  "include": [
+    "src/**/*",
+    "test/**/*"
+  ],
+  "files": [
+    "node_modules/typescript/lib/lib.es6.d.ts"
+  ],
+  "exclude": [
+    "node_modules"
+  ]  
+}

@@ -1,0 +1,23 @@
+# dependencies
+node_modules/
+
+# production
+build
+dist
+
+# local env files
+.env*.local
+.env
+
+# typescript
+*.tsbuildinfo
+
+# firebase
+.firebaserc
+ui-debug.log
+firebase-debug.log
+.firebase
+
+# ignore firestore-required-for-deployment-of-local-dependencies /lib dir
+lib
+

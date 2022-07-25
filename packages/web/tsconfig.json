@@ -1,0 +1,23 @@
+{
+  "compilerOptions": {
+    "outDir": "./dist",
+    "rootDir": "function",
+    "module": "commonjs",
+    "target": "es2017",
+    "lib": ["dom", "es2017"],
+
+    "declaration": true,
+    "declarationMap": true,
+    "forceConsistentCasingInFileNames": true,
+    "noImplicitReturns": true,
+    "noUnusedLocals": true,
+    "skipLibCheck": true,
+    "sourceMap": true,
+    "strict": true,
+    "strictNullChecks": true,
+  },
+  "compileOnSave": true,
+
+  "include": [ "function/**/*" ],
+  "exclude": [ "node_modules" ]
+}

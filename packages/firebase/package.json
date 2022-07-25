@@ -1,0 +1,26 @@
+{
+  "name": "firebase",
+  "description": "@Ureeka/Notebook | Firebase",
+  "version": "1.0.0",
+  "private": true,
+
+  "main": "lib/index.js",
+
+  "engines": {
+    "node": "16"
+  },
+
+  "scripts": {
+    "list-indexes": "cross-env-shell firebase -P '$NEXT_PUBLIC_FIREBASE_PROJECT_ID' firestore:indexes",
+    "indexes": "cross-env-shell npx firebase -P '$NEXT_PUBLIC_FIREBASE_PROJECT_ID' deploy --only firestore:indexes",
+    "rules": "npm run database-rules && npm run firestore-rules",
+    "database-rules": "cross-env-shell npx firebase -P '$NEXT_PUBLIC_FIREBASE_PROJECT_ID' deploy --only database",
+    "firestore-rules": "cross-env-shell npx firebase -P '$NEXT_PUBLIC_FIREBASE_PROJECT_ID' deploy --only firestore:rules"
+  },
+
+  "devDependencies": {
+    "firebase-functions-test": "2.2.0",
+    "firebase-tools": "11.2.2"
+  },
+  "dependencies": {}
+}

@@ -1,0 +1,83 @@
+{
+	"name": "@ureeka-notebook/web",
+	"description": "Web Application (Desktop)",
+	"version": "1.0.0",
+	"main": "dist/index.js",
+	"types": "dist/index.d.ts",
+	"publishConfig": {
+		"access": "restricted"
+	},
+	"engines": {
+		"node": "16"
+	},
+	"scripts": {
+    "preinstall": "node bin/link_lib.js",
+    "start": "( node bin/dump_env.js ) && ( next dev src/ )",
+    "serve": "next start src/",
+    "build": "( node bin/dump_env.js ) && ( npm run build-functions ) && ( npm run build-next ) && ( npx rimraf dist/.next/cache )",
+    "build-functions": "( npx rimraf dist/* ) && ./node_modules/typescript/bin/tsc",
+    "build-next": "( npx rimraf dist/.next ) && ( next build src/ )",
+    "deploy": "cross-env-shell npx firebase -P '$NEXT_PUBLIC_FIREBASE_PROJECT_ID' deploy --only hosting,functions:app",
+    "start-emulators": "cross-env-shell npx firebase  -P '$NEXT_PUBLIC_FIREBASE_PROJECT_ID' emulators:start"
+  },
+	"devDependencies": {
+    "@types/node": "18.0.3",
+    "@types/react": "18.0.15",
+    "@types/react-dom": "18.0.6",
+		"firebase-tools": "11.2.1",
+    "typescript": "4.7.4"
+	},
+	"dependencies": {
+		"@babel/runtime": "7.17.9",
+    "@chakra-ui/react": "2.2.3",
+    "@emotion/react": "11.9.3",
+    "@emotion/styled": "11.9.3",
+		"@tiptap/react": "2.0.0-beta.109",
+		"@ureeka-notebook/service-common": "file:./lib/service-common",
+		"@ureeka-notebook/ssr-service": "file:./lib/ssr-service",
+		"@ureeka-notebook/web-service": "file:./lib/web-service",
+		"compression": "1.7.4",
+		"dotenv": "16.0.1",
+		"feather-icons": "4.28.0",
+		"firebase": "9.9.0",
+		"firebase-admin": "11.0.0",
+		"firebase-functions": "3.22.0",
+    "framer-motion": "6.4.3",
+		"helmet": "5.0.2",
+		"next": "12.1.6",
+		"react": "18.2.0",
+		"react-dom": "18.2.0",
+    "react-icons": "4.4.0",
+		"universal-cookie": "4.0.4",
+		"web-vitals": "2.1.4"
+	},
+	"peerDependencies": {
+		"@tiptap/core": "2.0.0-beta.175",
+    "prosemirror-collab":"1.2.2",
+    "prosemirror-dropcursor": "1.4.0",
+		"prosemirror-gapcursor": "1.3.1",
+		"prosemirror-history": "1.2.0",
+    "prosemirror-model": "1.16.1",
+    "prosemirror-state": "1.3.4",
+    "prosemirror-transform": "1.3.4",
+    "prosemirror-view": "1.23.13"
+  },
+
+	"eslintConfig": {
+		"extends": [
+			"react-app"
+		]
+	},
+	"browserslist": {
+		"production": [
+			">0.2%",
+			"not dead",
+			"not op_mini all"
+		],
+		"development": [
+			"last 1 chrome version",
+			"last 1 firefox version",
+			"last 1 safari version"
+		]
+	}
+}

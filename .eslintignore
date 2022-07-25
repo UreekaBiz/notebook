@@ -1,0 +1,4 @@
+packages/*/tests/*.ts
+node_modules
+dist
+coverage

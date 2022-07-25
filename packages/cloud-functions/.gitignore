@@ -1,0 +1,8 @@
+# locally ignore the generated .env file
+.env
+
+# ignore firestore-required-for-deployment-of-local-dependencies /lib dir
+lib/**
+
+# temporary until a better solution can be found!
+firebase-admin.json

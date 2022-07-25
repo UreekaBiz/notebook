@@ -1,0 +1,161 @@
+rules_version = '2';
+
+// Cloud Firestore Security Rules
+// REF: https://firebase.google.com/docs/firestore/security/get-started
+// REF: https://firebase.google.com/docs/reference/rules/rules.firestore.Request#auth
+
+// Deploy using:
+//   npm run firestore-rules
+// ********************************************************************************
+
+// NOTE: using "userId=**" with "isSameUser(userId)" seems to break the rules simulator.
+//       It feels like it's picking up more from the path even if there isn't.
+
+// NOTE: resource.data must be used (rather than doing a separate get() for that
+//       resource) when doing a 'read'. (This was only determined via trail-and-error
+//       and might not be the root cause.)
+
+service cloud.firestore {
+  match /databases/{database}/documents {
+    // default deny
+    match /{document=**} {
+      allow read, write: if false;
+    }
+
+    // === Notebook ===============================================================
+    function getNotebook(notebookId) {
+      return get(/databases/$(database)/documents/notebooks/$(notebookId)).data;
+    }
+
+    // ............................................................................
+    // CHECK: why does 'createdBy' need to be explicitly included when the Creator
+    //        must be in 'viewers' by contract?
+    function canViewNotebook(notebook) {
+      return    isAdmin()
+             || (   isUser()
+                 && (   (notebook.createdBy == request.auth.uid)
+                     || (request.auth.uid in notebook.viewers) ) );
+    }
+    function canViewNotebookId(notebookId) {
+      return canViewNotebook(getNotebook(notebookId));
+    }
+
+    function canEditNotebookId(notebookId) {
+      return    isAdmin()
+             || (   isUser()
+                 && (request.auth.uid in getNotebook(notebookId).editors) );
+    }
+
+    // -- Notebook ----------------------------------------------------------------
+    match /notebooks/{notebookId} {
+      allow create: if isUser(); // User must be logged in to create a Notebook
+      allow update: if false; // server-side only
+      allow read:   if canViewNotebook(resource.data);
+      allow delete: if false; // soft-delete
+
+      // .. Version ...............................................................
+      // NOTE: document ID matches NotebookVersion#index (hashed)
+      match /notebook-versions/{versionId} {
+        // NOTE: since the NotebookVersion is written by the client, it *must* be
+        //       validated to ensure data integrity. At a minimum, security considerations
+        //       must be accounted for. Unfortunately, semantic considerations such
+        //       as that the index is monotoically increasing cannot be easily enforced
+        function isValid(version) {
+          return    (version.schemaVersion != null) // schema version must exist (its value cannot be assured)
+                 && (version.index != null) // index must exist (it's not possible to validate that it matches the hash of the versionId)
+                 && (version.content != null) // content must exist (it's not possible to validate it's valid ProseMirror Step JSON string'ified)
+                 && isSameUser(version.createdBy) // written by auth'd User
+                 && isServerTimestamp(version.createTimestamp) // server timestamp
+                 ;
+        }
+
+        allow create: if canEditNotebookId(notebookId) && isValid(request.resource.data); // client written!!!
+        allow update: if false; // read-only
+        allow read:   if canViewNotebookId(notebookId);
+        allow delete: if false; // create-only
+      }
+
+      // .. Checkpoint ............................................................
+      // NOTE: document ID matches NotebookVersion#index (hashed) from the last
+      //       NotebookVersion combined
+      match /notebook-checkpoints/{versionId} {
+        allow create: if false; // server-only created (TODO: allow for User-initiated?)
+        allow update: if false; // read-only
+        allow read:   if canViewNotebookId(notebookId);
+        allow delete: if false; // create-only
+      }
+    }
+
+    // -- Published Notebook ------------------------------------------------------
+    // NOTE: document ID matches NotebookVersion#index (hashed) from the last
+    //       NotebookVersion combined
+    match /notebook-published-notebooks/{versionId} {
+      allow create: if false; // server-only created
+      allow update: if false; // read-only
+      allow read:   if true; 	// published Notebooks are public by definition
+      allow delete: if false; // create-only
+    }
+
+    // == User ====================================================================
+    // NOTE: the userId is defined by Firebase Auth
+    // NOTE: all documents are created server-side by contract
+    // NOTE: user documents are *never* deleted -- they're only deactivated (deleted=true)
+    match /user-profile-privates/{userId} {
+      allow create: if false; // server-side only
+      allow update: if false; // server-side only
+      allow read:   if isSameSignedInUser(userId);
+      allow delete: if false; // only soft-delete
+    }
+    match /user-profile-publics/{userId} {
+      allow create: if false; // server-side only
+      allow update: if false; // server-side only
+      allow read:   if isUser();
+      allow delete: if false; // only soft-delete
+    }
+  }
+
+  // == Auth ======================================================================
+  // is the User is signed and associated with a valid 'auth' context?
+  function isSignedIn() {
+    return (request.auth != null) && (request.auth.uid != null);
+  }
+
+  // is the User authenticated with a valid token?
+  function isUser() {
+    return    isSignedIn()
+           && (request.auth.token != null);
+  }
+
+  // is User signed in, authenticated and posses the 'admin' role?
+  function isAdmin() {
+    return hasRole('admin');
+  }
+
+  // ..............................................................................
+  // is User signed in, authenticated and posses the specified role?
+  function hasRole(role) {
+    return    isUser()
+           && (   (request.auth.token != null)
+               &&  request.auth.token.keys().hasAny([role])
+               && (request.auth.token[role] == true) );
+  }
+
+  // ..............................................................................
+  // is the specified User the same as the logged in User?
+  function isSameSignedInUser(userId) {
+    return    isSignedIn()
+           && (request.auth.uid == userId);
+  }
+
+  // is the specified User the same as the logged in User?
+  function isSameUser(userId) {
+    return    isUser()
+           && (request.auth.uid == userId);
+  }
+
+  // == Util ======================================================================
+  // NOTE: 'timestamp' is the name of an internal package and cannot be used as var name
+  function isServerTimestamp(ts) {
+    return ts == request.time;
+  }
+}

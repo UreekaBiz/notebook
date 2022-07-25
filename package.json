@@ -1,0 +1,82 @@
+{
+  "name": "@ureeka-notebook/notebook",
+  "version": "1.0.0",
+  "description": "ProseMirror, Firebase Collaborative Editor",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/UreekaBiz/pm-fb-collab.git"
+  },
+  "author": "Ureeka",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/UreekaBiz/pm-fb-collab/issues"
+  },
+  "homepage": "https://github.com/UreekaBiz/pm-fb-collab#readme",
+  "scripts": {
+    "add": "./node_modules/.bin/lerna add",
+    "bootstrap": "./node_modules/.bin/lerna bootstrap",
+    "bootstrap-web": "./node_modules/.bin/lerna bootstrap --scope @ureeka-notebook/service-common --scope @ureeka-notebook/web-service --scope @ureeka-notebook/web",
+    "build-all-web": "( npm -C ./packages/service-common run build ) && ( npm -C ./packages/web-service run build ) && ( npm -C ./packages/web run build )",
+    "build-functions": "npm -C ./packages/cloud-functions run build",
+    "build-service": "./node_modules/.bin/lerna run --scope @ureeka-notebook/service-common --scope @ureeka-notebook/ssr-service --scope @ureeka-notebook/web-service build",
+    "build-service-common": "./node_modules/.bin/lerna run --scope @ureeka-notebook/service-common build",
+    "build-ssr-service": "./node_modules/.bin/lerna run --scope @ureeka-notebook/ssr-service build",
+    "build-web": "( node bin/check_env.js ) && ( NEXT_PUBLIC_VERSION=`node bin/get_version.js` npm run build-all-web )",
+    "build-web-service": "./node_modules/.bin/lerna run --scope @ureeka-notebook/web-service build",
+    "clean": "./node_modules/.bin/lerna clean",
+    "delete-function": "npm -C ./packages/cloud-functions run delete-function",
+    "deploy-indexes": "npm -C ./packages/firebase run indexes",
+    "deploy-specified-functions": "npm -C ./packages/cloud-functions run specified-functions --",
+    "deploy-functions": "npm -C ./packages/cloud-functions run functions",
+    "deploy-rules": "npm -C ./packages/firebase run rules",
+    "deploy-web": "npm -C ./packages/web run deploy",
+    "list-indexes": "npm -C ./packages/firebase run list-indexes",
+    "start": "lerna run --parallel --stream --scope @ureeka-notebook/web --scope @ureeka-notebook/service-common --scope @ureeka-notebook/ssr-service --scope @ureeka-notebook/web-service start",
+    "start-emulators": "npm -C ./packages/web run start-emulators",
+    "start-web": "( node bin/check_env.js ) && ( npm -C ./packages/web start )",
+    "watch-functions": "npm -C ./packages/cloud-functions run watch",
+    "watch-service-common": "npm -C ./packages/service-common run watch",
+    "watch-ssr-service": "npm -C ./packages/ssr-service run watch",
+    "watch-web-service": "npm -C ./packages/web-service run watch"
+  },
+  "devDependencies": {
+    "@types/node": "17.0.32",
+    "@types/prosemirror-collab": "1.1.2",
+    "@types/prosemirror-history": "1.0.3",
+    "@types/prosemirror-model": "1.16.2",
+    "@types/prosemirror-transform": "1.4.2",
+    "@types/prosemirror-state": "1.3.0",
+    "@types/yup": "0.29.13",
+    "@typescript-eslint/eslint-plugin": "5.30.6",
+    "@typescript-eslint/parser": "5.30.6",
+    "cross-env": "7.0.3",
+    "env-cmd": "10.1.0",
+    "eslint": "8.19.0",
+    "eslint-config-react-app": "7.0.1",
+    "eslint-plugin-deprecation": "1.3.2",
+    "eslint-plugin-import": "2.26.0",
+    "eslint-plugin-promise": "6.0.0",
+    "eslint-plugin-react": "7.30.1",
+    "eslint-plugin-react-hooks": "4.6.0",
+    "typescript": "4.7.4"
+  },
+  "dependencies": {
+    "@tiptap/core": "2.0.0-beta.175",
+    "lerna": "4.0.0",
+    "prosemirror-collab":"1.2.2",
+    "prosemirror-model": "1.16.1",
+    "prosemirror-state": "1.3.4",
+    "prosemirror-transform": "1.3.4",
+    "prosemirror-dropcursor": "1.4.0",
+		"prosemirror-gapcursor": "1.3.1",
+		"prosemirror-history": "1.2.0",
+    "prosemirror-view": "1.23.13",
+    "yup": "0.32.11"
+  },
+  "browserslist": [
+    ">0.2%",
+    "not dead",
+    "not ie <= 11",
+    "not op_mini all"
+  ]
+}

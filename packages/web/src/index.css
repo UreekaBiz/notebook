@@ -1,0 +1,153 @@
+/*
+  Style Order Convention -- alphabetically ordered within their corresponding scope:
+    Properties (that define element behavior)
+    Layout
+    Sizing
+    Spacing
+    Everything Else
+    Handlers
+*/
+
+/* == Constant ================================================================= */
+/* NOTE: Must match theme variables. (SEE: core/theme) */
+:root {
+  --ACTIVE_BUTTON_COLOR: #E2E8F0;
+  --HOVER_BUTTON_COLOR: #EDF2F7/*currently only used through CSS file*/;
+}
+
+/* == Editor =================================================================== */
+.Editor { outline: 1px solid transparent; }
+.inlineNodeContainer { position: relative; display: inline-block; }
+.selected { outline: 2px solid black; }
+
+/* -- Highlight ---------------------------------------------------------------- */
+.ProseMirror-focused .selected_text {
+  /*only show background when editor is no longer focused*/
+  background-color: transparent !important;
+}
+.selected_text {
+  background-color: rgba(0,0,0,0.1);
+}
+
+/* -- Container ---------------------------------------------------------------- */
+[data-node-type="container"] {
+  display: inline-block;
+}
+
+[data-node-type="carousel"] {
+  display: flex;
+  position: relative;
+  overflow: hidden;
+}
+
+.carousel_content {
+  display: flex;
+  width: 100%;
+  min-width: 0;
+
+}
+
+.carousel_content > div {
+  width: 33% !important;
+  min-width: calc(100% / 3);
+}
+
+.carousel_left-button{
+  position: absolute;
+  top:50%;
+  left: 0;
+  transform: translate(0, -50%);
+  background: #ccc;
+}
+
+.carousel_right-button{
+  position: absolute;
+  top:50%;
+  left: 100%;
+  transform: translate(-100%, -50%);
+  background: #ccc;
+}
+
+[selectionhighlighted="true"] {
+  outline: 2px dashed rgb(50, 50, 50, 0.05);
+}
+
+[data-node-type="layout"] > .ProseMirror-trailingBreak, [data-node-type="carousel"] > .ProseMirror-trailingBreak { display: none; }
+
+
+/* Title placeholder: NOTE: Must match TitleNode.tsx so that this placeholder matches its properties */
+.node-Title.is-empty div > div > div::before {
+  color: #adb5bd;
+  content: 'Untitled';
+  float: left;
+  height: 0;
+  pointer-events: none;
+}
+
+/* -- List --------------------------------------------------------------------- */
+li[data-checked]::before { content: '\200A'/*Prevents cursor from disappearing on task list items with no content REF: https://github.com/ueberdosis/tiptap/issues/1198 */; }
+
+/* -- CodeBlock ----------------------------------------------------------------- */
+code code > div { width: max-content/*targets the content from a CodeBlock Node*/; }
+code code { font-size: 1em/*code font size is relative to the parent, this fix is needed to prevent small fonts on nested code tags*/; }
+
+/* -- Button ------------------------------------------------------------------- */
+.iconButton {
+  width: auto;
+  height: auto;
+  border-radius: 100px;
+  margin-right: 0.375rem;
+  padding: 0.30em;
+}
+.iconButton:hover { background-color: #EDF2F7; }
+.iconButton.active { background-color: #E2E8F0; }
+
+/* == Packages compatibility =================================================== */
+/*
+  Unfortunately a lot of packages rely on specific CSS rules to work, and in some
+  cases they don't work as expected or collide with other packages, for this
+  reason manual fixes must be implemented to make sure the Application styles
+  works as expected
+*/
+
+/*
+  Known issue that having two ChakraUI Modals open at the same time the error
+  react-remove-scroll-bar error when open more than one modal is shown in the
+  console. This is due to the fact that another library sets the body overflow to
+  be hidden while react-remove-scroll-bar expects it to be present.
+
+  REF: https://github.com/chakra-ui/chakra-ui/issues/6213.
+  NOTE: Using html body to have more priority over the library selector.
+*/
+html body {
+  overflow: auto !important;
+}
+
+/* == Fonts ==================================================================== */
+@font-face {
+  font-family: 'SourceSerifPro';
+  src: local('SourceSerifPro'), url(../public/font/Source_Serif_Pro/SourceSerifPro-Regular.ttf) format('opentype');
+}
+
+@font-face {
+  font-family: 'SourceSerifPro';
+  font-weight: 700;
+  src: local('SourceSerifPro'), url(../public/font/Source_Serif_Pro/SourceSerifPro-Bold.ttf) format('opentype');
+}
+
+@font-face {
+  font-family: 'SourceSerifPro';
+  font-style: italic;
+  src: local('SourceSerifPro'), url(../public/font/Source_Serif_Pro/SourceSerifPro-Italic.ttf) format('opentype');
+}
+
+@font-face {
+  font-family: 'SourceSerifPro';
+  font-style: italic;
+  font-weight: 700;
+  src: local('SourceSerifPro'), url(../public/font/Source_Serif_Pro/SourceSerifPro-BoldItalic.ttf) format('opentype');
+}
+
+
+
+
