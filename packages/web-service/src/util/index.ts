@@ -52,7 +52,6 @@ export {
   // SEE: @ureeka-notebook/service-common: util/schema.ts
   emailSchema,
   urlSchema,
-  urlIMG,
 
   // SEE: @ureeka-notebook/service-common: util/string.ts
   defaultBlankString,

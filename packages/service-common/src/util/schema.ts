@@ -132,11 +132,6 @@ export const urlSchema = string()
     .matches(URL_REGEXP,
              { excludeEmptyString: true/*matches .url() behavior*/ });
 
-// Checks whether the URL contains an image
-// TODO: this neither correct nor complete. Use URL_REGEXP + suffix check at a minimum
-// REF: https://stackoverflow.com/questions/4098415/use-regex-to-get-image-url-in-html-js
-export const urlIMG = (url: string) =>  /(https?:\/\/.*\.(?:png|jpg))/i.test(url);
-
 // .. Social ......................................................................
 // TikTok handle (2-24 chars (numbers, letters, underscore or periods with possible
 // leading '@')
