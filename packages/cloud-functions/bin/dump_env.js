@@ -83,6 +83,9 @@ const commonVariables = [
   'NEXT_PUBLIC_SESSION_UPDATE_INTERVAL',
   'SESSION_EXPIRATION_EPSILON',
 ];
+const developmentVariables = [/*no additional*/];
+const stagingVariables = [/*no additional*/];
+const productionVariables = [/*no additional*/];
 
 // NOTE: defined locally to make this file dependency free
 const isBlank = (s) => {
@@ -92,7 +95,11 @@ const isBlank = (s) => {
 
 const environment = (() => {
   // pull the defined variables from the env
-  let variables = [...commonVariables]
+  if(!isLocalDevelopment()) {
+    if(ENVIRONMENT === 'production') variables = [...commonVariables, ...stagingVariables, ...productionVariables];
+    else if(ENVIRONMENT === 'staging') variables = [...commonVariables, ...stagingVariables];
+    else variables = [...commonVariables, ...stagingVariables, ...developmentVariables]/*non-local devel is at least 'staging'*/;
+  } else variables = [...commonVariables, ...developmentVariables]/*'monkeytest' implies 'development'*/;
 
   // pull the value(s) of each variable from the environment
   // NOTE: variables are either string or RegExp
