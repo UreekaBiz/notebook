@@ -21,6 +21,7 @@
     "start-emulators": "cross-env-shell npx firebase  -P '$NEXT_PUBLIC_FIREBASE_PROJECT_ID' emulators:start"
   },
 	"devDependencies": {
+    "@types/compression": "1.7.0",
     "@types/node": "18.0.3",
     "@types/react": "18.0.15",
     "@types/react-dom": "18.0.6",
