@@ -1,6 +1,6 @@
 import * as Validate from 'yup';
 
-import { ApplicationError } from './error';
+import { createApplicationError } from './error';
 
 // common / shared types
 // ********************************************************************************
@@ -9,12 +9,10 @@ import { ApplicationError } from './error';
 // type-safe alternate to 'XXX as YYY'
 export const isType = <T>(t: T) => t;
 
-/**
- * Used to assert that a switch is exhaustive
- * https://www.typescriptlang.org/docs/handbook/advanced-types.html#exhaustiveness-checking
- */
+// use to assert that a `switch` is exhaustive
+// SEE://www.typescriptlang.org/docs/handbook/advanced-types.html#exhaustiveness-checking
 export const assertNever = (x: never, message = `Invalid argument, expected never but received ${x}`): never => {
-  throw new ApplicationError('config/invalid-argument', message);
+  throw createApplicationError('config/invalid-argument', message);
 };
 
 // == TypeScript ==================================================================
