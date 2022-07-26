@@ -1,4 +1,5 @@
 import { createApplicationError } from './error';
+import { isBlank } from './string';
 
 // convenience types, etc. for accessing variables that are present in the environment
 // ********************************************************************************
@@ -10,14 +11,16 @@ export type EnvironmentType =
   | 'staging'
   | 'production';
 
-// --------------------------------------------------------------------------------
-export const isLocalDevelopment = () => {
-  // NOTE: a bit hack'ish but given that the environments are fixed, it should suffice
-  const projectId = process.env['NEXT_PUBLIC_FIREBASE_PROJECT_ID']!;
-  return !((projectId === 'notebook-dev-35453') ||
-           (projectId === 'notebook-stage-35453') ||
-           (projectId === 'notebook-prod-35453'));
-};
+// == Local Development ===========================================================
+// the presence of FIREBASE_PRIVATE_KEY determines if the development is local
+// TODO: this is close but should likely be updated to work for all packages. This
+//       approach assumes only server-side (since no 'NEXT_PUBLIC_' prefix)
+// TODO: this isn't 100% correct either. For development environments it is likely
+//       that both local-dev and deployed modes will be used therefore
+//       'FIREBASE_PRIVATE_KEY' will be present and make the deployed environment
+//       think that it's local-dev. This isn't specifically a problem per se. It's
+//       just not consistent / accurate.
+export const isLocalDevelopment = () => !isBlank(process.env['FIREBASE_PRIVATE_KEY']);
 
 // == Client vs Server ============================================================
 // a hacky way to check if the execution is being made on the server or client side.
