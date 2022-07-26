@@ -36,7 +36,7 @@ try {
   hash = String(childProcess.execSync('git rev-parse HEAD')).replace('\n', '');
 } catch(error) { /*do nothing; error will use default*/ }
 try {
-  branch = String(childProcess.execSync('git rev-parse --abbrev-ref HEAD')).replace('\n', '')
+  branch = String(childProcess.execSync('git rev-parse --abbrev-ref HEAD')).replace('\n', '');
 } catch(error) { /*do nothing; error will use default*/ }
 
 // .. Output ......................................................................
