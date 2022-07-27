@@ -20,7 +20,7 @@ export const defaultBlankString = <T>(s: string | null | undefined, defaultValue
 
 // --------------------------------------------------------------------------------
 // REF: https://stackoverflow.com/questions/175739/how-can-i-check-if-a-string-is-a-valid-number
-export const  isNumber = (str: string) => {
+export const isNumber = (str: string) => {
   return !isNaN(str as any) && // use type coercion to parse the _entirety_ of the string (`parseFloat` alone does not do this)...
           !isNaN(parseFloat(str)); // ...and ensure strings of whitespace fail
 };
