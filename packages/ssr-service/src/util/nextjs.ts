@@ -12,7 +12,7 @@ import { coreRoutes } from './routes';
 // ********************************************************************************
 // replica of request data used in next
 export type NextHttpRequest = IncomingMessage & {
-  cookies: Record<string, string>;
+  cookies: Partial<Record<string, string>>;
 };
 
 export type ServerSideProps = Record<string, any>;
