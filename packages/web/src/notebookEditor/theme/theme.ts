@@ -18,19 +18,22 @@ export const theme: Record<NodeName, Partial<Record<AttributeType, string>>> = {
 } as const;
 
 // == CSS =========================================================================
-// -- General ---------------------------------------------------------------------
-// NOTE: Must match CSS variables. (SEE: index.css)
+// NOTE: All of these must match index.css
+// .. General .....................................................................
 export const LIGHT_GRAY = '#E2E8F0';
 export const FOCUS_COLOR = '#5E9ED6';
-
-// -- Button ----------------------------------------------------------------------
 export const ACTIVE_BUTTON_COLOR = '#E2E8F0';
 
-// -- Node ------------------------------------------------------------------------
+// -- Class -----------------------------------------------------------------------
+export const CLICKABLE_CLASS = 'clickable';
+
+// .. Button ......................................................................
+export const ICON_BUTTON_CLASS = 'iconButton';
+
+// .. Node ........................................................................
 export const INLINE_NODE_CONTAINER_CLASS = 'inlineNodeContainer';
-export const SELECTED_CLASS = 'selected';
 export const SELECTED_TEXT_CLASS = 'selected_text';
 
-// -- Chip ------------------------------------------------------------------------
+// .. Chip ........................................................................
 export const CHIP_CLASS = 'chip';
 export const CHIP_CLOSE_BUTTON_CLASS = 'chipCloseButton';

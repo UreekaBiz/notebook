@@ -1,8 +1,6 @@
 import { CommandProps } from '@tiptap/core';
 
-import { NodeName } from '@ureeka-notebook/web-service';
-
-import { CommandFunctionType } from '../util/type';
+import { CommandFunctionType, NodeName } from '@ureeka-notebook/web-service';
 
 // ********************************************************************************
 // NOTE: ambient module to ensure command is TypeScript-registered for TipTap

@@ -13,9 +13,11 @@ export class NoPluginState {
 
 // == Extension ===================================================================
 export enum ExtensionName {
+  DROP_CURSOR = 'dropCursor',
   GAP_CURSOR = 'gapCursor',
   GAP_CURSOR_ALLOW = 'allowGapCursor'/*CHECK: is this the right place for this?*/,
   HIGHLIGHT = 'highlight',
+  HISTORY = 'history',
   NODEVIEW_REMOVAL = 'nodeViewRemoval',
   UNIQUE_NODE_ID = 'uniqueNodeId',
   SET_DEFAULT_MARKS = 'setDefaultMarks',
@@ -24,11 +26,32 @@ export enum ExtensionName {
 
 // == Priority ====================================================================
 // NOTE: priority can affect extensions, nodes and marks
+// NOTE: if priority is left unspecified, it defaults to 100
 // NOTE: names match extension, node or mark names for sanity.
 export enum ExtensionPriority {
-  NODEVIEW_REMOVAL = 110,
-  PARAGRAPH = 1000/*take precedence over everything else*/,
-  UNIQUE_NODE_ID = 109,
+  // -- Extension -----------------------------------------------------------------
+  UNIQUE_NODE_ID = 120/*T&E*/,
+  NODEVIEW_REMOVAL = 119,
+  SET_DEFAULT_MARKS = 118,
+
+  // -- Node ----------------------------------------------------------------------
+  // NOTE: Paragraph must have a higher priority than other block nodes since it
+  //       is the 'default' block node (by convention). If its priority is left
+  //       unspecified, the default block node on document creation will be the
+  //       first block node encountered in the editor extension array
+  //       (SEE: notebookEditor/type.ts)
+  PARAGRAPH = 117,
+
+  // NOTE: Since the text extension adds a \t whenever Tab is pressed, but this
+  //       behavior is not always guaranteed to be the desired one (e.g. when
+  //       going through a list node), the text extension runs last (SEE: note
+  //       above for default extension priority). This ensures that the shortcuts
+  //       defined in the text extension run only if their trigger was not handled
+  //       by another extension previously
+  TEXT = 99,
+
+  // -- Mark ----------------------------------------------------------------------
+  // Currently nothing
 }
 
 // == Selection ===================================================================

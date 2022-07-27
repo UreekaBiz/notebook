@@ -1,7 +1,8 @@
-import { mergeAttributes, Mark } from '@tiptap/core';
+import { Mark } from '@tiptap/core';
 
 import { AttributeType, TextStyleMarkSpec } from '@ureeka-notebook/web-service';
 
+import { getMarkOutputSpec } from 'notebookEditor/extension/util/attribute';
 import { isValidHTMLElement, safeParseTag } from 'notebookEditor/extension/util/parse';
 import { NoStorage } from 'notebookEditor/model/type';
 
@@ -17,21 +18,13 @@ export const TextStyle = Mark.create<TextStyleOptions, NoStorage>({
   addAttributes() {
     return {
       [AttributeType.FontSize]: {
-        default: null,
+        default: undefined,
         parseHTML: element => element.style.fontSize.replace(/['"]+/g, ''),
-        renderHTML: attributes => {
-          if(!attributes.fontSize) return {};
-          return { style: `font-size: ${attributes.fontSize}` };
-        },
       },
 
       [AttributeType.TextColor]: {
-        default: null,
+        default: undefined,
         parseHTML: element => element.style.color.replace(/['"]+/g, ''),
-        renderHTML: attributes => {
-          if(!attributes.color) return {};
-          return { style: `color: ${attributes.color}` };
-        },
       },
     };
   },
@@ -57,5 +50,5 @@ export const TextStyle = Mark.create<TextStyleOptions, NoStorage>({
       },
     }];
   },
-  renderHTML({ HTMLAttributes }) { return ['span', mergeAttributes(this.options.HTMLAttributes, HTMLAttributes), 0]; },
+  renderHTML({ mark, HTMLAttributes }) { return getMarkOutputSpec(mark, HTMLAttributes); },
 });

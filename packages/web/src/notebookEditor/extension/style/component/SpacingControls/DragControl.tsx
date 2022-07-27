@@ -16,7 +16,6 @@ interface Props {
   onEnd: () => void;
 }
 export const DragControl: React.FC<Props> = ({ value, unit, direction, onChange, onEnd }) => {
-  // == State =====================================================================
   const [isMoving, setIsMoving] = useState(false/*by contract*/);
   const [startingMousePosition, setStartingMousePosition] = useState(0);
   const [startingValue, setStartingValue] = useState(value);

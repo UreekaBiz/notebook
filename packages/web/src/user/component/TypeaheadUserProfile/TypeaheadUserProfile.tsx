@@ -155,7 +155,7 @@ export const TypeaheadUserProfile: React.FC<Props> = ({ onSelect, disabled = fal
   // == UI ========================================================================
   return (
     <Box width='full'>
-      <Input ref={inputRef} value={inputValue} disabled={disabled} variant='filled' width='full' marginRight={4} onChange={handleInputChange} onKeyDown={handleInputKeydown}/>
+      <Input ref={inputRef} value={inputValue} disabled={disabled} variant='filled' width='full' marginRight={4} onChange={handleInputChange} onKeyDown={handleInputKeydown} />
       <Menu isOpen={isMenuOpen && filteredProfiles.length > 0} onClose={closeMenu}>
         <MenuButton display='hidden'/>
         <MenuList ref={menuListRef} width='full' onKeyDown={handleMenuListKeydown}>

@@ -1,8 +1,8 @@
 import { Box, Flex, Input } from '@chakra-ui/react';
 import { ChangeEventHandler, KeyboardEventHandler } from 'react';
 
+import { useLocalValue } from 'notebookEditor/shared/hook/useLocalValue';
 import { separateUnitFromString, Unit } from 'notebookEditor/theme/type';
-import { useLocalValue } from 'shared/hook/useLocalValue';
 
 import { UnitPicker } from './UnitPicker';
 
@@ -15,7 +15,7 @@ interface Props {
 export const UnitPickerInput: React.FC<Props> = ({ name, onChange, valueWithUnit }) => {
   const { commitChange, localValue, resetLocalValue, updateLocalValue } = useLocalValue(valueWithUnit, onChange);
   let [value, unit] = separateUnitFromString(localValue);
-  unit = unit ?? Unit.Pixel/*default value*/;
+  unit ??= Unit.Pixel/*default value*/;
 
   // == Handlers ==================================================================
   const handleValueChange: ChangeEventHandler<HTMLInputElement> = (event) => {
@@ -28,12 +28,11 @@ export const UnitPickerInput: React.FC<Props> = ({ name, onChange, valueWithUnit
     updateLocalValue(newValue);
 
     // Sync with parent when selecting from dropdown
-    if(value && unit/*local value is valid*/) commitChange(newValue);
-    // else -- is not a valid value, don't commit*/
+    if(value && unit) commitChange(newValue);
   };
 
   const saveChange = () => {
-    if(value && unit/*local value is valid*/) commitChange();
+    if(value && unit) commitChange();
     else resetLocalValue();
   };
 

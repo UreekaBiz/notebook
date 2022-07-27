@@ -1,55 +1,59 @@
 import { Editor } from '@tiptap/core';
 import { Node as ProseMirrorNode } from 'prosemirror-model';
-import { NodeView } from 'prosemirror-view';
 
-import { NotebookSchemaType } from '@ureeka-notebook/web-service';
+import { DATA_NODE_TYPE } from '@ureeka-notebook/web-service';
 
-import { getPosType, isGetPos } from 'notebookEditor/extension/util/node';
+import { getPosType } from 'notebookEditor/extension/util/node';
 
 import { NodeViewStorage } from './NodeViewStorage';
+import { AbstractNodeController } from './AbstractNodeController';
+import { AbstractNodeModel } from './AbstractNodeModel';
 
+// Abstract class renders the corresponding DOM nodes for a NodeController
+// SEE: {@link AbstractNodeController}
 // ********************************************************************************
-// Implement the common behavior to all NodeViews that are managed via
-// a class implementation
-// == Class =======================================================================
-export abstract class AbstractNodeView<NodeType extends ProseMirrorNode, Storage extends NodeViewStorage<AbstractNodeView<NodeType, any>>> implements NodeView {
-  public readonly storage: Storage;
-
-  // -- ProseMirror ---------------------------------------------------------------
-  public readonly editor: Editor;
-  public node: NodeType;
+export abstract class AbstractNodeView<NodeType extends ProseMirrorNode, Storage extends NodeViewStorage<AbstractNodeController<NodeType, any, any, any>>, NodeModel extends AbstractNodeModel<NodeType, Storage>> {
+  // == Abstract Node View ========================================================
+  // the outer DOM node that represents the Document Node
   public readonly dom: HTMLElement;
-  public contentDOM?: HTMLElement;
-  public readonly getPos: (() => number);
 
-  // == Life-Cycle ================================================================
-  public constructor(editor: Editor, node: NodeType, storage: Storage, getPos: getPosType) {
-    if(!isGetPos(getPos)) throw new Error('getPos is not a function when creating an AbstractNodeView');
+  // the DOM node that holds the Node's content. Only meaningful if its Node is not
+  // a leaf Node type. When this is present, ProseMirror will take care of rendering
+  // the Node's children into it. When it is not present, the Node View itself is
+  // responsible for rendering (or deciding not to render) its child Nodes
+  public contentDOM?: Node | null | undefined;
 
-    this.storage = storage;
-    this.storage.addNode(node.attrs.id, this);
-
-    // .. ProseMirror .............................................................
-    this.editor = editor;
-    this.dom = this.createDomElement();
-    this.node = node;
-    this.getPos = getPos;
-  }
-
-  // == PM Life-Cycle =============================================================
-  public update(node: ProseMirrorNode<NotebookSchemaType>): boolean {
-    if(this.node.type.name !== node.type.name) return false/*different node so nothing was updated*/;
-
-    // update both storage and our reference to the Node
-    this.storage.addNode(this.node.attrs.id, this);
-    this.node = node as NodeType/*above check guarantees*/;
-
-    this.updateView();
-    return true/*as far as this implementation is concerned, an update occurred*/;
-  }
+  // ------------------------------------------------------------------------------
+  // the corresponding model for this view.
+  readonly model: NodeModel;
 
   // ==============================================================================
-  // .. View ......................................................................
+  readonly editor: Editor;
+  public node: NodeType;
+  readonly storage: Storage;
+  readonly getPos: getPosType;
+
+  // == Life-Cycle ================================================================
+  public constructor(model: NodeModel, editor: Editor, node: NodeType, storage: Storage, getPos: getPosType) {
+    this.editor = editor;
+    this.node = node;
+    this.storage = storage;
+    this.getPos = getPos;
+
+    this.model = model;
+
+    // Creates the outer DOM node.
+    this.dom = this.createDomElement();
+    this.dom.setAttribute(DATA_NODE_TYPE, node.type.name);
+  }
+
+  // == View ======================================================================
+  // creates the outer DOM node that represents the Document Node
   protected abstract createDomElement(): HTMLElement;
-  protected abstract updateView(): void;
+
+  // updates the DOM node that represents the Node
+  // NOTE: this method needs to be public since its render view could depend on
+  //       an external state (e.g. the visualId of the CodeBlockView) and thus
+  //       needs to be called from outside the class.
+  public abstract updateView(): void;
 }

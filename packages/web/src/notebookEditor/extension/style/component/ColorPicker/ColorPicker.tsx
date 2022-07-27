@@ -3,7 +3,7 @@ import { ChangeEventHandler, KeyboardEventHandler } from 'react';
 
 import { Color, colorToHexColor, removeColorAddon } from 'notebookEditor/theme/type';
 import { ToolContainer } from 'notebookEditor/toolbar/ToolbarContainer';
-import { useLocalValue } from 'shared/hook/useLocalValue';
+import { useLocalValue } from 'notebookEditor/shared/hook/useLocalValue';
 
 import { ColorPickerMenu } from './ColorPickerMenu';
 

@@ -2,9 +2,9 @@ import { Extension } from '@tiptap/core';
 import { Node as ProsemirrorNode } from 'prosemirror-model';
 import { Plugin } from 'prosemirror-state';
 
-import { NodeName } from '@ureeka-notebook/web-service';
+import { generateNodeId, NodeName } from '@ureeka-notebook/web-service';
 
-import { generateNodeId } from 'notebookEditor/extension/util/node';
+import { resolveNewSelection } from 'notebookEditor/extension/util/node';
 import { ExtensionName, ExtensionPriority } from 'notebookEditor/model/type';
 
 // ********************************************************************************
@@ -28,9 +28,10 @@ const isUuidNode = (node: ProsemirrorNode<any>) =>
 // REF: https://github.com/ueberdosis/tiptap/issues/252
 // REF: https://github.com/ueberdosis/tiptap/blob/ed56337470efb4fd277128ab7ef792b37cfae992/packages/core/src/extensions/keymap.ts
 export const UniqueNodeId = Extension.create({
-  name: ExtensionName.UNIQUE_NODE_ID,
+  name: ExtensionName.UNIQUE_NODE_ID/*Expected and guaranteed to be unique*/,
   priority: ExtensionPriority.UNIQUE_NODE_ID,
 
+  // -- Plugin --------------------------------------------------------------------
   addProseMirrorPlugins() {
     return [
       new Plugin({
@@ -38,7 +39,8 @@ export const UniqueNodeId = Extension.create({
         // Ensures there are no nodes with duplicate ids (e.g. during copy-paste operations)
         appendTransaction: (_transactions, oldState, newState) => {
           if(newState.doc === oldState.doc) return/*no changes*/;
-          const { tr } = newState/*for convenience*/;
+          const { tr } = newState/*for convenience*/,
+                { selection: initialSelection } = tr;
 
           // for Nodes in the inclusion set:
           // 1. if their id includes the default then replace with a new UUID
@@ -59,6 +61,7 @@ export const UniqueNodeId = Extension.create({
             }
           });
 
+          tr.setSelection(resolveNewSelection(initialSelection, tr))/*set selection to where it was*/;
           return tr;
         },
       }),

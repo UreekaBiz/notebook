@@ -1,11 +1,9 @@
 import { Extension } from '@tiptap/core';
 import { Plugin } from 'prosemirror-state';
 
-import { MarkName, NodeName } from '@ureeka-notebook/web-service';
+import { findContentDifferencePositions, getNodeName, MarkName, NodeName } from '@ureeka-notebook/web-service';
 
-import { ExtensionName } from 'notebookEditor/model/type';
-
-import { findContentDifferencePositions } from '../util/node';
+import { ExtensionName, ExtensionPriority } from 'notebookEditor/model/type';
 
 // ********************************************************************************
 // ================================================================================
@@ -21,7 +19,8 @@ const includedNodes = new Map<NodeName, MarkName[]>([[NodeName.HEADING, [MarkNam
  * the first textContent has been inserted into them)
  */
 export const SetDefaultMarks = Extension.create({
-  name: ExtensionName.SET_DEFAULT_MARKS,
+  name: ExtensionName.SET_DEFAULT_MARKS/*Expected and guaranteed to be unique*/,
+  priority: ExtensionPriority.SET_DEFAULT_MARKS,
 
   // -- Plugin --------------------------------------------------------------------
   addProseMirrorPlugins() {
@@ -48,7 +47,8 @@ export const SetDefaultMarks = Extension.create({
 
           // look for nodes across the doc in the range where the content changed
           newState.doc.nodesBetween(docsDifferenceStart, newDocDifferenceEnd, (node, nodePos) => {
-            const includedNodeMarks = includedNodes.get(node.type.name as NodeName);
+            const nodeName = getNodeName(node);
+            const includedNodeMarks = includedNodes.get(nodeName);
             if(includedNodeMarks && node.textContent !== '' && node.attrs.initialMarksSet === false) {
               includedNodeMarks.forEach(markName => {
                 tr.addMark(nodePos, nodePos + node.nodeSize, newState.schema.marks[markName].create());

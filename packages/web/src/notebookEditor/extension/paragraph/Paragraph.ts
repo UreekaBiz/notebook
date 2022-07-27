@@ -1,9 +1,9 @@
 import { Node } from '@tiptap/core';
 import { Plugin } from 'prosemirror-state';
 
-import { Attributes, AttributeType, NodeName, ParagraphNodeSpec, SetAttributeType } from '@ureeka-notebook/web-service';
+import { Attributes, AttributeType, ParagraphNodeSpec, SetAttributeType } from '@ureeka-notebook/web-service';
 
-import { getOutputSpec, setAttributeFromTheme, setAttributeParsingBehavior } from 'notebookEditor/extension/util/attribute';
+import { getNodeOutputSpec, setAttributeParsingBehavior } from 'notebookEditor/extension/util/attribute';
 import { safeParseTag } from 'notebookEditor/extension/util/parse';
 import { ExtensionPriority, NoStorage } from 'notebookEditor/model/type';
 
@@ -23,18 +23,18 @@ export const Paragraph = Node.create<ParagraphOptions, NoStorage>({
     return {
       ...this.parent?.(),
 
-      [AttributeType.FontSize]: setAttributeFromTheme(AttributeType.FontSize, NodeName.PARAGRAPH),
-      [AttributeType.TextColor]: setAttributeFromTheme(AttributeType.TextColor, NodeName.PARAGRAPH),
+      [AttributeType.FontSize]: setAttributeParsingBehavior(AttributeType.FontSize, SetAttributeType.STRING),
+      [AttributeType.TextColor]: setAttributeParsingBehavior(AttributeType.TextColor, SetAttributeType.STRING),
 
-      [AttributeType.PaddingTop]: setAttributeParsingBehavior(AttributeType.PaddingTop, '0px', SetAttributeType.STRING),
-      [AttributeType.PaddingBottom]: setAttributeParsingBehavior(AttributeType.PaddingBottom, '0px', SetAttributeType.STRING),
-      [AttributeType.PaddingLeft]: setAttributeParsingBehavior(AttributeType.PaddingLeft, '0px', SetAttributeType.STRING),
-      [AttributeType.PaddingRight]: setAttributeParsingBehavior(AttributeType.PaddingRight, '0px', SetAttributeType.STRING),
+      [AttributeType.PaddingTop]: setAttributeParsingBehavior(AttributeType.PaddingTop, SetAttributeType.STRING),
+      [AttributeType.PaddingBottom]: setAttributeParsingBehavior(AttributeType.PaddingBottom, SetAttributeType.STRING),
+      [AttributeType.PaddingLeft]: setAttributeParsingBehavior(AttributeType.PaddingLeft, SetAttributeType.STRING),
+      [AttributeType.PaddingRight]: setAttributeParsingBehavior(AttributeType.PaddingRight, SetAttributeType.STRING),
 
-      [AttributeType.MarginTop]: setAttributeParsingBehavior(AttributeType.MarginTop, '0px', SetAttributeType.STRING),
-      [AttributeType.MarginLeft]: setAttributeFromTheme(AttributeType.MarginLeft, NodeName.PARAGRAPH),
-      [AttributeType.MarginBottom]: setAttributeParsingBehavior(AttributeType.MarginBottom, '0px', SetAttributeType.STRING),
-      [AttributeType.MarginRight]: setAttributeParsingBehavior(AttributeType.MarginRight, '0px', SetAttributeType.STRING),
+      [AttributeType.MarginTop]: setAttributeParsingBehavior(AttributeType.MarginTop, SetAttributeType.STRING),
+      [AttributeType.MarginLeft]: setAttributeParsingBehavior(AttributeType.MarginLeft, SetAttributeType.STRING),
+      [AttributeType.MarginBottom]: setAttributeParsingBehavior(AttributeType.MarginBottom, SetAttributeType.STRING),
+      [AttributeType.MarginRight]: setAttributeParsingBehavior(AttributeType.MarginRight, SetAttributeType.STRING),
     };
   },
   addOptions() { return { HTMLAttributes: {/*currently nothing*/} }; },
@@ -70,5 +70,5 @@ export const Paragraph = Node.create<ParagraphOptions, NoStorage>({
 
   // -- View ----------------------------------------------------------------------
   parseHTML() { return [safeParseTag('div')]; },
-  renderHTML({ node, HTMLAttributes }) { return getOutputSpec(node, this.options, HTMLAttributes); },
+  renderHTML({ node, HTMLAttributes }) { return getNodeOutputSpec(node, HTMLAttributes); },
 });

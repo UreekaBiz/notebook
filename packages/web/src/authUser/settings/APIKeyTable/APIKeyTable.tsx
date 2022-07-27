@@ -34,7 +34,7 @@ export const APIKeyTable: React.FC = () => {
           </Thead>
           <Tbody>
             {Object.entries(auth?.profilePrivate.apiKeys ?? {}).map(([apiKey, value]) => (
-              <APIKeyTableItem key={apiKey} apiKey={apiKey as APIKey} value={value} handleRemove={handleApiKeyRemove}/>
+              <APIKeyTableItem key={apiKey} apiKey={apiKey as APIKey} value={value} handleRemove={handleApiKeyRemove} />
             ))}
           </Tbody>
         </Table>

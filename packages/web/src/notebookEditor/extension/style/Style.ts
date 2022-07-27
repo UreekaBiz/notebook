@@ -7,7 +7,7 @@ import { setStyleCommand } from './command';
 // ********************************************************************************
 // == Extension ===================================================================
 export const Style = Extension.create<NoOptions, NoStorage>({
-  name: ExtensionName.STYLE,
+  name: ExtensionName.STYLE/*Expected and guaranteed to be unique*/,
 
   // -- Command ------------------------------------------------------------------=
   addCommands() { return { setStyle: setStyleCommand }; },

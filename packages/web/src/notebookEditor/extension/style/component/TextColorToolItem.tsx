@@ -1,7 +1,7 @@
-import { AttributeType, MarkName } from '@ureeka-notebook/web-service';
+import { AttributeType, InvalidMergedAttributeValue, MarkName } from '@ureeka-notebook/web-service';
 
 import { ColorPicker } from 'notebookEditor/extension/style/component/ColorPicker';
-import { getMergedAttributeValueFromSelection, InvalidMergedAttributeValue } from 'notebookEditor/extension/util/attribute';
+import { getTextDOMRenderedValue  } from 'notebookEditor/extension/util/attribute';
 import { getSelectedNode } from 'notebookEditor/extension/util/node';
 import { textColors } from 'notebookEditor/theme/type';
 import { EditorToolComponentProps } from 'notebookEditor/toolbar/type';
@@ -13,8 +13,8 @@ export const TextColorToolItem: React.FC<Props> = ({ editor, depth }) => {
   const node = getSelectedNode(state, depth);
   if(!node) return null/*nothing to render*/;
 
-  const mergedValue = getMergedAttributeValueFromSelection(state, AttributeType.TextColor, MarkName.TEXT_STYLE);
-  const inputValue = mergedValue === InvalidMergedAttributeValue ? '' : mergedValue;
+  const domRenderValue = getTextDOMRenderedValue(editor, AttributeType.TextColor, MarkName.TEXT_STYLE);
+  const inputValue = domRenderValue === InvalidMergedAttributeValue ? '' : domRenderValue;
 
   // == Handlers ==================================================================
   const handleChange = (value: string) => {

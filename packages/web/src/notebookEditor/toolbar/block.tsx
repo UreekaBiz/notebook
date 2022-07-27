@@ -1,20 +1,16 @@
-import { ReactNode } from 'react';
 import { AiOutlineVerticalAlignBottom, AiOutlineVerticalAlignMiddle, AiOutlineVerticalAlignTop } from 'react-icons/ai';
-import { BiHeading } from 'react-icons/bi';
-import { FaHeading } from 'react-icons/fa';
-import { RiHeading } from 'react-icons/ri';
 
-import { HeadingLevel, NodeName, VerticalAlign } from '@ureeka-notebook/web-service';
+import { VerticalAlign } from '@ureeka-notebook/web-service';
 
-import { createDefaultHeadingAttributes } from 'notebookEditor/extension/heading/type';
 import { setVerticalAlign } from 'notebookEditor/shared/command';
 
-import { EditorTool } from './type';
+import { ToolItem } from './type';
 
+// FIXME: figure out where this goes!
 // ********************************************************************************
 // ================================================================================
 // -- Vertical Align --------------------------------------------------------------
-export const verticalAlignTop: EditorTool = {
+export const verticalAlignTop: ToolItem = {
   toolType: 'button',
   name: `verticalAlign-${VerticalAlign.top}`,
   tooltip: 'Vertical Align - Top',
@@ -24,7 +20,7 @@ export const verticalAlignTop: EditorTool = {
   onClick: (editor) => setVerticalAlign(editor, VerticalAlign.top),
 };
 
-export const verticalAlignMiddle: EditorTool = {
+export const verticalAlignMiddle: ToolItem = {
   toolType: 'button',
   name: `verticalAlign-${VerticalAlign.middle}`,
   tooltip: 'Vertical Align - Middle',
@@ -34,7 +30,7 @@ export const verticalAlignMiddle: EditorTool = {
   onClick: (editor) => setVerticalAlign(editor, VerticalAlign.middle),
 };
 
-export const verticalAlignBottom: EditorTool = {
+export const verticalAlignBottom: ToolItem = {
   toolType: 'button',
   name: `verticalAlign-${VerticalAlign.bottom}`,
   tooltip: 'Vertical Align - Bottom',
@@ -43,20 +39,3 @@ export const verticalAlignBottom: EditorTool = {
 
   onClick: (editor) => setVerticalAlign(editor, VerticalAlign.bottom),
 };
-
-// -- Heading ---------------------------------------------------------------------
-const createHeadingTool = (level: HeadingLevel, icon: ReactNode): EditorTool => ({
-  toolType: 'button',
-
-  name: `${NodeName.HEADING}${level}`,
-  label: `${NodeName.HEADING}${level}`,
-
-  icon,
-  tooltip: `Heading${level} (⌘ + ⌥ + ${level})`,
-
-  shouldShow: (editor, depth) => depth === 1,
-  onClick: (editor) => editor.chain().focus().toggleHeading(createDefaultHeadingAttributes(level)).run(),
-});
-export const heading1: EditorTool = createHeadingTool(HeadingLevel.One, <FaHeading size={16} />);
-export const heading2: EditorTool = createHeadingTool(HeadingLevel.Two, <RiHeading size={16} />);
-export const heading3: EditorTool = createHeadingTool(HeadingLevel.Three, <BiHeading size={16} />);

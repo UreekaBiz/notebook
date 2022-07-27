@@ -1,7 +1,8 @@
 import { Bold } from 'notebookEditor/extension/bold/Bold';
+import { Document } from 'notebookEditor/extension/document/Document';
+import { DropCursor } from 'notebookEditor/extension/dropCursor/DropCursor';
 import { GapCursor } from 'notebookEditor/extension/gapcursor/GapCursor';
 import { Heading } from 'notebookEditor/extension/heading/Heading';
-import { Document } from 'notebookEditor/extension/document/Document';
 import { Highlight } from 'notebookEditor/extension/highlight/Highlight';
 import { History } from 'notebookEditor/extension/history/History';
 import { NodeViewRemoval } from 'notebookEditor/extension/nodeViewRemoval/NodeViewRemoval';
@@ -16,13 +17,45 @@ import { UniqueNodeId } from 'notebookEditor/extension/uniqueNodeId/UniqueNodeId
 // defines the structure of the Editor
 // SEE: NotebookProvider
 export const editorDefinition = {
-  // NOTE: when adding or removing extensions, the Schema must be updated to match
-  //       the new changes. The Schema is used to validate the document and perform
-  //       operations on the server-side and must be always be in sync.
-  // SEE: @service-common:/notebookEditor/prosemirror/schema
-  extensions: [ Bold, Document, GapCursor, Heading, Highlight, History, NodeViewRemoval, Paragraph, SetDefaultMarks, Style, Text, TextStyle, UniqueNodeId ],
+  // NOTE: when adding or removing extensions you must also update the schema
+  //       to reflect the new changes. It is used to validate the document and
+  //       perform operations on the server-side and must be always be in sync.
+  // see: src/common/notebookEditor/prosemirror/schema.ts.
+  extensions: [ Bold, DropCursor, Document, GapCursor, Heading, Highlight, History, NodeViewRemoval, Paragraph, SetDefaultMarks, Style, Text, TextStyle, UniqueNodeId ],
   editorProps: { attributes: { class: 'Editor'/*SEE: /index.css*/ } },
 
   autofocus: true/*initially has focus*/,
   content: ''/*initially empty*/,
 };
+
+// NOTE: The following execution order goes from top-first to bottom-last
+//       (SEE: FeatureDoc, Changes section)
+//
+// Current Schema Execution Order (SEE: notebookEditor/model/type/ExtensionPriority)
+// appendedTransaction
+// 1. UniqueNodeId
+// 2. NodeViewRemoval
+// 3. SetDefaultMarks
+// 4. Paragraph
+// 5. all other extensions (in registration order, (SEE: Extension array above))
+//
+// onTransaction
+// 1. UniqueNodeId
+// 2. NodeViewRemoval
+// 3. SetDefaultMarks
+// 4. Paragraph
+// 5. all other extensions (in registration order, (SEE: Extension array above))
+//
+// onSelectionUpdate
+// 1. UniqueNodeId
+// 2. NodeViewRemoval
+// 3. SetDefaultMarks
+// 4. Paragraph
+// 5. all other extensions (in registration order, (SEE: Extension array above))
+//
+// onUpdate
+// 1. UniqueNodeId
+// 2. NodeViewRemoval
+// 3. SetDefaultMarks
+// 4. Paragraph
+// 5. all other extensions (in registration order, (SEE: Extension array above))

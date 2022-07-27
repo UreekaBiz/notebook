@@ -1,7 +1,8 @@
 import { Mark } from '@tiptap/core';
 
-import { BoldMarkSpec } from '@ureeka-notebook/web-service';
+import { BoldMarkSpec } from 'common';
 
+import { getMarkOutputSpec } from 'notebookEditor/extension/util/attribute';
 import { markInputRule, markPasteRule } from 'notebookEditor/extension/util/mark';
 import { safeParseTag, wrapGetStyleAttrs, wrapGetTagAttrs } from 'notebookEditor/extension/util/parse';
 import { NoOptions, NoStorage } from 'notebookEditor/model/type';
@@ -39,6 +40,7 @@ export const Bold = Mark.create<NoOptions, NoStorage>({
   },
 
   // -- Input ---------------------------------------------------------------------
+  // apply the bold Mark to typed or pasted text that is surrounded by '**' or '__'
   addInputRules() { return [ markInputRule(starRegex, this.type), markInputRule(underscoreRegex, this.type) ]; },
   addPasteRules() { return [ markPasteRule(starRegex, this.type), markPasteRule(underscoreRegex, this.type) ]; },
 
@@ -50,5 +52,5 @@ export const Bold = Mark.create<NoOptions, NoStorage>({
       { style: 'font-weight', getAttrs: wrapGetStyleAttrs(value => cssFontWeightRegex.test(value)) },
     ];
   },
-  renderHTML() { return ['strong', 0]; },
+  renderHTML({ mark, HTMLAttributes }) { return getMarkOutputSpec(mark, HTMLAttributes); },
 });

@@ -1,10 +1,10 @@
-import { AttributeType, MarkName } from '@ureeka-notebook/web-service';
+import { AttributeType, InvalidMergedAttributeValue, MarkName } from '@ureeka-notebook/web-service';
 
-import { getMergedAttributeValueFromSelection, InvalidMergedAttributeValue } from 'notebookEditor/extension/util/attribute';
+import { getTextDOMRenderedValue } from 'notebookEditor/extension/util/attribute';
 import { getSelectedNode } from 'notebookEditor/extension/util/node';
 import { EditorToolComponentProps } from 'notebookEditor/toolbar/type';
 
-import { UnitPickerInput } from './UnitPickerInput.tsx';
+import { UnitPickerInput } from './UnitPickerInput';
 
 // ********************************************************************************
 interface Props extends EditorToolComponentProps {/*no additional*/}
@@ -13,8 +13,8 @@ export const FontSizeToolItem: React.FC<Props> = ({ editor, depth }) => {
   const node = getSelectedNode(state, depth);
   if(!node) return null/*nothing to render*/;
 
-  const mergedValue = getMergedAttributeValueFromSelection(state, AttributeType.FontSize, MarkName.TEXT_STYLE);
-  const inputValue = mergedValue === InvalidMergedAttributeValue ? '' : mergedValue;
+  const domRenderValue = getTextDOMRenderedValue(editor, AttributeType.FontSize, MarkName.TEXT_STYLE);
+  const inputValue = domRenderValue === InvalidMergedAttributeValue ? '' : domRenderValue;
 
   // == Handlers ==================================================================
   const handleChange = (inputValue: string) => {

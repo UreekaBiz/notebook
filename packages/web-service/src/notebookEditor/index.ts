@@ -25,6 +25,7 @@ export {
   isPaddingAttribute,
   SpacingAttribute,
   SpacingType,
+  getOppositeSpacingAttribute,
 
   TextStyleAttributes,
   TextAlign,
@@ -35,7 +36,10 @@ export {
 
   SetAttributeType,
 
+  InvalidMergedAttributeValue,
+  MergedAttributeValue,
   mergeAttributes,
+  mergeAttributeValues,
   getRenderAttributes,
   isStyleAttribute,
 
@@ -49,7 +53,9 @@ export {
   NodeName,
   NodeTag,
   NodeIdentifier,
+  generateNodeId,
   getNodeName,
+  getNodeOffset,
 
   // -- Node Specs ----------------------------------------------------------------
   NodeSpecs,
@@ -71,9 +77,12 @@ export {
   // == Marks =====================================================================
   JSONMark,
   MarkName,
+  getMarkName,
+  getMarkValue,
 
   // -- Mark Specs ----------------------------------------------------------------
   BoldMarkSpec,
+  MarkSpecs,
   TextStyleMarkSpec,
 
   // -- Mark Types ----------------------------------------------------------------
@@ -83,6 +92,8 @@ export {
   isTextStyleMark,
 
   // == HTML Renderer =============================================================
+  DATA_NODE_TYPE,
+
   convertContentToHTML,
   convertJSONContentToHTML,
   getRenderTag,
@@ -93,7 +104,11 @@ export {
   ParagraphNodeRendererSpec,
   TextNodeRendererSpec,
 
+  MarkRendererSpecs,
   NodeRendererSpecs,
+
+  // == Command ===================================================================
+  CommandFunctionType,
 
   // == Content ===================================================================
   NotebookDocumentContent,

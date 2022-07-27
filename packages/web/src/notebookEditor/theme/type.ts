@@ -55,6 +55,7 @@ export const fillColors: Color[][] = [
 // == Units =======================================================================
 export enum Unit {
   Pixel = 'px',
+  Point = 'pt',
   Percentage = '%',
   Em = 'em',
   Rem = 'rem',
@@ -64,6 +65,7 @@ export enum Unit {
 }
 export const Units = Object.values(Unit);
 
+// --------------------------------------------------------------------------------
 export const getUnitFromString = (str: string): Unit | undefined => {
   let foundUnit: Unit | undefined = undefined;
   for(const unit of Units) {
@@ -85,7 +87,7 @@ export const separateUnitFromString = (str: string): [string, (Unit | undefined)
   return [value, unit];
 };
 
-export const getNumberValueFromUnitString = (str: string): number => {
+export const getNumberValueFromUnitString = (str: string = ''): number => {
   const [value] = separateUnitFromString(str);
   return Number(value ?? '0');
 };

@@ -1,15 +1,15 @@
 import { Box, Divider, Text } from '@chakra-ui/react';
 
-import { useEditorService } from 'notebookEditor/hook/useEditorService';
+import { useValidatedEditor } from 'notebookEditor/hook/useValidatedEditor';
 
 // ********************************************************************************
 export const Debugger = () => {
-  const { editor } = useEditorService();
+  const editor = useValidatedEditor();
   return (
     <>
       <Divider/>
-      <Box paddingX={2} overflow='auto'>
-        <Text marginBottom={1} pt={2} fontSize={15} fontWeight='bold' textTransform='capitalize'>
+      <Box flex='1 1 0' paddingX={2} overflow='auto'>
+        <Text marginBottom={1} paddingTop={2} fontSize={15} fontWeight='bold' textTransform='capitalize'>
           Selection
         </Text>
         <Box overflow='auto' fontSize={12}>
@@ -19,7 +19,7 @@ export const Debugger = () => {
 
       <Divider/>
       <Box flex='1 1 0' paddingX={2} overflow='auto'>
-        <Text marginBottom={1} pt={2} fontSize={15} fontWeight='bold' textTransform='capitalize'>
+        <Text marginBottom={1} paddingTop={2} fontSize={15} fontWeight='bold' textTransform='capitalize'>
           Document
         </Text>
         <Box overflow='auto' fontSize={12}>

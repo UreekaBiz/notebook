@@ -1,36 +1,44 @@
 import { NodeName } from '@ureeka-notebook/web-service';
 
-import { EditorTool, EditorToolbar } from 'notebookEditor/toolbar/type';
+import { Toolbar, ToolItem } from 'notebookEditor/toolbar/type';
 
 import { PreviewPublishedNotebookToolItem } from './PreviewPublishedNotebookToolItem';
 import { PublishNotebookButton } from './PublishNotebookButton';
+import { SetThemeToolItem } from './SetThemeToolItem';
 import { ShareNotebookToolItem } from './ShareNotebookToolItem';
 
 //*********************************************************************************
 // == Tool items ==================================================================
-export const previewPublishedNotebookToolItem: EditorTool = {
+export const previewPublishedNotebookToolItem: ToolItem = {
   toolType: 'component',
   name: 'previewPublishedNotebookToolItem',
 
   component: PreviewPublishedNotebookToolItem,
 };
 
-export const publishNotebookToolItem: EditorTool = {
+export const publishNotebookToolItem: ToolItem = {
   name: 'publishNotebook',
   toolType: 'component',
 
   component: PublishNotebookButton,
 };
 
-export const shareNotebookToolItem: EditorTool = {
+export const shareNotebookToolItem: ToolItem = {
   name: 'shareNotebookToolItem',
   toolType: 'component',
 
   component: ShareNotebookToolItem,
 };
 
+export const setThemeToolItem: ToolItem = {
+  toolType: 'component',
+  name: 'setThemeToolItem',
+
+  component: SetThemeToolItem,
+};
+
 // == Toolbar =====================================================================
-export const DocumentToolbar: EditorToolbar = {
+export const DocumentToolbar: Toolbar = {
   nodeName: NodeName.DOC,
 
   toolsCollections: [
@@ -40,6 +48,7 @@ export const DocumentToolbar: EditorToolbar = {
     ],
     [
       shareNotebookToolItem,
+      setThemeToolItem,
     ],
   ],
 };

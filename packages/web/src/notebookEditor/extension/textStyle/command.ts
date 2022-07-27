@@ -1,8 +1,6 @@
 import { Command, getMarkAttributes } from '@tiptap/core';
 
-import { AttributeType, MarkName } from '@ureeka-notebook/web-service';
-
-import { CommandFunctionType } from '../util/type';
+import { AttributeType, CommandFunctionType, MarkName } from '@ureeka-notebook/web-service';
 
 // ********************************************************************************
 // NOTE: ambient module to ensure command is TypeScript-registered for TipTap

@@ -11,7 +11,7 @@ import { SELECTED_TEXT_CLASS } from 'notebookEditor/theme/theme';
 // SEE: index.css
 // REF: https://discuss.prosemirror.net/t/add-css-class-to-current-node-or-selected-nodes/1287
 export const Highlight = Extension.create({
-  name: ExtensionName.HIGHLIGHT,
+  name: ExtensionName.HIGHLIGHT/*Expected and guaranteed to be unique*/,
 
   // -- Plugin --------------------------------------------------------------------
   addProseMirrorPlugins() {

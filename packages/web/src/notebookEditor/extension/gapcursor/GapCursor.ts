@@ -8,7 +8,7 @@ import { ExtensionName, NoOptions, NoStorage } from 'notebookEditor/model/type';
 
 // == Extension ===================================================================
 export const GapCursor: Extension<NoOptions, NoStorage> = Extension.create<NoOptions, NoStorage>({
-  name: ExtensionName.GAP_CURSOR,
+  name: ExtensionName.GAP_CURSOR/*Expected and guaranteed to be unique*/,
 
   // -- Plugin --------------------------------------------------------------------
   addProseMirrorPlugins() { return [ gapCursor() ]; },

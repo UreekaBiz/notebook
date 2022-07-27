@@ -1,9 +1,8 @@
 import { Box, Flex } from '@chakra-ui/react';
 import { useCallback, useEffect, useState } from 'react';
 
-import { isMarginAttribute, AttributeType, Margin, Padding, SpacingAttribute, SpacingType, MarginAttribute, PaddingAttribute } from '@ureeka-notebook/web-service';
+import { isMarginAttribute, getOppositeSpacingAttribute, AttributeType, Margin, MarginAttribute, Padding, PaddingAttribute, SpacingAttribute, SpacingType } from '@ureeka-notebook/web-service';
 
-import { getOppositeSpacingAttribute } from 'notebookEditor/extension/util/attribute';
 import { getNumberValueFromUnitString, Unit } from 'notebookEditor/theme/type';
 
 import { DragControl } from './DragControl';
@@ -16,7 +15,7 @@ interface Props {
   onChange: (attribute: AttributeType, value: string) => void;
   name: string;
 }
-export const SpacingControls = ({ margin, padding, name, onChange }:Props) => {
+export const SpacingControls: React.FC<Props> = ({ margin, padding, name, onChange }) => {
   const [localState, setLocalState] = useState<Partial<Record<SpacingAttribute, number>>>({/*empty*/});
   const [movingType, setMovingType] = useState<SpacingAttribute | null>(null/*initial value*/);
   const [updateOpposites, setUpdateOpposites] = useState(false/*by default*/);

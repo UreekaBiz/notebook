@@ -15,7 +15,6 @@ const selectColorButtonProps: Partial<FlexProps> = {
   _focus: { boxShadow: 'none' },
 };
 
-// ================================================================================
 interface Props {
   colors: Color[][];
   value: string;
@@ -29,7 +28,7 @@ export const ColorPickerMenu: React.FC<Props> = ({ colors, closeOnSelect = true,
   const [isOpen, setIsOpen] = useState(false/*by contract*/);
   const [selectedColor, setSelectedColor] = useState(''/*initial value*/);
 
-  // == Effects ===================================================================
+  // == Effect ====================================================================
   // Close the menu when the user clicks outside the box. The event is cancelled by
   // handlePopoverMouseDown when the user clicks on the portal so it only gets
   // here when it's outside the portal.

@@ -11,7 +11,7 @@ import { isNodeSelection } from 'notebookEditor/extension/util/node';
  *
  * @param editor The current editor instance
  * @param desiredAlignment The alignment that will be set given the checks the function performs
- * @returns A boolean indicating whether the attribute update was successful or not
+ * @returns `true` if attribute update was successful. `false` otherwise
  */
 export const setVerticalAlign = (editor: Editor, desiredAlignment: VerticalAlign): boolean => {
   const { selection } = editor.state;
@@ -23,12 +23,10 @@ export const setVerticalAlign = (editor: Editor, desiredAlignment: VerticalAlign
     if(selection.node.attrs.verticalAlign === desiredAlignment) {
       const nodeName = selection.node.type.name;
       return editor.chain().updateAttributes(nodeName, { verticalAlign: VerticalAlign.bottom }).setNodeSelection(nodePos).run();
-    }
-    /*case 2: vertical align must be changed from something other than bottom to something other than bottom*/
-    else
+    } else { /*case 2: vertical align must be changed from something other than bottom to something other than bottom*/
       return editor.chain().updateAttributes(nodeName, { verticalAlign: desiredAlignment }).setNodeSelection(nodePos).run();
-  }
-  /* else -- not a node selection */
+    }
+  } /* else -- not a node selection */
 
   return false;
 };

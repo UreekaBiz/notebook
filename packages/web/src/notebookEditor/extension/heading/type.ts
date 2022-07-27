@@ -1,7 +1,6 @@
-import { Attributes, HeadingLevel } from '@ureeka-notebook/web-service';
+import { generateNodeId, Attributes, HeadingLevel } from '@ureeka-notebook/web-service';
 
 import { DEFAULT_NODE_ID } from 'notebookEditor/extension/uniqueNodeId/UniqueNodeId';
-import { generateNodeId } from 'notebookEditor/extension/util/node';
 
 // ********************************************************************************
 // == Type ========================================================================

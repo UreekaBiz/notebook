@@ -1,11 +1,9 @@
 import { CommandProps, Editor } from '@tiptap/core';
 
-import { AttributeType, NodeName } from '@ureeka-notebook/web-service';
+import { isTextNode, AttributeType, CommandFunctionType } from '@ureeka-notebook/web-service';
 
 import { getSelectedNode } from 'notebookEditor/extension/util/node';
 import { ExtensionName, SelectionDepth } from 'notebookEditor/model/type';
-
-import { CommandFunctionType } from '../util/type';
 
 // ********************************************************************************
 // == Command =====================================================================
@@ -29,8 +27,8 @@ export const setStyleCommand = (attribute: AttributeType, value: string, depth: 
   if(from !== to) {
     const { doc } = tr;
     doc.nodesBetween(from, to, (node, pos) => {
-      if(!tr.doc || !node) return false;
-      if(node.type.name === NodeName.TEXT) return false/*skip text nodes since they cannot have attributes*/;
+      if(!tr.doc || !node) return false/*nothing to do*/;
+      if(isTextNode(node)) return false/*skip text nodes since they cannot have attributes*/;
 
       const nodeAttrs = { ...node.attrs, [attribute]: value };
       tr.setNodeMarkup(pos, undefined/*preserve type*/, nodeAttrs);
@@ -56,5 +54,5 @@ export const setStyleCommand = (attribute: AttributeType, value: string, depth: 
 };
 
 // == Util ========================================================================
-export const setNodeStyle = (editor: Editor, attribute: AttributeType, value: string, depth: SelectionDepth, fullySelectedNodes?: boolean) =>
+export const setNodeStyle = (editor: Editor, attribute: AttributeType, value: string, depth: SelectionDepth) =>
   editor.commands.setStyle(attribute, value, depth);

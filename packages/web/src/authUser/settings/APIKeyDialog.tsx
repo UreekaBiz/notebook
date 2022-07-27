@@ -143,7 +143,7 @@ export const APIKeyDialog: React.FC<Props> = ({ button }) => {
                 <Text fontSize={16} fontWeight={600} marginBottom={3} paddingX={6}>Add API Key</Text>
                 <Flex alignItems='center' justifyContent='space-between' width='100%' marginBottom={4} paddingX={6}>
                   <Box flex='1 1' minWidth={0} marginRight={2}>
-                    <Input disabled={status === 'loading'} onChange={handleInputChange}/>
+                    <Input disabled={status === 'loading'} onChange={handleInputChange} />
                   </Box>
                   <Select disabled={status === 'loading'} width={250} value={apiKeyType ?? ''/*no selected value*/} onChange={handleAPIKeySelect}>
                     {/* empty value that serves as a placeholder */}

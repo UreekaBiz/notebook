@@ -54,6 +54,7 @@ export {
   urlSchema,
 
   // SEE: @ureeka-notebook/service-common: util/string.ts
+  camelToKebabCase,
   defaultBlankString,
   hexString,
   isBlank,

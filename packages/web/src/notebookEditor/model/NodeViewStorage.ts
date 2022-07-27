@@ -1,25 +1,22 @@
 import { Editor } from '@tiptap/core';
 
 import { NodeIdentifier, NodeName } from '@ureeka-notebook/web-service';
-import { AbstractNodeView } from 'notebookEditor/model/AbstractNodeView';
+
+import { AbstractNodeController } from 'notebookEditor/model/AbstractNodeController';
 
 // ********************************************************************************
-/**
- * returns the {@link NodeViewStorage} that manages all {@link AbstractNodeViews}
- * for a particular type of node
- */
-export const getNodeViewStorage = <NV extends AbstractNodeView<any, any>>(editor: Editor, nodeName: NodeName): NodeViewStorage<NV> => {
+// returns the NodeViewStorage that manages all AbstractNodeViews for a particular
+// type of Node (specified)
+export const getNodeViewStorage = <Storage extends NodeViewStorage<any>>(editor: Editor, nodeName: NodeName): Storage => {
   const storage = editor.storage[nodeName];
-  if(!isNodeViewStorage<NV>(storage)) throw new Error(`Invalid storage for node (${nodeName}): ${JSON.stringify(storage)}`);
+  if(!isNodeViewStorage<Storage>(storage)) throw new Error(`Invalid storage for Node (${nodeName}): ${JSON.stringify(storage)}`);
 
   return storage;
 };
 
 // ********************************************************************************
-/**
- * Implements the common properties to all storage objects used by {@link AbstractNodeViews}
- */
-export class NodeViewStorage<V extends AbstractNodeView<any, any>> {
+// provides common properties to all storage objects used by AbstractNodeController
+export class NodeViewStorage<V extends AbstractNodeController<any>> {
   private readonly nodeViewMap = new Map<NodeIdentifier, V>();
 
   // == Life-cycle ================================================================
@@ -28,14 +25,19 @@ export class NodeViewStorage<V extends AbstractNodeView<any, any>> {
   // == NodeViews =================================================================
   // retrieves the node view for the specified node identifier. Such a node view
   // may not exist
-  public getNode(id: NodeIdentifier) { return this.nodeViewMap.get(id); }
+  public getNodeView(id: NodeIdentifier) { return this.nodeViewMap.get(id); }
 
   // adds or updates the specified node view to storage
-  public addNode(id: NodeIdentifier, nodeView: V) { this.nodeViewMap.set(id, nodeView); }
+  public addNodeView(id: NodeIdentifier, nodeView: V) { this.nodeViewMap.set(id, nodeView); }
 
   // removes the specified node view from storage
-  public removeNode(id: NodeIdentifier) { this.nodeViewMap.delete(id); }
+  public removeNodeView(id: NodeIdentifier) { this.nodeViewMap.delete(id); }
+
+  /** Calls the specified callback for each NodeView in Storage */
+  public forEachNodeView(operation: (nodeView: V) => void) {
+    this.nodeViewMap.forEach(nodeView => operation(nodeView));
+  }
 }
 
-export const isNodeViewStorage = <NV extends AbstractNodeView<any, any>>(obj: any): obj is NodeViewStorage<NV> =>
+export const isNodeViewStorage = <Storage extends NodeViewStorage<any>>(obj: any): obj is Storage =>
   'nodeViewMap' in obj;

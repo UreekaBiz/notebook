@@ -71,7 +71,7 @@ function SettingsPage() {
       <SettingsLayoutWrapper>
         <Text>Settings</Text>
         <Heading marginBottom={4}>General</Heading>
-        <SettingsForm initialValues={initialValues} status={status} onSubmit={handleSubmit}/>
+        <SettingsForm initialValues={initialValues} status={status} onSubmit={handleSubmit} />
       </SettingsLayoutWrapper>
     </Flex>
   );

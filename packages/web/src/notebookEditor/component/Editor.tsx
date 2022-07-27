@@ -6,6 +6,8 @@ import { getLogger, Logger } from '@ureeka-notebook/web-service';
 
 import { useEditorService } from 'notebookEditor/hook/useEditorService';
 
+import { EditorUserInteractions } from './EditorUserInteractions';
+
 const log = getLogger(Logger.NOTEBOOK);
 
 // ********************************************************************************
@@ -44,6 +46,7 @@ export const Editor = () => {
   // == UI ========================================================================
   return (
     <Box id={EDITOR_CONTAINER_ID} height='full' overflowY='auto' onClick={handleClick}>
+      <EditorUserInteractions />
       <EditorContent editor={editor} />
     </Box>
   );

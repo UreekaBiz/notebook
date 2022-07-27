@@ -1,12 +1,12 @@
 import { textblockTypeInputRule, Node } from '@tiptap/core';
 
-import { AttributeType, HeadingLevel, HeadingNodeSpec, NodeName, SetAttributeType } from '@ureeka-notebook/web-service';
+import { AttributeType, getHeadingLevelFromTag, HeadingLevel, HeadingNodeSpec,  SetAttributeType } from '@ureeka-notebook/web-service';
 
 import { NoStorage } from 'notebookEditor/model/type';
 
-import { getOutputSpec, setAttributeFromTheme, setAttributeParsingBehavior } from '../util/attribute';
-import { createDefaultHeadingAttributes, HeadingOptions, DEFAULT_HEADING_LEVEL, HEADING_ID } from './type';
+import { getNodeOutputSpec,  setAttributeParsingBehavior } from '../util/attribute';
 import { setHeadingCommand, toggleHeadingCommand } from './command';
+import { createDefaultHeadingAttributes, HeadingOptions, HEADING_ID } from './type';
 
 // NOTE: this Extension leverages the UniqueNodeId extension
 // ********************************************************************************
@@ -17,22 +17,22 @@ export const Heading = Node.create<HeadingOptions, NoStorage>({
   // -- Attribute -----------------------------------------------------------------
   addAttributes() {
     return {
-      id: setAttributeParsingBehavior('id', HEADING_ID, SetAttributeType.STRING),
-      level: setAttributeParsingBehavior('level', DEFAULT_HEADING_LEVEL, SetAttributeType.NUMBER),
-      initialMarksSet: setAttributeParsingBehavior('initialMarksSet', false, SetAttributeType.BOOLEAN),
+      id: setAttributeParsingBehavior('id', SetAttributeType.STRING, HEADING_ID),
+      level: { default: HeadingLevel.One, parseHTML: element => getHeadingLevelFromTag(element.tagName) },
+      initialMarksSet: setAttributeParsingBehavior('initialMarksSet', SetAttributeType.BOOLEAN, false),
 
-      [AttributeType.FontSize]: setAttributeParsingBehavior(AttributeType.FontSize, undefined/*no default value*/, SetAttributeType.STRING),
-      [AttributeType.TextColor]: setAttributeParsingBehavior(AttributeType.TextColor, undefined/*no default value*/, SetAttributeType.STRING),
+      [AttributeType.FontSize]: setAttributeParsingBehavior(AttributeType.FontSize, SetAttributeType.STRING),
+      [AttributeType.TextColor]: setAttributeParsingBehavior(AttributeType.TextColor, SetAttributeType.STRING),
 
-      [AttributeType.PaddingTop]: setAttributeParsingBehavior(AttributeType.PaddingTop, '0px', SetAttributeType.STRING),
-      [AttributeType.PaddingBottom]: setAttributeParsingBehavior(AttributeType.PaddingBottom, '0px', SetAttributeType.STRING),
-      [AttributeType.PaddingLeft]: setAttributeParsingBehavior(AttributeType.PaddingLeft, '0px', SetAttributeType.STRING),
-      [AttributeType.PaddingRight]: setAttributeParsingBehavior(AttributeType.PaddingRight, '0px', SetAttributeType.STRING),
+      [AttributeType.PaddingTop]: setAttributeParsingBehavior(AttributeType.PaddingTop, SetAttributeType.STRING),
+      [AttributeType.PaddingBottom]: setAttributeParsingBehavior(AttributeType.PaddingBottom, SetAttributeType.STRING),
+      [AttributeType.PaddingLeft]: setAttributeParsingBehavior(AttributeType.PaddingLeft, SetAttributeType.STRING),
+      [AttributeType.PaddingRight]: setAttributeParsingBehavior(AttributeType.PaddingRight, SetAttributeType.STRING),
 
-      [AttributeType.MarginTop]: setAttributeParsingBehavior(AttributeType.MarginTop, '0px', SetAttributeType.STRING),
-      [AttributeType.MarginLeft]: setAttributeFromTheme(AttributeType.MarginLeft, NodeName.HEADING),
-      [AttributeType.MarginBottom]: setAttributeParsingBehavior(AttributeType.MarginBottom, '0px', SetAttributeType.STRING),
-      [AttributeType.MarginRight]: setAttributeParsingBehavior(AttributeType.MarginRight, '0px', SetAttributeType.STRING),
+      [AttributeType.MarginTop]: setAttributeParsingBehavior(AttributeType.MarginTop, SetAttributeType.STRING),
+      [AttributeType.MarginLeft]: setAttributeParsingBehavior(AttributeType.MarginLeft, SetAttributeType.STRING),
+      [AttributeType.MarginBottom]: setAttributeParsingBehavior(AttributeType.MarginBottom, SetAttributeType.STRING),
+      [AttributeType.MarginRight]: setAttributeParsingBehavior(AttributeType.MarginRight, SetAttributeType.STRING),
     };
   },
   addOptions() {
@@ -56,6 +56,9 @@ export const Heading = Node.create<HeadingOptions, NoStorage>({
   },
 
   // -- Input ---------------------------------------------------------------------
+  // Create a Heading node if the user types '#' a certain amount of times and
+  // a space or an enter. The amount of times '#' was typed will be the level
+  // of the Heading, if it is a valid HeadingLevel
   addInputRules() {
     return this.options.levels.map(level => {
       return textblockTypeInputRule({
@@ -70,8 +73,9 @@ export const Heading = Node.create<HeadingOptions, NoStorage>({
   parseHTML() {
     return this.options.levels.map((level: HeadingLevel) => ({
       tag: `h${level}`,
-      attrs: { level },
+
+      attrs: { level, fontSize: '20px' },
     }));
   },
-  renderHTML({ node, HTMLAttributes }) { return getOutputSpec(node, this.options, HTMLAttributes); },
+  renderHTML({ node, HTMLAttributes }) { return getNodeOutputSpec(node, HTMLAttributes); },
 });
