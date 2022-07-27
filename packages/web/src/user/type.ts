@@ -1,4 +1,4 @@
-import { NotebookRole } from "@ureeka-notebook/service-common";
+import { NotebookRole } from '@ureeka-notebook/service-common';
 
 // ********************************************************************************
 export const ReadableNotebookRole: Record<NotebookRole, string> = {
