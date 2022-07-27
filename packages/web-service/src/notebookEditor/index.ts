@@ -115,4 +115,9 @@ export {
   contentToNode,
   contentToJSONNode,
   nodeToContent,
+
+  // == Utility ===================================================================
+  computeRemovedNodeObjs,
+  findContentDifferencePositions,
+  getNodesAffectedByStepMap,
 } from '@ureeka-notebook/service-common';

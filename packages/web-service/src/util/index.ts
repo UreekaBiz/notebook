@@ -16,6 +16,10 @@ export {
   ObjectTuple,
   Timestamp,
 
+  // SEE: @ureeka-notebook/service-common: util/environment.ts
+  isClientSide,
+  isServerSide,
+
   // SEE: @ureeka-notebook/service-common: util/hash.ts
   hashNumber,
   hashString,
