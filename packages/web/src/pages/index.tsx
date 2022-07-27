@@ -11,7 +11,7 @@ function HomePage() {
   return (
     <Box position='relative'>
       <HeroBanner />
-      <Box position='absolute' top={4} right={4}>
+      <Box position='absolute' top={8} right={12}>
         <AuthAvatar avatarSize='md' buttonSize='sm' />
       </Box>
     </Box>
