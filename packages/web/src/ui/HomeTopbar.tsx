@@ -13,9 +13,9 @@ export const HomeTopbar: React.FC = () => {
           <Heading marginLeft={2} fontSize={24}>Notebook</Heading>
         </Flex>
         <Flex alignItems='center'>
-          <Text marginRight={6} color='#555' fontSize={18} fontWeight={500} >Features</Text>
-          <Text marginRight={6} color='#555' fontSize={18} fontWeight={500} >About</Text>
-          <Text marginRight={6} color='#555' fontSize={18} fontWeight={500} >GitHub</Text>
+          <Text marginRight={6} color='#555' fontSize={18} fontWeight={500}>Features</Text>
+          <Text marginRight={6} color='#555' fontSize={18} fontWeight={500}>About</Text>
+          <Text marginRight={6} color='#555' fontSize={18} fontWeight={500}>GitHub</Text>
           <AuthAvatar avatarSize='md' buttonSize='sm' />
         </Flex>
       </Flex>
