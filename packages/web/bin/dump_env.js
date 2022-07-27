@@ -46,20 +46,6 @@ const VALUE_NOT_SPECIFIED = 'VALUE_NOT_SPECIFIED'/*sentinel if env variable isn'
                             /*ANYTHING other than 'undefined' -- it simply makes debugging easier*/
 
 // ................................................................................
-// NOTE: in order to support 'ENVIRONMENT' across all tiers, it's set to
-//       'NEXT_PUBLIC_ENVIRONMENT' in the .env. This clones it so that there are no
-//       'NEXT_PUBLIC_*' variables on the server (for sanity).
-process.env['ENVIRONMENT'] = process.env['NEXT_PUBLIC_ENVIRONMENT']/*clone*/;
-const ENVIRONMENT = (() => {
-  const environment = process.env['ENVIRONMENT'];
-  if(environment === 'production') return 'production';
-  else if(environment === 'staging') return 'staging';
-  else if(environment === 'monkeytest') return 'monkeytest';
-  else if(environment !== 'development') console.error(`Unknown value for 'ENVIRONMENT': ${environment}`);
-  return 'development'/*default for sanity*/;
-})();
-
-// ................................................................................
 // NOTE:  ensure that src/util/environment.ts matches!
 // NOTE: if regexp's are used then the first capture group is the variable name and
 //       the remaining group(s) are the (possibly nested) object value. Only a
@@ -99,7 +85,7 @@ const isBlank = (s) => {
 
 const environment = (() => {
   // pull the defined variables from the env
-  let variables = [...commonVariables]
+  let variables = [...commonVariables];
 
   // pull the value(s) of each variable from the environment
   // NOTE: variables are either string or RegExp
