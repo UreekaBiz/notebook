@@ -1,8 +1,8 @@
 import { Box } from '@chakra-ui/react';
 
-import { AuthAvatar } from 'authUser/component/AuthAvatar';
 import { WrappedPage } from 'core/wrapper';
 import { HeroBanner } from 'ui/HeroBanner';
+import { HomeTopbar } from 'ui/HomeTopbar';
 
 // ********************************************************************************
 // NOTE: this page is using Static Site Generation. See pages/README.md
@@ -10,10 +10,8 @@ import { HeroBanner } from 'ui/HeroBanner';
 function HomePage() {
   return (
     <Box position='relative'>
+      <HomeTopbar />
       <HeroBanner />
-      <Box position='absolute' top={8} right={12}>
-        <AuthAvatar avatarSize='md' buttonSize='sm' />
-      </Box>
     </Box>
   );
 }
