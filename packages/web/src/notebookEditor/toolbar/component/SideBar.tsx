@@ -1,12 +1,12 @@
 import { Divider, Flex, VStack } from '@chakra-ui/react';
 import { useCallback, useEffect, useMemo, useState } from 'react';
 
+import { NotebookTopBar } from 'notebook/component/NotebookTopBar';
 import { getAllAscendantsFromSelection } from 'notebookEditor/extension/util/node';
 import { useValidatedEditor } from 'notebookEditor/hook/useValidatedEditor';
 import { SelectionDepth } from 'notebookEditor/model/type';
 
 import { Debugger } from './Debugger';
-import { SideBarHeading } from './SideBarHeading';
 import { Toolbar } from './Toolbar';
 import { ToolbarBreadcrumbs } from './ToolbarBreadcrumbs';
 
@@ -47,7 +47,7 @@ export const SideBar = () => {
 
   return (
     <Flex flexDir='column' minH={0} width='100%' height='100%' background='#FCFCFC' borderLeft='1px solid' borderColor='gray.300' overflow='hidden'>
-      <SideBarHeading background='#F3F3F3' />
+      <NotebookTopBar background='#f3f3f3' />
       <ToolbarBreadcrumbs onSelection={handleDepthSelection} selectedDepth={selectedDepth} />
       <Flex flexDir='column' flex='1 1'>
         <VStack divider={<Divider />} spacing={0} flex='1 1 0' alignItems='stretch' overflowY='scroll'>
