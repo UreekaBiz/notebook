@@ -55,11 +55,16 @@ export const DefaultTheme: Theme = {
     [NodeName.DOC]: {/*no defined value*/},
     [NodeName.HEADING]: {
       [AttributeType.MarginLeft]: '4px',
+      [AttributeType.MarginRight]: '4px',
+      [AttributeType.MarginBottom]: '0.25rem',
     },
     [NodeName.PARAGRAPH]: {
       [AttributeType.TextColor]: '#000',
       [AttributeType.FontSize]: '16px',
       [AttributeType.MarginLeft]: '4px',
+      [AttributeType.MarginRight]: '4px',
+      [AttributeType.MarginTop]: '0.5rem',
+      [AttributeType.MarginBottom]: '0.5rem',
     },
     [NodeName.TEXT]:{/*no defined value*/},
   },
@@ -93,11 +98,15 @@ export const GoogleDocsTheme: Theme = {
     [NodeName.DOC]: {/*no defined value*/},
     [NodeName.HEADING]: {
       [AttributeType.MarginLeft]: '4px',
+      [AttributeType.MarginBottom]: '0.25rem',
     },
     [NodeName.PARAGRAPH]: {
       [AttributeType.FontSize]: '11pt',
       [AttributeType.TextColor]: '#353744',
       [AttributeType.MarginLeft]: '4px',
+      [AttributeType.MarginRight]: '4px',
+      [AttributeType.MarginTop]: '0.5rem',
+      [AttributeType.MarginBottom]: '0.5rem',
     },
     [NodeName.TEXT]:{/*no defined value*/},
   },
