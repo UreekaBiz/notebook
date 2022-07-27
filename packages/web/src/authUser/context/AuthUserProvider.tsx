@@ -41,6 +41,8 @@ export const AuthUserProvider: React.FC<Props> = ({ children }) => {
       subscription.unsubscribe();
       authUserService.shutdown();
     };
+    // NOTE: Ignoring dependencies since this is meant to be run only once.
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [/*only on mount/unmount*/]);
 
   // == UI ========================================================================
