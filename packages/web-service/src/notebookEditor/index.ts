@@ -100,13 +100,4 @@ export {
   contentToNode,
   contentToJSONNode,
   nodeToContent,
-
-  // .. Styling ...................................................................
-  CODE_BLOCK_DEFAULT_STYLES,
-  CODE_BLOCK_REFERENCE_DEFAULT_STYLES,
-
-  IMAGE_DEFAULT_STYLES,
-  DRAWING_DEFAULT_STYLES,
-
-  TITLE_DEFAULT_STYLES,
 } from '@ureeka-notebook/service-common';

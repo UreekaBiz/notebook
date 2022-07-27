@@ -1,14 +1,12 @@
-import { useToast, Avatar, Button, Flex, Menu, MenuButton, MenuItem, MenuList, Spinner, Text } from '@chakra-ui/react';
+import { useToast, Button, Flex, Spinner, Text } from '@chakra-ui/react';
 import { useRouter } from 'next/router';
 import { useCallback, useState } from 'react';
-import { FiSettings } from 'react-icons/fi';
-import { BiLogOut } from 'react-icons/bi';
 import { BsBook } from 'react-icons/bs';
 import { RiFileAddLine } from 'react-icons/ri';
 
 import { getLogger, NotebookService, NotebookType, Logger } from '@ureeka-notebook/web-service';
 
-import { useAuthedUser } from 'authUser/hook/useAuthedUser';
+import { AuthAvatar } from 'authUser/component/AuthAvatar';
 import { useIsMounted } from 'shared/hook';
 import { coreRoutes, notebookRoute } from 'shared/routes';
 
@@ -17,8 +15,6 @@ const log = getLogger(Logger.NOTEBOOK);
 // ********************************************************************************
 interface Props { background?: string; }
 export const NotebookTopBar: React.FC<Props> = ({ background }) => {
-  const authedUser = useAuthedUser();
-
   const router = useRouter();
   const isMounted = useIsMounted();
   const toast = useToast();
@@ -57,17 +53,18 @@ export const NotebookTopBar: React.FC<Props> = ({ background }) => {
     window.open(route, '_blank'/*new tab*/);
   }, [isMounted, toast]);
 
-  const handleSettingsClick = () => {
-    router.push(coreRoutes.settings);
-  };
-
-  const handleSignOut = useCallback(() => {
-    router.push(coreRoutes.logout);
-  }, [router]);
-
   // == UI ========================================================================
   return (
-    <Flex align='center' justify='space-between' width='100%' paddingY={2} paddingX={5} background={background} borderBottom='1px solid' borderColor='gray.200'>
+    <Flex
+      align='center'
+      justify='space-between'
+      width='100%'
+      paddingY={2}
+      paddingX={5}
+      background={background}
+      borderBottom='1px solid'
+      borderColor='gray.200'
+    >
       <Flex align='center' _hover={{ cursor: 'pointer' }} onClick={handleAppNameClick}>
         <BsBook size={20} />
         <Text marginLeft={2} fontSize={20}>Notebook</Text>
@@ -84,25 +81,7 @@ export const NotebookTopBar: React.FC<Props> = ({ background }) => {
               New
             </Button>
           )}
-        <Menu>
-          {authedUser ?
-            <MenuButton
-              as={Avatar}
-              name={`${authedUser.profilePrivate.firstName ?? ''/*default*/} ${authedUser.profilePrivate.lastName ?? ''/*default*/}`}
-              src={authedUser.profilePrivate.profileImageUrl}
-              size='sm'
-              marginLeft={4}
-              _hover={{ cursor: 'pointer' }}
-            /> : null}
-          <MenuList>
-            <MenuItem icon={<FiSettings />} onClick={handleSettingsClick}>
-              Settings
-            </MenuItem>
-            <MenuItem icon={<BiLogOut />} onClick={handleSignOut}>
-              Sign out
-            </MenuItem>
-          </MenuList>
-        </Menu>
+        <AuthAvatar avatarSize='sm' showLogIn={false}/>
       </Flex>
     </Flex>
   );
