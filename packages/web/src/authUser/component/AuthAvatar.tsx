@@ -57,7 +57,7 @@ export const AuthAvatar: React.FC<Props> = ({ avatarSize, buttonSize, showLogIn 
   } // else -- user is auth'ed
 
   return (
-    <Menu>
+    <Menu computePositionOnMount/**prevents sideways overflow in parent container */>
       {authedUser ?
         <MenuButton
           as={Avatar}
