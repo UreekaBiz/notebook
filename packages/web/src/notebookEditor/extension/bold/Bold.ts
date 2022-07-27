@@ -1,6 +1,6 @@
 import { Mark } from '@tiptap/core';
 
-import { BoldMarkSpec } from 'common';
+import { BoldMarkSpec } from '@ureeka-notebook/web-service';
 
 import { getMarkOutputSpec } from 'notebookEditor/extension/util/attribute';
 import { markInputRule, markPasteRule } from 'notebookEditor/extension/util/mark';
