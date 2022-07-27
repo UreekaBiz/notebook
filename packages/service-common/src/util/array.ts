@@ -13,13 +13,13 @@ export const difference = <T>(previous: T[], final: T[]): T[] => {
   if(final.length < 1) return previous.slice()/*clone*/;
   const lookup = new Set(final);
   const result: T[] = []/*initially empty*/;
-    previous.forEach(e => { if(!lookup.has(e)) result.push(e); })
+    previous.forEach(e => { if(!lookup.has(e)) result.push(e); });
   return result;
 };
 export const differenceSet = <T>(previous: Set<T>, final: Set<T>): Set<T> => {
   if(final.size < 1) return new Set(previous)/*clone*/;
   const result = new Set<T>();
-    previous.forEach(e => { if(!final.has(e)) result.add(e); })
+    previous.forEach(e => { if(!final.has(e)) result.add(e); });
   return result;
 };
 
@@ -32,12 +32,12 @@ export const differenceSet = <T>(previous: Set<T>, final: Set<T>): Set<T> => {
 export const intersection = <T>(a: T[], b: T[]): T[] => {
   const lookup = new Set(b);
   const result: T[] = []/*initially empty*/;
-    a.forEach(e => { if(lookup.has(e)) result.push(e); })
+    a.forEach(e => { if(lookup.has(e)) result.push(e); });
   return result;
 };
 export const intersectionSet = <T>(a: Set<T>, b: Set<T>): Set<T> => {
   const result = new Set<T>();
-    a.forEach(e => { if(b.has(e)) result.add(e); })
+    a.forEach(e => { if(b.has(e)) result.add(e); });
   return result;
 };
 
