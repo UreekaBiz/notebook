@@ -12,7 +12,6 @@ class NotebookEditorTheme {
   // == Constructor ===============================================================
   constructor(theme: Theme) {
     this.theme = theme;
-    this.setThemeStylesheet()/*sync stylesheet*/;
   }
 
   // == Public methods ============================================================
@@ -27,10 +26,9 @@ class NotebookEditorTheme {
     this.setThemeStylesheet()/*sync stylesheet*/;
   }
 
-  // == Private methods ===========================================================
   // updates the theme stylesheet with the current theme. This function should be
   // called whenever the theme is updated.
-  private setThemeStylesheet() {
+  public setThemeStylesheet() {
     const stylesheet = this.getStylesheet();
 
     // get existing stylesheet
@@ -46,6 +44,7 @@ class NotebookEditorTheme {
     existingStyleSheet.textContent = stylesheet;
   }
 
+  // == Private methods ===========================================================
   private getStylesheet() {
     const { nodes, marks, customSelectors } = this.theme;
 

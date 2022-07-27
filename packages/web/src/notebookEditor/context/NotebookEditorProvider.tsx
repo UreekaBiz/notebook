@@ -5,6 +5,7 @@ import { useEffect, useState, ReactNode } from 'react';
 import { getLogger, Notebook, NotebookEditorService, NotebookIdentifier, Logger, NodeIdentifier } from '@ureeka-notebook/web-service';
 
 import { useUserId } from 'authUser/hook/useUserId';
+import { notebookEditorTheme } from 'notebookEditor/extension/theme/theme';
 import { focusEditor } from 'notebookEditor/focus';
 import { editorDefinition } from 'notebookEditor/type';
 import { Loading } from 'shared/component/Loading';
@@ -64,6 +65,11 @@ export const NotebookEditorProvider: React.FC<Props> = ({ notebookId, notebook, 
 
     // NOTE: see effect below to shutdown the Service
   }, [notebookId, notebook.schemaVersion, focusedElementId, isMounted, status, setStatus, toast, editor, userId]);
+
+  // sets the initial theme when the component mounts
+  useEffect(() => {
+    notebookEditorTheme.setThemeStylesheet()/*sync stylesheet*/;
+  }, []);
 
   // ..............................................................................
   // sync editor with NotebookEditorService on Editor updates
