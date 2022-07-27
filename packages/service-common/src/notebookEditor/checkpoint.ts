@@ -1,9 +1,10 @@
 import { EditorState } from 'prosemirror-state';
 
-import { NotebookSchemaVersion } from '../notebook/type';
+import { NotebookDocumentContent } from './proseMirror/document';
+import { NotebookSchemaVersion } from './proseMirror/schema';
 import { contentToNode, nodeToContent } from './proseMirror/node';
 import { getSchema } from './proseMirror/schema';
-import { Checkpoint, NotebookDocumentContent, NotebookVersion } from './type';
+import { Checkpoint, NotebookVersion } from './type';
 import { contentToStep } from './version';
 
 // ********************************************************************************

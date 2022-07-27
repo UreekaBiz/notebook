@@ -1,6 +1,5 @@
 import { MarkSpec, NodeSpec, Schema } from 'prosemirror-model';
 
-import { NotebookSchemaVersion } from '../../notebook/type';
 import { createApplicationError } from '../../util/error';
 import { BoldMarkSpec } from './extension/bold';
 import { DocumentNodeSpec } from './extension/document';
@@ -26,12 +25,21 @@ export const MarkSpecs: Record<MarkName, MarkSpec> = {
 };
 
 // == Schema ======================================================================
-// NOTE: This schema must reflect the same schema that is being used in the editor
-//       itself, otherwise the editor will not be able to load the document.
+/** the schema version of the {@link Notebook}
+  *  @see Notebook#schemaVersion */
+// NOTE: must be updated when adding breaking changes to the Schema Notebook
+export enum NotebookSchemaVersion {
+  V1 = 'v1'/*initial version -- no longer used*/,
+  V2 = 'v2'/*moved away from 'steps' and confusion around 'version' (schema vs. PM 'step), etc*/,
+}
+
+// ................................................................................
+// NOTE: This schema must reflect the same Schema that is being used in the Editor
+//       itself, otherwise the Editor will not be able to load the Document.
 //
-//       When adding or removing nodes, the extensions that are used in the editor
-//       must also be updated to match the new schema
-// SEE: @web:/notebookEditor/context/NotebookProvider.ts
+//       When adding or removing Nodes, the extensions that are used in the Editor
+//       must also be updated to match the new Schema
+// SEE: NotebookProvider.ts
 export const SchemaV2 = new Schema({
   topNode: NodeName.DOC,
 

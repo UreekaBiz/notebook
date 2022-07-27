@@ -1,4 +1,5 @@
 export * from './attribute';
+export * from './document';
 export * from './htmlRenderer/renderer';
 export * from './htmlRenderer/type';
 export * from './extension/bold';
@@ -10,3 +11,4 @@ export * from './extension/textStyle';
 export * from './mark';
 export * from './node';
 export * from './schema';
+

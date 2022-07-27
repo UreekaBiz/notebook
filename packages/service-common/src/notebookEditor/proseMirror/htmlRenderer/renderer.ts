@@ -1,22 +1,20 @@
 import { MarkSpec, NodeSpec } from 'prosemirror-model';
 
-import { NotebookDocumentContent } from '../../type';
 import { isStyleAttribute, snakeCaseToKebabCase, HTMLAttributes } from '../attribute';
+import { NotebookDocumentContent } from '../document';
 import { BoldMarkRendererSpec } from '../extension/bold';
 import { DocumentNodeRendererSpec } from '../extension/document';
 import { HeadingNodeRendererSpec } from '../extension/heading';
-import { ParagraphNodeRendererSpec } from '../extension/paragraph';
-import { TextNodeRendererSpec } from '../extension/text';
+import { isParagraphJSONNode, ParagraphNodeRendererSpec } from '../extension/paragraph';
+import { isTextJSONNode, TextNodeRendererSpec } from '../extension/text';
 import { TextStyleMarkRendererSpec } from '../extension/textStyle';
 import { JSONMark, MarkName } from '../mark';
 import { contentToJSONNode, JSONNode, NodeName } from '../node';
 import { MarkSpecs, NodeSpecs } from '../schema';
-import { getRenderTag, MarkRendererSpec, NodeRendererSpec } from './type';
+import { getRenderTag, AttributeRenderer, HTMLString, MarkRendererSpec, NodeRendererSpec, DATA_NODE_TYPE } from './type';
 
 // ********************************************************************************
 // == Type ========================================================================
-export type HTMLString = string/*alias*/;
-
 export const NodeRendererSpecs: Record<NodeName, NodeRendererSpec> = {
   [NodeName.DOC]: DocumentNodeRendererSpec,
   [NodeName.HEADING]: HeadingNodeRendererSpec as any/*FIXME!!!*/,
@@ -26,7 +24,7 @@ export const NodeRendererSpecs: Record<NodeName, NodeRendererSpec> = {
 
 export const MarkRendererSpecs: Record<MarkName, MarkRendererSpec> = {
   [MarkName.BOLD]: BoldMarkRendererSpec,
-  [MarkName.TEXT_STYLE]: TextStyleMarkRendererSpec,
+  [MarkName.TEXT_STYLE]: TextStyleMarkRendererSpec as any/*FIXME!!!*/,
 };
 
 // ================================================================================
@@ -39,24 +37,33 @@ export const convertContentToHTML = (content: NotebookDocumentContent): HTMLStri
 export const convertJSONContentToHTML = (node: JSONNode): HTMLString => {
   const { type, content, text } = node;
   const nodeRendererSpec = NodeRendererSpecs[type];
-  const tag = getRenderTag(node.attrs, nodeRendererSpec);
+
+  // If the node is text and don't have attributes nor marks render its content as
+  // plain text instead of adding a 'span' tag to wrap it. Mimics the functionality
+  // of the editor.
+  if(isTextJSONNode(node) && !node.attrs && !node.marks) return node.text ?? '';
 
   // Gets the direct children nodes using the node content. An empty string is
   // equivalent to having no content when rendering the HTML.
   let children = content ? content.reduce((acc, child) => `${acc}${convertJSONContentToHTML(child)}`, '') : ''/*no children*/;
 
+  //, state In the case that the node is a Node View Renderer let the node renderer use
+  // its own render function to render the node and its children.
+  if(nodeRendererSpec.isNodeViewRenderer) return nodeRendererSpec.renderNodeView(node.attrs ?? {/*empty attributes*/}, children)/*nothing else to do*/;
+
   // NOTE: On the editor, a paragraph with no content is displayed as having a
   //       br node as it only child, this is an attempt to mimic that functionality
   //       and keep the HTML output consistent.
-  if(node.type === NodeName.PARAGRAPH && children.length < 1) children = `<br/>`;
+  if(isParagraphJSONNode(node) && children.length < 1) children = `<br/>`;
 
+  const tag = getRenderTag(node.attrs, nodeRendererSpec);
   const nodeSpec = NodeSpecs[node.type];
   const nodeRenderAttributes = getNodeRenderAttributes(node, nodeRendererSpec, nodeSpec),
         markRenderAttributes = getMarksRenderAttributes(node),
         attributes = mergeAttributes(nodeRenderAttributes, markRenderAttributes);
   const stringAttributes = renderAttributesToString(attributes);
 
-  return `<${tag} data-node-type="${node.type}" ${stringAttributes}>${text ?? ''}${children}</${tag}>`;
+  return `<${tag} ${DATA_NODE_TYPE}="${node.type}" ${stringAttributes}>${text ?? ''}${children}</${tag}>`;
 };
 
 // == Attributes ==================================================================
@@ -64,9 +71,7 @@ export const convertJSONContentToHTML = (node: JSONNode): HTMLString => {
 // Gets an object of attributes that will be used to render the node.
 const getNodeRenderAttributes = (node: JSONNode, nodeRendererSpec: NodeRendererSpec | undefined, nodeSpec: NodeSpec | undefined): HTMLAttributes=> {
   const attrs = node.attrs as Record<string, string | undefined/*attribute could be not defined*/>;
-   if(!nodeRendererSpec || !nodeRendererSpec.attributes || !attrs) return {/*empty attributes*/}/*nothing to do*/;
-
-   return getRenderAttributes(attrs, nodeRendererSpec, nodeSpec);
+  return getRenderAttributes(node.type, attrs, nodeRendererSpec, nodeSpec);
 };
 
 // -- Mark ------------------------------------------------------------------------
@@ -84,57 +89,81 @@ const getMarksRenderAttributes = (node: JSONNode): HTMLAttributes => {
   return renderAttributes;
 };
 const getMarkRenderAttributes = (mark: JSONMark, markRendererSpec: MarkRendererSpec | undefined, markSpec: MarkSpec | undefined): HTMLAttributes=> {
-  const attrs = mark.attrs as Record<string, string | undefined/*attribute could be not defined*/>;
-  if(!markRendererSpec) return {/*empty attributes*/}/*nothing to do*/;
-
-   return getRenderAttributes(attrs, markRendererSpec, markSpec);
+  const attrs = mark.attrs as Record<string, string | undefined/*attribute could be not defined*/> | undefined/*none*/;
+  return getRenderAttributes(mark.type, attrs, markRendererSpec, markSpec);
 };
 
 // --------------------------------------------------------------------------------
-// Gets the render attributes for the given node or mark.
-// NOTE: It's defined as function to use function overloads.
+// Gets the render attributes for the given Node or Mark. There are three steps on
+// how to get the render attributes:
+// 1. Attribute is defined on the NodeSpec/MarkSpec but not on the RendererSpec.
+//    In this case, a default renderer is used. If the attribute is not defined
+//    the current theme will be used.
+// 2. Attribute are present on the RendererSpec. In this case, the renderer is
+//    used. If the attribute is not defined the current theme will be used.
+// 3. Attribute are present on the Node/Mark itself but there is no corresponding
+//    rendererSpec nor NodeSpec/MarkSpec. This could a case of backwards/forwards
+//    compatibility problems, in this case a default rendered will be used.
+// NOTE: it's defined as function to use function overloads.
 // SEE: https://www.typescriptlang.org/docs/handbook/declaration-files/by-example.html#overloaded-functions
-export function getRenderAttributes(attrs: Record<string, string | undefined>, rendererSpec: NodeRendererSpec, nodeOrMarkSpec: NodeSpec | undefined): HTMLAttributes;
-export function getRenderAttributes(attrs: Record<string, string | undefined>, rendererSpec: MarkRendererSpec, nodeOrMarkSpec: MarkSpec | undefined): HTMLAttributes;
-export function getRenderAttributes(attrs: Record<string, string | undefined>, rendererSpec: NodeRendererSpec | MarkRendererSpec, nodeOrMarkSpec: NodeSpec | MarkSpec | undefined): HTMLAttributes {
-  let renderAttributes: HTMLAttributes = 'render' in rendererSpec ? rendererSpec.render : {};
+export function getRenderAttributes(nodeOrMarkName: NodeName | MarkName, attrs?: Record<string, string | undefined>, rendererSpec?: NodeRendererSpec, nodeOrMarkSpec?: NodeSpec): HTMLAttributes;
+export function getRenderAttributes(nodeOrMarkName: NodeName | MarkName, attrs?: Record<string, string | undefined>, rendererSpec?: MarkRendererSpec, nodeOrMarkSpec?: MarkSpec): HTMLAttributes;
+export function getRenderAttributes(nodeOrMarkName: NodeName | MarkName, attrs: Record<string, string | undefined> = {}, rendererSpec?: NodeRendererSpec | MarkRendererSpec, nodeOrMarkSpec?: NodeSpec | MarkSpec): HTMLAttributes {
+  // If the renderer spec doesn't any default attributes to render use and empty
+  // object.
+  let renderAttributes = rendererSpec?.render ??  {};
 
-  // merges the attributes with a default renderer
+  // get the render attributes based on the ones defined in the NodeSpec/MarkSpec.
   if(nodeOrMarkSpec && nodeOrMarkSpec.attrs) {
     Object.keys(nodeOrMarkSpec.attrs).forEach(attribute => {
-      // rendererSpec has a defined renderer for this attribute.
-      if(attribute in nodeOrMarkSpec) return;
-      // else -- use the default renderer.
-
-      const attributes = defaultAttributeRenderer(attribute, attrs[attribute]);
+      if(attribute in attrs) return/*prevent duplicated values*/;
+      const attributes = getRenderValue(nodeOrMarkName, rendererSpec, attribute, attrs);
       renderAttributes = mergeAttributes(renderAttributes, attributes);
     });
-  } /* else -- no attributes defined on the Node Spec */
+  } /* else -- no attributes defined on the NodeSpec/MarkSpec */
 
-  // merges the attributes from the rendererSpec
-  Object.entries(rendererSpec.attributes).forEach(([key, value]) => {
-    const attributes: HTMLAttributes = typeof value === 'function' ? value(attrs) : value;
+  // merge the attributes that are defined on the node
+  Object.entries(attrs).forEach(([key, value]) => {
+    const attributes = getRenderValue(nodeOrMarkName, rendererSpec, key, attrs);
     renderAttributes = mergeAttributes(renderAttributes, attributes);
   });
+
   return renderAttributes;
 }
 
 // -- Util ------------------------------------------------------------------------
+// parse an object of attributes into a string in the form of key="value".
+const renderAttributesToString = (attributes: HTMLAttributes) => Object.entries(attributes).reduce((acc, [key, value]) => `${acc} ${key}="${value}" `, '');
+
+// ................................................................................
+// gets the render attributes for the given attribute. It uses the corresponding
+// renderer spec to get the attributes, if there is not a defined renderer spec for
+// the given attribute the defaultAttributeRenderer will be used instead. If there
+// is no value defined for the attribute the current theme will be used.
+const getRenderValue = (nodeOrMarkName: NodeName | MarkName, rendererSpec: NodeRendererSpec | MarkRendererSpec | undefined, attribute: string, attrs: Record<string, string | undefined>): HTMLAttributes => {
+  // If the renderer spec has a renderer for this attribute use it.
+  if(rendererSpec && attribute in rendererSpec.attributes) {
+    const renderValue = rendererSpec.attributes[attribute as keyof typeof rendererSpec.attributes] as AttributeRenderer<any>;
+    return typeof renderValue === 'function' ? renderValue(attrs) : renderValue;
+  }/* else -- Attribute doesn't have a defined renderer */
+
+  return defaultAttributeRenderer(nodeOrMarkName, attribute, attrs[attribute]);
+};
+
 // Attributes defined on the Node Spec that don't define an Attribute renderer on
-// the Node Renderer Spec will use this default renderer.
-const defaultAttributeRenderer = (attribute: string, value: string | undefined): HTMLAttributes => {
+// the Node Renderer Spec will use this default renderer. If there is no value
+// defined for the attribute the current theme will be used.
+const defaultAttributeRenderer = (nodeOrMarkName: NodeName | MarkName, attribute: string, value: string | undefined): HTMLAttributes => {
+  // If not defined return an empty object.
   if(!value) return {}/*nothing to render*/;
 
   if(isStyleAttribute(attribute)) return { style: `${snakeCaseToKebabCase(attribute)}: ${value};` };
-  // else -- don't have a default renderer.
 
-  return {/*empty attributes*/};
+  return { [attribute]: value };
 };
 
-// parse an object of attributes into a string in the form of key="value".
-const renderAttributesToString = (attributes: HTMLAttributes) => Object.entries(attributes).reduce((acc, [key, value]) => `${key}="${value}" `, '');
-
-// Merge two objects of attributes.
+// ................................................................................
+// merge two Attribute objects
 export const mergeAttributes = (a: HTMLAttributes, b: HTMLAttributes): HTMLAttributes => {
   const attributes = { ...a }/*copy*/;
 
@@ -146,15 +175,15 @@ export const mergeAttributes = (a: HTMLAttributes, b: HTMLAttributes): HTMLAttri
   return attributes;
 };
 
-// Merges two attributes values into one value. If there is no way to merge this
-// values the second one will be used.
+// merges two attributes values into a single value. If there is no way to merge this
+// values the second one are used
 const mergeAttribute = (attribute: string, a: string | undefined, b: string | undefined ): string | undefined => {
   if(!a) return b;
   if(!b) return a;
   // else -- they are both defined, will try to merge them.
 
-  // Append the b to a.
-  // NOTE: If b have colliding attributes with a the value of b will be used.
+  // append the b to a
+  // NOTE: if 'b' has Attributes that collide with 'a' then the value of b is used
   if(attribute === 'style') return `${a} ${b}`;
   // else -- cannot be merged.
 

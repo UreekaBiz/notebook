@@ -48,7 +48,6 @@ export {
   JSONNode,
   NodeName,
   NodeTag,
-  NodeType,
   NodeIdentifier,
   getNodeName,
 

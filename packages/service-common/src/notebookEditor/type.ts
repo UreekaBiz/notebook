@@ -1,18 +1,16 @@
-import { NotebookSchemaVersion } from '../notebook/type';
 import { Creatable } from '../util/datastore';
 import { hashNumber } from '../util/hash';
 import { Identifier } from '../util/type';
 import { UserIdentifier } from '../util/user';
+import { NotebookDocumentContent } from './proseMirror/document';
 import { NodeContent } from './proseMirror/node';
+import { NotebookSchemaVersion } from './proseMirror/schema';
 
 // ********************************************************************************
 // identifies the Client / Session that made the Versions from a given Editor
 // CHECK: replace with UserIdentifier + SessionIdentifier? At a minimum this *must*
 //        be UserIdentifier. But is the additional session granularity useful / needed?
 export type ClientIdentifier = UserIdentifier;
-
-// == Document ====================================================================
-export type NotebookDocumentContent = NodeContent/*alias*/;
 
 // == Version =====================================================================
 // identifies when there is no NotebookVersion yet. It is also the starting value

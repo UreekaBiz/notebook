@@ -2,15 +2,11 @@ import { Node as ProseMirrorNode, NodeSpec } from 'prosemirror-model';
 
 import { noNodeSpecAttributeDefaultValue, AttributeType, AttributesTypeFromNodeSpecAttributes } from '../attribute';
 import { NodeRendererSpec } from '../htmlRenderer/type';
-import { NodeIdentifier, NodeName, NodeType } from '../node';
+import { JSONNode, NodeGroup, NodeIdentifier, NodeName } from '../node';
 import { NotebookSchemaType } from '../schema';
 
 // ********************************************************************************
-export enum HeadingLevel { One = 1, Two = 2, Three = 3 }
-export const isHeadingLevel = (level: number): level is HeadingLevel => level in HeadingLevel;
-
-// ================================================================================
-// -- Attribute -------------------------------------------------------------------
+// == Attribute ===================================================================
 // NOTE: This values must have matching types the ones defined in the Extension.
 const HeadingAttributesSpec = {
   [AttributeType.Id]: noNodeSpecAttributeDefaultValue<NodeIdentifier>(),
@@ -38,25 +34,18 @@ const HeadingAttributesSpec = {
 };
 export type HeadingAttributes = AttributesTypeFromNodeSpecAttributes<typeof HeadingAttributesSpec>;
 
-// ================================================================================
+// == Spec ========================================================================
 // -- Node Spec -------------------------------------------------------------------
 export const HeadingNodeSpec: NodeSpec = {
-  name: NodeName.HEADING,
+  name: NodeName.HEADING/*expected and guaranteed to be unique*/,
 
-  group: NodeType.BLOCK,
-  content: `${NodeType.INLINE}*`,
+  group: NodeGroup.BLOCK,
+  content: `${NodeGroup.INLINE}*`,
   defining: true,
 
   attrs: HeadingAttributesSpec,
 };
 
-// -- Node Type -------------------------------------------------------------------
-// NOTE: this is the only way since PM does not provide a way to specify the type
-//       of the attributes
-export type HeadingNodeType = ProseMirrorNode<NotebookSchemaType> & { attrs: HeadingAttributes; };
-export const isHeadingNode = (node: ProseMirrorNode<NotebookSchemaType>): node is HeadingNodeType => node.type.name === NodeName.HEADING;
-
-// ================================================================================
 // -- Render Spec -----------------------------------------------------------------
 export const HeadingNodeRendererSpec: NodeRendererSpec<HeadingAttributes> = {
   tag: attributes => {
@@ -71,44 +60,31 @@ export const HeadingNodeRendererSpec: NodeRendererSpec<HeadingAttributes> = {
     }
   },
 
-  attributes: {
-    [AttributeType.FontSize]: attributes => {
-      let fontSize;
-      if(attributes[AttributeType.FontSize]) fontSize = attributes[AttributeType.FontSize];
-      else {
-        switch(attributes[AttributeType.Level]) {
-          default: /*use H1 if level is unknown*/
-          case HeadingLevel.One:
-            fontSize = '34px;';
-            break;
-          case HeadingLevel.Two:
-            fontSize = '25px;';
-            break;
-          case HeadingLevel.Three:
-            fontSize = '20px;';
-            break;
-          }
-      }
-      return { style: `font-size: ${fontSize};` };
-    },
-    [AttributeType.TextColor]: attributes => {
-      let color;
-      if(attributes[AttributeType.TextColor]) color = attributes[AttributeType.TextColor];
-      else {
-        switch(attributes[AttributeType.Level]) {
-          default: /*use H1 if level is unknown*/
-          case HeadingLevel.One:
-            color = '#1C5987';
-            break;
-          case HeadingLevel.Two:
-            color = '#4E7246';
-            break;
-          case HeadingLevel.Three:
-            color = '#89B181';
-            break;
-          }
-      }
-      return { style: `color: ${color};` };
-    },
-  },
+  attributes: {/*use the default renderer on all attributes*/},
 };
+
+// == Type ========================================================================
+export enum HeadingLevel { One = 1, Two = 2, Three = 3 }
+export const isHeadingLevel = (level: number): level is HeadingLevel => level in HeadingLevel;
+
+
+/** Gets the heading level from a H1, H2 or H3 tag. This tag is case insensitive. */
+export const getHeadingLevelFromTag = (tag: string): HeadingLevel | undefined => {
+  const match = tag.match(/^h([1-3])$/i);
+  if(!match) return undefined/*invalid heading level*/;
+
+  const level = parseInt(match[1]/*second element is the one in the group selection from the regex*/);
+  // Only return a valid value.
+  if(isHeadingLevel(level)) return level/*nothing else to do*/;
+  return undefined;
+};
+
+// -- Node Type -------------------------------------------------------------------
+// NOTE: this is the only way since PM does not provide a way to specify the type
+//       of the attributes
+export type HeadingNodeType = ProseMirrorNode<NotebookSchemaType> & { attrs: HeadingAttributes; };
+export const isHeadingNode = (node: ProseMirrorNode<NotebookSchemaType>): node is HeadingNodeType => node.type.name === NodeName.HEADING;
+
+// -- JSON Node Type --------------------------------------------------------------
+export type HeadingJSONNodeType = JSONNode<HeadingAttributes> & { type: NodeName.HEADING; };
+export const isHeadingJSONNode = (node: JSONNode): node is HeadingJSONNodeType => node.type === NodeName.HEADING;

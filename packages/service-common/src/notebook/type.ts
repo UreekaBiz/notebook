@@ -1,4 +1,5 @@
-import { NotebookDocumentContent } from '../notebookEditor/type';
+import { NotebookDocumentContent } from '../notebookEditor/proseMirror/document';
+import { NotebookSchemaVersion } from '../notebookEditor/proseMirror/schema';
 import { Creatable, ObjectTuple, Updatable } from '../util/datastore';
 import { UserIdentifier } from '../util/user';
 import { Identifier } from '../util/type';
@@ -11,15 +12,6 @@ export enum NotebookType {
 // == Notebook ====================================================================
 /** @see {@link Notebook#name} */
 export const DEFAULT_NOTEBOOK_NAME = 'Untitled';
-
-// ................................................................................
-/** the schema version of the {@link Notebook}
-  *  @see Notebook#schemaVersion */
-// NOTE: must be updated when adding breaking changes to the Schema Notebook
-export enum NotebookSchemaVersion {
-  V1 = 'v1'/*initial version -- no longer used*/,
-  V2 = 'v2'/*moved away from 'steps' and confusion around 'version' (schema vs. PM 'step), etc*/,
-}
 
 // ................................................................................
 export type NotebookIdentifier = Identifier;

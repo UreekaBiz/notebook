@@ -7,7 +7,7 @@ export type HTMLAttributes = Record<string, string>;
 // Is there any other type of attribute that is not a string? If so add it below.
 export type AttributeValue = string;
 export enum AttributeType {
-  // CSS Styles
+  // -- CSS Styles ----------------------------------------------------------------
   Width = 'width',
   Height = 'height',
 
@@ -21,16 +21,19 @@ export enum AttributeType {
   PaddingLeft = 'paddingLeft',
   PaddingRight = 'paddingRight',
 
-  // Text Style
+  // -- Text Style ----------------------------------------------------------------
   FontSize = 'fontSize',
   TextColor = 'color',
   TextAlign = 'textAlign',
   VerticalAlign = 'verticalAlign',
 
-  // Custom
+  // -- Custom --------------------------------------------------------------------
+  // .. General ...................................................................
   Id = 'id',
-  Level = 'level',
   InitialMarksSet = 'initialMarksSet',
+
+  // .. Heading ...................................................................
+  Level = 'level',
 }
 
 export type StyleAttributes = {
@@ -75,25 +78,39 @@ export const isStyleAttribute = (property: any) => styleAttributeSet.has(propert
 
 // -- Spacing ---------------------------------------------------------------------
 export type Margin = {
-  [AttributeType.MarginTop]: string;
-  [AttributeType.MarginBottom]: string;
-  [AttributeType.MarginLeft]: string;
-  [AttributeType.MarginRight]: string;
+  [AttributeType.MarginTop]: string | undefined;
+  [AttributeType.MarginBottom]: string | undefined;
+  [AttributeType.MarginLeft]: string | undefined;
+  [AttributeType.MarginRight]: string | undefined;
 };
 export type MarginAttribute = keyof Margin;
 export const isMarginAttribute = (attribute: AttributeType) => attribute.includes('margin');
 
 export type Padding = {
-  [AttributeType.PaddingTop]: string;
-  [AttributeType.PaddingBottom]: string;
-  [AttributeType.PaddingLeft]: string;
-  [AttributeType.PaddingRight]: string;
+  [AttributeType.PaddingTop]: string | undefined;
+  [AttributeType.PaddingBottom]: string | undefined;
+  [AttributeType.PaddingLeft]: string | undefined;
+  [AttributeType.PaddingRight]: string | undefined;
 };
 export type PaddingAttribute = keyof Padding;
 export const isPaddingAttribute = (attribute: AttributeType) => attribute.includes('padding');
 
 export type SpacingType = 'margin' | 'padding';
 export type SpacingAttribute = MarginAttribute | PaddingAttribute;
+
+export const getOppositeSpacingAttribute = (attribute: SpacingAttribute) => {
+  switch(attribute) {
+    case AttributeType.MarginBottom: return AttributeType.MarginTop;
+    case AttributeType.MarginTop: return AttributeType.MarginBottom;
+    case AttributeType.MarginLeft: return AttributeType.MarginRight;
+    case AttributeType.MarginRight: return AttributeType.MarginLeft;
+
+    case AttributeType.PaddingBottom: return AttributeType.PaddingTop;
+    case AttributeType.PaddingTop: return AttributeType.PaddingBottom;
+    case AttributeType.PaddingLeft: return AttributeType.PaddingRight;
+    case AttributeType.PaddingRight: return AttributeType.PaddingLeft;
+  }
+};
 
 // -- Alignment -------------------------------------------------------------------
 export enum TextAlign {
@@ -135,4 +152,26 @@ export type AttributesTypeFromNodeSpecAttributes<A extends NodeSpecAttributes> =
 export const snakeCaseToKebabCase = (str: string) => {
   const res = Array.from(str).reduce((acc, char) => `${acc}${char === char.toUpperCase() ? `-${char.toLowerCase()}` : char}`, '');
   return res;
+};
+
+// -- Merging ---------------------------------------------------------------------
+// Symbol that is used when the merged value of the given attributes is invalid.
+// This usually means that the values are not compatible in some way.
+export const InvalidMergedAttributeValue = Symbol('invalidMergedAttribute');
+export type MergedAttributeValue = AttributeValue | typeof InvalidMergedAttributeValue/*could not be merged*/ | undefined/*no value*/;
+
+// Merges the given AttributeValues into one MergedAttributeValue.
+export const mergeAttributeValues = (a: MergedAttributeValue | undefined, b: MergedAttributeValue | undefined): MergedAttributeValue => {
+  // If one of the values is invalid it cannot be merged.
+  if(a === InvalidMergedAttributeValue || b === InvalidMergedAttributeValue) return InvalidMergedAttributeValue;
+
+  // If one of the values if not defined will default to the other value.
+  if(!a) return b;
+  if(!b) return a;
+
+  // If they are equal return either of those
+  if(a === b) return a;
+
+  // else -- the value is invalid.
+  return InvalidMergedAttributeValue;
 };
