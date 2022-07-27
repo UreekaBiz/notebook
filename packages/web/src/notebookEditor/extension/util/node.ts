@@ -214,7 +214,7 @@ export const isFullySelected = (state: EditorState, node: ProseMirrorNode, pos: 
   const selectedNode = getSelectedNode(state);
   const ascendants = [selectedNode];
 
-  for(let i = $anchor.depth; i >= 0; i--){
+  for(let i=$anchor.depth; i>=0; i--) {
     const ascendant = $anchor.node(i);
     ascendants.push(ascendant);
   }

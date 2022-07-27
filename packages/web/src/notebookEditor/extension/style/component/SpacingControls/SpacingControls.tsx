@@ -92,7 +92,7 @@ export const SpacingControls = ({ margin, padding, name, onChange }:Props) => {
 
   // == Handlers ==================================================================
   const handleEnd = () => {
-    for(let key in localState){
+    for(let key in localState) {
       const attribute = key as SpacingAttribute;
       onChange(attribute, `${localState[attribute]}${Unit.Pixel}`);
     }

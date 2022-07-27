@@ -50,7 +50,7 @@ function SettingsPage() {
 
       setStatus('complete');
       toast({ title: 'Profile updated', status: 'success' });
-    } catch(error){
+    } catch(error) {
       log.error(`Error updating profile for user (${user.authedUser.userId}): `, error);
       if(!isMounted()) return/*nothing else to do*/;
 
