@@ -16,9 +16,9 @@ interface Props {
 
   // FIXME: get the options from chakra
   /** the size of the avatar*/
-  avatarSize: 'sm' | 'md' | 'lg' | 'xl';
+  avatarSize?: 'sm' | 'md' | 'lg' | 'xl';
   /** the size of the login button */
-  buttonSize: 'sm' | 'md' | 'lg' | 'xl';
+  buttonSize?: 'sm' | 'md' | 'lg' | 'xl';
 }
 /**
  * Component that displays the user's avatar. This avatar functions as a Menu since
@@ -54,7 +54,7 @@ export const AuthAvatar: React.FC<Props> = ({ avatarSize, buttonSize, showLogIn 
       </Link>
     );
 
-  } // else -- user is logged in
+  } // else -- user is auth'ed
 
   return (
     <Menu>
