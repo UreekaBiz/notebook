@@ -1,6 +1,6 @@
 import { Mark as ProseMirrorMark, MarkSpec } from 'prosemirror-model';
 
-import { AttributesTypeFromNodeSpecAttributes, AttributeType, noNodeSpecAttributeDefaultValue } from '../attribute';
+import { noNodeOrMarkSpecAttributeDefaultValue, AttributesTypeFromNodeSpecAttributes, AttributeType } from '../attribute';
 import { MarkRendererSpec } from '../htmlRenderer/type';
 import { JSONMark, MarkName } from '../mark';
 import { NotebookSchemaType } from '../schema';
@@ -9,8 +9,8 @@ import { NotebookSchemaType } from '../schema';
 // == Attribute ===================================================================
 // NOTE: This values must have matching types the ones defined in the Extension.
 const TextStyleAttributesSpec = {
-  [AttributeType.TextColor]: noNodeSpecAttributeDefaultValue<string>(),
-  [AttributeType.FontSize]: noNodeSpecAttributeDefaultValue<string>(),
+  [AttributeType.TextColor]: noNodeOrMarkSpecAttributeDefaultValue<string>(),
+  [AttributeType.FontSize]: noNodeOrMarkSpecAttributeDefaultValue<string>(),
 };
 export type TextStyleAttributes = AttributesTypeFromNodeSpecAttributes<typeof TextStyleAttributesSpec>;
 

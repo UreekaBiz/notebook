@@ -138,12 +138,12 @@ export type NodeSpecAttributes = Partial<Record<AttributeType, NodeSpecAttribute
 //       this level which type of attribute is expected on the Extension itself
 //       and the HTML renderer.
 // SEE: node.ts
-export const noNodeSpecAttributeDefaultValue = <T>() => ({ default: undefined/*no default value*/ as unknown as T });
+export const noNodeOrMarkSpecAttributeDefaultValue = <T>() => ({ default: undefined/*no default value*/ as unknown as T });
 
 // Infers the types of the attributes from the NodeSpec using the default value
-// provided by noNodeSpecAttributeDefaultValue. This function should be used when
-// creating a NodeSpec and getting the types that will be shared all across the
-// editor including the extension and the HTML renderer.
+// provided by noNodeOrMarkSpecAttributeDefaultValue. This function should be used
+// when creating a NodeSpec and getting the types that will be shared all across
+// the editor including the extension and the HTML renderer.
 // @ts-ignore: 'default' is not assignable to key of type A[key]. TS cannot infer
 //            that 'default' will always be present since defined on the Generic.
 export type AttributesTypeFromNodeSpecAttributes<A extends NodeSpecAttributes> = { [key in keyof A]: A[key]['default'] };

@@ -1,6 +1,6 @@
 import { Node as ProseMirrorNode, NodeSpec } from 'prosemirror-model';
 
-import { noNodeSpecAttributeDefaultValue, AttributeType, AttributesTypeFromNodeSpecAttributes } from '../attribute';
+import { noNodeOrMarkSpecAttributeDefaultValue, AttributeType, AttributesTypeFromNodeSpecAttributes } from '../attribute';
 import { NodeRendererSpec } from '../htmlRenderer/type';
 import { JSONNode, NodeGroup, NodeIdentifier, NodeName } from '../node';
 import { NotebookSchemaType } from '../schema';
@@ -9,28 +9,28 @@ import { NotebookSchemaType } from '../schema';
 // == Attribute ===================================================================
 // NOTE: This values must have matching types the ones defined in the Extension.
 const HeadingAttributesSpec = {
-  [AttributeType.Id]: noNodeSpecAttributeDefaultValue<NodeIdentifier>(),
+  [AttributeType.Id]: noNodeOrMarkSpecAttributeDefaultValue<NodeIdentifier>(),
 
-  [AttributeType.Level]: noNodeSpecAttributeDefaultValue<HeadingLevel>(),
+  [AttributeType.Level]: noNodeOrMarkSpecAttributeDefaultValue<HeadingLevel>(),
 
   // Since headings have a default set of marks applied to them on creation, they
   // are required to have the 'initialMarksSet' attribute to ensure correct
   // creation behavior.
   // SEE: setDefaultMarks
-  [AttributeType.InitialMarksSet]: noNodeSpecAttributeDefaultValue<boolean>(),
+  [AttributeType.InitialMarksSet]: noNodeOrMarkSpecAttributeDefaultValue<boolean>(),
 
-  [AttributeType.FontSize]: noNodeSpecAttributeDefaultValue<string>(),
-  [AttributeType.TextColor]: noNodeSpecAttributeDefaultValue<string>(),
+  [AttributeType.FontSize]: noNodeOrMarkSpecAttributeDefaultValue<string>(),
+  [AttributeType.TextColor]: noNodeOrMarkSpecAttributeDefaultValue<string>(),
 
-  [AttributeType.PaddingTop]: noNodeSpecAttributeDefaultValue<string>(),
-  [AttributeType.PaddingBottom]: noNodeSpecAttributeDefaultValue<string>(),
-  [AttributeType.PaddingLeft]: noNodeSpecAttributeDefaultValue<string>(),
-  [AttributeType.PaddingRight]: noNodeSpecAttributeDefaultValue<string>(),
+  [AttributeType.PaddingTop]: noNodeOrMarkSpecAttributeDefaultValue<string>(),
+  [AttributeType.PaddingBottom]: noNodeOrMarkSpecAttributeDefaultValue<string>(),
+  [AttributeType.PaddingLeft]: noNodeOrMarkSpecAttributeDefaultValue<string>(),
+  [AttributeType.PaddingRight]: noNodeOrMarkSpecAttributeDefaultValue<string>(),
 
-  [AttributeType.MarginTop]: noNodeSpecAttributeDefaultValue<string>(),
-  [AttributeType.MarginBottom]: noNodeSpecAttributeDefaultValue<string>(),
-  [AttributeType.MarginLeft]: noNodeSpecAttributeDefaultValue<string>(),
-  [AttributeType.MarginRight]: noNodeSpecAttributeDefaultValue<string>(),
+  [AttributeType.MarginTop]: noNodeOrMarkSpecAttributeDefaultValue<string>(),
+  [AttributeType.MarginBottom]: noNodeOrMarkSpecAttributeDefaultValue<string>(),
+  [AttributeType.MarginLeft]: noNodeOrMarkSpecAttributeDefaultValue<string>(),
+  [AttributeType.MarginRight]: noNodeOrMarkSpecAttributeDefaultValue<string>(),
 };
 export type HeadingAttributes = AttributesTypeFromNodeSpecAttributes<typeof HeadingAttributesSpec>;
 
