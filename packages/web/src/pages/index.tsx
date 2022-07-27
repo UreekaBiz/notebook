@@ -1,23 +1,22 @@
-import Link from 'next/link';
+import { Box } from '@chakra-ui/react';
 
 import { WrappedPage } from 'core/wrapper';
-import { coreRoutes } from 'shared/routes';
+import { HeroBanner } from 'ui/HeroBanner';
 
 // ********************************************************************************
 // NOTE: this page is using Static Site Generation. See pages/README.md
 // == Client Side =================================================================
-function IndexPage() {
+function HomePage() {
   return (
-    <div>
-      Hero page!!!
-      Click <Link href={coreRoutes.notebook}><a>here</a></Link> to go to Notebook List page 🤖
-    </div>
+    <Box>
+      <HeroBanner />
+    </Box>
   );
 }
 
 // --------------------------------------------------------------------------------
 // SEE: core/wrapper.tsx for more information
-const Page: WrappedPage = IndexPage;
+const Page: WrappedPage = HomePage;
       Page.wrappers = [/*no wrappers*/];
 
 export default Page;
