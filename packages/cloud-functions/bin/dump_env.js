@@ -60,6 +60,12 @@ const ENVIRONMENT = (() => {
 })();
 
 // ................................................................................
+// NOTE: this was introduced to further differentiate the environments in cases
+//       where 'ENVIRONMENT' is too coarse
+// SEE: @web-service: /util/environment.ts
+const isLocalDevelopment = () => !isBlank(process.env['FIREBASE_PRIVATE_KEY']);
+
+// ................................................................................
 // NOTE:  ensure that src/util/environment.ts matches!
 // NOTE: if regexp's are used then the first capture group is the variable name and
 //       the remaining group(s) are the (possibly nested) object value. Only a
@@ -95,6 +101,7 @@ const isBlank = (s) => {
 
 const environment = (() => {
   // pull the defined variables from the env
+  let variables;
   if(!isLocalDevelopment()) {
     if(ENVIRONMENT === 'production') variables = [...commonVariables, ...stagingVariables, ...productionVariables];
     else if(ENVIRONMENT === 'staging') variables = [...commonVariables, ...stagingVariables];
