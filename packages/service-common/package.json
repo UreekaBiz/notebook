@@ -19,6 +19,7 @@
   },
   "dependencies": {
     "crypto-js": "4.1.1",
-    "nanoid": "3.3.4"
+    "nanoid": "3.3.4",
+    "uri-js": "4.4.1"
   }
 }

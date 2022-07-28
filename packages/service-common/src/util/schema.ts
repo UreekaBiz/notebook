@@ -1,3 +1,4 @@
+import * as URI from 'uri-js';
 import { object, reach, string, AnySchema, ObjectSchema, ValidationError } from 'yup';
 import { MixedSchema } from 'yup/lib/mixed';
 import { Assign, ObjectShape } from 'yup/lib/object';
@@ -123,14 +124,29 @@ export const RELAXED_URL_REGEXP = /^(http:\/\/www\.|https:\/\/www\.|http:\/\/|ht
 export const relaxedUrlSchema = string()
     .matches(RELAXED_URL_REGEXP);
 
-// a string()-based URL schema that allows for 'localhost'. Specifically, it only
-// adds 'localhost' to the existing Yup regex
+// a string()-based strict URL schema that allows for users to enter URL's such as
+// 'localhost'. This implementation is not using Yups' built-in URL schema since it
+// doesn't allow 'localhost'. A RegExp is not used since creating a RegExp that
+// complains with the CWE-1333 error is not a easy task. The schema uses an RFC 3986
+// compliant scheme that do this work.
 // NOTE: the following bug is not fixed: https://github.com/jquense/yup/issues/224
 // REF: https://github.com/jquense/yup/blob/master/src/string.js#L9
-export const URL_REGEXP = /^((https?|ftp):)?\/\/(((([a-z]|\d|-|\.|_|~|[\u00A0-\uD7FF\uF900-\uFDCF\uFDF0-\uFFEF])|(%[\da-f]{2})|[!\$&'\(\)\*\+,;=]|:)*@)?(localhost|((\d|[1-9]\d|1\d\d|2[0-4]\d|25[0-5])\.(\d|[1-9]\d|1\d\d|2[0-4]\d|25[0-5])\.(\d|[1-9]\d|1\d\d|2[0-4]\d|25[0-5])\.(\d|[1-9]\d|1\d\d|2[0-4]\d|25[0-5]))|((([a-z]|\d|[\u00A0-\uD7FF\uF900-\uFDCF\uFDF0-\uFFEF])|(([a-z]|\d|[\u00A0-\uD7FF\uF900-\uFDCF\uFDF0-\uFFEF])([a-z]|\d|-|\.|_|~|[\u00A0-\uD7FF\uF900-\uFDCF\uFDF0-\uFFEF])*([a-z]|\d|[\u00A0-\uD7FF\uF900-\uFDCF\uFDF0-\uFFEF])))\.)+(([a-z]|[\u00A0-\uD7FF\uF900-\uFDCF\uFDF0-\uFFEF])|(([a-z]|[\u00A0-\uD7FF\uF900-\uFDCF\uFDF0-\uFFEF])([a-z]|\d|-|\.|_|~|[\u00A0-\uD7FF\uF900-\uFDCF\uFDF0-\uFFEF])*([a-z]|[\u00A0-\uD7FF\uF900-\uFDCF\uFDF0-\uFFEF])))\.?)(:\d*)?)(\/((([a-z]|\d|-|\.|_|~|[\u00A0-\uD7FF\uF900-\uFDCF\uFDF0-\uFFEF])|(%[\da-f]{2})|[!\$&'\(\)\*\+,;=]|:|@)+(\/(([a-z]|\d|-|\.|_|~|[\u00A0-\uD7FF\uF900-\uFDCF\uFDF0-\uFFEF])|(%[\da-f]{2})|[!\$&'\(\)\*\+,;=]|:|@)*)*)?)?(\?((([a-z]|\d|-|\.|_|~|[\u00A0-\uD7FF\uF900-\uFDCF\uFDF0-\uFFEF])|(%[\da-f]{2})|[!\$&'\(\)\*\+,;=]|:|@)|[\uE000-\uF8FF]|\/|\?)*)?(\#((([a-z]|\d|-|\.|_|~|[\u00A0-\uD7FF\uF900-\uFDCF\uFDF0-\uFFEF])|(%[\da-f]{2})|[!\$&'\(\)\*\+,;=]|:|@)|\/|\?)*)?$/i;
 export const urlSchema = string()
-    .matches(URL_REGEXP,
-             { excludeEmptyString: true/*matches .url() behavior*/ });
+    .test('URL_REGEXP', 'Invalid URL', value => {
+      if(value === undefined) return false/*value must be defined*/;
+
+      try {
+        const parsed = URI.parse(value);
+        // parsed value must have a defined host and scheme
+        if(parsed.host === undefined || parsed.scheme === undefined) return false;
+        return true/*by contract*/;
+      } catch(error){
+        // Unexpected error happened while parsing the URL. URI.parse() should only
+        // return an invalid object that is handled above.
+        console.error(`Error parsing URL for value (${value}):`, error);
+        return false/*by contract*/;
+      }
+    });
 
 // .. Social ......................................................................
 // TikTok handle (2-24 chars (numbers, letters, underscore or periods with possible
