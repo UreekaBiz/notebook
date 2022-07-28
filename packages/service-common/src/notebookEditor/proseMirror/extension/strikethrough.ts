@@ -19,7 +19,7 @@ export const StrikethroughMarkRendererSpec: MarkRendererSpec<StrikethroughAttrib
   // NOTE: The tag is only used for the Editor, the HTML renderer will use the tag
   //       of the TextNode instead. SEE: ./renderer.ts
   tag: 's',
-  render: {/*currently nothing*/},
+  render: { style: 'text-decoration: line-through;' },
 
   attributes: {/*no attributes*/},
 };
