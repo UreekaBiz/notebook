@@ -21,19 +21,21 @@ function App({ Component, pageProps }: Props) {
   const wrappers = Component.wrappers ?? [/*none*/];
 
   return (
-    <ErrorBoundary>
+    <>
       <Head>
         <title>Ureeka | Notebook</title>
         <meta property="og:title" content="Ureeka | Notebook" key="title" />
       </Head>
       <ChakraProvider theme={theme}>
-        <FullPageLayout>
-          <AuthUserProvider>
-            {getPageWrapper(wrappers, <Component {...pageProps} />)}
-          </AuthUserProvider>
-        </FullPageLayout>
+        <ErrorBoundary>
+          <FullPageLayout>
+            <AuthUserProvider>
+              {getPageWrapper(wrappers, <Component {...pageProps} />)}
+            </AuthUserProvider>
+          </FullPageLayout>
+        </ErrorBoundary>
       </ChakraProvider>
-    </ErrorBoundary>
+    </>
   );
 }
 
