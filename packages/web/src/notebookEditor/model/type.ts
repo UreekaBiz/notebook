@@ -25,9 +25,11 @@ export enum ExtensionName {
 }
 
 // == Priority ====================================================================
-// NOTE: priority can affect extensions, nodes and marks
-// NOTE: if priority is left unspecified, it defaults to 100
-// NOTE: names match extension, node or mark names for sanity.
+// NOTE: priority can affect extensions, Nodes and Marks
+
+// -- Extension -------------------------------------------------------------------
+// NOTE: if extension priority is left unspecified, it defaults to 100
+// NOTE: names match extension, Node or Mark names for sanity.
 export enum ExtensionPriority {
   // -- Extension -----------------------------------------------------------------
   UNIQUE_NODE_ID = 120/*T&E*/,
@@ -35,16 +37,16 @@ export enum ExtensionPriority {
   SET_DEFAULT_MARKS = 118,
 
   // -- Node ----------------------------------------------------------------------
-  // NOTE: Paragraph must have a higher priority than other block nodes since it
-  //       is the 'default' block node (by convention). If its priority is left
-  //       unspecified, the default block node on document creation will be the
-  //       first block node encountered in the editor extension array
+  // NOTE: Paragraph must have a higher priority than other block Nodes since it
+  //       is the 'default' block Node (by convention). If its priority is left
+  //       unspecified, the default block Node on document creation will be the
+  //       first block Node encountered in the editor extension array
   //       (SEE: notebookEditor/type.ts)
   PARAGRAPH = 117,
 
   // NOTE: Since the text extension adds a \t whenever Tab is pressed, but this
   //       behavior is not always guaranteed to be the desired one (e.g. when
-  //       going through a list node), the text extension runs last (SEE: note
+  //       going through a list Node), the text extension runs last (SEE: note
   //       above for default extension priority). This ensures that the shortcuts
   //       defined in the text extension run only if their trigger was not handled
   //       by another extension previously
@@ -54,7 +56,11 @@ export enum ExtensionPriority {
   // Currently nothing
 }
 
+// NOTE: if parse rule priority is left unspecified, it defaults to 50
+// NOTE: names match extension, Node or Mark names for sanity.
+export enum ParseRulePriority {/*currently nothing*/}
+
 // == Selection ===================================================================
-// The depth of the selection from the current node.
-// 0 is the base node, selection.depth is the parent node.
-export type SelectionDepth = number | undefined/*current node*/;
+// the depth of the selection from the current Node. 0 is the base Node,
+// `selection.depth` is the parent Node.
+export type SelectionDepth = number | undefined/*current Node*/;

@@ -83,6 +83,7 @@ export {
   // -- Mark Specs ----------------------------------------------------------------
   BoldMarkSpec,
   MarkSpecs,
+  StrikethroughMarkSpec,
   TextStyleMarkSpec,
 
   // -- Mark Types ----------------------------------------------------------------

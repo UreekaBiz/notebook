@@ -6,6 +6,7 @@ import { BoldMarkRendererSpec } from '../extension/bold';
 import { DocumentNodeRendererSpec } from '../extension/document';
 import { HeadingNodeRendererSpec } from '../extension/heading';
 import { isParagraphJSONNode, ParagraphNodeRendererSpec } from '../extension/paragraph';
+import { StrikethroughMarkRendererSpec } from '../extension/strikethrough';
 import { isTextJSONNode, TextNodeRendererSpec } from '../extension/text';
 import { TextStyleMarkRendererSpec } from '../extension/textStyle';
 import { JSONMark, MarkName } from '../mark';
@@ -24,6 +25,7 @@ export const NodeRendererSpecs: Record<NodeName, NodeRendererSpec> = {
 
 export const MarkRendererSpecs: Record<MarkName, MarkRendererSpec> = {
   [MarkName.BOLD]: BoldMarkRendererSpec,
+  [MarkName.STRIKETHROUGH]: StrikethroughMarkRendererSpec as any/*FIXME!!!*/,
   [MarkName.TEXT_STYLE]: TextStyleMarkRendererSpec as any/*FIXME!!!*/,
 };
 
@@ -38,20 +40,20 @@ export const convertJSONContentToHTML = (node: JSONNode): HTMLString => {
   const { type, content, text } = node;
   const nodeRendererSpec = NodeRendererSpecs[type];
 
-  // If the node is text and don't have attributes nor marks render its content as
+  // if the Node is text and doesn't have Attributes nor Narks render its content as
   // plain text instead of adding a 'span' tag to wrap it. Mimics the functionality
-  // of the editor.
+  // of the Editor.
   if(isTextJSONNode(node) && !node.attrs && !node.marks) return node.text ?? '';
 
-  // Gets the direct children nodes using the node content. An empty string is
+  // gets the direct children Nodes using the Node content. An empty string is
   // equivalent to having no content when rendering the HTML.
   let children = content ? content.reduce((acc, child) => `${acc}${convertJSONContentToHTML(child)}`, '') : ''/*no children*/;
 
-  //, state In the case that the node is a Node View Renderer let the node renderer use
-  // its own render function to render the node and its children.
+  // in the case that the Node is a Node View Renderer let the Node renderer use
+  // its own render function to render the Node and its children.
   if(nodeRendererSpec.isNodeViewRenderer) return nodeRendererSpec.renderNodeView(node.attrs ?? {/*empty attributes*/}, children)/*nothing else to do*/;
 
-  // NOTE: On the editor, a paragraph with no content is displayed as having a
+  // NOTE: in the Editor, a paragraph with no content is displayed as having a
   //       br node as it only child, this is an attempt to mimic that functionality
   //       and keep the HTML output consistent.
   if(isParagraphJSONNode(node) && children.length < 1) children = `<br/>`;
@@ -78,7 +80,7 @@ const getNodeRenderAttributes = (node: JSONNode, nodeRendererSpec: NodeRendererS
 const getMarksRenderAttributes = (node: JSONNode): HTMLAttributes => {
   if(!node.marks) return {}/*no marks to parse*/;
 
-  // Merges all attributes from the marks of the given node.
+  // merges all Attributes from the Marks of the given Node
   const renderAttributes = node.marks.reduce<HTMLAttributes>((acc, mark) => {
     const markSpec = MarkSpecs[mark.type],
           markRendererSpec = MarkRendererSpecs[mark.type];
@@ -113,7 +115,7 @@ export function getRenderAttributes(nodeOrMarkName: NodeName | MarkName, attrs: 
   // object.
   let renderAttributes = rendererSpec?.render ??  {};
 
-  // get the render attributes based on the ones defined in the NodeSpec/MarkSpec.
+  // get the render attributes based on the ones defined in the NodeSpec/MarkSpec
   if(nodeOrMarkSpec && nodeOrMarkSpec.attrs) {
     Object.keys(nodeOrMarkSpec.attrs).forEach(attribute => {
       if(attribute in attrs) return/*prevent duplicated values*/;
@@ -122,7 +124,7 @@ export function getRenderAttributes(nodeOrMarkName: NodeName | MarkName, attrs: 
     });
   } /* else -- no attributes defined on the NodeSpec/MarkSpec */
 
-  // merge the attributes that are defined on the node
+  // merge the attributes that are defined on the Node
   Object.entries(attrs).forEach(([key, value]) => {
     const attributes = getRenderValue(nodeOrMarkName, rendererSpec, key, attrs);
     renderAttributes = mergeAttributes(renderAttributes, attributes);
@@ -167,7 +169,7 @@ const defaultAttributeRenderer = (nodeOrMarkName: NodeName | MarkName, attribute
 export const mergeAttributes = (a: HTMLAttributes, b: HTMLAttributes): HTMLAttributes => {
   const attributes = { ...a }/*copy*/;
 
-  // Merge both attributes into one.
+  // merge both attributes into one
   Object.entries(b).forEach(([key, value]) => {
     attributes[key] = mergeAttribute(key, attributes[key], value)!/*will be defined by contract*/;
   });
@@ -185,7 +187,7 @@ const mergeAttribute = (attribute: string, a: string | undefined, b: string | un
   // append the b to a
   // NOTE: if 'b' has Attributes that collide with 'a' then the value of b is used
   if(attribute === 'style') return `${a} ${b}`;
-  // else -- cannot be merged.
+  // else -- cannot be merged
 
   return b;
 };

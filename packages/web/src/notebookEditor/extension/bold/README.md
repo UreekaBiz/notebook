@@ -4,3 +4,5 @@ Renders text in **bold**. If the editor receives 'strong' or 'b' HTML tags, or t
 make the bold mark be applied to the text.
 
 A custom implementation is being used to have control over the RegEx expressions and parsing of the tags.
+
+The 'Cmd + B' keyboard shortcut can be used to apply the mark.

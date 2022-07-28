@@ -13,6 +13,7 @@ export type JSONMark<A extends Attributes = {}> = {
 // ================================================================================
 export enum MarkName {
   BOLD = 'bold',
+  STRIKETHROUGH = 'strikethrough',
   TEXT_STYLE = 'textStyle',
 }
 export const getMarkName = (mark: ProseMirrorMark) => mark.type.name as MarkName;
