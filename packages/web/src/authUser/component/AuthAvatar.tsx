@@ -1,6 +1,8 @@
-import { Avatar, Button, Menu, MenuButton, MenuItem, MenuList } from '@chakra-ui/react';
+import { Avatar, Button, Menu, MenuButton, MenuDivider, MenuItem, MenuList } from '@chakra-ui/react';
 import Link from 'next/link';
-import { BiLogOut } from 'react-icons/bi';
+import { AiOutlineFileText } from 'react-icons/ai';
+import { BiHomeAlt, BiLogOut } from 'react-icons/bi';
+import { BsGrid } from 'react-icons/bs';
 import { FiSettings } from 'react-icons/fi';
 
 import { isLoggedOut } from '@ureeka-notebook/web-service';
@@ -33,13 +35,12 @@ export const AuthAvatar: React.FC<Props> = ({ avatarSize, buttonSize, showLogIn 
   const router = useRouter();
 
   // == Handlers ==================================================================
-  const handleSettingsClick = () => {
-    router.push(coreRoutes.settings);
-  };
+  const handleHomeClick = () => router.push(coreRoutes.root);
+  const handleNotebooksClick = () => router.push(coreRoutes.notebook);
+  const handleCollectionsClick = () => {};
 
-  const handleSignOutClick = () => {
-    router.push(coreRoutes.logout);
-  };
+  const handleSettingsClick = () => router.push(coreRoutes.settings);
+  const handleSignOutClick = () => router.push(coreRoutes.logout);
 
   // == UI ========================================================================
   if(authedUser === undefined/*AuthUserService not initialized*/) return null/*don't render anything*/;
@@ -58,23 +59,23 @@ export const AuthAvatar: React.FC<Props> = ({ avatarSize, buttonSize, showLogIn 
 
   return (
     <Menu computePositionOnMount/**prevents sideways overflow in parent container */>
-      {authedUser ?
-        <MenuButton
-          as={Avatar}
-          name={`${authedUser.profilePrivate.firstName ?? ''/*default*/} ${authedUser.profilePrivate.lastName ?? ''/*default*/}`}
-          src={authedUser.profilePrivate.profileImageUrl}
-          size={avatarSize}
-          marginLeft={4}
-          _hover={{ cursor: 'pointer' }}
-        /> : null}
+      <MenuButton
+        as={Avatar}
+        name={`${authedUser.profilePrivate.firstName ?? ''/*default*/} ${authedUser.profilePrivate.lastName ?? ''/*default*/}`}
+        src={authedUser.profilePrivate.profileImageUrl}
+        size={avatarSize}
+        marginLeft={4}
+        _hover={{ cursor: 'pointer' }}
+      />
+      {/* FIXME: Make that it so that options can be a prop from the component?*/}
       <MenuList>
-        {/* FIXME: Make that it so that options can be a prop from the component?*/}
-        <MenuItem icon={<FiSettings />} onClick={handleSettingsClick}>
-          Settings
-        </MenuItem>
-        <MenuItem icon={<BiLogOut />} onClick={handleSignOutClick}>
-          Sign out
-        </MenuItem>
+        <MenuItem icon={<BiHomeAlt />} onClick={handleHomeClick}>Home</MenuItem>
+        <MenuItem icon={<AiOutlineFileText />} onClick={handleNotebooksClick}>Notebooks</MenuItem>
+        <MenuItem icon={<BsGrid />} onClick={handleCollectionsClick}>Collections</MenuItem>
+
+        <MenuDivider />
+        <MenuItem icon={<FiSettings />} onClick={handleSettingsClick}>Settings</MenuItem>
+        <MenuItem icon={<BiLogOut />} onClick={handleSignOutClick}>Sign out</MenuItem>
       </MenuList>
     </Menu>
   );
