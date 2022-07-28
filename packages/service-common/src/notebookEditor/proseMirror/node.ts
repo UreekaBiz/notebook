@@ -119,9 +119,9 @@ export const getNodesAffectedByStepMap = (transaction: Transaction, stepMapIndex
   const nodesOfType: NodeFound[] = [];
   rootNode.nodesBetween(from, to, (node, position) => {
     const nodeName = getNodeName(node);
-    if(nodeNames.has(nodeName))
+    if(nodeNames.has(nodeName)) {
       nodesOfType.push({ node, position });
-    /* else -- ignore node */
+    } /* else -- ignore Node */
   });
 
   return nodesOfType;

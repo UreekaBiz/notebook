@@ -12,8 +12,9 @@ import { ExtensionName, SelectionDepth } from 'notebookEditor/model/type';
 /** Toggles a block node if its currently active, or focuses it back if the type of
  *  the current selection is {@link ExtensionName.GAP_CURSOR} */
 export const toggleBlockNode = (props: CommandProps, nodeName: NodeName) => {
-  if(props.editor.isActive(nodeName)) return props.commands.clearNodes();
-  /* else -- insert node */
+  if(props.editor.isActive(nodeName)) {
+    return props.commands.clearNodes();
+  } /* else -- insert node */
 
   const { selection } = props.view.state,
         prevPos = selection.$anchor.pos;
@@ -33,7 +34,7 @@ export const handleBlockBackspace = (editor: Editor, nodeName: NodeName) => {
   if(!empty || $anchor.parent.type.name !== nodeName) return false/*do not delete block node*/;
   if(isAtStartOfDoc || !$anchor.parent.textContent.length) {
     return editor.commands.clearNodes();
-  }/* else -- no need to delete blockNode */
+  } /* else -- no need to delete blockNode */
 
   return false/*do not delete*/;
 };
@@ -86,7 +87,7 @@ export type getPosType = boolean | (() => number);
 /** Checks to see whether an object is a getPos function */
 export const isGetPos = (object: any): object is (() => number) => typeof object === 'function';
 
-/** Gets the node before the current {@link Selection}'s anchor */
+/** @returns the node before the current {@link Selection}'s anchor */
 const getNodeBefore = (selection: Selection) => {
   const { nodeBefore } = selection.$anchor;
   return nodeBefore;
@@ -102,14 +103,12 @@ export const selectionIsOfType = (selection: Selection<NotebookSchemaType>, type
   isNodeSelection(selection) && selection.node.type.name === type;
 
 // --------------------------------------------------------------------------------
-/** Gets currently selected Node. The node selection is based on the depth of the
- *  selection */
+/** @returns currently selected Node. The Node selection is based on the depth of
+ *           the selection */
  export const getSelectedNode = (state: EditorState, depth?: SelectionDepth) => {
-  const { selection } = state;
-
   // if depth is provided then an ancestor is returned
+  const { selection } = state;
   if(depth !== undefined) return selection.$anchor.node(depth);
-  // else -- is not ancestor
 
   // gets the selected Node based on its position
   const selectedNode = isNodeSelection(selection) ? selection.node : undefined/*no node selected*/;
@@ -121,7 +120,7 @@ export const isFullySelected = (state: EditorState, node: ProseMirrorNode, pos: 
   const start = selection.$from.pos,
         end = selection.$to.pos;
 
-  // the selection fully contains the node
+  // does the selection fully contain the Node?
   return pos >= start - 1 && end > pos + node.content.size;
 };
 
@@ -157,8 +156,9 @@ export const resolveNewSelection = (selection: Selection<NotebookSchemaType>, tr
   let nodeSelection = false;
   if(isNodeSelection(selection)) nodeSelection = true;
 
-  if(nodeSelection) return new NodeSelection(tr.doc.resolve(selection.$anchor.pos));
-  /* else -- textSelection */
+  if(nodeSelection) {
+    return new NodeSelection(tr.doc.resolve(selection.$anchor.pos));
+  } /* else -- textSelection */
 
   return Selection.near(tr.doc.resolve(selection.$anchor.pos), bias ? bias : SelectionBias.LEFT/*default*/);
 };
@@ -173,7 +173,7 @@ export const getResolvedAnchorPos = (tr: Transaction<NotebookSchemaType>, extraO
   return resolvedPos;
 };
 
-/** Returns the {@link ResolvedPos} of the node that is parent of the current {@link NodeSelection}'s node */
+/** @returns the {@link ResolvedPos} of the Node that is parent of the current {@link NodeSelection}'s Node */
 export const getResolvedParentSelectionByAnchorOffset = (selection: NodeSelection, tr: Transaction) => {
   const nodeOffset = getNodeOffset(selection.$anchor.parent, selection.node);
   const resolvedPos = tr.doc.resolve(selection.$anchor.pos - nodeOffset);
