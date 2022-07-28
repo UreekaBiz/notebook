@@ -16,17 +16,13 @@ import { isNodeSelection } from 'notebookEditor/extension/util/node';
 export const setVerticalAlign = (editor: Editor, desiredAlignment: VerticalAlign): boolean => {
   const { selection } = editor.state;
   const nodePos = selection.$anchor.pos;
+  if(!isNodeSelection(selection)) return false/*do not handle*/;
 
-  /*case 1: vertical align must be changed from something other than bottom to bottom*/
-  if(isNodeSelection(selection)) {
-    const nodeName = selection.node.type.name;
-    if(selection.node.attrs.verticalAlign === desiredAlignment) {
-      const nodeName = selection.node.type.name;
-      return editor.chain().updateAttributes(nodeName, { verticalAlign: VerticalAlign.bottom }).setNodeSelection(nodePos).run();
-    } else { /*case 2: vertical align must be changed from something other than bottom to something other than bottom*/
-      return editor.chain().updateAttributes(nodeName, { verticalAlign: desiredAlignment }).setNodeSelection(nodePos).run();
-    }
-  } /* else -- not a node selection */
+  const { name: nodeName } = selection.node.type,
+        shouldSetBottom = selection.node.attrs.verticalAlign === desiredAlignment;
 
-  return false;
+  return editor.chain()
+                .updateAttributes(nodeName, { verticalAlign: shouldSetBottom ? VerticalAlign.bottom : desiredAlignment })
+                .setNodeSelection(nodePos)
+                .run();
 };
