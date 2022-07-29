@@ -4,15 +4,17 @@ import { Notebook, NotebookIdentifier, NotebookRole, NotebookTuple, ObjectTuple,
 
 import { getLogger, ServiceLogger } from '../logging';
 import { ApplicationError } from '../util/error';
+import { Scrollable, scrollableQuery } from '../util/observableScrolledCollection';
 import { notebookCreate, notebookDelete, notebookShare, publishNotebook } from './function';
-import { notebookById$, notebookOnceById$, notebooks$, publishedNotebookById$, publishedNotebookOnceById$, publishedNotebooks$ } from './observable';
+import { notebookById$, notebookOnceById$,  notebooksQuery$, publishedNotebookById$, publishedNotebookOnceById$, publishedNotebooksQuery$ } from './observable';
 import { Notebook_Create, NotebookFilter, PublishedNotebook_Create, PublishedNotebookFilter } from './type';
+import { notebookQuery, publishedNotebookQuery } from './datastore';
 
 const log = getLogger(ServiceLogger.NOTEBOOK);
 
 // ********************************************************************************
 export class NotebookService {
-  protected static readonly DEFAULT_PAGE_SIZE = 24/*guess*/;
+  protected static readonly DEFAULT_SCROLL_SIZE = 24/*guess*/;
 
   // == Singleton =================================================================
   private static singleton: NotebookService;
@@ -28,13 +30,13 @@ export class NotebookService {
   // == Observables ===============================================================
   // -- Notebook ------------------------------------------------------------------
   /**
-   * @param filter the name that is optionally filtered and sorted on.
-   * @param pageSize the number of Notebooks returned per batch.
-   * @returns Observable over the collection of {@link Notebooks}.
+   * @param filter the fields that are optionally filtered and sorted on
+   * @param scrollSize the number of Notebooks returned per batch
+   * @returns {@link Scrollable} over the collection of {@link Notebooks}
    */
-  // TODO: Growable with pageSize
-  public onNotebooks$(filter: NotebookFilter, pageSize: number = NotebookService.DEFAULT_PAGE_SIZE): Observable<NotebookTuple[]> {
-    return notebooks$(filter);
+  public onNotebooks(filter: NotebookFilter, scrollSize: number = NotebookService.DEFAULT_SCROLL_SIZE): Scrollable<NotebookTuple> {
+    return scrollableQuery(notebookQuery(filter), notebooksQuery$, scrollSize,
+                           `Filtered Notebooks (${JSON.stringify(filter)})`);
   }
 
   /**
@@ -50,13 +52,13 @@ export class NotebookService {
 
   // -- Published Notebook --------------------------------------------------------
   /**
-   * @param filter the name that is optionally filtered and sorted on.
-   * @param pageSize the number of Notebooks returned per batch.
-   * @returns Observable over the collection of {@link Notebooks}.
+   * @param filter the fields that are optionally filtered and sorted on
+   * @param scrollSize the number of Published Notebooks returned per batch
+   * @returns {@link Scrollable} over the collection of {@link PublishedNotebooks}
    */
-  // TODO: Growable with pageSize
-  public onPublishedNotebooks$(filter: PublishedNotebookFilter, pageSize: number = NotebookService.DEFAULT_PAGE_SIZE): Observable<PublishedNotebookTuple[]> {
-    return publishedNotebooks$(filter);
+  public onPublishedNotebooks(filter: PublishedNotebookFilter, scrollSize: number = NotebookService.DEFAULT_SCROLL_SIZE): Scrollable<PublishedNotebookTuple> {
+    return scrollableQuery(publishedNotebookQuery(filter), publishedNotebooksQuery$, scrollSize,
+                           `Filtered Published Notebooks (${JSON.stringify(filter)})`);
   }
 
   /**

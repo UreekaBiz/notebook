@@ -23,7 +23,11 @@ function PublishedNotebookListPage() {
 
   // -- Effects -------------------------------------------------------------------
   useEffect(() => {
-    const subscription = NotebookService.getInstance().onPublishedNotebooks$({ sort: [{ field: 'title', direction: 'asc' }] }).subscribe({
+    const notebookService = NotebookService.getInstance();
+
+    // TODO: use the Scrollable to implement scroll-for-more behavior
+    const scrollablePublishedNotebooks = notebookService.onPublishedNotebooks({ sort: [{ field: 'title', direction: 'asc' }] });
+    const subscription = scrollablePublishedNotebooks.documents$().subscribe({
       next: value => {
         if(!isMounted()) return/*component is unmounted, prevent unwanted state updates*/;
         setPublishedNotebooks(value);
@@ -35,7 +39,7 @@ function PublishedNotebookListPage() {
     });
 
     return () => subscription.unsubscribe();
-  }, [isMounted]/*only on mount/unmount*/);
+  }, [isMounted]/*only on mount*/);
 
   // -- UI ------------------------------------------------------------------------
   return (

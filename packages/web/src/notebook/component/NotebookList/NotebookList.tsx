@@ -1,7 +1,7 @@
 import { Flex, Table, Tbody, Td, Text, Th, Thead, Tr } from '@chakra-ui/react';
 import { useState, useEffect } from 'react';
 
-import { getLogger, NotebookTuple, NotebookService, NotebookIdentifier, Logger } from '@ureeka-notebook/web-service';
+import { getLogger, Logger, NotebookTuple, NotebookService, NotebookIdentifier } from '@ureeka-notebook/web-service';
 
 import { useUserId } from 'authUser/hook/useUserId';
 import { Loading } from 'shared/component/Loading';
@@ -26,10 +26,11 @@ export const NotebookList = () => {
     const notebookService = NotebookService.getInstance();
 
     setStatus('loading');
-    const subscription = notebookService.onNotebooks$({ createdBy: userId, sort: [{ field: 'name', direction: 'asc' }] }).subscribe({
+    // TODO: use the Scrollable to implement scroll-for-more behavior
+    const scrollableNotebooks = notebookService.onNotebooks({ createdBy: userId, sort: [{ field: 'name', direction: 'asc' }] });
+    const subscription = scrollableNotebooks.documents$().subscribe({
       next: value => {
         if(!isMounted()) return/*component is unmounted, prevent unwanted state updates*/;
-
         setNotebookTuples(value);
         setStatus('complete');
       },
