@@ -40,7 +40,7 @@
     "watch-web-service": "npm -C ./packages/web-service run watch"
   },
   "devDependencies": {
-    "@types/node": "18.6.1",
+    "@types/node": "18.6.2",
     "@types/prosemirror-collab": "1.1.2",
     "@types/prosemirror-dropcursor": "1.0.3",
     "@types/prosemirror-history": "1.0.3",
