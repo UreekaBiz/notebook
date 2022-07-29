@@ -4,7 +4,7 @@ import { useEffect } from 'react';
 
 import { getLogger, Logger } from '@ureeka-notebook/web-service';
 
-import { useEditorService } from 'notebookEditor/hook/useEditorService';
+import { useNotebookEditor } from 'notebookEditor/hook/useNotebookEditor';
 
 import { EditorUserInteractions } from './EditorUserInteractions';
 
@@ -14,7 +14,7 @@ const log = getLogger(Logger.NOTEBOOK);
 export const EDITOR_CONTAINER_ID = 'NotebookEditorContainerID';
 
 export const Editor = () => {
-  const { editor, editorService } = useEditorService();
+  const { editor, editorService } = useNotebookEditor();
 
   // == Effects ===================================================================
   useEffect(() => {
