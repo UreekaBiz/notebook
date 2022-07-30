@@ -43,7 +43,7 @@ export const PublishedNotebookList = () => {
   }, [setStatus, isMounted]);
 
   // == UI ========================================================================
-  // FIXME: this is a temporary solution to display the error state.
+  // FIXME: this is a temporary solution to display the error state
   if(status === 'error') {
     return (
       <Flex align='center' justify='center' width='full' height='full'>
@@ -54,14 +54,15 @@ export const PublishedNotebookList = () => {
 
   if(status !== 'complete') return <Loading />;
 
-  // FIXME: Add a CTA to create a Notebook.
+  // NOTE: in a live production environment, this will never happen since operationally
+  //       there will always be at least one Published Notebook
   if(publishedNotebookTuples.length < 1) {
     return (
       <Flex align='center' justify='center' width='full' height='full'>
-        <Text>No Notebooks were found.</Text>
+        <Text>Create a Notebook!</Text>
       </Flex>
     );
-  } /* else -- notebook were found */
+  } /* else -- Published Notebook were found */
 
   return (
     <VStack spacing={10} alignItems='flex-start'>
