@@ -8,17 +8,15 @@ const log = getLogger(Logger.USER);
 
 // ********************************************************************************
 export type UseUserProfile = {
-  /** the status of the subscription*/
+  /** the status of the subscription */
   status: AsyncStatus;
 
-  /** the user profile*/
+  /** the {@link UserProfilePublic} */
   userProfile: UserProfilePublic | null/*not loaded*/;
 };
-/**
- * Utility hook that gets the UserProfilePublic from a given UserIdentifier. This
- * subscribes to the UserProfileService and updates the state when the user profile
- * changes.
- */
+
+// ================================================================================
+// live User Profile Public for the specified User Identifier
 export const useUserProfile = ( userId: UserIdentifier): UseUserProfile => {
   // == State =====================================================================
   const [userProfile, setUserProfile] = useState<UserProfilePublic | null/*not loaded*/>(null/*by contract*/);
@@ -29,9 +27,8 @@ export const useUserProfile = ( userId: UserIdentifier): UseUserProfile => {
 
   // == Effects ===================================================================
   useEffect(() => {
-    // This useEffect can be re-run if any of the dependencies changes, a flag must
-    // be used to indicate if this is the current effect in order to avoid race
-    // conditions.
+    // this can be re-run if any of the dependencies changes. A flag must be used
+    // to indicate if this is the current effect in order to avoid race conditions
     let isCurrentEffect = true;
     setStatus('loading');
     UserProfileService.getInstance().onUserProfile$(userId).subscribe({
@@ -42,7 +39,7 @@ export const useUserProfile = ( userId: UserIdentifier): UseUserProfile => {
         setStatus('complete');
       },
       error: (error) => {
-        log.info(`Unexpected error getting UserProfilePublic (${userId}). Error: `, error);
+        log.info(`Unexpected error getting User Profile Public (${userId}). Error: `, error);
         if(!isMounted() || !isCurrentEffect) return/*component is unmounted or another useEffect was executed, prevent unwanted state updates*/;
 
         setStatus('error');
