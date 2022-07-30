@@ -13,11 +13,11 @@ export type DocumentAttributes = {/*no attributes*/};
 export const DocumentNodeSpec: NodeSpec = {
   name: NodeName.DOC/*expected and guaranteed to be unique*/,
 
-  // NOTE: is expected that the Schema using this Node explicitly defines that this
-  //       is the top Node
-  // SEE:  /common/notebookEditor/schema.ts
-  topNode: true/*it's the Node that will be used as a root for the Document*/,
-  content: `${NodeGroup.BLOCK}+`,
+  // NOTE: Is expected that the schema using this node explicitly defines that this
+  //       is the top node.
+  // SEE:  src/common/notebookEditor/schema.ts
+  topNode: true/*it's the node that will be used as a root for the document*/,
+  content: `${NodeName.TITLE} ${NodeGroup.BLOCK}+`,
 };
 
 // -- Render Spec -----------------------------------------------------------------

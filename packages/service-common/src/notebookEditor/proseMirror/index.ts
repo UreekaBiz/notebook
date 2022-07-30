@@ -10,6 +10,7 @@ export * from './extension/paragraph';
 export * from './extension/strikethrough';
 export * from './extension/text';
 export * from './extension/textStyle';
+export * from './extension/title';
 export * from './mark';
 export * from './node';
 export * from './schema';

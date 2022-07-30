@@ -9,6 +9,7 @@ import { ParagraphNodeSpec } from './extension/paragraph';
 import { StrikethroughMarkSpec } from './extension/strikethrough';
 import { TextNodeSpec } from './extension/text';
 import { TextStyleMarkSpec } from './extension/textStyle';
+import { TitleNodeRendererSpec } from './extension/title';
 import { MarkName } from './mark';
 import { NodeName } from './node';
 
@@ -20,6 +21,7 @@ export const NodeSpecs: Record<NodeName, NodeSpec> = {
   [NodeName.IMAGE]: ImageNodeSpec,
   [NodeName.PARAGRAPH]: ParagraphNodeSpec,
   [NodeName.TEXT]: TextNodeSpec,
+  [NodeName.TITLE]: TitleNodeRendererSpec,
 };
 
 export const MarkSpecs: Record<MarkName, MarkSpec> = {

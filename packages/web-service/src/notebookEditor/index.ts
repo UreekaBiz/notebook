@@ -72,6 +72,7 @@ export {
   ImageNodeSpec,
   ParagraphNodeSpec,
   TextNodeSpec,
+  TitleNodeSpec,
 
   // -- Node Types ----------------------------------------------------------------
   DocumentNodeType,
@@ -84,6 +85,8 @@ export {
   isParagraphNode,
   TextNodeType,
   isTextNode,
+  TitleNodeType,
+  isTitleNode,
 
   // == Marks =====================================================================
   JSONMark,
@@ -132,4 +135,5 @@ export {
   computeRemovedNodeObjs,
   findContentDifferencePositions,
   getNodesAffectedByStepMap,
+  wereNodesAffectedByTransaction,
 } from '@ureeka-notebook/service-common';
