@@ -64,13 +64,14 @@ export const NotebookList = () => {
 
   if(status !== 'complete') return <Loading />;
 
+  // TODO: add a CTA to create a Notebook
   if(notebookTuples.length < 1) {
     return (
       <Flex align='center' justify='center' width='full' height='full'>
         <Text>No Notebooks were found.</Text>
       </Flex>
     );
-  } /* else -- notebook were found */
+  } /* else -- Notebooks were found */
 
   return (
     <Table variant='simple'>
