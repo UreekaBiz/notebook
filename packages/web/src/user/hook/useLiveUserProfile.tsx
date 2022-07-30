@@ -8,7 +8,7 @@ const log = getLogger(Logger.USER);
 
 // ********************************************************************************
 export type UseUserProfile = {
-  /** the status of the retrieval of the User Profile */
+  /** the status of the subscription */
   status: AsyncStatus;
 
   /** the {@link UserProfilePublic} */
@@ -16,32 +16,37 @@ export type UseUserProfile = {
 };
 
 // ================================================================================
-// *not* live (one-shot) User Profile Public for the specified User Identifier
-export const useUserProfile = ( userId: UserIdentifier): UseUserProfile => {
+// live User Profile Public for the specified User Identifier
+export const useLiveUserProfile = ( userId: UserIdentifier): UseUserProfile => {
   // == State =====================================================================
-  const [status, setStatus] = useAsyncStatus();
   const [userProfile, setUserProfile] = useState<UserProfilePublic | null/*not loaded*/>(null/*by contract*/);
+  const [status, setStatus] = useAsyncStatus();
 
   // ------------------------------------------------------------------------------
   const isMounted = useIsMounted();
 
   // == Effects ===================================================================
   useEffect(() => {
-    const getUser = async () => {
-      setStatus('loading');
-      try {
-        setUserProfile(await UserProfileService.getInstance().getUserProfile(userId));
-        if(!isMounted()) return/*component is unmounted, prevent unwanted state updates*/;
+    // this can be re-run if any of the dependencies changes. A flag must be used
+    // to indicate if this is the current effect in order to avoid race conditions
+    let isCurrentEffect = true;
+    setStatus('loading');
+    UserProfileService.getInstance().onUserProfile$(userId).subscribe({
+      next: value => {
+        if(!isMounted() || !isCurrentEffect) return/*component is unmounted or another useEffect was executed, prevent unwanted state updates*/;
 
+        setUserProfile(value.obj);
         setStatus('complete');
-      } catch(error) {
-        log.error(`Unexpected error getting User Profile Public (${userId}). Error: `, error);
-        if(!isMounted()) return/*component is unmounted, prevent unwanted state updates*/;
+      },
+      error: (error) => {
+        log.info(`Unexpected error getting User Profile Public (${userId}). Error: `, error);
+        if(!isMounted() || !isCurrentEffect) return/*component is unmounted or another useEffect was executed, prevent unwanted state updates*/;
 
         setStatus('error');
-      }
-    };
-    getUser();
+      },
+    });
+
+    return () => { isCurrentEffect = false/*by definition*/; };
   }, [isMounted, setStatus, userId]);
 
   return { status, userProfile };
