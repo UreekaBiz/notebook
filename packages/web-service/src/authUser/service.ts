@@ -1,9 +1,9 @@
-import { UserRole } from '@ureeka-notebook/service-common';
+import { AuthedUser, UserRole } from '@ureeka-notebook/service-common';
 
 import { getLogger, ServiceLogger } from '../logging';
 import { ApplicationError } from '../util/error';
 import { updateUserProfilePrivate } from './function';
-import { isLoggedIn, AuthedUser, AuthedUserState, UserProfilePrivate_Update } from './type';
+import { isLoggedIn, AuthedUserState, UserProfilePrivate_Update } from './type';
 import { FirebaseAuthService } from './support/FirebaseAuthService';
 import { Observable } from 'rxjs';
 

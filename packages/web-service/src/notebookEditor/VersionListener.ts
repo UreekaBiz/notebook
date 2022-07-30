@@ -3,9 +3,8 @@ import * as collab from 'prosemirror-collab';
 import { TextSelection } from 'prosemirror-state';
 import { distinctUntilChanged, BehaviorSubject } from 'rxjs';
 
-import { contentToStep, sleep, NotebookIdentifier, NotebookVersion, NotebookSchemaVersion, Unsubscribe, UserIdentifier, NO_NOTEBOOK_VERSION } from '@ureeka-notebook/service-common';
+import { contentToStep, generateClientIdentifier, sleep, AuthedUser, NotebookIdentifier, NotebookVersion, NotebookSchemaVersion, Unsubscribe, UserIdentifier, NO_NOTEBOOK_VERSION } from '@ureeka-notebook/service-common';
 
-import { AuthedUser } from '../authUser';
 import { getLogger, ServiceLogger } from '../logging';
 import { ApplicationError } from '../util/error';
 import { getLatestContent, getVersionsFromIndex, onNewVersion, writeVersions } from './version';
@@ -100,7 +99,7 @@ export class VersionListener {
   // ==============================================================================
   public constructor(user: AuthedUser, editor: Editor, schemaVersion: NotebookSchemaVersion, notebookId: NotebookIdentifier) {
     this.user = user;
-    this.clientId = user.userId + '|' + user.sessionId/*FIXME: move to an encoding method*/;
+    this.clientId = generateClientIdentifier(user);
 
     this.editor = editor;
     this.schemaVersion = schemaVersion;

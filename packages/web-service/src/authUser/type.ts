@@ -1,4 +1,4 @@
-import { SessionIdentifier, UserIdentifier, UserProfilePrivate, UserProfilePrivateUpdate_Rest, UserProfilePrivateUpdate_Rest_Schema, UserRoles } from '@ureeka-notebook/service-common';
+import { AuthedUser, UserProfilePrivate, UserProfilePrivateUpdate_Rest, UserProfilePrivateUpdate_Rest_Schema, UserRoles } from '@ureeka-notebook/service-common';
 
 // ********************************************************************************
 // == Convenience Types ===========================================================
@@ -9,12 +9,6 @@ import { SessionIdentifier, UserIdentifier, UserProfilePrivate, UserProfilePriva
 // 2. User is logged in:
 //      AuthedUserState = LoggedInUserState
 //      AuthedUser != undefined
-
-// an authenticated (logged-in) user
-export type AuthedUser = Readonly<{
-  userId: UserIdentifier;
-  sessionId: SessionIdentifier;
-}>;
 
 // ................................................................................
 // the overall user state (both auth'd and unauth'd)

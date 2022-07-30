@@ -1,3 +1,4 @@
+import { AuthedUser } from '../authUser/type';
 import { Creatable } from '../util/datastore';
 import { hashNumber } from '../util/hash';
 import { Identifier } from '../util/type';
@@ -20,11 +21,18 @@ export type NotebookVersionContent = NodeContent/*alias*/;
 // identifies the User / Session that made the Versions from a given Editor. This
 // *must* be universally unique for each Editor (by ProseMirror contract)
 export type ClientIdentifier = Identifier;
+export const generateClientIdentifier = (user: AuthedUser): ClientIdentifier =>
+  user.userId + '|' + user.sessionId;
 
 // --------------------------------------------------------------------------------
 // NOTE: document ID is NotebookVersion#index (string-hashed)
 // NOTE: because this is written by the client, any fields that are added need to be
 //       considered for validation in Firestore Rules
+// CHECK: ProseMirror keys off of the clientId which is *not* validated (since
+//        Firestore rules do not have the session information). This presents a
+//        minor data integrity issue as a User may spoof another User's clientId.
+//        As long as all uses of a Version rely only on 'createdBy' (which *is*
+//        validated) then this is not a problem.
 // SEE: firestore.rules:/notebooks/notebooks-versions
 export type NotebookVersion = Creatable & Readonly<{
   /** the {@link NotebookSchemaVersion} of this Checkpoint */

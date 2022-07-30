@@ -117,6 +117,15 @@ export type Session = Readonly<Modify<Validate.InferType<typeof Session_Schema>,
   activity: ActivityState/*explicit*/;
 }>>;
 
+// == Auth'ed User ================================================================
+// an authenticated (logged-in) User
+// NOTE: this is primarily used on the client but was made common to ensure that
+//       functions that include the Session can be made common as well
+export type AuthedUser = Readonly<{
+  userId: UserIdentifier;
+  sessionId: SessionIdentifier;
+}>;
+
 // == Private Profile =============================================================
 export type UserProfilePrivate =
     Creatable

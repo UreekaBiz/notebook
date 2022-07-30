@@ -2,12 +2,12 @@ import { User } from 'firebase/auth';
 import { combineLatest, BehaviorSubject, Observable, Subject, Unsubscribable } from 'rxjs';
 import { map } from 'rxjs/operators';
 
-import { generateUuid, isType, UserProfilePrivate, UserRole, UserRoles } from '@ureeka-notebook/service-common';
+import { generateUuid, isType, AuthedUser, UserProfilePrivate, UserRole, UserRoles } from '@ureeka-notebook/service-common';
 
 import { subjectStats } from '../../util/observable';
 import { AbstractService } from '../../util/AbstractService';
 import { profilePrivate$ } from '../observable';
-import { AuthedUser, LoggedInUserState } from '../type';
+import { LoggedInUserState } from '../type';
 import SessionService from './SessionService';
 
 // AuthUserService delegate that is per-User (whereas AuthUserService is across

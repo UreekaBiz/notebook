@@ -1,9 +1,8 @@
 import { Editor } from '@tiptap/core';
 import { Observable } from 'rxjs';
 
-import { NotebookIdentifier, NotebookSchemaVersion } from '@ureeka-notebook/service-common';
+import { AuthedUser, NotebookIdentifier, NotebookSchemaVersion } from '@ureeka-notebook/service-common';
 
-import { AuthedUser } from '../authUser';
 import { getLogger, ServiceLogger } from '../logging';
 import { ApplicationError } from '../util';
 import { VersionListener } from './VersionListener';
