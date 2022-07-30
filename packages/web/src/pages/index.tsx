@@ -15,21 +15,20 @@ function HomePage() {
     <Box position='relative'>
       <HomeTopbar />
       <HeroBanner />
-      <Box width='full' borderBottom='1px solid #eaeaea' marginBottom={4}/>
+      <Box width='full' borderBottom='1px solid #eaeaea' marginBottom={4} />
       <Box
         width='full'
         maxWidth={1000}
         marginX='auto'
-        paddingY={16}
+        paddingY={12}
       >
         <Flex>
           <Box flex='1 1'/*take remaining space*/ marginRight={8}>
             <PublishedNotebookList />
           </Box>
           {/** WIP: empty box for now*/}
-          <Box width={400} height={200}/>
+          <Box width={400} height={200} />
         </Flex>
-
       </Box>
     </Box>
   );
