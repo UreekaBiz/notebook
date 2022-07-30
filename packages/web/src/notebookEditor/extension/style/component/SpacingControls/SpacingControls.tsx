@@ -1,9 +1,7 @@
 import { Box, Flex } from '@chakra-ui/react';
 import { useCallback, useEffect, useState } from 'react';
 
-import { isMarginAttribute, getOppositeSpacingAttribute, AttributeType, Margin, MarginAttribute, Padding, PaddingAttribute, SpacingAttribute, SpacingType } from '@ureeka-notebook/web-service';
-
-import { getNumberValueFromUnitString, Unit } from 'notebookEditor/theme/type';
+import { isMarginAttribute, getOppositeSpacingAttribute, AttributeType, InvalidMergedAttributeValue, Margin, MarginAttribute, Padding, PaddingAttribute, SpacingAttribute, SpacingType } from '@ureeka-notebook/web-service';
 
 import { DragControl } from './DragControl';
 
@@ -16,13 +14,13 @@ interface Props {
   name: string;
 }
 export const SpacingControls: React.FC<Props> = ({ margin, padding, name, onChange }) => {
-  const [localState, setLocalState] = useState<Partial<Record<SpacingAttribute, number>>>({/*empty*/});
+  const [localState, setLocalState] = useState<Partial<Record<SpacingAttribute, string>>>({/*empty*/});
   const [movingType, setMovingType] = useState<SpacingAttribute | null>(null/*initial value*/);
   const [updateOpposites, setUpdateOpposites] = useState(false/*by default*/);
   const [updateAll, setUpdateAll] = useState(false/*by default*/);
 
   // ------------------------------------------------------------------------------
-  const syncRelatedValues = useCallback((newValue: number | undefined, updateAll: boolean, updateOpposites: boolean) => {
+  const syncRelatedValues = useCallback((newValue: string | undefined, updateAll: boolean, updateOpposites: boolean) => {
     if(!movingType) return/*nothing to do*/;
     setLocalState(prevValue => {
       const value = newValue ?? prevValue[movingType];
@@ -93,12 +91,12 @@ export const SpacingControls: React.FC<Props> = ({ margin, padding, name, onChan
   const handleEnd = () => {
     for(let key in localState) {
       const attribute = key as SpacingAttribute;
-      onChange(attribute, `${localState[attribute]}${Unit.Pixel}`);
+      onChange(attribute, localState[attribute]!);
     }
     setMovingType(null/*reset state*/);
   };
 
-  const handleChange = useCallback((attribute: SpacingAttribute, value: number) => {
+  const handleChange = useCallback((attribute: SpacingAttribute, value: string) => {
     setMovingType(attribute);
 
     setLocalState(prevValue => ({ ...prevValue, [attribute]: value }));
@@ -106,23 +104,82 @@ export const SpacingControls: React.FC<Props> = ({ margin, padding, name, onChan
   }, [syncRelatedValues, updateAll, updateOpposites]);
 
   const getValue = (type: SpacingType, attribute: SpacingAttribute) => {
-    const editorStateValue = getNumberValueFromUnitString(type === 'margin' ? margin[attribute as MarginAttribute] : padding[attribute as PaddingAttribute]);
-    return localState[attribute] ?? editorStateValue;
+    const mergedValue = type === 'margin' ? margin[attribute as MarginAttribute] : padding[attribute as PaddingAttribute];
+    const editorValue = mergedValue === InvalidMergedAttributeValue ? undefined : mergedValue;
+    return localState[attribute] ?? editorValue ?? '';
   };
 
   // == UI ========================================================================
   return (
     <Box>
       {name}
-      <Flex> margin-top: <DragControl value={getValue('margin', AttributeType.MarginTop)} direction='vertical' unit={Unit.Pixel} onChange={value => handleChange(AttributeType.MarginTop, value)} onEnd={handleEnd} /></Flex>
-      <Flex> margin-bottom: <DragControl value={getValue('margin', AttributeType.MarginBottom)} direction='vertical' unit={Unit.Pixel} onChange={value => handleChange(AttributeType.MarginBottom, value)} onEnd={handleEnd} /></Flex>
-      <Flex> margin-left: <DragControl value={getValue('margin', AttributeType.MarginLeft)} direction='horizontal' unit={Unit.Pixel} onChange={value => handleChange(AttributeType.MarginLeft, value)} onEnd={handleEnd} /></Flex>
-      <Flex> margin-right: <DragControl value={getValue('margin', AttributeType.MarginRight)} direction='horizontal' unit={Unit.Pixel} onChange={value => handleChange(AttributeType.MarginRight, value)} onEnd={handleEnd} /></Flex>
+      <Flex>
+        margin-top:
+        <DragControl
+          valueWithUnit={getValue('margin', AttributeType.MarginTop)}
+          direction='vertical'
+          onChange={value => handleChange(AttributeType.MarginTop, value)} onEnd={handleEnd}
+        />
+      </Flex>
+      <Flex>
+        margin-bottom:
+        <DragControl
+          valueWithUnit={getValue('margin', AttributeType.MarginBottom)}
+          direction='vertical'
+          onChange={value => handleChange(AttributeType.MarginBottom, value)} onEnd={handleEnd}
+        />
+      </Flex>
+      <Flex>
+        margin-left:
+        <DragControl
+          valueWithUnit={getValue('margin', AttributeType.MarginLeft)}
+          direction='horizontal'
+          onChange={value => handleChange(AttributeType.MarginLeft, value)} onEnd={handleEnd}
+        />
+      </Flex>
+      <Flex>
+        margin-right:
+        <DragControl
+          valueWithUnit={getValue('margin', AttributeType.MarginRight)}
+          direction='horizontal'
+          onChange={value => handleChange(AttributeType.MarginRight, value)} onEnd={handleEnd}
+        />
+      </Flex>
+
       <br/>
-      <Flex> padding-top: <DragControl value={getValue('padding', AttributeType.PaddingTop)} direction='vertical' unit={Unit.Pixel} onChange={value => handleChange(AttributeType.PaddingTop, value)} onEnd={handleEnd} /></Flex>
-      <Flex> padding-bottom: <DragControl value={getValue('padding', AttributeType.PaddingBottom)} direction='vertical' unit={Unit.Pixel} onChange={value => handleChange(AttributeType.PaddingBottom, value)} onEnd={handleEnd} /></Flex>
-      <Flex> padding-left: <DragControl value={getValue('padding', AttributeType.PaddingLeft)} direction='horizontal' unit={Unit.Pixel} onChange={value => handleChange(AttributeType.PaddingLeft, value)} onEnd={handleEnd} /></Flex>
-      <Flex> padding-right: <DragControl value={getValue('padding', AttributeType.PaddingRight)} direction='horizontal' unit={Unit.Pixel} onChange={value => handleChange(AttributeType.PaddingRight, value)} onEnd={handleEnd} /></Flex>
+
+      <Flex>
+        padding-top:
+        <DragControl
+          valueWithUnit={getValue('padding', AttributeType.PaddingTop)}
+          direction='vertical'
+          onChange={value => handleChange(AttributeType.PaddingTop, value)} onEnd={handleEnd}
+        />
+      </Flex>
+      <Flex>
+        padding-bottom:
+        <DragControl
+          valueWithUnit={getValue('padding', AttributeType.PaddingBottom)}
+          direction='vertical'
+          onChange={value => handleChange(AttributeType.PaddingBottom, value)} onEnd={handleEnd}
+        />
+      </Flex>
+      <Flex>
+        padding-left:
+        <DragControl
+          valueWithUnit={getValue('padding', AttributeType.PaddingLeft)}
+          direction='horizontal'
+          onChange={value => handleChange(AttributeType.PaddingLeft, value)} onEnd={handleEnd}
+        />
+      </Flex>
+      <Flex>
+        padding-right:
+        <DragControl
+          valueWithUnit={getValue('padding', AttributeType.PaddingRight)}
+          direction='horizontal'
+          onChange={value => handleChange(AttributeType.PaddingRight, value)} onEnd={handleEnd}
+        />
+      </Flex>
     </Box>
   );
 };

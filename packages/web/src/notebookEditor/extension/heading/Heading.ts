@@ -70,12 +70,6 @@ export const Heading = Node.create<HeadingOptions, NoStorage>({
   },
 
   // -- View ----------------------------------------------------------------------
-  parseHTML() {
-    return this.options.levels.map((level: HeadingLevel) => ({
-      tag: `h${level}`,
-
-      attrs: { level, fontSize: '20px' },
-    }));
-  },
+  parseHTML() { return this.options.levels.map((level: HeadingLevel) => ({ tag: `h${level}` })); },
   renderHTML({ node, HTMLAttributes }) { return getNodeOutputSpec(node, HTMLAttributes); },
 });

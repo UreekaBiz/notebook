@@ -9,6 +9,7 @@ import { Toolbar } from 'notebookEditor/toolbar/type';
 //*********************************************************************************
 // == Toolbar =====================================================================
 export const ParagraphToolbar: Toolbar = {
+  title: 'Paragraph',
   nodeName: NodeName.PARAGRAPH/*Expected and guaranteed to be unique*/,
 
   toolsCollections: [

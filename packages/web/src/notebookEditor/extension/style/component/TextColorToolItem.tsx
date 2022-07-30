@@ -17,11 +17,11 @@ export const TextColorToolItem: React.FC<Props> = ({ editor, depth }) => {
   const inputValue = domRenderValue === InvalidMergedAttributeValue ? '' : domRenderValue;
 
   // == Handlers ==================================================================
-  const handleChange = (value: string) => {
+  const handleChange = (value: string, focusEditor?: boolean) => {
     editor.commands.setTextStyle(AttributeType.TextColor, value);
 
     // Focus the editor again
-    editor.commands.focus();
+    if(focusEditor) editor.commands.focus();
   };
 
   // == UI ========================================================================

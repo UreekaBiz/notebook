@@ -16,7 +16,7 @@ interface Props {
   name: string;
 
   value: string;
-  onChange: (value: string) => void;
+  onChange: (value: string, focus?: boolean) => void;
 
   colors: Color[][];
 }
@@ -36,8 +36,8 @@ export const ColorPicker: React.FC<Props> = ({ colors, name, onChange, value }) 
     updateLocalValue(value);
   };
 
-  const saveChange = () => {
-    if(localValue) commitChange();
+  const saveChange = (focus: boolean = true/*focus editor by default*/) => {
+    if(localValue) commitChange(undefined/*use stored value*/, focus);
     else resetLocalValue();
   };
 
@@ -53,7 +53,13 @@ export const ColorPicker: React.FC<Props> = ({ colors, name, onChange, value }) 
       <ColorPickerMenu value={localValue} colors={colors} onChange={handleColorPickerChange} />
 
       <InputLeftAddon>{LEFT_ADDON_TEXT}</InputLeftAddon>
-      <Input type='text' value={removeColorAddon(localValue)} onBlur={saveChange} onChange={handleInputChange} onKeyDown={handleKeyDown} />
+      <Input
+        type='text'
+        value={removeColorAddon(localValue)}
+        onBlur={() => saveChange(false/*don't focus editor*/)}
+        onChange={handleInputChange}
+        onKeyDown={handleKeyDown}
+      />
      </InputGroup>
     </ToolContainer>
   );

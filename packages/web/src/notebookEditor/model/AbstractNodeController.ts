@@ -16,7 +16,7 @@ import { AbstractNodeModel } from './AbstractNodeModel';
 export abstract class AbstractNodeController<NodeType extends ProseMirrorNode, Storage extends NodeViewStorage<AbstractNodeController<NodeType, any, any, any>> | NoStorage = any, NodeModel extends AbstractNodeModel<NodeType, any> = any, NodeView extends AbstractNodeView<NodeType, Storage, NodeModel> = any>implements ProseMirrorNodeView {
   // == ProseMirror NodeView ======================================================
   public readonly dom: HTMLElement;
-  public contentDOM?: Node | null | undefined;
+  public contentDOM?: HTMLElement | null | undefined;
 
   // ==============================================================================
   readonly nodeView: NodeView/*initialized by the subclass*/;

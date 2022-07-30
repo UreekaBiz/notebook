@@ -2,21 +2,21 @@ import { Attributes, AttributeType, HeadingLevel, MarkName, NodeName, DATA_NODE_
 
 // ********************************************************************************
 // == Element =====================================================================
-// base type for all theme attributes. Each node can implement its own theme type
-// defining the attributes required by the theme.
-// NOTE: the value for a given attribute could be any since there are complex
-//       Nodes that requires render attributes based on an external value (e.g.
+// base type for all Theme Attributes. Each Node can implement its own theme type
+// defining the Attributes required by the Theme.
+// NOTE: the value for a given Attribute could be 'any' since there are complex
+//       Nodes that requires render Attributes based on an external value (e.g.
 //       Heading level).
 export type ThemeElement<ElementAttributes extends Attributes = Attributes> = Partial<Record<keyof ElementAttributes, any>>;
 export type NodeThemeElements = Record<NodeName, ThemeElement>;
 export type MarkThemeElements = Record<MarkName, ThemeElement>
 
 // -- Custom Selectors ------------------------------------------------------------
-// Custom Selectors are used to select a specific node based on more attributes
-// than just the node name. This is useful when a node requires a certain style
-// based on an attribute.
-// NOTE: Using an object instead of a Enum since the values are using template
-//       literals and cannot be used as values for the Enum.
+// Custom Selectors are used to select a specific Node based on more Attributes
+// than just the Node name. This is useful when a Node requires a certain style
+// based on an Attribute.
+// NOTE: this uses an object instead of a enum since the values are using template
+//       literals and cannot be used as values for the Enum
 export const CustomSelector = {
   HeadingLevelOne: `[${DATA_NODE_TYPE}="${NodeName.HEADING}"][level="${HeadingLevel.One}"]`,
   HeadingLevelTwo: `[${DATA_NODE_TYPE}="${NodeName.HEADING}"][level="${HeadingLevel.Two}"]`,
@@ -30,13 +30,13 @@ export enum ThemeName {
   GoogleDocs = 'Google Docs',
 }
 export interface Theme {
-  /** the name that identifies the theme */
+  /** the name that identifies the Theme */
   // NOTE: This name must be unique.
   name: ThemeName;
-  /** the name that will be shown to the user */
+  /** the name that will be shown to the User */
   displayName: string;
 
-  /** a record of themes defining the attributes for each element */
+  /** a record of themes defining the Attributes for each element */
   nodes: NodeThemeElements;
   marks: MarkThemeElements;
 

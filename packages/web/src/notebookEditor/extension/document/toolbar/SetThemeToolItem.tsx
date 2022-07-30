@@ -10,6 +10,7 @@ interface Props extends EditorToolComponentProps {/*no additional*/}
 export const SetThemeToolItem: React.FC<Props> = ({ editor }) => {
   const [theme, setTheme] = useState<ThemeName>(ThemeName.Default);
 
+  // == Handler ===================================================================
   const handleChange: ChangeEventHandler<HTMLSelectElement> = (event) => {
     const value = event.target.value as ThemeName/*by contract*/;
     setTheme(value);

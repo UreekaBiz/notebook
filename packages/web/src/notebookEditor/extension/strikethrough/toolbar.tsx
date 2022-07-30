@@ -1,6 +1,6 @@
 import { BiStrikethrough } from 'react-icons/bi';
 
-import { isHeadingNode, isParagraphNode, MarkName } from '@ureeka-notebook/web-service';
+import { MarkName } from '@ureeka-notebook/web-service';
 
 import { isNodeSelection } from 'notebookEditor/extension/util/node';
 import { ToolItem } from 'notebookEditor/toolbar/type';
@@ -17,9 +17,7 @@ export const markStrikethrough: ToolItem = {
 
   shouldBeDisabled: (editor) => {
     const { selection } = editor.state;
-    if(isNodeSelection(selection)) return true;
-    if(isParagraphNode(selection.$anchor.parent) || isHeadingNode(selection.$anchor.parent)) return false;
-    /* else -- selection somewhere that does not allow strikethrough */
+    if(!isNodeSelection(selection)) return false;
 
     return true;
   },

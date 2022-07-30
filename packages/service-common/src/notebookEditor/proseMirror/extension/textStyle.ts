@@ -7,7 +7,7 @@ import { NotebookSchemaType } from '../schema';
 
 // ********************************************************************************
 // == Attribute ===================================================================
-// NOTE: This values must have matching types the ones defined in the Extension.
+// NOTE: this value must have matching types -- the ones defined in the Extension
 const TextStyleAttributesSpec = {
   [AttributeType.TextColor]: noNodeOrMarkSpecAttributeDefaultValue<string>(),
   [AttributeType.FontSize]: noNodeOrMarkSpecAttributeDefaultValue<string>(),
@@ -23,18 +23,19 @@ export const TextStyleMarkSpec: MarkSpec = {
 
 // -- Render Spec -----------------------------------------------------------------
 export const TextStyleMarkRendererSpec: MarkRendererSpec<TextStyleAttributes> = {
-  // NOTE: The tag is only used for the Editor, the HTML renderer will use the tag
-  //       of the TextNode instead. SEE: ./renderer.ts
+  // NOTE: the tag is only used for the Editor. The HTML renderer uses the tag of
+  //       the TextNode instead
+  // SEE: ./renderer.ts
   tag: 'span',
   render: {/*don't render anything by default*/},
 
-  attributes: {/*use the default renderer on all attributes*/},
+  attributes: {/*use the default renderer on all Attributes*/},
 };
 
 // == Type ========================================================================
 // -- Mark Type -------------------------------------------------------------------
 // NOTE: this is the only way since PM does not provide a way to specify the type
-//       of the attributes
+//       of the Attributes
 export type TextStyleMarkType = ProseMirrorMark<NotebookSchemaType> & { attrs: TextStyleAttributes; };
 export const isTextStyleMark = (mark: ProseMirrorMark<NotebookSchemaType>): mark is TextStyleMarkType => mark.type.name === MarkName.TEXT_STYLE;
 

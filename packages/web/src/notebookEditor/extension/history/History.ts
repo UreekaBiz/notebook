@@ -1,7 +1,8 @@
 import { Extension } from '@tiptap/react';
-import { ExtensionName } from 'notebookEditor/model/type';
 import { history, redo, undo } from 'prosemirror-history';
 import { keymap } from 'prosemirror-keymap';
+
+import { ExtensionName } from 'notebookEditor/model/type';
 
 // ********************************************************************************
 // REF: https://github.com/ProseMirror/prosemirror-history/blob/master/src/history.ts

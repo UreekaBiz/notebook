@@ -10,8 +10,11 @@ import { useCallback, useEffect, useState } from 'react';
 // A use case is an input that modifies a value and commits the change to a external
 // entity, but this value should only be updated once after the user stops making
 // changes and the external entity could also update the value.
+//
+// An optional focus parameter can be passed to the update function to indicate if
+// the Editor should be focused after the update.
 // NOTE: not arrow function due to use of generic type
-export function useLocalValue<T>(value: T, update: (newValue: T) => void) {
+export function useLocalValue<T>(value: T, update: (newValue: T, focus?: boolean) => void) {
   // == State =====================================================================
   const [localValue, setLocalValue] = useState(value);
   const [isUpdating, setIsUpdating] = useState(false/*by contract*/);
@@ -32,8 +35,8 @@ export function useLocalValue<T>(value: T, update: (newValue: T) => void) {
     setIsUpdating(true);
   }, []);
 
-  const commitChange = useCallback((value?: T) => {
-    update(value ?? localValue);
+  const commitChange = useCallback((value?: T, focus?: boolean) => {
+    update(value ?? localValue, focus);
     setIsUpdating(false);
   }, [localValue, update]);
 

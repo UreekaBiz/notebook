@@ -17,11 +17,11 @@ export const FontSizeToolItem: React.FC<Props> = ({ editor, depth }) => {
   const inputValue = domRenderValue === InvalidMergedAttributeValue ? '' : domRenderValue;
 
   // == Handlers ==================================================================
-  const handleChange = (inputValue: string) => {
+  const handleChange = (inputValue: string, focusEditor?: boolean) => {
     editor.commands.setTextStyle(AttributeType.FontSize, inputValue);
 
     // Focus the editor again
-    editor.commands.focus();
+    if(focusEditor) editor.commands.focus();
   };
 
   // == UI ========================================================================

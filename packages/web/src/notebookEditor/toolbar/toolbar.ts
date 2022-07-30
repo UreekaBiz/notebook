@@ -11,8 +11,8 @@ import { Toolbar } from './type';
 // in the collection then nothing will be shown.
 const TOOLBAR_MAP: Record<NodeName, Toolbar | null> = {
   [NodeName.DOC]: DocumentToolbar,
+  [NodeName.PARAGRAPH]: ParagraphToolbar/*none*/,
   [NodeName.TEXT]: null/*none*/,
-  [NodeName.PARAGRAPH]: ParagraphToolbar,
   [NodeName.HEADING]: HeadingToolbar,
 };
 

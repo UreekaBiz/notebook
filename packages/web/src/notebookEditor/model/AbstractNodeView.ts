@@ -21,7 +21,7 @@ export abstract class AbstractNodeView<NodeType extends ProseMirrorNode, Storage
   // a leaf Node type. When this is present, ProseMirror will take care of rendering
   // the Node's children into it. When it is not present, the Node View itself is
   // responsible for rendering (or deciding not to render) its child Nodes
-  public contentDOM?: Node | null | undefined;
+  public contentDOM?: HTMLElement | null | undefined;
 
   // ------------------------------------------------------------------------------
   // the corresponding model for this view.

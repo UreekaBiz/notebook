@@ -20,13 +20,13 @@ export const TextNodeSpec: NodeSpec = {
 export const TextNodeRendererSpec: NodeRendererSpec = {
   tag: 'span',
 
-  attributes: {/*no attributes*/},
+  attributes: {/*no Attributes*/},
 };
 
 // == Type ========================================================================
 // -- Node Type -------------------------------------------------------------------
 // NOTE: this is the only way since PM does not provide a way to specify the type
-//       of the attributes
+//       of the Attributes
 export type TextNodeType = ProseMirrorNode<NotebookSchemaType> & {/*nothing additional*/};
 export const isTextNode = (node: ProseMirrorNode<NotebookSchemaType>): node is TextNodeType => node.type.name === NodeName.TEXT;
 

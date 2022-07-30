@@ -7,15 +7,15 @@ import { NotebookSchemaType } from '../schema';
 
 // ********************************************************************************
 // == Attribute ===================================================================
-// NOTE: This values must have matching types the ones defined in the Extension.
+// NOTE: this value must have matching types -- the ones defined in the Extension
 const HeadingAttributesSpec = {
   [AttributeType.Id]: noNodeOrMarkSpecAttributeDefaultValue<NodeIdentifier>(),
 
   [AttributeType.Level]: noNodeOrMarkSpecAttributeDefaultValue<HeadingLevel>(),
 
-  // Since headings have a default set of marks applied to them on creation, they
+  // since headings have a default set of Marks applied to them on creation, they
   // are required to have the 'initialMarksSet' attribute to ensure correct
-  // creation behavior.
+  // creation behavior
   // SEE: setDefaultMarks
   [AttributeType.InitialMarksSet]: noNodeOrMarkSpecAttributeDefaultValue<boolean>(),
 
@@ -60,7 +60,7 @@ export const HeadingNodeRendererSpec: NodeRendererSpec<HeadingAttributes> = {
     }
   },
 
-  attributes: {/*use the default renderer on all attributes*/},
+  attributes: {/*use the default renderer on all Attributes*/},
 };
 
 // == Type ========================================================================
@@ -80,7 +80,7 @@ export const getHeadingLevelFromTag = (tag: string): HeadingLevel | undefined =>
 
 // -- Node Type -------------------------------------------------------------------
 // NOTE: this is the only way since PM does not provide a way to specify the type
-//       of the attributes
+//       of the Attributes
 export type HeadingNodeType = ProseMirrorNode<NotebookSchemaType> & { attrs: HeadingAttributes; };
 export const isHeadingNode = (node: ProseMirrorNode<NotebookSchemaType>): node is HeadingNodeType => node.type.name === NodeName.HEADING;
 

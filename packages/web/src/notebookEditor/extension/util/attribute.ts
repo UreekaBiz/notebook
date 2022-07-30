@@ -1,7 +1,7 @@
 import { Attribute, Editor } from '@tiptap/core';
 import { DOMOutputSpec, Mark as ProseMirrorMark, Node as ProseMirrorNode } from 'prosemirror-model';
 
-import { getMarkName, getMarkValue, getNodeName, getRenderAttributes, getRenderTag, isHeadingNode, isTextNode, mergeAttributes, mergeAttributeValues, AttributeType, Attributes, InvalidMergedAttributeValue, MarkName, MarkRendererSpecs, MarkSpecs, MergedAttributeValue,  NodeRendererSpecs, NodeSpecs, SetAttributeType, DATA_NODE_TYPE } from '@ureeka-notebook/web-service';
+import { getMarkName, getMarkValue, getNodeName, getRenderAttributes, getRenderTag, isHeadingNode, isTextNode, mergeAttributes, mergeAttributeValues, AttributeType, Attributes, HeadingLevel, InvalidMergedAttributeValue, MarkName, MarkRendererSpecs, MarkSpecs, MergedAttributeValue, NodeRendererSpecs, NodeSpecs, SetAttributeType, DATA_NODE_TYPE } from '@ureeka-notebook/web-service';
 
 import { getHeadingThemeValue, getThemeValue } from '../theme/theme';
 import { getSelectedNode } from './node';
@@ -89,7 +89,7 @@ export const getMarkOutputSpec = (mark: ProseMirrorMark, HTMLAttributes: Attribu
 // 4. The value of an Attribute in the Theme.
 // 5. The inherited value from a parent DOM element. In this case the editor don't
 //   have an easy way to know what the actual value used is.
-export const getTextDOMRenderedValue = (editor: Editor, attributeType: AttributeType, markType: MarkName): MergedAttributeValue => {
+export const getTextDOMRenderedValue = (editor: Editor, attributeType: AttributeType, markType?: MarkName): MergedAttributeValue => {
   const { state } = editor;
   const { selection } = state;
   const start = selection.$from.pos,
@@ -98,16 +98,22 @@ export const getTextDOMRenderedValue = (editor: Editor, attributeType: Attribute
   // Get the initial value based on the active mark.
   // NOTE: This is needed in the case that a Node don't have a TextNode yet but the
   //       mark is active, when creating the TextNode it will this Mark active.
-  const currentMarkAttributes = editor.getAttributes(markType);
-  let mergedValue: MergedAttributeValue = currentMarkAttributes[attributeType];
+  const currentMarkAttributes = markType ? editor.getAttributes(markType) : undefined/*no mark attributes*/;
+  let mergedValue: MergedAttributeValue = currentMarkAttributes ? currentMarkAttributes[attributeType] : undefined/*no value*/;
 
   // Merges the value of all different attributeType in the given range.
   state.doc.nodesBetween(start, end, (node, pos, parent) => {
     if(mergedValue === InvalidMergedAttributeValue) return false/*stop search*/;
-    if(!isTextNode(node))  return;/*nothing to do*/
+    // Is a node that have at leas one child. This is needed since nodes that have
+    // one child will take the attributes of the child.
+    if(!isTextNode(node)  )  {
+      if(node.childCount > 0) return/*nothing to do*/;
+      const attributeValue = getDOMNodeRenderedValue(node, attributeType);
+      mergedValue = mergeAttributeValues(mergedValue, attributeValue);
+    }
 
     // Marks are applied to TextNodes only, get the Attribute value form the Mark.
-    const markValue = getMarkValue(node, markType, attributeType);
+    const markValue = markType ? getMarkValue(node, markType, attributeType) : undefined/*no mark value*/;
     // Value was found, merge it with mergedValue.
     if(markValue !== undefined) {
       mergedValue = mergeAttributeValues(mergedValue, markValue);
@@ -140,7 +146,7 @@ export const getDOMNodeRenderedValue = (node: ProseMirrorNode, attributeType: At
 
   // Heading nodes are a special case since the FontSize and TextColor are defined
   // by its level
-  if(isHeadingNode(node) && (attributeType === AttributeType.FontSize || attributeType === AttributeType.TextColor)) return getHeadingThemeValue(attributeType, node.attrs[AttributeType.Level]);
+  if(isHeadingNode(node) && (attributeType === AttributeType.FontSize || attributeType === AttributeType.TextColor)) return getHeadingThemeValue(attributeType, node.attrs[AttributeType.Level] ?? HeadingLevel.One/*default level if not present*/);
 
   const nodeName = getNodeName(node);
 

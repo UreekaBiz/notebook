@@ -86,6 +86,11 @@ const isToolActive = (editor: Editor, tool: ToolItem) => {
   // NOTE: This is a special case since Heading node uses multiple Tool Items for
   //       the same kind of node only differentiated by the Level attribute.
   if(tool.name.includes(NodeName.HEADING)) return isHeadingToolActive(editor, tool.name);
+  if(tool.toolType === 'component') return false/*no active state for components*/;
 
-  return tool.toolType === 'button' && editor.isActive(tool.name);
+  // Use component implementation if defined
+  if(tool.isActive) return tool.isActive(editor);
+
+  // Use editor implementation
+  return editor.isActive(tool.name);
 };

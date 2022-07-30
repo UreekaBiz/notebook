@@ -21,8 +21,6 @@ export const Paragraph = Node.create<ParagraphOptions, NoStorage>({
   // -- Attribute -----------------------------------------------------------------
   addAttributes() {
     return {
-      ...this.parent?.(),
-
       [AttributeType.FontSize]: setAttributeParsingBehavior(AttributeType.FontSize, SetAttributeType.STRING),
       [AttributeType.TextColor]: setAttributeParsingBehavior(AttributeType.TextColor, SetAttributeType.STRING),
 
@@ -55,12 +53,12 @@ export const Paragraph = Node.create<ParagraphOptions, NoStorage>({
           const { tr } = newState;
 
           // ensure paragraphs do not have default bold style carried from headings
-          // or any previous node
+          // or any previous Node
           if(newState.selection.$anchor.parent.type.name !== oldState.selection.$anchor.parent.type.name) {
             const marks = tr.storedMarks;
             if(!marks) return/*nothing to do*/;
             marks.forEach(mark => tr.removeStoredMark(mark));
-          } /* else -- no marks active, do nothing */
+          } /* else -- no Marks active, do nothing */
 
           return tr;
         },

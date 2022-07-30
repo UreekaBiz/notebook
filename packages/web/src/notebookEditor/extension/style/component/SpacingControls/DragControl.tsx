@@ -1,24 +1,26 @@
 import { Box } from '@chakra-ui/react';
 import { useEffect, useRef, useState, MouseEventHandler } from 'react';
 
-import { Unit } from 'notebookEditor/theme/type';
+import { separateUnitFromString } from 'notebookEditor/theme/type';
 
 // ********************************************************************************
 const SENSITIVITY = 0.5;
 
 // ********************************************************************************
 interface Props {
-  value: number;
-  unit: Unit;
+  valueWithUnit: string;
   direction: 'vertical' | 'horizontal';
 
-  onChange: (value: number) => void;
+  onChange: (valueWithUnit: string) => void;
   onEnd: () => void;
 }
-export const DragControl: React.FC<Props> = ({ value, unit, direction, onChange, onEnd }) => {
+export const DragControl: React.FC<Props> = ({ valueWithUnit, direction, onChange, onEnd }) => {
   const [isMoving, setIsMoving] = useState(false/*by contract*/);
   const [startingMousePosition, setStartingMousePosition] = useState(0);
-  const [startingValue, setStartingValue] = useState(value);
+  const [value, unit] = separateUnitFromString(valueWithUnit);
+  // NOTE: if the value is an empty string or undefined, it will be treated as 0.
+  //       This is the expected behavior.
+  const [startingValue, setStartingValue] = useState(Number(value)/*by contract*/);
   // Poor implementation of throttle. -- Limits the rate of how often onChange is called.
   const canUpdate = useRef(true/*initial value*/);
 
@@ -35,7 +37,7 @@ export const DragControl: React.FC<Props> = ({ value, unit, direction, onChange,
 
       const diff = direction === 'vertical' ? startingMousePosition - event.clientY : event.clientX - startingMousePosition;
       newValue = startingValue + Math.round(diff* SENSITIVITY);
-      onChange(newValue);
+      onChange(`${newValue}${unit}`);
     };
 
     document.addEventListener('mousemove', handleMouseMove);
@@ -69,8 +71,8 @@ export const DragControl: React.FC<Props> = ({ value, unit, direction, onChange,
   useEffect(() => {
     if(isMoving) return/*nothing to do*/;
 
-    // Sync value and unit
-    setStartingValue(value);
+    // Sync starting value
+    setStartingValue(Number(value));
 
     // Explicitly ignore isMoving since this only depends on valueWithUnit
     // eslint-disable-next-line react-hooks/exhaustive-deps

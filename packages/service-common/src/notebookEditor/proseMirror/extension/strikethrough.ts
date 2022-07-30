@@ -16,8 +16,9 @@ export const StrikethroughMarkSpec: MarkSpec = {
 
 // -- Render Spec -----------------------------------------------------------------
 export const StrikethroughMarkRendererSpec: MarkRendererSpec<StrikethroughAttributes> = {
-  // NOTE: The tag is only used for the Editor, the HTML renderer will use the tag
-  //       of the TextNode instead. SEE: ./renderer.ts
+  // NOTE: the tag is only used for the Editor. The HTML renderer uses the tag of
+  //       the TextNode instead
+  // SEE: ./renderer.ts
   tag: 's',
   render: { style: 'text-decoration: line-through;' },
 
@@ -27,7 +28,7 @@ export const StrikethroughMarkRendererSpec: MarkRendererSpec<StrikethroughAttrib
 // == Type ========================================================================
 // -- Mark Type -------------------------------------------------------------------
 // NOTE: this is the only way since PM does not provide a way to specify the type
-//       of the attributes
+//       of the Attributes
 export type StrikethroughMarkType = ProseMirrorMark<NotebookSchemaType> & { attrs: StrikethroughAttributes; };
 export const isStrikethroughMark = (mark: ProseMirrorMark<NotebookSchemaType>): mark is StrikethroughMarkType => mark.type.name === MarkName.STRIKETHROUGH;
 

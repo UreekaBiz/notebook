@@ -16,12 +16,13 @@ export const BoldMarkSpec: MarkSpec = {
 
 // -- Render Spec -----------------------------------------------------------------
 export const BoldMarkRendererSpec: MarkRendererSpec<BoldAttributes> = {
-  // NOTE: The tag is only used for the Editor, the HTML renderer will use the tag
-  //       of the TextNode instead. SEE: ./renderer.ts
+  // NOTE: the tag is only used for the Editor. The HTML renderer uses the tag of
+  //       the TextNode instead
+  // SEE: ./renderer.ts
   tag: 'strong',
   render: { style: 'font-weight: bold;' },
 
-  attributes: {/*no attributes*/},
+  attributes: {/*no Attributes*/},
 };
 
 // == Type ========================================================================

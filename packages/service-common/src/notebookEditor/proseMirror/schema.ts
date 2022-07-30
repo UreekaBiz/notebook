@@ -36,7 +36,7 @@ export enum NotebookSchemaVersion {
 }
 
 // ................................................................................
-// NOTE: This schema must reflect the same Schema that is being used in the Editor
+// NOTE: this schema must reflect the same Schema that is being used in the Editor
 //       itself, otherwise the Editor will not be able to load the Document.
 //
 //       When adding or removing Nodes, the extensions that are used in the Editor

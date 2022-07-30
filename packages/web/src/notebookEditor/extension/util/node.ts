@@ -1,7 +1,7 @@
 import { CommandProps, Editor } from '@tiptap/core';
 import { GapCursor } from 'prosemirror-gapcursor';
 import { Node as ProseMirrorNode } from 'prosemirror-model';
-import { EditorState, NodeSelection, Selection, Transaction } from 'prosemirror-state';
+import { EditorState, NodeSelection, Selection, TextSelection, Transaction } from 'prosemirror-state';
 
 import { getNodeOffset, NodeName, NotebookSchemaType } from '@ureeka-notebook/web-service';
 
@@ -9,7 +9,7 @@ import { ExtensionName, SelectionDepth } from 'notebookEditor/model/type';
 
 // ********************************************************************************
 // == Toggle ======================================================================
-/** Toggles a block node if its currently active, or focuses it back if the type of
+/** Toggles a block Node if its currently active, or focuses it back if the type of
  *  the current selection is {@link ExtensionName.GAP_CURSOR} */
 export const toggleBlockNode = (props: CommandProps, nodeName: NodeName) => {
   if(props.editor.isActive(nodeName)) {
@@ -80,8 +80,8 @@ export const handleBlockArrowDown = (editor: Editor, nodeName: NodeName) => {
 };
 
 // == Position ====================================================================
-// Type of the function that is used to compute the position of a NodeView in the
-// current document
+// type of the function that is used to compute the position of a NodeView in the
+// current Document
 export type getPosType = boolean | (() => number);
 
 /** Checks to see whether an object is a getPos function */
@@ -143,9 +143,9 @@ export const isFullySelected = (state: EditorState, node: ProseMirrorNode, pos: 
 
 // --------------------------------------------------------------------------------
 /**
- * @param selection The {@link Selection} that will be resolved
- * @param tr The {@link Transaction} whose document will be used to resolve the newSelection
- * @returns The new {@link Selection} that will be used after the Transaction
+ * @param selection The {@link Selection} that is resolved
+ * @param tr The {@link Transaction} whose document is used to resolve the newSelection
+ * @returns The new {@link Selection} that is used after the Transaction
  *          performs its modifications
  */
 export enum SelectionBias {
@@ -153,18 +153,19 @@ export enum SelectionBias {
   RIGHT = 1
 }
 export const resolveNewSelection = (selection: Selection<NotebookSchemaType>, tr: Transaction<NotebookSchemaType>, bias?: SelectionBias) => {
-  let nodeSelection = false;
-  if(isNodeSelection(selection)) nodeSelection = true;
-
-  if(nodeSelection) {
+  if(isNodeSelection(selection)) {
     return new NodeSelection(tr.doc.resolve(selection.$anchor.pos));
-  } /* else -- textSelection */
+  } /* else -- a Node is not selected */
+
+  if(!selection.empty) {
+    return new TextSelection(tr.doc.resolve(selection.$anchor.pos), tr.doc.resolve(selection.$head.pos));
+  } /* else -- selection is empty */
 
   return Selection.near(tr.doc.resolve(selection.$anchor.pos), bias ? bias : SelectionBias.LEFT/*default*/);
 };
 
 // ................................................................................
-/** Returns the {@link ResolvedPos} of the anchor of the selection of the given {@link Transaction} */
+/** @returns the {@link ResolvedPos} of the anchor of the selection of the given {@link Transaction} */
 export const getResolvedAnchorPos = (tr: Transaction<NotebookSchemaType>, extraOffset: number) => {
   const nodeBefore = getNodeBefore(tr.selection),
         nodeBeforeSize = nodeBefore?.nodeSize ?? 0/*no node before -- no size*/;

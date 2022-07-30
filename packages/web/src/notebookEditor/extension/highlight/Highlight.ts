@@ -1,5 +1,5 @@
 import { Extension } from '@tiptap/core';
-import { Plugin } from 'prosemirror-state';
+import { Plugin, EditorState } from 'prosemirror-state';
 import { Decoration, DecorationSet } from 'prosemirror-view';
 
 import { ExtensionName } from 'notebookEditor/model/type';
@@ -18,7 +18,7 @@ export const Highlight = Extension.create({
     return [
       new Plugin({
         props: {
-          decorations(state) {
+          decorations(state: EditorState) {
             const selection = state.selection;
             const from = selection.$from.pos,
                   to = selection.$to.pos;

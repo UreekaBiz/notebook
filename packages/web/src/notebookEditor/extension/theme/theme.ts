@@ -14,7 +14,7 @@ class NotebookEditorTheme {
     this.theme = theme;
   }
 
-  // == Public methods ============================================================
+  // == Accessors =================================================================
   /** Gets the current Theme */
   public getTheme() {
     return this.theme;
@@ -26,8 +26,8 @@ class NotebookEditorTheme {
     this.setThemeStylesheet()/*sync stylesheet*/;
   }
 
-  // updates the theme stylesheet with the current theme. This function should be
-  // called whenever the theme is updated.
+  // updates the theme stylesheet with the current Theme. This function must be
+  // called whenever the Theme is updated
   public setThemeStylesheet() {
     const stylesheet = this.getStylesheet();
 
@@ -44,7 +44,7 @@ class NotebookEditorTheme {
     existingStyleSheet.textContent = stylesheet;
   }
 
-  // == Private methods ===========================================================
+  // ==============================================================================
   private getStylesheet() {
     const { nodes, marks, customSelectors } = this.theme;
 
@@ -110,10 +110,10 @@ export const getThemeElement = (nodeOrMarkName: NodeName | MarkName): ThemeEleme
   return {/*empty*/};
 };
 
-// gets the attribute value from the current Theme based on the Node name and
+// gets the Attribute value from the current Theme based on the Node name and
 // Attribute type
-// NOTE: This function must only be used to get the actual render value that is a
-//       string (or undefined if not defined). If complex attributes are needed
+// NOTE: this function must only be used to get the actual render value that is a
+//       string (or undefined if not defined). If complex Attributes are needed
 //       (e.g. Heading level) then the NodeTheme must be accessed directly. This
 //       is required to avoid Type conflicts.
 export const getThemeValue = (nodeOrMarkName: NodeName | MarkName, attribute: AttributeType): string | undefined/*FIXME: document*/ => {
@@ -128,9 +128,9 @@ export const getThemeValue = (nodeOrMarkName: NodeName | MarkName, attribute: At
 };
 
 // gets the TextColor or FontSize for a Heading from the Theme
-// NOTE: Heading nodes are a special case since the FontSize and TextColor are
+// NOTE: Heading Nodes are a special case since the FontSize and TextColor are
 //       defined by its level, in this case a special CustomSelector is used and
-//       must be manually matched here.
+//       must be manually matched here
 export const getHeadingThemeValue = (attribute: AttributeType.FontSize | AttributeType.TextColor, level: HeadingLevel): string | undefined => {
   const theme = notebookEditorTheme.getTheme();
   const { customSelectors } = theme;

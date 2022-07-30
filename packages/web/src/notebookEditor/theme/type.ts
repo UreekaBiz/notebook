@@ -72,8 +72,8 @@ export const getUnitFromString = (str: string): Unit | undefined => {
     if(!str.includes(unit)) continue/*not a match -- keep looking*/;
     if(!foundUnit) { foundUnit = unit; continue; }
 
-    // NOTE: This is needed for the case where the search matches 'rem' and 'em',
-    //       the algorithm must choose the one that fully selects the pattern.
+    // NOTE: this is needed for the case where the search matches 'rem' and 'em'.
+    //       The algorithm must choose the one that fully selects the pattern
     if(unit.length > foundUnit.length) foundUnit = unit;
   }
   return foundUnit;
