@@ -4,7 +4,7 @@ import { BsBook } from 'react-icons/bs';
 import { AuthAvatar } from 'authUser/component/AuthAvatar';
 
 // ********************************************************************************
-export const HomeTopbar: React.FC = () => {
+export const HomeHeader: React.FC = () => {
   return (
     <Box width='full' borderBottom='1px solid #ccc'>
       <Flex

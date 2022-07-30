@@ -4,7 +4,7 @@ import { WrappedPage } from 'core/wrapper';
 import { PublishedNotebookList } from 'notebook/component/PublishedNotebookList';
 import { NotebookServiceWrapper } from 'notebook/NotebookServiceWrapper';
 import { HeroBanner } from 'ui/HeroBanner';
-import { HomeTopbar } from 'ui/HomeTopbar';
+import { HomeHeader } from 'ui/HomeHeader';
 import { UserProfileServiceWrapper } from 'user/UserProfileServiceWrapper';
 
 // ********************************************************************************
@@ -13,7 +13,7 @@ import { UserProfileServiceWrapper } from 'user/UserProfileServiceWrapper';
 function HomePage() {
   return (
     <Box position='relative'>
-      <HomeTopbar />
+      <HomeHeader />
       <HeroBanner />
       <Box width='full' borderBottom='1px solid #eaeaea' marginBottom={4} />
       <Box
