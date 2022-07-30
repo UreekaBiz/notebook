@@ -17,7 +17,7 @@ export const DocumentNodeSpec: NodeSpec = {
   //       is the top node.
   // SEE:  src/common/notebookEditor/schema.ts
   topNode: true/*it's the node that will be used as a root for the document*/,
-  content: `${NodeName.TITLE} ${NodeGroup.BLOCK}+`,
+  content: `${NodeGroup.BLOCK}+`,
 };
 
 // -- Render Spec -----------------------------------------------------------------

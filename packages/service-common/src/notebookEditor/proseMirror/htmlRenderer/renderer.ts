@@ -10,7 +10,6 @@ import { isParagraphJSONNode, ParagraphNodeRendererSpec } from '../extension/par
 import { StrikethroughMarkRendererSpec } from '../extension/strikethrough';
 import { isTextJSONNode, TextNodeRendererSpec } from '../extension/text';
 import { TextStyleMarkRendererSpec } from '../extension/textStyle';
-import { TitleNodeRendererSpec } from '../extension/title';
 import { JSONMark, MarkName } from '../mark';
 import { contentToJSONNode, JSONNode, NodeName } from '../node';
 import { MarkSpecs, NodeSpecs } from '../schema';
@@ -24,7 +23,6 @@ export const NodeRendererSpecs: Record<NodeName, NodeRendererSpec> = {
   [NodeName.IMAGE]: ImageNodeRendererSpec as any/*FIXME!!!*/,
   [NodeName.PARAGRAPH]: ParagraphNodeRendererSpec as any/*FIXME!!!*/,
   [NodeName.TEXT]: TextNodeRendererSpec,
-  [NodeName.TITLE]: TitleNodeRendererSpec as any/*FIXME!!!*/,
 };
 
 export const MarkRendererSpecs: Record<MarkName, MarkRendererSpec> = {
