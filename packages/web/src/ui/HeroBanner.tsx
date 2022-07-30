@@ -7,7 +7,7 @@ export const HeroBanner: React.FC =  () => {
       <Box marginX='auto' width='full' maxWidth={1000}>
         <Flex marginX='auto' textAlign='center' direction='column' alignItems='flex-start' maxWidth={800}>
           <Heading fontSize={72} marginBottom={2}>Notebooks. Reimagined.</Heading>
-          <Text fontSize={24}>
+          <Text fontSize={24} fontWeight='light'>
             Lorem ipsum dolor sit amet, consectetur adipiscing elit. Curabitur commodo, arcu sed fermentum convallis, neque velit imperdiet ex, a congue est nunc vitae diam. Nullam venenatis suscipit lacinia.
           </Text>
         </Flex>
