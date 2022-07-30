@@ -45,7 +45,7 @@ export const PublishNotebookButton: React.FC<Props> = () => {
       width={160}
       onClick={handlePublishNotebook}
     >
-      {isLoading ? 'Loading...' : 'Publish Notebook'}
+      {isLoading ? 'Publishing...' : 'Publish Notebook'}
     </Button>
   );
 };
