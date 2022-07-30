@@ -36,7 +36,7 @@ export const MarkSpecs: Record<MarkName, MarkSpec> = {
 // NOTE: must be updated when adding breaking changes to the Schema Notebook
 export enum NotebookSchemaVersion {
   V1 = 'v1'/*initial version -- no longer used*/,
-  V2 = 'v2'/*moved away from 'steps' and confusion around 'version' (schema vs. PM 'step), etc*/,
+  V2 = 'v2'/*moved away from 'steps' and confusion around 'version' (schema vs. PM 'step'), etc*/,
 }
 
 // ................................................................................
