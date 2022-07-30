@@ -31,10 +31,11 @@ export const editorDefinition = {
   content: ''/*initially empty*/,
 };
 
-// NOTE: The following execution order goes from top-first to bottom-last
-//       (SEE: FeatureDoc, Changes section)
+// NOTE: the following execution order goes from top-first to bottom-last
+// SEE: FeatureDoc, Changes section
 //
-// Current Schema Execution Order (SEE: notebookEditor/model/type/ExtensionPriority)
+// Current Schema Execution Order
+// SEE: notebookEditor/model/type/ExtensionPriority
 // appendedTransaction
 // 1. UniqueNodeId
 // 2. NodeViewRemoval
