@@ -20,10 +20,10 @@ import { UniqueNodeId } from 'notebookEditor/extension/uniqueNodeId/UniqueNodeId
 // defines the structure of the Editor
 // SEE: NotebookProvider
 export const editorDefinition = {
-  // NOTE: when adding or removing extensions you must also update the schema
-  //       to reflect the new changes. It is used to validate the document and
-  //       perform operations on the server-side and must be always be in sync.
-  // see: src/common/notebookEditor/prosemirror/schema.ts.
+  // NOTE: when adding or removing Extensions, the Schema must also be updated to
+  //       reflect the new changes. It is used to validate the document and perform
+  //       operations on the server-side and must be always be in sync
+  // SEE: /common/notebookEditor/prosemirror/schema.ts
   extensions: [ Bold, DropCursor, Document, GapCursor, Heading, Highlight, History, Image, NodeViewRemoval, Paragraph, SetDefaultMarks, Strikethrough, Style, Text, TextStyle, Title, UniqueNodeId ],
   editorProps: { attributes: { class: 'Editor'/*SEE: /index.css*/ } },
 
