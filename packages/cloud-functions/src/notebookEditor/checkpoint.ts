@@ -84,7 +84,7 @@ export const getNotebookContent = async (
   const versions = versionSnapshot.docs.map(doc => doc.data());
 
   return collapseVersions(version, lastCheckpoint, versions);
-}
+};
 
 // ................................................................................
 // returns the last known Checkpoint using the specified Transaction. If there
