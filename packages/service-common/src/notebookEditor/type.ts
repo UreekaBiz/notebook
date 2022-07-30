@@ -17,6 +17,10 @@ export const generateNotebookVersionIdentifier = (index: number): NotebookVersio
 
 export type NotebookVersionContent = NodeContent/*alias*/;
 
+// identifies the User / Session that made the Versions from a given Editor. This
+// *must* be universally unique for each Editor (by ProseMirror contract)
+export type ClientIdentifier = Identifier;
+
 // --------------------------------------------------------------------------------
 // NOTE: document ID is NotebookVersion#index (string-hashed)
 // NOTE: because this is written by the client, any fields that are added need to be
@@ -29,6 +33,9 @@ export type NotebookVersion = Creatable & Readonly<{
   /** the ProseMirror Step version of this Version. It is effectively a Lamport
    *  Timestamp. It must start at INITIAL_DOCUMENT_INDEX and increase monotonically */
   index: number;
+  /** the universally unique identifier for the 'client' (a combination of the User
+   *  and Session identifiers) as required by ProseMirror */
+  clientId: ClientIdentifier;
   /** Content is the stringified JSON of a ProseMirror Step */
   content: NotebookVersionContent;
 }>;

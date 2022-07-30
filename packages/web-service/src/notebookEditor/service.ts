@@ -1,8 +1,9 @@
 import { Editor } from '@tiptap/core';
 import { Observable } from 'rxjs';
 
-import { NotebookIdentifier, NotebookSchemaVersion, UserIdentifier } from '@ureeka-notebook/service-common';
+import { NotebookIdentifier, NotebookSchemaVersion } from '@ureeka-notebook/service-common';
 
+import { AuthedUser } from '../authUser';
 import { getLogger, ServiceLogger } from '../logging';
 import { ApplicationError } from '../util';
 import { VersionListener } from './VersionListener';
@@ -24,8 +25,8 @@ export class NotebookEditorService {
    * @see #initialize()
    * @see #shutdown()
    */
-  public constructor(private readonly userId: UserIdentifier, private editor: Editor, schemaVersion: NotebookSchemaVersion, private readonly notebookId: NotebookIdentifier) {
-    this.versionListener = new VersionListener(userId, editor, schemaVersion, notebookId);
+  public constructor(private readonly user: AuthedUser, private editor: Editor, schemaVersion: NotebookSchemaVersion, private readonly notebookId: NotebookIdentifier) {
+    this.versionListener = new VersionListener(user, editor, schemaVersion, notebookId);
   }
 
   // ------------------------------------------------------------------------------
@@ -95,5 +96,5 @@ console.error(`match`, this.editor === editor);
   }
 
   // == Logging ===================================================================
-  private logContext() { return `for Notebook (${this.notebookId}) for User (${this.userId})`; }
+  private logContext() { return `for Notebook (${this.notebookId}) for User (${this.user.userId})`; }
 }

@@ -5,6 +5,7 @@ import { distinctUntilChanged, BehaviorSubject } from 'rxjs';
 
 import { contentToStep, sleep, NotebookIdentifier, NotebookVersion, NotebookSchemaVersion, Unsubscribe, UserIdentifier, NO_NOTEBOOK_VERSION } from '@ureeka-notebook/service-common';
 
+import { AuthedUser } from '../authUser';
 import { getLogger, ServiceLogger } from '../logging';
 import { ApplicationError } from '../util/error';
 import { getLatestContent, getVersionsFromIndex, onNewVersion, writeVersions } from './version';
@@ -60,7 +61,12 @@ const collaborationDelay: CollaborationDelay = { readDelayMs: 0, writeDelayMs: 0
 // one-shot and not be reused.
 // ********************************************************************************
 export class VersionListener {
-  private readonly userId: UserIdentifier;
+  private readonly user: AuthedUser;
+  // NOTE: *must* be unique per User-Session pair. Specifically, if just the userId
+  //       is passed then ProseMirror gets confused if the same User is editing in
+  //       different sessions
+  // NOTE: the naming comes from ProseMirror
+  private readonly clientId: UserIdentifier;
 
   private editor: Editor;
   private readonly notebookId: NotebookIdentifier;
@@ -92,8 +98,9 @@ export class VersionListener {
   private readonly firestoreUnsubscribes: Unsubscribe[] = []/*initially empty until #listenFirestore()*/;
 
   // ==============================================================================
-  public constructor(userId: UserIdentifier, editor: Editor, schemaVersion: NotebookSchemaVersion, notebookId: NotebookIdentifier) {
-    this.userId = userId;
+  public constructor(user: AuthedUser, editor: Editor, schemaVersion: NotebookSchemaVersion, notebookId: NotebookIdentifier) {
+    this.user = user;
+    this.clientId = user.userId + '|' + user.sessionId/*FIXME: move to an encoding method*/;
 
     this.editor = editor;
     this.schemaVersion = schemaVersion;
@@ -187,7 +194,7 @@ export class VersionListener {
     if(this.initialContentLoaded) { log.warn(`Attempting to load initial content after being already loaded ${this.logContext()}.`); return/*nothing to do*/; }
 
     // get the latest content (from a combination of Checkpoint and NotebookVersions)
-    const { latestIndex, jsonContent } = await getLatestContent(this.userId!, this.schemaVersion, this.notebookId)/*throws on error*/;
+    const { latestIndex, jsonContent } = await getLatestContent(this.clientId, this.schemaVersion, this.notebookId)/*throws on error*/;
     if(!this.initialized) return/*listener was terminated before finished initialization*/;
     log.debug(`Loaded initial content at Version ${latestIndex} ${this.logContext()}.`);
     this.lastReadIndex = latestIndex/*by definition*/;
@@ -206,7 +213,7 @@ export class VersionListener {
     this.editor.view.dispatch(transaction);
 
     // register the Collaboration Plugin with the Editor at the latest index
-    this.editor.registerPlugin(collab.collab({ clientID: this.userId, version: latestIndex }));
+    this.editor.registerPlugin(collab.collab({ clientID: this.clientId, version: latestIndex }));
 
     this.initialContentLoaded = true/*by contract -- done*/;
   }
@@ -219,20 +226,6 @@ export class VersionListener {
   }
 
   // == Editor ====================================================================
-  /**
-   * @param editor the new {@link Editor} that this listener listens to
-   */
-  public updateEditor(editor: Editor) {
-    this.editor = editor;
-
-console.error(this.initialContentLoaded, this.initialized);
-    if(!this.initialContentLoaded || !this.initialized) return/*do not listen to steps before #loadInitialContent is executed*/;
-
-    // make subscriptions to the new Editor
-    this.listenEditor();
-    this.listenFirestore();
-  }
-
   public getEditorIndex() {
     return collab.getVersion(this.editor.view.state);
   }
@@ -304,7 +297,7 @@ console.error(this.initialContentLoaded, this.initialized);
   // 'commit' the specified Versions to the Editor
   private updateEditorWithVersions(versions: NotebookVersion[]) {
     // NOTE: 'clientId' is what ProseMirror calls them
-    const clientIds = versions.map(({ createdBy }) => createdBy),
+    const clientIds = versions.map(({ clientId }) => clientId),
           proseMirrorSteps = versions.map(({ content }) => contentToStep(this.editor.schema, content));
 
     const transaction = collab.receiveTransaction(this.editor.view.state, proseMirrorSteps, clientIds, { mapSelectionBackward: true });
@@ -354,7 +347,7 @@ console.error(this.initialContentLoaded, this.initialized);
         log.debug(`Editor (at Version ${editorIndex}) has ${sendableStep.steps.length} Sendable Steps (at Version ${sendableStep.version}) and last written (${this.lastWriteIndex}) will write starting at ${startIndex} ${this.logContext()}.`);
         while(startIndex < sendableStep.steps.length) { /*loop until all Steps are written*/
           const pmSteps = sendableStep.steps.slice(startIndex, startIndex + versionBatchSize)/*take next batch of PM Steps*/;
-          const result = await writeVersions(this.userId!, this.schemaVersion, this.notebookId, this.lastWriteIndex + 1/*next Version*/, pmSteps);
+          const result = await writeVersions(this.user.userId, this.clientId, this.schemaVersion, this.notebookId, this.lastWriteIndex + 1/*next Version*/, pmSteps);
           if(!this.initialized) return/*listener was terminated before finished transaction*/;
           if(!result) { /*PM Steps were not written*/
             log.debug(`Failed to write Notebook Versions at index ${editorIndex + 1} ${this.logContext()}. Will wait for latest to be read and retry.`);

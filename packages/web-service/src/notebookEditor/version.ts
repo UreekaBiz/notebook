@@ -1,7 +1,7 @@
 import { getDocs, onSnapshot, runTransaction, serverTimestamp } from 'firebase/firestore';
 import { Step as ProseMirrorStep } from 'prosemirror-transform';
 
-import { collapseVersions, generateNotebookVersionIdentifier, Checkpoint, NotebookIdentifier, NotebookSchemaVersion, NotebookVersion, NotebookVersion_Write, JSONContent, UserIdentifier, NO_NOTEBOOK_VERSION } from '@ureeka-notebook/service-common';
+import { collapseVersions, generateNotebookVersionIdentifier, Checkpoint, ClientIdentifier, NotebookIdentifier, NotebookSchemaVersion, NotebookVersion, NotebookVersion_Write, JSONContent, UserIdentifier, NO_NOTEBOOK_VERSION } from '@ureeka-notebook/service-common';
 
 import { getLogger, ServiceLogger } from '../logging';
 import { firestore } from '../util/firebase';
@@ -70,7 +70,7 @@ export const getLatestContent = async (userId: UserIdentifier, schemaVersion: No
 
 // == Write =======================================================================
 // writes the batch of ProseMirror Steps as NotebookVersions
-export const writeVersions = async (userId: UserIdentifier, schemaVersion: NotebookSchemaVersion, notebookId: NotebookIdentifier, startingIndex: number, pmSteps: ProseMirrorStep[]): Promise<boolean> => {
+export const writeVersions = async (userId: UserIdentifier, clientId: ClientIdentifier, schemaVersion: NotebookSchemaVersion, notebookId: NotebookIdentifier, startingIndex: number, pmSteps: ProseMirrorStep[]): Promise<boolean> => {
 // log.debug(`Start step transaction for startingIndex (${startingIndex})`);
   return runTransaction(firestore, async transaction => {
     // NOTE: only checks against first Version since if that doesn't exist then no
@@ -93,6 +93,7 @@ export const writeVersions = async (userId: UserIdentifier, schemaVersion: Noteb
         schemaVersion,
 
         index: versionIndex,
+        clientId,
         content: JSON.stringify(pmStep.toJSON())/*FIXME: refactor into a function*/,
 
         createdBy: userId,

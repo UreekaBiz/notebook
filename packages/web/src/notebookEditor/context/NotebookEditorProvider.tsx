@@ -4,7 +4,7 @@ import { useEffect, useState, ReactNode } from 'react';
 
 import { getLogger, Notebook, NotebookEditorService, NotebookIdentifier, Logger, NodeIdentifier } from '@ureeka-notebook/web-service';
 
-import { useUserId } from 'authUser/hook/useUserId';
+import { useAuthedUser } from 'authUser/hook/useAuthedUser';
 import { notebookEditorTheme } from 'notebookEditor/extension/theme/theme';
 import { focusEditor } from 'notebookEditor/focus';
 import { editorDefinition } from 'notebookEditor/type';
@@ -28,8 +28,8 @@ export const NotebookEditorProvider: React.FC<Props> = ({ notebookId, notebook, 
   const [status, setStatus] = useAsyncStatus();
   const toast = useToast();
 
+  const authedUser = useAuthedUser();
   const editor = useEditor(editorDefinition);
-  const userId = useUserId();
 
   // == State =====================================================================
   const [editorService, setEditorService] = useState<NotebookEditorService | null>(null/*no NotebookEditorService by default*/);
@@ -37,12 +37,12 @@ export const NotebookEditorProvider: React.FC<Props> = ({ notebookId, notebook, 
   // == Effects ===================================================================
   // creates a new NotebookEditorService for each new Notebook (assuming valid deps)
   useEffect(() => {
-    if(!editor || !userId || (status !== 'idle'/*don't initialize twice*/)) return/*nothing to do*/;
+    if(!authedUser || !editor || (status !== 'idle'/*don't initialize twice*/)) return/*nothing to do*/;
 
     const initializeService = async () => {
       setStatus('loading');
 
-      const editorService = new NotebookEditorService(userId, editor, notebook.schemaVersion, notebookId);
+      const editorService = new NotebookEditorService(authedUser.authedUser, editor, notebook.schemaVersion, notebookId);
       try {
         await editorService.initialize();
       } catch(error) {
@@ -64,7 +64,7 @@ export const NotebookEditorProvider: React.FC<Props> = ({ notebookId, notebook, 
     initializeService();
 
     // NOTE: see effect below to shutdown the Service
-  }, [notebookId, notebook.schemaVersion, focusedElementId, isMounted, status, setStatus, toast, editor, userId]);
+  }, [notebookId, notebook.schemaVersion, focusedElementId, isMounted, status, setStatus, toast, editor, authedUser]);
 
   // sets the initial theme when the component mounts
   useEffect(() => {
