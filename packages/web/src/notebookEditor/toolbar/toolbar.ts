@@ -2,6 +2,7 @@ import { NodeName } from '@ureeka-notebook/web-service';
 
 import { DocumentToolbar } from 'notebookEditor/extension/document/toolbar';
 import { HeadingToolbar } from 'notebookEditor/extension/heading/toolbar';
+import { ImageToolbar } from 'notebookEditor/extension/image/toolbar';
 import { ParagraphToolbar } from 'notebookEditor/extension/paragraph/toolbar';
 
 import { Toolbar } from './type';
@@ -11,9 +12,10 @@ import { Toolbar } from './type';
 // in the collection then nothing will be shown.
 const TOOLBAR_MAP: Record<NodeName, Toolbar | null> = {
   [NodeName.DOC]: DocumentToolbar,
-  [NodeName.PARAGRAPH]: ParagraphToolbar/*none*/,
   [NodeName.TEXT]: null/*none*/,
   [NodeName.HEADING]: HeadingToolbar,
+  [NodeName.IMAGE]: ImageToolbar,
+  [NodeName.PARAGRAPH]: ParagraphToolbar/*none*/,
 };
 
 // --------------------------------------------------------------------------------

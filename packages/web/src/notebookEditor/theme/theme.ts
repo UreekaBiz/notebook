@@ -1,24 +1,5 @@
-import { AttributeType, NodeName } from '@ureeka-notebook/web-service';
-
-// ********************************************************************************
-// == Theme =======================================================================
-export const theme: Record<NodeName, Partial<Record<AttributeType, string>>> = {
-  // ProseMirror Nodes
-  [NodeName.DOC]: {},
-  [NodeName.HEADING]: {},
-  [NodeName.PARAGRAPH]: {
-    [AttributeType.FontSize]: '16px',
-    [AttributeType.TextColor]: '#333',
-    [AttributeType.MarginLeft]: '4px',
-  },
-  [NodeName.TEXT]: {},
-
-  // Custom Nodes
-  // Currently nothing
-} as const;
-
 // == CSS =========================================================================
-// NOTE: All of these must match index.css
+// NOTE: all of these must match index.css
 // .. General .....................................................................
 export const LIGHT_GRAY = '#E2E8F0';
 export const FOCUS_COLOR = '#5E9ED6';

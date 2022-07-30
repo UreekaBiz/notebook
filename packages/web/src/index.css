@@ -18,7 +18,7 @@
 /* == Editor =================================================================== */
 .Editor { outline: 1px solid transparent; }
 .inlineNodeContainer { position: relative; display: inline-block; }
-.selected { outline: 2px solid black; }
+.ProseMirror-selectednode { outline: 2px solid black; }
 
 /* -- Highlight ---------------------------------------------------------------- */
 .ProseMirror-focused .selected_text {
@@ -29,78 +29,97 @@
   background-color: rgba(0,0,0,0.1);
 }
 
-/* -- Container ---------------------------------------------------------------- */
-[data-node-type="container"] {
+/* -- Image -------------------------------------------------------------------- */
+/* NOTE: Using selector since images are inline nodes but do not have a NodeView */
+[data-node-type="image"] {
+  position: relative;
   display: inline-block;
 }
 
-[data-node-type="carousel"] {
-  display: flex;
-  position: relative;
-  overflow: hidden;
+/* -- Link --------------------------------------------------------------------- */
+.link {
+  color: #0000EE;
+  text-decoration: underline;
+  cursor: inherit;
+}
+.clickable { cursor: pointer; }
+
+/* -- AsyncNode ---------------------------------------------------------------- */
+[data-asyncnodestate]::after {
+  content: '';
+  display: inline-block;
+  width: 0.75em;
+  height: 0.75em;
+  margin-left: 0.35em;
+  border-radius: 7.5px;
+  background-color: var(--status-color);
 }
 
-.carousel_content {
-  display: flex;
-  width: 100%;
-  min-width: 0;
+/* .. Chip ..................................................................... */
+.chip {
+  display: inline-block;
+  height: 40px;
+  padding: 0 15px;
+  background-color: #4299E1;
+  border-radius: 40px;
+  color: white;
+  line-height: 40px;
+  font-size: 16px;
+  cursor: grab;
+}
+.chip:hover { background-color: #2C5282; }
 
+.chipCloseButton {
+  margin-left: 15px;
+  color: white;
+  cursor: pointer;
+  float: right;
+  font-size: 20px;
+  font-weight: bold;
+}
+.chipCloseButton:hover { color: red; }
+
+/* -- VisualID ----------------------------------------------------------------- */
+[data-visualid]::after {
+  content: attr(data-visualid);
 }
 
-.carousel_content > div {
-  width: 33% !important;
-  min-width: calc(100% / 3);
-}
-
-.carousel_left-button{
+/* -- Gap Cursor --------------------------------------------------------------- */
+.ProseMirror-gapcursor {
+  display: none;
   position: absolute;
-  top:50%;
-  left: 0;
-  transform: translate(0, -50%);
-  background: #ccc;
-}
-
-.carousel_right-button{
-  position: absolute;
-  top:50%;
-  left: 100%;
-  transform: translate(-100%, -50%);
-  background: #ccc;
-}
-
-[selectionhighlighted="true"] {
-  outline: 2px dashed rgb(50, 50, 50, 0.05);
-}
-
-[data-node-type="layout"] > .ProseMirror-trailingBreak, [data-node-type="carousel"] > .ProseMirror-trailingBreak { display: none; }
-
-
-/* Title placeholder: NOTE: Must match TitleNode.tsx so that this placeholder matches its properties */
-.node-Title.is-empty div > div > div::before {
-  color: #adb5bd;
-  content: 'Untitled';
-  float: left;
-  height: 0;
   pointer-events: none;
 }
 
-/* -- List --------------------------------------------------------------------- */
-li[data-checked]::before { content: '\200A'/*Prevents cursor from disappearing on task list items with no content REF: https://github.com/ueberdosis/tiptap/issues/1198 */; }
+.ProseMirror-gapcursor:after {
+  position: absolute;
+  display: block;
+  top: -2px;
+  width: 20px;
+  margin-top: 0.25em;
+  animation: ProseMirror-cursor-blink 1.1s steps(2, start) infinite;
+  border-top: 1px solid black;
+  content: '';
+}
 
-/* -- CodeBlock ----------------------------------------------------------------- */
-code code > div { width: max-content/*targets the content from a CodeBlock Node*/; }
-code code { font-size: 1em/*code font size is relative to the parent, this fix is needed to prevent small fonts on nested code tags*/; }
+@keyframes ProseMirror-cursor-blink {
+  to { visibility: hidden; }
+}
 
-/* -- Button ------------------------------------------------------------------- */
+.ProseMirror-focused .ProseMirror-gapcursor { display: block; }
+
+/* == Toolbar ================================================================== */
 .iconButton {
   width: auto;
   height: auto;
-  border-radius: 100px;
+
   margin-right: 0.375rem;
   padding: 0.30em;
+
+  border-radius: 50%;
 }
-.iconButton:hover { background-color: #EDF2F7; }
-.iconButton.active { background-color: #E2E8F0; }
+.iconButton.active { background-color: var(--ACTIVE_BUTTON_COLOR); }
+.iconButton:hover  { background-color: var(--HOVER_BUTTON_COLOR); }
 
 /* == Packages compatibility =================================================== */
 /*

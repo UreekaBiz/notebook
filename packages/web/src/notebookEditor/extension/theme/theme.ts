@@ -2,7 +2,7 @@ import { camelToKebabCase, AttributeType, HeadingLevel, MarkName, NodeName, DATA
 
 import { CustomSelector, DefaultTheme, Theme, ThemeElement } from './type';
 
-// NOTE: cannot be 'common' since it relies on `document` (i.e. it is client-only)
+// NOTE: cannot be '@ureeka-notebook/web-service' since it relies on `document` (i.e. it is client-only)
 // ********************************************************************************
 // == Class =======================================================================
 // A singleton that holds the Themes used on the Editor

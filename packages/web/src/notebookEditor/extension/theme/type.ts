@@ -1,4 +1,4 @@
-import { Attributes, AttributeType, HeadingLevel, MarkName, NodeName, DATA_NODE_TYPE } from '@ureeka-notebook/web-service';
+import { Attributes, AttributeType, HeadingLevel, MarkName, NodeName, TextAlign, VerticalAlign, DATA_NODE_TYPE } from '@ureeka-notebook/web-service';
 
 // ********************************************************************************
 // == Element =====================================================================
@@ -58,6 +58,10 @@ export const DefaultTheme: Theme = {
       [AttributeType.MarginRight]: '4px',
       [AttributeType.MarginBottom]: '0.25rem',
     },
+    [NodeName.IMAGE]: {
+      [AttributeType.TextAlign]: TextAlign.left,
+      [AttributeType.VerticalAlign]: VerticalAlign.bottom,
+    },
     [NodeName.PARAGRAPH]: {
       [AttributeType.TextColor]: '#000',
       [AttributeType.FontSize]: '16px',
@@ -100,6 +104,10 @@ export const GoogleDocsTheme: Theme = {
     [NodeName.HEADING]: {
       [AttributeType.MarginLeft]: '4px',
       [AttributeType.MarginBottom]: '0.25rem',
+    },
+    [NodeName.IMAGE]: {
+      [AttributeType.TextAlign]: TextAlign.left,
+      [AttributeType.VerticalAlign]: VerticalAlign.bottom,
     },
     [NodeName.PARAGRAPH]: {
       [AttributeType.FontSize]: '11pt',

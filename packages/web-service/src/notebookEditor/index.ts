@@ -46,7 +46,15 @@ export {
   HeadingLevel,
   isHeadingLevel,
   HeadingAttributes,
+
   ParagraphAttributes,
+
+  ImageAttributes,
+  DefaultImageAttributes,
+  MAX_IMAGE_HEIGHT,
+  MIN_IMAGE_HEIGHT,
+  MAX_IMAGE_WIDTH,
+  MIN_IMAGE_WIDTH,
 
   // == Nodes =====================================================================
   JSONNode,
@@ -61,6 +69,7 @@ export {
   NodeSpecs,
   DocumentNodeSpec,
   HeadingNodeSpec,
+  ImageNodeSpec,
   ParagraphNodeSpec,
   TextNodeSpec,
 
@@ -69,6 +78,8 @@ export {
   isDocumentNode,
   HeadingNodeType,
   isHeadingNode,
+  ImageNodeType,
+  isImageNode,
   ParagraphNodeType,
   isParagraphNode,
   TextNodeType,

@@ -4,6 +4,7 @@ import { createApplicationError } from '../../util/error';
 import { BoldMarkSpec } from './extension/bold';
 import { DocumentNodeSpec } from './extension/document';
 import { HeadingNodeSpec } from './extension/heading';
+import { ImageNodeSpec } from './extension/image';
 import { ParagraphNodeSpec } from './extension/paragraph';
 import { StrikethroughMarkSpec } from './extension/strikethrough';
 import { TextNodeSpec } from './extension/text';
@@ -16,6 +17,7 @@ import { NodeName } from './node';
 export const NodeSpecs: Record<NodeName, NodeSpec> = {
   [NodeName.DOC]: DocumentNodeSpec,
   [NodeName.HEADING]: HeadingNodeSpec,
+  [NodeName.IMAGE]: ImageNodeSpec,
   [NodeName.PARAGRAPH]: ParagraphNodeSpec,
   [NodeName.TEXT]: TextNodeSpec,
 };

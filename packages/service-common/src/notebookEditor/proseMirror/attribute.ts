@@ -34,6 +34,12 @@ export enum AttributeType {
 
   // .. Heading ...................................................................
   Level = 'level',
+
+  // .. Image .....................................................................
+  Src = 'src',
+  Alt = 'alt',
+  Title = 'title',
+
 }
 
 export type StyleAttributes = {
@@ -56,13 +62,13 @@ export type StyleAttributes = {
   [AttributeType.PaddingRight]: string;
 };
 const styleAttributeSet = new Set([
+  AttributeType.Width,
+  AttributeType.Height,
+
   AttributeType.FontSize,
   AttributeType.TextColor,
   AttributeType.TextAlign,
   AttributeType.VerticalAlign,
-
-  AttributeType.Width,
-  AttributeType.Height,
 
   AttributeType.MarginTop,
   AttributeType.MarginBottom,
