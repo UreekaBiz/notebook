@@ -14,7 +14,7 @@ export const createNewPublishedNotebook = async (
   notebookId: NotebookIdentifier, version: number,
   title: string, image?: string, snippet?: string,
 ): Promise<PublishedNotebookIdentifier> => {
-  // NOTE: is the same as the notebook that it belongs to
+  // NOTE: is the same as the Notebook that it belongs to
   const publishedNotebookId = notebookId/*alias*/,
         publishedNotebookRef = publishedNotebookDocument(publishedNotebookId);
 
