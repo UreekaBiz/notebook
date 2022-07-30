@@ -14,17 +14,18 @@ interface Props {
   publishedNotebookTuple: PublishedNotebookTuple;
 }
 export const PublishedNotebookListItem: React.FC<Props> = ({ publishedNotebookTuple }) => {
-  const { id, obj } = publishedNotebookTuple,
-        { createTimestamp, createdBy, title, snippet } = obj;
+  const { id, obj: { createTimestamp, createdBy, title, snippet } } = publishedNotebookTuple;
 
-  const { status, userProfile } = useUserProfile(createdBy);
+  // since there can be 'n' Users in the Published Notebook list and a limited
+  // number of live subscriptions that can be made, the Users are static (not live)
+  const { status, userProfile } = useUserProfile(createdBy)/*not live*/;
 
   const router = useRouter();
   const toast = useToast();
 
   // == Handlers ==================================================================
   const handleUserClick: MouseEventHandler<HTMLDivElement> = (event) => {
-    // Prevent parent container from handling the click event
+    // prevent parent container from handling the click event
     event.stopPropagation();
     toast({ title: 'Not implemented yet!' });
   };
@@ -62,7 +63,7 @@ export const PublishedNotebookListItem: React.FC<Props> = ({ publishedNotebookTu
           />
           <Heading fontSize={16}>{getDisplayName(userProfile)}</Heading>
         </Flex>
-      ) : null}
+      ) : null/*User failed to load*//*FIXME: have a default state for this case*/}
       <Heading fontSize={26}>{title}</Heading>
       <Text marginBottom={2} color='#888' fontSize={20} fontWeight={500} lineHeight='26px'>
         {snippet}
