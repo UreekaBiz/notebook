@@ -8,6 +8,7 @@ export const Debugger = () => {
   return (
     <>
       <Divider />
+
       <Box flex='1 1 0' paddingX={2} overflow='auto'>
         <Text marginBottom={1} paddingTop={2} fontSize={15} fontWeight='bold' textTransform='capitalize'>
           Selection
