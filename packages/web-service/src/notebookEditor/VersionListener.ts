@@ -308,7 +308,6 @@ console.error(this.initialContentLoaded, this.initialized);
           proseMirrorSteps = versions.map(({ content }) => contentToStep(this.editor.schema, content));
 
     const transaction = collab.receiveTransaction(this.editor.view.state, proseMirrorSteps, clientIds, { mapSelectionBackward: true });
-console.log(clientIds, proseMirrorSteps, transaction);
     this.editor.view.dispatch(transaction);
   }
 
