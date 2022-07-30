@@ -5,14 +5,16 @@ import { RiFileAddLine } from 'react-icons/ri';
 import { getLogger, NotebookService, Logger } from '@ureeka-notebook/web-service';
 
 import { EditorToolComponentProps } from 'notebookEditor/toolbar/type';
+import { useNotebookEditor } from 'notebookEditor/hook/useNotebookEditor';
 
 const log = getLogger(Logger.NOTEBOOK);
 
 // ********************************************************************************
 interface Props extends EditorToolComponentProps {/*no additional*/}
-export const PublishNotebookButton: React.FC<Props> = ({ notebookId, editorService }) => {
+export const PublishNotebookButton: React.FC<Props> = () => {
   // == States ====================================================================
   // FIXME: move to using correct Async states, toasts, etc.
+  const { notebookId, editorService } = useNotebookEditor();
   const [isLoading, setIsLoading] = useState(false/*by contract*/);
 
   // == Handlers ==================================================================
@@ -35,7 +37,14 @@ export const PublishNotebookButton: React.FC<Props> = ({ notebookId, editorServi
 
   // == UI ========================================================================
   return (
-    <Button colorScheme='gray' variant='ghost' size='sm' leftIcon={<RiFileAddLine size={16} />} onClick={handlePublishNotebook}>
+    <Button
+      colorScheme='gray'
+      variant='ghost'
+      size='sm'
+      leftIcon={<RiFileAddLine size={16} />}
+      width={160}
+      onClick={handlePublishNotebook}
+    >
       {isLoading ? 'Loading...' : 'Publish Notebook'}
     </Button>
   );
