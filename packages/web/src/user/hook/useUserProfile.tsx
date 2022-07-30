@@ -1,0 +1,56 @@
+import { useEffect, useState } from 'react';
+
+import { getLogger, Logger, UserIdentifier, UserProfilePublic, UserProfileService } from '@ureeka-notebook/web-service';
+
+import { useAsyncStatus, useIsMounted, AsyncStatus } from 'shared/hook';
+
+const log = getLogger(Logger.USER);
+
+// ********************************************************************************
+export type UseUserProfile = {
+  /** the status of the subscription*/
+  status: AsyncStatus;
+
+  /** the user profile*/
+  userProfile: UserProfilePublic | null/*not loaded*/;
+};
+/**
+ * Utility hook that gets the UserProfilePublic from a given UserIdentifier. This
+ * subscribes to the UserProfileService and updates the state when the user profile
+ * changes.
+ */
+export const useUserProfile = ( userId: UserIdentifier): UseUserProfile => {
+  // == State =====================================================================
+  const [userProfile, setUserProfile] = useState<UserProfilePublic | null/*not loaded*/>(null/*by contract*/);
+  const [status, setStatus] = useAsyncStatus();
+
+  // ------------------------------------------------------------------------------
+  const isMounted = useIsMounted();
+
+  // == Effects ===================================================================
+  useEffect(() => {
+    // This useEffect can be re-run if any of the dependencies changes, a flag must
+    // be used to indicate if this is the current effect in order to avoid race
+    // conditions.
+    let isCurrentEffect = true;
+    setStatus('loading');
+    UserProfileService.getInstance().onUserProfile$(userId).subscribe({
+      next: value => {
+        if(!isMounted() || !isCurrentEffect) return/*component is unmounted or another useEffect was executed, prevent unwanted state updates*/;
+
+        setUserProfile(value.obj);
+        setStatus('complete');
+      },
+      error: (error) => {
+        log.info(`Unexpected error getting UserProfilePublic (${userId}). Error: `, error);
+        if(!isMounted() || !isCurrentEffect) return/*component is unmounted or another useEffect was executed, prevent unwanted state updates*/;
+
+        setStatus('error');
+      },
+    });
+
+    return () => { isCurrentEffect = false/*by definition*/; };
+  }, [isMounted, setStatus, userId]);
+
+  return { status, userProfile };
+};
