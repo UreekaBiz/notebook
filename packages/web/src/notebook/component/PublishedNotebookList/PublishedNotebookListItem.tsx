@@ -43,6 +43,7 @@ export const PublishedNotebookListItem: React.FC<Props> = ({ publishedNotebookTu
       _hover={{ cursor: 'pointer' }}
       onClick={handlePublishedNotebookClick}
     >
+      {/* FIXME: separate the User part into separate component to handle all cases */}
       {userProfile ? (
         <Flex
           alignItems='center'
@@ -54,6 +55,7 @@ export const PublishedNotebookListItem: React.FC<Props> = ({ publishedNotebookTu
           }}
           onClick={handleUserClick}
         >
+          {/* FIXME: handle case with no avatar */}
           <Image
             src={userProfile.profileImageUrl}
             width={5}
@@ -61,6 +63,7 @@ export const PublishedNotebookListItem: React.FC<Props> = ({ publishedNotebookTu
             marginRight={2}
             borderRadius={5}
           />
+          {/* FIXME: truncate display name for sanity */}
           <Heading fontSize={16}>{getDisplayName(userProfile)}</Heading>
         </Flex>
       ) : null/*User failed to load*//*FIXME: have a default state for this case*/}
