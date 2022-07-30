@@ -273,7 +273,7 @@ console.error(this.initialContentLoaded, this.initialized);
 
     // update the reader state based on what was just read
     const lastVersionIndex = versions[versions.length - 1].index/*since in order by contract, must be last*/;
-    log.debug(`Read ${versions.length} Notebook Versions (${this.lastReadIndex} - ${lastVersionIndex}) (Editor at ${editorIndex + 1} and last wrote ${this.lastWriteIndex}) ${this.logContext()}.`);
+    log.debug(`Read ${versions.length} Notebook Versions (${this.lastReadIndex} - ${lastVersionIndex}) (Editor at ${editorIndex} and last wrote ${this.lastWriteIndex}) ${this.logContext()}.`);
     this.lastReadIndex = lastVersionIndex;
 
     // update the Editor with the read Versions
@@ -308,6 +308,7 @@ console.error(this.initialContentLoaded, this.initialized);
           proseMirrorSteps = versions.map(({ content }) => contentToStep(this.editor.schema, content));
 
     const transaction = collab.receiveTransaction(this.editor.view.state, proseMirrorSteps, clientIds, { mapSelectionBackward: true });
+console.log(clientIds, proseMirrorSteps, transaction);
     this.editor.view.dispatch(transaction);
   }
 
@@ -384,5 +385,5 @@ console.error(this.initialContentLoaded, this.initialized);
   }
 
   // == Logging ===================================================================
-  private logContext() { return `for Notebook (${this.notebookId}) for User (${this.userId})`; }
+  private logContext() { return `for Notebook (${this.notebookId})`; }
 }
