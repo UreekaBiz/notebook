@@ -36,10 +36,9 @@ export enum AttributeType {
   Level = 'level',
 
   // .. Image .....................................................................
-  Src = 'src',
   Alt = 'alt',
+  Src = 'src',
   Title = 'title',
-
 }
 
 export type StyleAttributes = {
