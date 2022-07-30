@@ -89,6 +89,7 @@ log.debug(`${this.label}:documents$: desiredDocumentCount changed; isExhausted: 
         tap(tuples => {
           this.isLoading = false/*no longer loading*/;
           this.currentDocumentCount = tuples.length;
+log.debug(`${this.label}:documents$: loaded; isExhausted: ${this.isExhausted()}; currentDocumentCount: ${this.currentDocumentCount}; desiredDocumentCount: ${this.desiredDocumentCount}`);
         })
       );
   }
