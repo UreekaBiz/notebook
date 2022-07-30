@@ -3,7 +3,7 @@ import { Box, Flex, Heading, Text } from '@chakra-ui/react';
 // ********************************************************************************
 export const HeroBanner: React.FC =  () => {
   return (
-    <Box width='full' paddingTop={100} paddingBottom={100} backgroundColor='#E2E8F0'>
+    <Box width='full' paddingTop={100} paddingBottom={100} backgroundColor='#E2E8F0' borderBottom='1px' borderBottomColor='#CBD5E0'>
       <Box marginX='auto' width='full' maxWidth={1000}>
         <Flex marginX='auto' textAlign='center' direction='column' alignItems='flex-start' maxWidth={800}>
           <Heading fontSize={72} marginBottom={2}>Notebooks. Reimagined.</Heading>
