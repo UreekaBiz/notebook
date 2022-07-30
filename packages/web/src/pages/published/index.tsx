@@ -26,7 +26,7 @@ function PublishedNotebookListPage() {
     const notebookService = NotebookService.getInstance();
 
     // TODO: use the Scrollable to implement scroll-for-more behavior
-    const scrollablePublishedNotebooks = notebookService.onPublishedNotebooks({ sort: [{ field: 'title', direction: 'asc' }] });
+    const scrollablePublishedNotebooks = notebookService.onPublishedNotebooks({ sort: [{ field: 'createTimestamp', direction: 'desc' }] });
     const subscription = scrollablePublishedNotebooks.documents$().subscribe({
       next: value => {
         if(!isMounted()) return/*component is unmounted, prevent unwanted state updates*/;

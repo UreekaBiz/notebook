@@ -24,7 +24,7 @@ export const PublishedNotebookList = () => {
     const notebookService = NotebookService.getInstance();
 
     setStatus('loading');
-    const scrollablePublishedNotebooks = notebookService.onPublishedNotebooks({/*no filter*/});
+    const scrollablePublishedNotebooks = notebookService.onPublishedNotebooks({ sort: [{ field: 'createTimestamp', direction: 'desc' }] });
     const subscription = scrollablePublishedNotebooks.documents$().subscribe({
       next: value => {
         if(!isMounted()) return/*component is unmounted, prevent unwanted state updates*/;
