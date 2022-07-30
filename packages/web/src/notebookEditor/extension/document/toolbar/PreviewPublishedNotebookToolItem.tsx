@@ -16,9 +16,7 @@ export const PreviewPublishedNotebookToolItem: React.FC<Props> = ({ editor }) =>
   const [isOpen, setIsOpen] = useState(false/*by contract*/);
 
   // == Effects ===================================================================
-  // Adds a listener to the window to toggle the modal state based on the key
-  // pressed. A Special sequence of keys is used to toggle the state of isOpen. It
-  // consists on CTRL + ALT/Option + ,
+  // adds a listener to the window to toggle the modal state (CTRL + ALT/Option + ,)
   useEffect(() => {
     const handleKeyDown = (event: KeyboardEvent) => {
       if(event.key === 'Escape') { setIsOpen(false); return/*nothing else to do*/; }
@@ -31,7 +29,7 @@ export const PreviewPublishedNotebookToolItem: React.FC<Props> = ({ editor }) =>
     };
     document.addEventListener('keydown', handleKeyDown);
 
-    // Remove listener on unmount.
+    // remove listener on unmount
     return () => { document.removeEventListener('keydown', handleKeyDown); };
   }, [isOpen]);
 
