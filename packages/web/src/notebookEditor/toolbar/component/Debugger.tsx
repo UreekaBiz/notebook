@@ -8,7 +8,6 @@ export const Debugger = () => {
   return (
     <>
       <Divider />
-
       <Box paddingX={2} overflow='auto'>
         <Text marginBottom={1} paddingTop={2} fontSize={15} fontWeight='bold' textTransform='capitalize'>
           Selection
@@ -18,8 +17,19 @@ export const Debugger = () => {
         </Box>
       </Box>
 
-      <Divider />
+      {editor.state.storedMarks && (<>
+        <Divider />
+        <Box paddingX={2} overflow='auto'>
+          <Text marginBottom={1} paddingTop={2} fontSize={15} fontWeight='bold' textTransform='capitalize'>
+            Stored Marks
+          </Text>
+          <Box overflow='auto' fontSize={12}>
+            <pre>{JSON.stringify(editor.state.storedMarks, null/*no replacer*/, 2)}</pre>
+          </Box>
+        </Box>
+      </>)}
 
+      <Divider />
       <Box flex='1 1 0' paddingX={2} overflow='auto'>
         <Text marginBottom={1} paddingTop={2} fontSize={15} fontWeight='bold' textTransform='capitalize'>
           Document
