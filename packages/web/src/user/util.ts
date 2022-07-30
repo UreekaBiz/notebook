@@ -1,12 +1,12 @@
 import { isBlank, UserProfilePublic } from '@ureeka-notebook/web-service';
 
 // ********************************************************************************
-/** gets a readable name for the given UserProfilePublic */
+// a display name for the given User Profile
 export const getDisplayName = (profile: UserProfilePublic) => {
-  const name = `${profile.firstName ?? ''} ${profile.lastName ?? ''}`;
-
-  // FIXME: What should we do if the name is blank?
-  if(isBlank(name.trim())) return 'Unknown User';
-
-  return name;
+  const blankFirst = isBlank(profile.firstName),
+        blankLast = isBlank(profile.lastName);
+  if(blankFirst && blankLast) return 'Anonymous User'/*FIXME: constant*/;
+  if(blankFirst) return profile.lastName;
+  if(blankLast) return profile.firstName;
+  return `${profile.firstName} ${profile.lastName}`;
 };
