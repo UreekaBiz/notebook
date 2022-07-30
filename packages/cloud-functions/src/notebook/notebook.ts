@@ -1,7 +1,7 @@
 import { DocumentReference, Transaction } from 'firebase-admin/firestore';
 import { logger } from 'firebase-functions';
 
-import { contentToNode, getSchema, NotebookDocumentContent, NotebookIdentifier, NotebookType, NotebookSchemaVersion, Notebook_Create, Notebook_Delete, Notebook_Storage, Notebook_Update, SystemUserId, UserIdentifier, DEFAULT_NOTEBOOK_NAME } from '@ureeka-notebook/service-common';
+import { contentToNode, extractDocumentName, getSchema, NotebookDocumentContent, NotebookIdentifier, NotebookType, NotebookSchemaVersion, Notebook_Create, Notebook_Delete, Notebook_Storage, Notebook_Update, SystemUserId, UserIdentifier, DEFAULT_NOTEBOOK_NAME } from '@ureeka-notebook/service-common';
 
 import { firestore } from '../firebase';
 import { ApplicationError } from '../util/error';
@@ -9,10 +9,6 @@ import { ServerTimestamp } from '../util/firestore';
 import { notebookCollection, notebookDocument } from './datastore';
 
 // ********************************************************************************
-// the maximum number of characters in a Notebook name
-// TODO: make a configuration parameter
-const MAX_NOTEBOOK_NAME_LENGTH = 1024/*SEE: Notebook*/;
-
 // == Get =========================================================================
 // gets the Title of a Document from the specified content
 // NOTE: If there is no a valid title on the content from an Checkpoint it will
@@ -24,21 +20,7 @@ export const getNotebookName = (notebookId: NotebookIdentifier, version: Noteboo
       const document = contentToNode(getSchema(version), content);
       if(!document) { logger.error(`Trying to get Notebook (${version}; ${notebookId}) without valid content.`); return DEFAULT_NOTEBOOK_NAME /*nothing to do*/;}
 
-      // if there is a Title Node then retrieve its content otherwise take the
-      // first 'n' chars of the content
-
-      // TODO: implement for V2
-      //const titleNode = document.firstChild;
-      //if(titleNode?.type.name !== TITLE_NODE_NAME) { logger.error(`Invalid first child for (${DOC_NAME}) in Notebook (${version}; ${notebookId}). Expected (${TITLE_NODE_NAME}) but got (${titleNode?.type.name})`); return DEFAULT_NOTEBOOK_NAME/*nothing to do*/; }
-      //const textNode = titleNode.firstChild;
-      //if(textNode?.type.name !== TEXT_NAME) { logger.error(`Invalid first child for (${TITLE_NODE_NAME}) in Notebook (${version}; ${notebookId}). Expected (${TEXT_NAME}) but got (${textNode?.type.name})`); return DEFAULT_NOTEBOOK_NAME/*nothing to do*/; }
-      //const name = textNode.text?.trim();
-      //return name || DEFAULT_NOTEBOOK_NAME;
-
-      // TODO: needs to be more complex to handle cases such as leading blanks, etc.
-      const node = document.firstChild;
-      if(!node) return DEFAULT_NOTEBOOK_NAME;
-      return node.textContent.trim().substring(0, MAX_NOTEBOOK_NAME_LENGTH);
+      return extractDocumentName(document);
 
     default:
       logger.error(`Unknown Notebook version (${version}) while retrieving name from Notebook (${notebookId}).`);
