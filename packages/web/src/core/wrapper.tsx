@@ -26,9 +26,9 @@ export type WrappedPage<P = {}> = NextPage<P> & {
  *          Results in:
  *          <AuthServiceWrapper>
  *            <NotebookServiceWrapper>
- *              <PageComponent/>
+ *              <PageComponent />
  *            </NotebookServiceWrapper>
- *          <AuthServiceWrapper/>
+ *          <AuthServiceWrapper />
  *
  * @param wrappers an array of wrappers that wrap the given page. The order of the
  *        wrappers defines the order in which the page is wrapped which must be

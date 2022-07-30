@@ -53,7 +53,7 @@ export const SideBar = () => {
         <VStack divider={<Divider />} spacing={0} flex='1 1 0' alignItems='stretch' overflowY='scroll'>
           {Toolbars}
         </VStack>
-        {showDebugger && <Debugger/>}
+        {showDebugger && <Debugger />}
       </Flex>
     </Flex>
   );

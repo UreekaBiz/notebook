@@ -49,7 +49,7 @@ export const Toolbar: React.FC<Props> = ({ depth, node, onSelection, selectedDep
         </Text>
         {toolbar.rightContent && toolbar.rightContent({ editor, depth })}
       </Flex>
-      <VStack divider={<Divider/>} spacing={0} display='flex' alignItems='flex-start' width='full'>
+      <VStack divider={<Divider />} spacing={0} display='flex' alignItems='flex-start' width='full'>
         {toolbar.toolsCollections.map((tools, i) =>
           <Box key={`${node.type.name}-${i}`} paddingX={4} paddingY={1} width='100%'>
             {tools.map(tool =>

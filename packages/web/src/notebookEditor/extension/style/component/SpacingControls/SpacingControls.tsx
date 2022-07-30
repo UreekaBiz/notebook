@@ -146,7 +146,7 @@ export const SpacingControls: React.FC<Props> = ({ margin, padding, name, onChan
         />
       </Flex>
 
-      <br/>
+      <br />
 
       <Flex>
         padding-top:

@@ -7,7 +7,7 @@ export const Debugger = () => {
   const editor = useValidatedEditor();
   return (
     <>
-      <Divider/>
+      <Divider />
       <Box flex='1 1 0' paddingX={2} overflow='auto'>
         <Text marginBottom={1} paddingTop={2} fontSize={15} fontWeight='bold' textTransform='capitalize'>
           Selection
@@ -17,7 +17,8 @@ export const Debugger = () => {
         </Box>
       </Box>
 
-      <Divider/>
+      <Divider />
+
       <Box flex='1 1 0' paddingX={2} overflow='auto'>
         <Text marginBottom={1} paddingTop={2} fontSize={15} fontWeight='bold' textTransform='capitalize'>
           Document

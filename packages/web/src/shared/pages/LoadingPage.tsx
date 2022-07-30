@@ -4,6 +4,6 @@ import { FullPageLayout } from 'shared/layout/FullPageLayout';
 // ********************************************************************************
 export const LoadingPage = () => (
   <FullPageLayout>
-    <Loading/>
+    <Loading />
   </FullPageLayout>
 );

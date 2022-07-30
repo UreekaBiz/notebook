@@ -58,7 +58,7 @@ export const convertJSONContentToHTML = (node: JSONNode): HTMLString => {
   // NOTE: in the Editor, a paragraph with no content is displayed as having a
   //       br node as it only child, this is an attempt to mimic that functionality
   //       and keep the HTML output consistent
-  if(isParagraphJSONNode(node) && children.length < 1) children = `<br/>`;
+  if(isParagraphJSONNode(node) && children.length < 1) children = `<br />`;
 
   const tag = getRenderTag(node.attrs, nodeRendererSpec);
   const nodeSpec = NodeSpecs[node.type];

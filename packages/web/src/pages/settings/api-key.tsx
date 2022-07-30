@@ -14,7 +14,7 @@ import { NotebookServiceWrapper } from 'notebook/NotebookServiceWrapper';
 function APIKeyPage() {
   return (
     <Flex flexDirection='column' alignItems='center' justifyContent='center'>
-      <NotebookTopBar/>
+      <NotebookTopBar />
       {/* FIXME: Use layout wrapper in WrapperPage wrappers */}
       <SettingsLayoutWrapper>
         <Text>Settings</Text>
