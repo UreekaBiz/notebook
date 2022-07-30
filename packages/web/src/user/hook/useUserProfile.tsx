@@ -18,12 +18,11 @@ export type UseUserProfile = {
 // ================================================================================
 // *not* live (one-shot) User Profile Public for the specified User Identifier
 export const useUserProfile = ( userId: UserIdentifier): UseUserProfile => {
-  // == State =====================================================================
-  const [status, setStatus] = useAsyncStatus();
-  const [userProfile, setUserProfile] = useState<UserProfilePublic | null/*not loaded*/>(null/*by contract*/);
-
-  // ------------------------------------------------------------------------------
   const isMounted = useIsMounted();
+  const [status, setStatus] = useAsyncStatus();
+
+  // == State =====================================================================
+  const [userProfile, setUserProfile] = useState<UserProfilePublic | null/*not loaded*/>(null/*by contract*/);
 
   // == Effects ===================================================================
   useEffect(() => {
