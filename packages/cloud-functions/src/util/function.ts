@@ -170,7 +170,6 @@ export const wrapRequest = <T extends object, R = void>(opts: CallableOptions, h
       status = result.status;
       body = result.body;
     } finally {
-      // REF: https://github.com/microsoft/TypeScript/issues/28153
       res.status(status).send(body)/*must be the last call by contract*/;
     }
   };
