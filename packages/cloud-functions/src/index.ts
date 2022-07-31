@@ -19,6 +19,7 @@ export * from './authUser/callable';
 export * from './authUser/onCreate';
 export * from './authUser/onWrite';
 export * from './authUser/schedule';
+export * from './healthcheck/callable';
 export * from './notebook/callable';
 export * from './notebookEditor/onCreate';
 export * from './logging/callable';

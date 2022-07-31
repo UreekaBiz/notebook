@@ -1,4 +1,5 @@
 export * from './authUser';
+export * from './healthcheck';
 export * from './integration';
 export * from './notebook';
 export * from './notebookEditor';

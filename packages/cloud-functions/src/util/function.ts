@@ -3,9 +3,9 @@ import { DocumentSnapshot } from 'firebase-admin/firestore';
 import * as functions from 'firebase-functions';
 import { logger, RuntimeOptions } from 'firebase-functions';
 import { CallableContext, FunctionsErrorCode, Request } from 'firebase-functions/lib/providers/https';
-import { object, AnySchema, InferType, ValidationError } from 'yup';
+import { AnySchema, ValidationError } from 'yup';
 
-import { convertNullDeep, isType, redact, stringMedSchema, HttpStatusCode, Modify, UserIdentifier } from '@ureeka-notebook/service-common';
+import { convertNullDeep, isType, redact, HttpStatusCode, Modify, UserIdentifier, VersionResponse, VERSION_REQUEST } from '@ureeka-notebook/service-common';
 
 import { logFunctionInvocation } from '../logging/logging';
 import { getEnv, FUNCTION_REGION, PROJECT_ID } from './environment';
@@ -64,26 +64,6 @@ type OnWriteHandler<T, C extends ContextParams> = (change: functions.Change<T>, 
 
 // .. Firebase Auth ...............................................................
 type AuthOnCreateOrDeleteHandler<C extends ContextParams> = (user: functions.auth.UserRecord, context: EventContext<C>) => PromiseLike<any> | any;
-
-// ********************************************************************************
-export const VERSION_REQUEST = `__version`;
-
-export const VersionResponse_Schema = object({
-  buildDate: stringMedSchema/*UTC*/
-      .min(1/*cannot be blank*/)
-      .required(),
-  version: stringMedSchema/*package.json*/
-      .min(1/*cannot be blank*/)
-      .required(),
-
-  gitBranch: stringMedSchema/*build*/
-      .min(1/*cannot be blank*/)
-      .required(),
-  gitHash: stringMedSchema/*build*/
-      .min(1/*cannot be blank*/)
-      .required(),
-});
-export type VersionResponse = Readonly<InferType<typeof VersionResponse_Schema>>;
 
 // ********************************************************************************
 // retrieves the host and domain for the HTTPS Cloud Function being called
@@ -312,7 +292,7 @@ const hasAuth = (context: CallableContext) => {
 };
 
 // == Schema Validation ===========================================================
-const validateData = (data: any, schema: AnySchema<any>) => {
+export const validateData = (data: any, schema: AnySchema<any>) => {
   try {
     schema.validateSync(data, {
       abortEarly: false/*report all errors*/,
