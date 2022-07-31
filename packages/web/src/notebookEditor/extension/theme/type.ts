@@ -71,11 +71,6 @@ export const DefaultTheme: Theme = {
       [AttributeType.MarginBottom]: '0.5rem',
     },
     [NodeName.TEXT]:{/*no defined value*/},
-    [NodeName.TITLE]:{
-      [AttributeType.FontSize]: '45px',
-      [AttributeType.TextColor]: '#05284C',
-      [AttributeType.MarginLeft]: '4px',
-    },
   },
 
   marks: {
@@ -123,11 +118,6 @@ export const GoogleDocsTheme: Theme = {
       [AttributeType.MarginBottom]: '0.5rem',
     },
     [NodeName.TEXT]:{/*no defined value*/},
-    [NodeName.TITLE]:{
-      [AttributeType.FontSize]: '45px',
-      [AttributeType.TextColor]: '#05284C',
-      [AttributeType.MarginLeft]: '4px',
-    },
   },
 
   marks: {
