@@ -90,7 +90,12 @@ const commonVariables = [
   'SESSION_EXPIRATION_EPSILON',
 ];
 const developmentVariables = [/*no additional*/];
-const stagingVariables = [/*no additional*/];
+const stagingVariables = [
+  'BIGQUERY_IMPORT_DATASET',
+
+  'FIRESTORE_EXPORT_BUCKET',
+  'FIRESTORE_EXPORT_COLLECTIONS',
+];
 const productionVariables = [/*no additional*/];
 
 // NOTE: defined locally to make this file dependency free

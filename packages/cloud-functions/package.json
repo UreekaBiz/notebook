@@ -28,7 +28,10 @@
     "typescript": "4.7.4"
   },
   "dependencies": {
+    "@google-cloud/bigquery": "6.0.1",
+    "@google-cloud/firestore": "5.0.2",
     "@google-cloud/logging": "10.1.1",
+    "@google-cloud/storage": "6.2.3",
     "@ureeka-notebook/service-common": "file:./lib/service-common",
     "crypto-js": "4.1.1",
     "dotenv": "16.0.1",

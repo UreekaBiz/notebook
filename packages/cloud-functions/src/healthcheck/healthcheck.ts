@@ -20,6 +20,7 @@ const excludedEndpointNames = [
   'onWriteUserSessionUser',
 
   // Scheduled Tasks
+  'scheduleFirestoreExport',
   'scheduleUserSessionExpiration',
 
   // Cloud Task HTTPS targets

@@ -23,3 +23,4 @@ export * from './healthcheck/callable';
 export * from './logging/callable';
 export * from './notebook/callable';
 export * from './notebookEditor/onCreate';
+export * from './export/schedule';
