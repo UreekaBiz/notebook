@@ -77,8 +77,11 @@ export const ToolItemComponent: React.FC<Props> = (props) => {
   // component to display when an error occurs on the InternalToolItem. Currently,
   // nothing is rendered when there is an error by contract since it is required
   // that the User's experience is never interrupted
-  const ErrorComponent = null/*don't render anything*/;
-  return <ErrorBoundary errorComponent={ErrorComponent}><InternalToolItem {...props} /></ErrorBoundary>;
+
+  // FIXME: there's no such thing as 'errorComponent'?!?
+  // const ErrorComponent = null/*don't render anything*/;
+  // return <ErrorBoundary errorComponent={ErrorComponent}><InternalToolItem {...props} /></ErrorBoundary>;
+  return <ErrorBoundary><InternalToolItem {...props} /></ErrorBoundary>;
 };
 
 // == Util ========================================================================
