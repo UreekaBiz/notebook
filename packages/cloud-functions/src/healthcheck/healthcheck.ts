@@ -10,7 +10,7 @@ import { getFunctionDomain, validateData } from '../util/function';
 // ********************************************************************************
 // the set of endpoints (Cloud Functions) that do not follow the convention of
 // returning a VersionResponse when probed
-const excludedFunctionNames = [
+const excludedEndpointNames = [
   'healthcheck'/*ensures no circular dependency*/,
 
   // Firestore and RTDB triggers
@@ -27,7 +27,7 @@ const excludedFunctionNames = [
 ];
 
 // the set of all endpoints (Cloud Functions) that are to be health checked
-const functionNames = [
+const endpointNames = [
   // NOTE: this *CANNOT* include 'healthcheck' so that there is no circular dependency
   // SEE: excludedFunctionNames()
 
@@ -44,8 +44,8 @@ const functionNames = [
 
 // ================================================================================
 export const doHealthcheck = async (): Promise<HealthcheckResult> => {
-  const healthcheckFunctionNames = difference(functionNames, excludedFunctionNames)/*remove excluded*/;
-  const statuses = await Promise.all(healthcheckFunctionNames.map(name => healthcheckCallable(name)));
+  const healthcheckEndpointNames = difference(endpointNames, excludedEndpointNames)/*remove excluded*/;
+  const statuses = await Promise.all(healthcheckEndpointNames.map(name => healthcheckCallable(name)));
 
   // NOTE: this currently only checks for failed health checks. It does not ensure
   //       the versions are consistent, etc.
