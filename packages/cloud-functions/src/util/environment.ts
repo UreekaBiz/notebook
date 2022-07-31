@@ -155,9 +155,3 @@ export const getEnvObject = (key: string, defaultValue?: EnvVariable): EnvVariab
 export const getEnv = (key: string, defaultValue?: EnvVariable): EnvVariable => {
   return getEnvObject(key, defaultValue);
 };
-
-// ================================================================================
-// ... Constants ..................................................................
-/*SEE: ./function.ts/wrapOnCreateOrDelete*/
-/*SEE: ./function.ts/wrapAuthOnCreateOrDelete*/
-export const EVENT_AGE_MS_CONSTANT = 5000;
