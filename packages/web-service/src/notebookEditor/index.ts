@@ -44,6 +44,7 @@ export {
   isStyleAttribute,
 
   HeadingLevel,
+  getHeadingLevelFromTag,
   isHeadingLevel,
   HeadingAttributes,
 

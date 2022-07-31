@@ -1,6 +1,6 @@
 import { textblockTypeInputRule, Node } from '@tiptap/core';
 
-import { AttributeType, getHeadingLevelFromTag, HeadingLevel, HeadingNodeSpec,  SetAttributeType } from '@ureeka-notebook/web-service';
+import { getHeadingLevelFromTag, AttributeType, HeadingLevel, HeadingNodeSpec,  SetAttributeType } from '@ureeka-notebook/web-service';
 
 import { NoStorage } from 'notebookEditor/model/type';
 
