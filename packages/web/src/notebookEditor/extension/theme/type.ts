@@ -51,7 +51,7 @@ export const DefaultTheme: Theme = {
   name: ThemeName.Default/*expected and guaranteed to be unique*/,
   displayName: 'Default',
 
-  nodes:{
+  nodes: {
     [NodeName.DOC]: {/*no defined value*/},
     [NodeName.HEADING]: {
       [AttributeType.MarginLeft]: '4px',
@@ -70,7 +70,7 @@ export const DefaultTheme: Theme = {
       [AttributeType.MarginTop]: '0.5rem',
       [AttributeType.MarginBottom]: '0.5rem',
     },
-    [NodeName.TEXT]:{/*no defined value*/},
+    [NodeName.TEXT]: {/*no defined value*/},
   },
 
   marks: {
@@ -99,7 +99,7 @@ export const GoogleDocsTheme: Theme = {
   name: ThemeName.GoogleDocs/*expected and guaranteed to be unique*/,
   displayName: 'Default',
 
-  nodes:{
+  nodes: {
     [NodeName.DOC]: {/*no defined value*/},
     [NodeName.HEADING]: {
       [AttributeType.MarginLeft]: '4px',
@@ -117,13 +117,13 @@ export const GoogleDocsTheme: Theme = {
       [AttributeType.MarginTop]: '0.5rem',
       [AttributeType.MarginBottom]: '0.5rem',
     },
-    [NodeName.TEXT]:{/*no defined value*/},
+    [NodeName.TEXT]: {/*no defined value*/},
   },
 
   marks: {
-    [MarkName.BOLD]:  {/*no defined value*/},
-    [MarkName.STRIKETHROUGH]:  {/*no defined value*/},
-    [MarkName.TEXT_STYLE]:  {/*no defined value*/},
+    [MarkName.BOLD]: {/*no defined value*/},
+    [MarkName.STRIKETHROUGH]: {/*no defined value*/},
+    [MarkName.TEXT_STYLE]: {/*no defined value*/},
   },
 
   customSelectors: {
