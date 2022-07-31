@@ -8,7 +8,7 @@ import { object, AnySchema, InferType, ValidationError } from 'yup';
 import { convertNullDeep, isType, redact, stringMedSchema, HttpStatusCode, Modify, UserIdentifier } from '@ureeka-notebook/service-common';
 
 import { logFunctionInvocation } from '../logging/logging';
-import { getEnv, EVENT_AGE_MS_CONSTANT } from './environment';
+import { getEnv, FUNCTION_REGION, PROJECT_ID } from './environment';
 import { applicationErrorCodeMap, errorCodeMap, ApplicationError } from './error';
 import { getTaskHeaderData, TaskHeaderData } from './google/task';
 
@@ -36,6 +36,11 @@ export const LargeMemory = isType<functions.RuntimeOptions>({
 });
 
 // ********************************************************************************
+// ... Constants ..................................................................
+// the maximum amount of time (in millis) that an event can be delayed before it is
+// not retried
+export const MAX_EVENT_AGE = 5/*min*/ * 60/*sec/min*/ * 1000/*ms/sec*/; /*guess!*/
+
 // -- Callable / Request ----------------------------------------------------------
 // NOTE: mirrors Cloud Function's interface
 export type HttpsFunction = (req: Request, res: Response) => Promise<void> | void;
@@ -81,6 +86,12 @@ export const VersionResponse_Schema = object({
 export type VersionResponse = Readonly<InferType<typeof VersionResponse_Schema>>;
 
 // ********************************************************************************
+// retrieves the host and domain for the HTTPS Cloud Function being called
+export const getFunctionDomain = () => {
+  const domain = 'cloudfunctions.net'/*static*/;
+  return `${FUNCTION_REGION}-${PROJECT_ID}.${domain}`;
+};
+
 // ================================================================================
 // all options allowed for a wrapped callable
 export type CallableOptions = Readonly<{
@@ -230,8 +241,8 @@ export const wrapOnCreateOrDelete = <T, C extends ContextParams = {}>(handler: O
   const func = async (snapshot: DocumentSnapshot<T>, context: EventContext<C>) => {
     // prevent runaway retries
     // REF: https://cloud.google.com/functions/docs/bestpractices/retries#set_an_end_condition_to_avoid_infinite_retry_loops
-    const eventAgeMs = Date.now() - Date.parse(context.timestamp);
-    if(eventAgeMs > EVENT_AGE_MS_CONSTANT) { logger.warn(`Trigger retry aborted due to timeout ().`); return/*Avoid an infinite loop of retries*/; }
+    const eventAgeMillis = Date.now() - Date.parse(context.timestamp);
+    if(eventAgeMillis > MAX_EVENT_AGE) { logger.warn(`On-Create / On-Delete trigger retry aborted due to timeout (${eventAgeMillis}ms).`); return/*avoid an infinite loop of retries*/; }
 
     try {
       return await handler(snapshot, context);
@@ -276,8 +287,8 @@ export const wrapAuthOnCreateOrDelete = <C extends ContextParams = {}>(handler: 
   const func = async (user: functions.auth.UserRecord, context: EventContext<C>) => {
     // prevent runaway retries
     // REF: https://cloud.google.com/functions/docs/bestpractices/retries#set_an_end_condition_to_avoid_infinite_retry_loops
-    const eventAgeMs = Date.now() - Date.parse(context.timestamp);
-    if(eventAgeMs > EVENT_AGE_MS_CONSTANT) { logger.warn(`Trigger retry aborted due to timeout ().`); return/*Avoid an infinite loop of retries*/; }
+    const eventAgeMillis = Date.now() - Date.parse(context.timestamp);
+    if(eventAgeMillis > MAX_EVENT_AGE) { logger.warn(`Auth On-Create / On-Delete trigger retry aborted due to timeout (${eventAgeMillis}ms).`); return/*avoid an infinite loop of retries*/; }
 
     try {
       return await handler(user, context);
