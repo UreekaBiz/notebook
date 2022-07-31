@@ -110,6 +110,9 @@ export const convertBlankString = <T extends Record<string, any>>(o: T, convert:
   return result;
 };
 
+export const convertNullToUndefined = <T>(value: T | null | undefined) =>
+  (value === null) ? undefined : value;
+
 // --------------------------------------------------------------------------------
 // CHECK: can this do better than Partial<T>?
 export const removeValue = <T extends Record<string, any>>(o: T, value: any): Partial<T> => {
