@@ -2,7 +2,7 @@ import * as functions from 'firebase-functions';
 
 import { HealthcheckResult } from '@ureeka-notebook/service-common';
 
-import { LongrunningRuntimeOpts, wrapRequest } from '../util/function';
+import { wrapRequest, LongrunningRuntimeOpts } from '../util/function';
 import { doHealthcheck } from './healthcheck';
 
 // ********************************************************************************
