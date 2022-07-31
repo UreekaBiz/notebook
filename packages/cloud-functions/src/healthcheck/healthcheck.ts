@@ -29,7 +29,7 @@ const excludedEndpointNames = [
 // the set of all endpoints (Cloud Functions) that are to be health checked
 const endpointNames = [
   // NOTE: this *CANNOT* include 'healthcheck' so that there is no circular dependency
-  // SEE: excludedFunctionNames()
+  // SEE: #excludedEndpointNames()
 
   'authUserSessionClear',
   'authUserSessionHeartbeat',
