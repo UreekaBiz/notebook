@@ -1,5 +1,5 @@
 import { logger } from 'firebase-functions';
-import fetch, { Response } from 'node-fetch';
+import axios, { AxiosResponse } from 'axios';
 
 import { difference, HealthcheckResult, HealthcheckStatus, VersionResponse_Schema, VERSION_REQUEST } from '@ureeka-notebook/service-common';
 
@@ -59,35 +59,30 @@ export const doHealthcheck = async (): Promise<HealthcheckResult> => {
 const healthcheckCallable = async (name: string): Promise<HealthcheckStatus> => {
   const startTime = Date.now();
 
-  let response: Response | undefined;
-  let responseBody: any/*intentional*/ = {}/*none by default*/;
+  let response: AxiosResponse;
   try {
-    // TODO: implement a timeout! (REF: https://davidwalsh.name/fetch-timeout)
     const url = `https://${getFunctionDomain()}/${name}`;
-    const body = { 'data': { [VERSION_REQUEST]: true } }/*'data' wrapper required by HTTPS CFs*/;
-    response = await fetch(url, {
+    response = await axios(url, {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
-      redirect: 'follow'/*shouldn't redirect but just in case, follow it*/,
-      body: JSON.stringify(body),
+      data: { 'data': { [VERSION_REQUEST]: true } }/*'data' wrapper required by HTTPS CFs*/,
+      // TODO: implement a timeout!
     });
-    responseBody = await response.json()/*format is {'result': ...}*/;
   } catch(error) {
     logger.error(`Network error from HTTPS Cloud Function '${name}'. Reason: `, error);
-    try { if(response) logger.error(await response.text())/*NOTE: most errors are due to the fact that the response isn't JSON*/; } catch(error) { /*ignore*/ }
     return { name, result: false/*failed*/ };
   }
 
   const endTime = Date.now();
   const elapsedTime = endTime - startTime;
 
-  if(response.ok && ('result' in responseBody)) {
+  if(response.status !== 200/*OK*/) {
     try {
-      validateData(responseBody.result, VersionResponse_Schema);
+      validateData(response.data, VersionResponse_Schema);
       return {
         name,
         elapsedTime,
-        ...responseBody,
+        ...response.data,
       }
     } catch(error) {
       logger.error(`Invalid response body from HTTPS Cloud Function '${name}'. Reason: `, error);
