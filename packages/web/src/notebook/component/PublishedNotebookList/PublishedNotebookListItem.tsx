@@ -1,4 +1,4 @@
-import { useToast, Box, Flex, Heading, Image, Text, Link } from '@chakra-ui/react';
+import { useToast, Box, Heading, Link, Text } from '@chakra-ui/react';
 import NextLink from 'next/link';
 import { MouseEventHandler } from 'react';
 
@@ -6,8 +6,8 @@ import { PublishedNotebookTuple } from '@ureeka-notebook/web-service';
 
 import { coreRoutes } from 'shared/routes';
 import { getMinifiedReadableDate } from 'ui/util';
+import { UserProfileInline } from 'user/component/UserProfileInline';
 import { useUserProfile } from 'user/hook/useUserProfile';
-import { getDisplayName } from 'user/util';
 
 // ********************************************************************************
 interface Props {
@@ -34,30 +34,7 @@ export const PublishedNotebookListItem: React.FC<Props> = ({ publishedNotebookTu
 
   return (
     <Box>
-      {/* FIXME: separate the User part into separate component to handle all cases */}
-      {userProfile ? (
-        <Flex
-          alignItems='center'
-          marginBottom={1}
-          color='#555'
-          _hover={{
-            cursor: 'pointer',
-            color: '#000',
-          }}
-          onClick={handleUserClick}
-        >
-          {/* FIXME: handle case with no avatar */}
-          <Image
-            src={userProfile.profileImageUrl}
-            width={5}
-            height={5}
-            marginRight={2}
-            borderRadius={5}
-          />
-          {/* FIXME: truncate display name for sanity */}
-          <Heading fontSize={16}>{getDisplayName(userProfile)}</Heading>
-        </Flex>
-      ) : null/*User failed to load*//*FIXME: have a default state for this case*/}
+      <UserProfileInline userId={createdBy} userProfile={userProfile} onClick={handleUserClick} />
       <NextLink href={`${coreRoutes.publishedNotebook}/${id}`} passHref/*pass ref to 'a' child -- needed to open in new tab*/ >
         <Link color='#444' textDecoration='none' _hover={{ cursor: 'pointer' }}>
           <Heading fontSize={26}>{title}</Heading>

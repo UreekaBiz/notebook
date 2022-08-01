@@ -44,8 +44,7 @@ class NotebookEditorTheme {
     existingStyleSheet.textContent = stylesheet;
   }
 
-  // ==============================================================================
-  private getStylesheet() {
+  public getStylesheet() {
     const { nodes, marks, customSelectors } = this.theme;
 
     // creates a CSS class in the form of [DATA_NODE_TYPE="nodeName"] {} for each Node

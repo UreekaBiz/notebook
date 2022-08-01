@@ -20,6 +20,8 @@ interface Props {
 //       render anything.
 export const UserProfileListItem: React.FC<Props> = ({ userId, showYouLabel = true }) => {
   // == State =====================================================================
+  // FIXME: Refactor this component to make it receive the UserProfile from the
+  //        props. This should follow the same pattern as UserProfileInline.
   const [userProfilePublic, setUserProfilePublic] = useState<UserProfilePublic_Storage | null>(null/*no value*/);
   const [status, setStatus] = useAsyncStatus();
   const authedUser = useAuthedUser();

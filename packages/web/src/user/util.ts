@@ -10,3 +10,12 @@ export const getDisplayName = (profile: UserProfilePublic) => {
   if(blankLast) return profile.firstName;
   return `${profile.firstName} ${profile.lastName}`;
 };
+
+export const getInitials = (profile: UserProfilePublic) => {
+  const blankFirst = isBlank(profile.firstName),
+        blankLast = isBlank(profile.lastName);
+  if(blankFirst && blankLast) return 'A'/*FIXME: constant*/;
+  if(blankFirst) return profile.lastName!.charAt(0);
+  if(blankLast) return profile.firstName!.charAt(0);
+  return `${profile.firstName!.charAt(0)}${profile.lastName!.charAt(0)}`;
+};

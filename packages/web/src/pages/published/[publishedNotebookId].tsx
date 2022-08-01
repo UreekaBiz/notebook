@@ -5,6 +5,7 @@ import { json, publishedNotebookDocument, wrapGetServerSideProps, PublishedNoteb
 
 import { WrappedPage } from 'core/wrapper';
 import { NotebookViewer } from 'notebookEditor/component/NotebookViewer';
+import { notebookEditorTheme } from 'notebookEditor/extension/theme/theme';
 import { FullPageLayout } from 'shared/layout/FullPageLayout';
 
 // ********************************************************************************
@@ -42,6 +43,10 @@ async ({ params }) => {
 
 // == Client Side =================================================================
 function PublishedNotebookPage({ publishedNotebook }: ServerSideProps) {
+  // Get the theme from the notebookEditorTheme
+  const themeStylesheet = notebookEditorTheme.getStylesheet();
+
+  // == UI ========================================================================
   if(!publishedNotebook) return (
     <FullPageLayout>
       <p>Notebook not found!</p>
@@ -53,6 +58,8 @@ function PublishedNotebookPage({ publishedNotebook }: ServerSideProps) {
       <Head>
         <title>{publishedNotebook?.title}</title>
         <meta property="og:title" content={publishedNotebook.title} key="title" />
+        {/** sets the theme into the Document */}
+        <style>{themeStylesheet}</style>
       </Head>
       <NotebookViewer content={publishedNotebook.content} />
     </FullPageLayout>
