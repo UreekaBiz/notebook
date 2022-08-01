@@ -45,9 +45,9 @@ const migrationTask = () => {
 //    --method='POST' \
 //    --body-content='{
 //          "key":<migration_key>}'
-export const MIGRATE_FUNCTION = 'targetMigration'/*needed to enqueue in Cloud Task*/;
+export const TARGET_MIGRATION = 'targetMigration'/*needed to enqueue in Cloud Task*/;
 export const targetMigration = functions.runWith(MaintenanceRuntimeOpts).https.onRequest(wrapRequest<Migrate_Rest>(
-{ name: MIGRATE_FUNCTION, schema: Migrate_Rest_Schema },
+{ name: TARGET_MIGRATION, schema: Migrate_Rest_Schema },
 async (data) => {
   const task = migrationTask()[data.key];
   if(task === undefined) throw new ApplicationError('devel/unhandled', `Unknown migration task '${data.key}'.`);
