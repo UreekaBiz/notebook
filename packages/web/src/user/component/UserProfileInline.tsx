@@ -1,9 +1,10 @@
-import { Flex, Heading, Image } from '@chakra-ui/react';
+import { Flex, Heading } from '@chakra-ui/react';
 import { MouseEventHandler } from 'react';
 
 import { UserIdentifier, UserProfilePublic } from '@ureeka-notebook/web-service';
 
 import { getDisplayName } from 'user/util';
+import { UserProfileAvatar } from './UserProfileAvatar';
 
 // ********************************************************************************
 interface Props {
@@ -40,13 +41,13 @@ export const UserProfileInline: React.FC<Props> = ({ userProfile, onClick, userI
       }}
       onClick={onClick}
     >
-      {/* FIXME: handle case with no avatar */}
-      <Image
-        src={userProfile.profileImageUrl}
+      <UserProfileAvatar
+        userProfile={userProfile}
         width={5}
         height={5}
         marginRight={2}
         borderRadius={5}
+        fontSize={10}
       />
       <Heading
         // truncates the text
