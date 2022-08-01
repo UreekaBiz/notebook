@@ -7,7 +7,7 @@ import { createUserProfilePrivate } from './userProfilePrivate';
 // FIXME: do the on-delete!!
 // REF: https://github.com/firebase/firebase-functions/issues/530
 export const onCreateFirebaseUser = auth.user().onCreate(wrapAuthOnCreateOrDelete(async user => {
-  const userId = user.uid/*for convenience*/
+  const userId = user.uid/*for convenience*/;
   try {
     await createUserProfilePrivate(userId, user.email, user.photoURL, user.displayName)/*throws on error*/;
   } catch(error) {

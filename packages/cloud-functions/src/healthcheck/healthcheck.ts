@@ -83,7 +83,7 @@ const healthcheckCallable = async (name: string): Promise<HealthcheckStatus> => 
         name,
         elapsedTime,
         ...response.data,
-      }
+      };
     } catch(error) {
       logger.error(`Invalid response body from HTTPS Cloud Function '${name}'. Reason: `, error);
       return { name, result: false/*failed*/ };

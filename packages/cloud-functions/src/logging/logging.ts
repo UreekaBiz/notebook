@@ -42,7 +42,7 @@ type JsonLogEntry = Readonly<{
 //        is extremely error prone)?
 export const logFunctionInvocation = async (functionName: string, data: object, context?: CallableContext) => {
   const logName = camelToKebabCase(functionName);
-  const severity = LOGLEVEL_TO_LOGSEVERITY.get(LogLevel.INFO)!
+  const severity = LOGLEVEL_TO_LOGSEVERITY.get(LogLevel.INFO)!;
 
   // REF: https://firebase.google.com/docs/functions/writing-and-viewing-logs#custom_stackdriver_logs
   // REF: https://cloud.google.com/logging/docs/reference/v2/rest/v2/LogEntry
@@ -74,7 +74,7 @@ export const logFunctionInvocation = async (functionName: string, data: object, 
     data,
   };
   await logJson(logName, [{ metadata, jsonPayload }]);
-}
+};
 
 // == Reported Error ==============================================================
 // each ReportedError is unique -per- -invocation- (even if called multiple times

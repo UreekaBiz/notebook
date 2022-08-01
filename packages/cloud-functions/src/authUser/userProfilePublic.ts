@@ -39,7 +39,7 @@ export const userProfilePrivateChangedUserProfilePublic = async (userId: string,
 // NOTE: used both when the User Profile Private is created and when it is updated
 export const writeUserProfilePublic = (
   transaction: Transaction, userPublicProfileRef: DocumentReference<UserProfilePublic_Write>,
-  userPrivateProfile: UserProfilePrivate_Create | UserProfilePrivate_Storage,
+  userPrivateProfile: UserProfilePrivate_Create | UserProfilePrivate_Storage
 ) => {
   const document: UserProfilePublic_Write = {
     // *only* UserProfile_Core_Schema fields

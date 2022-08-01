@@ -56,7 +56,7 @@ type TaskHandler<T, R> = (data: T, taskHeaderData: TaskHeaderData) => Promise<R>
 
 // -- Triggers --------------------------------------------------------------------
 type ContextParams = Record<string, any>;
-type EventContext<T extends ContextParams> = Modify<functions.EventContext, { params: T }>;
+type EventContext<T extends ContextParams> = Modify<functions.EventContext, { params: T; }>;
 
 // .. PubSub Scheduled ............................................................
 type OnRunHandler = (context: functions.EventContext) => PromiseLike<any> | any;

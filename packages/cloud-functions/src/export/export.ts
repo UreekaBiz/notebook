@@ -1,5 +1,5 @@
 import * as firestore from '@google-cloud/firestore';
-import { google } from '@google-cloud/firestore/build/protos/firestore_admin_v1_proto_api'
+import { google } from '@google-cloud/firestore/build/protos/firestore_admin_v1_proto_api';
 import { logger } from 'firebase-functions';
 
 import { convertNullToUndefined, isBlank } from '@ureeka-notebook/service-common';
@@ -21,7 +21,7 @@ const configInfo = ((): ConfigInfo | null/*not configured*/ => {
     bucket: FIRESTORE_EXPORT_BUCKET,
     collections: isBlank(FIRESTORE_EXPORT_COLLECTIONS)
                         ? []/*default to 'all'*/
-                        : JSON.parse(FIRESTORE_EXPORT_COLLECTIONS)/*array of strings*/
+                        : JSON.parse(FIRESTORE_EXPORT_COLLECTIONS)/*array of strings*/,
   };
 })()/*execute*/;
 export const FirestoreExportConfigInfo = configInfo;

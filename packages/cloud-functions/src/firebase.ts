@@ -9,5 +9,5 @@ export const messaging = firebase.messaging();
 // ................................................................................
 // set default Firestore settings
 firestore.settings({
-  timestampsInSnapshots: true/*recommended default*/
+  timestampsInSnapshots: true/*recommended default*/,
 });

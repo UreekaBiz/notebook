@@ -145,7 +145,7 @@ export const hasEnv = (key: string) => environment.has(key);
 export const getEnvObject = (key: string, defaultValue?: EnvVariable): EnvVariable => {
   if(!environment.has(key)) {
     if(defaultValue !== undefined) return defaultValue;
-    throw new Error(`Unknown environment variable '${key}'.`)
+    throw new Error(`Unknown environment variable '${key}'.`);
   } /* else -- the key is known as expected */
   const value = environment.get(key)!;
 

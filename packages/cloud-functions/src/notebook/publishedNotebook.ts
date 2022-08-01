@@ -12,13 +12,13 @@ import { notebookDocument, publishedNotebookDocument } from './datastore';
 export const createNewPublishedNotebook = async (
   userId: UserIdentifier,
   notebookId: NotebookIdentifier, version: number,
-  title: string, image?: string, snippet?: string,
+  title: string, image?: string, snippet?: string
 ): Promise<PublishedNotebookIdentifier> => {
   // NOTE: is the same as the Notebook that it belongs to
   const publishedNotebookId = notebookId/*alias*/,
         publishedNotebookRef = publishedNotebookDocument(publishedNotebookId);
 
-  try{
+  try {
     await firestore.runTransaction(async transaction => {
       // ensure that the Notebook document still exists (i.e. has not been deleted
       // either hard or soft) before creating the associated Published Notebook
@@ -47,7 +47,7 @@ export const createNewPublishedNotebook = async (
         createdBy: userId,
         createTimestamp: ServerTimestamp/*by contract*/,
         lastUpdatedBy: userId,
-        updateTimestamp: ServerTimestamp/*by contract*/
+        updateTimestamp: ServerTimestamp/*by contract*/,
       };
       transaction.set(publishedNotebookRef, removeUndefined(publishedNotebook))/*by contract*/;
     });

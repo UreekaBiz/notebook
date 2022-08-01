@@ -31,7 +31,7 @@ export const getNotebookName = (notebookId: NotebookIdentifier, version: Noteboo
 // == Create ======================================================================
 export const createNewNotebook = async (
   userId: UserIdentifier,
-  type: NotebookType, name: string,
+  type: NotebookType, name: string
 ): Promise<NotebookIdentifier> => {
   const schemaVersion = NotebookSchemaVersion.V2;
   try {
@@ -75,7 +75,7 @@ export const updateExistingNotebook = (transaction: Transaction, notebookId: Not
 
     lastUpdatedBy: SystemUserId/*by contract*/,
     updateTimestamp: ServerTimestamp/*server-written*/,
-  }
+  };
   transaction.update(notebookRef, notebook);
 };
 

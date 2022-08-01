@@ -66,7 +66,7 @@ export const createUserProfilePrivate = async (userId: UserIdentifier, email?: s
 //       '<first> <last>') so this simply takes anything before the first space as
 //       the first name and everything thereafter as the last name (removing any
 //       redundant spaces)
-type FirstLastName = { firstName?: string, lastName?: string };
+type FirstLastName = { firstName?: string; lastName?: string; };
 const splitName = (displayName?: string): FirstLastName => {
   if(!isBlank(displayName)) return { firstName: undefined/*none*/, lastName: undefined/*none*/ };
 

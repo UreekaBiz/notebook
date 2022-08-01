@@ -72,7 +72,7 @@ export const createCheckpoint = async (notebookId: NotebookIdentifier, index: nu
 // returns the content of a Notebook at the given index
 export const getNotebookContent = async (
   transaction: Transaction,
-  version: NotebookSchemaVersion, notebookId: NotebookIdentifier, index: number,
+  version: NotebookSchemaVersion, notebookId: NotebookIdentifier, index: number
 ): Promise<NotebookDocumentContent> => {
   const lastCheckpoint = await getLastCheckpoint(transaction, notebookId),
         lastCheckpointIndex = getLastCheckpointIndex(lastCheckpoint);
