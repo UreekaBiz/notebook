@@ -1,4 +1,4 @@
-import { useToast, Box, Heading, Text, Link } from '@chakra-ui/react';
+import { useToast, Box, Heading, Link, Text } from '@chakra-ui/react';
 import NextLink from 'next/link';
 import { MouseEventHandler } from 'react';
 
