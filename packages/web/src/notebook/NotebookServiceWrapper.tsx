@@ -1,6 +1,6 @@
 import { ReactNode } from 'react';
 
-import { NotebookService } from '@ureeka-notebook/web-service';
+import { isClientSide, NotebookService } from '@ureeka-notebook/web-service';
 
 // ********************************************************************************
 interface Props { children: ReactNode; }
@@ -11,8 +11,9 @@ export const NotebookServiceWrapper: React.FC<Props> = ({ children }) => {
   // without having any kind of loading screen.
   // Ideally this would be inside a useEffect but since React don't provide an
   // explicit order in which the useEffects are within the tree this must be done
-  // instead..
-  if(!NotebookService.getInstance()/*not initialized*/) NotebookService.create();
+  // instead.
+  // NOTE: This is only mean to be run on the client side.
+  if(isClientSide() && !NotebookService.getInstance()/*not initialized*/) NotebookService.create();
 
   return <>{children}</>;
 };

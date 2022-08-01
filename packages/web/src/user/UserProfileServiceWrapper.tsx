@@ -1,6 +1,6 @@
 import { ReactNode } from 'react';
 
-import { UserProfileService } from '@ureeka-notebook/web-service';
+import { isClientSide, UserProfileService } from '@ureeka-notebook/web-service';
 
 // ********************************************************************************
 interface Props { children: ReactNode; }
@@ -12,7 +12,8 @@ export const UserProfileServiceWrapper: React.FC<Props> = ({ children }) => {
   // Ideally this would be inside a useEffect but since React don't provide an
   // explicit order in which the useEffects are within the tree this must be done
   // instead.
-  if(!UserProfileService.getInstance()/*not initialized*/) UserProfileService.create();
+  // NOTE: This is only mean to be run on the client side.
+  if(isClientSide() && !UserProfileService.getInstance()/*not initialized*/) UserProfileService.create();
 
   return <>{children}</>;
 };
