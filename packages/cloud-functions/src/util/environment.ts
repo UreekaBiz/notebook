@@ -32,6 +32,9 @@ export const ENVIRONMENT: EnvironmentType = (() => {
 // REF: '/bin/dump_env.js'
 export const PROJECT_ID = process.env['NEXT_PUBLIC_FIREBASE_PROJECT_ID']!;
 export const FUNCTION_REGION = process.env['NEXT_PUBLIC_FIREBASE_FUNCTION_REGION']!;
+
+export const SERVICE_ACCOUNT_EMAIL = `${PROJECT_ID}@appspot.gserviceaccount.com`;
+
 // ................................................................................
 // NOTE: the values are ANYTHING other than 'undefined' -- it simply makes debugging easier
 export const VALUE_NOT_SPECIFIED = 'VALUE_NOT_SPECIFIED'/*sentinel if env variable isn't specified*/;
