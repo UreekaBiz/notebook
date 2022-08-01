@@ -21,6 +21,7 @@ export * from './authUser/onWrite';
 export * from './authUser/schedule';
 export * from './healthcheck/callable';
 export * from './logging/callable';
+export * from './migration/task';
 export * from './notebook/callable';
 export * from './notebookEditor/onCreate';
 export * from './export/schedule';

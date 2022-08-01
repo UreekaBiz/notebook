@@ -24,7 +24,7 @@ const excludedEndpointNames = [
   'scheduleUserSessionExpiration',
 
   // Cloud Task HTTPS targets
-  // (currently none)
+  'targetMigration',
 ];
 
 // the set of all endpoints (Cloud Functions) that are to be health checked
