@@ -15,7 +15,7 @@ import { MigrationKey, MigrationTask } from './type';
 //    --region='us-central1' \
 //    --member='allUsers' \
 //    --role='roles/cloudfunctions.invoker'
-//  gcloud functions add-iam-policy-binding targetMigration \
+//  gcloud functions add-iam-policy-binding <function_name> \
 //    --project='<project_id>' \
 //    --region='us-central1' \
 //    --member='serviceAccount:<project_id>@appspot.gserviceaccount.com' \
