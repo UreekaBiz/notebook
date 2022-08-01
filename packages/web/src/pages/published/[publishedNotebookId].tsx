@@ -44,7 +44,7 @@ async ({ params }) => {
 // == Client Side =================================================================
 function PublishedNotebookPage({ publishedNotebook }: ServerSideProps) {
   // Get the theme from the notebookEditorTheme
-  const themeStylesheet = notebookEditorTheme.getStylesheet();
+  const theme = notebookEditorTheme.getStylesheet();
 
   // == UI ========================================================================
   if(!publishedNotebook) return (
@@ -58,8 +58,14 @@ function PublishedNotebookPage({ publishedNotebook }: ServerSideProps) {
       <Head>
         <title>{publishedNotebook?.title}</title>
         <meta property="og:title" content={publishedNotebook.title} key="title" />
-        {/** sets the theme into the Document */}
-        <style>{themeStylesheet}</style>
+
+        {/**
+         * sets the theme into the Document
+         * NOTE: Using dangerouslySetInnerHTML since it's the only way to correctly
+         *       set the theme into the Document. This is safe to use since the
+         *        theme is completely controlled by the notebookEditorTheme.
+         */}
+        <style dangerouslySetInnerHTML={{ __html: theme }}/>
       </Head>
       <NotebookViewer content={publishedNotebook.content} />
     </FullPageLayout>
