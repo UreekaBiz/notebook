@@ -1,26 +1,18 @@
-import { useEffect, useState, ReactNode } from 'react';
+import { ReactNode } from 'react';
 
 import { UserProfileService } from '@ureeka-notebook/web-service';
-
-import { Loading } from 'shared/component/Loading';
 
 // ********************************************************************************
 interface Props { children: ReactNode; }
 export const UserProfileServiceWrapper: React.FC<Props> = ({ children }) => {
-  // -- State ---------------------------------------------------------------------
-  const [initialized, setInitialized] = useState(false/*by definition*/);
-
-  // -- Effects -------------------------------------------------------------------
-  useEffect(() => {
-    UserProfileService.create();
-    setInitialized(true);
-
-    // FIXME: No shutdown?
-    // return () => userProfileService.shutdown();
-  }, [/*only on mount*/]);
-
-  // -- UI ------------------------------------------------------------------------
-  if(!initialized) return <Loading />;
+  // Initializes UserProfileService on mount once and only once.
+  // This is needed to do this way instead of using useEffect since UserProfileService
+  // is used by pages that requires to render its content on the first Render
+  // without having any kind of loading screen.
+  // Ideally this would be inside a useEffect but since React don't provide an
+  // explicit order in which the useEffects are within the tree this must be done
+  // instead.
+  if(!UserProfileService.getInstance()/*not initialized*/) UserProfileService.create();
 
   return <>{children}</>;
 };
