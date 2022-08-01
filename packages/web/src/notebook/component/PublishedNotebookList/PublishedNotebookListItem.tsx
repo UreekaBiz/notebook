@@ -35,7 +35,7 @@ export const PublishedNotebookListItem: React.FC<Props> = ({ publishedNotebookTu
   return (
     <Box>
       <UserProfileInline userId={createdBy} userProfile={userProfile} onClick={handleUserClick} />
-      <NextLink href={`${coreRoutes.publishedNotebook}/${id}`} passHref/*pass ref to 'a' child -- needed to open in new tab*/ >
+      <NextLink href={`${coreRoutes.publishedNotebook}${id}`} passHref/*pass ref to 'a' child -- needed to open in new tab*/ >
         <Link color='#444' textDecoration='none' _hover={{ cursor: 'pointer' }}>
           <Heading fontSize={26}>{title}</Heading>
           <Text marginBottom={2} color='#888' fontSize={20} fontWeight={500} lineHeight='26px'>
