@@ -14,7 +14,7 @@ import { DocumentIterator, Exhausted } from './DocumentIterator';
  */
 export class QueryDocumentIterator<T> implements DocumentIterator<DocumentSnapshot<T>> {
   // has the collection been exhausted?
-  private isExhausted: boolean = false/*by definition*/
+  private isExhausted: boolean = false/*by definition*/;
 
   // ..............................................................................
   // NOTE: these are only valid when `isExhausted === false`
