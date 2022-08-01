@@ -7,6 +7,7 @@ import { NotebookSchemaType } from '../schema';
 
 // ********************************************************************************
 // ================================================================================
+// NOTE: must be present on the NodeSpec below
 // NOTE: this value must have matching types -- the ones defined in the Extension
 const ImageAttributeSpec = {
   [AttributeType.Src]: noNodeOrMarkSpecAttributeDefaultValue<string>(),
@@ -26,14 +27,18 @@ export type ImageAttributes = AttributesTypeFromNodeSpecAttributes<typeof ImageA
 // -- Node Spec -------------------------------------------------------------------
 export const ImageNodeSpec: NodeSpec = {
   name: NodeName.IMAGE,
-  inline: true,
+
   group: 'inline',
+  inline: true,
   draggable: true,
+
+  attrs: ImageAttributeSpec,
 };
 
 // -- Render Spec -----------------------------------------------------------------
 export const ImageNodeRendererSpec: NodeRendererSpec<ImageAttributes> = {
   tag: 'img',
+
   attributes: {/*use the default renderer on all Attributes*/},
 };
 
