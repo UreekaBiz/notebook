@@ -1,5 +1,5 @@
-import { useToast, Box, Flex, Heading, Image, Text } from '@chakra-ui/react';
-import { useRouter } from 'next/router';
+import { useToast, Box, Flex, Heading, Image, Text, Link } from '@chakra-ui/react';
+import NextLink from 'next/link';
 import { MouseEventHandler } from 'react';
 
 import { PublishedNotebookTuple } from '@ureeka-notebook/web-service';
@@ -20,7 +20,6 @@ export const PublishedNotebookListItem: React.FC<Props> = ({ publishedNotebookTu
   // number of live subscriptions that can be made, the Users are static (not live)
   const { status, userProfile } = useUserProfile(createdBy)/*not live*/;
 
-  const router = useRouter();
   const toast = useToast();
 
   // == Handlers ==================================================================
@@ -30,19 +29,11 @@ export const PublishedNotebookListItem: React.FC<Props> = ({ publishedNotebookTu
     toast({ title: 'Not implemented yet!' });
   };
 
-  const handlePublishedNotebookClick: MouseEventHandler<HTMLDivElement> = (event) => {
-    router.push(`${coreRoutes.publishedNotebook}/${id}`);
-  };
-
   // == UI ========================================================================
   if(status === 'loading' || status === 'idle') return null/*still loading*/;
 
   return (
-    <Box
-      color='#444'
-      _hover={{ cursor: 'pointer' }}
-      onClick={handlePublishedNotebookClick}
-    >
+    <Box>
       {/* FIXME: separate the User part into separate component to handle all cases */}
       {userProfile ? (
         <Flex
@@ -67,10 +58,14 @@ export const PublishedNotebookListItem: React.FC<Props> = ({ publishedNotebookTu
           <Heading fontSize={16}>{getDisplayName(userProfile)}</Heading>
         </Flex>
       ) : null/*User failed to load*//*FIXME: have a default state for this case*/}
-      <Heading fontSize={26}>{title}</Heading>
-      <Text marginBottom={2} color='#888' fontSize={20} fontWeight={500} lineHeight='26px'>
-        {snippet}
-      </Text>
+      <NextLink href={`${coreRoutes.publishedNotebook}/${id}`} passHref/*pass ref to 'a' child -- needed to open in new tab*/ >
+        <Link color='#444' textDecoration='none' _hover={{ cursor: 'pointer' }}>
+          <Heading fontSize={26}>{title}</Heading>
+          <Text marginBottom={2} color='#888' fontSize={20} fontWeight={500} lineHeight='26px'>
+            {snippet}
+          </Text>
+        </Link>
+      </NextLink>
       <Text color='#555' fontSize={14}>{getMinifiedReadableDate(createTimestamp.toDate())}</Text>
     </Box>
   );
