@@ -9,10 +9,16 @@ import { getDisplayName } from 'user/util';
 interface Props {
   /** the {@link UserIdentifier} of the User */
   userId: UserIdentifier;
-  /** the {@link UserProfilePublic} of the User. If this value is null it will
-   *  be treated as if the User failed to load.*/
+  /**
+   *  the {@link UserProfilePublic} of the User. If this value is null it will
+   *  be treated as if the User failed to load.
+   */
   // NOTE: The  parent Component must handle the loading status of this component
   //       since giving it a null value is not the same as not loaded yet.
+  // NOTE: This component received the userProfile already loaded from the parent
+  //       instead of delegating this task to this component to have a better
+  //       control over the loading status and improve the reusability of this
+  //       component.
   userProfile: UserProfilePublic | null;
 
   onClick?: MouseEventHandler<HTMLDivElement>;
