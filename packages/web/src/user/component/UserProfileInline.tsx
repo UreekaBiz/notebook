@@ -49,9 +49,11 @@ export const UserProfileInline: React.FC<Props> = ({ userProfile, onClick, userI
         borderRadius={5}
       />
       <Heading
+        // truncates the text
         overflow='hidden'
         whiteSpace='nowrap'
         textOverflow='ellipsis'
+
         fontSize={16}
       >
         {getDisplayName(userProfile)}
