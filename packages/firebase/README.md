@@ -25,3 +25,7 @@ Firestore indexes are applied by running the following:
 ```bash
 npm run indexes
 ```
+
+# Firestore Hosting
+
+Firestore hosting is contained within the `web` package.
