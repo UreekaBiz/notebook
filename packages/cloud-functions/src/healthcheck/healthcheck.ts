@@ -25,6 +25,7 @@ const excludedEndpointNames = [
 
   // Cloud Task HTTPS targets
   'targetMigration',
+  'targetNotebookShareBatchNotification',
 ];
 
 // the set of all endpoints (Cloud Functions) that are to be health checked
