@@ -137,7 +137,7 @@ export const ShareNotebookDialog: React.FC = () => {
     try {
       setStatus('loading');
       await NotebookService.getInstance().shareNotebook({ notebookId, userRoles: removeUserPublicProfilesFromMap(shareRoles) });
-      toast({ title: 'Permissions updated', status: 'success' });
+      toast({ title: 'Share updated', status: 'success' });
       resetState();
       setIsModalOpen(false);
     } catch(error) {
