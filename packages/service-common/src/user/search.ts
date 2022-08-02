@@ -11,7 +11,6 @@ export const MAX_USER_SEARCH_RESULTS = 100/*sane limit on space and time -- can 
 export type UserSearchResult = SearchResult<UserIdentifier, string/*user name*/>;
 
 // ================================================================================
-
 // computes the User's name as it is used in sorting
 // CHECK: should this normalize as well?
 export const computeUserSortName = (firstName?: string, lastName?: string): string => {
@@ -27,8 +26,8 @@ export const computeUserSortName = (firstName?: string, lastName?: string): stri
 };
 
 // == Prefix-based Searches =======================================================
-// NOTE: currently normalizing diacritics to give the best possible chance of
-//       matching across character sets
+// NOTE: normalizing diacritics to give the best possible chance of matching across
+//       character sets
 // REF: https://stackoverflow.com/questions/990904/remove-accents-diacritics-in-a-string-in-javascript
 const normalizeUserPrefixString = (s: string) => {
   // NOTE: order matters!
