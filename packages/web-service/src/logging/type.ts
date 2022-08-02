@@ -1,13 +1,10 @@
 import log from 'loglevel';
 
-import {
-  Logger,
-  ServiceLogger,
-} from '@ureeka-notebook/service-common';
+import { Logger, ServiceLogger } from '@ureeka-notebook/service-common';
 
-// ********************************************************************************
-// SEE: @ureeka-notebook/service-common: logging/type.ts
+// ** Service-Common **************************************************************
 export {
+  // SEE: @ureeka-notebook/service-common: logging/type.ts
   Logger,
   LogLevel,
   LogView,
