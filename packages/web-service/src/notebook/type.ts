@@ -2,11 +2,13 @@ import { OrderByDirection } from 'firebase/firestore';
 
 import { FieldValue, Notebook, NotebookCreate_Rest, NotebookCreate_Rest_Schema, NotebookDelete_Rest, NotebookDelete_Rest_Schema, PublishedNotebook, PublishedNotebookCreate_Rest, PublishedNotebookCreate_Rest_Schema, UserIdentifier } from '@ureeka-notebook/service-common';
 
-// ** Service Common **************************************************************
+// ** Service-Common **************************************************************
 export {
+  // SEE: @ureeka-notebook/service-common: notebook/util.ts
   getNotebookShareRoles,
   areNotebookShareRolesEqual,
 
+  // SEE: @ureeka-notebook/service-common: notebook/type.ts
   Notebook,
   NotebookIdentifier,
   NotebookRole,
