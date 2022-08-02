@@ -1,19 +1,23 @@
 import { DocumentSnapshot, Query } from 'firebase-admin/firestore';
 import { logger } from 'firebase-functions';
 
-import { DocumentIterator, Exhausted } from './DocumentIterator';
+import { isType } from '@ureeka-notebook/service-common';
+
+// ********************************************************************************
+const Exhausted = isType<Promise<IteratorReturnResult<undefined>>>(Promise.resolve({ done: true, value: undefined }))/*by definition*/;
+const asyncIteratorResult = <T>(value: T) => isType<IteratorYieldResult<T>>({ done: false, value });
 
 // ********************************************************************************
 /**
- * An iterator over all documents defined by a {@link Query} (in the order specified
- * by that query) as {@link DocumentSnapshot}s. All documents are *not* live. If
- * new documents were added before the current batch then the are not included in
- * the iterator.
+ * An {@link AsyncIterator} over all documents defined by a {@link Query} (in the
+ * order specified by that query) as {@link DocumentSnapshot}s. All documents are
+ * *not* live. If new documents were added before the current batch then the are
+ * not included in the iterator.
  *
  * @typeparam T the document type
  */
-export class QueryDocumentIterator<T> implements DocumentIterator<DocumentSnapshot<T>> {
-  // has the collection been exhausted?
+export class QueryDocumentIterator<T> implements AsyncIterator<DocumentSnapshot<T>> {
+  // has the query been exhausted?
   private isExhausted: boolean = false/*by definition*/;
 
   // ..............................................................................
@@ -34,13 +38,9 @@ export class QueryDocumentIterator<T> implements DocumentIterator<DocumentSnapsh
    */
   public constructor(private readonly query: Query<T>, private readonly batchSize: number) {/*nothing additional*/}
 
-  // == DocumentIterator ==========================================================
-  /**
-   * @see DocumentIterator#next()
-   */
-  public async next(): Promise<DocumentSnapshot<T> | typeof Exhausted> {
-    return await this.fetchNextDocument();
-  }
+  // == AsyncIterator (protocol) ==================================================
+  public async next() { return await this.fetchNextDocument(); }
+  public [Symbol.asyncIterator]() { return this; }
 
   // ==============================================================================
   // fetches the next value from the batch (identified by `nextIndex`) if there is
@@ -49,17 +49,17 @@ export class QueryDocumentIterator<T> implements DocumentIterator<DocumentSnapsh
     if(this.isExhausted) return Exhausted/*by definition*/;
 
     // if there are insufficient documents in the current batch then load a new
-    // batch. If there are no more documents in the collection then return Exhausted
+    // batch. If there are no more documents in the query then return Exhausted
     if(this.nextIndex >= this.documents.length) {
-      await this.loadCollectionBatch(batchSize);
+      await this.loadNextBatch(batchSize);
       if(this.isExhausted) return Exhausted/*by definition*/;
     } /* else -- still documents in the current batch */
 
-    return this.documents[this.nextIndex++]/*get and move to next one*/;
+    return asyncIteratorResult(this.documents[this.nextIndex++]/*get and move to next one*/);
   }
 
   // ..............................................................................
-  private async loadCollectionBatch(batchSize: number) {
+  private async loadNextBatch(batchSize: number) {
     let query = this.query;
 
     // if there was a previous batch then start after the last document
@@ -82,7 +82,7 @@ export class QueryDocumentIterator<T> implements DocumentIterator<DocumentSnapsh
         this.lastDocumentSnapshot = snapshot.docs[snapshot.docs.length - 1];
       }
     } catch(error) {
-      logger.error('datastore/read', `Could not load next batch of documents from collection. Considering collection 'exhausted'. Reason: `, error);
+      logger.error(`Could not load next batch of documents from query. Considering query 'exhausted'. Reason: `, error);
 
       // treat it as if it was exhausted (by contract)
       // CHECK: is there any other option? Can it retry? (But then it's potentially

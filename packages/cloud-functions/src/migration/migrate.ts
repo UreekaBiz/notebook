@@ -2,7 +2,7 @@ import { DocumentSnapshot, Query } from 'firebase-admin/firestore';
 import { logger } from 'firebase-functions';
 
 import { QueryDocumentIterator } from '../util/QueryDocumentIterator';
-import { batchConsumeDocuments, COLLECTION_BATCH_SIZE } from '../util/DocumentIterator';
+import { asyncBatchConsume, ITERATOR_BATCH_SIZE } from '../util/iterator';
 import { MigrationFunction, MigrationKey } from './type';
 
 // ********************************************************************************
@@ -20,10 +20,10 @@ export const migrateTask = async <T extends string>(key: MigrationKey, query: Qu
     }
   };
 
-  await batchConsumeDocuments(
-    new QueryDocumentIterator(query, COLLECTION_BATCH_SIZE),
+  await asyncBatchConsume(
+    new QueryDocumentIterator(query, ITERATOR_BATCH_SIZE),
     snapshot => migrator(snapshot),
-    COLLECTION_BATCH_SIZE/*same size*/
+    ITERATOR_BATCH_SIZE/*same size*/
   );
 
   logger.info(`Migrated ${successCount} '${key}' document(s) with ${errorCount} error(s).`);
