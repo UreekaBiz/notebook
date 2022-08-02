@@ -3,8 +3,9 @@ import { useEffect, useState } from 'react';
 
 import { getLogger, ApplicationError, Logger, UserIdentifier, UserProfilePublic_Storage, UserProfileService } from '@ureeka-notebook/web-service';
 
-import { useAsyncStatus, useIsMounted } from 'shared/hook';
 import { useAuthedUser } from 'authUser/hook/useAuthedUser';
+import { useAsyncStatus, useIsMounted } from 'shared/hook';
+import { getPublicDisplayName } from 'user/util';
 
 const log = getLogger(Logger.UTIL);
 
@@ -76,7 +77,7 @@ export const UserProfileListItem: React.FC<Props> = ({ userId, showYouLabel = tr
       <Box flex='1 1'/*span remaining space*/ marginRight={4} overflow='hidden' whiteSpace='nowrap'>
         <Box marginBottom='-6px' fontSize={16} fontWeight='500'>
           <Flex>
-            <Box textOverflow='ellipsis' overflow='hidden'>{userProfilePublic.firstName ?? ''} {userProfilePublic.lastName ?? ''}</Box>
+            <Box textOverflow='ellipsis' overflow='hidden'>{getPublicDisplayName(userProfilePublic)}</Box>
             <Box marginLeft={1}>{showLabel ? '(You)' : null}</Box>
           </Flex>
         </Box>

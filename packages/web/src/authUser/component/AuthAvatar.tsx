@@ -7,8 +7,9 @@ import { FiSettings } from 'react-icons/fi';
 import { isLoggedOut } from '@ureeka-notebook/web-service';
 
 import { useAuthedUser } from 'authUser/hook/useAuthedUser';
-import { coreRoutes } from 'shared/routes';
 import { useRouter } from 'next/router';
+import { coreRoutes } from 'shared/routes';
+import { getPrivateDisplayName } from 'user/util';
 
 // displays the User's avatar and menu (ala a 'hamburger')
 // NOTE: the AuthUserService doesn't need to be initialized to use this component.
@@ -55,7 +56,7 @@ export const AuthAvatar: React.FC<Props> = ({ avatarSize, buttonSize, showLogIn 
     <Menu computePositionOnMount/**prevents sideways overflow in parent container */>
       <MenuButton
         as={Avatar}
-        name={`${authedUser.profilePrivate.firstName ?? ''/*default*/} ${authedUser.profilePrivate.lastName ?? ''/*default*/}`}
+        name={getPrivateDisplayName(authedUser.profilePrivate)}
         src={authedUser.profilePrivate.profileImageUrl}
         size={avatarSize}
         marginLeft={4}
