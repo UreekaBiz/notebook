@@ -19,12 +19,13 @@ export const deleteExpiredUserSessions = async (serverTimestamp: string, timeout
   const now = (new Date(serverTimestamp)/*server time*/).getTime();
   const maxAge = now - (timeout + epsilon);
 
+  // get all UserSession's (per User) that have some Session that has expired
   let userSessions: UserSessions;
   try {
     const snapshot = await expiredUserSessionsQuery(maxAge, MAX_USERS_PER_CHECK).once('value');
     if(!snapshot.exists()) { logger.info(`No expired Sessions to delete.`); return/*nothing more to do*/; }
     userSessions = snapshot.val() as UserSessions;
-logger.info(`Deleting expired User-Sessions: ${JSON.stringify(userSessions)}`);
+//logger.debug(`Deleting expired User-Sessions: ${JSON.stringify(userSessions)}`);
   } catch(error) {
     // CHECK: should this throw so that it causes the scheduled function to re-try?
     logger.error(`Could not query User-Sessions for Session timeout. Reason: ${error}`);

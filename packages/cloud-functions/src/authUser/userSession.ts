@@ -19,7 +19,7 @@ export const changedUserSession = async (userId: UserIdentifier, before: UserSes
   const sessionIdsRemoved = difference(getSessionIds(before), getSessionIds(after));
   if(sessionIdsRemoved.length > 0) {
     await Promise.all(sessionIdsRemoved.map(async sessionId => {
-      logger.info(`Session (${sessionId}) for User (${userId}) logged out / went offline.`);
+      logger.debug(`Session (${sessionId}) for User (${userId}) logged out / went offline.`);
 
       // TODO: put any dependencies here that depend on cleaning up when the User
       //       logs off or goes offline
@@ -37,11 +37,11 @@ export const updateUserSession = async (userId: UserIdentifier, userSession: Use
   const oldestSessionTimestamp = computeOldestSessionTimestamp(userSession);
   const presenceState = computePresenceState(userSession);
 
-//logger.info(`updateUserSession: ${userId}; ${JSON.stringify(user)}: ${oldestSessionTimestamp}; ${presenceState}`);
+//logger.debug(`updateUserSession: ${userId}; ${JSON.stringify(user)}: ${oldestSessionTimestamp}; ${presenceState}`);
   // determine if the state has changed (either oldest Session timestamp or presence)
   if(    (oldestSessionTimestamp !== userSession.oldestSessionTimestamp)
       || (presenceState !== userSession.presenceState) ) {
-//logger.info(`Presence or oldest Session timestamp have changed: ${JSON.stringify(user)}`);
+//logger.debug(`Presence or oldest Session timestamp have changed: ${JSON.stringify(user)}`);
     try {
       const summary: Partial<UserSession_Write>/*see NOTE below*/ = {
         presenceState,
@@ -113,23 +113,23 @@ const computeOldestSessionTimestamp = (userSession: UserSession) => {
 // NOTE: this must *NOT* be called be called from an on-write trigger as it writes
 //       the timestamp (which would cause a cycle)
 export const deleteExpiredSessions = async (userId: UserIdentifier, userSession: UserSession, maxAge: number/*millis since epoch*/) => {
-  // check each Session's timestamp to see if it's younger than the timeout. If so,
-  // accumulate in the records to be removed
-  let changed = false/*there is no change in the UserSession by default*/;
-  const deletedSessions: Record<string/*sessionKey*/, typeof DeleteRecord> = {};
   const sessions = userSession.sessions/*for convenience*/;
-  if(sessions !== undefined) {
-    for(const sessionId in sessions) {
-      const session = sessions[sessionId];
-//logger.info(`Session (${sessionId}) for User (${userId}): ${session.timestamp} < ${maxAge}`);
-      if(session.timestamp < maxAge) { /*expired since older (smaller)*/
-//logger.info(`Expired session`);
-        deletedSessions[sessionKey(sessionId)] = DeleteRecord/*clear session-level record*/;
-        changed = true/*by definition*/;
-      } /* else -- younger than the max age (so not expired) */
-    }
-  } /* else -- there are no Sessions associated with the UserSession */
-  if(!changed) return/*nothing to do*/;
+  if(!sessions) { logger.warn(`User (${userId}) supposedly had expired Sessions but had so Sessions!.`); return/*no Sessions so nothing to do*/; }
+
+  // check each Session's timestamp to see if it's older than the timeout. If so,
+  // accumulate in the records to be removed
+  let foundExpired = false/*default none found*/;
+  const deletedSessions: Record<string/*sessionKey*/, typeof DeleteRecord> = {};
+  for(const sessionId in sessions) {
+    const session = sessions[sessionId];
+//logger.debug(`Checking Session (${userId}:${sessionId}) for expiration: ${session.timestamp} < ${maxAge}`);
+    if(session.timestamp < maxAge) { /*expired since older (smaller)*/
+//logger.debug(`Deleting expired Session (${userId}:${sessionId}).`);
+      deletedSessions[sessionKey(sessionId)] = DeleteRecord/*clear Session-level record*/;
+      foundExpired = true/*by definition*/;
+    } /* else -- younger than the max age (so not expired) */
+  }
+  if(!foundExpired) { logger.warn(`User (${userId}) supposedly had expired Sessions but none were actually expired!`); return/*nothing to do*/; }
 
   try {
     const record: UserSession_Write = {
@@ -140,7 +140,7 @@ export const deleteExpiredSessions = async (userId: UserIdentifier, userSession:
 
       timestamp: DatabaseTimestamp/*write-always server-set*/,
     };
-logger.info(`Writing updated User-Session for deleted / expired Session (${userId}): ${JSON.stringify(userSession)} as ${JSON.stringify(record)}`);
+//logger.debug(`Writing updated User-Session for deleted / expired Session (${userId}): ${JSON.stringify(userSession)} as ${JSON.stringify(record)}`);
     await userSessionRef(userId).update(record);
   } catch(error) {
     logger.error(`Error writing User-Session for User (${userId}). Reason: `, error);
