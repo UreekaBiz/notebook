@@ -15,7 +15,8 @@ const excludedEndpointNames = [
 
   // Firestore and RTDB triggers
   'onCreateFirebaseUser',
-  'onCreateJournalVersion',
+  'onCreateHashtagSummary',
+  'onCreateNotebookVersion',
   'onWriteUserProfilePrivate',
   'onWriteUserSessionUser',
 
@@ -33,15 +34,17 @@ const endpointNames = [
   // NOTE: this *CANNOT* include 'healthcheck' so that there is no circular dependency
   // SEE: #excludedEndpointNames()
 
+  'adminHashtagRemoveUpdate',
+
   'authUserSessionClear',
   'authUserSessionHeartbeat',
   'authUserSessionUpdate',
   'authUserUserPrivateProfileUpdate',
-  'journalCreate',
-  'journalDelete',
-  'journalShare',
+  'notebookCreate',
+  'notebookDelete',
+  'notebookShare',
   'loggingClient',
-  'publishedJournalCreate',
+  'publishedNotebookCreate',
 ];
 
 // ================================================================================

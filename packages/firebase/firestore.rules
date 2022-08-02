@@ -22,6 +22,17 @@ service cloud.firestore {
       allow read, write: if false;
     }
 
+    // == Hashtag =================================================================
+    // all Hashtags with documentId equal to the hash of the normalized hashtag.
+    // Hashtags are defined in the RTDB and an on-create trigger is used to create
+    // this 'ledger'
+    match /hashtags/{hashId} {
+      allow create: if false; // server-only created
+      allow update: if false; // server-side only
+      allow read: if isUser();
+      allow delete: if false; // soft-delete
+    }
+
     // === Notebook ===============================================================
     function getNotebook(notebookId) {
       return get(/databases/$(database)/documents/notebooks/$(notebookId)).data;

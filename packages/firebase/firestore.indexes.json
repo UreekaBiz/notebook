@@ -1,6 +1,16 @@
 {
   "indexes": [
     {
+      "collectionGroup": "hashtags",
+      "queryScope": "COLLECTION",
+      "fields": [
+        { "fieldPath": "searchPrefixes", "arrayConfig": "CONTAINS" },
+        { "fieldPath": "removed", "order": "ASCENDING" },
+        { "fieldPath": "hashtag", "order": "ASCENDING" }
+      ]
+    },
+
+    {
       "collectionGroup": "notebooks",
       "queryScope": "COLLECTION",
       "fields": [

@@ -1,5 +1,12 @@
 {
   "rules": {
+    "hashtag-summaries": {
+      "$hashtag": {
+        ".read": "auth !== null",
+        ".write": "false"
+      }
+    },
+
     "user-sessions": {
       "$uid": {
         ".read": "auth !== null && auth.uid === $uid",

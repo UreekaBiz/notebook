@@ -19,6 +19,8 @@ export * from './authUser/callable';
 export * from './authUser/onCreate';
 export * from './authUser/onWrite';
 export * from './authUser/schedule';
+export * from './hashtag/callable';
+export * from './hashtag/onCreate';
 export * from './healthcheck/callable';
 export * from './logging/callable';
 export * from './migration/task';
