@@ -117,7 +117,7 @@ export const createApplicationError = (code: ErrorCode, message?: any, ...option
 
 // CHECK: can this be better qualified?
 // REF: https://www.typescriptlang.org/docs/handbook/advanced-types.html#using-type-predicates
-export const isApplicationError = (error: ApplicationError | Error): error is ApplicationError => (error as ApplicationError).code !== undefined;
+export const isApplicationError = (error: any/*what TypeScript considers the 'error' in 'catch'*/): error is ApplicationError => (error as ApplicationError).code !== undefined;
 
 // ================================================================================
 // REF: https://stackoverflow.com/questions/18391212/is-it-not-possible-to-stringify-an-error-using-json-stringify
