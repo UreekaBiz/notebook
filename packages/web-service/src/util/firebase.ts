@@ -40,7 +40,11 @@ export const auth = getAuth(client.getApp());
 // NOTE: the default persistence is 'local' which is desired (so not set explicitly)
 // REF: https://firebase.google.com/docs/auth/web/auth-state-persistence
 
+// REF: https://firebase.google.com/docs/auth/web/google-signin#customizing-the-redirect-domain-for-google-sign-in
+// REF: https://developers.google.com/identity/protocols/oauth2/scopes
 export const googleAuthProvider = new GoogleAuthProvider();
+             googleAuthProvider.addScope('https://www.googleapis.com/auth/userinfo.email')/*for email*/;
+             googleAuthProvider.addScope('https://www.googleapis.com/auth/userinfo.profile')/*for display name and profile pic*/;
 export const signInWithGooglePopup = async () => signInWithPopup(auth, googleAuthProvider);
 
 export const signOut = () => { auth.signOut(); };
