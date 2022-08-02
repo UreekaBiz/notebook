@@ -28,6 +28,10 @@ export type Notebook = Creatable & Updatable & Readonly<{
    *  possibly during a migration) */
   schemaVersion: NotebookSchemaVersion;
 
+  // NOTE: because Firestore does not have 'OR' queries, 'viewers' contains *all*
+  //       Users that can view the Notebook (including Creators and Editors) so
+  //       that it is a single source of truth. The same is true for 'editors'
+  //       which also contains the Creators of the Notebook.
   /** the set of User's that can view this Notebook. The creator and all editors are
    *  contained in this set. Bounded by {@link #MAX_NOTEBOOK_SHARE_USERS}.
    *  @see #getNotebookShareRoles() */
