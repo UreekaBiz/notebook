@@ -1,9 +1,10 @@
-import { collection, doc, orderBy, query, where, CollectionReference, Query } from 'firebase/firestore';
+import { collection, doc, query, where, CollectionReference, Query } from 'firebase/firestore';
 
-import { isBlank, isType, nameof, Notebook, NotebookIdentifier, PublishedNotebook, PublishedNotebookIdentifier, NOTEBOOKS, NOTEBOOK_PUBLISHED_NOTEBOOKS } from '@ureeka-notebook/service-common';
+import { isBlank, nameof, Notebook, NotebookIdentifier, PublishedNotebook, PublishedNotebookIdentifier, NOTEBOOKS, NOTEBOOK_PUBLISHED_NOTEBOOKS } from '@ureeka-notebook/service-common';
 
 import { firestore } from '../util/firebase';
-import { NotebookFilter, NotebookSort, PublishedNotebookFilter, PublishedNotebookSort } from './type';
+import { NotebookFilter, PublishedNotebookFilter } from './type';
+import { buildSortQuery } from '../util/firestore';
 
 // ********************************************************************************
 // == Collection ==================================================================
@@ -41,13 +42,7 @@ export const notebookQuery = (filter: NotebookFilter) => {
   } /* else -- (soft) deleted entries should be included */
 
   // sort
-  // REF: https://firebase.google.com/docs/firestore/query-data/order-limit-data
-  const sort: NotebookSort[] = [];
-  if(filter.sort && (filter.sort.length > 0))
-    sort.push(...filter.sort);
-  else/*sort not specified so use defaults*/
-    sort.push(isType<NotebookSort>({ field: 'name', direction: 'asc' }/*default by contract*/));
-  buildQuery = sort.reduce((sortQuery, sort) => query(sortQuery, orderBy(sort.field, sort.direction)), buildQuery);
+  buildQuery = buildSortQuery(buildQuery, filter, nameof<Notebook>('name')/*default sort field*/);
 
   return buildQuery;
 };
@@ -78,13 +73,7 @@ export const publishedNotebookQuery = (filter: PublishedNotebookFilter) => {
   // } /* else -- (soft) deleted entries should be included */
 
   // sort
-  // REF: https://firebase.google.com/docs/firestore/query-data/order-limit-data
-  const sort: PublishedNotebookSort[] = [];
-  if(filter.sort && (filter.sort.length > 0))
-    sort.push(...filter.sort);
-  else/*sort not specified so use defaults*/
-    sort.push(isType<PublishedNotebookSort>({ field: 'title', direction: 'asc' }/*default by contract*/));
-  buildQuery = sort.reduce((sortQuery, sort) => query(sortQuery, orderBy(sort.field, sort.direction)), buildQuery);
+  buildQuery = buildSortQuery(buildQuery, filter, nameof<PublishedNotebook>('title')/*default sort field*/);
 
   return buildQuery;
 };
