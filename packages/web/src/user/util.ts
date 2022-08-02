@@ -1,24 +1,29 @@
-import { isBlank, stringHashCode, UserProfilePublic } from '@ureeka-notebook/web-service';
+import { isBlank, stringHashCode, UserProfilePrivate, UserProfilePublic } from '@ureeka-notebook/web-service';
 
 // ********************************************************************************
 // == Display name ================================================================
-// a display name for the given User Profile
-export const getDisplayName = (profile: UserProfilePublic) => {
-  const blankFirst = isBlank(profile.firstName),
-        blankLast = isBlank(profile.lastName);
+// Gets the display name for the given User Profile.
+export const getPublicDisplayName = (profile: UserProfilePublic) => getDisplayName(profile.firstName, profile.lastName);
+export const getPrivateDisplayName = (profile: UserProfilePrivate) => getDisplayName(profile.firstName, profile.lastName);
+const getDisplayName = (firstName?: string, lastName?: string) => {
+  const blankFirst = isBlank(firstName),
+        blankLast = isBlank(lastName);
   if(blankFirst && blankLast) return 'Anonymous User'/*FIXME: constant*/;
-  if(blankFirst) return profile.lastName!;
-  if(blankLast) return profile.firstName!;
-  return `${profile.firstName} ${profile.lastName}`;
+  if(blankFirst) return lastName!;
+  if(blankLast) return firstName!;
+  return `${firstName} ${lastName}`;
 };
 
-export const getInitials = (profile: UserProfilePublic) => {
-  const blankFirst = isBlank(profile.firstName),
-        blankLast = isBlank(profile.lastName);
+// Gets the initials for the given User Profile.
+export const getPublicInitials = (profile: UserProfilePublic) => getInitials(profile.firstName, profile.lastName);
+export const getPrivateInitials = (profile: UserProfilePrivate) => getInitials(profile.firstName, profile.lastName);
+const getInitials = (firstName?: string, lastName?: string ) => {
+  const blankFirst = isBlank(firstName),
+        blankLast = isBlank(lastName);
   if(blankFirst && blankLast) return 'A'/*FIXME: constant*/;
-  if(blankFirst) return profile.lastName!.charAt(0);
-  if(blankLast) return profile.firstName!.charAt(0);
-  return `${profile.firstName!.charAt(0)}${profile.lastName!.charAt(0)}`;
+  if(blankFirst) return lastName!.charAt(0);
+  if(blankLast) return firstName!.charAt(0);
+  return `${firstName!.charAt(0)}${lastName!.charAt(0)}`;
 };
 
 // ================================================================================

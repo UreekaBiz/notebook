@@ -3,7 +3,8 @@ import { MouseEventHandler } from 'react';
 
 import { UserIdentifier, UserProfilePublic } from '@ureeka-notebook/web-service';
 
-import { getDisplayName } from 'user/util';
+import { getPublicDisplayName } from 'user/util';
+
 import { UserProfileAvatar } from './UserProfileAvatar';
 
 // ********************************************************************************
@@ -58,7 +59,7 @@ export const UserProfileInline: React.FC<Props> = ({ userProfile, onClick, userI
 
         fontSize={16}
       >
-        {getDisplayName(userProfile)}
+        {getPublicDisplayName(userProfile)}
       </Heading>
     </Flex>
   );
