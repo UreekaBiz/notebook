@@ -1,8 +1,6 @@
-# @Ureeka/Notebook | Firebase
+# Firebase
 
 This project encompasses all Firebase functionality (Firestore/RTDB rules, Indexes, Storage, etc) for the Notebook project.
-
-The top-level `package.json` should have all of the functions necessary to install and deploy the Firebase rules, storage, etc. (If there are any omissions then they should be added).
 
 ## Setup
 
