@@ -38,6 +38,16 @@ export type UserRoles = {
   [P in UserRole]?: true;
 };
 
+// .. Admin .......................................................................
+export const isAdminRole = (role: UserRole) => {
+  switch(role) {
+    case UserRole.Admin:
+    // add more UserRoles here that are Admin roles
+      return true/*is Admin Role*/;
+  }
+  return false/*not an Admin role*/;
+};
+
 // == Cookies =====================================================================
 export const SESSION_COOKIE = '__session';
 
