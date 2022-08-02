@@ -36,11 +36,11 @@ export type Checkpoint_Storage = Checkpoint/*nothing additional*/;
 // ** Action Types ****************************************************************
 // == Firestore ===================================================================
 // -- Version ------------------------------------------------------------------------
-export type NotebookVersion_Write = Readonly<Modify<NotebookVersion_Storage, {
-  createTimestamp: FieldValue/*server written*/;
+export type NotebookVersion_Write = Modify<NotebookVersion_Storage, Readonly<{
+  createTimestamp: FieldValue/*always-write server-set*/;
 }>>;
 
 // -- Checkpoint -----------------------------------------------------------------
-export type Checkpoint_Write = Readonly<Modify<Checkpoint_Storage, {
-  createTimestamp: FirestoreTimestamp/*server written*/;
+export type Checkpoint_Write = Modify<Checkpoint_Storage, Readonly<{
+  createTimestamp: FirestoreTimestamp/*always-write server-set*/;
 }>>;

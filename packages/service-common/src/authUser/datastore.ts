@@ -54,28 +54,28 @@ export type Session_Storage = Session;
 // ** Action Types ****************************************************************
 // == Firestore ===================================================================
 // -- User Profile Private --------------------------------------------------------
-export type UserProfilePrivate_Create = Readonly<Modify<UserProfilePrivate_Storage, {
-  createTimestamp: FieldValue/*server written*/;
-  updateTimestamp: FieldValue/*server written*/;
+export type UserProfilePrivate_Create = Modify<UserProfilePrivate_Storage, Readonly<{
+  createTimestamp: FieldValue/*always-write server-set*/;
+  updateTimestamp: FieldValue/*always-write server-set*/;
 }>>;
 
 export type UserProfilePrivate_Update =
     Partial<Omit<UserProfilePrivate_Storage, 'deleted'/*can't delete in update*/ | 'updateTimestamp'>>
-  & Readonly<Modify<Pick<UserProfilePrivate_Storage, 'updateTimestamp'>, {
+  & Modify<Pick<UserProfilePrivate_Storage, 'updateTimestamp'>, Readonly<{
       updateTimestamp: FieldValue/*always-write server-set*/;
     }>>;
 
-export type UserProfilePrivate_Delete = Readonly<Modify<Pick<UserProfilePrivate_Storage, 'deleted' | 'updateTimestamp' | 'lastUpdatedBy'>, {
-  updateTimestamp: FieldValue/*server written*/;
+export type UserProfilePrivate_Delete = Modify<Pick<UserProfilePrivate_Storage, 'deleted' | 'updateTimestamp' | 'lastUpdatedBy'>, Readonly<{
+  updateTimestamp: FieldValue/*always-write server-set*/;
 }>>;
 
 // == RTDB ========================================================================
 // -- Session ---------------------------------------------------------------------
-export type UserSession_Write = Readonly<Modify<Partial<UserSession_Storage>, {
+export type UserSession_Write = Modify<Partial<UserSession_Storage>, Readonly<{
   oldestSessionTimestamp?: DatabaseTimestamp/*computed*/;
 
   timestamp: DatabaseTimestamp/*server-set*/;
 }>>;
-export type Session_Write = Readonly<Modify<Partial<Session_Storage>, {
+export type Session_Write = Modify<Partial<Session_Storage>, Readonly<{
   timestamp: DatabaseTimestamp/*server-set*/;
 }>>;

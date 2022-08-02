@@ -27,7 +27,7 @@ export type UserProfilePublicTuple = ObjectTuple<UserIdentifier, UserProfilePubl
 // -- User Profile Public ---------------------------------------------------------
 // Public Profiles are *only* written as a result of an on-write trigger to the
 // Private Profile. A full-write is performed on each update.
-export type UserProfilePublic_Write = Readonly<Modify<UserProfilePublic_Storage, {
-  createTimestamp: FieldValue/*server written*/;
-  updateTimestamp: FieldValue/*server written*/;
+export type UserProfilePublic_Write = Modify<UserProfilePublic_Storage, Readonly<{
+  createTimestamp: FieldValue/*always-write server-set*/;
+  updateTimestamp: FieldValue/*always-write server-set*/;
 }>>;

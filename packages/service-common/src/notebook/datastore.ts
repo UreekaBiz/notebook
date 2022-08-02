@@ -29,19 +29,19 @@ export type PublishedNotebook_Storage = PublishedNotebook/*nothing additional*/;
 // ** Storage Types ***************************************************************
 // == Firestore ===================================================================
 // -- Notebook --------------------------------------------------------------------
-export type Notebook_Create = Readonly<Modify<Notebook_Storage, {
-  createTimestamp: FieldValue/*server written*/;
-  updateTimestamp: FieldValue/*server written*/;
+export type Notebook_Create = Modify<Notebook_Storage, Readonly<{
+  createTimestamp: FieldValue/*always-write server-set*/;
+  updateTimestamp: FieldValue/*always-write server-set*/;
 }>>;
-export type Notebook_Update = Readonly<Modify<Pick<Notebook_Storage, 'updateTimestamp' | 'lastUpdatedBy'>, {
-  updateTimestamp: FieldValue/*server written*/;
+export type Notebook_Update = Modify<Pick<Notebook_Storage, 'updateTimestamp' | 'lastUpdatedBy'>, Readonly<{
+  updateTimestamp: FieldValue/*always-write server-set*/;
 }>> & Partial<Omit<Notebook, 'deleted' | 'createTimestamp'| 'createdBy' | 'updateTimestamp'>>;
-export type Notebook_Delete = Readonly<Modify<Pick<Notebook_Storage, 'deleted' | 'updateTimestamp' | 'lastUpdatedBy'>, {
-  updateTimestamp: FieldValue/*server written*/;
+export type Notebook_Delete = Modify<Pick<Notebook_Storage, 'deleted' | 'updateTimestamp' | 'lastUpdatedBy'>, Readonly<{
+  updateTimestamp: FieldValue/*always-write server-set*/;
 }>>;
 
 // -- Published Notebook ----------------------------------------------------------
-export type PublishedNotebook_Create = Readonly<Modify<PublishedNotebook_Storage, {
-  createTimestamp: FieldValue/*server written*/;
-  updateTimestamp: FieldValue/*server written*/;
+export type PublishedNotebook_Create = Modify<PublishedNotebook_Storage, Readonly<{
+  createTimestamp: FieldValue/*always-write server-set*/;
+  updateTimestamp: FieldValue/*always-write server-set*/;
 }>>;
