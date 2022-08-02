@@ -1,17 +1,8 @@
 import { Box, BoxProps } from '@chakra-ui/react';
-import { useMemo } from 'react';
 
-import { UserProfilePublic } from '@ureeka-notebook/web-service';
+import { UserIdentifier, UserProfilePublic } from '@ureeka-notebook/web-service';
 
-import { getInitials } from 'user/util';
-
-/** A collection of colors used as a background colors */
-const DEFAULT_IMAGE_BACKGROUND_COLORS = [
-  '#F9EBC8',
-  '#FEFBE7',
-  '#DAE5D0',
-  '#A0BCC2',
-];
+import { getBackgroundImageColor, getInitials } from 'user/util';
 
 // ********************************************************************************
 /**
@@ -20,17 +11,16 @@ const DEFAULT_IMAGE_BACKGROUND_COLORS = [
  * defined colors as a background alongside the initials of the User.
  */
 interface Props extends BoxProps {
+  userId: UserIdentifier;
   userProfile: UserProfilePublic;
   // NOTE: Overriding BoxProps to require a defined width and height
   width: number | string;
   height: number | string;
 }
-export const DefaultUserProfileAvatar: React.FC<Props> = ({ userProfile, width, height, ...props }) => {
-
-  // Pick a random color
-  // NOTE: Using useMemo to ensure that the value don't change in each render.
-  const backgroundColor = useMemo(() => DEFAULT_IMAGE_BACKGROUND_COLORS[Math.floor(Math.random() * DEFAULT_IMAGE_BACKGROUND_COLORS.length)], []);
-
+export const DefaultUserProfileAvatar: React.FC<Props> = ({ userId, userProfile, width, height, ...props }) => {
+  // Pick a random color. The value is consistent across render since it picks the
+  // value based on the userId.
+  const backgroundColor = getBackgroundImageColor(userId);
   const initials = getInitials(userProfile);
 
   return (

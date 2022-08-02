@@ -42,6 +42,7 @@ export const UserProfileInline: React.FC<Props> = ({ userProfile, onClick, userI
       onClick={onClick}
     >
       <UserProfileAvatar
+        userId={userId}
         userProfile={userProfile}
         width={5}
         height={5}
