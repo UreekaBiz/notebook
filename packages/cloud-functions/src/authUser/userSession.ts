@@ -11,20 +11,22 @@ import { updateUserPrivateProfile } from './userProfilePrivate';
 // NOTE: called on *every* change (even if not the latest) -- be cognizant of
 //       operations that require order between calls
 export const changedUserSession = async (userId: UserIdentifier, before: UserSession | null/*new*/, after: UserSession) => {
-  // determine which, if any, Session changed (either came online or went offline)
-  // NOTE: there are only three types of changes at this level
+  // NOTE: there are only three types of changes at this level:
   //       1. New Session Id: Session came online
   //       2. Removed Session id: Session went offline
   //       3. Presence state changed (effectively as a result of the two above)
-  const sessionIdsRemoved = difference(getSessionIds(before), getSessionIds(after));
-  if(sessionIdsRemoved.length > 0) {
-    await Promise.all(sessionIdsRemoved.map(async sessionId => {
-      logger.debug(`Session (${sessionId}) for User (${userId}) logged out / went offline.`);
+  //       currently only care about #2 (but others can be added as needed)
 
-      // TODO: put any dependencies here that depend on cleaning up when the User
-      //       logs off or goes offline
-    }));
-  } /* else -- either the Session state changed or a new Session logged in (i.e. a Session was -added-) */
+  // determine which, if any, Session went offline (and was removed)
+  const sessionIdsRemoved = difference(getSessionIds(before), getSessionIds(after));
+  if(sessionIdsRemoved.length < 1) return/*no Session was removed*/;
+
+  await Promise.all(sessionIdsRemoved.map(async sessionId => {
+    logger.debug(`Session (${sessionId}) for User (${userId}) logged out / went offline.`);
+
+    // TODO: put any dependencies here that depend on cleaning up when the User
+    //       logs off or goes offline
+  }));
 };
 
 // --------------------------------------------------------------------------------
