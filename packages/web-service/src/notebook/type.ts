@@ -48,7 +48,8 @@ export type NotebookFilter = SortableFilter<NotebookSortField> & Readonly<{
   // NOTE: this supports only *exact* *match*
   name?: string;
 
-  // NOTE: only one of these should be specified since they cascade
+  // NOTE: only one of these should be specified since they cascade. If more than
+  //       one is specified then they're applied in waterfall order
   /** only show Notebooks that are viewable by this User (which includes any that
    *  are editable or created by the User) */
   viewableBy?: UserIdentifier;

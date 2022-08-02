@@ -39,13 +39,16 @@ service cloud.firestore {
     }
 
     // ............................................................................
-    // CHECK: why does 'createdBy' need to be explicitly included when the Creator
-    //        must be in 'viewers' by contract?
+    // NOTE: in theory, since 'viewers' *must* include anyone that can either view,
+    //       edit or is the creator, the other checks are superfluous. *BUT* it
+    //       seems that Firestore requires them to be aligned with the query so
+    //       therefore they're requried.
     function canViewNotebook(notebook) {
       return    isAdmin()
              || (   isUser()
-                 && (   (notebook.createdBy == request.auth.uid)
-                     || (request.auth.uid in notebook.viewers) ) );
+                 && (   (request.auth.uid in notebook.viewers)
+                     || (request.auth.uid in notebook.editors)
+                     || (notebook.createdBy == request.auth.uid) ) );
     }
     function canViewNotebookId(notebookId) {
       return canViewNotebook(getNotebook(notebookId));

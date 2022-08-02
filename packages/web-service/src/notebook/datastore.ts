@@ -26,6 +26,13 @@ export const notebookQuery = (filter: NotebookFilter) => {
     // TODO: support substring!!
     buildQuery = query(buildQuery, where(nameof<Notebook>('name'), '==', filter.name!));
   } /* else -- 'name' was not specified in the filter */
+  // NOTE: these are waterfall'd by design
+  if(!isBlank(filter.viewableBy)) {
+    buildQuery = query(buildQuery, where(nameof<Notebook>('viewers'), 'array-contains', filter.viewableBy!));
+  } /* else -- 'createdBy' was not specified in the filter */
+  if(!isBlank(filter.editableBy)) {
+    buildQuery = query(buildQuery, where(nameof<Notebook>('editors'), 'array-contains', filter.editableBy!));
+  } /* else -- 'createdBy' was not specified in the filter */
   if(!isBlank(filter.createdBy)) {
     buildQuery = query(buildQuery, where(nameof<Notebook>('createdBy'), '==', filter.createdBy!));
   } /* else -- 'createdBy' was not specified in the filter */

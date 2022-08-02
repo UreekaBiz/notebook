@@ -27,7 +27,7 @@ export const NotebookList = () => {
 
     setStatus('loading');
     // TODO: use the Scrollable to implement scroll-for-more behavior
-    const scrollableNotebooks = notebookService.onNotebooks({ createdBy: userId, sort: [{ field: 'name', direction: 'asc' }] });
+    const scrollableNotebooks = notebookService.onNotebooks({ editableBy: userId, sort: [{ field: 'name', direction: 'asc' }] });
     const subscription = scrollableNotebooks.documents$().subscribe({
       next: value => {
         if(!isMounted()) return/*component is unmounted, prevent unwanted state updates*/;
