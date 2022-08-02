@@ -1,9 +1,31 @@
-import { DocumentData, DocumentReference } from 'firebase/firestore';
+import { orderBy, query, DocumentData, DocumentReference, FieldValue, OrderByDirection, Query } from 'firebase/firestore';
 
 import { isType, Identifier, ObjectTuple } from '@ureeka-notebook/service-common';
 
-// ********************************************************************************
+// ** Query / Filter / Sort *******************************************************
+export type FilterSort<SortField> = Readonly<{
+  /** the field being sorted on */
+  field: SortField | FieldValue/*for FieldPath.documentId()*/;
 
+  /** the sort order / direction */
+  direction: OrderByDirection;
+}>;
+export type SortableFilter<SortField extends string> = Readonly<{ sort?: FilterSort<SortField>[]; }>;
+
+// ................................................................................
+export const buildSortQuery = <T, SortField extends string>(buildQuery: Query<T>, filter: SortableFilter<SortField>, defaultSortField?: SortField) => {
+  // REF: https://firebase.google.com/docs/firestore/query-data/order-limit-data
+  const sort: FilterSort<SortField>[] = [];
+  if(filter.sort && (filter.sort.length > 0))
+    sort.push(...filter.sort);
+  else if(defaultSortField) /*sort not specified so use defaults (if provided)*/
+    sort.push({ field: defaultSortField, direction: 'asc' }/*default by contract*/);
+  /* else -- sort and default not specified */
+
+  return sort.reduce((sortQuery, sort) => query(sortQuery, orderBy(sort.field, sort.direction)), buildQuery);
+};
+
+// ** Observable ******************************************************************
 // == Objects =====================================================================
 // TODO: these don't need 'ref' since 'ref' is only used for 'id' in the Tuple case!
 
