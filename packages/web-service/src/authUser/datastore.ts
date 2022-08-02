@@ -1,7 +1,7 @@
 import { ref, DatabaseReference } from 'firebase/database';
 import { collection, doc, CollectionReference, DocumentReference } from 'firebase/firestore';
 
-import { userKey, userSessionKey, SessionIdentifier, UserIdentifier, UserProfilePrivate, USER_PROFILE_PRIVATES, USER_SESSIONS, CLIENT_CONNECTED } from '@ureeka-notebook/service-common';
+import { userKey, userSessionKey, SessionIdentifier, UserIdentifier, UserProfilePrivate, CLIENT_CONNECTED, USER_PROFILE_PRIVATES, USER_SESSIONS } from '@ureeka-notebook/service-common';
 
 import { database, firestore } from '../util/firebase';
 
