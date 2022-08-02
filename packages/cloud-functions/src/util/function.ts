@@ -5,7 +5,7 @@ import { logger, RuntimeOptions } from 'firebase-functions';
 import { CallableContext, FunctionsErrorCode, Request } from 'firebase-functions/lib/providers/https';
 import { AnySchema, ValidationError } from 'yup';
 
-import { convertNullDeep, isType, redact, HttpStatusCode, Modify, UserIdentifier, VersionResponse, VERSION_REQUEST } from '@ureeka-notebook/service-common';
+import { convertNullDeep, isAdminRole as isAdminUserRole, isType, redact, HttpStatusCode, Modify, UserIdentifier, UserRole, VersionResponse, VERSION_REQUEST } from '@ureeka-notebook/service-common';
 
 import { logFunctionInvocation } from '../logging/logging';
 import { getEnv, FUNCTION_REGION, PROJECT_ID } from './environment';
@@ -90,6 +90,14 @@ export type CallableOptions = Readonly<{
   redact?: string[]/*the paths of fields to be redacted*/;
 
   // NOTE: 'context' is required and therefore not valid for #onRequest()
+  // NOTE: these are in waterfall order
+  /** is the caller one of the specified Admin roles? if present take precedence
+   *  over `requiresAdmin` and implies (even if empty) Application Admin (not present
+   *  by default) */
+  adminRoles?: UserRole[];
+  /** is Application Admin required? if true takes precedence over `requiresAuth`
+   *  (false by default) */
+  requiresAdmin?: boolean;
   /** is auth required? true by default */
   requiresAuth?: boolean;
 
@@ -100,9 +108,13 @@ export type CallableOptions = Readonly<{
 
 // == Process Callable Options ====================================================
 const processOptions = async <T extends object>(opts: CallableOptions, data: T, context?: CallableContext) => {
-  if((opts.requiresAuth !== false)/*default true*/ && context) {
+  if((opts.adminRoles !== undefined) && context) {
+    hasAdminRole(opts.adminRoles, context)/*throws if not Admin or is not auth'd*/;
+  } else if((opts.requiresAdmin === true)/*default false*/ && context) {
+    hasAdmin(context)/*throws if not Application Admin or is not auth'd*/;
+  } else if((opts.requiresAuth !== false)/*default true*/ && context) {
     hasAuth(context)/*throws if not auth'd*/;
-  } /* else -- no auth checks */
+  } /* else -- no auth checks (or didn't supply a context) */
 
   if(opts.name) { /*has a name so log this call*/
     // CHECK: always redact 'password' -except- when the caller explicitly blacklists?
@@ -288,9 +300,28 @@ export const wrapAuthOnCreateOrDelete = <C extends ContextParams = {}>(handler: 
 };
 
 // == Auth Checks =================================================================
+const hasAdminRole = (adminRoles: UserRole[], context: CallableContext) => {
+  hasAuth(context)/*by contract*/;
+  if(!isAdminRole(context, adminRoles)) throw new ApplicationError('functions/permission-denied', `Request not authorized. User must be an Administrator to fulfill request (${context.auth!.uid}).`);
+};
+
+const hasAdmin = (context: CallableContext) => {
+  hasAuth(context)/*by contract*/;
+  if(!context.auth!.token[UserRole.Admin]) throw new ApplicationError('functions/permission-denied', `Request not authorized. User must be an Application Administrator to fulfill request (${context.auth!.uid}).`);
+};
+
 const hasAuth = (context: CallableContext) => {
   if(!context) throw new ApplicationError('functions/permission-denied', `Attempted to call an HTTPS Cloud Function with no context.`);
   if(!context.auth) throw new ApplicationError('functions/permission-denied', `Attempted to call an HTTPS Cloud Function with no auth.`);
+};
+
+// ................................................................................
+const isAdminRole = (context: CallableContext, adminRoles: UserRole[]): boolean => {
+  if(!context || !context.auth) return false/*by contract*/;
+
+  const validAdminRoles = adminRoles.filter(role => isAdminUserRole(role))/*only consider admin roles by contract*/,
+        adminRoleSet = new Set([...validAdminRoles, UserRole.Admin/*by contract*/]);
+  return [...adminRoleSet].some(role => (context.auth!.token[role] !== undefined));
 };
 
 // == Schema Validation ===========================================================
