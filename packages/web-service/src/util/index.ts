@@ -23,6 +23,7 @@ export {
   // SEE: @ureeka-notebook/service-common: util/hash.ts
   hashNumber,
   hashString,
+  stringHashCode,
 
   // SEE: @ureeka-notebook/service-common: util/object.ts
   generateRange,
