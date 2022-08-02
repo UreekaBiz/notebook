@@ -2,7 +2,7 @@ import { Box, BoxProps } from '@chakra-ui/react';
 
 import { UserIdentifier, UserProfilePublic } from '@ureeka-notebook/web-service';
 
-import { getBackgroundImageColor, getInitials } from 'user/util';
+import { getBackgroundImageColor, getPublicInitials } from 'user/util';
 
 // ********************************************************************************
 /**
@@ -21,7 +21,7 @@ export const DefaultUserProfileAvatar: React.FC<Props> = ({ userId, userProfile,
   // Pick a random color. The value is consistent across render since it picks the
   // value based on the userId.
   const backgroundColor = getBackgroundImageColor(userId);
-  const initials = getInitials(userProfile);
+  const initials = getPublicInitials(userProfile);
 
   return (
     <Box
