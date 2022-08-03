@@ -17,9 +17,8 @@ export const Heading = Node.create<HeadingOptions, NoStorage>({
   // -- Attribute -----------------------------------------------------------------
   addAttributes() {
     return {
-      id: setAttributeParsingBehavior('id', SetAttributeType.STRING, HEADING_ID),
-      level: { default: HeadingLevel.One, parseHTML: element => getHeadingLevelFromTag(element.tagName) },
-      initialMarksSet: setAttributeParsingBehavior('initialMarksSet', SetAttributeType.BOOLEAN, false),
+      [AttributeType.Id]: setAttributeParsingBehavior(AttributeType.Id, SetAttributeType.STRING, HEADING_ID),
+      [AttributeType.Level]: { default: HeadingLevel.One, parseHTML: element => getHeadingLevelFromTag(element.tagName) },
 
       [AttributeType.FontSize]: setAttributeParsingBehavior(AttributeType.FontSize, SetAttributeType.STRING),
       [AttributeType.TextColor]: setAttributeParsingBehavior(AttributeType.TextColor, SetAttributeType.STRING),
