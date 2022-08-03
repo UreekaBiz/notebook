@@ -1,7 +1,6 @@
 import { Node } from '@tiptap/core';
-import { Mark } from 'prosemirror-model';
 
-import { getNodeOutputSpec, AttributeType, JSONMark, MarkHolderNodeSpec, NodeName, SchemaV2 } from '@ureeka-notebook/service-common';
+import { getNodeOutputSpec, AttributeType, MarkHolderNodeSpec, NodeName } from '@ureeka-notebook/service-common';
 
 import { NoOptions, NoStorage, ParseRulePriority } from 'notebookEditor/model/type';
 
@@ -18,19 +17,16 @@ export const MarkHolder = Node.create<NoOptions, NoStorage>({
   addAttributes() {
     return {
       [AttributeType.StoredMarks]: {
-        default: [/*empty*/],
+        default: '[]'/*empty array*/,
 
         // Parse the stored marks from the copied HTML.
         // SEE: MarkHolderNodeRendererSpec
-        parseHTML: (element): Mark[] => {
+        parseHTML: (element): string => {
           const stringifiedArray = element.getAttribute(AttributeType.StoredMarks);
-          if(!stringifiedArray) return [/*default empty*/];
+          if(!stringifiedArray) return '[]'/*empty array*/;
+          const StringifiedJSONMarks = JSON.parse(stringifiedArray.replaceAll("'", "\"")/*(SEE: markHolder.ts)*/);
 
-          const JSONMarks = JSON.parse(stringifiedArray.replaceAll("'", "\"")/*(SEE: markHolder.ts)*/) as JSONMark[]/*by contract*/;
-
-          // Convert the JSONMarks into ProseMirror Marks
-          const markArray: Mark[] = JSONMarks.map(markName => Mark.fromJSON(SchemaV2, markName));
-          return markArray;
+          return StringifiedJSONMarks;
         },
       },
     };
@@ -47,4 +43,3 @@ export const MarkHolder = Node.create<NoOptions, NoStorage>({
 },
   renderHTML({ node, HTMLAttributes }) { return getNodeOutputSpec(node, HTMLAttributes, true/*is Leaf Node*/); },
 });
-

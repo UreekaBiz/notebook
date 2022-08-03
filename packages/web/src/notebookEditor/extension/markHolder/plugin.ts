@@ -4,6 +4,8 @@ import { EditorView } from 'prosemirror-view';
 
 import { createMarkHolderNode, createParagraphNode, getNodesAffectedByStepMap, isMarkHolderNode, NodeName, NotebookSchemaType } from '@ureeka-notebook/service-common';
 
+import { parseStoredMarks } from './util';
+
 // == Constant ====================================================================
 // the Inclusion Set of Nodes that must maintain marks after their Content was
 // deleted, if any marks were active when said Content was deleted
@@ -49,7 +51,7 @@ export const MarkHolderPlugin = () => new Plugin<NotebookSchemaType>({
           const { storedMarks } = transactions[i];
           for(let j=0;j<newNodeObjs.length;j++) {
             if(newNodeObjs[j].node.content.size > 0/*has content*/ || !storedMarks /*no storedMarks*/) continue/*nothing to do*/;
-            tr.insert(newNodeObjs[j].position + 1/*inside the parent*/, createMarkHolderNode(newState.schema, { storedMarks }));
+            tr.insert(newNodeObjs[j].position + 1/*inside the parent*/, createMarkHolderNode(newState.schema, { storedMarks: JSON.stringify(storedMarks) }));
           }
         });
       }
@@ -119,7 +121,7 @@ export const MarkHolderPlugin = () => new Plugin<NotebookSchemaType>({
       } /* else -- handle event */
 
       tr.setSelection(new TextSelection(tr.doc.resolve(posBeforeAnchorPos), tr.doc.resolve(posBeforeAnchorPos + markHolder.nodeSize)))
-        .setStoredMarks(markHolder.attrs.storedMarks)
+        .setStoredMarks(parseStoredMarks(markHolder.attrs.storedMarks ?? '[]'/*empty marks array*/))
         .replaceSelectionWith(view.state.schema.text(event.key));
       dispatch(tr);
       return true/*event handled*/;
@@ -136,7 +138,7 @@ export const MarkHolderPlugin = () => new Plugin<NotebookSchemaType>({
 
       tr.setSelection(new TextSelection(tr.doc.resolve(posBeforeAnchorPos), tr.doc.resolve(posBeforeAnchorPos + markHolder.nodeSize)))
         .replaceSelection(slice);
-      markHolder.attrs.storedMarks?.forEach(storedMark => tr.addMark(posBeforeAnchorPos, posBeforeAnchorPos + slice.size, storedMark));
+      parseStoredMarks(markHolder.attrs.storedMarks ?? '[]'/*empty marks array*/).forEach(storedMark => tr.addMark(posBeforeAnchorPos, posBeforeAnchorPos + slice.size, storedMark));
       dispatch(tr);
       return true/*event handled*/;
     },

@@ -2,13 +2,13 @@ import { ChainedCommands, Editor } from '@tiptap/core';
 import { Mark, MarkType } from 'prosemirror-model';
 import { Selection, TextSelection } from 'prosemirror-state';
 
-import { createMarkHolderNode, isMarkHolderNode, JSONNode, MarkHolderNodeType, MarkName } from '@ureeka-notebook/service-common';
+import { createMarkHolderNode, isMarkHolderNode, MarkHolderNodeType, MarkName, JSONNode, JSONMark, SchemaV2 } from '@ureeka-notebook/service-common';
 
 // ********************************************************************************
 // creates a MarkHolder Node holding the Marks corresponding to the given MarkNames
 export const createMarkHolderJSONNode = (editor: Editor, markNames: MarkName[]): JSONNode => {
   const storedMarks = markNames.map(markName => editor.schema.marks[markName].create());
-  const markHolder = createMarkHolderNode(editor.schema, { storedMarks });
+  const markHolder = createMarkHolderNode(editor.schema, { storedMarks: JSON.stringify(storedMarks) });
 
   return markHolder.toJSON() as JSONNode;
 };
@@ -30,26 +30,37 @@ export const getMarkHolder = (editor: Editor) => {
  *  an empty node. */
 export const toggleMarkInMarkHolder = (selection: Selection, chain: () => ChainedCommands, markHolder: MarkHolderNodeType, appliedMarkType: MarkType): boolean => {
   let newMarksArray: Mark[] = [];
-  if(markHolder.attrs.storedMarks?.some(mark => mark.type.name === appliedMarkType.name)) {
+  const storedMarks  = markHolder.attrs.storedMarks ?? '[]'/*empty marks array*/;
+
+  if(parseStoredMarks(storedMarks).some(mark => mark.type.name === appliedMarkType.name)) {
     // already included, remove it
-    newMarksArray = [...markHolder.attrs.storedMarks!/*defined by contract*/.filter(mark => mark.type.name !== appliedMarkType.name)];
+    newMarksArray = [...parseStoredMarks(storedMarks).filter(mark => mark.type.name !== appliedMarkType.name)];
   } else {
     // not included yet, add it
-    newMarksArray = [...markHolder.attrs.storedMarks!/*defined by contract*/, appliedMarkType.create()];
+    newMarksArray = [...parseStoredMarks(storedMarks), appliedMarkType.create()];
   }
+
 
   return chain().focus().command((props) => {
     const { dispatch, tr } = props;
-    if(!isMarkHolderNode(selection.$anchor.parent)) return false/*command cannot be executed, Selection parent is not a MarkHolder Node*/;
+    if(!selection.$anchor.parent.isBlock) return false/*command cannot be executed, Selection parent is not a Block Node*/;
 
     const startOfParentNodePos = tr.doc.resolve(selection.$anchor.pos - selection.$anchor.parentOffset);
     const { pos: startingPos } = tr.selection.$anchor;
     if(dispatch) {
       tr.setSelection(new TextSelection(startOfParentNodePos, tr.doc.resolve(startOfParentNodePos.pos + markHolder.nodeSize)))
-        .setNodeMarkup(tr.selection.$anchor.pos, undefined/*maintain type*/, { storedMarks: newMarksArray })
+        .setNodeMarkup(tr.selection.$anchor.pos, undefined/*maintain type*/, { storedMarks: JSON.stringify(newMarksArray) })
         .setSelection(new TextSelection(tr.doc.resolve(startingPos)));
     } /* else -- called from can() (SEE: src/notebookEditor/README.md/#Commands) */
 
     return true/*command can be executed*/;
   }).run();
+};
+
+/** Parses the stringified array of Marks and returns it as a {@link Mark} array*/
+export const parseStoredMarks = (stringifiedStoredMarks: string) => {
+  const JSONMarks = JSON.parse(stringifiedStoredMarks) as JSONMark[]/*by contract*/;
+  const storedMarks = JSONMarks.map(markName => Mark.fromJSON(SchemaV2, markName));
+
+  return storedMarks;
 };

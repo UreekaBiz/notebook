@@ -1,6 +1,6 @@
 import { CommandProps, Editor } from '@tiptap/core';
 
-import { isTextNode, AttributeType, CommandFunctionType } from '@ureeka-notebook/web-service';
+import { isTextNode, CommandFunctionType, AttributeType } from '@ureeka-notebook/service-common';
 
 import { getSelectedNode } from 'notebookEditor/extension/util/node';
 import { ExtensionName, SelectionDepth } from 'notebookEditor/model/type';
@@ -19,7 +19,12 @@ declare module '@tiptap/core' {
 
 // --------------------------------------------------------------------------------
 export const setStyleCommand = (attribute: AttributeType, value: string, depth: SelectionDepth) => ({ tr, state, dispatch }: CommandProps): boolean => {
-  if(!dispatch) throw new Error('Dispatch is unexpectedly undefined.');
+  // NOTE: Unfortunately the resulting EditorState cannot be validated before
+  //       returning is valid, since TipTap will always dispatch the transaction.
+  //       Default to returning true
+  // SEE: notebookEditor/README.md/#Commands
+  if(!dispatch) return true/*SEE: NOTE above*/;
+
   tr.setSelection(state.selection);
   const { from, to } = tr.selection;
 
@@ -47,10 +52,8 @@ export const setStyleCommand = (attribute: AttributeType, value: string, depth: 
 
     tr.setNodeMarkup(pos, undefined/*preserve type*/, nodeAttrs);
   }
-  if(!tr.docChanged) return false/*nothing to do*/;
 
-  dispatch(tr);
-  return true;
+  return true/*command executed, (SEE: NOTE above)*/;
 };
 
 // == Util ========================================================================

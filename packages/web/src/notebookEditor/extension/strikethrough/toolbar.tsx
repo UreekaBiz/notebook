@@ -2,7 +2,7 @@ import { BiStrikethrough } from 'react-icons/bi';
 
 import { getStrikethroughMarkType, isStrikethroughMark, MarkName } from '@ureeka-notebook/service-common';
 
-import { toggleMarkInMarkHolder, getMarkHolder } from 'notebookEditor/extension/markHolder/util';
+import { toggleMarkInMarkHolder, getMarkHolder, parseStoredMarks } from 'notebookEditor/extension/markHolder/util';
 import { isNodeSelection } from 'notebookEditor/extension/util/node';
 import { ToolItem } from 'notebookEditor/toolbar/type';
 
@@ -34,7 +34,7 @@ export const markStrikethrough: ToolItem = {
 
   isActive: (editor) => {
     const markHolder = getMarkHolder(editor);
-    if(markHolder && markHolder.attrs.storedMarks?.some(mark => isStrikethroughMark(mark))) return true/*is active*/;
+    if(parseStoredMarks(markHolder?.attrs.storedMarks ?? '[]'/*empty marks array*/).some(mark => isStrikethroughMark(mark))) return true/*is active*/;
 
     return editor.isActive(MarkName.STRIKETHROUGH);
   },
