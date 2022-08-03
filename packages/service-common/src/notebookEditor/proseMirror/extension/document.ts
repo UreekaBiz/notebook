@@ -34,6 +34,10 @@ export const DocumentNodeRendererSpec: NodeRendererSpec<DocumentAttributes> = {
 export type DocumentNodeType = ProseMirrorNode<NotebookSchemaType> & {/*nothing additional*/};
 export const isDocumentNode = (node: ProseMirrorNode<NotebookSchemaType>): node is DocumentNodeType => node.type.name === NodeName.DOC;
 
+export const getDocumentNodeType = (schema: NotebookSchemaType) => schema.nodes[NodeName.DOC];
+// NOTE: Document has no create document Util function since there can only be
+//       one of it per document
+
 // -- JSON Node Type --------------------------------------------------------------
 export type DocumentJSONNodeType = JSONNode<DocumentAttributes> & { type: NodeName.DOC; };
 export const isDocumentJSONNode = (node: JSONNode): node is DocumentJSONNodeType => node.type === NodeName.DOC;

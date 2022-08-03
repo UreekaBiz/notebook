@@ -1,8 +1,8 @@
-import { Node as ProseMirrorNode, NodeSpec } from 'prosemirror-model';
+import { Mark, Node as ProseMirrorNode, NodeSpec } from 'prosemirror-model';
 
 import { noNodeOrMarkSpecAttributeDefaultValue, AttributeType, AttributesTypeFromNodeSpecAttributes } from '../attribute';
 import { NodeRendererSpec } from '../htmlRenderer/type';
-import { JSONNode, NodeGroup, NodeIdentifier, NodeName } from '../node';
+import { JSONNode, NodeGroup, NodeIdentifier, NodeName, ProseMirrorNodeContent } from '../node';
 import { NotebookSchemaType } from '../schema';
 
 // ********************************************************************************
@@ -83,6 +83,10 @@ export const getHeadingLevelFromTag = (tag: string): HeadingLevel | undefined =>
 //       of the Attributes
 export type HeadingNodeType = ProseMirrorNode<NotebookSchemaType> & { attrs: HeadingAttributes; };
 export const isHeadingNode = (node: ProseMirrorNode<NotebookSchemaType>): node is HeadingNodeType => node.type.name === NodeName.HEADING;
+
+export const getHeadingNodeType = (schema: NotebookSchemaType) => schema.nodes[NodeName.HEADING];
+export const createHeadingNode = (schema: NotebookSchemaType, attributes?: HeadingAttributes, content?: ProseMirrorNodeContent, marks?: Mark<NotebookSchemaType>[]) =>
+  getHeadingNodeType(schema).create(attributes, content, marks);
 
 // -- JSON Node Type --------------------------------------------------------------
 export type HeadingJSONNodeType = JSONNode<HeadingAttributes> & { type: NodeName.HEADING; };

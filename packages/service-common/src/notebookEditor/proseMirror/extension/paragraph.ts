@@ -1,8 +1,8 @@
-import { Node as ProseMirrorNode, NodeSpec } from 'prosemirror-model';
+import { Mark, Node as ProseMirrorNode, NodeSpec } from 'prosemirror-model';
 
 import { noNodeOrMarkSpecAttributeDefaultValue, AttributeType, AttributesTypeFromNodeSpecAttributes } from '../attribute';
 import { NodeRendererSpec } from '../htmlRenderer/type';
-import { JSONNode, NodeGroup, NodeName } from '../node';
+import { JSONNode, NodeGroup, NodeName, ProseMirrorNodeContent } from '../node';
 import { NotebookSchemaType } from '../schema';
 
 // ********************************************************************************
@@ -48,6 +48,10 @@ export const ParagraphNodeRendererSpec: NodeRendererSpec<ParagraphAttributes> = 
 //       of the Attributes
 export type ParagraphNodeType = ProseMirrorNode<NotebookSchemaType> & { attrs: ParagraphAttributes; };
 export const isParagraphNode = (node: ProseMirrorNode<NotebookSchemaType>): node is ParagraphNodeType => node.type.name === NodeName.PARAGRAPH;
+
+export const getParagraphNodeType = (schema: NotebookSchemaType) => schema.nodes[NodeName.PARAGRAPH];
+export const createParagraphNode = (schema: NotebookSchemaType, attributes?: ParagraphAttributes, content?: ProseMirrorNodeContent, marks?: Mark<NotebookSchemaType>[]) =>
+  getParagraphNodeType(schema).create(attributes, content, marks);
 
 // -- JSON Node Type --------------------------------------------------------------
 export type ParagraphJSONNodeType = JSONNode<ParagraphAttributes> & { type: NodeName.PARAGRAPH; };

@@ -89,14 +89,25 @@ export {
 
   // -- Node Types ----------------------------------------------------------------
   DocumentNodeType,
+  getDocumentNodeType,
   isDocumentNode,
+
   HeadingNodeType,
+  createHeadingNode,
+  getHeadingNodeType,
   isHeadingNode,
+
   ImageNodeType,
   isImageNode,
+
   ParagraphNodeType,
+  createParagraphNode,
+  getParagraphNodeType,
   isParagraphNode,
+
   TextNodeType,
+  createTextNode,
+  getTextNodeType,
   isTextNode,
 
   // == Marks =====================================================================
@@ -116,12 +127,21 @@ export {
 
   // -- Mark Types ----------------------------------------------------------------
   BoldMarkType,
+  createBoldMark,
+  getBoldMarkType,
   isBoldMark,
+
   LinkMarkType,
   isLinkMark,
+
   StrikethroughMarkType,
+  createStrikethroughMark,
+  getStrikethroughMarkType,
   isStrikethroughMark,
+
   TextStyleMarkType,
+  createTextStyleMark,
+  getTextStyleMarkType,
   isTextStyleMark,
 
   // == HTML Renderer =============================================================

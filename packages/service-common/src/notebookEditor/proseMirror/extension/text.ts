@@ -1,4 +1,4 @@
-import { Node as ProseMirrorNode, NodeSpec } from 'prosemirror-model';
+import { Mark, Node as ProseMirrorNode, NodeSpec } from 'prosemirror-model';
 
 import { NodeRendererSpec } from '../htmlRenderer/type';
 import { JSONNode, NodeGroup, NodeName } from '../node';
@@ -29,6 +29,9 @@ export const TextNodeRendererSpec: NodeRendererSpec = {
 //       of the Attributes
 export type TextNodeType = ProseMirrorNode<NotebookSchemaType> & {/*nothing additional*/};
 export const isTextNode = (node: ProseMirrorNode<NotebookSchemaType>): node is TextNodeType => node.type.name === NodeName.TEXT;
+
+export const getTextNodeType = (schema: NotebookSchemaType) => schema.marks[NodeName.TEXT];
+export const createTextNode = (schema: NotebookSchemaType, text: string, marks?: Mark<NotebookSchemaType>[]) => schema.text(text, marks);
 
 // -- JSON Node Type --------------------------------------------------------------
 export type TextJSONNodeType = JSONNode<TextAttributes> & { type: NodeName.TEXT; };

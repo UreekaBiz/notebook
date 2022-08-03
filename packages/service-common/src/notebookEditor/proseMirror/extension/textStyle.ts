@@ -39,6 +39,9 @@ export const TextStyleMarkRendererSpec: MarkRendererSpec<TextStyleAttributes> = 
 export type TextStyleMarkType = ProseMirrorMark<NotebookSchemaType> & { attrs: TextStyleAttributes; };
 export const isTextStyleMark = (mark: ProseMirrorMark<NotebookSchemaType>): mark is TextStyleMarkType => mark.type.name === MarkName.TEXT_STYLE;
 
+export const getTextStyleMarkType = (schema: NotebookSchemaType) => schema.marks[MarkName.TEXT_STYLE];
+export const createTextStyleMark = (schema: NotebookSchemaType, attributes?: TextStyleAttributes) => getTextStyleMarkType(schema).create(attributes);
+
 // -- JSON Mark Type --------------------------------------------------------------
 export type TextStyleJSONMarkType = JSONMark<TextStyleAttributes> & { type: MarkName.TEXT_STYLE; };
 export const isTextStyleJSONMark = (mark: JSONMark): mark is TextStyleJSONMarkType => mark.type === MarkName.TEXT_STYLE;
