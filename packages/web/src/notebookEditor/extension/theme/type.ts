@@ -64,6 +64,7 @@ export const DefaultTheme: Theme = {
       [AttributeType.TextAlign]: TextAlign.left,
       [AttributeType.VerticalAlign]: VerticalAlign.bottom,
     },
+    [NodeName.MARK_HOLDER]: {/*no defined value*/},
     [NodeName.PARAGRAPH]: {
       [AttributeType.TextColor]: '#000',
       [AttributeType.FontSize]: '16px',
@@ -117,6 +118,7 @@ export const GoogleDocsTheme: Theme = {
       [AttributeType.TextAlign]: TextAlign.left,
       [AttributeType.VerticalAlign]: VerticalAlign.bottom,
     },
+    [NodeName.MARK_HOLDER]: {/*no defined value*/},
     [NodeName.PARAGRAPH]: {
       [AttributeType.FontSize]: '11pt',
       [AttributeType.TextColor]: '#353744',
