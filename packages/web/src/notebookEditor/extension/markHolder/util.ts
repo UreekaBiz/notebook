@@ -2,7 +2,7 @@ import { ChainedCommands, Editor } from '@tiptap/core';
 import { Mark, MarkType } from 'prosemirror-model';
 import { Selection, TextSelection } from 'prosemirror-state';
 
-import { createMarkHolderNode, isMarkHolderNode, MarkHolderNodeType, MarkName, JSONNode, JSONMark, SchemaV2 } from '@ureeka-notebook/service-common';
+import { createMarkHolderNode, getMarkName, isMarkHolderNode, AttributeType, JSONNode, JSONMark, MarkHolderNodeType, MarkName, SchemaV2 } from '@ureeka-notebook/service-common';
 
 // ********************************************************************************
 // creates a MarkHolder Node holding the Marks corresponding to the given MarkNames
@@ -55,6 +55,17 @@ export const toggleMarkInMarkHolder = (selection: Selection, chain: () => Chaine
 
     return true/*command can be executed*/;
   }).run();
+};
+
+/** Checks if a MarkHolder contains a given Mark in its storedMarks attribute */
+export const inMarkHolder = (editor: Editor, markName: MarkName) => {
+  const markHolder = getMarkHolder(editor);
+  if(!markHolder) return false/*MarkHolder is not present*/;
+
+  const storedMarks = markHolder.attrs[AttributeType.StoredMarks];
+  if(!storedMarks) return false/*no stored Marks, false by definition*/;
+
+  return parseStoredMarks(storedMarks).some(mark => getMarkName(mark) === markName);
 };
 
 /** Parses the stringified array of Marks and returns it as a {@link Mark} array*/
