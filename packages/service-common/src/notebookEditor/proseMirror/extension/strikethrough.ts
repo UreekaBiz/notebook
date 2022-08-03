@@ -1,7 +1,6 @@
 import { Mark as ProseMirrorMark, MarkSpec } from 'prosemirror-model';
 
 import { AttributesTypeFromNodeSpecAttributes } from '../attribute';
-import { getMarkOutputSpec } from '../htmlRenderer/renderer';
 import { MarkRendererSpec } from '../htmlRenderer/type';
 import { JSONMark, MarkName } from '../mark';
 import { NotebookSchemaType } from '../schema';
@@ -21,7 +20,7 @@ export const StrikethroughMarkSpec: MarkSpec = {
 
   // NOTE: toDOM must be defined so that the Schema knows how to create it
   //       (SEE: schema.ts)
-  toDOM: (mark, inline) => getMarkOutputSpec(mark, mark.attrs ?? {/*empty object if attrs are undefined*/}, StrikethroughMarkRendererSpec, StrikethroughMarkSpec),
+  toDOM: (mark, inline) => [StrikethroughMarkRendererSpec.tag, StrikethroughMarkSpec],
 
   attrs: StrikethroughAttributesSpec,
 };
