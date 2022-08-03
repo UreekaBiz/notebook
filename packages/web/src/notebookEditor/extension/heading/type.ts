@@ -16,8 +16,6 @@ export const createDefaultHeadingAttributes = (level: number) =>
     id: generateNodeId()/*unique for each invocation*/,
 
     level,
-
-    initialMarksSet: false/*default not set*/,
   });
 
 // -- Defaults --------------------------------------------------------------------
