@@ -1,5 +1,4 @@
 import { Node } from '@tiptap/core';
-import { Plugin } from 'prosemirror-state';
 
 import { getNodeOutputSpec, Attributes, AttributeType, ParagraphNodeSpec, SetAttributeType } from '@ureeka-notebook/web-service';
 
@@ -40,31 +39,6 @@ export const Paragraph = Node.create<ParagraphOptions, NoStorage>({
   // -- Command -------------------------------------------------------------------
   addCommands() { return { setParagraph: setParagraphCommand }; },
   addKeyboardShortcuts() { return { 'Mod-Alt-0': () => this.editor.commands.setParagraph() }; },
-
-  // -- Plugin --------------------------------------------------------------------
-  addProseMirrorPlugins() {
-    return [
-      new Plugin({
-        // -- Transaction ---------------------------------------------------------
-        // ensure paragraphs do not carry marks from setDefaultMarks plugin
-        // SEE: setDefaultMarks
-        appendTransaction: (_transactions, oldState, newState) => {
-          if(newState.doc === oldState.doc) return/*no changes*/;
-          const { tr } = newState;
-
-          // ensure paragraphs do not have default bold style carried from headings
-          // or any previous Node
-          if(newState.selection.$anchor.parent.type.name !== oldState.selection.$anchor.parent.type.name) {
-            const marks = tr.storedMarks;
-            if(!marks) return/*nothing to do*/;
-            marks.forEach(mark => tr.removeStoredMark(mark));
-          } /* else -- no Marks active, do nothing */
-
-          return tr;
-        },
-      }),
-    ];
-  },
 
   // -- View ----------------------------------------------------------------------
   parseHTML() { return [safeParseTag('div')]; },

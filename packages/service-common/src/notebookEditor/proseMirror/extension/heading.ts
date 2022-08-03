@@ -13,12 +13,6 @@ const HeadingAttributesSpec = {
 
   [AttributeType.Level]: noNodeOrMarkSpecAttributeDefaultValue<HeadingLevel>(),
 
-  // since headings have a default set of Marks applied to them on creation, they
-  // are required to have the 'initialMarksSet' attribute to ensure correct
-  // creation behavior
-  // SEE: setDefaultMarks
-  [AttributeType.InitialMarksSet]: noNodeOrMarkSpecAttributeDefaultValue<boolean>(),
-
   [AttributeType.FontSize]: noNodeOrMarkSpecAttributeDefaultValue<string>(),
   [AttributeType.TextColor]: noNodeOrMarkSpecAttributeDefaultValue<string>(),
 

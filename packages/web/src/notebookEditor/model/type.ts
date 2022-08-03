@@ -34,7 +34,6 @@ export enum ExtensionPriority {
   // -- Extension -----------------------------------------------------------------
   UNIQUE_NODE_ID = 120/*T&E*/,
   NODEVIEW_REMOVAL = 119,
-  SET_DEFAULT_MARKS = 118,
 
   // -- Node ----------------------------------------------------------------------
   // NOTE: Paragraph must have a higher priority than other block Nodes since it
@@ -42,11 +41,11 @@ export enum ExtensionPriority {
   //       unspecified, the default block Node on document creation will be the
   //       first block Node encountered in the editor extension array
   //       (SEE: notebookEditor/type.ts)
-  PARAGRAPH = 117,
+  PARAGRAPH = 118,
 
   // NOTE: Link must have a higher priority than other marks so that it gets
   //       preference over them when creating, pasting or applying parse rules
-  LINK = 116/*T&E*/,
+  LINK = 117/*T&E*/,
 
   // NOTE: Since the text extension adds a \t whenever Tab is pressed, but this
   //       behavior is not always guaranteed to be the desired one (e.g. when
