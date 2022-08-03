@@ -30,7 +30,8 @@ export const EditorUserInteractions = () => {
 
   // == Effects ===================================================================
   // -- Image ---------------------------------------------------------------------
-  // Listen for editor storage to see if image should be modified (SEE: Image.ts)
+  // listen for Editor storage to see if image should be modified
+  // SEE: notebookEditor/extension/image.ts
   useEffect(() => {
     if(!shouldInsertImage) return;
 
@@ -38,7 +39,7 @@ export const EditorUserInteractions = () => {
   }, [shouldInsertImage]);
 
   // -- Link ----------------------------------------------------------------------
-  // Listen for editor storage to see if link should be inserted (SEE: Link.ts)
+  // listen for Editor storage to see if link should be inserted (SEE: Link.ts)
   useEffect(() => {
     if(!shouldInsertLink) return;
 
@@ -46,26 +47,26 @@ export const EditorUserInteractions = () => {
   }, [shouldInsertLink]);
 
   // ------------------------------------------------------------------------------
-  // Handles shortcuts with the editor that requires interaction with a React state.
+  // handles shortcuts with the Editor that requires interaction with a React state
   useEffect(() => {
     const handler = (event: KeyboardEvent) => {
       if(!editor) return/*nothing to do*/;
       if(event.code === 'KeyI' && event.ctrlKey && event.altKey) {
         event.preventDefault();
-        // NOTE: This is needed to remove the focus of the editor so that
-        //       the cursor is in the right position when the editor is
+        // NOTE: this is needed to remove the focus of the Editor so that
+        //       the cursor is in the right position when the Editor is
         //       focused back by closing the dialog
         if(document.activeElement instanceof HTMLElement) document.activeElement.blur();
         /* else -- is not active element */
 
         setIsCreatingImage(true);
         return/*nothing to do*/;
-      } // else -- not creating image
+      } /* else -- not creating image */
 
       if(event.code === 'KeyK' && event.altKey && event.metaKey) {
         event.preventDefault();
-        // NOTE: This is needed to remove the focus of the editor so that
-        //       the cursor is in the right position when the editor is
+        // NOTE: this is needed to remove the focus of the Editor so that
+        //       the cursor is in the right position when the Editor is
         //       focused back by closing the dialog
         if(document.activeElement instanceof HTMLElement) document.activeElement.blur();
         /* else -- do not blur */
@@ -80,9 +81,9 @@ export const EditorUserInteractions = () => {
         if(linkMarkActive) {
           editor.chain().focus().unsetLink().run();
           return;
-        }/* else -- link mark not active, add a new one */
+        } /* else -- Link Mark not active, add a new one */
         setIsCreatingLink(true);
-      } // else -- not creating link
+      } /* else -- not creating Link */
 
       if(event.code === 'Period' && event.altKey && event.metaKey) {
         // Selects the first item in the toolbar
@@ -96,15 +97,15 @@ export const EditorUserInteractions = () => {
         /* else -- valid html element */
 
         firstToolItem.focus();
-      } //else -- not selecting first item in toolbar
+      } /* else -- not selecting first item in Toolbar */
 
       if(event.code === 'Comma' && event.altKey && event.metaKey) {
         event.preventDefault();
 
-        // Focus the last focused item. If none select the editor.
+        // focus the last focused item. If none select the Editor
         if(isNodeSelection(editor.state.selection)) editor.chain().focus().setNodeSelection(editor.state.selection.$anchor.pos);
         else editor.commands.focus();
-      } // else -- not selecting editor
+      } /* else -- not selecting Editor */
     };
     window.addEventListener('keydown', handler);
     return () => window.removeEventListener('keydown', handler);
@@ -121,7 +122,7 @@ export const EditorUserInteractions = () => {
 
     // NOTE: if Editor is destroyed before the timeout runs, it wont be focused
     //       (i.e. no major side effects besides that)
-    // Focus editor after the react re-render
+    // focus Editor after the react re-render
     setTimeout(() => editor.commands.focus(), 150/*T&E*/);
   };
 
@@ -145,5 +146,5 @@ export const EditorUserInteractions = () => {
 
   if(isCreatingLink) return <LinkDialog editor={editor} isOpen={isCreatingLink} onClose={handleCloseLinkDialog} />;
 
-  return null;/*nothing to render*/
+  return null/*nothing to render*/;
 };

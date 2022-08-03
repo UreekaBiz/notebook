@@ -165,16 +165,16 @@ export type MergedAttributeValue = AttributeValue | typeof InvalidMergedAttribut
 
 // Merges the given AttributeValues into one MergedAttributeValue.
 export const mergeAttributeValues = (a: MergedAttributeValue | undefined, b: MergedAttributeValue | undefined): MergedAttributeValue => {
-  // If one of the values is invalid it cannot be merged.
+  // if one of the values is invalid it cannot be merged.
   if(a === InvalidMergedAttributeValue || b === InvalidMergedAttributeValue) return InvalidMergedAttributeValue;
 
-  // If one of the values if not defined will default to the other value.
+  // if one of the values if not defined will default to the other value.
   if(!a) return b;
   if(!b) return a;
 
-  // If they are equal return either of those
+  // if they are equal return either of those
   if(a === b) return a;
 
-  // else -- the value is invalid.
+  // the value is invalid
   return InvalidMergedAttributeValue;
 };

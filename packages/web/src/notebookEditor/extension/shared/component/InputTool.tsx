@@ -41,8 +41,7 @@ export const InputTool: React.FC<Props> = ({ name, initialInputValue, inputPlace
       setTimeout(() => {
         setInputColor('#000')/*default*/;
       }, 1000/*ms*/);
-
-    }/* else -- ignore */
+    } /* else -- ignore */
   };
 
   // == UI ========================================================================

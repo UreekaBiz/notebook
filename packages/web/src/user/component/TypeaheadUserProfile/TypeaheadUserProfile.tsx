@@ -43,16 +43,16 @@ export const TypeaheadUserProfile: React.FC<Props> = ({ onSelect, disabled = fal
       // Remove white space
       const query = inputValue.trim();
       if(query.length < 1) {
-        // Reset value
+        // reset value
         setUserProfiles([]);
         return/*nothing to do*/;
-      } // else -- is a valid query
+      } /* else -- is a valid query */
 
       try {
         setStatus('loading');
         const profiles = await UserProfileService.getInstance().typeaheadSearchProfiles(inputValue);
 
-        // Query changed while performing async operation.
+        // query changed while performing async operation
         if(!isCurrentQuery) return/*nothing else to do*/;
 
         setUserProfiles(profiles);
@@ -70,9 +70,9 @@ export const TypeaheadUserProfile: React.FC<Props> = ({ onSelect, disabled = fal
 
     searchProfiles();
 
-    //The inputValue is no longer the current value
+    // the inputValue is no longer the current value
     return () => { isCurrentQuery = false; };
-  // NOTE: Explicitly set the dependencies to only change when input value change
+  // NOTE: explicitly set the dependencies to only change when input value change
   //       since it is the only real dependency.
   // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [inputValue]);
@@ -115,8 +115,8 @@ export const TypeaheadUserProfile: React.FC<Props> = ({ onSelect, disabled = fal
     } /* else -- FIXME */
   };
 
-  // Manually handle focus on input when menu list item is the first element and
-  // the arrow key is pressed.
+  // manually handle focus on input when menu list item is the first element and
+  // the arrow key is pressed
   const handleMenuListKeydown = (event: React.KeyboardEvent<HTMLDivElement>) => {
     if(!inputRef.current) return/*nothing to do*/;
     const { target, key } = event;

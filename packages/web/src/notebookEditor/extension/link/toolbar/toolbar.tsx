@@ -27,7 +27,7 @@ export const linkToolItem: ToolItem = {
     if(linkMarkActive) {
       editor.chain().focus().unsetLink().run();
       return;
-    }/* else -- link mark not active, add a new one */
+    } /* else -- Link Mark not active, add a new one */
 
     const linkStorage = getDialogStorage(editor, MarkName.LINK);
     if(!linkStorage) return/*nothing to do*/;

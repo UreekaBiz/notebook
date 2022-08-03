@@ -121,9 +121,8 @@ export const getThemeValue = (nodeOrMarkName: NodeName | MarkName, attribute: At
 
   if(typeof value === 'string') return value;
   if(typeof value !== 'undefined') { console.error(`Unexpected value type for (${nodeOrMarkName}) theme attribute (${attribute}): ${value}`); return undefined/*FIXME: document*/; }
-  // else -- value is valid but undefined.
 
-  return value;
+  return value/*value is valid but undefined*/;
 };
 
 // gets the TextColor or FontSize for a Heading from the Theme
