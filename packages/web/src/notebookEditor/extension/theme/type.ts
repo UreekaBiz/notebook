@@ -98,7 +98,7 @@ export const DefaultTheme: Theme = {
       [AttributeType.TextColor]: '#89B181',
     },
     [CustomSelector.LinkVisited]: {
-      color: '#c58af9',
+      color: '#660199',
     },
   },
 };
@@ -151,7 +151,7 @@ export const GoogleDocsTheme: Theme = {
       [AttributeType.TextColor]: '#353744',
     },
     [CustomSelector.LinkVisited]: {
-      color: '#c58af9',
+      color: '#660199',
     },
   },
 };
