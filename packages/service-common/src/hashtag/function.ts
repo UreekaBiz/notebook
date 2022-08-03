@@ -1,14 +1,17 @@
+import { isValidHashtag } from 'twitter-text';
 import * as Validate from 'yup';
 
 import { stringMedSchema } from '../util/schema';
-import { HashtagContentRegExp } from './regexp';
 
 // ********************************************************************************
 // == Admin-Only ==================================================================
 export const AdminHashtagRemoveUpdate_Rest_Schema = Validate.object({
   hashtag: stringMedSchema
           .min(1/*cannot be blank*/)
-          .matches(HashtagContentRegExp)
+          .test('HASHTAG', 'Invalid Hashtag', value => {
+            if(value === undefined) return false/*value must be defined (since required)*/;
+            return isValidHashtag(value);
+          })
           .required(),
 
   remove: Validate.bool()

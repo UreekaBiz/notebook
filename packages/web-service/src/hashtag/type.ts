@@ -1,9 +1,10 @@
 // ** Service-Common **************************************************************
 export {
   // SEE: @ureeka-notebook/service-common: hashtag/type.ts
+  extractHashtags,
+  extractHashtagSet,
+  isValidHashtag,
   Hashtag,
-  HashtagContentRegExp,
-  HashtagRegExp,
   HashtagSummary,
 
   // SEE: @ureeka-notebook/service-common: hashtag/search.ts
