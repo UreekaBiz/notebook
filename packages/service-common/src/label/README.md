@@ -16,12 +16,14 @@ Labels can be either Public or Private. Public Labels are visible to any User on
 
 ## Notebook Permissions
 
-Labels have Notebook permissions are associated with them. Editor takes precedence over Viewer. Permissions are determined by looking at the permissions on the Notebook itself as well as the set of all LabelNotebooks to which the Notebook is associated. With Firestore, two things need to be considered:
+Labels have Notebook permissions are associated with them. Editor takes precedence over Viewer. Permissions are determined by looking at the permissions on the Notebook itself as well as the set of all LabelNotebooks to which the Notebook is associated.
+
+With Firestore, two things need to be considered:
 1. Firestore Rules: For a given Notebook and User, a Rule needs to determine if the User can view, edit or neither the Notebook. Since there is a limit of 10 document reads per Rule, it cannot be that each Label associated with a Notebook is checked (since there may be 'n' Labels associated with any given Notebook). That leaves two choices: either the set of Notebooks that each User can view / edit or the set of Users that can view / edit per Notebook.
-2. Queries: Since there are no joins in Firestore, to list all Notebooks that a User can View there needs to be a collection group that contains either all Notebooks that a User can view / edit or all Users that can view / edit a Notebook.
+2. Queries: Since there are no joins in Firestore, to list all Notebooks that a User can View, there needs to be a collection group that contains either all Notebooks that a User can view / edit or all Users that can view / edit a Notebook.
 Bottom line: both constraints are identical.
 
-For separation-of-concerns reasons, it feels "proper" to have a sub-collection on Notebooks that contains all of the Users that can view / edit it. This also provides an obvious way to look at a Notebook and see all of the Users permissions.
+For separation-of-concerns reasons, it feels "proper" to have a sub-collection on Notebooks that contains all of the Users that can view / edit it. This also provides an obvious way to look at a Notebook and see all of the associated User's permissions.
 
 So the challenge becomes: given 'n' Labels per Notebook in which each Label can specify 'v' Notebook viewers and 'e' Notebook editors, how is a sub-collection of Users on Notebook maintained? For each edit to the permissions on any Label or Notebook, a query is run that checks:
 1. If there are any Labels associated with the Notebook in which the User appears as a viewer / editor:
