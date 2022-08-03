@@ -7,6 +7,7 @@ export * from './extension/document';
 export * from './extension/heading';
 export * from './extension/image';
 export * from './extension/link';
+export * from './extension/markHolder';
 export * from './extension/paragraph';
 export * from './extension/strikethrough';
 export * from './extension/text';

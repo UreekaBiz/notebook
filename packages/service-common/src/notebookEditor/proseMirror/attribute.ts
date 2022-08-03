@@ -43,6 +43,9 @@ export enum AttributeType {
   // .. Link ......................................................................
   Href = 'href',
   Target = 'target',
+
+  // .. MarkHolder ................................................................
+  StoredMarks = 'storedMarks',
 }
 
 export type StyleAttributes = {
