@@ -22,7 +22,7 @@ export const TextStyleMarkSpec: MarkSpec = {
 
   // NOTE: toDOM must be defined so that the Schema knows how to create it
   //       (SEE: schema.ts)
-  toDOM: (mark, inline) => getMarkOutputSpec(mark, mark.attrs ?? {/*empty object if attrs are undefined*/}),
+  toDOM: (mark, inline) => getMarkOutputSpec(mark, mark.attrs ?? {/*empty object if attrs are undefined*/}, TextStyleMarkRendererSpec, TextStyleMarkSpec),
 
   attrs: TextStyleAttributesSpec,
 };

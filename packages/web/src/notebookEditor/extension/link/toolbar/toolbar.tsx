@@ -1,7 +1,8 @@
 import { AiOutlineLink } from 'react-icons/ai';
 
-import { MarkName } from '@ureeka-notebook/web-service';
+import { isLinkMark, MarkName } from '@ureeka-notebook/web-service';
 
+import { getMarkHolder } from 'notebookEditor/extension/markHolder/util';
 import { getDialogStorage } from 'notebookEditor/model/DialogStorage';
 import { Toolbar, ToolItem } from 'notebookEditor/toolbar/type';
 
@@ -20,6 +21,7 @@ export const linkToolItem: ToolItem = {
   icon: <AiOutlineLink size={16} />,
   tooltip: 'Link (⌘ + K)',
 
+  // FIXME: Deal with right behavior taking MarkHolder into account
   onClick: (editor) => {
     // (SEE: EditorUserInteractions.tsx)
     const { $from } = editor.state.selection,
@@ -35,6 +37,12 @@ export const linkToolItem: ToolItem = {
 
     // Focus the editor again
     editor.commands.focus();
+  },
+  isActive: (editor) => {
+    const markHolder = getMarkHolder(editor);
+    if(markHolder && markHolder.attrs.storedMarks?.some(mark => isLinkMark(mark))) return true/*is active*/;
+
+    return editor.isActive(MarkName.LINK);
   },
 };
 

@@ -18,7 +18,7 @@ export const TextNodeSpec: NodeSpec = {
   name: NodeName.TEXT/*expected and guaranteed to be unique*/,
 
   group: NodeGroup.INLINE,
-  
+
   attrs: TextAttributesSpec,
 };
 
