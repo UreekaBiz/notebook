@@ -1,17 +1,28 @@
 import { Mark as ProseMirrorMark, MarkSpec } from 'prosemirror-model';
 
+import { AttributesTypeFromNodeSpecAttributes } from '../attribute';
+import { getMarkOutputSpec } from '../htmlRenderer/renderer';
 import { MarkRendererSpec } from '../htmlRenderer/type';
 import { JSONMark, MarkName } from '../mark';
 import { NotebookSchemaType } from '../schema';
 
 // ********************************************************************************
 // == Attribute ===================================================================
-export type BoldAttributes = {/*currently none*/};
+// NOTE: must be present on the MarkSpec below
+// NOTE: this value must have matching types -- the ones defined in the Extension
+const BoldAttributesSpec = {/*no attributes*/};
+export type BoldAttributes = AttributesTypeFromNodeSpecAttributes<typeof BoldAttributesSpec>;
 
 // == Spec ========================================================================
 // -- Mark Spec -------------------------------------------------------------------
 export const BoldMarkSpec: MarkSpec = {
   name: MarkName.BOLD/*expected and guaranteed to be unique*/,
+
+  // NOTE: toDOM must be defined so that the Schema knows how to create it
+  //       (SEE: schema.ts)
+  toDOM: (mark, inline) => getMarkOutputSpec(mark, mark.attrs ?? {/*empty object if attrs are undefined*/}),
+
+  attributes: BoldAttributesSpec,
 };
 
 // -- Render Spec -----------------------------------------------------------------

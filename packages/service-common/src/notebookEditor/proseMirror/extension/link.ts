@@ -1,6 +1,7 @@
 import { Mark as ProseMirrorMark, MarkSpec } from 'prosemirror-model';
 
 import { noNodeOrMarkSpecAttributeDefaultValue, AttributesTypeFromNodeSpecAttributes, AttributeType } from '../attribute';
+import { getMarkOutputSpec } from '../htmlRenderer/renderer';
 import { MarkRendererSpec } from '../htmlRenderer/type';
 import { JSONMark, MarkName } from '../mark';
 import { NotebookSchemaType } from '../schema';
@@ -42,6 +43,10 @@ export const LinkMarkSpec: MarkSpec = {
 
   // REF: https://prosemirror.net/docs/ref/#model.MarkSpec.inclusive
   inclusive: false/*do not continue typing with link mark after having added one*/,
+
+  // NOTE: toDOM must be defined so that the Schema knows how to create it
+  //       (SEE: schema.ts)
+  toDOM: (mark, inline) => getMarkOutputSpec(mark, mark.attrs ?? {/*empty object if attrs are undefined*/}),
 
   attrs: LinkAttributeSpec,
 };

@@ -7,6 +7,7 @@ import { NotebookSchemaType } from '../schema';
 
 // ********************************************************************************
 // == Attribute ===================================================================
+// NOTE: must be present on the MarkSpec below
 // NOTE: this value must have matching types -- the ones defined in the Extension
 const ParagraphAttributesSpec = {
   [AttributeType.FontSize]: noNodeOrMarkSpecAttributeDefaultValue<string>(),

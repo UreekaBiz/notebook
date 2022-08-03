@@ -1,12 +1,16 @@
 import { Mark, Node as ProseMirrorNode, NodeSpec } from 'prosemirror-model';
 
+import { AttributesTypeFromNodeSpecAttributes } from '../attribute';
 import { NodeRendererSpec } from '../htmlRenderer/type';
 import { JSONNode, NodeGroup, NodeName } from '../node';
 import { NotebookSchemaType } from '../schema';
 
 // ********************************************************************************
 // == Attribute ===================================================================
-export type TextAttributes = {/*no attributes*/};
+// NOTE: must be present on the NodeSpec below
+// NOTE: this value must have matching types -- the ones defined in the Extension
+const TextAttributesSpec = {/*no attributes*/};
+export type TextAttributes = AttributesTypeFromNodeSpecAttributes<typeof TextAttributesSpec>;
 
 // == Spec ========================================================================
 // -- Node Spec -------------------------------------------------------------------
@@ -14,6 +18,8 @@ export const TextNodeSpec: NodeSpec = {
   name: NodeName.TEXT/*expected and guaranteed to be unique*/,
 
   group: NodeGroup.INLINE,
+  
+  attrs: TextAttributesSpec,
 };
 
 // -- Render Spec -----------------------------------------------------------------

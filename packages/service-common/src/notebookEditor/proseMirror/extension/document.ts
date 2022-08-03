@@ -1,12 +1,16 @@
 import { Node as ProseMirrorNode, NodeSpec } from 'prosemirror-model';
 
+import { AttributesTypeFromNodeSpecAttributes } from '../attribute';
 import { NodeRendererSpec } from '../htmlRenderer/type';
 import { JSONNode, NodeGroup, NodeName } from '../node';
 import { NotebookSchemaType } from '../schema';
 
 // ********************************************************************************
 // == Attribute ===================================================================
-export type DocumentAttributes = {/*no attributes*/};
+// NOTE: must be present on the NodeSpec below
+// NOTE: this value must have matching types -- the ones defined in the Extension
+const DocumentAttributesSpec = {/*no attributes*/};
+export type DocumentAttributes = AttributesTypeFromNodeSpecAttributes<typeof DocumentAttributesSpec>;
 
 // == Spec ========================================================================
 // -- Node Spec -------------------------------------------------------------------
