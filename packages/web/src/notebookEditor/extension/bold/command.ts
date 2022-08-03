@@ -1,6 +1,8 @@
 import { CommandProps } from '@tiptap/core';
 
-import { CommandFunctionType, MarkName } from '@ureeka-notebook/web-service';
+import { getBoldMarkType, CommandFunctionType, MarkName } from '@ureeka-notebook/service-common';
+
+import { getMarkHolder, toggleMarkInMarkHolder } from 'notebookEditor/extension/markHolder/util';
 
 // ********************************************************************************
 // NOTE: ambient module to ensure command is TypeScript-registered for TipTap
@@ -17,4 +19,10 @@ declare module '@tiptap/core' {
 // --------------------------------------------------------------------------------
 export const setBoldCommand = () => ({ commands }: CommandProps) => commands.setMark(MarkName.BOLD);
 export const unsetBoldCommand = () => ({ commands }: CommandProps) => commands.unsetMark(MarkName.BOLD);
-export const toggleBoldCommand = () => ({ commands }: CommandProps) => commands.toggleMark(MarkName.BOLD);
+export const toggleBoldCommand = () => ({ editor, chain, commands }: CommandProps) => {
+  // if MarkHolder is defined toggle the mark inside it
+  const markHolder = getMarkHolder(editor);
+
+  if(markHolder) return toggleMarkInMarkHolder(editor.state.selection, chain, markHolder, getBoldMarkType(editor.schema))/*nothing else to do*/;
+  return commands.toggleMark(MarkName.BOLD);
+};
