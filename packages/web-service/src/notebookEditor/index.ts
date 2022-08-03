@@ -98,6 +98,8 @@ export {
   isHeadingNode,
 
   ImageNodeType,
+  createImageNode,
+  getImageNodeType,
   isImageNode,
 
   ParagraphNodeType,
@@ -132,6 +134,8 @@ export {
   isBoldMark,
 
   LinkMarkType,
+  createLinkMark,
+  getLinkMarkType,
   isLinkMark,
 
   StrikethroughMarkType,

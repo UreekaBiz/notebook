@@ -65,6 +65,9 @@ export type LinkMarkType = ProseMirrorMark<NotebookSchemaType> & { attrs: LinkAt
 export const isLinkMarkAttributes = (attrs: any): attrs is LinkAttributes => 'href' in attrs && 'target' in attrs;
 export const isLinkMark = (mark: ProseMirrorMark<NotebookSchemaType>): mark is LinkMarkType => mark.type.name === MarkName.LINK;
 
+export const getLinkMarkType = (schema: NotebookSchemaType) => schema.marks[MarkName.LINK];
+export const createLinkMark = (schema: NotebookSchemaType, attributes?: LinkAttributes) => getLinkMarkType(schema).create(attributes);
+
 // -- JSON Mark Type --------------------------------------------------------------
 export type LinkJSONMarkType = JSONMark<LinkAttributes> & { type: MarkName.LINK; };
 export const isLinkJSONMark = (mark: JSONMark): mark is LinkJSONMarkType => mark.type === MarkName.LINK;

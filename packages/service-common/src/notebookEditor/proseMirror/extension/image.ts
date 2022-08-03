@@ -1,8 +1,8 @@
-import { Node as ProseMirrorNode, NodeSpec } from 'prosemirror-model';
+import { Mark, Node as ProseMirrorNode, NodeSpec } from 'prosemirror-model';
 
 import { noNodeOrMarkSpecAttributeDefaultValue, AttributeType, AttributesTypeFromNodeSpecAttributes } from '../attribute';
 import { NodeRendererSpec } from '../htmlRenderer/type';
-import { JSONNode, NodeName } from '../node';
+import { JSONNode, NodeName, ProseMirrorNodeContent } from '../node';
 import { NotebookSchemaType } from '../schema';
 
 // ********************************************************************************
@@ -48,6 +48,10 @@ export const ImageNodeRendererSpec: NodeRendererSpec<ImageAttributes> = {
 //       of the Attributes
 export type ImageNodeType = ProseMirrorNode<NotebookSchemaType> & { attrs: ImageAttributes; };
 export const isImageNode = (node: ProseMirrorNode<NotebookSchemaType>): node is ImageNodeType => node.type.name === NodeName.IMAGE;
+
+export const getImageNodeType = (schema: NotebookSchemaType) => schema.nodes[NodeName.IMAGE];
+export const createImageNode = (schema: NotebookSchemaType, attributes?: ImageAttributes, content?: ProseMirrorNodeContent, marks?: Mark<NotebookSchemaType>[]) =>
+  getImageNodeType(schema).create(attributes, content, marks);
 
 // -- JSON Node Type --------------------------------------------------------------
 export type ImageJSONNodeType = JSONNode<ImageAttributes> & { type: NodeName.IMAGE; };
