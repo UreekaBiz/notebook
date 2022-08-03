@@ -17,7 +17,7 @@ export const asyncBatchConsume = async <T, R>(
   while(!exhausted) {
     let batchCount = 0/*reset with each batch*/;
     const promises: (R | Promise<R>)[] = []/*callbackfn Promises*/;
-    while(!exhausted && (batchCount++ < batchSize)) {
+    while(batchCount++ < batchSize) { /*NOTE: no check for !exhausted since will always be true. If logic changes, re-evaluate presence of condition*/
       const entry = await iterator.next();
       if(entry.done) {
         exhausted = true/*by definition*/;
