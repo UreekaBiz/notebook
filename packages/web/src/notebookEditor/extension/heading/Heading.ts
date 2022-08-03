@@ -1,10 +1,10 @@
 import { textblockTypeInputRule, Node } from '@tiptap/core';
 
-import { getHeadingLevelFromTag, AttributeType, HeadingLevel, HeadingNodeSpec,  SetAttributeType } from '@ureeka-notebook/web-service';
+import { getHeadingLevelFromTag, getNodeOutputSpec, AttributeType, HeadingLevel, HeadingNodeSpec,  SetAttributeType } from '@ureeka-notebook/web-service';
 
 import { NoStorage } from 'notebookEditor/model/type';
 
-import { getNodeOutputSpec,  setAttributeParsingBehavior } from '../util/attribute';
+import { setAttributeParsingBehavior } from '../util/attribute';
 import { setHeadingCommand, toggleHeadingCommand } from './command';
 import { createDefaultHeadingAttributes, HeadingOptions, HEADING_ID } from './type';
 

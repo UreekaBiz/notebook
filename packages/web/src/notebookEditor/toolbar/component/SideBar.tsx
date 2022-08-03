@@ -1,7 +1,10 @@
 import { Divider, Flex, VStack } from '@chakra-ui/react';
 import { useCallback, useEffect, useMemo, useState } from 'react';
 
+import { getMarkName, getNodeName } from '@ureeka-notebook/web-service';
+
 import { NotebookTopBar } from 'notebook/component/NotebookTopBar';
+import { getAllMarksFromSelection } from 'notebookEditor/extension/util/mark';
 import { getAllAscendantsFromSelection } from 'notebookEditor/extension/util/node';
 import { useValidatedEditor } from 'notebookEditor/hook/useValidatedEditor';
 import { SelectionDepth } from 'notebookEditor/model/type';
@@ -35,15 +38,47 @@ export const SideBar = () => {
   const handleDepthSelection = useCallback((depth: SelectionDepth) => { setSelectedDepth(depth); }, []);
 
   // == UI ========================================================================
- // Create a toolbar for each ascendant node on the current selection.
+  // Create a toolbar for each ascendant node on the current selection.
   const Toolbars = useMemo(() => {
-    const ascendantsNodes = getAllAscendantsFromSelection(editor.state);
-    return ascendantsNodes.map((node, i) => {
-      if(!node) return undefined;
-      const depth = i === 0 ? undefined/*leaf node*/ : ascendantsNodes.length - i - 1;
-      return (<Toolbar key={i} depth={depth} node={node} onSelection={handleDepthSelection} selectedDepth={selectedDepth} />);
+    const toolbars: JSX.Element[] = [];
+
+    // Create a toolbar for each mark on the current selection
+    // NOTE: Order matters.
+    const marks = getAllMarksFromSelection(editor.state);
+    marks.forEach((mark, i) => {
+      if(!mark) return undefined/*nothing to do*/;
+
+      const markName = getMarkName(mark);
+      toolbars.push(<Toolbar
+                      key={i}
+                      depth={undefined}
+                      nodeOrMarkName={markName}
+                      onSelection={handleDepthSelection}
+                      selectedDepth={selectedDepth}
+                    />);
+      return;
     });
+
+    const ascendantsNodes = getAllAscendantsFromSelection(editor.state);
+
+    // Create a toolbar for each ascendant node.
+    ascendantsNodes.forEach((node, i) => {
+      if(!node) return undefined/*nothing to do*/;
+
+      const depth = i === 0 ? undefined/*leaf node*/ : ascendantsNodes.length - i - 1;
+      const nodeName = getNodeName(node);
+      toolbars.push(<Toolbar
+                      key={i}
+                      depth={depth}
+                      nodeOrMarkName={nodeName}
+                      onSelection={handleDepthSelection}
+                      selectedDepth={selectedDepth}
+                    />);
+      return/*nothing else to do*/;
+    });
+    return toolbars;
   }, [editor.state, handleDepthSelection, selectedDepth]);
+
 
   return (
     <Flex flexDir='column' minH={0} width='100%' height='100%' background='#FCFCFC' borderLeft='1px solid' borderColor='gray.300' overflow='hidden'>

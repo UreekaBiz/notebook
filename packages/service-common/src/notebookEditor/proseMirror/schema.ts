@@ -5,6 +5,7 @@ import { BoldMarkSpec } from './extension/bold';
 import { DocumentNodeSpec } from './extension/document';
 import { HeadingNodeSpec } from './extension/heading';
 import { ImageNodeSpec } from './extension/image';
+import { LinkMarkSpec } from './extension/link';
 import { ParagraphNodeSpec } from './extension/paragraph';
 import { StrikethroughMarkSpec } from './extension/strikethrough';
 import { TextNodeSpec } from './extension/text';
@@ -24,6 +25,7 @@ export const NodeSpecs: Record<NodeName, NodeSpec> = {
 
 export const MarkSpecs: Record<MarkName, MarkSpec> = {
   [MarkName.BOLD]: BoldMarkSpec,
+  [MarkName.LINK]: LinkMarkSpec,
   [MarkName.STRIKETHROUGH]: StrikethroughMarkSpec,
   [MarkName.TEXT_STYLE]: TextStyleMarkSpec,
 };

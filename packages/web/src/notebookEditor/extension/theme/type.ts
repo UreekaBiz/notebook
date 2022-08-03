@@ -1,4 +1,4 @@
-import { Attributes, AttributeType, HeadingLevel, MarkName, NodeName, TextAlign, VerticalAlign, DATA_NODE_TYPE } from '@ureeka-notebook/web-service';
+import { Attributes, AttributeType, HeadingLevel, MarkName, NodeName, TextAlign, VerticalAlign, DATA_MARK_TYPE, DATA_NODE_TYPE } from '@ureeka-notebook/web-service';
 
 // ********************************************************************************
 // == Element =====================================================================
@@ -21,6 +21,8 @@ export const CustomSelector = {
   HeadingLevelOne: `[${DATA_NODE_TYPE}="${NodeName.HEADING}"][level="${HeadingLevel.One}"]`,
   HeadingLevelTwo: `[${DATA_NODE_TYPE}="${NodeName.HEADING}"][level="${HeadingLevel.Two}"]`,
   HeadingLevelThree: `[${DATA_NODE_TYPE}="${NodeName.HEADING}"][level="${HeadingLevel.Three}"]`,
+
+  LinkVisited: `[${DATA_MARK_TYPE}="${MarkName.LINK}"]:visited`,
 } as const;
 export type CustomThemeElements = Record<typeof CustomSelector[keyof typeof CustomSelector], ThemeElement>;
 
@@ -75,6 +77,9 @@ export const DefaultTheme: Theme = {
 
   marks: {
     [MarkName.BOLD]:  {/*no defined value*/},
+    [MarkName.LINK]:  {
+      [AttributeType.TextColor]: '#1a73e8',
+    },
     [MarkName.STRIKETHROUGH]:  {/*no defined value*/},
     [MarkName.TEXT_STYLE]:  {/*no defined value*/},
   },
@@ -91,6 +96,9 @@ export const DefaultTheme: Theme = {
     [CustomSelector.HeadingLevelThree]: {
       [AttributeType.FontSize]: '20px',
       [AttributeType.TextColor]: '#89B181',
+    },
+    [CustomSelector.LinkVisited]: {
+      color: '#c58af9',
     },
   },
 };
@@ -122,6 +130,9 @@ export const GoogleDocsTheme: Theme = {
 
   marks: {
     [MarkName.BOLD]: {/*no defined value*/},
+    [MarkName.LINK]:  {
+      [AttributeType.TextColor]: '#1a73e8',
+    },
     [MarkName.STRIKETHROUGH]: {/*no defined value*/},
     [MarkName.TEXT_STYLE]: {/*no defined value*/},
   },
@@ -138,6 +149,9 @@ export const GoogleDocsTheme: Theme = {
     [CustomSelector.HeadingLevelThree]: {
       [AttributeType.FontSize]: '13pt',
       [AttributeType.TextColor]: '#353744',
+    },
+    [CustomSelector.LinkVisited]: {
+      color: '#c58af9',
     },
   },
 };

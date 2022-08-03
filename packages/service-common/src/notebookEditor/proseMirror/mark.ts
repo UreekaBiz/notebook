@@ -13,6 +13,7 @@ export type JSONMark<A extends Attributes = {}> = {
 // ================================================================================
 export enum MarkName {
   BOLD = 'bold',
+  LINK = 'link',
   STRIKETHROUGH = 'strikethrough',
   TEXT_STYLE = 'textStyle',
 }

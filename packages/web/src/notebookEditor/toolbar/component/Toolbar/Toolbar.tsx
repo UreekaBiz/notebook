@@ -1,7 +1,6 @@
 import { Box, Divider, Flex, Text, VStack } from '@chakra-ui/react';
-import { Node as ProsemirrorNode } from 'prosemirror-model';
 
-import { getNodeName } from '@ureeka-notebook/web-service';
+import { MarkName, NodeName } from '@ureeka-notebook/web-service';
 
 import { useValidatedEditor } from 'notebookEditor/hook/useValidatedEditor';
 import { SelectionDepth } from 'notebookEditor/model/type';
@@ -11,15 +10,14 @@ import { ToolItemComponent } from './ToolItem';
 
 // ********************************************************************************
 interface Props {
-  node: ProsemirrorNode;
+  nodeOrMarkName: MarkName | NodeName;
   depth: SelectionDepth;
 
   onSelection: (depth: SelectionDepth) => void;
   selectedDepth: SelectionDepth;
 }
-export const Toolbar: React.FC<Props> = ({ depth, node, onSelection, selectedDepth }) => {
-  const nodeName = getNodeName(node);
-  const toolbar = getToolbar(nodeName);
+export const Toolbar: React.FC<Props> = ({ depth, nodeOrMarkName, onSelection, selectedDepth }) => {
+  const toolbar = getToolbar(nodeOrMarkName);
   const editor = useValidatedEditor();
 
   if(!toolbar) return null/*nothing to render*/;
@@ -51,9 +49,9 @@ export const Toolbar: React.FC<Props> = ({ depth, node, onSelection, selectedDep
       </Flex>
       <VStack divider={<Divider />} spacing={0} display='flex' alignItems='flex-start' width='full'>
         {toolbar.toolsCollections.map((tools, i) =>
-          <Box key={`${node.type.name}-${i}`} paddingX={4} paddingY={1} width='100%'>
+          <Box key={`${nodeOrMarkName}-${i}`} paddingX={4} paddingY={1} width='100%'>
             {tools.map(tool =>
-              <ToolItemComponent key={`${node.type.name}-${tool.name}-${i}`} depth={depth} editor={editor} tool={tool} />)}
+              <ToolItemComponent key={`${nodeOrMarkName}-${tool.name}-${i}`} depth={depth} editor={editor} tool={tool} />)}
           </Box>
           )}
       </VStack>

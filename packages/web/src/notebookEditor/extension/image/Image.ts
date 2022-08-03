@@ -1,8 +1,8 @@
 import { Node } from '@tiptap/core';
 
-import { AttributeType, ImageNodeSpec, SetAttributeType, NodeName } from '@ureeka-notebook/web-service';
+import { getNodeOutputSpec, AttributeType, ImageNodeSpec, SetAttributeType, NodeName } from '@ureeka-notebook/web-service';
 
-import { getNodeOutputSpec, setAttributeParsingBehavior } from 'notebookEditor/extension/util/attribute';
+import { setAttributeParsingBehavior } from 'notebookEditor/extension/util/attribute';
 import { NoOptions } from 'notebookEditor/model/type';
 import { DialogStorage } from 'notebookEditor/model/DialogStorage';
 

@@ -44,6 +44,10 @@ export enum ExtensionPriority {
   //       (SEE: notebookEditor/type.ts)
   PARAGRAPH = 117,
 
+  // NOTE: Link must have a higher priority than other marks so that it gets
+  //       preference over them when creating, pasting or applying parse rules
+  LINK = 116/*T&E*/,
+
   // NOTE: Since the text extension adds a \t whenever Tab is pressed, but this
   //       behavior is not always guaranteed to be the desired one (e.g. when
   //       going through a list Node), the text extension runs last (SEE: note

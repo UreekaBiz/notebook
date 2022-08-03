@@ -1,8 +1,7 @@
 import { Mark } from '@tiptap/core';
 
-import { AttributeType, TextStyleMarkSpec } from '@ureeka-notebook/web-service';
+import { getMarkOutputSpec, AttributeType, TextStyleMarkSpec } from '@ureeka-notebook/web-service';
 
-import { getMarkOutputSpec } from 'notebookEditor/extension/util/attribute';
 import { isValidHTMLElement, safeParseTag } from 'notebookEditor/extension/util/parse';
 import { NoStorage } from 'notebookEditor/model/type';
 

@@ -1,5 +1,6 @@
 
 import { Attributes, HTMLAttributes } from '../attribute';
+import { MarkName } from '../mark';
 import { NodeName } from '../node';
 
 // ********************************************************************************
@@ -82,3 +83,6 @@ export const getRenderTag = (attributes: Partial<Attributes> = {}, rendererSpec:
 // for the getNodeOutputSpec, the Renderer and AbstractNodeViews
 export const DATA_NODE_TYPE = 'data-node-type';
 export const createNodeDataTypeAttribute = (nodeName: NodeName) => `${DATA_NODE_TYPE}="${nodeName}"`;
+
+export const DATA_MARK_TYPE = 'data-mark-type';
+export const createMarkDataTypeAttribute = (markName: MarkName) => `${DATA_MARK_TYPE}="${markName}"`;

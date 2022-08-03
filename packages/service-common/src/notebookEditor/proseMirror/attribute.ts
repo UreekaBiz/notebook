@@ -39,6 +39,10 @@ export enum AttributeType {
   Alt = 'alt',
   Src = 'src',
   Title = 'title',
+
+  // .. Link ......................................................................
+  Href = 'href',
+  Target = 'target',
 }
 
 export type StyleAttributes = {

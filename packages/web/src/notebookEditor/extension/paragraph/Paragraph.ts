@@ -1,9 +1,9 @@
 import { Node } from '@tiptap/core';
 import { Plugin } from 'prosemirror-state';
 
-import { Attributes, AttributeType, ParagraphNodeSpec, SetAttributeType } from '@ureeka-notebook/web-service';
+import { getNodeOutputSpec, Attributes, AttributeType, ParagraphNodeSpec, SetAttributeType } from '@ureeka-notebook/web-service';
 
-import { getNodeOutputSpec, setAttributeParsingBehavior } from 'notebookEditor/extension/util/attribute';
+import { setAttributeParsingBehavior } from 'notebookEditor/extension/util/attribute';
 import { safeParseTag } from 'notebookEditor/extension/util/parse';
 import { ExtensionPriority, NoStorage } from 'notebookEditor/model/type';
 

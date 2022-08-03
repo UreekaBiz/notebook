@@ -1,8 +1,7 @@
 import { Mark } from '@tiptap/core';
 
-import { StrikethroughMarkSpec } from '@ureeka-notebook/web-service';
+import { getMarkOutputSpec, StrikethroughMarkSpec } from '@ureeka-notebook/web-service';
 
-import { getMarkOutputSpec } from 'notebookEditor/extension/util/attribute';
 import { markInputRule, markPasteRule } from 'notebookEditor/extension/util/mark';
 import { safeParseTag } from 'notebookEditor/extension/util/parse';
 import { NoOptions, NoStorage } from 'notebookEditor/model/type';

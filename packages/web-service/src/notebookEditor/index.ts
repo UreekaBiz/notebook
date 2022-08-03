@@ -57,6 +57,17 @@ export {
   MAX_IMAGE_WIDTH,
   MIN_IMAGE_WIDTH,
 
+  LinkAttributes,
+  isLinkMarkAttributes,
+  DEFAULT_LINK_ATTRIBUTES,
+  LinkTarget,
+  isLinkTargetValue,
+  DEFAULT_LINK_HREF,
+  DEFAULT_LINK_TAG,
+  DEFAULT_LINK_TARGET,
+  LINK_PROTOCOLS,
+  PREVENT_LINK_META,
+
   // == Nodes =====================================================================
   JSONNode,
   NodeName,
@@ -73,6 +84,8 @@ export {
   ImageNodeSpec,
   ParagraphNodeSpec,
   TextNodeSpec,
+
+  getNodeOutputSpec,
 
   // -- Node Types ----------------------------------------------------------------
   DocumentNodeType,
@@ -94,21 +107,28 @@ export {
 
   // -- Mark Specs ----------------------------------------------------------------
   BoldMarkSpec,
+  LinkMarkSpec,
   MarkSpecs,
   StrikethroughMarkSpec,
   TextStyleMarkSpec,
 
+  getMarkOutputSpec,
+
   // -- Mark Types ----------------------------------------------------------------
   BoldMarkType,
   isBoldMark,
+  LinkMarkType,
+  isLinkMark,
+  StrikethroughMarkType,
+  isStrikethroughMark,
   TextStyleMarkType,
   isTextStyleMark,
 
   // == HTML Renderer =============================================================
+  DATA_MARK_TYPE,
   DATA_NODE_TYPE,
 
   convertContentToHTML,
-  convertJSONContentToHTML,
   getRenderTag,
 
   // -- HTML Render Specs ---------------------------------------------------------

@@ -127,7 +127,7 @@ const verticalAlignBottomToolItem: ToolItem = {
 // == Toolbar =====================================================================
 export const ImageToolbar: Toolbar = {
   title: NodeName.IMAGE,
-  nodeName: NodeName.IMAGE,
+  name: NodeName.IMAGE,
 
   toolsCollections: [
     [

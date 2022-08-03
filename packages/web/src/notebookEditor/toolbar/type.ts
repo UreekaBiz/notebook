@@ -1,7 +1,7 @@
 import { Editor } from '@tiptap/core';
 import { ReactNode } from 'react';
 
-import { NodeName } from '@ureeka-notebook/web-service';
+import { MarkName, NodeName } from '@ureeka-notebook/web-service';
 
 import { SelectionDepth } from 'notebookEditor/model/type';
 
@@ -10,9 +10,9 @@ import { SelectionDepth } from 'notebookEditor/model/type';
 export type Toolbar = Readonly<{
   /** Title that is being displayed on the Toolbar and in the Breadcrumb.*/
   title: string;
-  /** Unique name of the toolbar, its must correspond to the specific Node that it
-   *  is associated with */
-  nodeName: NodeName;
+  /** Unique name of the toolbar, its must correspond to the specific Node or mark
+   *  that it is associated with */
+  name: NodeName | MarkName;
 
   /** Optional component that will be displayed on the right side of the title. */
   rightContent?: (props: EditorToolComponentProps) => ReactNode | null/*allow to be rendered conditionally*/;

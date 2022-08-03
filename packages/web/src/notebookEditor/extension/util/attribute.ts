@@ -1,7 +1,7 @@
 import { Attribute, Editor } from '@tiptap/core';
-import { DOMOutputSpec, Mark as ProseMirrorMark, Node as ProseMirrorNode } from 'prosemirror-model';
+import { Node as ProseMirrorNode } from 'prosemirror-model';
 
-import { getMarkName, getMarkValue, getNodeName, getRenderAttributes, getRenderTag, isHeadingNode, isTextNode, mergeAttributes, mergeAttributeValues, AttributeType, Attributes, HeadingLevel, InvalidMergedAttributeValue, MarkName, MarkRendererSpecs, MarkSpecs, MergedAttributeValue, NodeRendererSpecs, NodeSpecs, SetAttributeType, DATA_NODE_TYPE } from '@ureeka-notebook/web-service';
+import { getMarkValue, getNodeName, isHeadingNode, isTextNode, mergeAttributeValues, AttributeType, HeadingLevel, InvalidMergedAttributeValue, MarkName, MergedAttributeValue, SetAttributeType } from '@ureeka-notebook/web-service';
 
 import { getHeadingThemeValue, getThemeValue } from '../theme/theme';
 import { getSelectedNode } from './node';
@@ -47,35 +47,6 @@ export const setAttributeParsingBehavior = (name: string, type: SetAttributeType
     parseHTML,
     keepOnSplit: false/*don't keep by default*/,
   };
-};
-
-export const getNodeOutputSpec = (node: ProseMirrorNode, HTMLAttributes: Attributes, isLeaf: boolean = false): DOMOutputSpec => {
-  const nodeName = getNodeName(node);
-  const nodeRendererSpec = NodeRendererSpecs[nodeName],
-        nodeSpec = NodeSpecs[nodeName];
-
-  // All nodes require to have 'DATA_NODE_TYPE' attribute to be able to identify
-  // the Node.
-  const attributes = mergeAttributes(HTMLAttributes, { [DATA_NODE_TYPE]: node.type.name });
-  const tag = getRenderTag(attributes, nodeRendererSpec);
-  const merged = getRenderAttributes(nodeName, attributes, nodeRendererSpec, nodeSpec);
-
-  // Leaf nodes don't need a content hole
-  if(isLeaf) return [tag, merged];
-  return [tag, merged, 0/*content hole*/];
-};
-
-export const getMarkOutputSpec = (mark: ProseMirrorMark, HTMLAttributes: Attributes): DOMOutputSpec => {
-  const markName = getMarkName(mark);
-  const markRendererSpec = MarkRendererSpecs[markName],
-        markSpec = MarkSpecs[markName];
-
-  // All marks require to have 'data-mark-type' attribute to be able to identify
-  // the mark.
-  const attributes = mergeAttributes(HTMLAttributes, { 'data-mark-type': mark.type.name });
-  const tag = getRenderTag(attributes, markRendererSpec);
-  const merged = getRenderAttributes(markName, attributes, markRendererSpec, markSpec);
-  return [tag, merged];
 };
 
 // == Rendered values =============================================================
