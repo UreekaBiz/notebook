@@ -115,12 +115,12 @@ export const getThemeElement = (nodeOrMarkName: NodeName | MarkName): ThemeEleme
 //       string (or undefined if not defined). If complex Attributes are needed
 //       (e.g. Heading level) then the NodeTheme must be accessed directly. This
 //       is required to avoid Type conflicts.
-export const getThemeValue = (nodeOrMarkName: NodeName | MarkName, attribute: AttributeType): string | undefined/*FIXME: document*/ => {
+export const getThemeValue = (nodeOrMarkName: NodeName | MarkName, attribute: AttributeType): string | undefined/*no value in Theme*/ => {
   const themeElement = getThemeElement(nodeOrMarkName);
   const value = themeElement[attribute];
 
   if(typeof value === 'string') return value;
-  if(typeof value !== 'undefined') { console.error(`Unexpected value type for (${nodeOrMarkName}) theme attribute (${attribute}): ${value}`); return undefined/*FIXME: document*/; }
+  if(typeof value !== 'undefined') { console.error(`Unexpected value type for (${nodeOrMarkName}) theme attribute (${attribute}): ${value}`); return undefined/*unexpected value, default to no value*/; }
 
   return value/*value is valid but undefined*/;
 };
