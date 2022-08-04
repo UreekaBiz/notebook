@@ -6,7 +6,7 @@ import { firestore } from '../util/firebase';
 import { NotebookFilter, PublishedNotebookFilter } from './type';
 import { buildSortQuery } from '../util/firestore';
 
-// ********************************************************************************
+// ** Firestore *******************************************************************
 // == Collection ==================================================================
 // -- Notebook ---------------------------------------------------------------------
 export const notebookCollection = collection(firestore, NOTEBOOKS) as CollectionReference<Notebook>;

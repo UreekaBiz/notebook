@@ -5,7 +5,7 @@ import { computeUserNamePrefixQueryString, nameof, UserIdentifier, UserProfilePu
 import { firestore } from '../util/firebase';
 
 // NOTE: the shortened 'User Profile' naming is used throughout for simplicity
-// ********************************************************************************
+// ** Firestore *******************************************************************
 // == Collection ==================================================================
 export const userProfileCollection = collection(firestore, USER_PROFILE_PUBLICS) as CollectionReference<UserProfilePublic_Storage>;
 export const userProfileDocument = (userId: UserIdentifier) => doc(userProfileCollection, userId);
