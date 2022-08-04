@@ -67,18 +67,6 @@ export const publishedNotebookQuery = (filter: PublishedNotebookFilter) => {
     buildQuery = query(buildQuery, where(nameof<PublishedNotebook>('createdBy'), '==', filter.createdBy!));
   } /* else -- 'createdBy' was not specified in the filter */
 
-  // TODO: Implement soft-deletion filter
-  // // if no filter is applied then both deleted and non-deleted entries are included.
-  // // * If only-deleted then include only deleted = true
-  // // * If nothing is specified then only include non-deleted (i.e. deleted = false)
-  // let includeDeleted = ((filter.deleted === true) || (filter.onlyDeleted === true));
-  // if(filter.onlyDeleted === true) {
-  //   buildQuery = query(buildQuery, where(nameof<PublishedNotebook>('deleted'), '==', true));
-  // } /* else -- don't limit to only (soft) deleted entries */
-  // if(!includeDeleted) {
-  //   buildQuery = query(buildQuery, where(nameof<PublishedNotebook>('deleted'), '==', false));
-  // } /* else -- (soft) deleted entries should be included */
-
   // sort
   buildQuery = buildSortQuery(buildQuery, filter, nameof<PublishedNotebook>('title')/*default sort field*/);
 
