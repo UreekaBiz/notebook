@@ -64,6 +64,7 @@ const applyBoldToHeadingContent = (props: CommandProps) => {
         parentPos = currentPos - offset;
   if(dispatch) {
     tr.addMark(parentPos, parentPos + tr.selection.$anchor.parent.nodeSize - 2/*account for the start and end of the parent Node*/, createBoldMark(editor.schema));
+    dispatch(tr);
   } /* else -- called from can() (SEE: src/notebookEditor/README.md/#Commands) */
 
   return true/*command can be executed*/;

@@ -53,3 +53,35 @@ This is the list of parse rules that are implemented in the editor
 | Wrap text in between double _ characters                         | Toggle the **bold** Mark for the corresponding text            |
 | Wrap text in between double ~ characters                         | Toggle the ~~strikethrough~~ Mark for the corresponding text   |
 | Type between 1 and 3 '#' characters at the start of a new line   | Toggle a Heading Node with the corresponding level             |
+
+# Commands
+REF: https://prosemirror.net/docs/guide/#commands
+
+In ProseMirror, Commands are functions that take an Editor State and a Dispatch
+function and return a boolean. To be able to query whether a command is applicable
+for a given state without executing it, their Dispatch argument is optional.
+(SEE: REF above)
+
+That is, in ProseMirror, Commands only return true without doing anything
+when they are applicable but no Dispatch argument is given. If the Dispatch
+argument is given, they also dispatch the Transaction.
+
+REF: https://github.com/ueberdosis/tiptap/blob/main/packages/core/src/CommandManager.ts#L51
+In TipTap, the command() method used by ChainedCommands gets passed, through the
+CommandProps, a Dispatch function. This function is undefined whenever the call
+to the Command is being done after a can() command call. Otherwise, the Dispatch
+function is defined.
+(SEE: REF above)
+
+A similar approach to that of ProseMirror should be followed whenever using the
+TipTap command. That is, check if the Dispatch function is defined,
+perform the action and return accordingly, taking into account that if Dispatch
+is undefined, then that means that a can() command has been called before.
+
+Thus, the Dispatch function in TipTap's command() method only has a
+semantic meaning relating to whether or not a can() was used previously.
+It will always end up passing the transaction to PM and thus be dispatched, which
+means that any changes to the Transaction should be made within the body of the
+if(dispatch) {/**/} block. In order to be consistent with the way ProseMirror uses
+commands, however, commands do dispatch(tr) at their end (as if they were
+ProseMirror commands)
