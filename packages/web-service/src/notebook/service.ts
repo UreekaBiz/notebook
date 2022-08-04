@@ -62,11 +62,10 @@ export class NotebookService {
   }
 
   /**
-   * @param notebookId the {@link NotebookIdentifier} for which the {@link Notebook}
+   * @param notebookId the {@link NotebookIdentifier} for which the {@link PublishedNotebook}
    *         is desired
-   * @returns Observable over {@link Notebook} with the specified identifier. If
-   *          no such Notebook exists then `null` is returned. Note that the Notebook
-   *          _may be_ soft deleted {@link Notebook#deleted}.
+   * @returns Observable over the {@link PublishedNotebook} with the specified
+   *          identifier. If no such Published Notebook exists then `null` is returned.
    */
   public onPublishedNotebook$(notebookId: NotebookIdentifier): Observable<ObjectTuple<PublishedNotebookIdentifier, PublishedNotebook | null/*not found*/>> {
     return publishedNotebookById$(notebookId);
