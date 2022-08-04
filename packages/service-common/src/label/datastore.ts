@@ -1,6 +1,6 @@
 import { FieldValue } from '../util/firestore';
 import { Modify } from '../util/type';
-import { Label, LabelNotebook, LabelNotebookPublished, LabelPublished } from './type';
+import { Label, LabelNotebook, LabelNotebookPublished, LabelPublished, LabelSummary } from './type';
 
 // ** Constants *******************************************************************
 // == Firestore ===================================================================
@@ -21,6 +21,11 @@ export const LABEL_PUBLISHED = `${LABEL_PUBLISHEDS}/{labelId}` as const/*documen
 export const LABEL_NOTEBOOK_PUBLISHEDS = 'label-notebook-publisheds'/*sub-collection*/;
 export const LABEL_NOTEBOOK_PUBLISHED = `${LABEL_PUBLISHED}/${LABEL_NOTEBOOK_PUBLISHEDS}/{notebookId}` as const/*document (used by CF triggers)*/;
 
+// == RTDB ========================================================================
+// -- Label Summary ---------------------------------------------------------------
+// the key is the Label Identifier
+export const LABEL_SUMMARIES = 'label-summaries'/*top-level 'collection'*/;
+
 // ** Storage Types ***************************************************************
 // == Firestore ===================================================================
 // -- Label -----------------------------------------------------------------------
@@ -30,6 +35,10 @@ export type LabelNotebook_Storage = LabelNotebook/*nothing additional*/;
 // -- Published Label -------------------------------------------------------------
 export type LabelPublished_Storage = LabelPublished/*nothing additional*/;
 export type LabelNotebookPublished_Storage = LabelNotebookPublished/*nothing additional*/;
+
+// == RTDB ========================================================================
+// -- Label Summary ---------------------------------------------------------------
+export type LabelSummary_Storage = LabelSummary/*nothing additional*/;
 
 // ** Action Types ****************************************************************
 // == Firestore ===================================================================
@@ -65,3 +74,7 @@ export type LabelNotebookPublished_Write = Modify<LabelNotebookPublished_Storage
   createTimestamp: FieldValue/*always-write server-set*/;
 }>>;
 // NOTE: hard-delete so no delete Action Type
+
+// == RTDB ========================================================================
+// -- Label Summary ---------------------------------------------------------------
+export type LabelSummary_Update = LabelSummary_Storage/*nothing additional*/;
