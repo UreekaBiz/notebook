@@ -73,8 +73,9 @@ export enum NotebookRole {
 // SEE: /notebookEditor/type.ts
 
 // -- Label User Share ------------------------------------------------------------
-// a sub-collection of Notebooks whose document ID is a the User identifier so that
-// Firestore Rules can check for the existence of a Notebook-User share (via a Label)
+// a Notebook sub-collection of Users that have some permissions to the Notebook.
+// The document ID is a the User identifier so that Firestore Rules can check for
+// the existence of a Notebook-User share (via either a Label or the Notebook itself)
 // NOTE: documents are always fully written on any change to the role
 export type NotebookLabelUser = Creatable & Readonly<{ /*Firestore*/
   /** the parent Notebook (for convenience when indexing) */
