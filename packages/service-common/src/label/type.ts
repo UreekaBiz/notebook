@@ -1,3 +1,4 @@
+import { NotebookIdentifier } from '../notebook/type';
 import { Creatable, Updatable } from '../util/datastore';
 import { Identifier } from '../util/type';
 import { UserIdentifier } from '../util/user';
@@ -5,6 +6,12 @@ import { UserIdentifier } from '../util/user';
 // ********************************************************************************
 // NOTE: Label documentIds are raw Firestore (random) Document Ids
 export type LabelIdentifier = Identifier;
+
+// --------------------------------------------------------------------------------
+// Labels don't have to be unique so this simply removes leading / trailing whitespace
+// as well as any duplicate whitespace
+export const normalizeLabel = (name: string) =>
+  name.trim().replace(/\s+/g, ' ');
 
 // == Label (Firestore) ===========================================================
 export enum LabelVisibility {
@@ -62,7 +69,7 @@ export type LabelNotebook = Creatable & Readonly<{ /*Firestore*/
   /** the parent Label (for convenience when indexing) */
   labelId: LabelIdentifier/*write-once server-written*/;
   /** the Notebook (for convenience when indexing) */
-  notebookId: Identifier/*write-once server-written*/;
+  notebookId: NotebookIdentifier/*write-once server-written*/;
 
   /** the Label's name to facilitate collection-group queries
    *  @see Label#name */
