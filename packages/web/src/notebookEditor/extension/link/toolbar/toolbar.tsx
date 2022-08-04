@@ -1,8 +1,8 @@
 import { AiOutlineLink } from 'react-icons/ai';
 
-import { MarkName } from '@ureeka-notebook/web-service';
+import { getLinkMarkType, MarkName } from '@ureeka-notebook/web-service';
 
-import { inMarkHolder } from 'notebookEditor/extension/markHolder/util';
+import { getMarkHolder, inMarkHolder, toggleMarkInMarkHolder } from 'notebookEditor/extension/markHolder/util';
 import { getDialogStorage } from 'notebookEditor/model/DialogStorage';
 import { Toolbar, ToolItem } from 'notebookEditor/toolbar/type';
 
@@ -21,22 +21,25 @@ export const linkToolItem: ToolItem = {
   icon: <AiOutlineLink size={16} />,
   tooltip: 'Link (⌘ + K)',
 
-  // FIXME: Deal with right behavior taking MarkHolder into account
   onClick: (editor) => {
+    // if MarkHolder is defined toggle the Mark inside it
+    const markHolder = getMarkHolder(editor);
+
+    if(markHolder) return toggleMarkInMarkHolder(editor.state.selection, editor.chain, markHolder, getLinkMarkType(editor.schema))/*nothing else to do*/;
+
     // (SEE: EditorUserInteractions.tsx)
     const { $from } = editor.state.selection,
       linkMarkActive = editor.isActive(MarkName.LINK) || editor.state.doc.rangeHasMark($from.pos, $from.pos + 1, editor.state.schema.marks[MarkName.LINK]);
     if(linkMarkActive) {
-      editor.chain().focus().unsetLink().run();
-      return;
+      return editor.chain().focus().unsetLink().run();
     } /* else -- Link Mark not active, add a new one */
 
     const linkStorage = getDialogStorage(editor, MarkName.LINK);
     if(!linkStorage) return/*nothing to do*/;
     linkStorage.setShouldInsertNodeOrMark(true);
 
-    // Focus the editor again
-    editor.commands.focus();
+    // focus the Editor again
+    return editor.commands.focus();
   },
   isActive: (editor) => {
     if(inMarkHolder(editor, MarkName.LINK)) return true/*is active in MarkHolder*/;
