@@ -19,7 +19,7 @@ export const MarkHolderPlugin = () => new Plugin<NotebookSchemaType>({
   // Content's length was greater than zero and now its -exactly- zero), and there
   // were activeMarks, insert a MarkHolder Node that contains the respective Marks
   appendTransaction(transactions, oldState, newState) {
-    if(oldState === newState) return/*no changes*/;
+    if(newState.doc === oldState.doc) return/*no changes*/;
     const { tr } = newState;
 
     // do not allow cursor to be set behind a MarkHolder
