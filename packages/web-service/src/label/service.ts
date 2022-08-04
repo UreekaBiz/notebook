@@ -218,10 +218,10 @@ export class LabelService {
    *        Label. The specified list completely replaces the existing order. This
    *        means that this operation can be used to both reorder as well as add
    *        and remove Notebooks. Any identifier that does not represent a known
-   *        Notebook is silently ignored.
+   *        Notebook is silently ignored. If any identifier is duplicated then
+   *        the first occurrence (in its position) is used.
    * @returns the resulting ordered list of Notebooks. This is useful to know if
-   *          any Notebook identifiers where were invalid or not found as they are
-   *          not included in the returned list.
+   *          any Notebook identifiers where were invalid, not found or duplicated.
    * @throws a {@link ApplicationError}:
    * - `permission-denied` if the caller is not the creator of the Label
    * - `not-found` if the specified {@link LabelIdentifier} does not represent a
