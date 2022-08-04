@@ -1,8 +1,8 @@
-import { Fragment, Node as ProseMirrorNode, Slice } from 'prosemirror-model';
+import { Fragment, Mark, Node as ProseMirrorNode, Slice } from 'prosemirror-model';
 import { Plugin, TextSelection } from 'prosemirror-state';
 import { EditorView } from 'prosemirror-view';
 
-import { createMarkHolderNode, createParagraphNode, getNodesAffectedByStepMap, isMarkHolderNode, AttributeType, NodeName, NotebookSchemaType } from '@ureeka-notebook/service-common';
+import { createMarkHolderNode, createParagraphNode, getNodesAffectedByStepMap, isMarkHolderNode, AttributeType, JSONMark, NodeName, NotebookSchemaType } from '@ureeka-notebook/service-common';
 
 import { parseStoredMarks } from './util';
 
@@ -70,7 +70,7 @@ export const MarkHolderPlugin = () => new Plugin<NotebookSchemaType>({
             markHolder = view.state.doc.nodeAt(posBeforeAnchorPos);
       if(!markHolder || !isMarkHolderNode(markHolder)) return false/*let PM handle the event*/;
 
-      const parentPos = posBeforeAnchorPos - 1/*by contract --  MarkHolder gets inserted at start of parent Node*/;
+      const parentPos = Math.max(0/*don't go outside limits*/, posBeforeAnchorPos - 1)/*by contract --  MarkHolder gets inserted at start of parent Node*/;
 
       // NOTE: since the selection is not allowed to be behind a MarkHolder but
       //       expected behavior must be maintained on an Enter keypress, manually
@@ -85,7 +85,7 @@ export const MarkHolderPlugin = () => new Plugin<NotebookSchemaType>({
         // Paragraph
         tr.setSelection(new TextSelection(tr.doc.resolve(parentEndPos), tr.doc.resolve(parentEndPos)))
           .insert(tr.selection.$anchor.pos, createParagraphNode(view.state.schema))
-          .setSelection(new TextSelection(tr.doc.resolve(tr.selection.$anchor.pos - 1/*start of inserted Paragraph*/)));
+          .setSelection(new TextSelection(tr.doc.resolve(Math.max(0/*don't go outside limits*/, tr.selection.$anchor.pos - 1/*start of inserted Paragraph*/))));
         dispatch(tr);
         return true/*event handled*/;
       } /* else -- not handling Enter */
@@ -96,7 +96,7 @@ export const MarkHolderPlugin = () => new Plugin<NotebookSchemaType>({
       // MarkHolder (i.e. to its right) by default.
       // (SEE: appendedTransaction above).
       if(event.key === 'ArrowLeft' && (posBeforeAnchorPos > 1/*not pressing ArrowLeft at the start of the document*/)) {
-        const posBeforeMarkHolder = posBeforeAnchorPos - 1;
+        const posBeforeMarkHolder = Math.max(0/*don't go outside limits*/, posBeforeAnchorPos - 1);
         tr.setSelection(new TextSelection(tr.doc.resolve(posBeforeMarkHolder), tr.doc.resolve(posBeforeMarkHolder)));
         dispatch(tr);
         return false/*PM handles default selection*/;
@@ -120,12 +120,22 @@ export const MarkHolderPlugin = () => new Plugin<NotebookSchemaType>({
         return false/*do not handle event*/;
       } /* else -- handle event */
 
+      // Apply the stored marks to the current selection
       const storedMarks = markHolder.attrs[AttributeType.StoredMarks];
       if(!storedMarks) return false/*nothing to do, do not handle event*/;
 
-      tr.setSelection(new TextSelection(tr.doc.resolve(posBeforeAnchorPos), tr.doc.resolve(posBeforeAnchorPos + markHolder.nodeSize)))
-        .setStoredMarks(parseStoredMarks(storedMarks))
-        .replaceSelectionWith(view.state.schema.text(event.key));
+      // Range to insert text and marks
+      const from = tr.doc.resolve(posBeforeAnchorPos).pos,
+            to = tr.doc.resolve(posBeforeAnchorPos + markHolder.nodeSize).pos;
+
+      // Create marks from the stored marks attribute
+      const JSONMarks = JSON.parse(storedMarks) as JSONMark[]/*by contract*/;
+      const marks = JSONMarks.map(markName => Mark.fromJSON(view.state.schema, markName));
+
+      // Insert the text and apply every stored mark into it
+      tr.insertText(event.key, from, to);
+      marks.forEach(mark => tr.addMark(from, to + 1/*exclusive selection -- add one to wrap whole text*/, mark));
+
       dispatch(tr);
       return true/*event handled*/;
     },
@@ -144,7 +154,7 @@ export const MarkHolderPlugin = () => new Plugin<NotebookSchemaType>({
 
       tr.setSelection(new TextSelection(tr.doc.resolve(posBeforeAnchorPos), tr.doc.resolve(posBeforeAnchorPos + markHolder.nodeSize)))
         .replaceSelection(slice);
-      parseStoredMarks(storedMarks).forEach(storedMark => tr.addMark(posBeforeAnchorPos, posBeforeAnchorPos + slice.size, storedMark));
+      parseStoredMarks(view.state.schema, storedMarks).forEach(storedMark => tr.addMark(posBeforeAnchorPos, posBeforeAnchorPos + slice.size, storedMark));
       dispatch(tr);
       return true/*event handled*/;
     },
@@ -180,7 +190,7 @@ export const MarkHolderPlugin = () => new Plugin<NotebookSchemaType>({
 const getUtilsFromView = (view: EditorView) => {
   const { dispatch } = view;
   const { tr } = view.state;
-  const posBeforeAnchorPos = view.state.selection.$anchor.pos - 1/*selection will be past the MarkHolder*/;
+  const posBeforeAnchorPos = Math.max(0/*don't go outside limits*/, view.state.selection.$anchor.pos - 1)/*selection will be past the MarkHolder*/;
 
   return { dispatch, tr, posBeforeAnchorPos };
 };
