@@ -2,7 +2,7 @@ import { Fragment, Node as ProseMirrorNode, Slice } from 'prosemirror-model';
 import { Plugin, TextSelection } from 'prosemirror-state';
 import { EditorView } from 'prosemirror-view';
 
-import { createMarkHolderNode, createParagraphNode, getNodesAffectedByStepMap, isMarkHolderNode, NodeName, NotebookSchemaType } from '@ureeka-notebook/service-common';
+import { createMarkHolderNode, createParagraphNode, getNodesAffectedByStepMap, isMarkHolderNode, AttributeType, NodeName, NotebookSchemaType } from '@ureeka-notebook/service-common';
 
 import { parseStoredMarks } from './util';
 
@@ -120,8 +120,11 @@ export const MarkHolderPlugin = () => new Plugin<NotebookSchemaType>({
         return false/*do not handle event*/;
       } /* else -- handle event */
 
+      const storedMarks = markHolder.attrs[AttributeType.StoredMarks];
+      if(!storedMarks) return false/*nothing to do, do not handle event*/;
+
       tr.setSelection(new TextSelection(tr.doc.resolve(posBeforeAnchorPos), tr.doc.resolve(posBeforeAnchorPos + markHolder.nodeSize)))
-        .setStoredMarks(parseStoredMarks(markHolder.attrs.storedMarks ?? '[]'/*empty marks array*/))
+        .setStoredMarks(parseStoredMarks(storedMarks))
         .replaceSelectionWith(view.state.schema.text(event.key));
       dispatch(tr);
       return true/*event handled*/;
@@ -136,9 +139,12 @@ export const MarkHolderPlugin = () => new Plugin<NotebookSchemaType>({
             markHolder = view.state.doc.nodeAt(posBeforeAnchorPos);
       if(!markHolder || !isMarkHolderNode(markHolder)) return false/*let PM handle the event*/;
 
+      const storedMarks = markHolder.attrs[AttributeType.StoredMarks];
+      if(!storedMarks) return false/*nothing to do, do not handle event*/;
+
       tr.setSelection(new TextSelection(tr.doc.resolve(posBeforeAnchorPos), tr.doc.resolve(posBeforeAnchorPos + markHolder.nodeSize)))
         .replaceSelection(slice);
-      parseStoredMarks(markHolder.attrs.storedMarks ?? '[]'/*empty marks array*/).forEach(storedMark => tr.addMark(posBeforeAnchorPos, posBeforeAnchorPos + slice.size, storedMark));
+      parseStoredMarks(storedMarks).forEach(storedMark => tr.addMark(posBeforeAnchorPos, posBeforeAnchorPos + slice.size, storedMark));
       dispatch(tr);
       return true/*event handled*/;
     },

@@ -2,7 +2,7 @@ import { ChainedCommands, Editor } from '@tiptap/core';
 import { Mark, MarkType } from 'prosemirror-model';
 import { Selection, TextSelection } from 'prosemirror-state';
 
-import { createMarkHolderNode, getMarkName, isMarkHolderNode, AttributeType, MarkHolderNodeType, MarkName, JSONNode, JSONMark, SchemaV2 } from '@ureeka-notebook/service-common';
+import { createMarkHolderNode, getMarkName, isMarkHolderNode, AttributeType, MarkName, MarkHolderNodeType, JSONMark, JSONNode, SchemaV2 } from '@ureeka-notebook/service-common';
 
 // ********************************************************************************
 // creates a MarkHolder Node holding the Marks corresponding to the given MarkNames
@@ -28,9 +28,10 @@ export const getMarkHolder = (editor: Editor) => {
 
 /** Toggles a mark in the mark holder. This should be used when a mark is added to
  *  an empty node. */
-export const toggleMarkInMarkHolder = (selection: Selection, chain: () => ChainedCommands, markHolder: MarkHolderNodeType, appliedMarkType: MarkType): boolean => {
+export const toggleMarkInMarkHolder = (selection: Selection, chain: () => ChainedCommands, markHolder: MarkHolderNodeType, appliedMarkType: MarkType) => {
   let newMarksArray: Mark[] = [];
-  const storedMarks  = markHolder.attrs.storedMarks ?? '[]'/*empty marks array*/;
+  const storedMarks  = markHolder.attrs[AttributeType.StoredMarks];
+  if(!storedMarks) return false/*nothing to do*/;
 
   if(parseStoredMarks(storedMarks).some(mark => getMarkName(mark) === appliedMarkType.name)) {
     // already included, remove it
@@ -39,7 +40,6 @@ export const toggleMarkInMarkHolder = (selection: Selection, chain: () => Chaine
     // not included yet, add it
     newMarksArray = [...parseStoredMarks(storedMarks), appliedMarkType.create()];
   }
-
 
   return chain().focus().command((props) => {
     const { dispatch, tr } = props;
