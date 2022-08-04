@@ -25,7 +25,7 @@ export const linkToolItem: ToolItem = {
     // if MarkHolder is defined toggle the Mark inside it
     const markHolder = getMarkHolder(editor);
 
-    if(markHolder) return toggleMarkInMarkHolder(editor.state.selection, editor.chain, markHolder, getLinkMarkType(editor.schema))/*nothing else to do*/;
+    if(markHolder) return toggleMarkInMarkHolder(editor, editor.chain, markHolder, getLinkMarkType(editor.schema))/*nothing else to do*/;
 
     // (SEE: EditorUserInteractions.tsx)
     const { $from } = editor.state.selection,
