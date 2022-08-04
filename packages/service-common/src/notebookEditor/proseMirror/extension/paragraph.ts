@@ -31,9 +31,10 @@ export type ParagraphAttributes = AttributesTypeFromNodeSpecAttributes<typeof Pa
 export const ParagraphNodeSpec: Readonly<NodeSpec> = {
   name: NodeName.PARAGRAPH/*expected and guaranteed to be unique*/,
 
-  group: NodeGroup.BLOCK,
   content: `${NodeGroup.INLINE}*`,
   marks: getAllowedMarks([MarkName.BOLD, MarkName.STRIKETHROUGH, MarkName.TEXT_STYLE]),
+  
+  group: NodeGroup.BLOCK,
 
   attrs: ParagraphAttributesSpec,
 };

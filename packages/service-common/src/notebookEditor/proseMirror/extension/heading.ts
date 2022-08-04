@@ -34,9 +34,10 @@ export type HeadingAttributes = AttributesTypeFromNodeSpecAttributes<typeof Head
 export const HeadingNodeSpec: NodeSpec = {
   name: NodeName.HEADING/*expected and guaranteed to be unique*/,
 
-  group: NodeGroup.BLOCK,
   content: `${NodeGroup.INLINE}*`,
   marks: getAllowedMarks([MarkName.BOLD, MarkName.STRIKETHROUGH, MarkName.TEXT_STYLE]),
+
+  group: NodeGroup.BLOCK,
   defining: true,
 
   attrs: HeadingAttributesSpec,
