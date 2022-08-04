@@ -18,7 +18,7 @@ export const shareNotebook = async (userId: UserIdentifier, notebookId: Notebook
   userRoles.set(userId!/*auth'd*/, NotebookRole.Creator);
 
   // bound to MAX_NOTEBOOK_SHARE_USERS and ensure that there is only a single Creator
-  if(userRoles.size > MAX_NOTEBOOK_SHARE_USERS) throw new ApplicationError('functions/invalid-argument', `Cannot Share a Notebook (${notebookId}) with more than ${MAX_NOTEBOOK_SHARE_USERS} (${userRoles.size} > ${MAX_NOTEBOOK_SHARE_USERS}) Users Notebook (${notebookId}).`);
+  if(userRoles.size > MAX_NOTEBOOK_SHARE_USERS) throw new ApplicationError('functions/invalid-argument', `Cannot Share a Notebook (${notebookId}) with more than ${MAX_NOTEBOOK_SHARE_USERS} (${userRoles.size} > ${MAX_NOTEBOOK_SHARE_USERS}) Users.`);
   const creatorUserIds = [...userRoles.values()].filter(role => role === NotebookRole.Creator);
   if(creatorUserIds.length > 1) throw new ApplicationError('functions/invalid-argument', `Cannot Share a Notebook (${notebookId}) with more than one Creator (${creatorUserIds.length} > 1).`);
 
