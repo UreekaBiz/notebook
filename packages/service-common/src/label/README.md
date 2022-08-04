@@ -14,9 +14,19 @@ Labels are *not* uniquely named -- meaning that two different Labels may have th
 
 Labels can be either Public or Private. Public Labels are visible to any User on the internet (via either the Creator's homepage or a Published Notebook associated with the Label). Private Labels are only visible to the creator (`createdBy`). Making a Label Public or Private has no impact on the Notebooks associated with that Label. (Specifically, making a Label Public does *not* Publish unpublished Notebooks associated with the Label nor does making a Label Private unpublish any Published Notebooks.)
 
-## Notebook Permissions
+In keeping with Notebook's notion of 'Published', a Public Label is considered to be Published.
+
+## Notebooks
+
+Zero or more Notebooks may be associated with a Label. Notebooks are ordered in the order in which they are added. If the Label is marked as 'ordered' then the User may reorder the Notebooks. The numeric order of the Notebooks is sparse (*not* dense).
+
+Labels that are Public are associated with only those Notebooks that are associated with the Label that are Published. If an associated Notebook is unpublished then that Notebook is removed from the _Published_ Label's collection of Notebooks (but it remains in the Label's ordered collection).
+
+### Notebook Permissions
 
 Labels have Notebook permissions are associated with them. Editor takes precedence over Viewer. Permissions are determined by looking at the permissions on the Notebook itself as well as the set of all LabelNotebooks to which the Notebook is associated.
+
+A User with whom a Notebook is shared *cannot* view (or know the existence of) Labels that are not *explicitly* shared with them. In other words, only the share roles of a Label determine whether or not a User may view (or know the existence of) that Label.
 
 With Firestore, two things need to be considered:
 1. Firestore Rules: For a given Notebook and User, a Rule needs to determine if the User can view, edit or neither the Notebook. Since there is a limit of 10 document reads per Rule, it cannot be that each Label associated with a Notebook is checked (since there may be 'n' Labels associated with any given Notebook). That leaves two choices: either the set of Notebooks that each User can view / edit or the set of Users that can view / edit per Notebook.
@@ -25,7 +35,7 @@ Bottom line: both constraints are identical.
 
 For separation-of-concerns reasons, it feels "proper" to have a sub-collection on Notebooks that contains all of the Users that can view / edit it. This also provides an obvious way to look at a Notebook and see all of the associated User's permissions.
 
-So the challenge becomes: given 'n' Labels per Notebook in which each Label can specify 'v' Notebook viewers and 'e' Notebook editors, how is a sub-collection of Users on Notebook maintained? For each edit to the permissions on any Label or Notebook, a query is run that checks:
+The challenge becomes: given 'n' Labels per Notebook in which each Label can specify 'v' Notebook viewers and 'e' Notebook editors, how is a sub-collection of Users on Notebook maintained? For each edit to the permissions on any Label or Notebook, a query is run that checks:
 1. If there are any Labels associated with the Notebook in which the User appears as a viewer / editor:
 ```TypeScript
       query(LabelNotebooks, where(notebook, '==', notebookId),

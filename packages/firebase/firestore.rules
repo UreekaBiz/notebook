@@ -33,9 +33,9 @@ service cloud.firestore {
       allow delete: if false; // soft-delete
     }
 
-    // === Notebook ===============================================================
-    function getNotebook(notebookId) {
-      return get(/databases/$(database)/documents/notebooks/$(notebookId)).data;
+    // === Label ==================================================================
+    function getLabel(labelId) {
+      return get(/databases/$(database)/documents/labels/$(labelId)).data;
     }
 
     // ............................................................................
@@ -43,12 +43,109 @@ service cloud.firestore {
     //       edit or is the creator, the other checks are superfluous. *BUT* it
     //       seems that Firestore requires them to be aligned with the query so
     //       therefore they're requried.
+    function canViewLabel(label) {
+      return    isAdmin()
+             || (   isUser()
+                 && (   (request.auth.uid in label.viewers)
+                     || (request.auth.uid in label.editors)
+                     || (label.createdBy == request.auth.uid) ) );
+    }
+    function canViewLabelId(labelId) {
+      return canViewLabel(getLabel(labelId));
+    }
+
+    function canViewLabelNotebook(labelNotebook) {
+      // NOTE: *could* just use #canViewLabelId() but that would require an additional
+      //       read for the Label
+      // NOTE: *could* duck-type and just use #canViewLabel() but that's brittle
+      return    isAdmin()
+             || (   isUser()
+                 && (   (request.auth.uid in labelNotebook.viewers)
+                     || (request.auth.uid in labelNotebook.editors)
+                     || (labelNotebook.createdBy == request.auth.uid) ) );
+    }
+
+    // -- Label -------------------------------------------------------------------
+    match /labels/{labelId} {
+      allow create: if false; // server-only created
+      allow update: if false; // server-side only
+      allow read:   if canViewLabel(resource.data);
+      allow delete: if false; // server-side hard-delete
+
+      // .. Notebooks .............................................................
+      // NOTE: document id matches that of the Notebook
+      match /label-notebooks/{notebookId} {
+        allow create: if false; // server-only created
+        allow update: if false; // server-side only
+        // NOTE: by design a Notebook Creator / Editor / Viewer *cannot* determine
+        //       what Labels are associated with that Notebook *unless* that Label
+        //       is shared with them explicitly.
+        allow read:   if canViewLabelId(labelId);
+        allow delete: if false; // server-side hard-delete
+      }
+    }
+    // collection-group rules
+    match /{path=**}/label-notebooks/{notebookId} {
+      allow create: if false; // managed server-side
+      allow update: if false; // managed server-side
+      allow read: if canViewLabelNotebook(resource.data);
+      allow delete: if false; // managed server-side
+    }
+
+    // -- Label Published ---------------------------------------------------------
+    // NOTE: the id matches the id of the Label whose visibility is 'public'
+    // NOTE: terrible English but consistent naming
+    match /label-publisheds/{labelId} {
+      allow create: if false; // server-only created
+      allow update: if false; // server-side only
+      allow read:   if true; 	// Published Labels are public by definition
+      allow delete: if false; // server-side hard-delete
+
+      // .. Published Notebooks ...................................................
+      // NOTE: document id matches that of the Notebook Published
+      // NOTE: when a Notebook is unpublished then the corresponding entry in this
+      //       sub-collection is removed
+      match /label-notebook-publisheds/{notebookId} {
+        allow create: if false; // server-only created
+        allow update: if false; // server-side only
+        allow read:   if true; 	// Published Label's Published Notebooks are public by definition
+        allow delete: if false; // server-side hard-delete
+      }
+    }
+    // collection-group rules
+    match /{path=**}/label-notebooks/{notebookId} {
+      allow create: if false; // managed server-side
+      allow update: if false; // managed server-side
+      allow read: if canViewLabelNotebook(resource.data);
+      allow delete: if false; // managed server-side
+    }
+
+    // === Notebook ===============================================================
+    function getNotebook(notebookId) {
+      return get(/databases/$(database)/documents/notebooks/$(notebookId)).data;
+    }
+
+    // ............................................................................
+    // is the specified Notebook shared with the specified user via a Label?
+    function hasNotebookLabelShare(notebookId, userId) {
+      return exists(/databases/$(database)/documents/notebooks/$(notebookId)/notebook-label-users/$(userId));
+    }
+
+    // ............................................................................
+    // NOTE: in theory, since 'viewers' *must* include anyone that can either view,
+    //       edit or is the creator, the other checks are superfluous. *BUT* it
+    //       seems that Firestore requires them to be aligned with the query so
+    //       therefore they're requried.
+    function canUserViewNotebook(userId, notebook) {
+      return   (userId in notebook.viewers)
+            || (userId in notebook.editors)
+            || (notebook.createdBy == userId) )
+    }
     function canViewNotebook(notebook) {
       return    isAdmin()
              || (   isUser()
-                 && (   (request.auth.uid in notebook.viewers)
-                     || (request.auth.uid in notebook.editors)
-                     || (notebook.createdBy == request.auth.uid) ) );
+                 && (   canUserViewNotebook(request.auth.uid, notebook)
+                     || hasNotebookLabelShare(notebook.id, request.auth.uid) ) );
     }
     function canViewNotebookId(notebookId) {
       return canViewNotebook(getNotebook(notebookId));
@@ -68,7 +165,7 @@ service cloud.firestore {
       allow delete: if false; // soft-delete
 
       // .. Version ...............................................................
-      // NOTE: document ID matches NotebookVersion#index (hashed)
+      // NOTE: document id matches NotebookVersion#index (hashed)
       match /notebook-versions/{versionId} {
         // NOTE: since the NotebookVersion is written by the client, it *must* be
         //       validated to ensure data integrity. At a minimum, security considerations
@@ -90,18 +187,36 @@ service cloud.firestore {
       }
 
       // .. Checkpoint ............................................................
-      // NOTE: document ID matches NotebookVersion#index (hashed) from the last
+      // NOTE: document id matches NotebookVersion#index (hashed) from the last
       //       NotebookVersion combined
       match /notebook-checkpoints/{versionId} {
-        allow create: if false; // server-only created (TODO: allow for User-initiated?)
+        allow create: if false; // server-only created
         allow update: if false; // read-only
         allow read:   if canViewNotebookId(notebookId);
         allow delete: if false; // create-only
       }
+
+      // .. Label User Share  .....................................................
+      // NOTE: this explicitly has 'label' in the name to make it clear that these
+      //       are the Users that are shared with the Notebook specifically via a
+      //       Label (rather than shared directly on the Notebook itself)
+      match /notebook-label-users/{userId} {
+        allow create: if false; // server-only created
+        allow update: if false; // server-side only
+        allow read:   if isSameSignedInUser(userId);
+        allow delete: if false; // server-side hard-delete
+      }
+    }
+    // collection-group rules
+    match /{path=**}/notebook-label-users/{userId} {
+      allow create: if false; // managed server-side
+      allow update: if false; // managed server-side
+      allow read:   if isSameSignedInUser(userId);
+      allow delete: if false; // managed server-side
     }
 
     // -- Published Notebook ------------------------------------------------------
-    // NOTE: document ID matches NotebookVersion#index (hashed) from the last
+    // NOTE: document id matches NotebookVersion#index (hashed) from the last
     //       NotebookVersion combined
     match /notebook-published-notebooks/{versionId} {
       allow create: if false; // server-only created
