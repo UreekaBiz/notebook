@@ -58,6 +58,9 @@ export {
   emailSchema,
   urlSchema,
 
+  // SEE: @ureeka-notebook/service-common: util/share.ts
+  ShareRole,
+
   // SEE: @ureeka-notebook/service-common: util/string.ts
   camelToKebabCase,
   defaultBlankString,
