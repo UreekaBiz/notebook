@@ -56,6 +56,7 @@ export type NotebookTuple = ObjectTuple<NotebookIdentifier, Notebook>;
 // ................................................................................
 // these are used when communicating the the shared state of a Notebook. They get
 // translated into Notebook#viewers and Notebook#editors
+// TODO: remove in favor of ShareRole
 export enum NotebookRole {
   /** a Creator is an Editor and a Viewer */
   Creator = 'creator',
