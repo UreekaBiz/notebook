@@ -10,6 +10,9 @@ import { NotebookSchemaType } from '../schema';
 // NOTE: must be present on the MarkSpec below
 // NOTE: this value must have matching types -- the ones defined in the Extension
 const MarkHolderAttributeSpec = {
+  // NOTE: this attribute is a stringified version of the array holding the marks
+  //       to prevent parsing issues in both copy-paste operations, and loading
+  //       MarkHolder Nodes from the server in the Notebook repo
   // the stringified version of an array containing the stored marks
   [AttributeType.StoredMarks]: noNodeOrMarkSpecAttributeDefaultValue<string>(),
 };
