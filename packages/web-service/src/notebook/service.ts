@@ -5,10 +5,10 @@ import { Notebook, NotebookIdentifier, NotebookRole, NotebookTuple, ObjectTuple,
 import { getLogger, ServiceLogger } from '../logging';
 import { ApplicationError } from '../util/error';
 import { Scrollable, scrollableQuery } from '../util/observableScrolledCollection';
+import { notebookQuery, publishedNotebookQuery } from './datastore';
 import { notebookCreate, notebookDelete, notebookShare, publishNotebook } from './function';
 import { notebookById$, notebookOnceById$,  notebooksQuery$, publishedNotebookById$, publishedNotebookOnceById$, publishedNotebooksQuery$ } from './observable';
 import { Notebook_Create, NotebookFilter, PublishedNotebook_Create, PublishedNotebookFilter } from './type';
-import { notebookQuery, publishedNotebookQuery } from './datastore';
 
 const log = getLogger(ServiceLogger.NOTEBOOK);
 
