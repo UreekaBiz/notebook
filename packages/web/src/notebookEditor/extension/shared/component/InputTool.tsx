@@ -4,6 +4,7 @@ import { useState, ChangeEventHandler, KeyboardEventHandler } from 'react';
 import { useLocalValue } from 'notebookEditor/shared/hook/useLocalValue';
 import { separateUnitFromString } from 'notebookEditor/theme/type';
 import { TOOL_ITEM_DATA_TYPE } from 'notebookEditor/toolbar/type';
+import { useIsMounted } from 'shared/hook';
 
 // ********************************************************************************
 interface Props {
@@ -16,6 +17,7 @@ interface Props {
 export const InputTool: React.FC<Props> = ({ name, initialInputValue, inputPlaceholder, onChange }) => {
   // == State =====================================================================
   const [inputColor, setInputColor] = useState('#000')/*default*/;
+  const isMounted = useIsMounted();
   const { commitChange, localValue, resetLocalValue, updateLocalValue } = useLocalValue<string>(initialInputValue, onChange);
   let [value] = separateUnitFromString(localValue);
 
@@ -31,14 +33,14 @@ export const InputTool: React.FC<Props> = ({ name, initialInputValue, inputPlace
   };
 
   const handleKeyDown: KeyboardEventHandler<HTMLInputElement> = (event) => {
-    // Save changes when user presses enter
+    // save changes when user presses Enter
     if(event.key === 'Enter') {
       saveChange();
 
       setInputColor('green');
-      // FIXME: Changing state of component that could be unmounted by the time
-      //        the timeout resolves
       setTimeout(() => {
+        if(!isMounted()) return/*nothing to do*/;
+
         setInputColor('#000')/*default*/;
       }, 1000/*ms*/);
     } /* else -- ignore */
