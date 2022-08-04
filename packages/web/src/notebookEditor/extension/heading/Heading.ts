@@ -1,5 +1,6 @@
-import { textblockTypeInputRule, Node } from '@tiptap/core';
+import { InputRule, Node } from '@tiptap/core';
 
+import { createBoldMark, createMarkHolderNode } from '@ureeka-notebook/service-common';
 import { getHeadingLevelFromTag, getNodeOutputSpec, AttributeType, HeadingLevel, HeadingNodeSpec,  SetAttributeType } from '@ureeka-notebook/web-service';
 
 import { NoStorage } from 'notebookEditor/model/type';
@@ -55,15 +56,30 @@ export const Heading = Node.create<HeadingOptions, NoStorage>({
   },
 
   // -- Input ---------------------------------------------------------------------
-  // Create a Heading node if the user types '#' a certain amount of times and
+  // Create a Heading Node if the user types '#' a certain amount of times and
   // a space or an enter. The amount of times '#' was typed will be the level
-  // of the Heading, if it is a valid HeadingLevel
+  // of the Heading, if it is a valid HeadingLevel. The created Heading Node
+  // will contain a MarkHolder with the Bold Mark set by default
   addInputRules() {
     return this.options.levels.map(level => {
-      return textblockTypeInputRule({
+      return new InputRule({
         find: new RegExp(`^(#{1,${level}})\\s$`),
-        type: this.type,
-        getAttributes: { level },
+        handler: ({ state, range }) => {
+          const startPos = state.doc.resolve(range.from);
+
+          if(!startPos.node(-1/*top level*/).canReplaceWith(startPos.index(-1/*top level*/), startPos.indexAfter(-1/*top level*/), this.type)) {
+            return null/*the resulting Node Content is not valid, do nothing*/;
+          }/* else -- the resulting Node Content is valid, set Heading Block Type */
+
+          const { tr } = state;
+          const storedMarks = JSON.stringify([createBoldMark(state.schema)]);
+
+          tr.delete(range.from, range.to)
+            .setBlockType(range.from, range.from, this.type, { level })
+            .insert(tr.selection.$anchor.pos, createMarkHolderNode(state.schema, { storedMarks } ));
+
+          return/*nothing left to do*/;
+        },
       });
     });
   },
