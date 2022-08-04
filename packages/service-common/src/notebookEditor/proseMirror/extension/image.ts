@@ -2,7 +2,6 @@ import { Mark, Node as ProseMirrorNode, NodeSpec } from 'prosemirror-model';
 
 import { noNodeOrMarkSpecAttributeDefaultValue, AttributeType, AttributesTypeFromNodeSpecAttributes } from '../attribute';
 import { NodeRendererSpec } from '../htmlRenderer/type';
-import { getAllowedMarks } from '../mark';
 import { JSONNode, NodeName, ProseMirrorNodeContent } from '../node';
 import { NotebookSchemaType } from '../schema';
 
@@ -28,8 +27,6 @@ export type ImageAttributes = AttributesTypeFromNodeSpecAttributes<typeof ImageA
 // -- Node Spec -------------------------------------------------------------------
 export const ImageNodeSpec: NodeSpec = {
   name: NodeName.IMAGE,
-
-  marks: getAllowedMarks([/*no Marks allowed for Image Node*/]),
 
   group: 'inline',
   inline: true,

@@ -2,7 +2,6 @@ import { Node as ProseMirrorNode, NodeSpec } from 'prosemirror-model';
 
 import { AttributesTypeFromNodeSpecAttributes } from '../attribute';
 import { NodeRendererSpec } from '../htmlRenderer/type';
-import { getAllowedMarks } from '../mark';
 import { JSONNode, NodeGroup, NodeName } from '../node';
 import { NotebookSchemaType } from '../schema';
 
@@ -24,7 +23,6 @@ export const DocumentNodeSpec: NodeSpec = {
   topNode: true/*it's the node that will be used as a root for the document*/,
 
   content: `${NodeGroup.BLOCK}+`,
-  marks: getAllowedMarks([/*no Marks allowed for Doc Node*/]),
 
   attrs: DocumentAttributesSpec,
 };
