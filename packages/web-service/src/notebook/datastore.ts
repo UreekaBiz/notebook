@@ -3,8 +3,8 @@ import { collection, doc, query, where, CollectionReference, Query } from 'fireb
 import { isBlank, nameof, Notebook, NotebookIdentifier, PublishedNotebook, PublishedNotebookIdentifier, NOTEBOOKS, NOTEBOOK_PUBLISHED_NOTEBOOKS } from '@ureeka-notebook/service-common';
 
 import { firestore } from '../util/firebase';
-import { NotebookFilter, PublishedNotebookFilter } from './type';
 import { buildSortQuery } from '../util/firestore';
+import { NotebookFilter, PublishedNotebookFilter } from './type';
 
 // ** Firestore *******************************************************************
 // == Collection ==================================================================
