@@ -33,7 +33,7 @@ export const InputTool: React.FC<Props> = ({ name, initialInputValue, inputPlace
   };
 
   const handleKeyDown: KeyboardEventHandler<HTMLInputElement> = (event) => {
-    // Save changes when user presses enter
+    // save changes when user presses Enter
     if(event.key === 'Enter') {
       saveChange();
 
