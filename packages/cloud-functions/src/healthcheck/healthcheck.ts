@@ -40,10 +40,21 @@ const endpointNames = [
   'authUserSessionHeartbeat',
   'authUserSessionUpdate',
   'authUserUserPrivateProfileUpdate',
+
+  'labelCreate',
+  'labelDelete',
+  'labelNotebookAdd',
+  'labelNotebookRemove',
+  'labelNotebookReorder',
+  'labelShare',
+  'labelUpdate',
+
   'notebookCreate',
   'notebookDelete',
   'notebookShare',
+
   'loggingClient',
+
   'publishedNotebookCreate',
 ];
 

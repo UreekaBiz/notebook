@@ -22,6 +22,7 @@ export * from './authUser/schedule';
 export * from './hashtag/callable';
 export * from './hashtag/onCreate';
 export * from './healthcheck/callable';
+export * from './label/callable';
 export * from './logging/callable';
 export * from './migration/task';
 export * from './notebook/callable';

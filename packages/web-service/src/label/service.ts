@@ -129,6 +129,7 @@ export class LabelService {
    * @returns the {@link LabelIdentifier} for the created {@link Label}
    * @throws a {@link ApplicationError}:
    * - `permission-denied` if the caller is not logged in
+   * - `invalid-argument` if the specified name is not valid (e.g. empty)
    * - `datastore/write` if there was an error creating the {@link Label}
    */
   public async createLabel(create: Label_Create): Promise<LabelIdentifier> {
@@ -145,7 +146,10 @@ export class LabelService {
    *        (e.g. setting a Label to 'public' does *not* publish the associated
    *        Notebooks).
    * @throws a {@link ApplicationError}:
-   * - `permission-denied` if the caller is not logged in
+   * - `permission-denied` if the caller is not logged in or is not the creator of
+   *   the {@link Label}
+   * - `not-found` if the {@link LabelIdentifier} does not represent a known {@link Label}
+   * - `invalid-argument` if the specified name is not valid (e.g. empty)
    * - `datastore/write` if there was an error updating the {@link Label}
    * @see #addNotebook()
    * @see #removeNotebook()
@@ -160,10 +164,9 @@ export class LabelService {
    * @param labelId the {@link LabelIdentifier} of the {@link Label} that is
    *         to be deleted
    * @throws a {@link ApplicationError}:
-   * - `permission-denied` if the caller is not the creator of the Label
-   * - `not-found` if the specified {@link LabelIdentifier} does not represent a
-   *   known {@link Label}
-   * - `data/deleted` if the {@link Label} has already been flagged as deleted
+   * - `permission-denied` if the caller is not logged in or is not the creator of
+   *   the {@link Label}
+   * - `not-found` if the {@link LabelIdentifier} does not represent a known {@link Label}
    * - `datastore/write` if there was an error setting the deleted flag on the {@link Label}
    */
   public async deleteLabel(labelId: LabelIdentifier) {

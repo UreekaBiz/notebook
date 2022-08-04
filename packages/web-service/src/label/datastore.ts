@@ -47,7 +47,7 @@ export const labelQuery = (filter: LabelFilter) => {
   } /* else -- 'createdBy' was not specified in the filter */
 
   // sort
-  buildQuery = buildSortQuery(buildQuery, filter, nameof<Label_Storage>('name')/*default sort field*/);
+  buildQuery = buildSortQuery(buildQuery, filter, nameof<Label_Storage>('sortName')/*default sort field*/);
 
   return buildQuery;
 };
