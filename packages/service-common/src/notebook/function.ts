@@ -18,7 +18,7 @@ export const NotebookCreate_Rest_Schema = Validate.object({
   name: stringMedSchema
       .required(),
 }).noUnknown();
-export type NotebookCreate_Rest = Readonly<Modify<Validate.InferType<typeof NotebookCreate_Rest_Schema>, {
+export type NotebookCreate_Rest = Modify<Validate.InferType<typeof NotebookCreate_Rest_Schema>, Readonly<{
   type: NotebookType/*explicit*/;
 }>>;
 
@@ -40,7 +40,7 @@ export const NotebookShare_Rest_Schema = Validate.object({
           .required(),
       ))),
 }).noUnknown();
-export type NotebookShare_Rest = Readonly<Modify<Validate.InferType<typeof NotebookShare_Rest_Schema>, {
+export type NotebookShare_Rest = Modify<Validate.InferType<typeof NotebookShare_Rest_Schema>, Readonly<{
   userRoles: Record<UserIdentifier, NotebookRole>/*explicit*/;
 }>>;
 
