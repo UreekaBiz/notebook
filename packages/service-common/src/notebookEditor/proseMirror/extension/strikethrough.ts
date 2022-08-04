@@ -19,7 +19,8 @@ export const StrikethroughMarkSpec: MarkSpec = {
 
   // NOTE: toDOM must be defined so that the Schema knows how to create it
   //       (SEE: schema.ts)
-  toDOM: (mark, inline) => [StrikethroughMarkRendererSpec.tag, StrikethroughMarkSpec],
+  // NOTE: toDOM tag must match renderer tag
+  toDOM: (mark, inline) => ['s', StrikethroughMarkSpec],
 
   attrs: StrikethroughAttributesSpec,
 };
@@ -29,6 +30,7 @@ export const StrikethroughMarkRendererSpec: MarkRendererSpec<StrikethroughAttrib
   // NOTE: the tag is only used for the Editor. The HTML renderer uses the tag of
   //       the TextNode instead
   // SEE: ./renderer.ts
+  // NOTE: renderer tag must match toDOM tag
   tag: 's',
   render: { style: 'text-decoration: line-through;' },
 

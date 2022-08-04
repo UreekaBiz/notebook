@@ -45,7 +45,8 @@ export const LinkMarkSpec: MarkSpec = {
 
   // NOTE: toDOM must be defined so that the Schema knows how to create it
   //       (SEE: schema.ts)
-  toDOM: (mark, inline) => [LinkMarkRendererSpec.tag, LinkMarkSpec],
+  // NOTE: toDOM tag must match renderer tag
+  toDOM: (mark, inline) => ['a', LinkMarkSpec],
 
   attrs: LinkAttributeSpec,
 };
@@ -53,6 +54,7 @@ export const LinkMarkSpec: MarkSpec = {
 // -- Render Spec -----------------------------------------------------------------
 export const LinkMarkRendererSpec: MarkRendererSpec<LinkAttributes> = {
   // FIXME: Not actually rendering as an 'a' tag
+  // NOTE: renderer tag must match toDOM tag
   tag: 'a',
   render: {
     rel: 'noopener noreferrer nofollow'/*for general link sanity*/,

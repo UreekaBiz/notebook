@@ -149,13 +149,10 @@ export function getRenderAttributes(nodeOrMarkName: NodeName | MarkName, attrs: 
 }
 
 // == Output Spec =================================================================
-// NOTE: NodeRendererSpec and NodeSpec can be passes as props directly instead of
-//       using the corresponding Records to avoid circular dependencies. If no value
-//       is provided the Records will be used.
-export const getNodeOutputSpec = (node: ProseMirrorNode, HTMLAttributes: Attributes, isLeaf: boolean = false, nodeRendererSpec?: NodeRendererSpec, nodeSpec?: NodeSpec): DOMOutputSpec => {
+export const getNodeOutputSpec = (node: ProseMirrorNode, HTMLAttributes: Attributes, isLeaf: boolean = false): DOMOutputSpec => {
   const nodeName = getNodeName(node);
-  nodeRendererSpec ??= NodeRendererSpecs[nodeName];
-  nodeSpec ??= NodeSpecs[nodeName];
+  const nodeRendererSpec = NodeRendererSpecs[nodeName],
+        nodeSpec = NodeSpecs[nodeName];
 
   // All nodes require to have 'DATA_NODE_TYPE' attribute to be able to identify
   // the Node.
@@ -168,13 +165,10 @@ export const getNodeOutputSpec = (node: ProseMirrorNode, HTMLAttributes: Attribu
   return [tag, merged, 0/*content hole*/];
 };
 
-// NOTE: MarkRendererSpec and MarkSpec can be passes as props directly instead of
-//       using the corresponding Records to avoid circular dependencies. If no value
-//       is provided the Records will be used.
-export const getMarkOutputSpec = (mark: ProseMirrorMark, HTMLAttributes: Attributes, markRendererSpec?: MarkRendererSpec<any>, markSpec?: MarkSpec): DOMOutputSpec => {
+export const getMarkOutputSpec = (mark: ProseMirrorMark, HTMLAttributes: Attributes): DOMOutputSpec => {
   const markName = getMarkName(mark);
-  markRendererSpec ??= MarkRendererSpecs[markName];
-  markSpec ??= MarkSpecs[markName];
+  const markRendererSpec = MarkRendererSpecs[markName],
+        markSpec = MarkSpecs[markName];
 
   // All marks require to have 'data-mark-type' attribute to be able to identify
   // the mark.

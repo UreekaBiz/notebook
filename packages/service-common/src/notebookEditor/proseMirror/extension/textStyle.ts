@@ -21,7 +21,8 @@ export const TextStyleMarkSpec: MarkSpec = {
 
   // NOTE: toDOM must be defined so that the Schema knows how to create it
   //       (SEE: schema.ts)
-  toDOM: (mark, inline) => [TextStyleMarkRendererSpec.tag, TextStyleMarkSpec],
+  // NOTE: toDOM tag must match renderer tag
+  toDOM: (mark, inline) => ['span', TextStyleMarkSpec],
 
   attrs: TextStyleAttributesSpec,
 };
@@ -31,6 +32,7 @@ export const TextStyleMarkRendererSpec: MarkRendererSpec<TextStyleAttributes> = 
   // NOTE: the tag is only used for the Editor. The HTML renderer uses the tag of
   //       the TextNode instead
   // SEE: ./renderer.ts
+  // NOTE: renderer tag must match toDOM tag
   tag: 'span',
   render: {/*don't render anything by default*/},
 
