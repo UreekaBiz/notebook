@@ -1,8 +1,8 @@
 import { BiBold } from 'react-icons/bi';
 
-import { getBoldMarkType, isBoldMark, MarkName } from '@ureeka-notebook/service-common';
+import { getBoldMarkType, MarkName } from '@ureeka-notebook/service-common';
 
-import { toggleMarkInMarkHolder, getMarkHolder, parseStoredMarks } from 'notebookEditor/extension/markHolder/util';
+import { getMarkHolder, inMarkHolder, toggleMarkInMarkHolder } from 'notebookEditor/extension/markHolder/util';
 import { isNodeSelection } from 'notebookEditor/extension/util/node';
 import { ToolItem } from 'notebookEditor/toolbar/type';
 
@@ -32,8 +32,7 @@ export const markBold: ToolItem = {
   },
 
   isActive: (editor) => {
-    const markHolder = getMarkHolder(editor);
-    if(markHolder && parseStoredMarks(markHolder.attrs.storedMarks ?? '[]'/*empty marks array*/).some(mark => isBoldMark(mark))) return true/*is active*/;
+    if(inMarkHolder(editor,  MarkName.BOLD)) return true/*is active in MarkHolder*/;
 
     return editor.isActive(MarkName.BOLD);
   },

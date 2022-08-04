@@ -1,8 +1,8 @@
 import { AiOutlineLink } from 'react-icons/ai';
 
-import { isLinkMark, MarkName } from '@ureeka-notebook/web-service';
+import { MarkName } from '@ureeka-notebook/web-service';
 
-import { getMarkHolder } from 'notebookEditor/extension/markHolder/util';
+import { inMarkHolder } from 'notebookEditor/extension/markHolder/util';
 import { getDialogStorage } from 'notebookEditor/model/DialogStorage';
 import { Toolbar, ToolItem } from 'notebookEditor/toolbar/type';
 
@@ -39,8 +39,7 @@ export const linkToolItem: ToolItem = {
     editor.commands.focus();
   },
   isActive: (editor) => {
-    const markHolder = getMarkHolder(editor);
-    if(markHolder && markHolder.attrs.storedMarks?.some(mark => isLinkMark(mark))) return true/*is active*/;
+    if(inMarkHolder(editor, MarkName.LINK)) return true/*is active in MarkHolder*/;
 
     return editor.isActive(MarkName.LINK);
   },
