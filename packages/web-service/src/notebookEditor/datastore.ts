@@ -4,7 +4,7 @@ import { nameof, Checkpoint, CheckpointIdentifier, NotebookIdentifier, NotebookV
 
 import { notebookDocument } from '../notebook/datastore';
 
-// ********************************************************************************
+// ** Firestore *******************************************************************
 // == Collection ==================================================================
 // .. Version .....................................................................
 export const notebookVersionCollection = (notebookId: NotebookIdentifier) => collection(notebookDocument(notebookId), NOTEBOOK_VERSIONS) as CollectionReference<NotebookVersion_Storage>;
