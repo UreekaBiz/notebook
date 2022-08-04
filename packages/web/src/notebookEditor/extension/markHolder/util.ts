@@ -26,9 +26,16 @@ export const getMarkHolder = (editor: Editor) => {
   return undefined/*not found*/;
 };
 
-/** Toggles a mark in the mark holder. This should be used when a mark is added to
- *  an empty node. */
-export const toggleMarkInMarkHolder = (editor: Editor, chain: () => ChainedCommands, markHolder: MarkHolderNodeType, appliedMarkType: MarkType) => {
+/**
+ * Toggles a mark in the mark holder. This should be used when a mark is added to
+ *  an empty node.
+ *
+ * NOTE: the chain parameter, when coming from a Command, must be the chain
+ *       passed by CommandProps. Otherwise an 'applyingMismatchedTransaction'
+ *       error gets thrown. This is the reason why the used chain is not taken from
+ *       the editor parameter
+ */
+ export const toggleMarkInMarkHolder = (editor: Editor, chain: () => ChainedCommands/*(SEE: NOTE above)*/, markHolder: MarkHolderNodeType, appliedMarkType: MarkType) => {
   let newMarksArray: Mark[] = [];
   const storedMarks  = markHolder.attrs[AttributeType.StoredMarks];
   if(!storedMarks) return false/*nothing to do*/;
@@ -41,6 +48,7 @@ export const toggleMarkInMarkHolder = (editor: Editor, chain: () => ChainedComma
     newMarksArray = [...parseStoredMarks(editor.state.schema, storedMarks), appliedMarkType.create()];
   }
 
+  // (SEE: NOTE above)
   return chain().focus().command((props) => {
     const { selection } = editor.state;
     const { dispatch, tr } = props;
