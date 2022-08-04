@@ -16,6 +16,8 @@ export enum ServiceLogger {
   DEFAULT = 'service.default'/*for generic cases*/,
 
   AUTH_USER = 'service.auth_user',
+  HASHTAG = 'service.hashtag',
+  LABEL = 'service.label',
   NOTEBOOK = 'service.notebook',
   NOTEBOOK_EDITOR = 'service.notebook_editor'/*separate since can be very noisy*/,
   USER = 'service.user',
