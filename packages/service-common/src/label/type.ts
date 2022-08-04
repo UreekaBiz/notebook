@@ -1,5 +1,5 @@
 import { NotebookIdentifier } from '../notebook/type';
-import { Creatable, Updatable } from '../util/datastore';
+import { Creatable, ObjectTuple, Updatable } from '../util/datastore';
 import { Identifier } from '../util/type';
 import { UserIdentifier } from '../util/user';
 
@@ -59,6 +59,7 @@ export type Label = Creatable & Updatable & Readonly<{ /*Firestore*/
    *  @see #labelComparator */
   sortName: string/*write-many server-written*/;
 }>;
+export type LabelTuple = ObjectTuple<LabelIdentifier, Label>;
 
 // ................................................................................
 // a sub-collection of Labels whose document ID is the Notebook Identifier. The
@@ -87,6 +88,7 @@ export type LabelNotebook = Creatable & Readonly<{ /*Firestore*/
    *  @see Label#editors */
   editors: UserIdentifier[]/*write-many server-written*/;
 }>;
+export type LabelNotebookTuple = ObjectTuple<NotebookIdentifier, LabelNotebook>;
 
 // -- Label Published (Firestore) -------------------------------------------------
 // to ensure that no internal information (e.g. viewer/editor lists) is exposed to
@@ -110,6 +112,7 @@ export type LabelPublished = Creatable & Readonly<{ /*Firestore*/
    *  @see #labelComparator */
   sortName: string/*write-many server-written*/;
 }>;
+export type LabelPublishedTuple = ObjectTuple<LabelIdentifier, LabelPublished>;
 
 // ................................................................................
 // the analog of LabelNotebook for Labels that are public *and* Notebooks that are
