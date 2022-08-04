@@ -2,7 +2,7 @@ import { getAttributes } from '@tiptap/core';
 import { EditorState, Plugin, PluginKey, Transaction } from 'prosemirror-state';
 import { EditorView } from 'prosemirror-view';
 
-import { NotebookSchemaType, MarkName } from '@ureeka-notebook/web-service';
+import { AttributeType, NotebookSchemaType, MarkName } from '@ureeka-notebook/web-service';
 
 import { NoPluginState } from 'notebookEditor/model/type';
 import { isValidHTMLElement } from 'notebookEditor/extension/util/parse';
@@ -56,12 +56,12 @@ export const linkClickPlugin = (): Plugin => {
 
         // gets the closes ancestor of the target that is a link
         const link = target.closest('a');
-        if(!link || !attrs.href) return false/*nothing to do*/;
+        if(!link || !attrs[AttributeType.Href]) return false/*nothing to do*/;
 
         // CHECK: Do we want the user to specify the target? This is only used for
         //        the editor itself, maybe the target should always be _blank?
         // open te link in the target specified by the link.
-        window.open(sanitizeLinkInput(attrs.href), attrs.target);
+        window.open(sanitizeLinkInput(attrs[AttributeType.Href]), attrs[AttributeType.Target]);
         return true;
       },
 

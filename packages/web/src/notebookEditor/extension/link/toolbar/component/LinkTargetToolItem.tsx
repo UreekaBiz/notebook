@@ -16,7 +16,7 @@ export const LinkTargetToolItem: React.FC<Props> = ({ editor, depth }) => {
   // == Handlers ==================================================================
   const handleChange: ChangeEventHandler<HTMLSelectElement> = (event) => {
     const target = event.target.value;
-    if(target === attrs.target || !isLinkTargetValue(target)) return/*nothing to do*/;
+    if(target === attrs[AttributeType.Target]|| !isLinkTargetValue(target)) return/*nothing to do*/;
 
     const { pos: prevPos } = editor.state.selection.$anchor;
     editor.chain()

@@ -1,6 +1,6 @@
 import { CommandProps } from '@tiptap/core';
 
-import { createBoldMark, isHeadingLevel, CommandFunctionType, HeadingLevel, MarkName, NodeName } from '@ureeka-notebook/service-common';
+import { createBoldMark, isHeadingLevel, AttributeType, CommandFunctionType, HeadingLevel, MarkName, NodeName } from '@ureeka-notebook/service-common';
 
 import { createMarkHolderJSONNode } from 'notebookEditor/extension/markHolder/util';
 
@@ -17,7 +17,7 @@ declare module '@tiptap/core' {
 
 // --------------------------------------------------------------------------------
 export const setHeadingCommand = (attributes: { level: HeadingLevel; }) => ({ editor, chain }: CommandProps) => {
-  if(!isHeadingLevel(attributes.level)) return false/*invalid command, level for heading not supported*/;
+  if(!isHeadingLevel(attributes[AttributeType.Level])) return false/*invalid command, level for heading not supported*/;
 
   let shouldInsertMarkHolder = editor.state.selection.$anchor.parent.content.size < 1;
   if(shouldInsertMarkHolder) {
@@ -33,11 +33,11 @@ export const setHeadingCommand = (attributes: { level: HeadingLevel; }) => ({ ed
 
 
 export const toggleHeadingCommand = (attributes: { level: HeadingLevel; }) => ({ editor, chain }: CommandProps) => {
-  if(!isHeadingLevel(attributes.level)) {
+  if(!isHeadingLevel(attributes[AttributeType.Level])) {
     return false/*invalid command, level for heading not supported*/;
   } /* else -- valid level */
 
-  if(editor.isActive(NodeName.HEADING) && editor.state.selection.$anchor.parent.attrs.level === attributes.level/*is the same heading -- toggle*/) {
+  if(editor.isActive(NodeName.HEADING) && editor.state.selection.$anchor.parent.attrs[AttributeType.Level] === attributes[AttributeType.Level]/*is the same heading -- toggle*/) {
     return chain().toggleNode(NodeName.PARAGRAPH, NodeName.HEADING, attributes).run();
   } /* else -- set heading normally */
 

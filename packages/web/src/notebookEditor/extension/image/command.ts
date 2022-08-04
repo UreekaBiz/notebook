@@ -1,6 +1,6 @@
 import { CommandProps, Editor } from '@tiptap/core';
 
-import { CommandFunctionType, ImageAttributes, ImageNodeType, NotebookSchemaType, NodeName, VerticalAlign } from '@ureeka-notebook/web-service';
+import { AttributeType, CommandFunctionType, ImageAttributes, ImageNodeType, NotebookSchemaType, NodeName, VerticalAlign } from '@ureeka-notebook/web-service';
 
 import { isNodeSelection, replaceAndSelectNode } from 'notebookEditor/extension/util/node';
 
@@ -38,7 +38,7 @@ export const setVerticalAlign = (editor: Editor, desiredAlignment: VerticalAlign
   if(!isNodeSelection(selection)) return false/*do not handle*/;
 
   const { name: nodeName } = selection.node.type,
-        shouldSetBottom = selection.node.attrs.verticalAlign === desiredAlignment;
+        shouldSetBottom = selection.node.attrs[AttributeType.VerticalAlign] === desiredAlignment;
 
   return editor.chain()
                 .updateAttributes(nodeName, { verticalAlign: shouldSetBottom ? VerticalAlign.bottom : desiredAlignment })

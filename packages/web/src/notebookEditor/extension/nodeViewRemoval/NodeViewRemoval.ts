@@ -1,7 +1,7 @@
 import { Extension } from '@tiptap/core';
 import { Transaction } from 'prosemirror-state';
 
-import { computeRemovedNodeObjs, getNodesAffectedByStepMap, NotebookSchemaType, NodeFound, NodeName } from '@ureeka-notebook/web-service';
+import { computeRemovedNodeObjs, getNodesAffectedByStepMap, AttributeType, NotebookSchemaType, NodeFound, NodeName } from '@ureeka-notebook/web-service';
 
 import { ExtensionName, ExtensionPriority, NoOptions, NoStorage } from 'notebookEditor/model/type';
 
@@ -19,7 +19,7 @@ export const NodeViewRemoval = Extension.create<NoOptions, NoStorage>({
   // -- Transaction ---------------------------------------------------------------
   onTransaction({ transaction }) {
     const removedNodeObjs = getRemovedNodes(transaction);
-    removedNodeObjs.forEach(removedObj => this.editor.storage[removedObj.node.type.name].removeNodeView(removedObj.node.attrs.id));
+    removedNodeObjs.forEach(removedObj => this.editor.storage[removedObj.node.type.name].removeNodeView(removedObj.node.attrs[AttributeType.Id]));
   },
 });
 

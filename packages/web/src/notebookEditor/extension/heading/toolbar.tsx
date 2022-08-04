@@ -4,7 +4,7 @@ import { BiHeading } from 'react-icons/bi';
 import { FaHeading } from 'react-icons/fa';
 import { RiHeading } from 'react-icons/ri';
 
-import { HeadingLevel, NodeName } from '@ureeka-notebook/web-service';
+import { AttributeType, HeadingLevel, NodeName } from '@ureeka-notebook/web-service';
 
 import { markBold } from 'notebookEditor/extension/bold/toolbar';
 import { markStrikethrough } from 'notebookEditor/extension/strikethrough/toolbar';
@@ -61,11 +61,11 @@ export const isHeadingToolActive = (editor: Editor, toolName: string/*in the for
 
   switch(toolName) {
     case `${NodeName.HEADING}1`:
-      return editor.isActive(NodeName.HEADING) && selection.$anchor.parent.attrs.level === HeadingLevel.One;
+      return editor.isActive(NodeName.HEADING) && selection.$anchor.parent.attrs[AttributeType.Level] === HeadingLevel.One;
     case `${NodeName.HEADING}2`:
-      return editor.isActive(NodeName.HEADING) && selection.$anchor.parent.attrs.level === HeadingLevel.Two;
+      return editor.isActive(NodeName.HEADING) && selection.$anchor.parent.attrs[AttributeType.Level] === HeadingLevel.Two;
     case `${NodeName.HEADING}3`:
-      return editor.isActive(NodeName.HEADING) && selection.$anchor.parent.attrs.level === HeadingLevel.Three;
+      return editor.isActive(NodeName.HEADING) && selection.$anchor.parent.attrs[AttributeType.Level] === HeadingLevel.Three;
     default:
       return false;
   }

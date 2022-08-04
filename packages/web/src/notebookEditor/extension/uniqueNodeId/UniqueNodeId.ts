@@ -2,7 +2,7 @@ import { Extension } from '@tiptap/core';
 import { Node as ProsemirrorNode } from 'prosemirror-model';
 import { Plugin } from 'prosemirror-state';
 
-import { generateNodeId, NodeName } from '@ureeka-notebook/web-service';
+import { generateNodeId, AttributeType, NodeName } from '@ureeka-notebook/web-service';
 
 import { resolveNewSelection } from 'notebookEditor/extension/util/node';
 import { ExtensionName, ExtensionPriority } from 'notebookEditor/model/type';
@@ -16,7 +16,7 @@ const includedNodes: Set<string> = new Set([NodeName.HEADING]);
 
 // is the specified Node in the inclusion set?
 const isUuidNode = (node: ProsemirrorNode<any>) =>
-  node.attrs.id && (typeof node.attrs.id === 'string') && includedNodes.has(node.type.name);
+  node.attrs[AttributeType.Id] && (typeof node.attrs[AttributeType.Id] === 'string') && includedNodes.has(node.type.name);
 
 // ********************************************************************************
 /**
@@ -51,7 +51,7 @@ export const UniqueNodeId = Extension.create({
             if(!isUuidNode(node)) return/*not in the inclusion set*/;
 
             // NOTE: adding any new id to the known set is overkill but is done for completeness
-            const id = node.attrs.id as string/*confirmed by 'type guard' above*/;
+            const id = node.attrs[AttributeType.Id] as string/*confirmed by 'type guard' above*/;
             if(id.includes(DEFAULT_NODE_ID)/*case #1*/ || knownIds.has(id)/*case #2*/) {
               const newId = generateNodeId();
               tr.setNodeMarkup(pos, undefined/*preserve existing type*/, { ...node.attrs, id: newId });

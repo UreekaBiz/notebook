@@ -2,7 +2,7 @@ import { customAlphabet } from 'nanoid';
 import { Fragment, Node as ProseMirrorNode, Schema } from 'prosemirror-model';
 import { Selection, Transaction } from 'prosemirror-state';
 
-import { Attributes } from './attribute';
+import { Attributes, AttributeType } from './attribute';
 import { JSONMark } from './mark';
 import { NotebookSchemaType } from './schema';
 import { mapOldStartAndOldEndThroughHistory } from './step';
@@ -142,7 +142,7 @@ export const getNodesAffectedByStepMap = (transaction: Transaction, stepMapIndex
  export const getNodeOffset = (parentNode: ProseMirrorNode, childNode: ProseMirrorNode) => {
   let offset = 0/*default*/;
   parentNode.content.descendants((node, nodePos) => {
-    if(node.attrs.id === childNode.attrs.id) offset = nodePos + 1/*account for 0 indexing*/;
+    if(node.attrs[AttributeType.Id] === childNode.attrs[AttributeType.Id]) offset = nodePos + 1/*account for 0 indexing*/;
   });
 
   return offset;
@@ -221,7 +221,7 @@ export const getRemovedNodesByTransaction = (transaction: Transaction, nodeNameS
 
 /** Get Nodes that are no longer present in the newArray */
 export const computeRemovedNodeObjs = (oldArray: NodeFound[], newArray: NodeFound[]) =>
-  oldArray.filter(oldNodeObj => !newArray.some(newNodeObj => newNodeObj.node.attrs.id === oldNodeObj.node.attrs.id));
+  oldArray.filter(oldNodeObj => !newArray.some(newNodeObj => newNodeObj.node.attrs[AttributeType.Id] === oldNodeObj.node.attrs[AttributeType.Id]));
 
 // == Unique Node Id ==============================================================
 // NOTE: at a minimum the id must be URL-safe (i.e. without the need to URL encode)
@@ -235,4 +235,4 @@ export const generateNodeId = () => customNanoid();
  * Note that not all nodes require their view to have an ID, but all nodeViews
  * whose nodes make use of this functionality -must- have an ID attribute.
  */
- export const nodeToTagId = (node: ProseMirrorNode) => `${node.type.name}-${node.attrs.id}`;
+ export const nodeToTagId = (node: ProseMirrorNode) => `${node.type.name}-${node.attrs[AttributeType.Id]}`;

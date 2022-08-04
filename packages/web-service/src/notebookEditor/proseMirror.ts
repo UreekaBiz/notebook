@@ -2,7 +2,7 @@ import { Editor, Content } from '@tiptap/core';
 import { Node as ProsemirrorNode } from 'prosemirror-model';
 import { NodeSelection, Selection, EditorState } from 'prosemirror-state';
 
-import { getNodeName, NodeIdentifier, NodeName } from '@ureeka-notebook/service-common';
+import { getNodeName, AttributeType, NodeIdentifier, NodeName } from '@ureeka-notebook/service-common';
 
 import { getLogger, ServiceLogger } from '../logging';
 
@@ -167,7 +167,7 @@ export const findLastNodeById = (rootNode: ProsemirrorNode, nodeId: NodeIdentifi
   let nodeFound: NodeFound | null = null;
 
   rootNode.descendants((node, position) => {
-    if(node.attrs.id !== nodeId) return /*continue searching*/;
+    if(node.attrs[AttributeType[AttributeType.Id]] !== nodeId) return /*continue searching*/;
 
     nodeFound = { node, position };
   });
@@ -230,7 +230,7 @@ export const replaceNode = (editor: Editor, nodeId: NodeIdentifier, content: Con
 
   // case 1: selected node is the one that will be replaced
   const { selection } = editor.state;
-  if(isNodeSelection(selection) && selection.node.attrs.id === currentNode.node.attrs.id) {
+  if(isNodeSelection(selection) && selection.node.attrs[AttributeType.Id] === currentNode.node.attrs[AttributeType.Id]) {
     editor.chain()
         .deleteSelection()
         .insertContent(content)

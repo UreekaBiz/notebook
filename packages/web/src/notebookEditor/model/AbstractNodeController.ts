@@ -2,7 +2,7 @@ import { Editor } from '@tiptap/core';
 import { Node as ProseMirrorNode } from 'prosemirror-model';
 import { NodeView as ProseMirrorNodeView } from 'prosemirror-view';
 
-import { NotebookSchemaType } from '@ureeka-notebook/web-service';
+import { AttributeType, NotebookSchemaType } from '@ureeka-notebook/web-service';
 
 import { getPosType, isGetPos } from 'notebookEditor/extension/util/node';
 
@@ -36,7 +36,7 @@ export abstract class AbstractNodeController<NodeType extends ProseMirrorNode, S
     this.storage = storage;
 
     // only add the Storage if it is a NodeViewStorage (so NoStorage is not added)
-    if(storage && isNodeViewStorage(storage)) this.storage.addNodeView(node.attrs.id, this);
+    if(storage && isNodeViewStorage(storage)) this.storage.addNodeView(node.attrs[AttributeType.Id], this);
 
     this.nodeModel = nodeModel;
     this.nodeView = nodeView;
@@ -51,7 +51,7 @@ export abstract class AbstractNodeController<NodeType extends ProseMirrorNode, S
     if(this.node.type.name !== node.type.name) return false/*different node so nothing was updated*/;
 
     // update both storage and our reference to the Node
-    this.storage.addNodeView(this.node.attrs.id, this);
+    this.storage.addNodeView(this.node.attrs[AttributeType.Id], this);
     // updates node in the model and view
     this.node = node as NodeType/*above check guarantees*/;
     this.nodeModel.node = node as NodeType/*above check guarantees*/;
