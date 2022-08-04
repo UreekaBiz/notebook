@@ -1,7 +1,7 @@
 import { DocumentReference } from 'firebase-admin/firestore';
 import { logger } from 'firebase-functions';
 
-import { generateHashtagPrefixes, Hashtag_Create, isApplicationError, Hashtag_Update, SystemUserId, UserIdentifier } from '@ureeka-notebook/service-common';
+import { computeHashtagPrefixes, Hashtag_Create, isApplicationError, Hashtag_Update, SystemUserId, UserIdentifier } from '@ureeka-notebook/service-common';
 
 import { firestore } from '../firebase';
 import { ApplicationError } from '../util/error';
@@ -29,7 +29,7 @@ export const createHashtag = async (hashtag: string) => {
       const document: Hashtag_Create = {
         hashtag,
 
-        searchPrefixes: generateHashtagPrefixes(hashtag),
+        searchPrefixes: computeHashtagPrefixes(hashtag),
 
         removed: false/*by contract*/,
 
