@@ -27,7 +27,7 @@ export const markBold: ToolItem = {
     // if MarkHolder is defined toggle the Mark inside it
     const markHolder = getMarkHolder(editor);
 
-    if(markHolder) return toggleMarkInMarkHolder(editor, editor.chain, markHolder, getBoldMarkType(editor.schema))/*nothing else to do*/;
+    if(markHolder) return toggleMarkInMarkHolder(editor, editor.chain/*(SEE: toggleInMarkHolder)*/, markHolder, getBoldMarkType(editor.schema))/*nothing else to do*/;
     return editor.chain().focus().toggleBold().run();
   },
 
