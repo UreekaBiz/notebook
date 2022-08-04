@@ -63,7 +63,7 @@ export const EditorUserInteractions = () => {
         return/*nothing to do*/;
       } /* else -- not creating image */
 
-      if(event.code === 'KeyK' && event.altKey && event.metaKey) {
+      if(event.code === 'KeyK' && event.metaKey) {
         event.preventDefault();
         // NOTE: this is needed to remove the focus of the Editor so that
         //       the cursor is in the right position when the Editor is
