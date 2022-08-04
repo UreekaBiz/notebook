@@ -41,7 +41,7 @@ export const safeParseTag = (tagName: string) => {
 export const wrapGetTagAttrs = (getAttrsCallback: (node: HTMLElement) => boolean | { [key: string]: any; } | null | undefined): GetAttrsReturnType => {
   const validatedGetAttrsFunction: GetAttrsReturnType = (node) =>
     !isValidHTMLElement(node)
-      ? null/*FIXME: document*/
+      ? null/*not a valid HTML Element*/
       : getAttrsCallback(node) && null/*required by GetAttrsReturnType*/;
 
   return validatedGetAttrsFunction;
@@ -58,7 +58,7 @@ export const wrapGetTagAttrs = (getAttrsCallback: (node: HTMLElement) => boolean
 export const wrapGetStyleAttrs = (getAttrsCallback: (value: string) => boolean | { [key: string]: any; } | null | undefined): GetAttrsReturnType => {
   const validatedGetAttrsFunction: GetAttrsReturnType = (value) =>
     !isString(value)
-      ? null/*FIXME: document*/
+      ? null/*not a string*/
       : getAttrsCallback(value) && null/*required by GetAttrsReturnType*/;
 
   return validatedGetAttrsFunction;
