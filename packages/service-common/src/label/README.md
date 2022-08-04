@@ -16,6 +16,10 @@ Labels can be either Public or Private. Public Labels are visible to any User on
 
 In keeping with Notebook's notion of 'Published', a Public Label is considered to be Published.
 
+## Permissions
+
+Permissions associated with Labels affect the Notebooks associated with the Label and not the Label itself. Specifically, if a User is in the list of Editors then that does *not* mean that that User can edit the Label itself. (Think about if there should be two different sets of Permissions.)
+
 ## Notebooks
 
 Zero or more Notebooks may be associated with a Label. Notebooks are ordered in the order in which they are added. If the Label is marked as 'ordered' then the User may reorder the Notebooks. The numeric order of the Notebooks is sparse (*not* dense).

@@ -21,7 +21,7 @@ const searchNormalizeHashtag = (s: string) => {
 };
 
 // --------------------------------------------------------------------------------
-export const generateHashtagPrefixes = (hashtag: string): string[] =>
+export const computeHashtagPrefixes = (hashtag: string): string[] =>
   createPrefixArray(searchNormalizeHashtag(hashtag));
 
 // normalizes the specified query for a Hashtag

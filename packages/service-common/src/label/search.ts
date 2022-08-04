@@ -1,6 +1,6 @@
 import { createPrefixArray, createSearchPrefix } from '../util/prefix';
 import { SearchResult } from '../util/search';
-import { LabelIdentifier } from './type';
+import { normalizeLabel, LabelIdentifier } from './type';
 
 // typeahead-find and prefix-based search are synonyms in all contexts
 // ********************************************************************************
@@ -8,6 +8,12 @@ export const MAX_LABEL_SEARCH_RESULTS = 100/*sane limit on space and time -- can
 
 // --------------------------------------------------------------------------------
 export type LabelSearchResult = SearchResult<LabelIdentifier, string/*label name*/>;
+
+// ================================================================================
+// computes the Label's name as it is used in sorting
+// CHECK: would removing whitespace and/or diacritics improve the sort results?
+export const computeLabelSortName = (name: string): string =>
+  normalizeLabel(name).toLocaleLowerCase();
 
 // == Prefix-based Searches =======================================================
 // NOTE: normalizing diacritics to give the best possible chance of matching across
@@ -23,7 +29,7 @@ const searchNormalizeLabel = (s: string) => {
 };
 
 // --------------------------------------------------------------------------------
-export const generateLabelPrefixes = (hashtag: string): string[] =>
+export const computeLabelPrefixes = (hashtag: string): string[] =>
   createPrefixArray(searchNormalizeLabel(hashtag));
 
 // normalizes the specified query for a Label

@@ -18,5 +18,6 @@ export const hashtagCollection = firestore.collection(HASHTAGS) as CollectionRef
 export const hashtagDocument = (hashtag: string) => hashtagCollection.doc(hashString(normalizeHashtag(hashtag)));
 
 // ** RTDB ************************************************************************
+// == Collection ==================================================================
 // -- Hashtag Summary -------------------------------------------------------------
 export const hashtagSummary = (hashtag: string) => database.ref(`/${HASHTAG_SUMMARIES}/${normalizeHashtag(hashtag)}`);

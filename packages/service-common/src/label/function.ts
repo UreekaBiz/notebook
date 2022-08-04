@@ -14,6 +14,7 @@ import { LabelVisibility } from './type';
 // .. Create ......................................................................
 export const LabelCreate_Rest_Schema = Validate.object({
   name: stringMedSchema
+      .min(1/*cannot be blank*/)
       .required(),
 
   visibility: Validate.string()
