@@ -9,8 +9,7 @@ export const lastValueFromStream = <T>(source: Observable<T>) => {
 };
 
 // ================================================================================
-// NOTE: detail$ *must* complete its stream otherwise this stream will never complete.
-//       Specifically, detail$ is expected to return a single value and return
+// NOTE: detail$ *must* return a value otherwise this stream will never complete
 // TODO: turn this into an Operator
 export const joinDetail$ = <M, D, R>(master$: Observable<M[]>, detail$: (value: M) => Observable<D>, join: (master: M, detail: D) => R) =>
   master$
