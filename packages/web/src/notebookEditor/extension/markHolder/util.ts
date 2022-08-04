@@ -2,7 +2,7 @@ import { ChainedCommands, Editor } from '@tiptap/core';
 import { Mark, MarkType } from 'prosemirror-model';
 import { Selection, TextSelection } from 'prosemirror-state';
 
-import { createMarkHolderNode, getMarkName, isMarkHolderNode, AttributeType, JSONNode, JSONMark, MarkHolderNodeType, MarkName, SchemaV2 } from '@ureeka-notebook/service-common';
+import { createMarkHolderNode, getMarkName, isMarkHolderNode, AttributeType, MarkHolderNodeType, MarkName, JSONNode, JSONMark, SchemaV2 } from '@ureeka-notebook/service-common';
 
 // ********************************************************************************
 // creates a MarkHolder Node holding the Marks corresponding to the given MarkNames
@@ -32,9 +32,9 @@ export const toggleMarkInMarkHolder = (selection: Selection, chain: () => Chaine
   let newMarksArray: Mark[] = [];
   const storedMarks  = markHolder.attrs.storedMarks ?? '[]'/*empty marks array*/;
 
-  if(parseStoredMarks(storedMarks).some(mark => mark.type.name === appliedMarkType.name)) {
+  if(parseStoredMarks(storedMarks).some(mark => getMarkName(mark) === appliedMarkType.name)) {
     // already included, remove it
-    newMarksArray = [...parseStoredMarks(storedMarks).filter(mark => mark.type.name !== appliedMarkType.name)];
+    newMarksArray = [...parseStoredMarks(storedMarks).filter(mark => getMarkName(mark) !== appliedMarkType.name)];
   } else {
     // not included yet, add it
     newMarksArray = [...parseStoredMarks(storedMarks), appliedMarkType.create()];
