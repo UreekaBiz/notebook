@@ -2,6 +2,7 @@ import { Mark, Node as ProseMirrorNode, NodeSpec } from 'prosemirror-model';
 
 import { noNodeOrMarkSpecAttributeDefaultValue, AttributeType, AttributesTypeFromNodeSpecAttributes } from '../attribute';
 import { NodeRendererSpec } from '../htmlRenderer/type';
+import { getAllowedMarks, MarkName } from '../mark';
 import { JSONNode, NodeGroup, NodeIdentifier, NodeName, ProseMirrorNodeContent } from '../node';
 import { NotebookSchemaType } from '../schema';
 
@@ -35,6 +36,7 @@ export const HeadingNodeSpec: NodeSpec = {
 
   group: NodeGroup.BLOCK,
   content: `${NodeGroup.INLINE}*`,
+  marks: getAllowedMarks([MarkName.BOLD, MarkName.STRIKETHROUGH, MarkName.TEXT_STYLE]),
   defining: true,
 
   attrs: HeadingAttributesSpec,
