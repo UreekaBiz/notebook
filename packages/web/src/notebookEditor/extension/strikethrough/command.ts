@@ -22,7 +22,7 @@ export const unsetStrikethroughCommand = () => ({ commands }: CommandProps) => c
 export const toggleStrikethroughCommand = () => ({ editor, chain, commands }: CommandProps) => {
   // if MarkHolder is defined toggle the mark inside it
   const markHolder = getMarkHolder(editor);
-  if(markHolder) return toggleMarkInMarkHolder(editor, chain, markHolder, getStrikethroughMarkType(editor.schema))/*nothing else to do*/;
+  if(markHolder) return toggleMarkInMarkHolder(editor, chain/*(SEE: toggleInMarkHolder)*/, markHolder, getStrikethroughMarkType(editor.schema))/*nothing else to do*/;
   /* else -- MarkHolder is not present */
 
   return commands.toggleMark(MarkName.STRIKETHROUGH);
