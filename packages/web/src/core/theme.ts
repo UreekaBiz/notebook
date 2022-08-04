@@ -36,11 +36,6 @@ export const theme = extendTheme({
         div: { minWidth: '1px' },
       },
 
-      // Is this styles still needed?
-      // h1: { fontSize: TEXT_STYLE_DEFAULT_HEADING1_FONT_SIZE,  mb: 1 },
-      // h2: { fontSize: TEXT_STYLE_DEFAULT_HEADING2_FONT_SIZE, mb: 1 },
-      // h3: { fontSize: TEXT_STYLE_DEFAULT_HEADING3_FONT_SIZE, mb: 1},
-
       a: {
         color: '#3b5fc0',
         textDecoration: 'underline',
