@@ -84,15 +84,4 @@ export type PublishedNotebookFilter = SortableFilter<PublishedNotebookSortField>
 
   /** only show entries that were created by this User */
   createdBy?: UserIdentifier;
-
-  // TODO: Not implemented yet!
-  // .. Deleted ...................................................................
-  /** also include (soft) deleted entries (`false` by default) */
-  deleted?: boolean;
-
-  // TODO: Not implemented yet!
-  /** include _only_ (soft) deleted entries (`false` by default). This implies
-   *  {@link #deleted} is `true` (but specifically the value of {@link #deleted}
-   *  is ignored if this is `true`). */
-  onlyDeleted?: boolean;
 }>;
