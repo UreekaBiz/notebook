@@ -122,6 +122,7 @@ export type LabelPublishedTuple = ObjectTuple<LabelIdentifier, LabelPublished>;
 //        since this would be used in cases of 'show all Notebooks for a Label'
 //        (rather than having to do the Notebook lookup on the client)
 // SEE: LabelPublished and LabelNotebook
+// FIXME: drop this for LabelNotebook!!!
 export type LabelNotebookPublished = Creatable & Readonly<{ /*Firestore*/
   /** the parent public Label (for convenience when indexing) */
   labelId: LabelIdentifier/*write-once server-written*/;
