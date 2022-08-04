@@ -1,3 +1,4 @@
+import { LabelIdentifier } from '../label/type';
 import { NotebookDocumentContent } from '../notebookEditor/proseMirror/document';
 import { NotebookSchemaVersion } from '../notebookEditor/proseMirror/schema';
 import { Creatable, ObjectTuple, Updatable } from '../util/datastore';
@@ -21,7 +22,7 @@ export type NotebookIdentifier = Identifier;
  *  document small. */
 // NOTE: if increased then move share Users to a separate sub-collection
 export const MAX_NOTEBOOK_SHARE_USERS = 10;
-export type Notebook = Creatable & Updatable & Readonly<{
+export type Notebook = Creatable & Updatable & Readonly<{ /*Firestore*/
   /** {@link NotebookType} set on creation only */
   type: NotebookType;
   /** the {@link NotebookSchemaVersion} of this Notebook set on creation only (or
@@ -65,11 +66,33 @@ export enum NotebookRole {
   Viewer = 'viewer',
 }
 
+// -- Version ---------------------------------------------------------------------
+// SEE: /notebookEditor/type.ts
+
+// -- Checkpoint ------------------------------------------------------------------
+// SEE: /notebookEditor/type.ts
+
+// -- Label User Share ------------------------------------------------------------
+// a sub-collection of Notebooks whose document ID is a the User identifier so that
+// Firestore Rules can check for the existence of a Notebook-User share (via a Label)
+// NOTE: documents are always fully written on any change to the role
+export type NotebookLabelUser = Creatable & Readonly<{ /*Firestore*/
+  /** the parent Notebook (for convenience when indexing) */
+  notebookId: NotebookIdentifier;
+  /** the identifier of the User that the Notebook is shared with via Label(s)
+   *  @see Label#viewers
+   *  @see Label#editors */
+  userId: UserIdentifier;
+
+  /** a set of Label-NotebookRole pairs for this Notebook-User */
+  labels: Record<LabelIdentifier, NotebookRole>;
+}>;
+
 // == Published Notebook ==========================================================
 export type PublishedNotebookIdentifier = Identifier;
 
 // NOTE: document Id is the same as the NotebookIdentifier that generated it
-export type PublishedNotebook = Creatable & Updatable & Readonly<{
+export type PublishedNotebook = Creatable & Updatable & Readonly<{ /*Firestore*/
   /** {@link NotebookVersion} index that this Published Notebook corresponds to */
   version: number;
 

@@ -12,6 +12,12 @@ export enum LabelVisibility {
   Public = 'public',
 }
 
+// ................................................................................
+/** the maximum number of Users that any Label may be shared with. This limit is
+ *  to keep the size of the Label document bounded and small. */
+// NOTE: if increased then move share Users to a separate sub-collection
+export const MAX_LABEL_SHARE_USERS = 10;
+
 // --------------------------------------------------------------------------------
 // NOTE: Labels (and all dependent documents) are *hard* deleted
 export type Label = Creatable & Updatable & Readonly<{ /*Firestore*/
@@ -30,14 +36,14 @@ export type Label = Creatable & Updatable & Readonly<{ /*Firestore*/
   // NOTE: because Firestore does not have 'OR' queries, 'viewers' contains *all*
   //       Users that can view associated Notebooks (including Editors) so that it
   //       is a single source of truth for this Label.
-  /** the set of User's that can view Notebooks associated with this Label. All
-   *  editors are also contained in this set. Bounded by {@link #MAX_NOTEBOOK_SHARE_USERS}.
-   *  @see #getNotebookShareRoles() */
-  notebookViewers: UserIdentifier[]/*effectively an unordered set*//*write-many server-written*/;
-  /** the set of User's that can edit Notebooks associated with this Label. Bounded
-   *  by {@link #MAX_NOTEBOOK_SHARE_USERS}.
-   *  @see #getNotebookShareRoles() */
-  notebookEditors: UserIdentifier[]/*effectively an unordered set*//*write-many server-written*/;
+  /** the set of User's that can view this Label and any associated Notebooks. All
+   *  editors are also contained in this set. Bounded by {@link #MAX_LABEL_SHARE_USERS}.
+   *  @see #getLabelShareRoles() */
+  viewers: UserIdentifier[]/*effectively an unordered set*//*write-many server-written*/;
+  /** the set of User's that can edit this Label and any associated Notebooks.
+   *  Bounded by {@link #MAX_LABEL_SHARE_USERS}.
+   *  @see #getLabelShareRoles() */
+  editors: UserIdentifier[]/*effectively an unordered set*//*write-many server-written*/;
 
   /** in order to support fast prefix (typeahead find) searches, at most
    *  #MAX_PREFIX_COUNT normalized prefixes of the Label's name */
@@ -49,9 +55,10 @@ export type Label = Creatable & Updatable & Readonly<{ /*Firestore*/
 
 // ................................................................................
 // a sub-collection of Labels whose document ID is the Notebook Identifier. The
-// number of Notebooks for a given Label is reflected in the corresponding
+// number of Notebooks for a given Label is reflected in the corresponding summary.
+// NOTE: documents are always fully written on any change to Label
 // LabelSummary (in RTDB)
-export type LabelNotebook = Updatable & Readonly<{ /*Firestore*/
+export type LabelNotebook = Creatable & Readonly<{ /*Firestore*/
   /** the parent Label (for convenience when indexing) */
   labelId: LabelIdentifier/*write-once server-written*/;
   /** the Notebook (for convenience when indexing) */
@@ -67,18 +74,21 @@ export type LabelNotebook = Updatable & Readonly<{ /*Firestore*/
   order: number/*write-many server-written*/;
 
   /** the Label's viewers to facilitate collection-group queries
-   *  @see Label#notebookViewers */
-  notebookViewers: UserIdentifier[]/*write-many server-written*/;
+   *  @see Label#viewers */
+  viewers: UserIdentifier[]/*write-many server-written*/;
   /** the Label's editors to facilitate collection-group queries
-   *  @see Label#notebookEditors */
-  notebookEditors: UserIdentifier[]/*write-many server-written*/;
+   *  @see Label#editors */
+  editors: UserIdentifier[]/*write-many server-written*/;
 }>;
 
 // -- Label Published (Firestore) -------------------------------------------------
 // to ensure that no internal information (e.g. viewer/editor lists) is exposed to
 // public Users, this copy of Label (where `visibility === 'public'`) is created
 // NOTE: the document ID is the Label Identifier
-export type LabelPublished = Readonly<{ /*Firestore*/
+// NOTE: these are not Updatable as there is no notion of 'first made visible' as
+//       there is with Notebooks and 'first published'
+// NOTE: documents are always fully written on any change to a public Label
+export type LabelPublished = Creatable & Readonly<{ /*Firestore*/
   /** the name of the Label (non-normalized, etc) */
   name: string/*write-many server-written*/;
 
@@ -97,8 +107,12 @@ export type LabelPublished = Readonly<{ /*Firestore*/
 // ................................................................................
 // the analog of LabelNotebook for Labels that are public *and* Notebooks that are
 // Published
+// NOTE: documents are always fully written on any change to a public Label
+// CHECK: probably want to denormalize the Notebook meta-data onto this structure
+//        since this would be used in cases of 'show all Notebooks for a Label'
+//        (rather than having to do the Notebook lookup on the client)
 // SEE: LabelPublished and LabelNotebook
-export type LabelNotebookPublished = Updatable & Readonly<{ /*Firestore*/
+export type LabelNotebookPublished = Creatable & Readonly<{ /*Firestore*/
   /** the parent public Label (for convenience when indexing) */
   labelId: LabelIdentifier/*write-once server-written*/;
   /** the Published Notebook (for convenience when indexing) */
