@@ -22,6 +22,9 @@ export abstract class AbstractCodeBlockAsyncNodeView<
   // ==============================================================================
   public constructor(model: NodeModel, editor: Editor, node: NodeType, asyncNodeStorage: Storage, getPos: getPosType) {
     super(model, editor, node, asyncNodeStorage, getPos);
+
+    // Sync view with current state
+    this.updateView();
   }
 
   // == View ======================================================================

@@ -21,6 +21,8 @@ export abstract class AbstractAsyncNodeView<T, NodeType extends AsyncNodeType, S
 
     this.content = this.createViewElement(node);
     this.dom.appendChild(this.content);
+
+    // Sync view with current state
     this.updateView();
   }
 
