@@ -1,5 +1,9 @@
+import { AsyncNode } from 'notebookEditor/extension/asyncNode/AsyncNode';
 import { Bold } from 'notebookEditor/extension/bold/Bold';
 import { CodeBlock } from 'notebookEditor/extension/codeblock/CodeBlock';
+import { CodeBlockAsyncNode } from 'notebookEditor/extension/codeBlockAsyncNode/CodeBlockAsyncNode';
+import { Demo2AsyncNode } from 'notebookEditor/extension/demo2AsyncNode/Demo2AsyncNode';
+import { DemoAsyncNode } from 'notebookEditor/extension/demoAsyncNode/DemoAsyncNode';
 import { Document } from 'notebookEditor/extension/document/Document';
 import { DropCursor } from 'notebookEditor/extension/dropCursor/DropCursor';
 import { GapCursor } from 'notebookEditor/extension/gapcursor/GapCursor';
@@ -11,6 +15,7 @@ import { Link } from 'notebookEditor/extension/link/Link';
 import { MarkHolder } from 'notebookEditor/extension/markHolder/MarkHolder';
 import { NodeViewRemoval } from 'notebookEditor/extension/nodeViewRemoval/NodeViewRemoval';
 import { Paragraph } from 'notebookEditor/extension/paragraph/Paragraph';
+import { ReplacedTextMark } from 'notebookEditor/extension/replacedTextMark/ReplacedTextMark';
 import { Strikethrough } from 'notebookEditor/extension/strikethrough/Strikethrough';
 import { Style } from 'notebookEditor/extension/style/Style';
 import { Text } from 'notebookEditor/extension/text/Text';
@@ -26,8 +31,12 @@ export const editorDefinition = {
   //       operations on the server-side and must be always be in sync
   // SEE: /common/notebookEditor/prosemirror/schema.ts
   extensions: [
+    AsyncNode,
     Bold,
     CodeBlock,
+    CodeBlockAsyncNode,
+    Demo2AsyncNode,
+    DemoAsyncNode,
     DropCursor,
     Document,
     GapCursor,
@@ -39,6 +48,7 @@ export const editorDefinition = {
     MarkHolder,
     NodeViewRemoval,
     Paragraph,
+    ReplacedTextMark,
     Strikethrough,
     Style,
     Text,

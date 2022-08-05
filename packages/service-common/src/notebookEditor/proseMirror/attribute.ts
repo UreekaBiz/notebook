@@ -28,12 +28,24 @@ export enum AttributeType {
   VerticalAlign = 'verticalAlign',
 
   // -- Custom --------------------------------------------------------------------
+  // .. General ...................................................................
+  Id = 'id',
+
+  // .. AsyncNode .................................................................
+  Status = 'status',
+
   // .. CodeBlock .................................................................
   Type = 'type',
   Wrap = 'wrap',
 
-  // .. General ...................................................................
-  Id = 'id',
+  // .. Demo AsyncNode ............................................................
+  CodeBlockReferences = 'codeBlockReferences',
+  CodeBlockHashes = 'codeBlockHashes',
+  Text = 'text',
+  Delay = 'delay',
+
+  // .. Demo 2 AsyncNode ..........................................................
+  TextToReplace = 'textToReplace',
 
   // .. Heading ...................................................................
   Level = 'level',

@@ -42,9 +42,33 @@ export {
   getRenderAttributes,
   isStyleAttribute,
 
+  AsyncNodeAttributes,
+  isAsyncNodeAttributes,
+
   CodeBlockAttributes,
   isCodeBlockAttributes,
   CodeBlockType,
+
+  CodeBlockAsyncNodeAttributes,
+  isCodeBlockAsyncNodeAttributes,
+  CodeBlockReference,
+  REMOVED_CODEBLOCK_VISUALID,
+
+  Demo2AsyncNodeAttributes,
+  DEFAULT_DEMO_2_ASYNC_NODE_ID,
+  DEFAULT_DEMO_2_ASYNC_NODE_DELAY,
+  DEFAULT_DEMO_2_ASYNC_NODE_STATUS,
+
+  DemoAsyncNodeAttributes,
+  createDefaultDemoAsyncNodeAttributes,
+  DEFAULT_DEMOASYNCNODE_ID,
+  DEFAULT_DEMOASYNCNODE_DELAY,
+  DEFAULT_DEMOASYNCNODE_STATUS,
+  DEFAULT_DEMOASYNCNODE_TEXT,
+  DEMO_ASYNCNODE_TEXT_STYLE,
+  DEMO_ASYNCNODE_STATUS_COLOR,
+  DEMO_ASYNCNODE_BORDER_COLOR,
+  DEMO_ASYNCNODE_DATA_STATE,
 
   HeadingLevel,
   getHeadingLevelFromTag,
@@ -80,9 +104,13 @@ export {
   getNodeName,
   getNodeOffset,
 
+  asyncNodes,
+
   // -- Node Specs ----------------------------------------------------------------
   NodeSpecs,
   CodeBlockNodeSpec,
+  DemoAsyncNodeSpec,
+  Demo2AsyncNodeSpec,
   DocumentNodeSpec,
   HeadingNodeSpec,
   ImageNodeSpec,
@@ -92,9 +120,23 @@ export {
   getNodeOutputSpec,
 
   // -- Node Types ----------------------------------------------------------------
+  AsyncNodeType,
+  isAsyncNode,
+
   CodeBlockNodeType,
   getCodeblockNodeType,
   isCodeBlockNode,
+
+  CodeBlockAsyncNodeType,
+  isCodeBlockAsyncNode,
+
+  Demo2AsyncNodeType,
+  getDemo2AsyncNodeNodeType,
+  isDemo2AsyncNode,
+
+  DemoAsyncNodeType,
+  getDemoAsyncNodeNodeType,
+  isDemoAsyncNode,
 
   DocumentNodeType,
   getDocumentNodeType,
@@ -130,6 +172,7 @@ export {
   BoldMarkSpec,
   LinkMarkSpec,
   MarkSpecs,
+  ReplacedTextMarkMarkSpec,
   StrikethroughMarkSpec,
   TextStyleMarkSpec,
 
@@ -145,6 +188,11 @@ export {
   createLinkMark,
   getLinkMarkType,
   isLinkMark,
+
+  ReplacedTextMarkMarkType,
+  createReplacedTextMarkMark,
+  getReplacedTextMarkMarkType,
+  isReplacedTextMarkMark,
 
   StrikethroughMarkType,
   createStrikethroughMark,
@@ -165,6 +213,8 @@ export {
 
   // -- HTML Render Specs ---------------------------------------------------------
   CodeBlockNodeRendererSpec,
+  Demo2AsyncNodeRendererSpec,
+  DemoAsyncNodeRendererSpec,
   DocumentNodeRendererSpec,
   HeadingNodeRendererSpec,
   ParagraphNodeRendererSpec,
@@ -193,11 +243,19 @@ export {
 
   VisualIdMap,
 
+  // -- Async ---------------------------------------------------------------------
+  asyncNodeStatusToColor,
+  nonEditableWhileOperatingAsyncNodes,
+  AsyncNodeStatus,
+  ASYNC_NODE_DIRTY_DATATYPE,
+
   // ------------------------------------------------------------------------------
   getParentNode,
   getWrapStyles,
   computeRemovedNodeObjs,
   findContentDifferencePositions,
   getNodesAffectedByStepMap,
+  nodeToTagId,
   wereNodesAffectedByTransaction,
+  NodeFound,
 } from '@ureeka-notebook/service-common';

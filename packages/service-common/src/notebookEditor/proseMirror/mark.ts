@@ -14,6 +14,7 @@ export type JSONMark<A extends Attributes = {}> = {
 export enum MarkName {
   BOLD = 'bold',
   LINK = 'link',
+  REPLACED_TEXT_MARK = 'replacedTextMark',
   STRIKETHROUGH = 'strikethrough',
   TEXT_STYLE = 'textStyle',
 }
@@ -35,4 +36,4 @@ export const getMarkValue = (node: ProseMirrorNode, markName: MarkName, attribut
 };
 
 // returns a string with the names of all allowed Marks for a Node
-export const getAllowedMarks = (allowedMarks: MarkName[]) => Object.values(MarkName).filter(markName => allowedMarks.includes(markName)).join(' ');
+export const getAllowedMarks = (allowedMarks: MarkName[]) => allowedMarks.join(' ');

@@ -10,6 +10,7 @@ export {
   groupBy,
   orderedGroupBy,
   splitIntoChunks,
+  swap,
 
   // SEE: @ureeka-notebook/service-common: util/datastore.ts
   objectTuple,

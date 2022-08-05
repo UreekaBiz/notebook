@@ -2,12 +2,15 @@ import { MarkSpec, NodeSpec, Schema } from 'prosemirror-model';
 
 import { createApplicationError } from '../../util/error';
 import { BoldMarkSpec } from './extension/bold';
+import { Demo2AsyncNodeSpec } from './extension/demo2AsyncNode';
+import { DemoAsyncNodeSpec } from './extension/demoAsyncNode';
 import { DocumentNodeSpec } from './extension/document';
 import { HeadingNodeSpec } from './extension/heading';
 import { ImageNodeSpec } from './extension/image';
 import { LinkMarkSpec } from './extension/link';
 import { MarkHolderNodeSpec } from './extension/markHolder';
 import { ParagraphNodeSpec } from './extension/paragraph';
+import { ReplacedTextMarkMarkSpec } from './extension/replacedTextMark';
 import { StrikethroughMarkSpec } from './extension/strikethrough';
 import { TextNodeSpec } from './extension/text';
 import { TextStyleMarkSpec } from './extension/textStyle';
@@ -24,7 +27,10 @@ export const NodeSpecs: Record<NodeName, NodeSpec> = {
   //       (SEE: web/src/notebookEditor/model/type/ExtensionPriority.ts)
   [NodeName.DOC]: DocumentNodeSpec,
   [NodeName.PARAGRAPH]: ParagraphNodeSpec,
+
   [NodeName.CODEBLOCK]: DocumentNodeSpec,
+  [NodeName.DEMO_2_ASYNC_NODE]: Demo2AsyncNodeSpec,
+  [NodeName.DEMO_ASYNCNODE]: DemoAsyncNodeSpec,
   [NodeName.HEADING]: HeadingNodeSpec,
   [NodeName.IMAGE]: ImageNodeSpec,
   [NodeName.MARK_HOLDER]: MarkHolderNodeSpec,
@@ -32,8 +38,9 @@ export const NodeSpecs: Record<NodeName, NodeSpec> = {
 };
 
 export const MarkSpecs: Record<MarkName, MarkSpec> = {
-  [MarkName.LINK]: LinkMarkSpec,
   [MarkName.BOLD]: BoldMarkSpec,
+  [MarkName.LINK]: LinkMarkSpec,
+  [MarkName.REPLACED_TEXT_MARK]: ReplacedTextMarkMarkSpec,
   [MarkName.STRIKETHROUGH]: StrikethroughMarkSpec,
   [MarkName.TEXT_STYLE]: TextStyleMarkSpec,
 };

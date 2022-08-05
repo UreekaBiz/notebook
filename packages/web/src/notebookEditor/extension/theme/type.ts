@@ -66,6 +66,21 @@ export const DefaultTheme: Theme = {
       [AttributeType.MarginBottom]: '0.5rem',
     },
     [NodeName.DOC]: {/*no defined value*/},
+    [NodeName.DEMO_2_ASYNC_NODE]: {
+      [AttributeType.TextColor]: '#000',
+      [AttributeType.FontSize]: '16px',
+
+      [AttributeType.PaddingLeft]: '4px',
+      [AttributeType.PaddingRight]: '4px',
+      [AttributeType.PaddingTop]: '4px',
+      [AttributeType.PaddingBottom]: '4px',
+
+      [AttributeType.MarginLeft]: '4px',
+      [AttributeType.MarginRight]: '4px',
+      [AttributeType.MarginTop]: '0.5rem',
+      [AttributeType.MarginBottom]: '0.5rem',
+    },
+    [NodeName.DEMO_ASYNCNODE]: {/*no defined value*/},
     [NodeName.HEADING]: {
       [AttributeType.MarginLeft]: '4px',
       [AttributeType.MarginRight]: '4px',
@@ -92,6 +107,7 @@ export const DefaultTheme: Theme = {
     [MarkName.LINK]:  {
       [AttributeType.TextColor]: '#1a73e8',
     },
+    [MarkName.REPLACED_TEXT_MARK]:  {/*no defined value*/},
     [MarkName.STRIKETHROUGH]:  {/*no defined value*/},
     [MarkName.TEXT_STYLE]:  {/*no defined value*/},
   },
@@ -132,6 +148,21 @@ export const GoogleDocsTheme: Theme = {
       [AttributeType.MarginBottom]: '0.5rem',
     },
     [NodeName.DOC]: {/*no defined value*/},
+    [NodeName.DEMO_2_ASYNC_NODE]: {
+      [AttributeType.TextColor]: '#000',
+      [AttributeType.FontSize]: '16px',
+
+      [AttributeType.PaddingLeft]: '4px',
+      [AttributeType.PaddingRight]: '4px',
+      [AttributeType.PaddingTop]: '4px',
+      [AttributeType.PaddingBottom]: '4px',
+
+      [AttributeType.MarginLeft]: '4px',
+      [AttributeType.MarginRight]: '4px',
+      [AttributeType.MarginTop]: '0.5rem',
+      [AttributeType.MarginBottom]: '0.5rem',
+    },
+    [NodeName.DEMO_ASYNCNODE]: {/*no defined value*/},
     [NodeName.HEADING]: {
       [AttributeType.MarginLeft]: '4px',
       [AttributeType.MarginBottom]: '0.25rem',
@@ -157,6 +188,7 @@ export const GoogleDocsTheme: Theme = {
     [MarkName.LINK]:  {
       [AttributeType.TextColor]: '#1a73e8',
     },
+    [MarkName.REPLACED_TEXT_MARK]:  {/*no defined value*/},
     [MarkName.STRIKETHROUGH]: {/*no defined value*/},
     [MarkName.TEXT_STYLE]: {/*no defined value*/},
   },

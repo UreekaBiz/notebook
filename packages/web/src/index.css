@@ -49,6 +49,55 @@
   font-size: 16px;
 }
 
+/* .. Demo2AsyncNode ........................................................... */
+[data-node-type="demo2AsyncNode"] {
+  background: rgba(0,0,0,0.1);
+  border-radius: 4px;
+}
+
+[data-node-type="demo2AsyncNode"].performing-async-operation{
+  background: rgba(0,0,0,0.3);
+}
+
+/* .. DemoAsyncNode ............................................................ */
+[data-node-type="demoAsyncNode"] > [data-async-node-dirty] {
+  border-color: red !important;
+}
+
+[data-demoasyncnodestate]::after {
+  content: '';
+  display: inline-block;
+  width: 0.75em;
+  height: 0.75em;
+  margin-left: 0.35em;
+  border-radius: 7.5px;
+  background-color: var(--status-color);
+}
+
+/* .. Chip ..................................................................... */
+.chip {
+  display: inline-block;
+  height: 40px;
+  padding: 0 15px;
+  background-color: #4299E1;
+  border-radius: 40px;
+  color: white;
+  line-height: 40px;
+  font-size: 16px;
+  cursor: grab;
+}
+
+.chipCloseButton {
+  margin-left: 15px;
+  color: white;
+  cursor: pointer;
+  float: right;
+  font-size: 20px;
+  font-weight: bold;
+}
+.chipCloseButton:hover { color: red; }
+.chipCloseButton:focus { color: red; }
+
 /* .. MarkHolder ............................................................... */
 [data-node-type="markHolder"] {
   /*
