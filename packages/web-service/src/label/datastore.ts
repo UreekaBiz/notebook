@@ -86,6 +86,12 @@ export const labelPublishedQuery = (filter: LabelPublishedFilter) => {
   return buildQuery;
 };
 
+// .. Notebook ....................................................................
+// TODO: the inability to sort here is another reason to denormalize the Notebook
+//       record on LabelNotebook
+export const labelNotebookPublishedQuery = (labelId: LabelIdentifier) =>
+  query(labelNotebookPublishedCollection(labelId));
+
 // ** RTDB ************************************************************************
 // == Collection ==================================================================
 // -- Label Summary -------------------------------------------------------------

@@ -1,9 +1,9 @@
-import { LabelIdentifier, LabelTuple, Label_Storage, LabelPublished_Storage, LabelNotebook_Storage, LabelNotebookTuple, LabelPublishedTuple } from '@ureeka-notebook/service-common';
+import { LabelIdentifier, LabelTuple, Label_Storage, LabelPublished_Storage, LabelNotebook_Storage, LabelNotebookTuple, LabelPublishedTuple, LabelNotebookPublishedTuple, LabelNotebookPublished_Storage } from '@ureeka-notebook/service-common';
 
 import { defaultDocumentConverter, defaultDocumentTupleConverter, defaultTupleConverter } from '../util/firestore';
-import { QueryObservable } from '../util/observableCollection';
+import { QueryObservable, QuerySnapshotObservable } from '../util/observableCollection';
 import { documentOnce } from '../util/observableDocument';
-import { queryTuples } from '../util/observableTupleCollection';
+import { queryTuples, snapshotTuplesOnce } from '../util/observableTupleCollection';
 import { documentTuple } from '../util/observableTupleDocument';
 import { labelDocument, labelQuery, labelPublishedDocument, labelPublishedQuery } from './datastore';
 import { LabelFilter, LabelPublishedFilter } from './type';
@@ -32,6 +32,10 @@ export const labelPublishedOnceById$ = (labelId: LabelIdentifier) =>
   documentOnce(labelPublishedDocument(labelId), defaultDocumentConverter);
 export const labelPublishedById$ = (labelId: LabelIdentifier) =>
   documentTuple(labelPublishedDocument(labelId), defaultDocumentTupleConverter);
+
+// -- Notebook --------------------------------------------------------------------
+export const labelNotebooksPublishedSnapshot$: QuerySnapshotObservable<LabelNotebookPublished_Storage, LabelNotebookPublishedTuple> =
+  snapshot => snapshotTuplesOnce(snapshot, defaultTupleConverter);
 
 // -- Search ----------------------------------------------------------------------
 export const labelPublishedsQuery$: QueryObservable<LabelPublished_Storage, LabelPublishedTuple> =
