@@ -1,4 +1,4 @@
-import { asyncNodeStatusToColor, getRenderAttributes, AsyncNodeStatus, AttributeType, DemoAsyncNodeRendererSpec, DemoAsyncNodeSpec, DemoAsyncNodeType, NodeName, DEMO_ASYNCNODE_TEXT_STYLE, DEMO_ASYNCNODE_STATUS_COLOR, DEMO_ASYNCNODE_BORDER_COLOR, DEMO_ASYNCNODE_DATA_STATE } from '@ureeka-notebook/web-service';
+import { asyncNodeStatusToColor, getRenderAttributes, AsyncNodeStatus, AttributeType, DemoAsyncNodeRendererSpec, DemoAsyncNodeSpec, DemoAsyncNodeType, NodeName, DEMO_ASYNC_NODE_TEXT_STYLE, DEMO_ASYNC_NODE_STATUS_COLOR, DEMO_ASYNC_NODE_BORDER_COLOR, DEMO_ASYNC_NODE_DATA_STATE } from '@ureeka-notebook/web-service';
 
 import { AbstractCodeBlockAsyncNodeView } from 'notebookEditor/extension/codeBlockAsyncNode/nodeView/view';
 import { createTextSpan } from 'notebookEditor/extension/codeBlockAsyncNode/ui';
@@ -23,10 +23,10 @@ export class DemoAsyncNodeView extends AbstractCodeBlockAsyncNodeView<string, De
     // Update styles
     const statusColor = performingAsyncOperation ? asyncNodeStatusToColor(AsyncNodeStatus.PROCESSING) : asyncNodeStatusToColor(status);
     const renderAttributes = getRenderAttributes(NodeName.DEMO_ASYNC_NODE, attrs, DemoAsyncNodeRendererSpec, DemoAsyncNodeSpec);
-    const style = `${renderAttributes.style ?? ''/*empty string if not present*/} ${DEMO_ASYNCNODE_TEXT_STYLE} ${DEMO_ASYNCNODE_STATUS_COLOR}: ${statusColor}; ${DEMO_ASYNCNODE_BORDER_COLOR};`;
+    const style = `${renderAttributes.style ?? ''/*empty string if not present*/} ${DEMO_ASYNC_NODE_TEXT_STYLE} ${DEMO_ASYNC_NODE_STATUS_COLOR}: ${statusColor}; ${DEMO_ASYNC_NODE_BORDER_COLOR};`;
     this.content.setAttribute('style', style);
 
-    this.content.setAttribute(DEMO_ASYNCNODE_DATA_STATE, ''/*does not need a value*/);
+    this.content.setAttribute(DEMO_ASYNC_NODE_DATA_STATE, ''/*does not need a value*/);
 
     if(this.content.innerHTML !== attrs.text) this.content.innerHTML = attrs.text;
     /* else -- current view matches state */

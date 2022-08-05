@@ -49,7 +49,7 @@ const renderDemoAsyncNodeView = (attributes: DemoAsyncNodeAttributes) => {
   //       (hence it is a single line below)
   // NOTE: createNodeDataTypeAttribute must be used for all nodeRenderSpecs
   //       that define their own renderNodeView
-  return `<span ${createNodeDataTypeAttribute(NodeName.DEMO_ASYNC_NODE)} style="position: relative; display: inline; ${renderAttributes.style ?? ''}"><span style="${DEMO_ASYNCNODE_TEXT_STYLE} ${DEMO_ASYNCNODE_STATUS_COLOR}: ${asyncNodeStatusToColor(status)};" ${DEMO_ASYNCNODE_DATA_STATE}="">${text}</span></span>`;
+  return `<span ${createNodeDataTypeAttribute(NodeName.DEMO_ASYNC_NODE)} style="position: relative; display: inline; ${renderAttributes.style ?? ''}"><span style="${DEMO_ASYNC_NODE_TEXT_STYLE} ${DEMO_ASYNC_NODE_STATUS_COLOR}: ${asyncNodeStatusToColor(status)};" ${DEMO_ASYNC_NODE_DATA_STATE}="">${text}</span></span>`;
 };
 
 export const DemoAsyncNodeRendererSpec: NodeRendererSpec<DemoAsyncNodeAttributes> = {
@@ -61,10 +61,10 @@ export const DemoAsyncNodeRendererSpec: NodeRendererSpec<DemoAsyncNodeAttributes
   attributes: {/*no need to render attributes*/},
 };
 
-export const DEFAULT_DEMOASYNCNODE_ID = `Default DemoAsyncNode ID`;
-export const DEFAULT_DEMOASYNCNODE_STATUS = DEFAULT_CODEBLOCK_ASYNC_NODE_STATUS/*alias*/;
-export const DEFAULT_DEMOASYNCNODE_TEXT = 'Not Executed'/*creation default*/;
-export const DEFAULT_DEMOASYNCNODE_DELAY = 4000/*ms*/;
+export const DEFAULT_DEMO_ASYNC_NODE_ID = `Default DemoAsyncNode ID`;
+export const DEFAULT_DEMO_ASYNC_NODE_STATUS = DEFAULT_CODEBLOCK_ASYNC_NODE_STATUS/*alias*/;
+export const DEFAULT_DEMO_ASYNC_NODE_TEXT = 'Not Executed'/*creation default*/;
+export const DEFAULT_DEMO_ASYNC_NODE_DELAY = 4000/*ms*/;
 
 // == Type ========================================================================
 // -- Node Type -------------------------------------------------------------------
@@ -83,10 +83,10 @@ export const isDemoAsyncNodeJSONNode = (node: JSONNode): node is DemoAsyncNodeJS
 
 // == Util ========================================================================
 export const createDefaultDemoAsyncNodeAttributes = (): Partial<DemoAsyncNodeAttributes> =>
-  ({ ...createDefaultCodeBlockAsyncNodeAttributes(), [AttributeType.Delay]: DEFAULT_DEMOASYNCNODE_DELAY });
+  ({ ...createDefaultCodeBlockAsyncNodeAttributes(), [AttributeType.Delay]: DEFAULT_DEMO_ASYNC_NODE_DELAY });
 
 // == CSS =========================================================================
-export const DEMO_ASYNCNODE_TEXT_STYLE = 'padding: 4px; margin-left: 4px; margin-right: 4px; border: 1px solid; border-color: #CBD5E0; border-radius: 4px; background: #EDF2F7; word-break: break-word;';
-export const DEMO_ASYNCNODE_STATUS_COLOR = '--status-color';
-export const DEMO_ASYNCNODE_DATA_STATE = 'data-demoasyncnodestate';
-export const DEMO_ASYNCNODE_BORDER_COLOR = 'border-color: #CBD5E0;';
+export const DEMO_ASYNC_NODE_TEXT_STYLE = 'padding: 4px; margin-left: 4px; margin-right: 4px; border: 1px solid; border-color: #CBD5E0; border-radius: 4px; background: #EDF2F7; word-break: break-word;';
+export const DEMO_ASYNC_NODE_STATUS_COLOR = '--status-color';
+export const DEMO_ASYNC_NODE_DATA_STATE = 'data-demoasyncnodestate';
+export const DEMO_ASYNC_NODE_BORDER_COLOR = 'border-color: #CBD5E0;';

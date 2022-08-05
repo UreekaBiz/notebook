@@ -37,7 +37,7 @@ const demoAsyncNodeDelayTool: ToolItem = {
   name: 'demoAsyncNodeDelayTool',
 
   component: DemoAsyncNodeDelaySlider,
-  shouldShow: (editor) => selectionIsOfType(editor.state.selection, NodeName.DEMO_ASYNCNODE),
+  shouldShow: (editor) => selectionIsOfType(editor.state.selection, NodeName.DEMO_ASYNC_NODE),
 };
 
 const demoAsyncNodeChipTool: ToolItem = {
@@ -45,13 +45,13 @@ const demoAsyncNodeChipTool: ToolItem = {
   name: 'demoAsyncNodeChipTool',
 
   component: DemoAsyncNodeChipSelector,
-  shouldShow: (editor) => selectionIsOfType(editor.state.selection, NodeName.DEMO_ASYNCNODE),
+  shouldShow: (editor) => selectionIsOfType(editor.state.selection, NodeName.DEMO_ASYNC_NODE),
 };
 
 // == Toolbar =====================================================================
 export const DemoAsyncNodeToolbar: Toolbar = {
   title: 'Demo Async Node',
-  name: NodeName.DEMO_ASYNCNODE,
+  name: NodeName.DEMO_ASYNC_NODE,
   rightContent: ExecuteDemoAsyncNodeButton,
   toolsCollections: [
     [
