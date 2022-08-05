@@ -67,7 +67,9 @@ export class Demo2AsyncNodeModel extends AbstractAsyncNodeModel<string, Demo2Asy
   }
 
   public isAsyncNodeDirty(): boolean {
-    return false;/*FIXME: Development*/
+    // FIXME: discuss and implement the conditions for a Demo2AsyncNode
+    //        to be considered dirty
+    return false;
   }
 }
 
