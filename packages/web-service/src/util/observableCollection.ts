@@ -8,7 +8,7 @@ import { fromQuery, fromQueryOnce } from './observableFirestore';
 // SEE: #scrollableQuery()
 export type QueryObservable<T, R> = (query: Query<T>) => Observable<R[]>;
 // SEE: #paginatedQuery()
-export type QuerySnapshotObservable<T, R> = (snapshotObservable: Observable<QuerySnapshot<T>>) => Observable<R[]>;
+export type QuerySnapshotObservable<T, R> = (snapshot: QuerySnapshot<T>) => Observable<R[]>;
 
 // == Query => Observable Snapshot ================================================
 export const querySnapshots = <T = DocumentData>(query: Query<T>): Observable<QueryDocumentSnapshot<T>[]> =>
