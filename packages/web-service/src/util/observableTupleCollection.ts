@@ -1,5 +1,5 @@
-import { refEqual, DocumentChange, DocumentData, DocumentReference, Query, QueryDocumentSnapshot } from 'firebase/firestore';
-import { Observable } from 'rxjs';
+import { refEqual, DocumentChange, DocumentData, DocumentReference, Query, QueryDocumentSnapshot, QuerySnapshot } from 'firebase/firestore';
+import { of, Observable } from 'rxjs';
 import { distinctUntilChanged, map, scan } from 'rxjs/operators';
 
 import { ObjectTuple } from '@ureeka-notebook/service-common';
@@ -8,6 +8,10 @@ import { TupleConverter } from './firestore';
 import { queryCollectionChanges, querySnapshotsOnce } from './observableCollection';
 
 // ********************************************************************************
+// == Snapshot => Observable Tuple ================================================
+export const snapshotTuplesOnce = <F extends DocumentData, I, T>(snapshot: QuerySnapshot<F>, tupleConverter: TupleConverter<I, F, T>): Observable<ObjectTuple<I, T>[]> =>
+  of(snapshot.docs.map(snapshot => snapshotToTuple(snapshot, tupleConverter)));
+
 // == Query => Observable Tuple ===================================================
 export const queryTuples = <F extends DocumentData, I, T>(query: Query<F>, tupleConverter: TupleConverter<I, F, T>): Observable<ObjectTuple<I, T>[]> =>
   observableTuples(queryCollectionChanges(query), tupleConverter);

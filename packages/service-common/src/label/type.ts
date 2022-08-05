@@ -1,5 +1,6 @@
 import { NotebookIdentifier } from '../notebook/type';
 import { Creatable, ObjectTuple, Updatable } from '../util/datastore';
+import { Timestamp } from '../util/firestore';
 import { Identifier } from '../util/type';
 import { UserIdentifier } from '../util/user';
 
@@ -79,14 +80,19 @@ export type LabelNotebook = Creatable & Readonly<{ /*Firestore*/
   /** the Notebook's order within the Label. For unordered Labels, this is unused
    *  but still has a valid value. This value is *not* explicitly dense -- it may
    *  be sparse. */
-  order: number/*write-many server-written*/;
+  // NOTE: the use of Timestamp is the poor man's way to always ensure that the
+  //       last-added Notebook is ordered last. Specifically, any manually ordered
+  //       entries start at '0' (ensuring that they're always less than the current
+  //       timestamp). New Notebooks are added using the ServerTimestamp.
+  order: Timestamp/*write-many server-written*/;
 
-  /** the Label's viewers to facilitate collection-group queries
-   *  @see Label#viewers */
-  viewers: UserIdentifier[]/*write-many server-written*/;
-  /** the Label's editors to facilitate collection-group queries
-   *  @see Label#editors */
-  editors: UserIdentifier[]/*write-many server-written*/;
+  // FIXME: remove!
+  // /** the Label's viewers to facilitate collection-group queries
+  //  *  @see Label#viewers */
+  // viewers: UserIdentifier[]/*write-many server-written*/;
+  // /** the Label's editors to facilitate collection-group queries
+  //  *  @see Label#editors */
+  // editors: UserIdentifier[]/*write-many server-written*/;
 }>;
 export type LabelNotebookTuple = ObjectTuple<NotebookIdentifier, LabelNotebook>;
 
@@ -135,8 +141,9 @@ export type LabelNotebookPublished = Creatable & Readonly<{ /*Firestore*/
 
   /** the LabelNotebook's order
    *  @see LabelNotebook#order */
-  order: number/*write-many server-written*/;
+  order: Timestamp/*write-many server-written*/;
 }>;
+export type LabelNotebookPublishedTuple = ObjectTuple<NotebookIdentifier, LabelNotebookPublished>;
 
 // == Label Summary (RTDB) ========================================================
 // SEE: ./datastore.ts: LABEL_SUMMARY

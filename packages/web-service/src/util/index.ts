@@ -54,6 +54,7 @@ export {
   NumberComparator,
   StringComparator,
   StringNumberComparator,
+  TimestampComparator,
 
   // SEE: @ureeka-notebook/service-common: util/schema.ts
   emailSchema,

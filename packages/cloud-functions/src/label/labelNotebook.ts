@@ -4,7 +4,7 @@ import { LabelIdentifier, LabelVisibility, LabelNotebook_Write, Label_Storage, N
 
 import { firestore } from '../firebase';
 import { ApplicationError } from '../util/error';
-import { ServerTimestamp } from '../util/firestore';
+import { writeBatch, ServerTimestamp } from '../util/firestore';
 import { labelNotebookCollection, labelDocument } from './datastore';
 
 // ********************************************************************************
@@ -19,22 +19,21 @@ export const addNotebook = async (
     await firestore.runTransaction(async transaction => {
       const snapshot = await transaction.get(labelRef);
       if(!snapshot.exists) throw new ApplicationError('functions/not-found', `Cannot add a Notebook (${notebookId}) to a non-existing Label (${labelId}) for User (${userId}).`);
-      const parentLabel = snapshot.data()! as Label_Storage/*by definition*/;
+      const parentLabel = snapshot.data()!;
 
       const labelNotebook: LabelNotebook_Write = {
         labelId,
         notebookId,
 
-        viewers: []/*FIXME: figure out if really necessary*/,
-        editors: []/*FIXME: figure out if really necessary*/,
-
         name: parentLabel.name,
-        order: 1/*FIXME*/,
+        order: ServerTimestamp,
 
         createdBy: userId,
         createTimestamp: ServerTimestamp/*by contract*/,
       };
       await labelNotebookRef.set(labelNotebook)/*'set' and not 'create' by contract*/;
+
+      // FIXME: update Notebook's permissions based on the Label's permissions
 
       if(parentLabel.visibility === LabelVisibility.Public) {
         // FIXME: check if the Notebook is published and if so then also write to the published collection
@@ -57,13 +56,40 @@ export const removeNotebook = async (
     await firestore.runTransaction(async transaction => {
       const snapshot = await transaction.get(labelRef);
       if(!snapshot.exists) throw new ApplicationError('functions/not-found', `Cannot remove Notebook (${notebookId}) from a non-existing Label (${labelId}) for User (${userId}).`);
+      const parentLabel = snapshot.data()!;
 
       // NOTE: there is no existence check for the LabelNotebook document by contract
       transaction.delete(labelNotebookRef);
+
+      // FIXME: update Notebook's permissions based on the Label's permissions
+
+      if(parentLabel.visibility === LabelVisibility.Public) {
+        // FIXME: check if the Notebook is published and if so then also remove from the published collection
+      } /* else -- the parent Label is private and nothing else needs to be done */
     });
   } catch(error) {
     if(error instanceof ApplicationError) throw error;
     throw new ApplicationError('datastore/write', `Error removing Notebook (${notebookId}) from Label (${labelId}) for User (${userId}). Reason: `, error);
+  }
+};
+
+// --------------------------------------------------------------------------------
+// NOTE: because Labels are hard-deleted, there no need to worry about doing this
+//       in the same transaction. (This can just keep retrying until it succeeds.)
+export const removeAllNotebooks = async (userId: UserIdentifier, labelId: LabelIdentifier) => {
+  // TODO: this should retry until it succeeds
+  try {
+    const labelNotebookRefs = await labelNotebookCollection(labelId).listDocuments();
+    await writeBatch(labelNotebookRefs.values(), (batch, notebookRef) => batch.delete(notebookRef))/*throws on error*/;
+
+    // FIXME: remove all from Label Notebooks Published (doesn't check visibility
+    //        to ensure any turds are removed)
+
+    // FIXME: update Notebook's permissions to remove Label-related
+
+  } catch(error) {
+    if(error instanceof ApplicationError) throw error;
+    throw new ApplicationError('datastore/write', `Error removing all Notebooks for Label (${labelId}) for User (${userId}). Reason: `, error);
   }
 };
 
