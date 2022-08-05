@@ -1,13 +1,13 @@
 import { lastValueFrom, Observable } from 'rxjs';
 
-import { Label, LabelIdentifier, LabelTuple, ObjectTuple, LabelPublished, LabelPublishedTuple, LabelNotebookTuple, LabelNotebookPublishedTuple, NotebookIdentifier, ShareRole, UserIdentifier } from '@ureeka-notebook/service-common';
+import { Label, LabelIdentifier, LabelTuple, ObjectTuple, LabelPublished, LabelPublishedTuple, LabelNotebookTuple, LabelNotebookPublishedTuple, NotebookIdentifier, NotebookTuple, ShareRole, UserIdentifier } from '@ureeka-notebook/service-common';
 
 import { getLogger, ServiceLogger } from '../logging';
 import { ApplicationError } from '../util/error';
 import { Scrollable, scrollableQuery } from '../util/observableScrolledCollection';
 import { labelNotebookPublishedQuery, labelNotebookQuery, labelPublishedQuery, labelQuery } from './datastore';
 import { labelCreate, labelDelete, labelNotebookAdd, labelNotebookRemove, labelNotebookReorder, labelShare, labelUpdate } from './function';
-import { labelById$, labelNotebooksPublishedSnapshot$, labelNotebooksQuery$, labelOnceById$, labelPublishedById$, labelPublishedOnceById$, labelPublishedsQuery$, labelsQuery$ } from './observable';
+import { labelById$, labelNotebooksPublishedSnapshot$, labelNotebooksSnapshot$, labelOnceById$, labelPublishedById$, labelPublishedOnceById$, labelPublishedsQuery$, labelsQuery$, notebooksSnapshot$ } from './observable';
 import { Label_Create, Label_Update, LabelFilter, LabelPublishedFilter } from './type';
 import { paginatedQuery, Pagination } from '../util/observablePaginatedCollection';
 
@@ -52,16 +52,26 @@ export class LabelService {
 
   // .. Notebook ..................................................................
   /**
-   * @param labelId the identifier of the {@link Label} for which the {@link Notebook}s
-   *        are desired. Permission denied will occur in the Observable if the
-   *        caller is not a Creator of the {@link Label} or listed as one of the
-   *        {@link Label#viewers} or {@link Label#editors}.
-   * @param scrollSize the number of Notebooks returned per batch
-   * @returns {@link Scrollable} over the collection of {@link LabelNotebook}s
+   * @param labelId the identifier of the {@link Label} for the desired {@link LabelNotebook}s
+   * @param pageSize the number of Notebooks returned per page
+   * @returns {@link Pagination} over the collection of {@link LabelNotebook}s
    */
-  public onNotebooks(labelId: LabelIdentifier, scrollSize: number = LabelService.DEFAULT_SCROLL_SIZE): Scrollable<LabelNotebookTuple> {
-    return scrollableQuery(labelNotebookQuery(labelId), labelNotebooksQuery$, scrollSize,
-                           `Label (${labelId}}) Notebooks`);
+  public onLabelNotebooks(labelId: LabelIdentifier, pageSize: number = LabelService.DEFAULT_SCROLL_SIZE): Pagination<LabelNotebookTuple> {
+    return paginatedQuery(labelNotebookQuery(labelId), labelNotebooksSnapshot$, pageSize,
+                          `Label (${labelId}}) Notebooks`);
+  }
+
+  /**
+   * @param labelId the identifier of the {@link Label} for the desired {@link Notebook}s.
+   *        Permission denied will occur in the Observable if the caller is not a
+   *        Creator of the {@link Label} or listed as one of the {@link Label#viewers}
+   *        or {@link Label#editors}.
+   * @param pageSize the number of Notebooks returned per batch
+   * @returns {@link Pagination} over the collection of {@link Notebook}s
+   */
+  public onNotebooks(labelId: LabelIdentifier, pageSize: number = LabelService.DEFAULT_SCROLL_SIZE): Pagination<NotebookTuple> {
+    return paginatedQuery(labelNotebookQuery(labelId), notebooksSnapshot$, pageSize,
+                          `Label (${labelId}}) Notebooks`);
   }
 
   // -- Label Published -----------------------------------------------------------
@@ -87,11 +97,11 @@ export class LabelService {
   // .. Notebook ..................................................................
   /**
    * @param labelId the identifier of the {@link Label} for which the Published
-   *        {@link Notebook}s are desired.
+   *        {@link LabelNotebook}s are desired.
    * @param pageSize the number of Published Notebooks returned per page
    * @returns {@link Pagination} over the collection of {@link LabelNotebook}s
    */
-  public onNotebooksPublished(labelId: LabelIdentifier, pageSize: number = LabelService.DEFAULT_SCROLL_SIZE): Pagination<LabelNotebookPublishedTuple> {
+  public onLabelNotebooksPublished(labelId: LabelIdentifier, pageSize: number = LabelService.DEFAULT_SCROLL_SIZE): Pagination<LabelNotebookPublishedTuple> {
     return paginatedQuery(labelNotebookPublishedQuery(labelId), labelNotebooksPublishedSnapshot$, pageSize,
                           `Published Label (${labelId}}) Published Notebooks`);
   }
