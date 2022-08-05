@@ -10,6 +10,7 @@ import { AsyncNodeAttributeSpec, DEFAULT_ASYNC_NODE_STATUS } from './asyncNode';
 
 // ********************************************************************************
 // == Attribute ===================================================================
+// NOTE: must be present on the NodeSpec below
 // NOTE: This values must have matching types the ones defined in the Extension
 const Demo2AsyncNodeAttributeSpec = {
   ...AsyncNodeAttributeSpec,

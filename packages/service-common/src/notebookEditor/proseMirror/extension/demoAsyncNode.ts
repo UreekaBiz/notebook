@@ -11,6 +11,7 @@ import { CodeBlockAsyncNodeAttributeSpec, createDefaultCodeBlockAsyncNodeAttribu
 
 // ********************************************************************************
 // == Attribute ===================================================================
+// NOTE: must be present on the NodeSpec below
 // NOTE: This values must have matching types the ones defined in the Extension
 const DemoAsyncNodeAttributeSpec = {
   ...CodeBlockAsyncNodeAttributeSpec,
@@ -33,6 +34,8 @@ export const DemoAsyncNodeSpec: NodeSpec = {
   selectable: true,
   draggable: false,
   defining: true/*maintain original node during replace operations if possible*/,
+
+  attrs: DemoAsyncNodeAttributeSpec,
 };
 
 // -- Render Spec -----------------------------------------------------------------
