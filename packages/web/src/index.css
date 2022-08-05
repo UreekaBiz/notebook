@@ -29,6 +29,26 @@
 .inlineNodeContainer { position: relative; display: inline-block; }
 
 /* -- Node styles -------------------------------------------------------------- */
+/* .. Codeblock ................................................................ */
+[data-node-type="codeBlock"]{
+  align-items: center;
+  display: flex;
+  gap: 10px;
+  background:#EDF2F7;
+  border: 1px solid;
+  border-color: #CBD5E0;
+  border-radius: 4px;
+}
+[data-node-type="codeBlock"] > div {
+  width: 100%;
+  overflow: auto;
+}
+
+[data-node-type="codeBlock"] > div > p{
+  min-height: 1.5em;
+  font-size: 16px;
+}
+
 /* .. MarkHolder ............................................................... */
 [data-node-type="markHolder"] {
   /*

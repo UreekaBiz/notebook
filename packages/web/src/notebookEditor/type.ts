@@ -1,4 +1,5 @@
 import { Bold } from 'notebookEditor/extension/bold/Bold';
+import { CodeBlock } from 'notebookEditor/extension/codeblock/CodeBlock';
 import { Document } from 'notebookEditor/extension/document/Document';
 import { DropCursor } from 'notebookEditor/extension/dropCursor/DropCursor';
 import { GapCursor } from 'notebookEditor/extension/gapcursor/GapCursor';
@@ -24,7 +25,26 @@ export const editorDefinition = {
   //       reflect the new changes. It is used to validate the document and perform
   //       operations on the server-side and must be always be in sync
   // SEE: /common/notebookEditor/prosemirror/schema.ts
-  extensions: [ Bold, DropCursor, Document, GapCursor, Heading, Highlight, History, Image, Link, MarkHolder, NodeViewRemoval, Paragraph, Strikethrough, Style, Text, TextStyle, UniqueNodeId ],
+  extensions: [
+    Bold,
+    CodeBlock,
+    DropCursor,
+    Document,
+    GapCursor,
+    Heading,
+    Highlight,
+    History,
+    Image,
+    Link,
+    MarkHolder,
+    NodeViewRemoval,
+    Paragraph,
+    Strikethrough,
+    Style,
+    Text,
+    TextStyle,
+    UniqueNodeId,
+  ],
   editorProps: { attributes: { class: 'Editor'/*SEE: /index.css*/ } },
 
   autofocus: true/*initially has focus*/,

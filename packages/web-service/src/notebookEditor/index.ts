@@ -1,5 +1,4 @@
 // ** Local ***********************************************************************
-export * from './proseMirror';
 export * from './service';
 
 // ** Service-Common **************************************************************
@@ -43,6 +42,10 @@ export {
   getRenderAttributes,
   isStyleAttribute,
 
+  CodeBlockAttributes,
+  isCodeBlockAttributes,
+  CodeBlockType,
+
   HeadingLevel,
   getHeadingLevelFromTag,
   isHeadingLevel,
@@ -79,6 +82,7 @@ export {
 
   // -- Node Specs ----------------------------------------------------------------
   NodeSpecs,
+  CodeBlockNodeSpec,
   DocumentNodeSpec,
   HeadingNodeSpec,
   ImageNodeSpec,
@@ -88,6 +92,10 @@ export {
   getNodeOutputSpec,
 
   // -- Node Types ----------------------------------------------------------------
+  CodeBlockNodeType,
+  getCodeblockNodeType,
+  isCodeBlockNode,
+
   DocumentNodeType,
   getDocumentNodeType,
   isDocumentNode,
@@ -156,6 +164,7 @@ export {
   getRenderTag,
 
   // -- HTML Render Specs ---------------------------------------------------------
+  CodeBlockNodeRendererSpec,
   DocumentNodeRendererSpec,
   HeadingNodeRendererSpec,
   ParagraphNodeRendererSpec,
@@ -163,6 +172,10 @@ export {
 
   MarkRendererSpecs,
   NodeRendererSpecs,
+
+  RendererState,
+
+  CodeBlockRendererState,
 
   // == Command ===================================================================
   CommandFunctionType,
@@ -174,6 +187,15 @@ export {
   nodeToContent,
 
   // == Utility ===================================================================
+  // -- State ---------------------------------------------------------------------
+  codeBlockLevel,
+  updateStack,
+
+  VisualIdMap,
+
+  // ------------------------------------------------------------------------------
+  getParentNode,
+  getWrapStyles,
   computeRemovedNodeObjs,
   findContentDifferencePositions,
   getNodesAffectedByStepMap,

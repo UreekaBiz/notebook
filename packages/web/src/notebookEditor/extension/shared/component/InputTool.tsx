@@ -4,7 +4,7 @@ import { useState, ChangeEventHandler, KeyboardEventHandler } from 'react';
 import { useLocalValue } from 'notebookEditor/shared/hook/useLocalValue';
 import { separateUnitFromString } from 'notebookEditor/theme/type';
 import { TOOL_ITEM_DATA_TYPE } from 'notebookEditor/toolbar/type';
-import { useIsMounted } from 'shared/hook';
+import { useIsMounted } from 'shared/hook/useIsMounted';
 
 // ********************************************************************************
 interface Props {

@@ -24,6 +24,7 @@ export const NodeSpecs: Record<NodeName, NodeSpec> = {
   //       (SEE: web/src/notebookEditor/model/type/ExtensionPriority.ts)
   [NodeName.DOC]: DocumentNodeSpec,
   [NodeName.PARAGRAPH]: ParagraphNodeSpec,
+  [NodeName.CODEBLOCK]: DocumentNodeSpec,
   [NodeName.HEADING]: HeadingNodeSpec,
   [NodeName.IMAGE]: ImageNodeSpec,
   [NodeName.MARK_HOLDER]: MarkHolderNodeSpec,

@@ -1,7 +1,7 @@
-
 import { Attributes, HTMLAttributes } from '../attribute';
 import { MarkName } from '../mark';
 import { NodeName } from '../node';
+import { RendererState } from './state';
 
 // ********************************************************************************
 export type HTMLTag = string/*alias*/;
@@ -11,7 +11,7 @@ export const DEFAULT_RENDER_TAG = 'div';
 // == Node ========================================================================
 export type TagRenderer<A extends Attributes> = HTMLTag | ((attributes: A) => HTMLTag);
 export type AttributeRenderer<A extends Attributes> = HTMLAttributes | ((attributes: A) => HTMLAttributes);
-export type NodeViewRenderer<A extends Attributes> = ((attributes: A, content: HTMLString) => HTMLString);
+export type NodeViewRenderer<A extends Attributes> = ((attributes: A, content: HTMLString, state: RendererState) => HTMLString);
 
 // --------------------------------------------------------------------------------
 export type NodeViewRendererSpec<A extends Attributes = {}> = {

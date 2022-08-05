@@ -54,6 +54,17 @@ export const DefaultTheme: Theme = {
   displayName: 'Default',
 
   nodes: {
+    [NodeName.CODEBLOCK]: {
+      [AttributeType.PaddingLeft]: '4px',
+      [AttributeType.PaddingRight]: '4px',
+      [AttributeType.PaddingTop]: '4px',
+      [AttributeType.PaddingBottom]: '4px',
+
+      [AttributeType.MarginLeft]: '4px',
+      [AttributeType.MarginRight]: '4px',
+      [AttributeType.MarginTop]: '0.5rem',
+      [AttributeType.MarginBottom]: '0.5rem',
+    },
     [NodeName.DOC]: {/*no defined value*/},
     [NodeName.HEADING]: {
       [AttributeType.MarginLeft]: '4px',
@@ -109,6 +120,17 @@ export const GoogleDocsTheme: Theme = {
   displayName: 'Default',
 
   nodes: {
+    [NodeName.CODEBLOCK]: {
+      [AttributeType.PaddingLeft]: '4px',
+      [AttributeType.PaddingRight]: '4px',
+      [AttributeType.PaddingTop]: '4px',
+      [AttributeType.PaddingBottom]: '4px',
+
+      [AttributeType.MarginLeft]: '4px',
+      [AttributeType.MarginRight]: '4px',
+      [AttributeType.MarginTop]: '0.5rem',
+      [AttributeType.MarginBottom]: '0.5rem',
+    },
     [NodeName.DOC]: {/*no defined value*/},
     [NodeName.HEADING]: {
       [AttributeType.MarginLeft]: '4px',

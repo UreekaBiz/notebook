@@ -3,6 +3,7 @@ import { DOMOutputSpec, Mark as ProseMirrorMark, MarkSpec, Node as ProseMirrorNo
 import { isStyleAttribute, snakeCaseToKebabCase, Attributes, HTMLAttributes } from '../attribute';
 import { NotebookDocumentContent } from '../document';
 import { BoldMarkRendererSpec } from '../extension/bold';
+import { CodeBlockNodeRendererSpec } from '../extension/codeBlock';
 import { DocumentNodeRendererSpec } from '../extension/document';
 import { HeadingNodeRendererSpec } from '../extension/heading';
 import { ImageNodeRendererSpec } from '../extension/image';
@@ -15,11 +16,13 @@ import { TextStyleMarkRendererSpec } from '../extension/textStyle';
 import { getMarkName, JSONMark, MarkName } from '../mark';
 import { contentToJSONNode, getNodeName, JSONNode, NodeName } from '../node';
 import { MarkSpecs, NodeSpecs } from '../schema';
+import { computeState, RendererState } from './state';
 import { getRenderTag, AttributeRenderer, HTMLString, MarkRendererSpec, NodeRendererSpec, DATA_MARK_TYPE, DATA_NODE_TYPE } from './type';
 
 // ********************************************************************************
 // == Type ========================================================================
 export const NodeRendererSpecs: Record<NodeName, NodeRendererSpec> = {
+  [NodeName.CODEBLOCK]: CodeBlockNodeRendererSpec as any/*FIXME!!!*/,
   [NodeName.DOC]: DocumentNodeRendererSpec,
   [NodeName.HEADING]: HeadingNodeRendererSpec as any/*FIXME!!!*/,
   [NodeName.IMAGE]: ImageNodeRendererSpec as any/*FIXME!!!*/,
@@ -34,14 +37,16 @@ export const MarkRendererSpecs: Record<MarkName, MarkRendererSpec> = {
   [MarkName.STRIKETHROUGH]: StrikethroughMarkRendererSpec as any/*FIXME!!!*/,
   [MarkName.TEXT_STYLE]: TextStyleMarkRendererSpec as any/*FIXME!!!*/,
 };
+
 // ================================================================================
 export const convertContentToHTML = (content: NotebookDocumentContent): HTMLString => {
   const rootNode = contentToJSONNode(content);
 
-  return convertJSONNodeToHTML(rootNode);
+  const state = computeState(rootNode);
+  return convertJSONContentToHTML(rootNode, state);
 };
 
-export const convertJSONNodeToHTML = (node: JSONNode): HTMLString => {
+export const convertJSONContentToHTML = (node: JSONNode, state: RendererState): HTMLString => {
   const { type, content, text } = node;
   const nodeRendererSpec = NodeRendererSpecs[type];
 
@@ -52,11 +57,11 @@ export const convertJSONNodeToHTML = (node: JSONNode): HTMLString => {
 
   // gets the direct children Nodes using the Node content. An empty string is
   // equivalent to having no content when rendering the HTML.
-  let children = content ? content.reduce((acc, child) => `${acc}${convertJSONNodeToHTML(child)}`, '') : ''/*no children*/;
+  let children = content ? content.reduce((acc, child) => `${acc}${convertJSONContentToHTML(child, state)}`, '') : ''/*no children*/;
 
   // in the case that the Node is a Node View Renderer let the Node renderer use
-  // its own render function to render the Node and its children
-  if(nodeRendererSpec.isNodeViewRenderer) return nodeRendererSpec.renderNodeView(node.attrs ?? {/*empty attributes*/}, children)/*nothing else to do*/;
+  // its own render function to render the Node and its children.
+  if(nodeRendererSpec.isNodeViewRenderer) return nodeRendererSpec.renderNodeView(node.attrs ?? {/*empty attributes*/}, children, state)/*nothing else to do*/;
 
   // NOTE: in the Editor, a paragraph with no content is displayed as having a
   //       br node as it only child, this is an attempt to mimic that functionality
@@ -123,9 +128,9 @@ const getMarkRenderAttributes = (mark: JSONMark, markRendererSpec: MarkRendererS
 //    compatibility problems. In this case a default rendered is used.
 // NOTE: it's defined as function to use function overloads.
 // SEE: https://www.typescriptlang.org/docs/handbook/declaration-files/by-example.html#overloaded-functions
-export function getRenderAttributes(nodeOrMarkName: NodeName | MarkName, attrs?: Record<string, string | undefined>, rendererSpec?: NodeRendererSpec, nodeOrMarkSpec?: NodeSpec): HTMLAttributes;
-export function getRenderAttributes(nodeOrMarkName: NodeName | MarkName, attrs?: Record<string, string | undefined>, rendererSpec?: MarkRendererSpec, nodeOrMarkSpec?: MarkSpec): HTMLAttributes;
-export function getRenderAttributes(nodeOrMarkName: NodeName | MarkName, attrs: Record<string, string | undefined> = {}, rendererSpec?: NodeRendererSpec | MarkRendererSpec, nodeOrMarkSpec?: NodeSpec | MarkSpec): HTMLAttributes {
+export function getRenderAttributes(nodeOrMarkName: NodeName | MarkName, attrs?: Record<string, string | undefined>, rendererSpec?: NodeRendererSpec<any>, nodeOrMarkSpec?: NodeSpec): HTMLAttributes;
+export function getRenderAttributes(nodeOrMarkName: NodeName | MarkName, attrs?: Record<string, string | undefined>, rendererSpec?: MarkRendererSpec<any>, nodeOrMarkSpec?: MarkSpec): HTMLAttributes;
+export function getRenderAttributes(nodeOrMarkName: NodeName | MarkName, attrs: Record<string, string | undefined> = {}, rendererSpec?: NodeRendererSpec<any> | MarkRendererSpec, nodeOrMarkSpec?: NodeSpec | MarkSpec): HTMLAttributes {
   // If the renderer spec doesn't any default attributes to render use and empty
   // object.
   let renderAttributes = rendererSpec?.render ??  {};
@@ -178,10 +183,9 @@ export const getMarkOutputSpec = (mark: ProseMirrorMark, HTMLAttributes: Attribu
   return [tag, merged];
 };
 
-
 // -- Util ------------------------------------------------------------------------
 // parse an object of Attributes into a string in the form of key="value"
-const renderAttributesToString = (attributes: HTMLAttributes) => Object.entries(attributes).reduce((acc, [key, value]) => `${acc} ${key}="${value}" `, '');
+export const renderAttributesToString = (attributes: HTMLAttributes) => Object.entries(attributes).reduce((acc, [key, value]) => `${acc} ${key}="${value}" `, '');
 
 // ................................................................................
 // gets the render Attributes for the given Attribute. It uses the corresponding

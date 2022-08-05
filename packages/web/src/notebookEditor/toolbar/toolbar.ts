@@ -1,5 +1,6 @@
 import { MarkName, NodeName } from '@ureeka-notebook/web-service';
 
+import { CodeBlockToolbar } from 'notebookEditor/extension/codeblock/toolbar';
 import { DocumentToolbar } from 'notebookEditor/extension/document/toolbar';
 import { HeadingToolbar } from 'notebookEditor/extension/heading/toolbar';
 import { ImageToolbar } from 'notebookEditor/extension/image/toolbar';
@@ -12,6 +13,7 @@ import { Toolbar } from './type';
 // A collection of Toolbars. Each Node can have its own Toolbar. If it's not defined
 // in the collection then nothing will be shown.
 const TOOLBAR_MAP: Record<NodeName | MarkName, Toolbar | null> = {
+  [NodeName.CODEBLOCK]: CodeBlockToolbar,
   [NodeName.DOC]: DocumentToolbar,
   [NodeName.TEXT]: null/*none*/,
   [NodeName.HEADING]: HeadingToolbar,

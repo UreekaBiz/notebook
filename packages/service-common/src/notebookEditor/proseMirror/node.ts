@@ -14,6 +14,7 @@ export type NodeIdentifier = string/*alias*/;
 // --------------------------------------------------------------------------------
 /** Unique identifier for each Node on the schema */
 export enum NodeName {
+  CODEBLOCK = 'codeBlock',
   DOC = 'document',
   HEADING = 'heading',
   IMAGE = 'image',
