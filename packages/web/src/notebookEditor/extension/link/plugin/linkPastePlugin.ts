@@ -5,7 +5,6 @@ import { Plugin, PluginKey } from 'prosemirror-state';
 import { EditorView } from 'prosemirror-view';
 
 import { urlSchema, NotebookSchemaType, MarkName } from '@ureeka-notebook/web-service';
-
 import { NoPluginState } from 'notebookEditor/model/type';
 
 // ********************************************************************************
@@ -43,10 +42,15 @@ export const linkPastePlugin = (editor: Editor): Plugin => {
       // Ensure that pasted links get a space added to them at the end, so that
       // typing after having pasted a link does not include the link mark
       transformPastedText(text: string) {
-        const isUrl = urlSchema.validateSync(text);
-        if(isUrl) text += ' ';
-        /* else -- not an url, do not add space */
-        return text;
+        try {
+          const isUrl = urlSchema.validateSync(text);
+          if(isUrl) {
+            text += ' ';
+          }/* else -- not an url, do not add space */
+          return text;
+        } catch(error) {
+          return text/*not an url, return text without modification*/;
+        }
       },
     },
   });
