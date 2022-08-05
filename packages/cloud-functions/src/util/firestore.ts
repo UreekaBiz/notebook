@@ -1,10 +1,11 @@
 import * as firebase from 'firebase-admin';
-import { DocumentSnapshot } from 'firebase-admin/firestore';
+import { DocumentSnapshot, WriteBatch } from 'firebase-admin/firestore';
 import * as functions from 'firebase-functions';
 
 import { nameof, TimestampValue, Updatable } from '@ureeka-notebook/service-common';
 
 import { ApplicationError } from './error';
+import { firestore } from '../firebase';
 import { ChangeOp } from './trigger';
 
 // ********************************************************************************
@@ -93,3 +94,25 @@ export const getChangeState = async <T extends Updatable>(change: functions.Chan
   return { changeOp, isLatest, validDocument: validDocument, previousDocument, afterDocument, latestDocument };
 };
 const getUpdateTimestamp = <T extends Updatable>(document: T) => document.updateTimestamp.valueOf()/*compare using valueOf()*/;
+
+// == Batch =======================================================================
+export type WriteBatchCallback<T> = (batch: WriteBatch, value: T) => void;
+export const writeBatch = async <T>(iterator: IterableIterator<T>, callback: WriteBatchCallback<T>) => {
+  let exhausted = false/*true when iterator is exhausted*/;
+  while(!exhausted) {
+    const batch = firestore.batch();
+
+    let batchCount = 0/*reset with each batch*/;
+    while(!exhausted && (batchCount < FIRESTORE_BATCH_SIZE)) {
+      const entry = iterator.next();
+      if(entry.done) {
+        exhausted = true/*by definition*/;
+        break/*completely exhausted*/;
+      } /* else -- there was a member */
+      batchCount++/*exists so count*/;
+
+      callback(batch, entry.value);
+    }
+    if(batchCount > 0) await batch.commit();
+  }
+};
