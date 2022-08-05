@@ -6,6 +6,7 @@ import { firestore } from '../firebase';
 import { ApplicationError } from '../util/error';
 import { ServerTimestamp } from '../util/firestore';
 import { labelCollection, labelDocument } from './datastore';
+import { removeAllNotebooks } from './labelNotebook';
 
 // ********************************************************************************
 // == Create ======================================================================
@@ -19,12 +20,12 @@ export const createLabel = async (
     const labelRef = labelCollection.doc(/*create new*/) as DocumentReference<Label_Create>,
           labelId = labelRef.id;
     const label: Label_Create = {
-      viewers: [userId/*creator must be a viewer by contract*/],
-      editors: [userId/*creator must be an editor by contract*/],
-
       name,
       visibility,
       ordered,
+
+      viewers: [userId/*creator must be a viewer by contract*/],
+      editors: [userId/*creator must be an editor by contract*/],
 
       sortName: computeLabelSortName(name),
       searchNamePrefixes: computeLabelPrefixes(name),
@@ -99,14 +100,14 @@ export const deleteLabel = async (userId: UserIdentifier, labelId: LabelIdentifi
       if(existingLabel.createdBy !== userId) throw new ApplicationError('functions/permission-denied', `Cannot delete Label (${labelId}) not created by User (${userId}).`);
 
       transaction.delete(labelRef);
-
-      // FIXME: trickle down to sub-collections!!!
-      // FIXME: remove any published labels!!! (do it in all cases for sanity)
-
     });
+
+    await removeAllNotebooks(userId, labelId)/*logs on error*/;
+
+    // FIXME: remove any published labels!!! (do it in all cases for sanity)
+
   } catch(error) {
     if(error instanceof ApplicationError) throw error;
     throw new ApplicationError('datastore/write', `Error deleting Label (${labelId}) for User (${userId}). Reason: `, error);
   }
 };
-

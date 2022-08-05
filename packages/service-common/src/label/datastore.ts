@@ -1,4 +1,4 @@
-import { FieldValue } from '../util/firestore';
+import { FieldValue, FirestoreTimestamp } from '../util/firestore';
 import { Modify } from '../util/type';
 import { Label, LabelNotebook, LabelNotebookPublished, LabelPublished, LabelSummary } from './type';
 
@@ -56,6 +56,8 @@ export type Label_Update = Partial<Omit<Label, 'createTimestamp'| 'createdBy' | 
 // .. Label Notebook ..............................................................
 // always written as if new (i.e. always completely overwritten)
 export type LabelNotebook_Write = Modify<LabelNotebook_Storage, Readonly<{
+  order: FirestoreTimestamp/*either an explicit Timestamp or server-set*/;
+
   createTimestamp: FieldValue/*always-write server-set*/;
 }>>;
 // NOTE: hard-delete so no delete Action Type
