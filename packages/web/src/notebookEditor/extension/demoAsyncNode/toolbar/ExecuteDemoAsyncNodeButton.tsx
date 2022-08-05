@@ -19,7 +19,7 @@ export const ExecuteDemoAsyncNodeButton: React.FC<Props> = ({ editor }) => {
         codeBlockReferences = attrs[AttributeType.CodeBlockReferences] ?? []/*default*/;
   if(!id) return null/*nothing to render -- silently fail*/;
 
-  const demoAsyncNodeViewStorage = getNodeViewStorage<DemoAsyncNodeStorageType>(editor, NodeName.DEMO_ASYNCNODE),
+  const demoAsyncNodeViewStorage = getNodeViewStorage<DemoAsyncNodeStorageType>(editor, NodeName.DEMO_ASYNC_NODE),
         demoAsyncNodeView = demoAsyncNodeViewStorage.getNodeView(id);
   if(!demoAsyncNodeView) return null/*nothing to render -- silently fail*/;
 

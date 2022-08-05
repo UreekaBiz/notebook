@@ -35,6 +35,9 @@ export class Demo2AsyncNodeView extends AbstractAsyncNodeView<string, Demo2Async
     // Tell PM that the content fo the node must go into the paragraph element,
     // by delegating keeping track of the it to PM (SEE: NodeView#contentDOM)
     this.contentDOM = this.content/*created by createViewElement call*/;
+
+    // Sync view with current state
+    this.updateView();
   }
 
   // -- Creation ------------------------------------------------------------------

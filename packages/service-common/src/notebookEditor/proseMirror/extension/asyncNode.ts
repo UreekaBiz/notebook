@@ -24,7 +24,7 @@ export const isAsyncNodeAttributes = (attrs: any): attrs is AsyncNodeAttributes 
 
 // == Type ========================================================================
 // the set of Node 'types' that are async nodes (the 'inclusion set')
-export const asyncNodes: Set<NodeName> = new Set([NodeName.DEMO_ASYNCNODE]);
+export const asyncNodes: Set<NodeName> = new Set([NodeName.DEMO_ASYNC_NODE]);
 
 // The set of node 'types' that should not be modifiable while they
 // are performing an asynchronous operation. This does not apply to all of them,
@@ -38,9 +38,9 @@ export enum AsyncNodeStatus {
   ERROR = 'error',
 }
 
-export const DEFAULT_ASYNCNODE_ID = `Default AsyncNode ID`;
-export const DEFAULT_ASYNCNODE_STATUS = AsyncNodeStatus.NEVER_EXECUTED;
-export const DEFAULT_ASYNCNODE_EDITABLE = true;
+export const DEFAULT_ASYNC_NODE_ID = `Default AsyncNode ID`;
+export const DEFAULT_ASYNC_NODE_STATUS = AsyncNodeStatus.NEVER_EXECUTED;
+export const DEFAULT_ASYNC_NODE_EDITABLE = true;
 
 // -- Node Type -------------------------------------------------------------------
 // NOTE: this is the only way to ensure the right attributes will be available
@@ -65,7 +65,7 @@ export const asyncNodeStatusToColor = (status: AsyncNodeStatus): string => {
 export const createDefaultAsyncNodeAttributes = (): AsyncNodeAttributes =>
 ({
   [AttributeType.Id]: generateNodeId()/*unique for each invocation*/,
-  [AttributeType.Status]: DEFAULT_ASYNCNODE_STATUS,
+  [AttributeType.Status]: DEFAULT_ASYNC_NODE_STATUS,
 });
 
 // == CSS =========================================================================

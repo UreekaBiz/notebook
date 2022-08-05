@@ -22,7 +22,7 @@ export const DemoAsyncNodeChipSelector: React.FC<Props> = ({ editor }) => {
     if(!codeBlockReference.isValid) return false/*ignore call*/;
 
     return editor.chain()
-                 .updateAttributes(NodeName.DEMO_ASYNCNODE, { ...attrs, codeBlockReferences: [...codeBlockReferences, codeBlockReference.codeBlockId] })
+                 .updateAttributes(NodeName.DEMO_ASYNC_NODE, { ...attrs, codeBlockReferences: [...codeBlockReferences, codeBlockReference.codeBlockId] })
                  .setNodeSelection(selection.$anchor.pos)
                  .run();
   };
@@ -37,7 +37,7 @@ export const DemoAsyncNodeChipSelector: React.FC<Props> = ({ editor }) => {
 
     return editor.chain()
               .focus()
-              .updateAttributes(NodeName.DEMO_ASYNCNODE, { ...attrs, codeBlockReferences: newCodeBlockReferences })
+              .updateAttributes(NodeName.DEMO_ASYNC_NODE, { ...attrs, codeBlockReferences: newCodeBlockReferences })
               .setNodeSelection(selection.$anchor.pos)
               .run();
   };
@@ -48,7 +48,7 @@ export const DemoAsyncNodeChipSelector: React.FC<Props> = ({ editor }) => {
 
     return editor.chain()
               .focus()
-              .updateAttributes(NodeName.DEMO_ASYNCNODE, { ...attrs, codeBlockReferences: newCodeBlockReferences })
+              .updateAttributes(NodeName.DEMO_ASYNC_NODE, { ...attrs, codeBlockReferences: newCodeBlockReferences })
               .setNodeSelection(selection.$anchor.pos)
               .run();
   };

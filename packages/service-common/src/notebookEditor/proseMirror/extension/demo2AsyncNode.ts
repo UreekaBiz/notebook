@@ -6,7 +6,7 @@ import { createNodeDataTypeAttribute, NodeRendererSpec } from '../htmlRenderer/t
 import { getAllowedMarks, MarkName } from '../mark';
 import { JSONNode, NodeName, ProseMirrorNodeContent } from '../node';
 import { NotebookSchemaType } from '../schema';
-import { AsyncNodeAttributeSpec, DEFAULT_ASYNCNODE_STATUS } from './asyncNode';
+import { AsyncNodeAttributeSpec, DEFAULT_ASYNC_NODE_STATUS } from './asyncNode';
 
 // ********************************************************************************
 // == Attribute ===================================================================
@@ -79,7 +79,7 @@ export const Demo2AsyncNodeRendererSpec: NodeRendererSpec<Demo2AsyncNodeAttribut
 };
 
 export const DEFAULT_DEMO_2_ASYNC_NODE_ID = `Default Demo2AsyncNode ID`;
-export const DEFAULT_DEMO_2_ASYNC_NODE_STATUS = DEFAULT_ASYNCNODE_STATUS/*alias*/;
+export const DEFAULT_DEMO_2_ASYNC_NODE_STATUS = DEFAULT_ASYNC_NODE_STATUS/*alias*/;
 
 export const DEFAULT_DEMO_2_ASYNC_NODE_DELAY = 4000/*ms*/;
 
