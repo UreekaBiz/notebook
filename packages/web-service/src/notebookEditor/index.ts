@@ -245,7 +245,6 @@ export {
 
   // -- Async ---------------------------------------------------------------------
   asyncNodeStatusToColor,
-  nonEditableWhileOperatingAsyncNodes,
   AsyncNodeStatus,
   ASYNC_NODE_DIRTY_DATATYPE,
 
