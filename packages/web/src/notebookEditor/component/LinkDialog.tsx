@@ -4,7 +4,7 @@ import { useFormik, Field, FormikProvider } from 'formik';
 import { useState } from 'react';
 import * as Validate from 'yup';
 
-import { DEFAULT_LINK_ATTRIBUTES, urlSchema } from '@ureeka-notebook/web-service';
+import { urlSchema, DEFAULT_LINK_ATTRIBUTES } from '@ureeka-notebook/web-service';
 
 import { useIsMounted } from 'shared/hook/useIsMounted';
 
