@@ -1,8 +1,8 @@
 import { NotebookIdentifier, NotebookTuple, Notebook_Storage, PublishedNotebookIdentifier, PublishedNotebookTuple, PublishedNotebook_Storage } from '@ureeka-notebook/service-common';
 
 import { defaultDocumentConverter, defaultDocumentTupleConverter, defaultTupleConverter } from '../util/firestore';
+import { QueryObservable } from '../util/observableCollection';
 import { documentOnce } from '../util/observableDocument';
-import { QueryObservable } from '../util/observableScrolledCollection';
 import { queryTuples } from '../util/observableTupleCollection';
 import { documentTuple } from '../util/observableTupleDocument';
 import { notebookDocument, notebookQuery, publishedNotebookDocument, publishedNotebookQuery } from './datastore';

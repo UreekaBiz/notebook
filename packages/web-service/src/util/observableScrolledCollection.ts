@@ -3,13 +3,11 @@ import { switchMap, BehaviorSubject, Observable } from 'rxjs';
 import { tap } from 'rxjs/operators';
 
 import { getLogger, ServiceLogger } from '../logging';
+import { QueryObservable } from './observableCollection';
 
 const log = getLogger(ServiceLogger.UTIL);
 
 // ********************************************************************************
-export type QueryObservable<T, R> = (query: Query<T>) => Observable<R[]>;
-
-// --------------------------------------------------------------------------------
 /**
  * A scrollable (as in 'scroll down for more data') list of ordered documents.
  * Batches of documents are retrieved when {@link #moreDocuments()} is called until
