@@ -38,9 +38,9 @@ export enum AsyncNodeStatus {
   ERROR = 'error',
 }
 
-export const DEFAULT_ASYNCNODE_ID = `Default AsyncNode ID`;
-export const DEFAULT_ASYNCNODE_STATUS = AsyncNodeStatus.NEVER_EXECUTED;
-export const DEFAULT_ASYNCNODE_EDITABLE = true;
+export const DEFAULT_ASYNC_NODE_ID = `Default AsyncNode ID`;
+export const DEFAULT_ASYNC_NODE_STATUS = AsyncNodeStatus.NEVER_EXECUTED;
+export const DEFAULT_ASYNC_NODE_EDITABLE = true;
 
 // -- Node Type -------------------------------------------------------------------
 // NOTE: this is the only way to ensure the right attributes will be available
@@ -65,7 +65,7 @@ export const asyncNodeStatusToColor = (status: AsyncNodeStatus): string => {
 export const createDefaultAsyncNodeAttributes = (): AsyncNodeAttributes =>
 ({
   [AttributeType.Id]: generateNodeId()/*unique for each invocation*/,
-  [AttributeType.Status]: DEFAULT_ASYNCNODE_STATUS,
+  [AttributeType.Status]: DEFAULT_ASYNC_NODE_STATUS,
 });
 
 // == CSS =========================================================================

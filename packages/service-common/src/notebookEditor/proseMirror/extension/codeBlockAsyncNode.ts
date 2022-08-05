@@ -3,7 +3,7 @@ import { Node as ProseMirrorNode } from 'prosemirror-model';
 import { noNodeOrMarkSpecAttributeDefaultValue, AttributeType, AttributesTypeFromNodeSpecAttributes } from '../attribute';
 import { NodeIdentifier, NodeName } from '../node';
 import { NotebookSchemaType } from '../schema';
-import { createDefaultAsyncNodeAttributes, AsyncNodeAttributeSpec, DEFAULT_ASYNCNODE_STATUS } from './asyncNode';
+import { createDefaultAsyncNodeAttributes, AsyncNodeAttributeSpec, DEFAULT_ASYNC_NODE_STATUS } from './asyncNode';
 
 // ********************************************************************************
 // NOTE: codeBlockAsyncNodes are meant to be an abstraction for all async nodes
@@ -39,7 +39,7 @@ export type CodeBlockReference = NodeIdentifier;
 export type CodeBlockHash = string/*alias*/;
 
 export const DEFAULT_CODEBLOCKASYNCNODE_ID = `Default CodeBlockAsyncNode ID`;
-export const DEFAULT_CODEBLOCKASYNCNODE_STATUS = DEFAULT_ASYNCNODE_STATUS/*alias*/;
+export const DEFAULT_CODEBLOCKASYNCNODE_STATUS = DEFAULT_ASYNC_NODE_STATUS/*alias*/;
 
 // the text that gets shown for codeBlockAsyncNode chips when the corresponding
 // codeBlock gets removed, hence invalidating its visualId
