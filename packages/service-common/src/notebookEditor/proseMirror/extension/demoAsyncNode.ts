@@ -12,7 +12,9 @@ import { CodeBlockAsyncNodeAttributeSpec, createDefaultCodeBlockAsyncNodeAttribu
 // ********************************************************************************
 // == Attribute ===================================================================
 // NOTE: This values must have matching types the ones defined in the Extension
-const DemoAsyncNodeAttributeSpec = { ...CodeBlockAsyncNodeAttributeSpec,
+const DemoAsyncNodeAttributeSpec = {
+  ...CodeBlockAsyncNodeAttributeSpec,
+
   [AttributeType.Delay]: noNodeOrMarkSpecAttributeDefaultValue<number>(),
 };
 export type DemoAsyncNodeAttributes = AttributesTypeFromNodeSpecAttributes<typeof DemoAsyncNodeAttributeSpec>;

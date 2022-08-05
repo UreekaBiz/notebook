@@ -15,7 +15,9 @@ import { createDefaultAsyncNodeAttributes, AsyncNodeAttributeSpec, DEFAULT_ASYNC
 
 // == Attribute ===================================================================
 // NOTE: This values must have matching types the ones defined in the Node
-export const CodeBlockAsyncNodeAttributeSpec = { ...AsyncNodeAttributeSpec,
+export const CodeBlockAsyncNodeAttributeSpec = {
+  ...AsyncNodeAttributeSpec,
+
   /** The array of nodeIdentifiers that the async node is listening to */
   [AttributeType.CodeBlockReferences]: noNodeOrMarkSpecAttributeDefaultValue<CodeBlockReference[]>(),
 
