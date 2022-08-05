@@ -31,7 +31,7 @@ export class DemoAsyncNodeModel extends AbstractCodeBlockAsyncNodeModel<string, 
   }
 
   protected replaceCodeBlockAsyncNode(editor: Editor, node: CodeBlockAsyncNodeType, position: number): boolean {
-    // Replace the codeBlockAsyncNode with a new one with the updated attributes
+    // Replace the CodeBlockAsyncNode with a new one with the updated attributes
     return replaceInlineCodeBlockAsyncNode(editor, node, position);
   }
 }
