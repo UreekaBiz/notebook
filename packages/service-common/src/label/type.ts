@@ -137,6 +137,7 @@ export type LabelNotebookPublished = Creatable & Readonly<{ /*Firestore*/
    *  @see LabelNotebook#order */
   order: number/*write-many server-written*/;
 }>;
+export type LabelNotebookPublishedTuple = ObjectTuple<NotebookIdentifier, LabelNotebookPublished>;
 
 // == Label Summary (RTDB) ========================================================
 // SEE: ./datastore.ts: LABEL_SUMMARY
