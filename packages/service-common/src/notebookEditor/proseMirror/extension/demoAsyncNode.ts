@@ -7,7 +7,7 @@ import { getAllowedMarks } from '../mark';
 import { JSONNode, NodeName, ProseMirrorNodeContent } from '../node';
 import { NotebookSchemaType } from '../schema';
 import { AsyncNodeStatus, asyncNodeStatusToColor } from './asyncNode';
-import { CodeBlockAsyncNodeAttributeSpec, createDefaultCodeBlockAsyncNodeAttributes, DEFAULT_CODEBLOCKASYNCNODE_STATUS } from './codeBlockAsyncNode';
+import { CodeBlockAsyncNodeAttributeSpec, createDefaultCodeBlockAsyncNodeAttributes, DEFAULT_CODEBLOCK_ASYNC_NODE_STATUS } from './codeBlockAsyncNode';
 
 // ********************************************************************************
 // == Attribute ===================================================================
@@ -62,7 +62,7 @@ export const DemoAsyncNodeRendererSpec: NodeRendererSpec<DemoAsyncNodeAttributes
 };
 
 export const DEFAULT_DEMOASYNCNODE_ID = `Default DemoAsyncNode ID`;
-export const DEFAULT_DEMOASYNCNODE_STATUS = DEFAULT_CODEBLOCKASYNCNODE_STATUS/*alias*/;
+export const DEFAULT_DEMOASYNCNODE_STATUS = DEFAULT_CODEBLOCK_ASYNC_NODE_STATUS/*alias*/;
 export const DEFAULT_DEMOASYNCNODE_TEXT = 'Not Executed'/*creation default*/;
 export const DEFAULT_DEMOASYNCNODE_DELAY = 4000/*ms*/;
 

@@ -38,8 +38,8 @@ export const codeBlockAsyncNodes: Set<NodeName> = new Set([NodeName.DEMO_ASYNC_N
 export type CodeBlockReference = NodeIdentifier;
 export type CodeBlockHash = string/*alias*/;
 
-export const DEFAULT_CODEBLOCKASYNCNODE_ID = `Default CodeBlockAsyncNode ID`;
-export const DEFAULT_CODEBLOCKASYNCNODE_STATUS = DEFAULT_ASYNC_NODE_STATUS/*alias*/;
+export const DEFAULT_CODEBLOCK_ASYNC_NODE_ID = `Default CodeBlockAsyncNode ID`;
+export const DEFAULT_CODEBLOCK_ASYNC_NODE_STATUS = DEFAULT_ASYNC_NODE_STATUS/*alias*/;
 
 // the text that gets shown for codeBlockAsyncNode chips when the corresponding
 // codeBlock gets removed, hence invalidating its visualId
@@ -56,7 +56,7 @@ export const createDefaultCodeBlockAsyncNodeAttributes = (): Partial<CodeBlockAs
 ({
   ...createDefaultAsyncNodeAttributes(),
 
-  [AttributeType.Id]: DEFAULT_CODEBLOCKASYNCNODE_ID,
+  [AttributeType.Id]: DEFAULT_CODEBLOCK_ASYNC_NODE_ID,
   [AttributeType.CodeBlockReferences]: [/*initially empty*/],
   [AttributeType.CodeBlockHashes]: [/*initially empty*/],
 });
