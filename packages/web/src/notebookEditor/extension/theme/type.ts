@@ -80,7 +80,7 @@ export const DefaultTheme: Theme = {
       [AttributeType.MarginTop]: '0.5rem',
       [AttributeType.MarginBottom]: '0.5rem',
     },
-    [NodeName.DEMO_ASYNCNODE]: {/*no defined value*/},
+    [NodeName.DEMO_ASYNC_NODE]: {/*no defined value*/},
     [NodeName.HEADING]: {
       [AttributeType.MarginLeft]: '4px',
       [AttributeType.MarginRight]: '4px',
@@ -162,7 +162,7 @@ export const GoogleDocsTheme: Theme = {
       [AttributeType.MarginTop]: '0.5rem',
       [AttributeType.MarginBottom]: '0.5rem',
     },
-    [NodeName.DEMO_ASYNCNODE]: {/*no defined value*/},
+    [NodeName.DEMO_ASYNC_NODE]: {/*no defined value*/},
     [NodeName.HEADING]: {
       [AttributeType.MarginLeft]: '4px',
       [AttributeType.MarginBottom]: '0.25rem',

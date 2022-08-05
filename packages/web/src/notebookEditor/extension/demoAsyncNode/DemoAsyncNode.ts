@@ -1,6 +1,6 @@
 import { Node } from '@tiptap/core';
 
-import { getNodeOutputSpec, isDemoAsyncNode, AttributeType, DemoAsyncNodeSpec, NodeName, SetAttributeType, DEFAULT_DEMOASYNCNODE_ID, DEFAULT_DEMOASYNCNODE_DELAY, DEFAULT_DEMOASYNCNODE_STATUS, DEFAULT_DEMOASYNCNODE_TEXT } from '@ureeka-notebook/web-service';
+import { getNodeOutputSpec, isDemoAsyncNode, AttributeType, DemoAsyncNodeSpec, NodeName, SetAttributeType, DEFAULT_DEMO_ASYNC_NODE_ID, DEFAULT_DEMO_ASYNC_NODE_DELAY, DEFAULT_DEMO_ASYNC_NODE_STATUS, DEFAULT_DEMO_ASYNC_NODE_TEXT } from '@ureeka-notebook/web-service';
 
 import { setAttributeParsingBehavior } from 'notebookEditor/extension/util/attribute';
 import { NodeViewStorage } from 'notebookEditor/model/NodeViewStorage';
@@ -17,15 +17,15 @@ export const DemoAsyncNode = Node.create<NoOptions, DemoAsyncNodeStorageType>({
   // -- Attribute -----------------------------------------------------------------
   addAttributes() {
     return {
-      [AttributeType.Id]: setAttributeParsingBehavior(AttributeType.Id, SetAttributeType.STRING, DEFAULT_DEMOASYNCNODE_ID),
+      [AttributeType.Id]: setAttributeParsingBehavior(AttributeType.Id, SetAttributeType.STRING, DEFAULT_DEMO_ASYNC_NODE_ID),
 
       [AttributeType.CodeBlockReferences]: setAttributeParsingBehavior(AttributeType.CodeBlockReferences, SetAttributeType.ARRAY, [/*default empty*/]),
       [AttributeType.CodeBlockHashes]: setAttributeParsingBehavior(AttributeType.CodeBlockHashes, SetAttributeType.ARRAY, [/*default empty*/]),
 
-      [AttributeType.Status]: setAttributeParsingBehavior(AttributeType.Status, SetAttributeType.STRING, DEFAULT_DEMOASYNCNODE_STATUS),
-      [AttributeType.Text]: setAttributeParsingBehavior(AttributeType.Text, SetAttributeType.STRING, DEFAULT_DEMOASYNCNODE_TEXT),
+      [AttributeType.Status]: setAttributeParsingBehavior(AttributeType.Status, SetAttributeType.STRING, DEFAULT_DEMO_ASYNC_NODE_STATUS),
+      [AttributeType.Text]: setAttributeParsingBehavior(AttributeType.Text, SetAttributeType.STRING, DEFAULT_DEMO_ASYNC_NODE_TEXT),
 
-      [AttributeType.Delay]: setAttributeParsingBehavior(AttributeType.Delay, SetAttributeType.NUMBER, DEFAULT_DEMOASYNCNODE_DELAY),
+      [AttributeType.Delay]: setAttributeParsingBehavior(AttributeType.Delay, SetAttributeType.NUMBER, DEFAULT_DEMO_ASYNC_NODE_DELAY),
     };
   },
 
@@ -49,7 +49,7 @@ export const DemoAsyncNode = Node.create<NoOptions, DemoAsyncNodeStorageType>({
       return new DemoAsyncNodeController(editor, node, this.storage, getPos);
     };
   },
-  parseHTML() { return [{ tag: NodeName.DEMO_ASYNCNODE }]; },
+  parseHTML() { return [{ tag: NodeName.DEMO_ASYNC_NODE }]; },
   renderHTML({ node, HTMLAttributes }) { return getNodeOutputSpec(node, HTMLAttributes, true/*is leaf node*/); },
 });
 

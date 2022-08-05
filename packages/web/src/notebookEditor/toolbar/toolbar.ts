@@ -17,7 +17,7 @@ import { Toolbar } from './type';
 const TOOLBAR_MAP: Record<NodeName | MarkName, Toolbar | null> = {
   [NodeName.CODEBLOCK]: CodeBlockToolbar,
   [NodeName.DEMO_2_ASYNC_NODE]: Demo2AsyncNodeToolbar,
-  [NodeName.DEMO_ASYNCNODE]: DemoAsyncNodeToolbar,
+  [NodeName.DEMO_ASYNC_NODE]: DemoAsyncNodeToolbar,
   [NodeName.DOC]: DocumentToolbar,
   [NodeName.TEXT]: null/*none*/,
   [NodeName.HEADING]: HeadingToolbar,
