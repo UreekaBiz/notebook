@@ -26,11 +26,6 @@ export const isAsyncNodeAttributes = (attrs: any): attrs is AsyncNodeAttributes 
 // the set of Node 'types' that are async nodes (the 'inclusion set')
 export const asyncNodes: Set<NodeName> = new Set([NodeName.DEMO_ASYNC_NODE]);
 
-// The set of node 'types' that should not be modifiable while they
-// are performing an asynchronous operation. This does not apply to all of them,
-// so the ones that must not exhibit this behavior must be added here
-export const nonEditableWhileOperatingAsyncNodes = new Set<NodeName>([/*currently empty*/]);
-
 export enum AsyncNodeStatus {
   NEVER_EXECUTED = 'neverExecuted',
   PROCESSING = 'processing',
