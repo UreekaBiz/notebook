@@ -121,12 +121,12 @@ export const LinkDialog: React.FC<Props> = ({ editor, isOpen, onClose }) => {
                   Cancel
                 </Button>
                 <Button
-                  disabled={status === 'loading' || !(formik.isValid && formik.dirty)}
+                  disabled={formik.status === 'loading' || !(formik.isValid && formik.dirty)}
                   type='submit'
                   colorScheme='purple'
                   width={120}
                 >
-                  {status === 'loading' ? 'Loading' : 'Create' }
+                  {formik.status === 'loading' ? 'Loading' : 'Create' }
                 </Button>
               </ModalFooter>
             </fieldset>
