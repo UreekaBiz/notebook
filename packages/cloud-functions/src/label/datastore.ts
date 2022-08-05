@@ -1,6 +1,6 @@
 import { CollectionReference } from 'firebase-admin/firestore';
 
-import { LabelIdentifier, LabelNotebook_Storage, LabelNotebookPublished_Storage, LabelPublished_Storage, Label_Storage, NotebookIdentifier, LABELS, LABEL_NOTEBOOK_PUBLISHEDS, LABEL_NOTEBOOKS, LABEL_PUBLISHEDS, LABEL_SUMMARIES } from '@ureeka-notebook/service-common';
+import { LabelIdentifier, LabelNotebook_Storage, LabelPublished_Storage, Label_Storage, NotebookIdentifier, LABELS, LABEL_NOTEBOOK_PUBLISHEDS, LABEL_NOTEBOOKS, LABEL_PUBLISHEDS, LABEL_SUMMARIES } from '@ureeka-notebook/service-common';
 
 import { database, firestore } from '../firebase';
 
@@ -23,7 +23,7 @@ export const labelPublishedCollection = firestore.collection(LABEL_PUBLISHEDS) a
 export const labelPublishedDocument = (labelId: LabelIdentifier) => labelPublishedCollection.doc(labelId);
 
 // .. Label Notebook Published ....................................................
-export const labelNotebookPublishedCollection = (labelId: LabelIdentifier) => labelPublishedDocument(labelId).collection(LABEL_NOTEBOOK_PUBLISHEDS) as CollectionReference<LabelNotebookPublished_Storage>;
+export const labelNotebookPublishedCollection = (labelId: LabelIdentifier) => labelPublishedDocument(labelId).collection(LABEL_NOTEBOOK_PUBLISHEDS) as CollectionReference<LabelNotebook_Storage>;
 export const labelNotebookPublishedDocument = (labelId: LabelIdentifier, notebookId: NotebookIdentifier) => labelNotebookPublishedCollection(labelId).doc(notebookId);
 
 // ** RTDB ************************************************************************

@@ -1,6 +1,6 @@
 import { FieldValue, FirestoreTimestamp } from '../util/firestore';
 import { Modify } from '../util/type';
-import { Label, LabelNotebook, LabelNotebookPublished, LabelPublished, LabelSummary } from './type';
+import { Label, LabelNotebook, LabelPublished, LabelSummary } from './type';
 
 // ** Constants *******************************************************************
 // == Firestore ===================================================================
@@ -34,7 +34,7 @@ export type LabelNotebook_Storage = LabelNotebook/*nothing additional*/;
 
 // -- Published Label -------------------------------------------------------------
 export type LabelPublished_Storage = LabelPublished/*nothing additional*/;
-export type LabelNotebookPublished_Storage = LabelNotebookPublished/*nothing additional*/;
+// SEE: LabelNotebook_Storage
 
 // == RTDB ========================================================================
 // -- Label Summary ---------------------------------------------------------------
@@ -71,10 +71,7 @@ export type LabelPublished_Write = Modify<LabelPublished_Storage, Readonly<{
 // NOTE: hard-delete so no delete Action Type
 
 // .. Label Notebook Published ....................................................
-// always written as if new (i.e. always completely overwritten)
-export type LabelNotebookPublished_Write = Modify<LabelNotebookPublished_Storage, Readonly<{
-  createTimestamp: FieldValue/*always-write server-set*/;
-}>>;
+// SEE: LabelNotebook_Write
 // NOTE: hard-delete so no delete Action Type
 
 // == RTDB ========================================================================

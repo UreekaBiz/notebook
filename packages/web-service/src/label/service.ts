@@ -1,6 +1,6 @@
 import { lastValueFrom, Observable } from 'rxjs';
 
-import { Label, LabelIdentifier, LabelTuple, ObjectTuple, LabelPublished, LabelPublishedTuple, LabelNotebookTuple, LabelNotebookPublishedTuple, NotebookIdentifier, NotebookTuple, ShareRole, UserIdentifier } from '@ureeka-notebook/service-common';
+import { Label, LabelIdentifier, LabelTuple, ObjectTuple, LabelPublished, LabelPublishedTuple, LabelNotebookTuple, NotebookIdentifier, NotebookTuple, ShareRole, UserIdentifier } from '@ureeka-notebook/service-common';
 
 import { getLogger, ServiceLogger } from '../logging';
 import { ApplicationError } from '../util/error';
@@ -101,7 +101,7 @@ export class LabelService {
    * @param pageSize the number of Published Notebooks returned per page
    * @returns {@link Pagination} over the collection of {@link LabelNotebook}s
    */
-  public onLabelNotebooksPublished(labelId: LabelIdentifier, pageSize: number = LabelService.DEFAULT_SCROLL_SIZE): Pagination<LabelNotebookPublishedTuple> {
+  public onLabelNotebooksPublished(labelId: LabelIdentifier, pageSize: number = LabelService.DEFAULT_SCROLL_SIZE): Pagination<LabelNotebookTuple> {
     return paginatedQuery(labelNotebookPublishedQuery(labelId), labelNotebooksPublishedSnapshot$, pageSize,
                           `Published Label (${labelId}}) Published Notebooks`);
   }

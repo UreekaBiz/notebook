@@ -121,29 +121,9 @@ export type LabelPublished = Creatable & Readonly<{ /*Firestore*/
 export type LabelPublishedTuple = ObjectTuple<LabelIdentifier, LabelPublished>;
 
 // ................................................................................
-// the analog of LabelNotebook for Labels that are public *and* Notebooks that are
-// Published
-// NOTE: documents are always fully written on any change to a public Label
-// CHECK: probably want to denormalize the Notebook meta-data onto this structure
-//        since this would be used in cases of 'show all Notebooks for a Label'
-//        (rather than having to do the Notebook lookup on the client)
-// SEE: LabelPublished and LabelNotebook
-// FIXME: drop this for LabelNotebook!!!
-export type LabelNotebookPublished = Creatable & Readonly<{ /*Firestore*/
-  /** the parent public Label (for convenience when indexing) */
-  labelId: LabelIdentifier/*write-once server-written*/;
-  /** the Published Notebook (for convenience when indexing) */
-  notebookId: Identifier/*write-once server-written*/;
-
-  /** the Label's name to facilitate collection-group queries
-   *  @see Label#name */
-  name: string/*write-many server-written*/;
-
-  /** the LabelNotebook's order
-   *  @see LabelNotebook#order */
-  order: Timestamp/*write-many server-written*/;
-}>;
-export type LabelNotebookPublishedTuple = ObjectTuple<NotebookIdentifier, LabelNotebookPublished>;
+// NOTE: LabelNotebook is used for both public and private Labels. Specifically,
+//       there is no LabelNotebookPublished type -- LabelNotebook is used (though
+//       an alias could easily be added)
 
 // == Label Summary (RTDB) ========================================================
 // SEE: ./datastore.ts: LABEL_SUMMARY

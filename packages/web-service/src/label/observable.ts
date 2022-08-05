@@ -1,6 +1,6 @@
 import { map } from 'rxjs';
 
-import { isDefined, isTupleNotNull, LabelIdentifier, LabelTuple, Label_Storage, LabelPublished_Storage, LabelNotebook_Storage, LabelNotebookTuple, LabelPublishedTuple, LabelNotebookPublishedTuple, LabelNotebookPublished_Storage, NotebookTuple } from '@ureeka-notebook/service-common';
+import { isDefined, isTupleNotNull, LabelIdentifier, LabelTuple, Label_Storage, LabelPublished_Storage, LabelNotebook_Storage, LabelNotebookTuple, LabelPublishedTuple, NotebookTuple } from '@ureeka-notebook/service-common';
 
 import { defaultDocumentConverter, defaultDocumentTupleConverter, defaultTupleConverter } from '../util/firestore';
 import { joinDetail$ } from '../util/observable';
@@ -50,7 +50,7 @@ export const labelPublishedById$ = (labelId: LabelIdentifier) =>
   documentTuple(labelPublishedDocument(labelId), defaultDocumentTupleConverter);
 
 // -- Notebook --------------------------------------------------------------------
-export const labelNotebooksPublishedSnapshot$: QuerySnapshotObservable<LabelNotebookPublished_Storage, LabelNotebookPublishedTuple> =
+export const labelNotebooksPublishedSnapshot$: QuerySnapshotObservable<LabelNotebook_Storage, LabelNotebookTuple> =
   snapshot => snapshotTuplesOnce(snapshot, defaultTupleConverter);
 
 // -- Search ----------------------------------------------------------------------

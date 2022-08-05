@@ -1,7 +1,7 @@
 import { ref } from 'firebase/database';
 import { collection, doc, limit, orderBy, query, where, CollectionReference, Query } from 'firebase/firestore';
 
-import { computeLabelPrefixQueryString, isBlank, nameof, LabelIdentifier, LabelNotebook_Storage, LabelNotebookPublished_Storage, LabelPublished_Storage, Label_Storage, NotebookIdentifier, LABELS, LABEL_NOTEBOOK_PUBLISHEDS, LABEL_NOTEBOOKS, LABEL_PUBLISHEDS, LABEL_SUMMARIES, MAX_LABEL_SEARCH_RESULTS } from '@ureeka-notebook/service-common';
+import { computeLabelPrefixQueryString, isBlank, nameof, LabelIdentifier, LabelNotebook_Storage, LabelPublished_Storage, Label_Storage, NotebookIdentifier, LABELS, LABEL_NOTEBOOK_PUBLISHEDS, LABEL_NOTEBOOKS, LABEL_PUBLISHEDS, LABEL_SUMMARIES, MAX_LABEL_SEARCH_RESULTS } from '@ureeka-notebook/service-common';
 
 import { database, firestore } from '../util/firebase';
 import { buildSortQuery } from '../util/firestore';
@@ -22,7 +22,7 @@ export const labelPublishedCollection = collection(firestore, LABEL_PUBLISHEDS) 
 export const labelPublishedDocument = (labelId: LabelIdentifier) => doc(labelPublishedCollection, labelId);
 
 // .. Label Notebook Published ....................................................
-export const labelNotebookPublishedCollection = (labelId: LabelIdentifier) => collection(labelPublishedDocument(labelId), LABEL_NOTEBOOK_PUBLISHEDS) as CollectionReference<LabelNotebookPublished_Storage>;
+export const labelNotebookPublishedCollection = (labelId: LabelIdentifier) => collection(labelPublishedDocument(labelId), LABEL_NOTEBOOK_PUBLISHEDS) as CollectionReference<LabelNotebook_Storage>;
 export const labelNotebookPublishedDocument = (labelId: LabelIdentifier, notebookId: NotebookIdentifier) => doc(labelNotebookPublishedCollection(labelId), notebookId);
 
 // == Query =======================================================================
