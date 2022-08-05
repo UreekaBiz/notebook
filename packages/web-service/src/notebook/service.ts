@@ -40,8 +40,7 @@ export class NotebookService {
   }
 
   /**
-   * @param notebookId the {@link NotebookIdentifier} for which the {@link Notebook}
-   *         is desired
+   * @param notebookId the {@link NotebookIdentifier} of the desired {@link Notebook}
    * @returns Observable over {@link Notebook} with the specified identifier. If
    *          no such Notebook exists then `null` is returned. Note that the Notebook
    *          _may be_ soft deleted {@link Notebook#deleted}.
@@ -62,8 +61,7 @@ export class NotebookService {
   }
 
   /**
-   * @param notebookId the {@link NotebookIdentifier} for which the {@link PublishedNotebook}
-   *         is desired
+   * @param notebookId the {@link NotebookIdentifier} of the desired {@link PublishedNotebook}
    * @returns Observable over the {@link PublishedNotebook} with the specified
    *          identifier. If no such Published Notebook exists then `null` is returned.
    */
@@ -74,8 +72,7 @@ export class NotebookService {
   // == Read ======================================================================
   // -- Notebook ------------------------------------------------------------------
   /**
-   * @param notebookId the {@link NotebookIdentifier} for which the {@link Notebook}
-   *         is desired
+   * @param notebookId the {@link NotebookIdentifier} of the desired {@link Notebook}
    *  @returns the {@link Notebook} for the specified {@link NotebookIdentifier}. Note
    *           that the Notebook _may be_ soft deleted {@link Notebook#deleted}.
    *  @throws {@link ApplicationError}
@@ -93,8 +90,8 @@ export class NotebookService {
 
   // -- Published Notebook --------------------------------------------------------
   /**
-   * @param notebookId the {@link PublishedNotebookIdentifier} for which the
-   *         {@link PublishedNotebook} is desired
+   * @param notebookId the {@link PublishedNotebookIdentifier} of the desired
+   *        {@link PublishedNotebook}
    *  @returns the {@link PublishedNotebook} for the specified
    *           {@link PublishedNotebookIdentifier}. Note that the PublishedNotebook
    *           _may be_ soft deleted {@link PublishedNotebook#delete}.
