@@ -5,7 +5,7 @@ import { LabelIdentifier, LabelVisibility, LabelNotebook_Write, Label_Storage, N
 import { firestore } from '../firebase';
 import { ApplicationError } from '../util/error';
 import { writeBatch, ServerTimestamp } from '../util/firestore';
-import { labelNotebookCollection, labelDocument } from './datastore';
+import { labelDocument, labelNotebookCollection, labelNotebookDocument } from './datastore';
 
 // ********************************************************************************
 // == Add =========================================================================
@@ -15,7 +15,7 @@ export const addNotebook = async (
 ) => {
   try {
     const labelRef = labelDocument(labelId) as DocumentReference<Label_Storage>,
-          labelNotebookRef = labelNotebookCollection(labelId).doc(notebookId) as DocumentReference<LabelNotebook_Write>;
+          labelNotebookRef = labelNotebookDocument(labelId, notebookId) as DocumentReference<LabelNotebook_Write>;
     await firestore.runTransaction(async transaction => {
       const snapshot = await transaction.get(labelRef);
       if(!snapshot.exists) throw new ApplicationError('functions/not-found', `Cannot add a Notebook (${notebookId}) to a non-existing Label (${labelId}) for User (${userId}).`);
@@ -52,7 +52,7 @@ export const removeNotebook = async (
 ) => {
   try {
     const labelRef = labelDocument(labelId) as DocumentReference<Label_Storage>,
-          labelNotebookRef = labelNotebookCollection(labelId).doc(notebookId) as DocumentReference<LabelNotebook_Write>;
+          labelNotebookRef = labelNotebookDocument(labelId, notebookId) as DocumentReference<LabelNotebook_Write>;
     await firestore.runTransaction(async transaction => {
       const snapshot = await transaction.get(labelRef);
       if(!snapshot.exists) throw new ApplicationError('functions/not-found', `Cannot remove Notebook (${notebookId}) from a non-existing Label (${labelId}) for User (${userId}).`);
