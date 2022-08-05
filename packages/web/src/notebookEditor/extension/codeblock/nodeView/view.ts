@@ -35,6 +35,9 @@ export class CodeBlockView extends AbstractNodeView<CodeBlockNodeType, CodeBlock
     // Tell PM that the content fo the node must go into the paragraph element,
     // by delegating keeping track of the it to PM (SEE: NodeView#contentDOM)
     this.contentDOM = paragraph;
+
+    // Sync view with current state
+    this.updateView();
   }
 
   /** @see AbstractNodeView#createDomElement() */
