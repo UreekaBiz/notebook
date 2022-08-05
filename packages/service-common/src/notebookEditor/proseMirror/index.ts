@@ -1,5 +1,6 @@
 export * from './attribute';
 export * from './document';
+export * from './htmlRenderer/attribute';
 export * from './htmlRenderer/renderer';
 export * from './htmlRenderer/state';
 export * from './htmlRenderer/type';

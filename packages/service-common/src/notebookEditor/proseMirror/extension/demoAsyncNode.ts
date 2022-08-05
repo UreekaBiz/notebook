@@ -1,7 +1,7 @@
 import { Mark, Node as ProseMirrorNode, NodeSpec } from 'prosemirror-model';
 
 import { AttributesTypeFromNodeSpecAttributes, AttributeType, noNodeOrMarkSpecAttributeDefaultValue } from '../attribute';
-import { getRenderAttributes } from '../htmlRenderer/renderer';
+import { getRenderAttributes } from '../htmlRenderer/attribute';
 import { createNodeDataTypeAttribute, NodeRendererSpec } from '../htmlRenderer/type';
 import { getAllowedMarks } from '../mark';
 import { JSONNode, NodeName, ProseMirrorNodeContent } from '../node';
