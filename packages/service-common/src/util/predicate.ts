@@ -1,4 +1,5 @@
 import { ObjectTuple  } from './datastore';
+import { Timestamp } from './firestore';
 
 // convenience functions for predicates (e.g. Array's filter())
 // ********************************************************************************
@@ -10,6 +11,15 @@ export const NumberComparator = (a: number, b: number) => a - b;/*ascending*/
 export const StringComparator = (a: string, b: string) => a.localeCompare(b);
        const IntlComparator = new Intl.Collator([], { numeric: true }).compare/*sort string-numbers as numbers*/;
 export const StringNumberComparator = (a: string, b: string) => IntlComparator(a, b);
+
+// REF: https://firebase.google.com/docs/reference/js/firebase.firestore.Timestamp#valueof
+export const TimestampComparator = (a: Timestamp, b: Timestamp) => {
+  const aValue = a.valueOf(),
+        bValue = b.valueOf();
+  if(aValue < bValue) return -1;
+  if(aValue > bValue) return 1;
+  return 0;
+};
 
 // == Filters =====================================================================
 // REF: https://github.com/microsoft/TypeScript/issues/16069
