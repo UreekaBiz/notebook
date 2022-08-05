@@ -24,7 +24,7 @@ export const isAsyncNodeAttributes = (attrs: any): attrs is AsyncNodeAttributes 
 
 // == Type ========================================================================
 // the set of Node 'types' that are async nodes (the 'inclusion set')
-export const asyncNodes: Set<NodeName> = new Set([NodeName.DEMO_ASYNCNODE]);
+export const asyncNodes: Set<NodeName> = new Set([NodeName.DEMO_ASYNC_NODE]);
 
 // The set of node 'types' that should not be modifiable while they
 // are performing an asynchronous operation. This does not apply to all of them,

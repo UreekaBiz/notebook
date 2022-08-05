@@ -32,7 +32,7 @@ export const isCodeBlockAsyncNodeAttributes = (attrs: any): attrs is CodeBlockAs
 
 // == Type ========================================================================
 // the set of Node 'types' that are codeBlockAsyncNodes (the 'inclusion set')
-export const codeBlockAsyncNodes: Set<NodeName> = new Set([NodeName.DEMO_ASYNCNODE]);
+export const codeBlockAsyncNodes: Set<NodeName> = new Set([NodeName.DEMO_ASYNC_NODE]);
 
 // semantic differentiation: references are only inside codeBlockAsyncNodes
 export type CodeBlockReference = NodeIdentifier;

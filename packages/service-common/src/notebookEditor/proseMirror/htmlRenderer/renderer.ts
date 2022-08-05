@@ -28,7 +28,7 @@ import { getRenderTag, HTMLString, MarkRendererSpec, NodeRendererSpec, DATA_MARK
 export const NodeRendererSpecs: Record<NodeName, NodeRendererSpec> = {
   [NodeName.CODEBLOCK]: CodeBlockNodeRendererSpec as any/*FIXME!!!*/,
   [NodeName.DEMO_2_ASYNC_NODE]: Demo2AsyncNodeRendererSpec as any/*FIXME!!!*/,
-  [NodeName.DEMO_ASYNCNODE]: DemoAsyncNodeRendererSpec as any/*FIXME!!!*/,
+  [NodeName.DEMO_ASYNC_NODE]: DemoAsyncNodeRendererSpec as any/*FIXME!!!*/,
   [NodeName.DOC]: DocumentNodeRendererSpec,
   [NodeName.HEADING]: HeadingNodeRendererSpec as any/*FIXME!!!*/,
   [NodeName.IMAGE]: ImageNodeRendererSpec as any/*FIXME!!!*/,

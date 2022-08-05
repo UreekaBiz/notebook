@@ -22,7 +22,7 @@ export class DemoAsyncNodeView extends AbstractCodeBlockAsyncNodeView<string, De
 
     // Update styles
     const statusColor = performingAsyncOperation ? asyncNodeStatusToColor(AsyncNodeStatus.PROCESSING) : asyncNodeStatusToColor(status);
-    const renderAttributes = getRenderAttributes(NodeName.DEMO_ASYNCNODE, attrs, DemoAsyncNodeRendererSpec, DemoAsyncNodeSpec);
+    const renderAttributes = getRenderAttributes(NodeName.DEMO_ASYNC_NODE, attrs, DemoAsyncNodeRendererSpec, DemoAsyncNodeSpec);
     const style = `${renderAttributes.style ?? ''/*empty string if not present*/} ${DEMO_ASYNCNODE_TEXT_STYLE} ${DEMO_ASYNCNODE_STATUS_COLOR}: ${statusColor}; ${DEMO_ASYNCNODE_BORDER_COLOR};`;
     this.content.setAttribute('style', style);
 

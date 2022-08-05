@@ -31,7 +31,7 @@ export const NodeSpecs: Record<NodeName, NodeSpec> = {
 
   [NodeName.CODEBLOCK]: CodeBlockNodeSpec,
   [NodeName.DEMO_2_ASYNC_NODE]: Demo2AsyncNodeSpec,
-  [NodeName.DEMO_ASYNCNODE]: DemoAsyncNodeSpec,
+  [NodeName.DEMO_ASYNC_NODE]: DemoAsyncNodeSpec,
   [NodeName.HEADING]: HeadingNodeSpec,
   [NodeName.IMAGE]: ImageNodeSpec,
   [NodeName.MARK_HOLDER]: MarkHolderNodeSpec,

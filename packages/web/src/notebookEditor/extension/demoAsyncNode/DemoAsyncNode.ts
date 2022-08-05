@@ -49,7 +49,7 @@ export const DemoAsyncNode = Node.create<NoOptions, DemoAsyncNodeStorageType>({
       return new DemoAsyncNodeController(editor, node, this.storage, getPos);
     };
   },
-  parseHTML() { return [{ tag: NodeName.DEMO_ASYNCNODE }]; },
+  parseHTML() { return [{ tag: NodeName.DEMO_ASYNC_NODE }]; },
   renderHTML({ node, HTMLAttributes }) { return getNodeOutputSpec(node, HTMLAttributes, true/*is leaf node*/); },
 });
 
