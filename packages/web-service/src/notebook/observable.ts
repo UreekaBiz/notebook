@@ -12,12 +12,14 @@ import { NotebookFilter, PublishedNotebookFilter } from './type';
 // == Get =========================================================================
 export const notebookOnceById$ = (notebookId: NotebookIdentifier) =>
   documentOnce(notebookDocument(notebookId), defaultDocumentConverter);
-export const notebookById$ = (notebookId: NotebookIdentifier) =>
+export const notebookTupleOnceById$ = (notebookId: NotebookIdentifier) =>
+  documentTuple(notebookDocument(notebookId), defaultDocumentTupleConverter);
+export const notebookTupleById$ = (notebookId: NotebookIdentifier) =>
   documentTuple(notebookDocument(notebookId), defaultDocumentTupleConverter);
 
 export const publishedNotebookOnceById$ = (notebookId: PublishedNotebookIdentifier) =>
   documentOnce(publishedNotebookDocument(notebookId), defaultDocumentConverter);
-export const publishedNotebookById$ = (notebookId: PublishedNotebookIdentifier) =>
+export const publishedNotebookTupleById$ = (notebookId: PublishedNotebookIdentifier) =>
   documentTuple(publishedNotebookDocument(notebookId), defaultDocumentTupleConverter);
 
 // == Search ======================================================================

@@ -7,7 +7,7 @@ import { ApplicationError } from '../util/error';
 import { Scrollable, scrollableQuery } from '../util/observableScrolledCollection';
 import { notebookQuery, publishedNotebookQuery } from './datastore';
 import { notebookCreate, notebookDelete, notebookShare, publishNotebook } from './function';
-import { notebookById$, notebookOnceById$,  notebooksQuery$, publishedNotebookById$, publishedNotebookOnceById$, publishedNotebooksQuery$ } from './observable';
+import { notebookTupleById$, notebookOnceById$,  notebooksQuery$, publishedNotebookTupleById$, publishedNotebookOnceById$, publishedNotebooksQuery$ } from './observable';
 import { Notebook_Create, NotebookFilter, PublishedNotebook_Create, PublishedNotebookFilter } from './type';
 
 const log = getLogger(ServiceLogger.NOTEBOOK);
@@ -46,7 +46,7 @@ export class NotebookService {
    *          _may be_ soft deleted {@link Notebook#deleted}.
    */
   public onNotebook$(notebookId: NotebookIdentifier): Observable<ObjectTuple<NotebookIdentifier, Notebook | null/*not found*/>> {
-    return notebookById$(notebookId);
+    return notebookTupleById$(notebookId);
   }
 
   // -- Published Notebook --------------------------------------------------------
@@ -66,7 +66,7 @@ export class NotebookService {
    *          identifier. If no such Published Notebook exists then `null` is returned.
    */
   public onPublishedNotebook$(notebookId: NotebookIdentifier): Observable<ObjectTuple<PublishedNotebookIdentifier, PublishedNotebook | null/*not found*/>> {
-    return publishedNotebookById$(notebookId);
+    return publishedNotebookTupleById$(notebookId);
   }
 
   // == Read ======================================================================
