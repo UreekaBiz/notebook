@@ -50,7 +50,7 @@ export const SideBar = () => {
 
       const markName = getMarkName(mark);
       toolbars.push(<Toolbar
-                      key={i}
+                      key={`mark-toolbar-${i}`}
                       depth={undefined}
                       nodeOrMarkName={markName}
                       onSelection={handleDepthSelection}
@@ -68,7 +68,7 @@ export const SideBar = () => {
       const depth = i === 0 ? undefined/*leaf node*/ : ascendantsNodes.length - i - 1;
       const nodeName = getNodeName(node);
       toolbars.push(<Toolbar
-                      key={i}
+                      key={`node-toolbar-${i}`}
                       depth={depth}
                       nodeOrMarkName={nodeName}
                       onSelection={handleDepthSelection}
@@ -78,7 +78,6 @@ export const SideBar = () => {
     });
     return toolbars;
   }, [editor.state, handleDepthSelection, selectedDepth]);
-
 
   return (
     <Flex flexDir='column' minH={0} width='100%' height='100%' background='#FCFCFC' borderLeft='1px solid' borderColor='gray.300' overflow='hidden'>
