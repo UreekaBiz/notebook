@@ -1,6 +1,6 @@
 import { CommandProps } from '@tiptap/core';
 
-import { createBoldMark, isHeadingLevel, AttributeType, CommandFunctionType, HeadingLevel, MarkName, NodeName } from '@ureeka-notebook/service-common';
+import { createBoldMark, isHeadingLevel, AttributeType, CommandFunctionType, HeadingLevel, NodeName, MarkName } from '@ureeka-notebook/web-service';
 
 import { createMarkHolderJSONNode } from 'notebookEditor/extension/markHolder/util';
 

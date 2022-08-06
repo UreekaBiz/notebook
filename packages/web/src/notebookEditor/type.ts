@@ -20,7 +20,6 @@ import { Strikethrough } from 'notebookEditor/extension/strikethrough/Strikethro
 import { Style } from 'notebookEditor/extension/style/Style';
 import { Text } from 'notebookEditor/extension/text/Text';
 import { TextStyle } from 'notebookEditor/extension/textStyle/TextStyle';
-import { UniqueNodeId } from 'notebookEditor/extension/uniqueNodeId/UniqueNodeId';
 
 // ********************************************************************************
 // defines the structure of the Editor
@@ -53,7 +52,6 @@ export const editorDefinition = {
     Style,
     Text,
     TextStyle,
-    UniqueNodeId,
   ],
   editorProps: { attributes: { class: 'Editor'/*SEE: /index.css*/ } },
 
@@ -67,29 +65,25 @@ export const editorDefinition = {
 // Current Schema Execution Order
 // SEE: notebookEditor/model/type/ExtensionPriority
 // appendedTransaction
-// 1. UniqueNodeId
-// 2. NodeViewRemoval
-// 3. SetDefaultMarks
-// 4. Paragraph
-// 5. all other extensions (in registration order, (SEE: Extension array above))
+// 1. NodeViewRemoval
+// 2. SetDefaultMarks
+// 3. Paragraph
+// 4. all other extensions (in registration order, (SEE: Extension array above))
 //
 // onTransaction
-// 1. UniqueNodeId
-// 2. NodeViewRemoval
-// 3. SetDefaultMarks
-// 4. Paragraph
-// 5. all other extensions (in registration order, (SEE: Extension array above))
+// 1. NodeViewRemoval
+// 2. SetDefaultMarks
+// 3. Paragraph
+// 4. all other extensions (in registration order, (SEE: Extension array above))
 //
 // onSelectionUpdate
-// 1. UniqueNodeId
-// 2. NodeViewRemoval
-// 3. SetDefaultMarks
-// 4. Paragraph
-// 5. all other extensions (in registration order, (SEE: Extension array above))
+// 1. NodeViewRemoval
+// 2. SetDefaultMarks
+// 3. Paragraph
+// 4. all other extensions (in registration order, (SEE: Extension array above))
 //
 // onUpdate
-// 1. UniqueNodeId
-// 2. NodeViewRemoval
-// 3. SetDefaultMarks
-// 4. Paragraph
-// 5. all other extensions (in registration order, (SEE: Extension array above))
+// 1. NodeViewRemoval
+// 2. SetDefaultMarks
+// 3. Paragraph
+// 4. all other extensions (in registration order, (SEE: Extension array above))

@@ -1,7 +1,5 @@
 import { generateNodeId, Attributes, HeadingLevel } from '@ureeka-notebook/web-service';
 
-import { DEFAULT_NODE_ID } from 'notebookEditor/extension/uniqueNodeId/UniqueNodeId';
-
 // ********************************************************************************
 // == Type ========================================================================
 // -- Options ---------------------------------------------------------------------
@@ -19,6 +17,5 @@ export const createDefaultHeadingAttributes = (level: number) =>
   });
 
 // -- Defaults --------------------------------------------------------------------
-export const HEADING_ID = `${DEFAULT_NODE_ID} Heading ID`;
 export const DEFAULT_HEADING_LEVEL: HeadingLevel = HeadingLevel.One;
 export const DEFAULT_HEADING_STYLE_SET = false;

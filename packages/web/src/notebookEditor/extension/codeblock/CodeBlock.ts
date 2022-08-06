@@ -1,6 +1,6 @@
 import { textblockTypeInputRule, Node } from '@tiptap/core';
 
-import { getNodeOutputSpec, isCodeBlockNode, AttributeType, CodeBlockNodeSpec, CodeBlockType, NodeName, SetAttributeType } from '@ureeka-notebook/web-service';
+import { generateNodeId, getNodeOutputSpec, isCodeBlockNode, AttributeType, CodeBlockNodeSpec, CodeBlockType, NodeName, SetAttributeType } from '@ureeka-notebook/web-service';
 
 import { setAttributeParsingBehavior } from 'notebookEditor/extension/util/attribute';
 import { handleBlockArrowDown, handleBlockArrowUp, handleBlockBackspace } from 'notebookEditor/extension/util/node';
@@ -10,7 +10,6 @@ import { toggleCodeBlockCommand } from './command';
 import { CodeBlockController } from './nodeView/controller';
 import { CodeBlockStorage } from './nodeView/storage';
 import { codeBlockOnTransaction } from './transaction';
-import { DEFAULT_CODEBLOCK_ID } from './type';
 
 // ********************************************************************************
 // == Node ========================================================================
@@ -20,7 +19,8 @@ export const CodeBlock = Node.create<NoOptions, CodeBlockStorage>({
   // -- Attribute -----------------------------------------------------------------
   addAttributes() {
     return {
-      [AttributeType.Id]: setAttributeParsingBehavior(AttributeType.Id, SetAttributeType.STRING, DEFAULT_CODEBLOCK_ID),
+      // Creates a new id for the node when it is created.
+      [AttributeType.Id]: { parseHTML: () => generateNodeId() },
 
       [AttributeType.Type]: setAttributeParsingBehavior(AttributeType.Type, SetAttributeType.STRING, CodeBlockType.Code),
       [AttributeType.Wrap]: setAttributeParsingBehavior(AttributeType.Wrap, SetAttributeType.BOOLEAN, false/*default wrap for Code type is false*/),

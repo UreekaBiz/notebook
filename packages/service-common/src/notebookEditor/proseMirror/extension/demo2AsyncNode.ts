@@ -1,6 +1,6 @@
 import { Mark, Node as ProseMirrorNode, NodeSpec } from 'prosemirror-model';
 
-import { noNodeOrMarkSpecAttributeDefaultValue, AttributeType, AttributesTypeFromNodeSpecAttributes } from '../attribute';
+import { noNodeOrMarkSpecAttributeDefaultValue, AttributesTypeFromNodeSpecAttributes, AttributeType } from '../attribute';
 import { getRenderAttributes } from '../htmlRenderer/attribute';
 import { createNodeDataTypeAttribute, NodeRendererSpec } from '../htmlRenderer/type';
 import { getAllowedMarks, MarkName } from '../mark';
@@ -79,7 +79,6 @@ export const Demo2AsyncNodeRendererSpec: NodeRendererSpec<Demo2AsyncNodeAttribut
   attributes: {/*no need to render attributes*/},
 };
 
-export const DEFAULT_DEMO_2_ASYNC_NODE_ID = `Default Demo2AsyncNode ID`;
 export const DEFAULT_DEMO_2_ASYNC_NODE_STATUS = DEFAULT_ASYNC_NODE_STATUS/*alias*/;
 
 export const DEFAULT_DEMO_2_ASYNC_NODE_DELAY = 4000/*ms*/;
@@ -98,12 +97,4 @@ export const createDemo2AsyncNodeNode = (schema: NotebookSchemaType, attributes?
 // -- JSON Node Type --------------------------------------------------------------
 export type Demo2AsyncNodeJSONNodeType = JSONNode<Demo2AsyncNodeAttributes> & { type: NodeName.DEMO_2_ASYNC_NODE; };
 export const isDemo2AsyncNodeJSONNode = (node: JSONNode): node is Demo2AsyncNodeJSONNodeType => node.type === NodeName.DEMO_2_ASYNC_NODE;
-
-// == Util ========================================================================
-export const createDefaultDemo2AsyncNodeAttributes = (): Partial<Demo2AsyncNodeAttributes> =>({
-  [AttributeType.Id]: DEFAULT_DEMO_2_ASYNC_NODE_ID,
-  [AttributeType.Status]: DEFAULT_DEMO_2_ASYNC_NODE_STATUS,
-
-  [AttributeType.Delay]: DEFAULT_DEMO_2_ASYNC_NODE_DELAY,
-});
 

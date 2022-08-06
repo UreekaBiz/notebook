@@ -64,7 +64,6 @@ export const DemoAsyncNodeRendererSpec: NodeRendererSpec<DemoAsyncNodeAttributes
   attributes: {/*no need to render attributes*/},
 };
 
-export const DEFAULT_DEMO_ASYNC_NODE_ID = `Default DemoAsyncNode ID`;
 export const DEFAULT_DEMO_ASYNC_NODE_STATUS = DEFAULT_CODEBLOCK_ASYNC_NODE_STATUS/*alias*/;
 export const DEFAULT_DEMO_ASYNC_NODE_TEXT = 'Not Executed'/*creation default*/;
 export const DEFAULT_DEMO_ASYNC_NODE_DELAY = 4000/*ms*/;
@@ -77,7 +76,7 @@ export type DemoAsyncNodeType = ProseMirrorNode<NotebookSchemaType> & { attrs: D
 export const isDemoAsyncNode = (node: ProseMirrorNode<NotebookSchemaType>): node is DemoAsyncNodeType => node.type.name === NodeName.DEMO_ASYNC_NODE;
 
 export const getDemoAsyncNodeNodeType = (schema: NotebookSchemaType) => schema.nodes[NodeName.DEMO_ASYNC_NODE];
-export const createDemoAsyncNodeNode = (schema: NotebookSchemaType, attributes?: DemoAsyncNodeAttributes, content?: ProseMirrorNodeContent, marks?: Mark<NotebookSchemaType>[]) =>
+export const createDemoAsyncNodeNode = (schema: NotebookSchemaType, attributes?: Partial<DemoAsyncNodeAttributes>, content?: ProseMirrorNodeContent, marks?: Mark<NotebookSchemaType>[]) =>
   getDemoAsyncNodeNodeType(schema).create(attributes, content, marks);
 
 // -- JSON Node Type --------------------------------------------------------------

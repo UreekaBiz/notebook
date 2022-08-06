@@ -31,8 +31,9 @@
 /* -- Node styles -------------------------------------------------------------- */
 /* .. Codeblock ................................................................ */
 [data-node-type="codeBlock"]{
-  align-items: center;
+  position: relative;
   display: flex;
+  align-items: center;
   gap: 10px;
   background:#EDF2F7;
   border: 1px solid;
@@ -49,6 +50,16 @@
   font-size: 16px;
 }
 
+/* .. Visual id ................................................................ */
+[data-node-type="codeBlock"]::after{
+  content: attr(data-visualid);
+  position: absolute;
+  top: 50%;
+  left: calc(100% + 8px);
+  transform: translateY(-50%);
+  color: rgba(0,0,0,.3);
+  font-weight: 600;
+}
 /* .. Demo2AsyncNode ........................................................... */
 [data-node-type="demo2AsyncNode"] {
   background: rgba(0,0,0,0.1);

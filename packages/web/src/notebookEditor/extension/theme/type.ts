@@ -61,7 +61,7 @@ export const DefaultTheme: Theme = {
       [AttributeType.PaddingBottom]: '4px',
 
       [AttributeType.MarginLeft]: '4px',
-      [AttributeType.MarginRight]: '4px',
+      [AttributeType.MarginRight]: '62px'/*spacing for visual id -- max content equals to "0.0.0.0"*/,
       [AttributeType.MarginTop]: '0.5rem',
       [AttributeType.MarginBottom]: '0.5rem',
     },
@@ -143,7 +143,7 @@ export const GoogleDocsTheme: Theme = {
       [AttributeType.PaddingBottom]: '4px',
 
       [AttributeType.MarginLeft]: '4px',
-      [AttributeType.MarginRight]: '4px',
+      [AttributeType.MarginRight]: '62px'/*spacing for visual id -- max content equals to "0.0.0.0"*/,
       [AttributeType.MarginTop]: '0.5rem',
       [AttributeType.MarginBottom]: '0.5rem',
     },

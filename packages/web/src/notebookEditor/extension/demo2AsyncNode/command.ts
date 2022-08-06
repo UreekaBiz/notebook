@@ -1,8 +1,6 @@
 import { CommandProps } from '@tiptap/core';
 
-import { getParentNode, isDemo2AsyncNode, CommandFunctionType, NodeName } from '@ureeka-notebook/web-service';
-
-import { toggleBlockNode } from 'notebookEditor/extension/util/node';
+import {  generateNodeId, getParentNode, isDemo2AsyncNode, AttributeType, CommandFunctionType, NodeName } from '@ureeka-notebook/web-service';
 
 // == Type ========================================================================
 // NOTE: Usage of ambient module to ensure command is TypeScript-registered
@@ -15,10 +13,9 @@ declare module '@tiptap/core' {
   }
 }
 // == Implementation ==============================================================
-export const toggleDemo2AsyncNodeCommand = () => (commandProps: CommandProps) => {
-  if(isDemo2AsyncNode(getParentNode(commandProps.editor.state.selection))) {
+export const toggleDemo2AsyncNodeCommand = () => ({ commands, editor }: CommandProps) => {
+  if(isDemo2AsyncNode(getParentNode(editor.state.selection))) {
     return false/*do not allow demo2AsyncNodes to be toggable*/;
   }/* else -- create a demo2AsyncNode */
 
-  return toggleBlockNode(commandProps, NodeName.DEMO_2_ASYNC_NODE);
-};
+  return commands.setNode(NodeName.DEMO_2_ASYNC_NODE, { [AttributeType.Id]: generateNodeId() });};
