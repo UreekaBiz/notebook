@@ -22,7 +22,7 @@ export const demoAsyncNodeToolItem: ToolItem = {
   // disable tool item if current selected node or its parent is a CodeBlock node
   shouldBeDisabled: (editor) => {
     const { selection } = editor.state;
-    if(selectionIsOfType(selection, NodeName.DEMO_ASYNC_NODE)) return true;
+    if(editor.isActive(NodeName.DEMO_ASYNC_NODE)) return true;
 
     const parentNode = selection.$anchor.parent;
     if(isAsyncNode(parentNode)) return true;
