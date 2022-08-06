@@ -1,7 +1,6 @@
 import { CommandProps } from '@tiptap/core';
-import { Node as ProseMirrorNode } from 'prosemirror-model';
 
-import { createDefaultDemoAsyncNodeAttributes, CommandFunctionType, DemoAsyncNodeAttributes, NotebookSchemaType, NodeName } from '@ureeka-notebook/web-service';
+import { createDefaultDemoAsyncNodeAttributes, createDemoAsyncNodeNode, generateNodeId, AttributeType, CommandFunctionType, NodeName } from '@ureeka-notebook/web-service';
 
 import { replaceAndSelectNode, selectionIsOfType } from 'notebookEditor/extension/util/node';
 
@@ -16,14 +15,10 @@ declare module '@tiptap/core' {
   }
 }
 // == Implementation ==============================================================
-// .. Create ......................................................................
-const createDemoAsyncNode = (schema: NotebookSchemaType, attributes: Partial<DemoAsyncNodeAttributes>): ProseMirrorNode<NotebookSchemaType> =>
-    schema.nodes[NodeName.DEMO_ASYNC_NODE].create(attributes);
-
 // .. Insert ......................................................................
 export const insertAndSelectDemoAsyncNode = () => (props: CommandProps) => {
   if(selectionIsOfType(props.editor.state.selection, NodeName.DEMO_ASYNC_NODE)) return false/*ignore if selected node already is a demo async node*/;
 
-  const demoAsyncNode = createDemoAsyncNode(props.editor.schema, createDefaultDemoAsyncNodeAttributes());
+  const demoAsyncNode = createDemoAsyncNodeNode(props.editor.schema, { ...createDefaultDemoAsyncNodeAttributes(), [AttributeType.Id]: generateNodeId() } );
   return replaceAndSelectNode(demoAsyncNode, props.tr, props.dispatch);
 };

@@ -1,8 +1,6 @@
 import { CommandProps } from '@tiptap/core';
 
-import { getParentNode, isCodeBlockNode, CommandFunctionType, NodeName } from '@ureeka-notebook/web-service';
-
-import { toggleBlockNode } from 'notebookEditor/extension/util/node';
+import { getParentNode, isCodeBlockNode, CommandFunctionType, NodeName, AttributeType, generateNodeId } from '@ureeka-notebook/web-service';
 
 // ********************************************************************************
 // == Type ========================================================================
@@ -17,10 +15,10 @@ declare module '@tiptap/core' {
 }
 
 // --------------------------------------------------------------------------------
-export const toggleCodeBlockCommand = () => (commandProps: CommandProps) => {
-  if(isCodeBlockNode(getParentNode(commandProps.editor.state.selection))) {
+export const toggleCodeBlockCommand = () => ({ editor, commands }: CommandProps) => {
+  if(isCodeBlockNode(getParentNode(editor.state.selection))) {
     return false/*do not allow codeBlocks to be toggable*/;
   }/* else -- create a codeBlock */
 
-  return toggleBlockNode(commandProps, NodeName.CODEBLOCK);
+  return commands.setNode(NodeName.CODEBLOCK, { [AttributeType.Id]: generateNodeId() });
 };

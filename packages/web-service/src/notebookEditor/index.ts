@@ -55,13 +55,11 @@ export {
   REMOVED_CODEBLOCK_VISUALID,
 
   Demo2AsyncNodeAttributes,
-  DEFAULT_DEMO_2_ASYNC_NODE_ID,
   DEFAULT_DEMO_2_ASYNC_NODE_DELAY,
   DEFAULT_DEMO_2_ASYNC_NODE_STATUS,
 
   DemoAsyncNodeAttributes,
   createDefaultDemoAsyncNodeAttributes,
-  DEFAULT_DEMO_ASYNC_NODE_ID,
   DEFAULT_DEMO_ASYNC_NODE_DELAY,
   DEFAULT_DEMO_ASYNC_NODE_STATUS,
   DEFAULT_DEMO_ASYNC_NODE_TEXT,
@@ -131,10 +129,12 @@ export {
   isCodeBlockAsyncNode,
 
   Demo2AsyncNodeType,
+  createDemo2AsyncNodeNode,
   getDemo2AsyncNodeNodeType,
   isDemo2AsyncNode,
 
   DemoAsyncNodeType,
+  createDemoAsyncNodeNode,
   getDemoAsyncNodeNodeType,
   isDemoAsyncNode,
 
@@ -151,6 +151,11 @@ export {
   createImageNode,
   getImageNodeType,
   isImageNode,
+
+  MarkHolderNodeType,
+  createMarkHolderNode,
+  getMarkHolderNodeType,
+  isMarkHolderNode,
 
   ParagraphNodeType,
   createParagraphNode,

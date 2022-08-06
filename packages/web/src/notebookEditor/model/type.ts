@@ -21,7 +21,6 @@ export enum ExtensionName {
   HIGHLIGHT = 'highlight',
   HISTORY = 'history',
   NODEVIEW_REMOVAL = 'nodeViewRemoval',
-  UNIQUE_NODE_ID = 'uniqueNodeId',
   SET_DEFAULT_MARKS = 'setDefaultMarks',
   STYLE = 'style',
 }
@@ -34,7 +33,6 @@ export enum ExtensionName {
 // NOTE: names match extension, Node or Mark names for sanity.
 export enum ExtensionPriority {
   // -- Extension -----------------------------------------------------------------
-  UNIQUE_NODE_ID = 120/*T&E*/,
   NODEVIEW_REMOVAL = 119,
 
   // -- Node ----------------------------------------------------------------------
