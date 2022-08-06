@@ -27,6 +27,9 @@
   font-feature-settings: "liga" 0;
 }
 .inlineNodeContainer { position: relative; display: inline-block; }
+.ProseMirror-selectednode > span/*target inline nodes with content (e.g. asyncNodes)*/{
+  outline: 2px solid black;
+}
 
 /* -- Node styles -------------------------------------------------------------- */
 /* .. Codeblock ................................................................ */
