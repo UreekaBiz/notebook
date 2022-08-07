@@ -1,6 +1,7 @@
 import { ActivityState, Unsubscribe } from '@ureeka-notebook/service-common';
 
 import { getLogger, ServiceLogger } from '../../logging';
+import { getEnvNumber } from '../../util/environment';
 import { AbstractService } from '../../util/AbstractService';
 import SessionService from './SessionService';
 
@@ -11,7 +12,7 @@ const log = getLogger(ServiceLogger.AUTH_USER);
 // server is lost
 // REF: https://stackoverflow.com/questions/667555/how-to-detect-idle-time-in-javascript-elegantly
 // ********************************************************************************
-const idleTimeout = Math.min(60/*min/hr*/*60/*sec/min*/, Math.max(30/*sec*/, Number(process.env.NEXT_PUBLIC_ACTIVITY_IDLE_TIMEOUT || 180/*default to 3min*/)))/*sec*/;
+const idleTimeout = Math.min(60/*min/hr*/*60/*sec/min*/, Math.max(30/*sec*/, getEnvNumber('NEXT_PUBLIC_ACTIVITY_IDLE_TIMEOUT', 180/*default to 3min*/)))/*sec*/;
 
 // ********************************************************************************
 export default class IdleService extends AbstractService {

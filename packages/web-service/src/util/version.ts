@@ -1,7 +1,11 @@
+import { getEnv, hasEnv } from './environment';
+
 // ********************************************************************************
 // the PackageVersion is specified by the top-level 'bin/get_version.js' via the
 // env var NEXT_PUBLIC_VERSION (which is set when the build is run)
+const NEXT_PUBLIC_VERSION = 'NEXT_PUBLIC_VERSION';
 
+// --------------------------------------------------------------------------------
 // NOTE: only the 'packages' structure exists in non-deployed environments
 export type PackageVersions = Record<Package, string/*version*/>;
 export type PackageVersion = Readonly<{
@@ -36,11 +40,11 @@ export enum Package {
 const defaultPackageVersions = Object.values(Package).reduce((o, key) => ({ ...o, [key]: UnknownVersion }), {} as PackageVersions);
 
 export const getPackageVersion = (): PackageVersion => {
-  if(process.env.NEXT_PUBLIC_VERSION) {
+  if(hasEnv(NEXT_PUBLIC_VERSION)) {
     try {
-      return JSON.parse(process.env.NEXT_PUBLIC_VERSION);
+      return JSON.parse(getEnv(NEXT_PUBLIC_VERSION));
     } catch(error) {
-      console.warn(`Error parsing package version from NEXT_PUBLIC_VERSION. (A default will be used.) Reason: `, error);
+      console.warn(`Error parsing package version from ${NEXT_PUBLIC_VERSION}. (A default will be used.) Reason: `, error);
       return {
         branch: UnknownBranch,
         hash: UnknownHash,
@@ -48,7 +52,7 @@ export const getPackageVersion = (): PackageVersion => {
         packages: defaultPackageVersions,
       };
     }
-  } else {
+  } else { /*no version set on build (assumed to be local-dev)*/
     return {
       branch: `${UnknownBranch} (local-dev)`,
       hash: `${UnknownHash} (local-dev)`,

@@ -5,14 +5,15 @@ import { distinctUntilChanged, BehaviorSubject } from 'rxjs';
 
 import { contentToStep, generateClientIdentifier, sleep, AuthedUser, NotebookIdentifier, NotebookVersion, NotebookSchemaVersion, Unsubscribe, UserIdentifier, NO_NOTEBOOK_VERSION } from '@ureeka-notebook/service-common';
 
-import { getLogger, ServiceLogger } from '../logging';
+import { getLogger, ServiceLogger } from '../logging/type';
+import { getEnvNumber } from '../util/environment';
 import { ApplicationError } from '../util/error';
 import { getLatestContent, getVersionsFromIndex, onNewVersion, writeVersions } from './version';
 
 const log = getLogger(ServiceLogger.NOTEBOOK_EDITOR);
 
 // ********************************************************************************
-const versionBatchSize = Math.max(1/*at least one*/, Number(process.env.NEXT_PUBLIC_NOTEBOOK_VERSION_BATCH_SIZE || 1/*default to 1*/));
+const versionBatchSize = Math.max(1/*at least one*/, getEnvNumber('NEXT_PUBLIC_NOTEBOOK_VERSION_BATCH_SIZE', 1/*default to 1*/));
 
 // --------------------------------------------------------------------------------
 // TODO: make this configurable at runtime to facilitate debugging
