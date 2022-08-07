@@ -12,6 +12,7 @@ import { coreRoutes, notebookRoute } from 'shared/routes';
 
 const log = getLogger(Logger.NOTEBOOK);
 
+// header for Notebook-based pages that is *ONLY* used in Auth'd cases
 // ********************************************************************************
 interface Props { background?: string; }
 export const NotebookTopBar: React.FC<Props> = ({ background }) => {
@@ -47,7 +48,7 @@ export const NotebookTopBar: React.FC<Props> = ({ background }) => {
 
     setIsLoading(false/*no longer loading*/);
 
-    // Open a new tab with the newly created Notebook
+    // open a new tab with the newly created Notebook
     const notebookPath = notebookRoute(notebookId);
     const route = `${window.location.origin}${notebookPath}`;
     window.open(route, '_blank'/*new tab*/);
@@ -81,7 +82,7 @@ export const NotebookTopBar: React.FC<Props> = ({ background }) => {
               New
             </Button>
           )}
-        <AuthAvatar avatarSize='sm' showLogIn={false} />
+        <AuthAvatar avatarSize='sm' />
       </Flex>
     </Flex>
   );
