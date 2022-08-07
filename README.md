@@ -39,8 +39,9 @@ npm run clean
 rm -rf node_modules
 rm -rf packages/service-common/dist
 rm -rf packages/ssr-service/dist
-rm -rf packages/web-service/dist
 rm -rf packages/web/build
+rm -rf packages/web/dist
+rm -rf packages/web-service/dist
 rm -rf packages/cloud-functions/dist
 ```
 
