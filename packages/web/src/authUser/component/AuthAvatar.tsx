@@ -4,7 +4,7 @@ import { AiOutlineFileText } from 'react-icons/ai';
 import { BiHomeAlt, BiLogOut } from 'react-icons/bi';
 import { FiSettings } from 'react-icons/fi';
 
-import { isLoggedOut } from '@ureeka-notebook/web-service';
+import { getEnvBoolean, isLoggedOut } from '@ureeka-notebook/web-service';
 
 import { useAuthedUser } from 'authUser/hook/useAuthedUser';
 import { useRouter } from 'next/router';
@@ -14,6 +14,11 @@ import { getPrivateDisplayName } from 'user/util';
 // displays the User's avatar and menu (ala a 'hamburger')
 // NOTE: the AuthUserService doesn't need to be initialized to use this component.
 //       While the service is being initialized this component won't be shown.
+// ********************************************************************************
+// should a login button be shown if configured to do so? This allows the config to
+// override and prevent the login button from being shown.
+const shouldShowLogin = getEnvBoolean('NEXT_PUBLIC_LOGIN_SHOW_BUTTON', true/*default 'show' (by contract)*/);
+
 // ********************************************************************************
 interface Props {
   /** show a login button when the User is not auth'ed. Defaults to true */
@@ -41,7 +46,7 @@ export const AuthAvatar: React.FC<Props> = ({ avatarSize, buttonSize, showLogIn 
   if(authedUser === undefined/*AuthUserService not initialized*/) return null/*don't render anything*/;
 
   if(isLoggedOut(authedUser)) {
-    if(!showLogIn) return null/*don't render anything*/;
+    if(!shouldShowLogin || !showLogIn) return null/*don't render anything (config takes precedence over prop)*/;
     return (
       <Link href={coreRoutes.login}>
         <Button colorScheme='blue' size={buttonSize}>
@@ -62,7 +67,7 @@ export const AuthAvatar: React.FC<Props> = ({ avatarSize, buttonSize, showLogIn 
         marginLeft={4}
         _hover={{ cursor: 'pointer' }}
       />
-      {/* FIXME: make that it so that options can be a prop from the component?*/}
+      {/* FIXME: make that it so that options can be a prop from the component? */}
       <MenuList>
         <MenuItem icon={<BiHomeAlt />} onClick={handleHomeClick}>Home</MenuItem>
         <MenuItem icon={<AiOutlineFileText />} onClick={handleNotebooksClick}>Notebooks</MenuItem>
