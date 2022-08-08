@@ -2,8 +2,8 @@ import { logger } from 'firebase-functions';
 
 import { isType, LabelIdentifier, LabelSummary_Create, LabelSummary_Update, LabelVisibility, UserIdentifier } from '@ureeka-notebook/service-common';
 
+import { DatabaseIncrement } from '../util/rtdb';
 import { labelSummaryRef } from './datastore';
-import { DatabaseIncrement } from 'util/rtdb';
 
 // ********************************************************************************
 // == Create ======================================================================
