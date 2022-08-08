@@ -37,6 +37,7 @@ export const createLabel = async (
     };
     await labelRef.create(label)/*create by definition*/;
 
+    // FIXME: create stub Summary
     // FIXME: publish if visibility === LabelVisibility.Public
 
     return labelId;
@@ -77,6 +78,8 @@ export const updateLabel = async (
       };
       transaction.update(labelRef, label);
 
+      // NOTE: Label Summary does not change for Label updates (only Label Notebooks)
+
       // FIXME: trickle down to sub-collections!!!
       // FIXME: compare visibility to existing and either publish or unpublish or nothing
 
@@ -104,6 +107,7 @@ export const deleteLabel = async (userId: UserIdentifier, labelId: LabelIdentifi
 
     await removeAllNotebooks(userId, labelId)/*logs on error*/;
 
+    // FIXME: remove Label Summary
     // FIXME: remove any published labels!!! (do it in all cases for sanity)
 
   } catch(error) {

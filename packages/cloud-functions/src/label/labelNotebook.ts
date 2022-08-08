@@ -39,6 +39,8 @@ export const addNotebook = async (
         // FIXME: check if the Notebook is published and if so then also write to the published collection
       } /* else -- the parent Label is private and nothing else needs to be done */
     });
+
+    // FIXME: update Label Summary
   } catch(error) {
     if(error instanceof ApplicationError) throw error;
     throw new ApplicationError('datastore/write', `Error adding Notebook (${notebookId}) to Label (${labelId}) for User (${userId}). Reason: `, error);
@@ -67,6 +69,8 @@ export const removeNotebook = async (
         // FIXME: check if the Notebook is published and if so then also remove from the published collection
       } /* else -- the parent Label is private and nothing else needs to be done */
     });
+
+    // FIXME: update Label Summary
   } catch(error) {
     if(error instanceof ApplicationError) throw error;
     throw new ApplicationError('datastore/write', `Error removing Notebook (${notebookId}) from Label (${labelId}) for User (${userId}). Reason: `, error);
@@ -87,6 +91,7 @@ export const removeAllNotebooks = async (userId: UserIdentifier, labelId: LabelI
 
     // FIXME: update Notebook's permissions to remove Label-related
 
+    // NOTE: Label handles updating (removing) Label Summaries
   } catch(error) {
     if(error instanceof ApplicationError) throw error;
     throw new ApplicationError('datastore/write', `Error removing all Notebooks for Label (${labelId}) for User (${userId}). Reason: `, error);
@@ -108,6 +113,8 @@ export const reorderNotebooks = async (
 
       return notebookOrder/*FIXME*/;
     });
+
+    // FIXME: update Label Summary
   } catch(error) {
     if(error instanceof ApplicationError) throw error;
     throw new ApplicationError('datastore/write', `Error reordering Notebooks on Label (${labelId}) for User (${userId}). Reason: `, error);
