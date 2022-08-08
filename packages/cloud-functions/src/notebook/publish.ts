@@ -59,14 +59,14 @@ export const publishNotebook = async (
         lastUpdatedBy: userId,
         updateTimestamp: ServerTimestamp/*by contract*/,
       };
-      transaction.set(notebookPublishedRef, removeUndefined({...create, ...publishedNotebook}))/*full write, by contract*/;
+      transaction.set(notebookPublishedRef, removeUndefined({ ...create, ...publishedNotebook }))/*full write, by contract*/;
 
       const content = await getNotebookContent(transaction, notebook.schemaVersion, notebookId, versionIndex);
       const publishedNotebookContent: NotebookPublishedContent_Update = {
         ...publishedNotebook,
         content,
       };
-      transaction.set(notebookPublishedContentRef, removeUndefined({...create, ...publishedNotebookContent}))/*full write, by contract*/;
+      transaction.set(notebookPublishedContentRef, removeUndefined({ ...create, ...publishedNotebookContent }))/*full write, by contract*/;
     });
   } catch(error) {
     if(error instanceof ApplicationError) throw error;
