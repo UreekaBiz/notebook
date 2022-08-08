@@ -31,6 +31,10 @@
   outline: 1px solid #666;
 }
 
+img.ProseMirror-selectednode/*target inline nodes with content (e.g. asyncNodes)*/{
+  outline: 1px solid #666;
+}
+
 /* -- Node styles -------------------------------------------------------------- */
 /* .. Codeblock ................................................................ */
 [data-node-type="codeBlock"]{
