@@ -20,4 +20,4 @@ export const hashtagDocument = (hashtag: string) => hashtagCollection.doc(hashSt
 // ** RTDB ************************************************************************
 // == Collection ==================================================================
 // -- Hashtag Summary -------------------------------------------------------------
-export const hashtagSummary = (hashtag: string) => database.ref(`/${HASHTAG_SUMMARIES}/${normalizeHashtag(hashtag)}`);
+export const hashtagSummaryRef = (hashtag: string) => database.ref(`/${HASHTAG_SUMMARIES}/${normalizeHashtag(hashtag)}`);

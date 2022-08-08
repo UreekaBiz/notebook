@@ -44,6 +44,7 @@ function PublishedNotebookListPage() {
   // -- UI ------------------------------------------------------------------------
   return (
     <FullPageLayout>
+      {/* FIXME: don't use NotebookTopBar in a possibly-public setting */}
       <NotebookTopBar />
       {publishedNotebooks.map(publishedNotebook => (
         <div key={publishedNotebook.id}>

@@ -2,7 +2,7 @@ import { logger } from 'firebase-functions';
 
 import { isType, normalizeHashtag, HashtagSummary_Storage, HashtagSummary_Update } from '@ureeka-notebook/service-common';
 
-import { hashtagSummary } from './datastore';
+import { hashtagSummaryRef } from './datastore';
 
 // ********************************************************************************
 // == Occurrence ==================================================================
@@ -27,7 +27,7 @@ export const updateHashtagOccurrences = async (added: Set<string> | undefined, r
 type IncrementDecrement = 1 | -1;
 const updateHashtagOccurrence = async (hashtag: string, value: IncrementDecrement) => {
   try {
-    await hashtagSummary(hashtag).transaction((hashtagSummary: HashtagSummary_Storage | null) => {
+    await hashtagSummaryRef(hashtag).transaction((hashtagSummary: HashtagSummary_Storage | null) => {
       // NOTE: negative values are allowed to account for out-of-order data. Clients
       //       should filter out negative values for a consistent user experience
       const currentValue = (hashtagSummary === null/*either 1st time or cache-miss*/)

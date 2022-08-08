@@ -8,7 +8,7 @@ import { NotebookSchemaType } from './schema';
 import { mapOldStartAndOldEndThroughHistory } from './step';
 
 // ********************************************************************************
-// == Node definition =============================================================
+// == Node Definition =============================================================
 export type NodeIdentifier = string/*alias*/;
 
 // --------------------------------------------------------------------------------
@@ -26,11 +26,9 @@ export enum NodeName {
 }
 export const getNodeName = (node: ProseMirrorNode) => node.type.name as NodeName;
 
-/**
- * The type of group that this Node belongs to. This is used on the Content field
- * on a NodeSpec.
- */
-// NOTE: When using a custom group type it is expected to be defined here with a
+/** The type of group that this Node belongs to. This is used on the Content field
+ *  on a NodeSpec */
+// NOTE: when using a custom group type it is expected to be defined here with a
 //       explicit description on where and why it is used. This is done to help
 //       prevent inconsistencies between the content of a node and the Group it
 //       belongs to.
@@ -76,6 +74,17 @@ export type NodeFound = { node: ProseMirrorNode; position: number; };
 /** @returns the parent node of a {@link Selection} */
 export const getParentNode = (selection: Selection): ProseMirrorNode => selection.$anchor.parent;
 
+/** @returns the last Node (as a {@link NodeFound}) with the specified identifier */
+export const findLastNodeById = (rootNode: ProseMirrorNode, nodeId: NodeIdentifier): NodeFound | null/*not found*/ => {
+  let nodeFound: NodeFound | null/*not found*/ = null/*not found*/;
+  rootNode.descendants((node, position) => {
+    if(node.attrs.id === nodeId) return/*doesn't match -- keep looking*/;
+    nodeFound = { node, position };
+  });
+  return nodeFound;
+};
+
+// ................................................................................
 /**
  * @param node1 The first {@link ProseMirrorNode} whose content will be compared
  * @param node2 The second {@link ProseMirrorNode} whose content will be compared

@@ -4,6 +4,7 @@ import { BehaviorSubject, Observable } from 'rxjs';
 import { sessionKey, ActivityState, DeleteRecord, UserSession_Write, SessionIdentifier, Unsubscribe, UserIdentifier } from '@ureeka-notebook/service-common';
 
 import { getLogger, ServiceLogger } from '../../logging';
+import { getEnvNumber } from '../../util/environment';
 import { AbstractService } from '../../util/AbstractService';
 import { clientConnectedRef, userSessionRef } from '../datastore';
 import { authUserSessionClear, authUserSessionUpdate } from '../function';
@@ -21,7 +22,7 @@ const log = getLogger(ServiceLogger.AUTH_USER);
 // REF: https://firebase.google.com/docs/database/web/offline-capabilities#section-presence
 // REF: https://groups.google.com/d/msg/firebase-talk/tQcYTUXkRnQ/XZv7IMSdBgAJ
 // ********************************************************************************
-const updateInterval = Math.min(60/*min/hr*/*60/*sec/min*/, Math.max(30/*sec*/, Number(process.env.NEXT_PUBLIC_SESSION_UPDATE_INTERVAL || 300/*default to 5min*/)))/*sec*/;
+const updateInterval = Math.min(60/*min/hr*/*60/*sec/min*/, Math.max(30/*sec*/, getEnvNumber('NEXT_PUBLIC_SESSION_UPDATE_INTERVAL', 300/*default to 5min*/)))/*sec*/;
 
 // ********************************************************************************
 export default class SessionService extends AbstractService {

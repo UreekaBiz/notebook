@@ -76,4 +76,7 @@ export type LabelPublished_Write = Modify<LabelPublished_Storage, Readonly<{
 
 // == RTDB ========================================================================
 // -- Label Summary ---------------------------------------------------------------
-export type LabelSummary_Update = LabelSummary_Storage/*nothing additional*/;
+export type LabelSummary_Create = LabelSummary_Storage/*nothing additional*/;
+export type LabelSummary_Update = Modify<LabelSummary_Storage, Readonly<{
+  notebook: Object/*sentinel value for atomic Increment / Decrement*/;
+}>>;

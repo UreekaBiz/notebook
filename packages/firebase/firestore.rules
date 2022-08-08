@@ -139,7 +139,7 @@ service cloud.firestore {
     function canUserViewNotebook(userId, notebook) {
       return   (userId in notebook.viewers)
             || (userId in notebook.editors)
-            || (notebook.createdBy == userId) )
+            || (notebook.createdBy == userId);
     }
     function canViewNotebook(notebook) {
       return    isAdmin()
@@ -238,7 +238,8 @@ service cloud.firestore {
     match /user-profile-publics/{userId} {
       allow create: if false; // server-side only
       allow update: if false; // server-side only
-      allow read:   if isUser();
+      allow get:    if true;  // all Public Profiles are visible to the world
+      allow list:   if isUser(); // but they're not 'discoverable' unless logged in
       allow delete: if false; // only soft-delete
     }
   }

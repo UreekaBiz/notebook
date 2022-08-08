@@ -7,6 +7,7 @@ import { ApplicationError } from '../util/error';
 import { ServerTimestamp } from '../util/firestore';
 import { labelCollection, labelDocument } from './datastore';
 import { removeAllNotebooks } from './labelNotebook';
+import { createLabelSummary, deleteLabelSummary } from './labelSummary';
 
 // ********************************************************************************
 // == Create ======================================================================
@@ -36,6 +37,10 @@ export const createLabel = async (
       updateTimestamp: ServerTimestamp/*by contract*/,
     };
     await labelRef.create(label)/*create by definition*/;
+
+    // NOTE: it *is* possible for the Summary to fail. Cleanup *should* either
+    //       retry or remove the parent Label and error out.
+    await createLabelSummary(userId, labelId, visibility)/*logs on error*/;
 
     // FIXME: publish if visibility === LabelVisibility.Public
 
@@ -77,6 +82,8 @@ export const updateLabel = async (
       };
       transaction.update(labelRef, label);
 
+      // NOTE: Label Summary does not change for Label updates (only Label Notebooks)
+
       // FIXME: trickle down to sub-collections!!!
       // FIXME: compare visibility to existing and either publish or unpublish or nothing
 
@@ -103,6 +110,7 @@ export const deleteLabel = async (userId: UserIdentifier, labelId: LabelIdentifi
     });
 
     await removeAllNotebooks(userId, labelId)/*logs on error*/;
+    await deleteLabelSummary(userId, labelId)/*logs on error*/;
 
     // FIXME: remove any published labels!!! (do it in all cases for sanity)
 

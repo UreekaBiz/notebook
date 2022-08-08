@@ -36,6 +36,8 @@ export const firestore = getFirestore(client.getApp());
 export const functions = getFunctions(client.getApp());
 
 // -- Auth ------------------------------------------------------------------------
+// TODO: configure Auth to reduce dependencies
+// REF: https://firebase.google.com/docs/auth/web/custom-dependencies
 export const auth = getAuth(client.getApp());
 // NOTE: the default persistence is 'local' which is desired (so not set explicitly)
 // REF: https://firebase.google.com/docs/auth/web/auth-state-persistence

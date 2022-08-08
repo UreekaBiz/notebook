@@ -3,6 +3,7 @@ import log from 'loglevel';
 
 import { decycle, isLocalDevelopment, isServiceLogger, removeNull, removeUndefined, ClientLog_Rest, LogLevel, LogView } from '@ureeka-notebook/service-common';
 
+import { getEnv } from '../util/environment';
 import { functions } from '../util/firebase';
 import { getPackageVersion, Package, PackageVersion } from '../util/version';
 
@@ -66,7 +67,7 @@ export const configureLogging = () => {
 // --------------------------------------------------------------------------------
 // sets the root logger's log-level based on the environment var (if set)
 const configureLogLevel = () => {
-  let logLevelString = process.env.NEXT_PUBLIC_LOG_LEVEL || DEFAULT_LOG_LEVEL;
+  let logLevelString = getEnv('NEXT_PUBLIC_LOG_LEVEL', DEFAULT_LOG_LEVEL);
   if(mapLogLevel[logLevelString] === undefined) {
     console.warn(`Unknown log level ${logLevelString}. Defaulting to ${DEFAULT_LOG_LEVEL}.`);
     logLevelString = DEFAULT_LOG_LEVEL;
@@ -76,7 +77,7 @@ const configureLogLevel = () => {
   ///       has no effect!
   //log.setDefaultLevel(logLevelString as log.LogLevelDesc);
   log.setLevel(logLevelString as log.LogLevelDesc);
-  // Explicitely log to the console
+  // explicitly log to the console
   // eslint-disable-next-line no-console
   console.info(`Setting default log level to ${logLevelString} `);
 };

@@ -253,11 +253,12 @@ export {
   AsyncNodeStatus,
   ASYNC_NODE_DIRTY_DATATYPE,
 
-  // ------------------------------------------------------------------------------
-  getParentNode,
-  getWrapStyles,
+  // -- Misc ----------------------------------------------------------------------
   computeRemovedNodeObjs,
   findContentDifferencePositions,
+  findLastNodeById,
+  getParentNode,
+  getWrapStyles,
   getNodesAffectedByStepMap,
   nodeToTagId,
   wereNodesAffectedByTransaction,
