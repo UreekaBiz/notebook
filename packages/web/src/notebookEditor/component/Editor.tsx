@@ -16,7 +16,7 @@ export const EDITOR_CONTAINER_ID = 'NotebookEditorContainerID';
 export const Editor = () => {
   const { editor, editorService } = useNotebookEditor();
 
-  // == Effects ===================================================================
+  // == Effect ====================================================================
   useEffect(() => {
     const subscription = editorService.onPendingWrites$().subscribe({
       next: (hasPendingWrite) => {

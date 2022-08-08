@@ -19,7 +19,7 @@ export const PublishedNotebookList = () => {
   // ------------------------------------------------------------------------------
   const isMounted = useIsMounted();
 
-  // == Effects ===================================================================
+  // == Effect ====================================================================
   useEffect(() => {
     const notebookService = NotebookService.getInstance();
 

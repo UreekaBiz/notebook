@@ -44,7 +44,7 @@ export const ShareNotebookDialog: React.FC = () => {
   // Current auth'ed User has the Creator Role
   const isCreator = authedUser?.authedUser.userId === notebook.createdBy;
 
-  // == Effects ===================================================================
+  // == Effect ====================================================================
   // resolves (loads) the User Profile for the initial Roles
   useEffect(() => {
     if(!isModalOpen) return/*nothing to do*/;

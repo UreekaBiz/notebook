@@ -52,7 +52,7 @@ export const SpacingControls: React.FC<Props> = ({ margin, padding, name, onChan
     });
   }, [movingType]);
 
-  // == Effects ===================================================================
+  // == Effect ====================================================================
   useEffect(() => {
     const handleKeyDown = (event: KeyboardEvent) => {
       setUpdateAll(event.shiftKey);

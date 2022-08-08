@@ -19,7 +19,7 @@ export const AuthUserProvider: React.FC<Props> = ({ children }) => {
   const [authedUserState, setAuthedUserState] = useState<AuthedUserState | undefined>(undefined/*none until AuthUserService#onAuthUser*/);
   const [userId, setUserId] = useState<UserIdentifier | null/*logged out*/ | undefined/*AuthUserService not initialized*/>(undefined/*none until AuthUserService#onUpdate*/);
 
-  // == Effects ===================================================================
+  // == Effect ====================================================================
   useEffect(() => {
     // initialize the AuthUserService on mount once and only once
     const authUserService = AuthUserService.create();

@@ -25,7 +25,7 @@ export const useLiveUserProfile = ( userId: UserIdentifier): UseUserProfile => {
   // ------------------------------------------------------------------------------
   const isMounted = useIsMounted();
 
-  // == Effects ===================================================================
+  // == Effect ====================================================================
   useEffect(() => {
     // this can be re-run if any of the dependencies changes. A flag must be used
     // to indicate if this is the current effect in order to avoid race conditions

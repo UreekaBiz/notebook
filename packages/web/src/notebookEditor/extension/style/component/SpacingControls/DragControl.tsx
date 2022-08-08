@@ -24,7 +24,7 @@ export const DragControl: React.FC<Props> = ({ valueWithUnit, direction, onChang
   // Poor implementation of throttle. -- Limits the rate of how often onChange is called.
   const canUpdate = useRef(true/*initial value*/);
 
-  // == Effects ===================================================================
+  // == Effect ====================================================================
   useEffect(() => {
     if(!isMoving) return;/*nothing to do*/
 

@@ -19,7 +19,7 @@ export const NotebookList = () => {
   const [status, setStatus] = useAsyncStatus();
   const userId = useUserId();
 
-  // == Effects ===================================================================
+  // == Effect ====================================================================
   useEffect(() => {
     if(!userId) return/*nothing to do*/;
 

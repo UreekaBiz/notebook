@@ -34,7 +34,7 @@ export const NotebookEditorProvider: React.FC<Props> = ({ notebookId, notebook, 
   // == State =====================================================================
   const [editorService, setEditorService] = useState<NotebookEditorService | null>(null/*no NotebookEditorService by default*/);
 
-  // == Effects ===================================================================
+  // == Effect ====================================================================
   // creates a new NotebookEditorService for each new Notebook (assuming valid deps)
   useEffect(() => {
     if(!authedUser || !editor || (status !== 'idle'/*don't initialize twice*/)) return/*nothing to do*/;

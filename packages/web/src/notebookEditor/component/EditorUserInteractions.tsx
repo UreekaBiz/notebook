@@ -28,7 +28,7 @@ export const EditorUserInteractions = () => {
   const shouldInsertLink = linkStorage?.getShouldInsertNodeOrMark();
   const [isCreatingLink, setIsCreatingLink] = useState(false);
 
-  // == Effects ===================================================================
+  // == Effect ====================================================================
   // -- Image ---------------------------------------------------------------------
   // listen for Editor storage to see if image should be modified
   // SEE: notebookEditor/extension/image.ts

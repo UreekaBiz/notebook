@@ -21,7 +21,7 @@ function PublishedNotebookListPage() {
 
   const isMounted = useIsMounted();
 
-  // -- Effects -------------------------------------------------------------------
+  // -- Effect --------------------------------------------------------------------
   useEffect(() => {
     const notebookService = NotebookService.getInstance();
 

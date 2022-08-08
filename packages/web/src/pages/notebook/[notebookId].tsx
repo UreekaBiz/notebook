@@ -32,7 +32,7 @@ function NotebookEditorPage() {
 
   const toast = useToast();
 
-  // -- Effects -------------------------------------------------------------------
+  // -- Effect --------------------------------------------------------------------
   // ensures that notebookId is a valid value. If it's not then the user is redirected
   // to #coreRoutes.root
   useEffect(() => {

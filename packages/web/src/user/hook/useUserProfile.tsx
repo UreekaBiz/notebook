@@ -24,7 +24,7 @@ export const useUserProfile = ( userId: UserIdentifier): UseUserProfile => {
   // == State =====================================================================
   const [userProfile, setUserProfile] = useState<UserProfilePublic | null/*not loaded*/>(null/*by contract*/);
 
-  // == Effects ===================================================================
+  // == Effect ====================================================================
   useEffect(() => {
     const getUser = async () => {
       setStatus('loading');
