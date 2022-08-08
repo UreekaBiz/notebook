@@ -1,10 +1,10 @@
 export {
   Notebook,
   NotebookIdentifier,
+  NotebookPublished,
+  NotebookPublishedContent,
+  NotebookPublishedTuple,
   NotebookSchemaVersion,
   NotebookTuple,
   NotebookType,
-  PublishedNotebook,
-  PublishedNotebookIdentifier,
-  PublishedNotebookTuple,
 } from '@ureeka-notebook/service-common';
