@@ -4,23 +4,25 @@ import { MarkName, NodeName } from '@ureeka-notebook/web-service';
 
 import { useValidatedEditor } from 'notebookEditor/hook/useValidatedEditor';
 import { SelectionDepth } from 'notebookEditor/model/type';
-import { getToolbar } from 'notebookEditor/toolbar/toolbar';
+import { Toolbar as ToolbarType } from 'notebookEditor/toolbar/type';
 
 import { ToolItemComponent } from './ToolItem';
 
 // ********************************************************************************
 interface Props {
   nodeOrMarkName: MarkName | NodeName;
+  toolbar: ToolbarType/*renamed to avoid naming conflict*/;
+
   depth: SelectionDepth;
+  selectedDepth: SelectionDepth;
 
   onSelection: (depth: SelectionDepth) => void;
-  selectedDepth: SelectionDepth;
 }
-export const Toolbar: React.FC<Props> = ({ depth, nodeOrMarkName, onSelection, selectedDepth }) => {
-  const toolbar = getToolbar(nodeOrMarkName);
+export const Toolbar: React.FC<Props> = ({ depth, nodeOrMarkName, toolbar,  selectedDepth, onSelection }) => {
   const editor = useValidatedEditor();
 
-  if(!toolbar) return null/*nothing to render*/;
+  // NOTE: The check must be done by the caller, this is just a safety check in in
+  //       case that the caller does not check it.
   if(toolbar.shouldShow && !toolbar.shouldShow(editor, depth)) return null/*nothing to render*/;
 
   return (
