@@ -73,6 +73,13 @@
   background: rgba(0,0,0,0.3);
 }
 
+/* NOTE: ProseMirror adds white-space: normal to non editable nodes, this causes the
+         node to lose its white-space while its being executed. The solution is to
+         overwrite that property on this specific case. */
+.Editor [data-node-type="demo2AsyncNode"] > div > div {
+  white-space: pre-wrap;
+}
+
 /* .. DemoAsyncNode ............................................................ */
 [data-node-type="demoAsyncNode"] > [data-async-node-dirty] {
   border-color: red !important;
