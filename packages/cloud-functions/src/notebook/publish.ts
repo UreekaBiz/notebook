@@ -63,13 +63,13 @@ export const publishNotebook = async (
         lastUpdatedBy: userId,
         updateTimestamp: ServerTimestamp/*by contract*/,
       };
-      transaction.set(notebookPublishedRef, removeUndefined({ ...create, ...publishedNotebook }))/*full write, by contract*/;
+      transaction.set(notebookPublishedRef, removeUndefined({ ...create, ...publishedNotebook }), { merge: true });
 
       const publishedNotebookContent: NotebookPublishedContent_Update = {
         ...publishedNotebook,
         content,
       };
-      transaction.set(notebookPublishedContentRef, removeUndefined({ ...create, ...publishedNotebookContent }))/*full write, by contract*/;
+      transaction.set(notebookPublishedContentRef, removeUndefined({ ...create, ...publishedNotebookContent }), { merge: true });
     });
   } catch(error) {
     if(error instanceof ApplicationError) throw error;
