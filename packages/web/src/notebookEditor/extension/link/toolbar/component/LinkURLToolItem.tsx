@@ -47,9 +47,6 @@ export const LinkURLToolItem: React.FC<Props> = ({ editor }) => {
           .setTextSelection(prevPos)
           .run();
 
-    // Focus the editor again
-    editor.commands.focus();
-
     // focus the editor again
     if(focusEditor) editor.commands.focus();
   };
