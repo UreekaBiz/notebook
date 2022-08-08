@@ -3,11 +3,11 @@ import { DocumentReference } from 'firebase-admin/firestore';
 import { LabelIdentifier, LabelVisibility, LabelNotebook_Write, Label_Storage, NotebookIdentifier, Notebook_Storage, UserIdentifier } from '@ureeka-notebook/service-common';
 
 import { firestore } from '../firebase';
+import { notebookDocument } from '../notebook/datastore';
 import { ApplicationError } from '../util/error';
 import { writeBatch, ServerTimestamp } from '../util/firestore';
 import { labelDocument, labelNotebookCollection, labelNotebookDocument } from './datastore';
 import { updateLabelSummary } from './labelSummary';
-import { notebookDocument } from 'notebook/datastore';
 
 // ********************************************************************************
 // == Add =========================================================================
