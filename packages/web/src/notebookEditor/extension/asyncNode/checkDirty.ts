@@ -1,7 +1,7 @@
 import { Editor } from '@tiptap/core';
 import { Transaction } from 'prosemirror-state';
 
-import { asyncNodes, wereNodesAffectedByTransaction, AsyncNodeStatus, NodeName } from '@ureeka-notebook/web-service';
+import { asyncNodes, wereNodesAffectedByTransaction, AsyncNodeStatus, NodeName, AttributeType } from '@ureeka-notebook/web-service';
 
 import { getNodeViewStorage } from 'notebookEditor/model/NodeViewStorage';
 
@@ -27,29 +27,27 @@ export const checkDirty = (transaction: Transaction, editor: Editor) => {
 
   if(!wereNodesAffectedByTransaction(transaction, codeBlockAsyncNodeNames)) return/*not affected*/;
 
-  checkIfAsyncNodesDirty(editor);
-};
-
-// ================================================================================
-// ................................................................................
-// checks to see whether or not the AsyncNodes of a particular AbstractAsyncNodeStorageType
-// fulfils the requirements to be considered dirty, and tells their view to set
-// them to dirty if they do
-const checkIfAsyncNodesDirty = (editor: Editor) => {
+  // checks to see whether or not the AsyncNodes of a particular AbstractAsyncNodeStorageType
+  // fulfils the requirements to be considered dirty, and tells their view to set
+  // them to dirty if they do
   const asyncNodeTypesArray = Array.from(asyncNodes.values());
 
   for(let i=0; i<asyncNodeTypesArray.length; i++) {
+    const nodeName = asyncNodeTypesArray[i];
+
     // check if each async node in the corresponding storage is dirty
-    const asyncNodeStorage = getNodeViewStorage<AbstractAsyncNodeStorageType>(editor, asyncNodeTypesArray[i]);
-    asyncNodeStorage.forEachNodeView(asyncNodeView => {
-      if(asyncNodeView.node.attrs.status === AsyncNodeStatus.NEVER_EXECUTED) return/*cannot be dirty by definition*/;
+    const storage = getNodeViewStorage<AbstractAsyncNodeStorageType>(editor, nodeName);
+    storage.forEachNodeView(controller => {
+      const status = controller.node.attrs[AttributeType.Status];
+      if(!status || status === AsyncNodeStatus.NEVER_EXECUTED) return/*cannot be dirty by definition*/;
 
-      if(!asyncNodeView.nodeModel.isAsyncNodeDirty()) {
-        asyncNodeView.setDirty(false)/*not dirty*/;
-        return/*nothing left to do*/;
-      }/* else -- its dirty */
+      if(typeof controller.nodeModel.isAsyncNodeDirty !== 'function') return/*cannot compute*/;
 
-      asyncNodeView.setDirty(true);
+      // Update model and view
+      const isDirty = controller.nodeModel.isAsyncNodeDirty();
+      controller.setDirty(isDirty);
     });
   }
+
 };
+
