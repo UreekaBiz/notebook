@@ -1,4 +1,4 @@
-import { FirestoreTimestamp, Timestamp } from './firestore';
+import { FieldValue, Timestamp } from './firestore';
 import { Modify } from './type';
 import { UserIdentifier } from './user';
 
@@ -30,8 +30,14 @@ export interface Updatable {
 }
 
 // ................................................................................
+export type Creatable_Create<T extends Creatable> =
+    Pick<T, 'createdBy'>/*required*/
+  & Modify<Pick<T, 'createTimestamp'>, Readonly<{
+      createTimestamp: FieldValue/*write-on-edit server-side*/;
+    }>>;
+
 export type Updatable_Update<T extends Updatable> =
     Pick<T, 'lastUpdatedBy'>/*required*/
-  & Modify<Pick<T, 'updateTimestamp'>, {
-      readonly updateTimestamp: FirestoreTimestamp/*write-on-edit server-side*/;
-    }>;
+  & Modify<Pick<T, 'updateTimestamp'>, Readonly<{
+      updateTimestamp: FieldValue/*write-on-edit server-side*/;
+    }>>;
