@@ -1,10 +1,10 @@
 import * as functions from 'firebase-functions';
 
-import { isBlank, NotebookCreate_Rest, NotebookCreate_Rest_Schema, NotebookDelete_Rest, NotebookDelete_Rest_Schema, NotebookIdentifier, NotebookShare_Rest, NotebookShare_Rest_Schema, PublishedNotebookCreate_Rest, PublishedNotebookCreate_Rest_Schema, PublishedNotebookIdentifier } from '@ureeka-notebook/service-common';
+import { isBlank, NotebookCreate_Rest, NotebookCreate_Rest_Schema, NotebookDelete_Rest, NotebookDelete_Rest_Schema, NotebookIdentifier, NotebookPublish_Rest, NotebookPublish_Rest_Schema, NotebookShare_Rest, NotebookShare_Rest_Schema } from '@ureeka-notebook/service-common';
 
 import { wrapCall } from '../util/function';
-import { createNewNotebook, deleteNotebook } from './notebook';
-import { createNewPublishedNotebook } from './publishedNotebook';
+import { createNotebook, deleteNotebook } from './notebook';
+import { publishNotebook } from './publish';
 import { shareNotebook } from './share';
 
 // ********************************************************************************
@@ -12,7 +12,7 @@ import { shareNotebook } from './share';
 export const notebookCreate = functions.https.onCall(wrapCall<NotebookCreate_Rest, NotebookIdentifier>(
 { name: 'notebookCreate', schema: NotebookCreate_Rest_Schema, convertNullToUndefined: true, requiresAuth: true },
 async (data, context, userId) => {
-  return await createNewNotebook(userId!/*auth'd*/, data.type, data.name);
+  return await createNotebook(userId!/*auth'd*/, data.type, data.name);
 }));
 
 // ................................................................................
@@ -30,9 +30,9 @@ async (data, context, userId) => {
   await shareNotebook(userId!/*auth'd*/, data.notebookId, share);
 }));
 
-// == Published Notebook ===========================================================
-export const publishedNotebookCreate = functions.https.onCall(wrapCall<PublishedNotebookCreate_Rest, PublishedNotebookIdentifier>(
-{ name: 'publishedNotebookCreate', schema: PublishedNotebookCreate_Rest_Schema, convertNullToUndefined: true, requiresAuth: true },
+// -- Publish ---------------------------------------------------------------------
+export const notebookPublish = functions.https.onCall(wrapCall<NotebookPublish_Rest, NotebookIdentifier>(
+{ name: 'notebookPublish', schema: NotebookPublish_Rest_Schema, convertNullToUndefined: true, requiresAuth: true },
 async (data, context, userId) => {
-  return await createNewPublishedNotebook(userId!/*auth'd*/, data.notebookId, data.version, data.title, data.image, data.snippet);
+  return await publishNotebook(userId!/*auth'd*/, data.notebookId, data.versionIndex, data.title, data.image, data.snippet);
 }));

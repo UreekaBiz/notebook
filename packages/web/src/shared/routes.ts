@@ -1,4 +1,4 @@
-import { NotebookIdentifier, PublishedNotebookIdentifier } from '@ureeka-notebook/web-service';
+import { NotebookIdentifier } from '@ureeka-notebook/web-service';
 
 // FIXME: Find a better way to share routes!
 // NOTE: This routes are used also on the client-side, when modifying any of the
@@ -24,15 +24,7 @@ export const coreRoutes = {
   settings: settingsRootRoute,
 } as const;
 
-// == Notebook ====================================================================
-// -- Notebook --------------------------------------------------------------------
-export const publishedNotebookRoutes = {
-  root: publishedNotebookRootRoute,
-
-  publishedNotebook: `${publishedNotebookRootRoute}:publishedNotebookId`,
-} as const;
-export const publishedNotebookRoute = (publishedNotebookId: PublishedNotebookIdentifier) => `${publishedNotebookRoutes.root}${publishedNotebookId}`;
-
+// == Auth'd Routes ===============================================================
 // -- Notebook Editor --------------------------------------------------------------
 export const notebookRoutes = {
   root: notebookRootRoute,
@@ -41,10 +33,19 @@ export const notebookRoutes = {
 } as const;
 export const notebookRoute = (notebookId: NotebookIdentifier) => `${notebookRoutes.root}${notebookId}`;
 
-// == User ========================================================================
 // -- Settings --------------------------------------------------------------------
 export const settingsRoutes = {
   root: settingsRootRoute,
 
   apiKey: `${settingsRootRoute}api-key`,
 };
+
+// == Public Routes ===============================================================
+// -- Notebook --------------------------------------------------------------------
+// .. Published ...................................................................
+export const publishedNotebookRoutes = {
+  root: publishedNotebookRootRoute,
+
+  publishedNotebook: `${publishedNotebookRootRoute}:publishedNotebookId`,
+} as const;
+export const publishedNotebookRoute = (notebookId: NotebookIdentifier) => `${publishedNotebookRoutes.root}${notebookId}`;

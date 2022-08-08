@@ -44,19 +44,22 @@ export type NotebookShare_Rest = Modify<Validate.InferType<typeof NotebookShare_
   userRoles: Record<UserIdentifier, NotebookRole>/*explicit*/;
 }>>;
 
-// == Published Notebook ==========================================================
-// -- Create ----------------------------------------------------------------------
-export const PublishedNotebookCreate_Rest_Schema = Validate.object({
+// -- Publish ---------------------------------------------------------------------
+export const NotebookPublish_Rest_Schema = Validate.object({
   notebookId: Identifier_Schema
       .required(),
-  // FIXME: rename to 'versionIndex' so as to distinguish from NotebookVersion
-  version: Validate
-      .number()
+
+  versionIndex: Validate.number()
       .required(),
 
   title: stringMedSchema
       .required(),
-  image: Validate.string(),
-  snippet: stringMedSchema,
+  image: Validate.string()
+      .notRequired(),
+  snippet: stringMedSchema
+      .notRequired(),
 }).noUnknown();
-export type PublishedNotebookCreate_Rest = Readonly<Validate.InferType<typeof PublishedNotebookCreate_Rest_Schema>>;
+export type NotebookPublish_Rest = Readonly<Validate.InferType<typeof NotebookPublish_Rest_Schema>>;
+
+// == Notebook Published ==========================================================
+// SEE: NotebookPublish_Rest_Schema

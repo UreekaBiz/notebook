@@ -17,17 +17,29 @@ export const DEFAULT_NOTEBOOK_NAME = 'Untitled';
 // ................................................................................
 export type NotebookIdentifier = Identifier;
 
+// ................................................................................
 /** the maximum number of Users that any Notebook may be shared with. This limit is
  *  to both satisfy Collaboration constraints and to keep the size of the Notebook
  *  document small. */
 // NOTE: if increased then move share Users to a separate sub-collection
 export const MAX_NOTEBOOK_SHARE_USERS = 10;
+
+// --------------------------------------------------------------------------------
 export type Notebook = Creatable & Updatable & Readonly<{ /*Firestore*/
   /** {@link NotebookType} set on creation only */
-  type: NotebookType;
+  type: NotebookType/*write-once-on-create server-written*/;
   /** the {@link NotebookSchemaVersion} of this Notebook set on creation only (or
    *  possibly during a migration) */
-  schemaVersion: NotebookSchemaVersion;
+  schemaVersion: NotebookSchemaVersion/*write-once-on-create(-or-migration) server-written*/;
+
+  /** name of the Notebook as shown in a Notebook-list view limited to at most 1024
+   *  characters. Can be modified at any time.
+   *  @see #DEFAULT_NOTEBOOK_NAME  */
+  name: string/*write-many server-written*/;
+
+  /** has this Notebook been published? If published then a separate (public)
+   *  Published document exists. Notebooks are not published by default. */
+  isPublished: boolean/*write-many server-written*/;
 
   // NOTE: because Firestore does not have 'OR' queries, 'viewers' contains *all*
   //       Users that can view the Notebook (including Creators and Editors) so
@@ -36,16 +48,11 @@ export type Notebook = Creatable & Updatable & Readonly<{ /*Firestore*/
   /** the set of User's that can view this Notebook. The creator and all editors are
    *  contained in this set. Bounded by {@link #MAX_NOTEBOOK_SHARE_USERS}.
    *  @see #getNotebookShareRoles() */
-  viewers: UserIdentifier[]/*effectively an unordered set*/;
+  viewers: UserIdentifier[]/*effectively an unordered set*//*write-many server-written*/;
   /** the set of User's that can edit this Notebook. The creator is contained in
    *  this set. Bounded by {@link #MAX_NOTEBOOK_SHARE_USERS}.
    *  @see #getNotebookShareRoles() */
-  editors: UserIdentifier[]/*effectively an unordered set*/;
-
-  /** name of the Notebook as shown in a Notebook-list view limited to at most 1024
-   *  characters. Can be modified at any time.
-   *  @see #DEFAULT_NOTEBOOK_NAME  */
-  name: string;
+  editors: UserIdentifier[]/*effectively an unordered set*//*write-many server-written*/;
 
   /** at this time, Notebooks are soft-deleted to allow for a 'Trash'-like concept
    *  (i.e. they are available to be undeleted as need be) */
@@ -89,18 +96,32 @@ export type NotebookLabelUser = Creatable & Readonly<{ /*Firestore*/
   labels: Record<LabelIdentifier, NotebookRole>;
 }>;
 
-// == Published Notebook ==========================================================
-export type PublishedNotebookIdentifier = Identifier;
-
+// == Notebook Published ==========================================================
+/** a Published {@link Notebook}. This is a separate document to allow Notebooks to
+ *  be edited while they are published. Also, there are two records: one with content
+ *  and one with out. The former is used when displaying the content. The latter is
+ *  used in list views (since the content may be large!).
+ *  If a Notebook is unpublished then this record is removed and any history of
+ *  that Published Notebook is lost.
+ *  The Author of a Published Notebook is the Creator of the associated Notebook
+ *  (regardless of who actually does the Publishing). */
 // NOTE: document Id is the same as the NotebookIdentifier that generated it
-export type PublishedNotebook = Creatable & Updatable & Readonly<{ /*Firestore*/
+export type NotebookPublished = Creatable & Updatable & Readonly<{ /*Firestore*/
   /** {@link NotebookVersion} index that this Published Notebook corresponds to */
-  version: number;
+  versionIndex: number;
 
+  title: string;
   image?: string;
   snippet?: string;
-  title: string;
 
+  // NOTE: the content is not stored on this view since it may be large
+  // SEE: NotebookPublishedContent
+}>;
+export type NotebookPublishedTuple = ObjectTuple<NotebookIdentifier, NotebookPublished>;
+
+// SEE: NotebookPublished
+export type NotebookPublishedContent = NotebookPublished & Readonly<{ /*Firestore*/
+  /** the content as a ProseMirror document */
   content: NotebookDocumentContent;
 }>;
-export type PublishedNotebookTuple = ObjectTuple<PublishedNotebookIdentifier, PublishedNotebook>;
+export type NotebookPublishedContentTuple = ObjectTuple<NotebookIdentifier, NotebookPublishedContent>;

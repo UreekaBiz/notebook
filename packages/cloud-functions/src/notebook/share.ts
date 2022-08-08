@@ -1,6 +1,6 @@
 import { DocumentReference } from 'firebase-admin/firestore';
 
-import { difference, NotebookIdentifier, NotebookRole, Notebook_Storage, Notebook_Update, UserIdentifier, MAX_NOTEBOOK_SHARE_USERS } from '@ureeka-notebook/service-common';
+import { difference, NotebookIdentifier, NotebookRole, Notebook_Storage, Notebook_Share, UserIdentifier, MAX_NOTEBOOK_SHARE_USERS } from '@ureeka-notebook/service-common';
 
 import { firestore } from '../firebase';
 import { ApplicationError } from '../util/error';
@@ -31,7 +31,7 @@ export const shareNotebook = async (userId: UserIdentifier, notebookId: Notebook
 
   let newShareUserIds: Set<UserIdentifier>;
   try {
-    const notebookRef = notebookCollection.doc(notebookId) as DocumentReference<Notebook_Update>;
+    const notebookRef = notebookCollection.doc(notebookId) as DocumentReference<Notebook_Share>;
     newShareUserIds = await firestore.runTransaction(async transaction => {
       const snapshot = await transaction.get(notebookRef);
       if(!snapshot.exists) throw new ApplicationError('functions/not-found', `Cannot update Share for non-existing Notebook (${notebookId}).`);
@@ -41,14 +41,14 @@ export const shareNotebook = async (userId: UserIdentifier, notebookId: Notebook
       if(notebook.createdBy !== userId) throw new ApplicationError('functions/permission-denied', `Cannot update for Share on Notebook (${notebookId}) since created by User (${userId}).`);
       if(notebook.deleted) throw new ApplicationError('data/deleted', `Cannot update deleted Notebook (${notebookId}).`);
 
-      const update: Notebook_Update = {
+      const share: Notebook_Share = {
         viewers: viewerUserIds,
         editors: editorUserIds,
 
         lastUpdatedBy: userId,
         updateTimestamp: ServerTimestamp/*by contract*/,
       };
-      transaction.set(notebookRef, update, { merge: true });
+      transaction.set(notebookRef, share, { merge: true });
 
       // compute and return the set of *new* Users to share with
       return new Set<UserIdentifier>([

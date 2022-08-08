@@ -1,6 +1,6 @@
 import { FieldValue } from '../util/firestore';
 import { Modify } from '../util/type';
-import { Notebook, NotebookIdentifier, NotebookLabelUser, PublishedNotebook } from './type';
+import { Notebook, NotebookLabelUser, NotebookPublished, NotebookPublishedContent } from './type';
 
 // ** Constants *******************************************************************
 // == Firestore ===================================================================
@@ -18,19 +18,16 @@ export const NOTEBOOK = `${NOTEBOOKS}/{notebookId}` as const/*document (used by 
 export const LABEL_NOTEBOOK_USERS = 'notebook-label-users'/*sub-collection*/;
 export const LABEL_NOTEBOOK_USER = `${NOTEBOOK}/${LABEL_NOTEBOOK_USERS}/{userId}` as const/*document (used by CF triggers)*/;
 
-// -- Published Notebook ----------------------------------------------------------
-// NOTE: Each Notebook will have at most one Published Notebook at any point. Its a
-//       top-level collection since it needs to be accessed with some query to all
-//       Published Notebooks.
-export const NOTEBOOK_PUBLISHED_NOTEBOOKS = 'notebook-published-notebooks'; /*top-level collection*/
-export const NOTEBOOK_PUBLISHED_NOTEBOOK = `${NOTEBOOK_PUBLISHED_NOTEBOOKS}/{notebookId}` as const/*document (used by CF triggers)*/;
+// -- Notebook Published ----------------------------------------------------------
+// NOTE: each Notebook has at most one Published Notebook at any point
+// NOTE: terrible English but consistent naming
+export const NOTEBOOK_PUBLISHEDS = 'notebook-publisheds'/*top-level collection*/;
+export const NOTEBOOK_PUBLISHED = `${NOTEBOOK_PUBLISHEDS}/{notebookId}` as const/*document (used by CF triggers)*/;
 
-// -- Trigger Context -------------------------------------------------------------
-export type PublishedNotebookParams = Readonly<{
-  notebookId/*NOTE: must match #NOTEBOOK*/: NotebookIdentifier;
-}>;
+export const NOTEBOOK_PUBLISHED_CONTENTS = 'notebook-published-contents'/*top-level collection*/;
+export const NOTEBOOK_PUBLISHED_CONTENT = `${NOTEBOOK_PUBLISHED_CONTENTS}/{notebookId}` as const/*document (used by CF triggers)*/;
 
-// ** Action Types ****************************************************************
+// ** Storage Types ***************************************************************
 // == Firestore ===================================================================
 // -- Notebook --------------------------------------------------------------------
 export type Notebook_Storage = Notebook/*nothing additional*/;
@@ -44,19 +41,28 @@ export type Notebook_Storage = Notebook/*nothing additional*/;
 // .. Label User Share ............................................................
 export type NotebookLabelUser_Storage = NotebookLabelUser/*nothing additional*/;
 
-// -- Published Notebook ----------------------------------------------------------
-export type PublishedNotebook_Storage = PublishedNotebook/*nothing additional*/;
+// -- Notebook Published ----------------------------------------------------------
+export type NotebookPublished_Storage = NotebookPublished/*nothing additional*/;
+export type NotebookPublishedContent_Storage = NotebookPublishedContent/*nothing additional*/;
 
-// ** Storage Types ***************************************************************
+// ** Action Types ****************************************************************
 // == Firestore ===================================================================
 // -- Notebook --------------------------------------------------------------------
 export type Notebook_Create = Modify<Notebook_Storage, Readonly<{
   createTimestamp: FieldValue/*always-write server-set*/;
   updateTimestamp: FieldValue/*always-write server-set*/;
 }>>;
-export type Notebook_Update = Modify<Pick<Notebook_Storage, 'updateTimestamp' | 'lastUpdatedBy'>, Readonly<{
+
+export type Notebook_Publish = Modify<Pick<Notebook_Storage, 'isPublished' | 'updateTimestamp' | 'lastUpdatedBy'>, Readonly<{
   updateTimestamp: FieldValue/*always-write server-set*/;
-}>> & Partial<Omit<Notebook, 'deleted' | 'createTimestamp'| 'createdBy' | 'updateTimestamp'>>;
+}>>;
+export type Notebook_Rename = Modify<Pick<Notebook_Storage, 'name' | 'updateTimestamp' | 'lastUpdatedBy'>, Readonly<{
+  updateTimestamp: FieldValue/*always-write server-set*/;
+}>>;
+export type Notebook_Share = Modify<Pick<Notebook_Storage, 'editors' | 'viewers' | 'updateTimestamp' | 'lastUpdatedBy'>, Readonly<{
+  updateTimestamp: FieldValue/*always-write server-set*/;
+}>>;
+
 export type Notebook_Delete = Modify<Pick<Notebook_Storage, 'deleted' | 'updateTimestamp' | 'lastUpdatedBy'>, Readonly<{
   updateTimestamp: FieldValue/*always-write server-set*/;
 }>>;
@@ -74,8 +80,21 @@ export type NotebookLabelUser_Write = Modify<NotebookLabelUser_Storage, Readonly
 }>>;
 // NOTE: hard-delete so no delete Action Type
 
-// -- Published Notebook ----------------------------------------------------------
-export type PublishedNotebook_Create = Modify<PublishedNotebook_Storage, Readonly<{
+// -- Notebook Published ----------------------------------------------------------
+export type NotebookPublished_Create = Modify<NotebookPublished_Storage, Readonly<{
   createTimestamp: FieldValue/*always-write server-set*/;
   updateTimestamp: FieldValue/*always-write server-set*/;
 }>>;
+export type NotebookPublished_Update = Modify<Omit<NotebookPublished_Storage, 'createdBy' | 'createTimestamp'>, Readonly<{
+  updateTimestamp: FieldValue/*always-write server-set*/;
+}>>;
+// NOTE: hard-delete so no delete Action Type
+
+export type NotebookPublishedContent_Create = Modify<NotebookPublishedContent_Storage, Readonly<{
+  createTimestamp: FieldValue/*always-write server-set*/;
+  updateTimestamp: FieldValue/*always-write server-set*/;
+}>>;
+export type NotebookPublishedContent_Update = Modify<Omit<NotebookPublishedContent_Storage, 'createdBy' | 'createTimestamp'>, Readonly<{
+  updateTimestamp: FieldValue/*always-write server-set*/;
+}>>;
+// NOTE: hard-delete so no delete Action Type

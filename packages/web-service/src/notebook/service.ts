@@ -1,17 +1,20 @@
 import { lastValueFrom, Observable } from 'rxjs';
 
-import { Notebook, NotebookIdentifier, NotebookRole, NotebookTuple, ObjectTuple, PublishedNotebook, PublishedNotebookIdentifier, PublishedNotebookTuple, UserIdentifier } from '@ureeka-notebook/service-common';
+import { Notebook, NotebookIdentifier, NotebookRole, NotebookTuple, ObjectTuple, NotebookPublishedContent, NotebookPublishedTuple, UserIdentifier } from '@ureeka-notebook/service-common';
 
 import { getLogger, ServiceLogger } from '../logging';
 import { ApplicationError } from '../util/error';
 import { Scrollable, scrollableQuery } from '../util/observableScrolledCollection';
-import { notebookQuery, publishedNotebookQuery } from './datastore';
-import { notebookCreate, notebookDelete, notebookShare, publishNotebook } from './function';
-import { notebookTupleById$, notebookOnceById$,  notebooksQuery$, publishedNotebookTupleById$, publishedNotebookOnceById$, publishedNotebooksQuery$ } from './observable';
-import { Notebook_Create, NotebookFilter, PublishedNotebook_Create, PublishedNotebookFilter } from './type';
+import { notebookQuery, notebookPublishedQuery } from './datastore';
+import { notebookCreate, notebookDelete, notebookShare, notebookPublish } from './function';
+import { notebookTupleById$, notebookOnceById$,  notebooksQuery$, notebookPublishedContentTupleById$, notebookPublishedContentOnceById$, notebookPublishedsQuery$ } from './observable';
+import { Notebook_Create, NotebookFilter, Notebook_Publish, NotebookPublishedFilter } from './type';
 
 const log = getLogger(ServiceLogger.NOTEBOOK);
 
+// for Published Notebooks, a distinct differentiation is made between the list of
+// Published Notebooks and a single Published Notebook. Lists *never* contain the
+// content (to keep their sizes small). Single requests *always* contain the content.
 // ********************************************************************************
 export class NotebookService {
   protected static readonly DEFAULT_SCROLL_SIZE = 24/*guess*/;
@@ -49,24 +52,26 @@ export class NotebookService {
     return notebookTupleById$(notebookId);
   }
 
-  // -- Published Notebook --------------------------------------------------------
+  // -- Notebook Published --------------------------------------------------------
   /**
    * @param filter the fields that are optionally filtered and sorted on
    * @param scrollSize the number of Published Notebooks returned per batch
    * @returns {@link Scrollable} over the collection of {@link PublishedNotebooks}
    */
-  public onPublishedNotebooks(filter: PublishedNotebookFilter, scrollSize: number = NotebookService.DEFAULT_SCROLL_SIZE): Scrollable<PublishedNotebookTuple> {
-    return scrollableQuery(publishedNotebookQuery(filter), publishedNotebooksQuery$, scrollSize,
+  // NOTE: a list so the content is explicitly not included
+  public onPublishedNotebooks(filter: NotebookPublishedFilter, scrollSize: number = NotebookService.DEFAULT_SCROLL_SIZE): Scrollable<NotebookPublishedTuple> {
+    return scrollableQuery(notebookPublishedQuery(filter), notebookPublishedsQuery$, scrollSize,
                            `Filtered Published Notebooks (${JSON.stringify(filter)})`);
   }
 
   /**
-   * @param notebookId the {@link NotebookIdentifier} of the desired {@link PublishedNotebook}
-   * @returns Observable over the {@link PublishedNotebook} with the specified
+   * @param notebookId the {@link NotebookIdentifier} of the desired {@link NotebookPublishedContent}
+   * @returns Observable over the {@link NotebookPublishedContent} with the specified
    *          identifier. If no such Published Notebook exists then `null` is returned.
    */
-  public onPublishedNotebook$(notebookId: NotebookIdentifier): Observable<ObjectTuple<PublishedNotebookIdentifier, PublishedNotebook | null/*not found*/>> {
-    return publishedNotebookTupleById$(notebookId);
+  // NOTE: a single entry so that the content *is* included
+  public onPublishedNotebook$(notebookId: NotebookIdentifier): Observable<ObjectTuple<NotebookIdentifier, NotebookPublishedContent | null/*not found*/>> {
+    return notebookPublishedContentTupleById$(notebookId);
   }
 
   // == Read ======================================================================
@@ -90,21 +95,17 @@ export class NotebookService {
 
   // -- Published Notebook --------------------------------------------------------
   /**
-   * @param notebookId the {@link PublishedNotebookIdentifier} of the desired
-   *        {@link PublishedNotebook}
-   *  @returns the {@link PublishedNotebook} for the specified
-   *           {@link PublishedNotebookIdentifier}. Note that the PublishedNotebook
-   *           _may be_ soft deleted {@link PublishedNotebook#delete}.
-   *  @throws {@link ApplicationError}
-   *  - `permission-denied` if the calling User does not have access to the
-   *    specified identified {@link PublishedNotebook}
-   *  - `not-found` if the specified {@link PublishedNotebookIdentifier} does not represent
-   *    known {@link PublishedNotebook}
+   * @param notebookId the {@link NotebookIdentifier} of the desired {@link NotebookPublishedContent}
+   * @returns the {@link NotebookPublishedContent} for the specified {@link NotebookIdentifier}
+   * @throws {@link ApplicationError}
+   * - `not-found` if the specified {@link NotebookIdentifier} does not represent a
+   *   known {@link NotebookPublishedContent} (which could mean that either the associated
+   *   Notebook was deleted or that the Notebook is no longer published)
    */
-  public async getPublishedNotebook(notebookId: PublishedNotebookIdentifier): Promise<PublishedNotebook> {
-    const publishedNotebook = await lastValueFrom(publishedNotebookOnceById$(notebookId));
-    if(publishedNotebook == null/*not-found*/) throw new ApplicationError('functions/not-found', `Could not find Notebook for Notebook Id (${notebookId}).`);
-    // TODO: test 'permission-denied' case!
+  // NOTE: a single entry so that the content *is* included
+  public async getPublishedNotebook(notebookId: NotebookIdentifier): Promise<NotebookPublishedContent> {
+    const publishedNotebook = await lastValueFrom(notebookPublishedContentOnceById$(notebookId));
+    if(publishedNotebook == null/*not-found*/) throw new ApplicationError('functions/not-found', `Could not find Published Notebook for Notebook Id (${notebookId}).`);
     return publishedNotebook;
   }
 
@@ -158,17 +159,17 @@ export class NotebookService {
 
   // == Publish ===================================================================
   /**
-   * @param notebookId the {@link NotebookIdentifier} of the {@link Notebook} that is
-   *         to be published
-   * @param version the version of the {@link Notebook} that is to be published
+   * @param publish identifies the {@link Notebook} by {@link NotebookIdentifier}
+   *        and the index of the {@link Version} that is to be published
    * @throws a {@link ApplicationError}:
+   * - `permission-denied` if the caller is not the creator of the Notebook
    * - `not-found` if the specified {@link NotebookIdentifier} does not represent a
    *   known {@link Notebook} or it the specified version does not represent a known
    *   {@link NotebookVersion}
    * - `data/deleted` if the {@link Notebook} has already been flagged as deleted (FIXME!!!!)
    * - `datastore/write` if there was an error setting the deleted flag on the {@link Notebook} (FIXME!!!)
    */
-  public async publishNotebook(create: PublishedNotebook_Create) {
-    await publishNotebook(create);
+  public async publishNotebook(publish: Notebook_Publish) {
+    await notebookPublish(publish);
   }
 }

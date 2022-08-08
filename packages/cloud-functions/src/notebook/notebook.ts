@@ -1,7 +1,7 @@
 import { DocumentReference, Transaction } from 'firebase-admin/firestore';
 import { logger } from 'firebase-functions';
 
-import { contentToNode, extractDocumentName, getSchema, NotebookDocumentContent, NotebookIdentifier, NotebookType, NotebookSchemaVersion, Notebook_Create, Notebook_Delete, Notebook_Storage, Notebook_Update, SystemUserId, UserIdentifier, DEFAULT_NOTEBOOK_NAME } from '@ureeka-notebook/service-common';
+import { contentToNode, extractDocumentName, getSchema, NotebookDocumentContent, NotebookIdentifier, NotebookType, NotebookSchemaVersion, Notebook_Create, Notebook_Delete, Notebook_Publish, Notebook_Rename, Notebook_Storage, SystemUserId, UserIdentifier, DEFAULT_NOTEBOOK_NAME } from '@ureeka-notebook/service-common';
 
 import { firestore } from '../firebase';
 import { ApplicationError } from '../util/error';
@@ -29,7 +29,7 @@ export const getNotebookName = (notebookId: NotebookIdentifier, version: Noteboo
 };
 
 // == Create ======================================================================
-export const createNewNotebook = async (
+export const createNotebook = async (
   userId: UserIdentifier,
   type: NotebookType, name: string
 ): Promise<NotebookIdentifier> => {
@@ -41,10 +41,12 @@ export const createNewNotebook = async (
       type,
       schemaVersion,
 
+      name,
+
+      isPublished: false/*cannot be published at creation*/,
+
       viewers: [userId/*creator must be a viewer by contract*/],
       editors: [userId/*creator must be an editor by contract*/],
-
-      name,
 
       deleted: false/*not deleted by default*/,
 
@@ -63,20 +65,33 @@ export const createNewNotebook = async (
 };
 
 // == Update ======================================================================
+// updates the published status of the specified Notebook
+export const updateNotebookPublish = (transaction: Transaction, notebookId: NotebookIdentifier, isPublished: boolean) => {
+  const notebookRef = notebookDocument(notebookId);
+  const notebook: Notebook_Publish = {
+    isPublished,
+
+    lastUpdatedBy: SystemUserId/*by contract*/,
+    updateTimestamp: ServerTimestamp/*server-written*/,
+  };
+  transaction.set(notebookRef, notebook, { merge: true });
+};
+
+// --------------------------------------------------------------------------------
 // extracts meta-data (e.g. the Title) from the specified Notebook and updates the
 // Notebook document (using the specified Transaction) as needed
 // NOTE: currently only run on Checkpoints
-export const updateExistingNotebook = (transaction: Transaction, notebookId: NotebookIdentifier, version: NotebookSchemaVersion, content: NotebookDocumentContent) => {
+export const updateNotebookRename = (transaction: Transaction, notebookId: NotebookIdentifier, version: NotebookSchemaVersion, content: NotebookDocumentContent) => {
   const name = getNotebookName(notebookId, version, content);
 
   const notebookRef = notebookDocument(notebookId);
-  const notebook: Notebook_Update = {
+  const notebook: Notebook_Rename = {
     name,
 
     lastUpdatedBy: SystemUserId/*by contract*/,
     updateTimestamp: ServerTimestamp/*server-written*/,
   };
-  transaction.update(notebookRef, notebook);
+  transaction.set(notebookRef, notebook, { merge: true });
 };
 
 // == Delete ======================================================================
@@ -98,7 +113,7 @@ export const deleteNotebook = async (userId: UserIdentifier, notebookId: Noteboo
         lastUpdatedBy: userId,
         updateTimestamp: ServerTimestamp/*by contract*/,
       };
-      transaction.set(notebookRef, notebook);
+      transaction.set(notebookRef, notebook, { merge: true });
     });
   } catch(error) {
     if(error instanceof ApplicationError) throw error;

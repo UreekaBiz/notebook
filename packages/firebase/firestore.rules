@@ -215,10 +215,18 @@ service cloud.firestore {
       allow delete: if false; // managed server-side
     }
 
-    // -- Published Notebook ------------------------------------------------------
-    // NOTE: document id matches NotebookVersion#index (hashed) from the last
-    //       NotebookVersion combined
-    match /notebook-published-notebooks/{versionId} {
+    // -- Notebook Published ------------------------------------------------------
+    // NOTE: the document id matches the id of the corresponding Notebook
+    // NOTE: terrible English but consistent naming
+    match /notebook-publisheds/{notebookId} {
+      allow create: if false; // server-only created
+      allow update: if false; // read-only
+      allow read:   if true; 	// published Notebooks are public by definition
+      allow delete: if false; // create-only
+    }
+
+    // NOTE: the document id matches the id of the corresponding Notebook
+    match /notebook-published-contents/{notebookId} {
       allow create: if false; // server-only created
       allow update: if false; // read-only
       allow read:   if true; 	// published Notebooks are public by definition
