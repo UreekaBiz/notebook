@@ -28,7 +28,7 @@
 }
 .inlineNodeContainer { position: relative; display: inline-block; }
 .ProseMirror-selectednode > span/*target inline nodes with content (e.g. asyncNodes)*/{
-  outline: 2px solid black;
+  outline: 1px solid #666;
 }
 
 /* -- Node styles -------------------------------------------------------------- */
