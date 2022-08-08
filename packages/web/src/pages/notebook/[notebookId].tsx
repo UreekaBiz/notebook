@@ -28,7 +28,7 @@ function NotebookEditorPage() {
   // get the notebookId from the URL
   // NOTE: the effect(s) below handle if the notebookId is not found
   const router = useRouter();
-  const { notebookId } = router.query as { notebookId: NotebookIdentifier; };
+  const { notebookId } = router.query as { notebookId: NotebookIdentifier; }/*FIXME: follow a paradigm like in [publishedNotebookId].tsx*/;
 
   const toast = useToast();
 

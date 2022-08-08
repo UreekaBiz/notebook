@@ -2,7 +2,7 @@
 import Link from 'next/link';
 import { useEffect, useState } from 'react';
 
-import { getLogger, NotebookService, Logger, PublishedNotebookTuple } from '@ureeka-notebook/web-service';
+import { getLogger, NotebookService, Logger, NotebookPublishedTuple } from '@ureeka-notebook/web-service';
 
 import { WrappedPage } from 'core/wrapper';
 import { NotebookTopBar } from 'notebook/component/NotebookTopBar';
@@ -17,7 +17,7 @@ const log = getLogger(Logger.NOTEBOOK);
 // NOTE: this page uses Static Site Generation. See pages/README.md
 // == Client Side =================================================================
 function PublishedNotebookListPage() {
-  const [publishedNotebooks, setPublishedNotebooks] = useState<PublishedNotebookTuple[]>([]);
+  const [publishedNotebooks, setPublishedNotebooks] = useState<NotebookPublishedTuple[]>([]);
 
   const isMounted = useIsMounted();
 

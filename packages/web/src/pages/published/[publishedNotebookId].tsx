@@ -1,7 +1,7 @@
 import Head from 'next/head';
 import * as Validate from 'yup';
 
-import { json, publishedNotebookDocument, wrapGetServerSideProps, PublishedNotebook } from '@ureeka-notebook/ssr-service';
+import { json, notebookPublishedContentDocument, wrapGetServerSideProps, Identifier_Schema, NotebookPublishedContent } from '@ureeka-notebook/ssr-service';
 
 import { WrappedPage } from 'core/wrapper';
 import { NotebookViewer } from 'notebookEditor/component/NotebookViewer';
@@ -13,13 +13,13 @@ import { FullPageLayout } from 'shared/layout/FullPageLayout';
 // == Types =======================================================================
 // NOTE: the params must match the route path
 export const PublishedNotebookPage_QueryParams_Schema = Validate.object({
-  publishedNotebookId: Validate.string()
-    .required(),
+  publishedNotebookId: Identifier_Schema
+      .required(),
 });
 export type PublishedNotebookPage_QueryParams = Readonly<Validate.InferType<typeof PublishedNotebookPage_QueryParams_Schema>>;
 
 interface ServerSideProps {
-  publishedNotebook: PublishedNotebook;
+  publishedNotebook: NotebookPublishedContent;
 }
 
 // == Server Side =================================================================
@@ -28,14 +28,13 @@ interface ServerSideProps {
 export const getServerSideProps = wrapGetServerSideProps<ServerSideProps, PublishedNotebookPage_QueryParams>(
 { requiresAuth: false, schema: PublishedNotebookPage_QueryParams_Schema },
 async ({ params }) => {
-  const publishedNotebookId = params!.publishedNotebookId/*validated with schema*/;
+  const notebookId = params!.publishedNotebookId/*validated with schema*/;
 
-  const notebookRef = publishedNotebookDocument(publishedNotebookId),
+  const notebookRef = notebookPublishedContentDocument(notebookId),
         snapshot = await notebookRef.get();
   // FIXME: How to log events on getServerSideProps?
   // eslint-disable-next-line no-console
-  if(!snapshot.exists) { console.info(`Published Notebook (${publishedNotebookId}) no longer exists.`); return { notFound: true/*redirects caller to 404 page*/ }; }
-  // TODO: Validate if the notebook is not deleted.
+  if(!snapshot.exists) { console.info(`Published Notebook (${notebookId}) no longer exists.`); return { notFound: true/*redirects caller to 404 page*/ }; }
 
   const publishedNotebook = snapshot.data()!/*validated above*/;
   return { props: json<ServerSideProps>({ publishedNotebook }) };

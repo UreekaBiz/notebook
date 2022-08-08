@@ -22,14 +22,15 @@ export const PublishNotebookButton: React.FC<Props> = () => {
     if(!notebookId || !editorService) return/*nothing to do*/;
     setIsLoading(true);
 
-    const version = editorService.getVersionIndex();
+    const versionIndex = editorService.getVersionIndex();
     const title = extractDocumentName(editor.state.doc)/*default to extracted Document name*/;
     const snippet = ''/*FIXME*/;
     const image = ''/*FIXME*/;
     try {
-      await NotebookService.getInstance().publishNotebook({ notebookId, version, title, image, snippet });
+      await NotebookService.getInstance().publishNotebook({ notebookId, versionIndex, title, image, snippet });
     } catch(error) {
       log.error('Error creating published notebook: ', error);
+      // FIXME: add toast!
     } finally {
       setIsLoading(false);
     }

@@ -2,7 +2,7 @@ import { useToast, Box, Heading, Link, Text } from '@chakra-ui/react';
 import NextLink from 'next/link';
 import { MouseEventHandler } from 'react';
 
-import { PublishedNotebookTuple } from '@ureeka-notebook/web-service';
+import { NotebookPublishedTuple } from '@ureeka-notebook/web-service';
 
 import { coreRoutes } from 'shared/routes';
 import { getMinifiedReadableDate } from 'ui/util';
@@ -11,10 +11,10 @@ import { useUserProfile } from 'user/hook/useUserProfile';
 
 // ********************************************************************************
 interface Props {
-  publishedNotebookTuple: PublishedNotebookTuple;
+  notebookPublishedTuple: NotebookPublishedTuple;
 }
-export const PublishedNotebookListItem: React.FC<Props> = ({ publishedNotebookTuple }) => {
-  const { id, obj: { createTimestamp, createdBy, title, snippet } } = publishedNotebookTuple;
+export const PublishedNotebookListItem: React.FC<Props> = ({ notebookPublishedTuple }) => {
+  const { id, obj: { createTimestamp, createdBy, title, snippet } } = notebookPublishedTuple;
 
   // since there can be 'n' Users in the Published Notebook list and a limited
   // number of live subscriptions that can be made, the Users are static (not live)

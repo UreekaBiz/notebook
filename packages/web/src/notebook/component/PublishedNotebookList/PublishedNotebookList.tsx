@@ -1,7 +1,7 @@
 import { Flex, Text, VStack } from '@chakra-ui/react';
 import { useState, useEffect } from 'react';
 
-import { getLogger, Logger, NotebookService, PublishedNotebookTuple } from '@ureeka-notebook/web-service';
+import { getLogger, Logger, NotebookService, NotebookPublishedTuple } from '@ureeka-notebook/web-service';
 
 import { Loading } from 'shared/component/Loading';
 import { useAsyncStatus, useIsMounted } from 'shared/hook';
@@ -13,7 +13,7 @@ const log = getLogger(Logger.DEFAULT);
 // ********************************************************************************
 export const PublishedNotebookList = () => {
   // == State =====================================================================
-  const [publishedNotebookTuples, setPublishedNotebookTuples] = useState<PublishedNotebookTuple[]>([/*initially empty*/]);
+  const [notebookPublishedTuples, setNotebookPublishedTuples] = useState<NotebookPublishedTuple[]>([/*initially empty*/]);
   const [status, setStatus] = useAsyncStatus();
 
   // ------------------------------------------------------------------------------
@@ -28,7 +28,7 @@ export const PublishedNotebookList = () => {
     const subscription = scrollablePublishedNotebooks.documents$().subscribe({
       next: value => {
         if(!isMounted()) return/*component is unmounted, prevent unwanted state updates*/;
-        setPublishedNotebookTuples(value);
+        setNotebookPublishedTuples(value);
         setStatus('complete');
       },
       error: (error) => {
@@ -56,7 +56,7 @@ export const PublishedNotebookList = () => {
 
   // NOTE: in a live production environment, this will never happen since operationally
   //       there will always be at least one Published Notebook
-  if(publishedNotebookTuples.length < 1) {
+  if(notebookPublishedTuples.length < 1) {
     return (
       <Flex align='center' justify='center' width='full' height='full'>
         <Text>Create a Notebook!</Text>
@@ -66,8 +66,8 @@ export const PublishedNotebookList = () => {
 
   return (
     <VStack spacing={10} alignItems='flex-start'>
-      {publishedNotebookTuples.map(tuple => (
-        <PublishedNotebookListItem key={tuple.id} publishedNotebookTuple={tuple} />
+      {notebookPublishedTuples.map(tuple => (
+        <PublishedNotebookListItem key={tuple.id} notebookPublishedTuple={tuple} />
       ))}
     </VStack>
   );
