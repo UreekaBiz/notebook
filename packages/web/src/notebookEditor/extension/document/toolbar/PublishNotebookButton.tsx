@@ -4,6 +4,7 @@ import { RiFileAddLine } from 'react-icons/ri';
 
 import { extractDocumentName, getLogger, Logger, NotebookService } from '@ureeka-notebook/web-service';
 
+import { useNotebook } from 'notebook/hook/useNotebook';
 import { EditorToolComponentProps } from 'notebookEditor/toolbar/type';
 import { useNotebookEditor } from 'notebookEditor/hook/useNotebookEditor';
 
@@ -15,6 +16,7 @@ export const PublishNotebookButton: React.FC<Props> = () => {
   // == States ====================================================================
   // FIXME: move to using correct Async states, toasts, etc.
   const { notebookId, editor, editorService } = useNotebookEditor();
+  const { notebook } = useNotebook()/*FIXME: want one that guarantees that the Notebook exists!*/;
   const [isLoading, setIsLoading] = useState(false/*by contract*/);
 
   // == Handler ===================================================================
@@ -46,7 +48,7 @@ export const PublishNotebookButton: React.FC<Props> = () => {
       width={160}
       onClick={handlePublishNotebook}
     >
-      {isLoading ? 'Publishing...' : 'Publish Notebook'}
+      {isLoading ? 'Publishing...' : (notebook?.isPublished ? 'Republish Notebook' : 'Publish Notebook')}
     </Button>
   );
 };
