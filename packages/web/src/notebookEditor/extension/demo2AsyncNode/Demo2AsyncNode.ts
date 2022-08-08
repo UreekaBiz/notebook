@@ -66,9 +66,23 @@ export const Demo2AsyncNode = Node.create<NoOptions, Demo2AsyncNodeStorageType>(
   addStorage() { return new NodeViewStorage<Demo2AsyncNodeController>(); },
 
   // -- View ----------------------------------------------------------------------
+  // NOTE: NodeViews are supposed to be unique for each Node (based on the id of
+  //       the node). This is done to persist the state of the node.
   addNodeView() {
     return ({ editor, node, getPos }) => {
-      if(!isDemo2AsyncNode(node)){ console.error(`Unexpected node type (${node.type.name}) while adding Demo2AsyncNode NodeView`); return {/*empty*/};/*nothing to do*/}
+      if(!isDemo2AsyncNode(node)) throw new Error(`Unexpected node type (${node.type.name}) while adding Demo2AsyncNode NodeView.`);
+      const id = node.attrs[AttributeType.Id];
+      if(!id) return {}/*invalid id -- no node view returned*/;
+
+      const controller = this.storage.getNodeView(id);
+
+      // Use existing NodeView, update it and return it.
+      if(controller) {
+        controller.updateProps(getPos);
+        return controller;
+      } // else -- controller don't exists
+
+      // Create a new controller and NodeView instead.
       return new Demo2AsyncNodeController(editor, node, this.storage, getPos);
     };
   },
