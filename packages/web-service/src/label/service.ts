@@ -251,7 +251,8 @@ export class LabelService {
    * @throws a {@link ApplicationError}:
    * - `permission-denied` if the caller is not the creator of the Label
    * - `not-found` if the specified {@link LabelIdentifier} does not represent a
-   *   known {@link Label}
+   *   known {@link Label}. Any specified {@link NotebookIdentifier} that does not
+   *   represent a known {@link Notebook} is silently ignored.
    * - `datastore/write` if there was an error associating the Notebook with the Label
    * @see #addNotebook()
    * @see #removeNotebook()

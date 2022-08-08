@@ -29,4 +29,4 @@ export const labelNotebookPublishedDocument = (labelId: LabelIdentifier, noteboo
 // ** RTDB ************************************************************************
 // == Collection ==================================================================
 // -- Label Summary -------------------------------------------------------------
-export const labelSummary = (labelId: LabelIdentifier) => database.ref(`/${LABEL_SUMMARIES}/${labelId}`);
+export const labelSummaryRef = (labelId: LabelIdentifier) => database.ref(`/${LABEL_SUMMARIES}/${labelId}`);

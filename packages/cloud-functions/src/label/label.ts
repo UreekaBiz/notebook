@@ -7,6 +7,7 @@ import { ApplicationError } from '../util/error';
 import { ServerTimestamp } from '../util/firestore';
 import { labelCollection, labelDocument } from './datastore';
 import { removeAllNotebooks } from './labelNotebook';
+import { createLabelSummary, deleteLabelSummary } from './labelSummary';
 
 // ********************************************************************************
 // == Create ======================================================================
@@ -37,7 +38,10 @@ export const createLabel = async (
     };
     await labelRef.create(label)/*create by definition*/;
 
-    // FIXME: create stub Summary
+    // NOTE: it *is* possible for the Summary to fail. Cleanup *should* either
+    //       retry or remove the parent Label and error out.
+    await createLabelSummary(userId, labelId, visibility)/*logs on error*/;
+
     // FIXME: publish if visibility === LabelVisibility.Public
 
     return labelId;
@@ -106,8 +110,8 @@ export const deleteLabel = async (userId: UserIdentifier, labelId: LabelIdentifi
     });
 
     await removeAllNotebooks(userId, labelId)/*logs on error*/;
+    await deleteLabelSummary(userId, labelId)/*logs on error*/;
 
-    // FIXME: remove Label Summary
     // FIXME: remove any published labels!!! (do it in all cases for sanity)
 
   } catch(error) {
