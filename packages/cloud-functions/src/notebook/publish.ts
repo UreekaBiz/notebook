@@ -36,6 +36,10 @@ export const publishNotebook = async (
       const versionSnapshot = await transaction.get(versionRef);
       if(!versionSnapshot.exists) throw new ApplicationError('functions/not-found', `Cannot create Published Notebook for non-existing Version (${versionIndex}) in Notebook (${notebookId}) for User (${userId}).`);
 
+      // create Notebook content
+      // NOTE: all reads must come before writes in a Firestore transaction
+      const content = await getNotebookContent(transaction, notebook.schemaVersion, notebookId, versionIndex);
+
       // if the Notebook isn't already published then update its state
       const isPublished = notebook.isPublished/*preserve state*/;
       if(!isPublished) updateNotebookPublish(transaction, notebookId, true/*by definition*/);
@@ -61,7 +65,6 @@ export const publishNotebook = async (
       };
       transaction.set(notebookPublishedRef, removeUndefined({ ...create, ...publishedNotebook }))/*full write, by contract*/;
 
-      const content = await getNotebookContent(transaction, notebook.schemaVersion, notebookId, versionIndex);
       const publishedNotebookContent: NotebookPublishedContent_Update = {
         ...publishedNotebook,
         content,
