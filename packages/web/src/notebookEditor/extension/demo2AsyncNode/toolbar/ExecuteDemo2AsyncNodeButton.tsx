@@ -1,4 +1,4 @@
-import { isDemo2AsyncNode, AttributeType, NodeName } from '@ureeka-notebook/service-common';
+import { isDemo2AsyncNode, AttributeType, NodeName } from '@ureeka-notebook/web-service';
 
 import { ExecuteAsyncNodeButton } from 'notebookEditor/extension/asyncNode/component/ExecuteAsyncNodeButton';
 import { getNodeViewStorage } from 'notebookEditor/model/NodeViewStorage';

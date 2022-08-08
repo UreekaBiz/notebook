@@ -112,6 +112,7 @@ export {
   DocumentNodeSpec,
   HeadingNodeSpec,
   ImageNodeSpec,
+  MarkHolderNodeSpec,
   ParagraphNodeSpec,
   TextNodeSpec,
 

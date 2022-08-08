@@ -2,7 +2,7 @@ import { ChainedCommands, Editor } from '@tiptap/core';
 import { Mark, MarkType } from 'prosemirror-model';
 import { TextSelection } from 'prosemirror-state';
 
-import { createMarkHolderNode, getMarkName, isMarkHolderNode, AttributeType, JSONMark, JSONNode, MarkHolderNodeType, MarkName, NotebookSchemaType } from '@ureeka-notebook/service-common';
+import { createMarkHolderNode, getMarkName, isMarkHolderNode, AttributeType, JSONMark, JSONNode, MarkHolderNodeType, MarkName, NotebookSchemaType } from '@ureeka-notebook/web-service';
 
 // ********************************************************************************
 // creates a MarkHolder Node holding the Marks corresponding to the given MarkNames

@@ -2,7 +2,7 @@ import { Fragment, Mark, Node as ProseMirrorNode, Slice } from 'prosemirror-mode
 import { Plugin, TextSelection } from 'prosemirror-state';
 import { EditorView } from 'prosemirror-view';
 
-import { createMarkHolderNode, createParagraphNode, getNodesAffectedByStepMap, isMarkHolderNode, AttributeType, JSONMark, NodeName, NotebookSchemaType } from '@ureeka-notebook/service-common';
+import { createMarkHolderNode, createParagraphNode, getNodesAffectedByStepMap, isMarkHolderNode, AttributeType, JSONMark, NodeName, NotebookSchemaType } from '@ureeka-notebook/web-service';
 
 import { parseStoredMarks } from './util';
 
