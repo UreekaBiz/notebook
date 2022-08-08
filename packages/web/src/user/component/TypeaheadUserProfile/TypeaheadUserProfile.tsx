@@ -30,7 +30,7 @@ export const TypeaheadUserProfile: React.FC<Props> = ({ onSelect, disabled = fal
 
   const filteredProfiles = userProfiles.filter(({ id }) => !ignoreUserIds.has(id));
 
-  // == Effects ===================================================================
+  // == Effect ====================================================================
   useEffect(() => {
     // Since the input value could change while the request is being executed due
     // to how the React side effects works a flag must be used to indicate if this

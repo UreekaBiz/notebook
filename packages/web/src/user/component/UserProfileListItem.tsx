@@ -30,7 +30,7 @@ export const UserProfileListItem: React.FC<Props> = ({ userId, showYouLabel = tr
 
   const showLabel = showYouLabel && userId === authedUser?.authedUser.userId;
 
-  // == Effects ===================================================================
+  // == Effect ====================================================================
   useEffect(() => {
     setStatus('loading');
     // Reset any existing state.

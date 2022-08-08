@@ -16,7 +16,7 @@ export const RequiredAuthUserWrapper: React.FC<Props> = ({ children }) => {
   const isAuth = useIsAuth();
   const router = useRouter();
 
-  // == Effects ===================================================================
+  // == Effect ====================================================================
   // client-side redirect when User is not auth'ed
   useEffect(() => {
     if(!isAuthServiceInitialized) return/*wait until service is initialized*/;

@@ -19,7 +19,7 @@ function LoginPage() {
   const isAuth = useIsAuth();
   const router = useRouter();
 
-  // -- Effects -------------------------------------------------------------------
+  // -- Effect --------------------------------------------------------------------
   // client-side redirect when User is auth'ed (so User doesn't see Login)
   useEffect(() => {
     if(!isAuth || !isAuthServiceInitialized) return/*User will see page*/;

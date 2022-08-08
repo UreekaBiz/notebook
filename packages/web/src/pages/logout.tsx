@@ -18,7 +18,7 @@ const log = getLogger(Logger.AUTH_USER);
 function LogoutPage () {
   const router = useRouter();
 
-  // -- Effects -------------------------------------------------------------------
+  // -- Effect --------------------------------------------------------------------
   // sign out the auth'ed User
   useEffect(() => {
     // User will be auth'ed by the time this page is rendered due to

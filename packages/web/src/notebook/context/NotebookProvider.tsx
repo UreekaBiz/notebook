@@ -23,7 +23,7 @@ export const NotebookProvider: React.FC<Props> = ({ notebookId, children }) => {
   const isMounted = useIsMounted();
   const toast = useToast();
 
-  // == Effects ===================================================================
+  // == Effect ====================================================================
   // subscribes to the Notebook with the give notebookId
   useEffect(() => {
     if(!notebookId) return/*nothing to do*/;

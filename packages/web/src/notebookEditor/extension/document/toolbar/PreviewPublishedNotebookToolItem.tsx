@@ -15,7 +15,7 @@ export const PreviewPublishedNotebookToolItem: React.FC<Props> = ({ editor }) =>
   // == State =====================================================================
   const [isOpen, setIsOpen] = useState(false/*by contract*/);
 
-  // == Effects ===================================================================
+  // == Effect ====================================================================
   // adds a listener to the window to toggle the modal state (CTRL + ALT/Option + ,)
   useEffect(() => {
     const handleKeyDown = (event: KeyboardEvent) => {

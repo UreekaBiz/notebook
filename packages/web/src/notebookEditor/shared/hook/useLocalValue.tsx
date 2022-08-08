@@ -19,7 +19,7 @@ export function useLocalValue<T>(value: T, update: (newValue: T, focus?: boolean
   const [localValue, setLocalValue] = useState(value);
   const [isUpdating, setIsUpdating] = useState(false/*by contract*/);
 
-  // == Effects ===================================================================
+  // == Effect ====================================================================
   // Sync the value from the original source with the local value. If the local
   // value is being updated (isUpdating its true) it won't update it.
   useEffect(() => {

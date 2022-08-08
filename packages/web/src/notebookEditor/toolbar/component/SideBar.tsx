@@ -20,7 +20,7 @@ export const SideBar = () => {
   const [selectedDepth, setSelectedDepth] = useState<SelectionDepth | undefined/*current node*/>(undefined);
   const editor = useValidatedEditor();
 
-  // == Effects ===================================================================
+  // == Effect ====================================================================
   useEffect(() => {
     const handleKeydown = (e: KeyboardEvent) => {
       const isSequence = e.ctrlKey && e.altKey && e.code === 'Period';
