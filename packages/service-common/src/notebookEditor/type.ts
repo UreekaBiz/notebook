@@ -39,7 +39,7 @@ export type NotebookVersion = Creatable & Readonly<{
   schemaVersion: NotebookSchemaVersion;
 
   /** the ProseMirror Step version of this Version. It is effectively a Lamport
-   *  Timestamp. It must start at INITIAL_DOCUMENT_INDEX and increase monotonically */
+   *  Timestamp. It must start at NO_NOTEBOOK_VERSION and increase monotonically */
   index: number;
   /** the universally unique identifier for the 'client' (a combination of the User
    *  and Session identifiers) as required by ProseMirror */
