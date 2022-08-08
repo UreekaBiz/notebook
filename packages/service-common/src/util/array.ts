@@ -1,5 +1,14 @@
 // convenience methods for working with arrays
 // ********************************************************************************
+// REF: https://github.com/tc39/proposal-array-from-async
+export const fromAsync = async <T>(iterator: AsyncIterable<T>): Promise<T[]> => {
+  const result: T[] = [];
+  for await(const item of iterator) {
+    result.push(item);
+  }
+  return result;
+};
+
 // ================================================================================
 // returns an array of values that exist in `previous` that do not exist in `final`.
 // If there are no values that have been removed in `final` then an *empty* array
