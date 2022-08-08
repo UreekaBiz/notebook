@@ -1,7 +1,7 @@
 import { Editor } from '@tiptap/core';
 import { Transaction } from 'prosemirror-state';
 
-import { asyncNodes, wereNodesAffectedByTransaction, AsyncNodeStatus, NodeName, AttributeType } from '@ureeka-notebook/web-service';
+import { asyncNodes, wereNodesAffectedByTransaction, AsyncNodeStatus, AttributeType, NodeName } from '@ureeka-notebook/web-service';
 
 import { getNodeViewStorage } from 'notebookEditor/model/NodeViewStorage';
 
