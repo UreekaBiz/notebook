@@ -51,11 +51,10 @@ const endpointNames = [
 
   'notebookCreate',
   'notebookDelete',
+  'notebookPublish',
   'notebookShare',
 
   'loggingClient',
-
-  'publishedNotebookCreate',
 ];
 
 // ================================================================================

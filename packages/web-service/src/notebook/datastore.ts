@@ -1,40 +1,43 @@
 import { collection, doc, query, where, CollectionReference, Query } from 'firebase/firestore';
 
-import { isBlank, nameof, Notebook, NotebookIdentifier, PublishedNotebook, PublishedNotebookIdentifier, NOTEBOOKS, NOTEBOOK_PUBLISHED_NOTEBOOKS } from '@ureeka-notebook/service-common';
+import { isBlank, nameof, Notebook_Storage, NotebookIdentifier, NotebookPublished_Storage, NotebookPublishedContent, NOTEBOOKS, NOTEBOOK_PUBLISHEDS, NOTEBOOK_PUBLISHED_CONTENTS } from '@ureeka-notebook/service-common';
 
 import { firestore } from '../util/firebase';
 import { buildSortQuery } from '../util/firestore';
-import { NotebookFilter, PublishedNotebookFilter } from './type';
+import { NotebookFilter, NotebookPublishedFilter } from './type';
 
 // ** Firestore *******************************************************************
 // == Collection ==================================================================
 // -- Notebook ---------------------------------------------------------------------
-export const notebookCollection = collection(firestore, NOTEBOOKS) as CollectionReference<Notebook>;
+export const notebookCollection = collection(firestore, NOTEBOOKS) as CollectionReference<Notebook_Storage>;
 export const notebookDocument = (notebookId: NotebookIdentifier ) => doc(notebookCollection, notebookId);
 
-// -- Published Notebook ----------------------------------------------------------
-export const publishedNotebookCollection = collection(firestore, NOTEBOOK_PUBLISHED_NOTEBOOKS) as CollectionReference<PublishedNotebook>;
-export const publishedNotebookDocument = (publishedNotebookId: PublishedNotebookIdentifier ) => doc(publishedNotebookCollection, publishedNotebookId);
+// -- Notebook Published ----------------------------------------------------------
+export const notebookPublishedCollection = collection(firestore, NOTEBOOK_PUBLISHEDS) as CollectionReference<NotebookPublished_Storage>;
+export const notebookPublishedDocument = (notebookId: NotebookIdentifier) => doc(notebookPublishedCollection, notebookId);
+
+export const notebookPublishedContentCollection = collection(firestore, NOTEBOOK_PUBLISHED_CONTENTS) as CollectionReference<NotebookPublishedContent>;
+export const notebookPublishedContentDocument = (notebookId: NotebookIdentifier) => doc(notebookPublishedContentCollection, notebookId);
 
 // == Query =======================================================================
 // -- Notebook --------------------------------------------------------------------
 export const notebookQuery = (filter: NotebookFilter) => {
-  let buildQuery = notebookCollection as Query<Notebook>;
+  let buildQuery = notebookCollection as Query<Notebook_Storage>;
 
   // filter
   if(!isBlank(filter.name)) {
     // TODO: support substring!!
-    buildQuery = query(buildQuery, where(nameof<Notebook>('name'), '==', filter.name!));
+    buildQuery = query(buildQuery, where(nameof<Notebook_Storage>('name'), '==', filter.name!));
   } /* else -- 'name' was not specified in the filter */
   // NOTE: these are waterfall'd by design
   if(!isBlank(filter.viewableBy)) {
-    buildQuery = query(buildQuery, where(nameof<Notebook>('viewers'), 'array-contains', filter.viewableBy!));
+    buildQuery = query(buildQuery, where(nameof<Notebook_Storage>('viewers'), 'array-contains', filter.viewableBy!));
   } /* else -- 'createdBy' was not specified in the filter */
   if(!isBlank(filter.editableBy)) {
-    buildQuery = query(buildQuery, where(nameof<Notebook>('editors'), 'array-contains', filter.editableBy!));
+    buildQuery = query(buildQuery, where(nameof<Notebook_Storage>('editors'), 'array-contains', filter.editableBy!));
   } /* else -- 'createdBy' was not specified in the filter */
   if(!isBlank(filter.createdBy)) {
-    buildQuery = query(buildQuery, where(nameof<Notebook>('createdBy'), '==', filter.createdBy!));
+    buildQuery = query(buildQuery, where(nameof<Notebook_Storage>('createdBy'), '==', filter.createdBy!));
   } /* else -- 'createdBy' was not specified in the filter */
 
   // if no filter is applied then both deleted and non-deleted entries are included.
@@ -42,33 +45,36 @@ export const notebookQuery = (filter: NotebookFilter) => {
   // * If nothing is specified then only include non-deleted (i.e. deleted = false)
   let includeDeleted = ((filter.deleted === true) || (filter.onlyDeleted === true));
   if(filter.onlyDeleted === true) {
-    buildQuery = query(buildQuery, where(nameof<Notebook>('deleted'), '==', true));
+    buildQuery = query(buildQuery, where(nameof<Notebook_Storage>('deleted'), '==', true));
   } /* else -- don't limit to only (soft) deleted entries */
   if(!includeDeleted) {
-    buildQuery = query(buildQuery, where(nameof<Notebook>('deleted'), '==', false));
+    buildQuery = query(buildQuery, where(nameof<Notebook_Storage>('deleted'), '==', false));
   } /* else -- (soft) deleted entries should be included */
 
   // sort
-  buildQuery = buildSortQuery(buildQuery, filter, nameof<Notebook>('name')/*default sort field*/);
+  buildQuery = buildSortQuery(buildQuery, filter, nameof<Notebook_Storage>('name')/*default sort field*/);
 
   return buildQuery;
 };
 
 // -- Published Notebook ----------------------------------------------------------
-export const publishedNotebookQuery = (filter: PublishedNotebookFilter) => {
-  let buildQuery = publishedNotebookCollection as Query<PublishedNotebook>;
+// NOTE: list views (i.e. something that this query would be used for) *must* use
+//       the non-content form of Notebook Published to ensure that as little data
+//       as possible is returned to the client.
+export const notebookPublishedQuery = (filter: NotebookPublishedFilter) => {
+  let buildQuery = notebookPublishedCollection as Query<NotebookPublished_Storage>;
 
   // filter
   if(!isBlank(filter.title)) {
     // TODO: support substring!!
-    buildQuery = query(buildQuery, where(nameof<PublishedNotebook>('title'), '==', filter.title!));
+    buildQuery = query(buildQuery, where(nameof<NotebookPublished_Storage>('title'), '==', filter.title!));
   } /* else -- 'title' was not specified in the filter */
   if(!isBlank(filter.createdBy)) {
-    buildQuery = query(buildQuery, where(nameof<PublishedNotebook>('createdBy'), '==', filter.createdBy!));
+    buildQuery = query(buildQuery, where(nameof<NotebookPublished_Storage>('createdBy'), '==', filter.createdBy!));
   } /* else -- 'createdBy' was not specified in the filter */
 
   // sort
-  buildQuery = buildSortQuery(buildQuery, filter, nameof<PublishedNotebook>('title')/*default sort field*/);
+  buildQuery = buildSortQuery(buildQuery, filter, nameof<NotebookPublished_Storage>('title')/*default sort field*/);
 
   return buildQuery;
 };

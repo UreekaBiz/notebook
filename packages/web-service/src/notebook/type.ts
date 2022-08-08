@@ -1,4 +1,4 @@
-import { Notebook, NotebookCreate_Rest, NotebookCreate_Rest_Schema, NotebookDelete_Rest, NotebookDelete_Rest_Schema, PublishedNotebook, PublishedNotebookCreate_Rest, PublishedNotebookCreate_Rest_Schema, UserIdentifier } from '@ureeka-notebook/service-common';
+import { Notebook, NotebookCreate_Rest, NotebookCreate_Rest_Schema, NotebookDelete_Rest, NotebookDelete_Rest_Schema, NotebookPublished, NotebookPublish_Rest, NotebookPublish_Rest_Schema, UserIdentifier } from '@ureeka-notebook/service-common';
 
 import { SortableFilter } from '../util/firestore';
 
@@ -11,13 +11,13 @@ export {
   // SEE: @ureeka-notebook/service-common: notebook/type.ts
   Notebook,
   NotebookIdentifier,
+  NotebookPublished,
+  NotebookPublishedContent,
+  NotebookPublishedTuple,
   NotebookRole,
   NotebookSchemaVersion,
   NotebookTuple,
   NotebookType,
-  PublishedNotebook,
-  PublishedNotebookIdentifier,
-  PublishedNotebookTuple,
 
   MAX_NOTEBOOK_SHARE_USERS,
 } from '@ureeka-notebook/service-common';
@@ -31,8 +31,8 @@ export type Notebook_Create = NotebookCreate_Rest;
 export const Notebook_Delete_Schema = NotebookDelete_Rest_Schema;
 export type Notebook_Delete = NotebookDelete_Rest;
 
-export const PublishedNotebook_Create_Schema = PublishedNotebookCreate_Rest_Schema;
-export type PublishedNotebook_Create = PublishedNotebookCreate_Rest;
+export const Notebook_Publish_Schema = NotebookPublish_Rest_Schema;
+export type Notebook_Publish = NotebookPublish_Rest;
 
 // == Search ======================================================================
 // -- Notebook --------------------------------------------------------------------
@@ -70,7 +70,7 @@ export type NotebookFilter = SortableFilter<NotebookSortField> & Readonly<{
 }>;
 
 // -- Published Notebook ----------------------------------------------------------
-export type PublishedNotebookSortField = keyof Pick<PublishedNotebook,
+export type NotebookPublishedSortField = keyof Pick<NotebookPublished,
   | 'title'
   | 'createTimestamp'
   | 'createdBy'
@@ -78,7 +78,7 @@ export type PublishedNotebookSortField = keyof Pick<PublishedNotebook,
 
 /** the resulting query is the 'AND' of each member but the 'OR' of any multi-valued
  *  filter */
-export type PublishedNotebookFilter = SortableFilter<PublishedNotebookSortField> & Readonly<{
+export type NotebookPublishedFilter = SortableFilter<NotebookPublishedSortField> & Readonly<{
   // NOTE: this supports only *exact* *match*
   title?: string;
 

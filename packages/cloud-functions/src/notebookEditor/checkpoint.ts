@@ -7,7 +7,7 @@ import { firestore } from '../firebase';
 import { getEnv } from '../util/environment';
 import { ServerTimestamp } from '../util/firestore';
 import { notebookDocument } from '../notebook/datastore';
-import { updateExistingNotebook } from '../notebook/notebook';
+import { updateNotebookRename } from '../notebook/notebook';
 import { checkpointDocument, lastCheckpointQuery, versionRangeQuery } from './datastore';
 
 // ********************************************************************************
@@ -64,7 +64,7 @@ export const createCheckpoint = async (notebookId: NotebookIdentifier, index: nu
     transaction.create(checkpointRef, checkpoint)/*by contract*/;
 
     // also extract the dependent Notebook meta-data and update the Notebook as needed
-    updateExistingNotebook(transaction, notebookId, notebook.schemaVersion, content);
+    updateNotebookRename(transaction, notebookId, notebook.schemaVersion, content);
   });
 };
 
