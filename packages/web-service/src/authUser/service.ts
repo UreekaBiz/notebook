@@ -1,3 +1,5 @@
+import { Observable } from 'rxjs';
+
 import { AuthedUser, UserRole } from '@ureeka-notebook/service-common';
 
 import { getLogger, ServiceLogger } from '../logging';
@@ -5,7 +7,6 @@ import { ApplicationError } from '../util/error';
 import { updateUserProfilePrivate } from './function';
 import { isLoggedIn, AuthedUserState, UserProfilePrivate_Update } from './type';
 import { FirebaseAuthService } from './support/FirebaseAuthService';
-import { Observable } from 'rxjs';
 
 const log = getLogger(ServiceLogger.AUTH_USER);
 
@@ -180,5 +181,5 @@ export class AuthUserService {
   }
 
   // == Stats =====================================================================
-  public stats(): any { return this.firebaseAuthService.stats() }
+  public stats(): any { return this.firebaseAuthService.stats(); }
 }

@@ -1,7 +1,8 @@
-import { ApplicationError } from '@ureeka-notebook/service-common';
 import { limit, query, startAfter, startAt, DocumentSnapshot, Query, QuerySnapshot } from 'firebase/firestore';
 import { map, switchMap, Observable, ReplaySubject } from 'rxjs';
 import { tap } from 'rxjs/operators';
+
+import { ApplicationError } from '@ureeka-notebook/service-common';
 
 import { getLogger, ServiceLogger } from '../logging';
 import { QuerySnapshotObservable } from './observableCollection';
@@ -85,7 +86,7 @@ const createPage = <T>(firstDocumentSnapshot: DocumentSnapshot<T>, lastDocumentS
 // ................................................................................
 type Direction = 'next' | 'previous' | undefined/*first time*/;
 
-type QueryPage<T> = { buildQuery: Query<T>, previousPage: Page<T> | undefined/*first time*/; };
+type QueryPage<T> = { buildQuery: Query<T>; previousPage: Page<T> | undefined/*first time*/; };
 
 // ================================================================================
 class PaginatedQueryObservable<T, R> implements Pagination<R> {
@@ -128,7 +129,7 @@ class PaginatedQueryObservable<T, R> implements Pagination<R> {
         switchMap(({ direction, previousPage, snapshot }) => {
           this.recordPage(direction, previousPage, snapshot);
 
-          return querySnapshotObservable(snapshot)
+          return querySnapshotObservable(snapshot);
         }),
         tap(tuples => {
           this.isLoading = false/*finished loading*/;

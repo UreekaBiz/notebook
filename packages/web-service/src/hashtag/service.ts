@@ -37,7 +37,9 @@ export class HashtagService {
   }
 
   // == Stats =====================================================================
-  public stats() { return {
-    // NOTE: none at this time
-  }}
+  public stats() {
+    return {
+      // NOTE: none at this time
+    };
+  }
 }

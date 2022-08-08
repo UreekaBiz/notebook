@@ -279,7 +279,7 @@ export class LabelService {
    *   than {@link #MAX_NOTEBOOK_SHARE_USERS} identified
    * - `datastore/write` if there was an error updating the share for the Label
    */
-  public async shareLabel(share: { labelId: LabelIdentifier, userRoles: Map<UserIdentifier, ShareRole> }) {
+  public async shareLabel(share: { labelId: LabelIdentifier; userRoles: Map<UserIdentifier, ShareRole>; }) {
     await labelShare({ labelId: share.labelId, userRoles: Object.fromEntries(share.userRoles) });
   }
 
