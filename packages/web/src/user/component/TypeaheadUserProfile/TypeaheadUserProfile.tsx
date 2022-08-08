@@ -77,7 +77,7 @@ export const TypeaheadUserProfile: React.FC<Props> = ({ onSelect, disabled = fal
   // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [inputValue]);
 
-  // == Handlers ==================================================================
+  // == Handler ===================================================================
   const closeMenu = () => setIsMenuOpen(false);
 
   const handleInputChange = (event: React.ChangeEvent<HTMLInputElement>) => {

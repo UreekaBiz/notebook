@@ -48,7 +48,7 @@ export const APIKeyDialog: React.FC<Props> = ({ button }) => {
   const isDirty = !isBlank(apiKeyValue) || apiKeyType !== undefined;
   const isValid = !isBlank(apiKeyValue) && apiKeyType !== undefined;
 
-  // == Handlers ==================================================================
+  // == Handler ===================================================================
   const resetState = () => {
     // Reset initial value
     setApiKeyValue(''/*initial value*/);

@@ -33,7 +33,7 @@ export const ImageDialog: React.FC<Props> = ({ editor, isOpen, onClose }) => {
   const toast = useToast();
   const isMounted = useIsMounted();
 
-  // == Handlers  =================================================================
+  // == Handler ===================================================================
   // -- Form ----------------------------------------------------------------------
   const handleSubmit = async ({ src: value }: ImageDialog_Create) => {
     try {

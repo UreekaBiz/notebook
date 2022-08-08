@@ -35,7 +35,7 @@ export const AuthAvatar: React.FC<Props> = ({ avatarSize, buttonSize, showLogIn 
 
   const router = useRouter();
 
-  // == Handlers ==================================================================
+  // == Handler ===================================================================
   const handleHomeClick = () => router.push(coreRoutes.root);
   const handleNotebooksClick = () => router.push(coreRoutes.notebook);
 

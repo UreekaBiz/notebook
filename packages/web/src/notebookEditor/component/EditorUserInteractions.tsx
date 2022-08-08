@@ -112,7 +112,7 @@ export const EditorUserInteractions = () => {
   }, [editor]);
 
 
-  // == Handlers ==================================================================
+  // == Handler ===================================================================
   // -- Image ---------------------------------------------------------------------
   const handleCloseImageDialog = () => {
     if(!editor || !imageStorage) return/*nothing to do*/;

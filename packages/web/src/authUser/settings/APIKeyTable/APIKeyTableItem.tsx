@@ -28,7 +28,7 @@ export const APIKeyTableItem: React.FC<Props> = ({ apiKey, value, handleRemove }
   const toast = useToast();
   const isMounted = useIsMounted();
 
-  // == Handlers ==================================================================
+  // == Handler ===================================================================
   // -- API Key handlers  ---------------------------------------------------------
   // Opens the AYS modal. This will prompt the user to confirm the deletion of the
   // API key. The handleAYSConfirmation will delete the API key correspondingly.

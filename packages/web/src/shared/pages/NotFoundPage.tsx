@@ -6,7 +6,7 @@ import { coreRoutes } from 'shared/routes';
 // ********************************************************************************
 interface Props { message?: string; }
 export const NotFoundPage: React.FC<Props> = ({ message }) => {
-  // == Handlers ==================================================================
+  // == Handler ===================================================================
   const router = useRouter();
   const handleButtonClick = () => router.push(coreRoutes.root);
 

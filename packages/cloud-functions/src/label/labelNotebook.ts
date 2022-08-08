@@ -1,11 +1,13 @@
 import { DocumentReference } from 'firebase-admin/firestore';
 
-import { LabelIdentifier, LabelVisibility, LabelNotebook_Write, Label_Storage, NotebookIdentifier, UserIdentifier } from '@ureeka-notebook/service-common';
+import { LabelIdentifier, LabelVisibility, LabelNotebook_Write, Label_Storage, NotebookIdentifier, Notebook_Storage, UserIdentifier } from '@ureeka-notebook/service-common';
 
 import { firestore } from '../firebase';
 import { ApplicationError } from '../util/error';
 import { writeBatch, ServerTimestamp } from '../util/firestore';
 import { labelDocument, labelNotebookCollection, labelNotebookDocument } from './datastore';
+import { updateLabelSummary } from './labelSummary';
+import { notebookDocument } from 'notebook/datastore';
 
 // ********************************************************************************
 // == Add =========================================================================
@@ -16,17 +18,24 @@ export const addNotebook = async (
   try {
     const labelRef = labelDocument(labelId) as DocumentReference<Label_Storage>,
           labelNotebookRef = labelNotebookDocument(labelId, notebookId) as DocumentReference<LabelNotebook_Write>;
-    await firestore.runTransaction(async transaction => {
-      const snapshot = await transaction.get(labelRef);
-      if(!snapshot.exists) throw new ApplicationError('functions/not-found', `Cannot add a Notebook (${notebookId}) to a non-existing Label (${labelId}) for User (${userId}).`);
-      const parentLabel = snapshot.data()!;
+    const notebookRef = notebookDocument(notebookId) as DocumentReference<Notebook_Storage>;
+    const { parentLabel } = await firestore.runTransaction(async transaction => {
+      // ensure that the parent Label exists (by contract)
+      const labelSnapshot = await transaction.get(labelRef);
+      if(!labelSnapshot.exists) throw new ApplicationError('functions/not-found', `Cannot add a Notebook (${notebookId}) to a non-existing Label (${labelId}) for User (${userId}).`);
+      const parentLabel = labelSnapshot.data()!;
+
+      // ensure that the associated Notebook exists (by contract)
+      const notebookSnapshot = await transaction.get(notebookRef);
+      if(!notebookSnapshot.exists) throw new ApplicationError('functions/not-found', `Cannot add a non-existing Notebook (${notebookId}) to a Label (${labelId}) for User (${userId}).`);
+      const notebook = notebookSnapshot.data()!;
 
       const labelNotebook: LabelNotebook_Write = {
         labelId,
         notebookId,
 
         name: parentLabel.name,
-        order: ServerTimestamp,
+        order: ServerTimestamp/*by contract*/,
 
         createdBy: userId,
         createTimestamp: ServerTimestamp/*by contract*/,
@@ -38,9 +47,11 @@ export const addNotebook = async (
       if(parentLabel.visibility === LabelVisibility.Public) {
         // FIXME: check if the Notebook is published and if so then also write to the published collection
       } /* else -- the parent Label is private and nothing else needs to be done */
+
+      return { parentLabel, notebook };
     });
 
-    // FIXME: update Label Summary
+    await updateLabelSummary(userId, labelId, parentLabel.visibility, 1/*increment*/)/*logs on error*/;
   } catch(error) {
     if(error instanceof ApplicationError) throw error;
     throw new ApplicationError('datastore/write', `Error adding Notebook (${notebookId}) to Label (${labelId}) for User (${userId}). Reason: `, error);
@@ -55,10 +66,12 @@ export const removeNotebook = async (
   try {
     const labelRef = labelDocument(labelId) as DocumentReference<Label_Storage>,
           labelNotebookRef = labelNotebookDocument(labelId, notebookId) as DocumentReference<LabelNotebook_Write>;
-    await firestore.runTransaction(async transaction => {
+    const parentLabel = await firestore.runTransaction(async transaction => {
       const snapshot = await transaction.get(labelRef);
       if(!snapshot.exists) throw new ApplicationError('functions/not-found', `Cannot remove Notebook (${notebookId}) from a non-existing Label (${labelId}) for User (${userId}).`);
       const parentLabel = snapshot.data()!;
+
+      // NOTE: the associated Notebook *may no longer exist* (therefore no check is made)
 
       // NOTE: there is no existence check for the LabelNotebook document by contract
       transaction.delete(labelNotebookRef);
@@ -68,9 +81,11 @@ export const removeNotebook = async (
       if(parentLabel.visibility === LabelVisibility.Public) {
         // FIXME: check if the Notebook is published and if so then also remove from the published collection
       } /* else -- the parent Label is private and nothing else needs to be done */
+
+      return parentLabel;
     });
 
-    // FIXME: update Label Summary
+    await updateLabelSummary(userId, labelId, parentLabel.visibility, -1/*decrement*/)/*logs on error*/;
   } catch(error) {
     if(error instanceof ApplicationError) throw error;
     throw new ApplicationError('datastore/write', `Error removing Notebook (${notebookId}) from Label (${labelId}) for User (${userId}). Reason: `, error);

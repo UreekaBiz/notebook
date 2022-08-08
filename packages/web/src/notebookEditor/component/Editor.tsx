@@ -35,7 +35,7 @@ export const Editor = () => {
     };
   }, [editorService]);
 
-  // == Handlers ==================================================================
+  // == Handler ===================================================================
   const handleClick = () => {
     if(!editor) return/*nothing to do*/;
     if(editor.isFocused) return/*already focused*/;

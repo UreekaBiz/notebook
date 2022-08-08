@@ -5,7 +5,7 @@ import { signInWithGooglePopup } from '@ureeka-notebook/web-service';
 
 // ********************************************************************************
 export const SignInWithGoogleButton = () => {
-  // == Handlers ==================================================================
+  // == Handler ===================================================================
   const handleClick = async () => await signInWithGooglePopup();
 
   // == UI ========================================================================

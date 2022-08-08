@@ -23,7 +23,7 @@ const InternalToolItem: React.FC<Props> = ({ editor, tool, depth }) => {
   const isButtonActive = isToolActive(editor, tool);
   const toast = useToast();
 
-  // == Handlers ==================================================================
+  // == Handler ===================================================================
   const handleToolClick = useCallback(() => {
     if(tool.toolType !== 'button') return/*nothing to do*/;
 

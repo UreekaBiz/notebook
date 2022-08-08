@@ -35,7 +35,7 @@ export const ImageSrcToolItem: React.FC<Props> = ({ editor }) => {
     onSubmit: () => {},
   });
 
-  // == Handlers ==================================================================
+  // == Handler ===================================================================
   // -- Form ----------------------------------------------------------------------
   // update the Attributes and select the previous position
   const handleSubmit = ({ src: value }: ImageDialog_Create, focusEditor: boolean) => {

@@ -32,7 +32,7 @@ export const LinkDialog: React.FC<Props> = ({ editor, isOpen, onClose }) => {
   const toast = useToast();
   const isMounted = useIsMounted();
 
-  // == Handlers  =================================================================
+  // == Handler ===================================================================
   // -- Form ----------------------------------------------------------------------
   const handleSubmit = async ({ href }: LinkDialog_Create) => {
     try {

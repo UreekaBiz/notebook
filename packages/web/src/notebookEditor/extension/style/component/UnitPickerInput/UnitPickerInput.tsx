@@ -17,7 +17,7 @@ export const UnitPickerInput: React.FC<Props> = ({ name, onChange, valueWithUnit
   let [value, unit] = separateUnitFromString(localValue);
   unit ??= Unit.Pixel/*default value*/;
 
-  // == Handlers ==================================================================
+  // == Handler ===================================================================
   const handleValueChange: ChangeEventHandler<HTMLInputElement> = (event) => {
     const newValue = event.target.value;
     updateLocalValue(`${newValue}${unit}`);

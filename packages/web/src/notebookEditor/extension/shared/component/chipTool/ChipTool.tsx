@@ -1,5 +1,5 @@
 import { Flex, Input } from '@chakra-ui/react';
-import { useEffect, useState } from 'react';
+import { useState } from 'react';
 import { DndProvider } from 'react-dnd';
 import { HTML5Backend } from 'react-dnd-html5-backend';
 
@@ -21,18 +21,6 @@ interface Props {
 export const ChipTool: React.FC<Props> = ({ name, width, marginTop, currentChips, updateChipsInputCallback, chipDropCallback, chipCloseButtonCallback }) => {
   // == State =====================================================================
   const [inputValue, setInputValue] = useState('');
-  const [shouldUpdateChips, setShouldUpdateChips] = useState(false);
-
-  // == Effect ====================================================================
-  useEffect(() => { /*update chips on enter or tab press*/
-    if(shouldUpdateChips === false) return;
-
-    const updated = updateChipsInputCallback(inputValue);
-    if(updated) setInputValue('');
-    /* else -- not updated, do nothing */
-
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [shouldUpdateChips/*explicitly only on shouldUpdateChips change*/]);
 
   // == Handler ===================================================================
   const handleInputChange = (event: React.ChangeEvent<HTMLInputElement>) => setInputValue(event.target.value);
@@ -41,11 +29,13 @@ export const ChipTool: React.FC<Props> = ({ name, width, marginTop, currentChips
       event.preventDefault();
       event.stopPropagation();
 
-      setShouldUpdateChips(true);
+      const chipsUpdated = updateChipsInputCallback(inputValue);
+      if(chipsUpdated) {
+        setInputValue('');
+      } /* else -- do not reset inputValue */
+
       return/*work done*/;
     } /* else -- handle keydown regularly */
-
-    setShouldUpdateChips(false);
   };
 
   // == UI ========================================================================

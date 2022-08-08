@@ -64,7 +64,7 @@ export const ColorPickerMenu: React.FC<Props> = ({ colors, closeOnSelect = true,
     return () => { window.removeEventListener('keydown', selectColorWithKey); };
   }, [isOpen, closeOnSelect, colors, onChange]);
 
-  // == Handlers ==================================================================
+  // == Handler ===================================================================
   const toggleIsOpen = useCallback(() => setIsOpen(prevValue => !prevValue), []);
 
   const handlePopoverMouseDown: React.MouseEventHandler<HTMLDivElement> = (event) => {

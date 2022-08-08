@@ -16,7 +16,7 @@ export const LinkColorToolItem: React.FC<Props> = ({ editor, depth }) => {
   const themeValue = getThemeValue(MarkName.LINK, AttributeType.TextColor);
   const inputValue = attrs[AttributeType.TextColor] ?? themeValue ?? '';
 
-  // == Handlers ==================================================================
+  // == Handler ===================================================================
   const handleChange = (value: string, focusEditor?: boolean) => {
     const { pos: prevPos } = editor.state.selection.$anchor;
 

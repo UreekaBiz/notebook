@@ -41,7 +41,7 @@ function SettingsPage() {
     socialMedia_twitter: profilePrivate.socialMedia_twitter,
   };
 
-  // == Handlers ==================================================================
+  // == Handler ===================================================================
   const handleSubmit = async (update: UserProfilePrivate_Update) => {
     try {
       setStatus('loading');

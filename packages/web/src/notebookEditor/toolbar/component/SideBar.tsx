@@ -34,7 +34,7 @@ export const SideBar = () => {
     return () => window.removeEventListener('keydown', handleKeydown);
   }, []);
 
-  // == Handlers ==================================================================
+  // == Handler ===================================================================
   const handleDepthSelection = useCallback((depth: SelectionDepth) => { setSelectedDepth(depth); }, []);
 
   // == UI ========================================================================

@@ -13,7 +13,7 @@ export const LinkTargetToolItem: React.FC<Props> = ({ editor, depth }) => {
   const attrs = getMarkAttributes(editor.state, MarkName.LINK);
   if(!isLinkMarkAttributes(attrs)) return null/*nothing to render*/;
 
-  // == Handlers ==================================================================
+  // == Handler ===================================================================
   const handleChange: ChangeEventHandler<HTMLSelectElement> = (event) => {
     const target = event.target.value;
     if(target === attrs[AttributeType.Target]|| !isLinkTargetValue(target)) return/*nothing to do*/;

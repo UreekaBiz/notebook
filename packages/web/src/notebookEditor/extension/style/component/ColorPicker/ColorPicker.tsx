@@ -24,7 +24,7 @@ export const ColorPicker: React.FC<Props> = ({ colors, name, onChange, value }) 
   // == State ====================================================================
   const { commitChange, localValue, resetLocalValue, updateLocalValue } = useLocalValue(value, onChange);
 
-  // == Handlers ==================================================================
+  // == Handler ===================================================================
   const handleColorPickerChange = (color: Color) => {
     const value = color.hexCode;
     updateLocalValue(value);

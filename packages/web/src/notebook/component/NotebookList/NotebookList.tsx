@@ -45,7 +45,7 @@ export const NotebookList = () => {
     return () => subscription.unsubscribe();
   }, [setStatus, isMounted, userId]);
 
-  // == Handlers ==================================================================
+  // == Handler ===================================================================
   const handleNotebookClick = (notebookId: NotebookIdentifier) => {
     const notebookPath = notebookRoute(notebookId);
     const route = `${window.location.origin}${notebookPath}`;

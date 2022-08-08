@@ -18,7 +18,7 @@ export const PublishNotebookButton: React.FC<Props> = () => {
   const { notebookId, editor, editorService } = useNotebookEditor();
   const [isLoading, setIsLoading] = useState(false/*by contract*/);
 
-  // == Handlers ==================================================================
+  // == Handler ===================================================================
   const handlePublishNotebook = async () => {
     if(!notebookId || !editorService) return/*nothing to do*/;
     setIsLoading(true);

@@ -15,7 +15,7 @@ export const DemoAsyncNodeDelaySlider: React.FC<Props> = ({ editor, depth }) => 
   const node = getSelectedNode(state, depth);
   if(!node || !isDemoAsyncNode(node))  return null /*nothing to render - invalid DemoAsyncNodeSlider render*/;
 
-  // == Handlers ==================================================================
+  // == Handler ===================================================================
   const handleChange = (value: number) => {
     editor.commands.updateAttributes(NodeName.DEMO_2_ASYNC_NODE, { delay: value * 100/*turns sliderValue to ms*/ });
 

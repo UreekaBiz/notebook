@@ -16,7 +16,7 @@ export const DemoAsyncNodeChipSelector: React.FC<Props> = ({ editor }) => {
   const codeBlockReferences = attrs[AttributeType.CodeBlockReferences] ?? []/*default*/;
   const selectedChips = visualIdsFromCodeBlockReferences(editor, codeBlockReferences);
 
-  // == Handlers ==================================================================
+  // == Handler ===================================================================
   const handleChipsInputUpdate = (codeBlockVisualId: string) => {
     const codeBlockReference = isValidCodeBlockReference(editor, attrs, codeBlockVisualId);
     if(!codeBlockReference.isValid) return false/*ignore call*/;
