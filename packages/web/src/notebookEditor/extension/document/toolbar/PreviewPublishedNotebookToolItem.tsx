@@ -43,7 +43,7 @@ export const PreviewPublishedNotebookToolItem: React.FC<Props> = ({ editor }) =>
       <Button colorScheme='gray' variant='ghost' size='sm' onClick={handleOpen}>Preview published Notebook</Button>
       <Portal>
         {isOpen && (
-          <Box position='absolute' top='0' left='0' w='100vw' h='100vh' background='white'>
+          <Box position='absolute' top='0' left='0' w='100%' h='100vh' overflowY='auto' background='white'>
             <CloseButton position='absolute' top='0' right={0} onClick={handleClose} />
             <NotebookViewer content={content} />
           </Box>

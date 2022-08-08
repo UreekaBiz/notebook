@@ -61,7 +61,7 @@ const renderCodeBlockNodeView = (attributes: CodeBlockAttributes, content: strin
   //       (hence it is a single line below)
   // NOTE: createNodeDataTypeAttribute must be used for all nodeRenderSpecs
   //       that define their own renderNodeView
-  return `<div ${createNodeDataTypeAttribute(NodeName.CODEBLOCK)} data-visualid="${visualId}" style="${renderAttributes.style ?? ''/*empty string if not defined*/}"><div><p${getWrapStyles(isWrap)}">${content}</p></div></div>`;
+  return `<div ${createNodeDataTypeAttribute(NodeName.CODEBLOCK)} data-visualid="${visualId}" style="${renderAttributes.style ?? ''/*empty string if not defined*/}"><div><p style="${getWrapStyles(isWrap)}">${content}</p></div></div>`;
 };
 
 export const CodeBlockNodeRendererSpec: NodeRendererSpec<CodeBlockAttributes> = {
