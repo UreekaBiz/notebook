@@ -25,7 +25,7 @@ export abstract class AbstractNodeController<NodeType extends ProseMirrorNode, S
   public readonly storage: Storage;
   public readonly editor: Editor;
   public node: NodeType;
-  public readonly getPos: (() => number);
+  public getPos: (() => number);
 
   // == Life-Cycle ================================================================
   public constructor(nodeModel: NodeModel, nodeView: NodeView, editor: Editor, node: NodeType, storage: Storage, getPos: getPosType) {
@@ -44,6 +44,15 @@ export abstract class AbstractNodeController<NodeType extends ProseMirrorNode, S
     // hook up the nodeView to this controller
     this.dom = this.nodeView.dom;
     this.contentDOM = this.nodeView.contentDOM;
+  }
+
+  // Sync getPos and node when prosemirror updates it.
+  public updateProps(getPos: getPosType){
+    if(!isGetPos(getPos)) throw new Error('getPos is not a function when calling updateProps');
+    this.getPos = getPos;
+
+    this.nodeModel.updateProps(getPos);
+    this.nodeView.updateProps(getPos);
   }
 
   // == PM Life-Cycle =============================================================

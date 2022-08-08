@@ -31,7 +31,7 @@ export abstract class AbstractNodeView<NodeType extends ProseMirrorNode, Storage
   readonly editor: Editor;
   public node: NodeType;
   readonly storage: Storage;
-  readonly getPos: getPosType;
+  getPos: getPosType;
 
   // == Life-Cycle ================================================================
   public constructor(model: NodeModel, editor: Editor, node: NodeType, storage: Storage, getPos: getPosType) {
@@ -45,6 +45,11 @@ export abstract class AbstractNodeView<NodeType extends ProseMirrorNode, Storage
     // Creates the outer DOM node.
     this.dom = this.createDomElement();
     this.dom.setAttribute(DATA_NODE_TYPE, node.type.name);
+  }
+
+  // Sync getPos and node when prosemirror updates it.
+  public updateProps(getPos: getPosType){
+    this.getPos = getPos;
   }
 
   // == View ======================================================================

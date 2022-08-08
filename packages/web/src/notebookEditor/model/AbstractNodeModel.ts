@@ -14,7 +14,7 @@ export abstract class AbstractNodeModel<NodeType extends ProseMirrorNode, Storag
   public readonly editor: Editor;
   public readonly storage: Storage;
   public node: NodeType;
-  public readonly getPos: (() => number);
+  getPos: (() => number);
 
   // == Life-Cycle ================================================================
   public constructor(editor: Editor, node: NodeType, storage: Storage, getPos: getPosType) {
@@ -23,6 +23,11 @@ export abstract class AbstractNodeModel<NodeType extends ProseMirrorNode, Storag
     this.editor = editor;
     this.storage = storage;
     this.node = node;
+    this.getPos = getPos;
+  }
+
+  // Sync getPos and node when prosemirror updates it.
+  public updateProps(getPos: (() => number)){
     this.getPos = getPos;
   }
 }
