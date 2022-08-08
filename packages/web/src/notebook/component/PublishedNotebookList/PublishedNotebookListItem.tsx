@@ -22,7 +22,7 @@ export const PublishedNotebookListItem: React.FC<Props> = ({ publishedNotebookTu
 
   const toast = useToast();
 
-  // == Handlers ==================================================================
+  // == Handler ===================================================================
   const handleUserClick: MouseEventHandler<HTMLDivElement> = (event) => {
     // prevent parent container from handling the click event
     event.stopPropagation();

@@ -10,7 +10,7 @@ import { APIKeyTableItem } from './APIKeyTableItem';
 export const APIKeyTable: React.FC = () => {
   const auth = useAuthedUser();
 
-  // == Handlers ==================================================================
+  // == Handler ===================================================================
   // NOTE: Errors will be handled by the APIKeyTableItem component since it's
   //       needed to display errors and handle states.
   const handleApiKeyRemove = async (apiKey: APIKey) => {

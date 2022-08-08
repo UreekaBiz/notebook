@@ -86,7 +86,7 @@ export const ShareNotebookDialog: React.FC = () => {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [isModalOpen]);
 
-  // == Handlers ==================================================================
+  // == Handler ===================================================================
   const resetState = () => {
     // Reset initial value
     setShareRoles(null/*initial value*/);

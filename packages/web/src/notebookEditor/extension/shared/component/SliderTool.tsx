@@ -23,7 +23,7 @@ export const SliderTool: React.FC<Props> = ({ name, value, step = 10, sliderMark
   // == State =====================================================================
   const { commitChange, localValue, updateLocalValue } = useLocalValue(value, onChange);
 
-  // == Handlers ==================================================================
+  // == Handler ===================================================================
   const handleSliderChange = (value: number) => {
     updateLocalValue(value);
   };

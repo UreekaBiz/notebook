@@ -19,7 +19,7 @@ export const SideBarLayout: React.FC<Props> = ({ children, sidebar }) => {
   const [isTablet] = useMediaQuery(`(max-width:${SIDEBAR_DESKTOP_MIN_WIDTH}px) and (min-width:${SIDEBAR_DEVICE_WIDTH}px)`);
   const [isPhone] = useMediaQuery(`(max-width:${SIDEBAR_DEVICE_WIDTH}px)`);
 
-  // == Handlers ==================================================================
+  // == Handler ===================================================================
   const toggleSidebar = () => setIsShowingSidebar(prevState => !prevState);
 
   // == UI ========================================================================

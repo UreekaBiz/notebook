@@ -28,7 +28,7 @@ interface Props {
   onRemove?: () => void;
 }
 export const NotebookRoleSelector: React.FC<Props> = ({ canRemove = false, disabled = false, disableCreatorOption = true, onChange, value, onRemove, hideCreatorOption = true }) => {
-  // == Handlers ==================================================================
+  // == Handler ===================================================================
   const handleChange: ChangeEventHandler<HTMLSelectElement> = (event) => {
     const { value } = event.target;
 

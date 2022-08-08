@@ -23,7 +23,7 @@ export const NotebookTopBar: React.FC<Props> = ({ background }) => {
   // == State =====================================================================
   const [isLoading, setIsLoading] = useState<boolean>(false/*default not loading*/);
 
-  // == Handlers ==================================================================
+  // == Handler ===================================================================
   const handleAppNameClick = useCallback(() => {
     router.push(coreRoutes.root);
   }, [router]);

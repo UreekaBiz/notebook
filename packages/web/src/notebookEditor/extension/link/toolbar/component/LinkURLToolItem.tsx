@@ -36,7 +36,7 @@ export const LinkURLToolItem: React.FC<Props> = ({ editor }) => {
   if(!isLinkMarkAttributes(attrs)) return null/*nothing to render*/;
 
 
-  // == Handlers ==================================================================
+  // == Handler ===================================================================
   // -- Form ----------------------------------------------------------------------
   // update the Attributes and select the previous position
   const handleSubmit = ({ href }: LinkDialog_Create, focusEditor: boolean) => {

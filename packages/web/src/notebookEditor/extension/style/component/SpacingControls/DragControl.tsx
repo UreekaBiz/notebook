@@ -78,7 +78,7 @@ export const DragControl: React.FC<Props> = ({ valueWithUnit, direction, onChang
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [value]);
 
-  // == Handlers ==================================================================
+  // == Handler ===================================================================
   const handleMouseDown: MouseEventHandler<HTMLDivElement> = (event) => {
     const startingPosition = direction === 'vertical' ? event.clientY : event.clientX;
     setStartingMousePosition(startingPosition);

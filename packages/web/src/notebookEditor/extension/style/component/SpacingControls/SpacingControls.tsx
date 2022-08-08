@@ -87,7 +87,7 @@ export const SpacingControls: React.FC<Props> = ({ margin, padding, name, onChan
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [movingType]);
 
-  // == Handlers ==================================================================
+  // == Handler ===================================================================
   const handleEnd = () => {
     for(let key in localState) {
       const attribute = key as SpacingAttribute;

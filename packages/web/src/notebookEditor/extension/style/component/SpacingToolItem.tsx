@@ -31,7 +31,7 @@ export const SpacingToolItem: React.FC<Props> = ({ depth, editor }) => {
     [AttributeType.PaddingRight]: getTextDOMRenderedValue(editor, AttributeType.PaddingRight) ?? DEFAULT_VALUE,
   };
 
-  // == Handlers ==================================================================
+  // == Handler ===================================================================
   const handleChange = (attribute: AttributeType, value: string) => {
     editor.commands.setStyle(attribute, value, depth);
   };

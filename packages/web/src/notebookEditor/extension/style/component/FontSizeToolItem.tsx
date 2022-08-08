@@ -16,7 +16,7 @@ export const FontSizeToolItem: React.FC<Props> = ({ editor, depth }) => {
   const domRenderValue = getTextDOMRenderedValue(editor, AttributeType.FontSize, MarkName.TEXT_STYLE);
   const inputValue = domRenderValue === InvalidMergedAttributeValue ? '' : domRenderValue;
 
-  // == Handlers ==================================================================
+  // == Handler ===================================================================
   const handleChange = (inputValue: string, focusEditor?: boolean) => {
     editor.commands.setTextStyle(AttributeType.FontSize, inputValue);
 
