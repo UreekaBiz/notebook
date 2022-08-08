@@ -5,6 +5,6 @@ export * from './nextjs';
 
 // ** Service-Common **************************************************************
 export {
-  // SEE: @ureeka-notebook/service-common: util/schema.ts
+  // SEE: @ureeka-notebook/service-common: util/type.ts
   Identifier_Schema,
 } from '@ureeka-notebook/service-common';
