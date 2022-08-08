@@ -16,9 +16,10 @@ export const ReplacedTextMarkPlugin = () => new Plugin<NotebookSchemaType>({
       const { tr } = state;
       const replacedNodeMarkType = getReplacedTextMarkMarkType(view.state.schema);
 
+
       // insert the text in the normal way and remove the replaced text mark from it
       tr.insertText(text, from, to)
-        .removeMark(from, to + 1/*exclusive selection -- add one to wrap whole text*/, replacedNodeMarkType);
+        .removeMark(from, from + text.length/*remove mark in inserted text*/, replacedNodeMarkType);
 
       // dispatch Transaction into the view
       dispatch(tr);
