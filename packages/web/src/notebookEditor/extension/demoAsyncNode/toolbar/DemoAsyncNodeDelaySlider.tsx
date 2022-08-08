@@ -12,12 +12,16 @@ const SLIDER_MARK_VALUES = [{ value: 25, label: '2.5' }, { value: 50, label: '5'
 interface Props extends EditorToolComponentProps {/*no additional*/ }
 export const DemoAsyncNodeDelaySlider: React.FC<Props> = ({ editor, depth }) => {
   const { state } = editor;
+  const { selection } = state;
   const node = getSelectedNode(state, depth);
   if(!node || !isDemoAsyncNode(node))  return null /*nothing to render - invalid DemoAsyncNodeSlider render*/;
 
   // == Handler ===================================================================
   const handleChange = (value: number) => {
-    editor.commands.updateAttributes(NodeName.DEMO_2_ASYNC_NODE, { delay: value * 100/*turns sliderValue to ms*/ });
+    editor.chain()
+          .updateAttributes(NodeName.DEMO_ASYNC_NODE, { delay: value * 100/*turns sliderValue to ms*/ })
+          .setNodeSelection(selection.$anchor.pos)
+          .run();
 
     // Focus the editor again
     editor.commands.focus();

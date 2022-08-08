@@ -1,6 +1,6 @@
 import { Node } from '@tiptap/core';
 
-import { getNodeOutputSpec, AttributeType, MarkHolderNodeSpec, NodeName } from '@ureeka-notebook/service-common';
+import { getNodeOutputSpec, AttributeType, MarkHolderNodeSpec, NodeName } from '@ureeka-notebook/web-service';
 
 import { NoOptions, NoStorage, ParseRulePriority } from 'notebookEditor/model/type';
 

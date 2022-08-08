@@ -112,6 +112,7 @@ export {
   DocumentNodeSpec,
   HeadingNodeSpec,
   ImageNodeSpec,
+  MarkHolderNodeSpec,
   ParagraphNodeSpec,
   TextNodeSpec,
 
@@ -255,6 +256,7 @@ export {
 
   // -- Misc ----------------------------------------------------------------------
   computeRemovedNodeObjs,
+  extractDocumentName,
   findContentDifferencePositions,
   findLastNodeById,
   getParentNode,

@@ -60,7 +60,16 @@ export const convertJSONContentToHTML = (node: JSONNode, state: RendererState): 
   // if the Node is text and doesn't have Attributes nor Narks render its content as
   // plain text instead of adding a 'span' tag to wrap it. Mimics the functionality
   // of the Editor.
-  if(isTextJSONNode(node) && !node.attrs && !node.marks) return node.text ?? '';
+  if(isTextJSONNode(node) && !node.attrs && !node.marks) {
+    const { text } = node;
+    if(!text || text.length < 1) return ''/*empty content*/;
+    // Replace last newline with a br tag. This tag is used to mimic the
+    // functionality of ProseMirror, this includes the same class name as the <br>
+    // in ProseMirror
+    if(text.at(text.length - 1) === '\n') return `${text}<br class="ProseMirror-trailingBreak">`;
+
+    return text;
+  } // else -- is not text node
 
   // gets the direct children Nodes using the Node content. An empty string is
   // equivalent to having no content when rendering the HTML.

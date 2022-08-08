@@ -152,7 +152,7 @@ export class NotebookService {
    *   than {@link #MAX_NOTEBOOK_SHARE_USERS} identified
    * - `datastore/write` if there was an error updating the share for the Notebook
    */
-  public async shareNotebook(share: { notebookId: NotebookIdentifier, userRoles: Map<UserIdentifier, NotebookRole> }) {
+  public async shareNotebook(share: { notebookId: NotebookIdentifier; userRoles: Map<UserIdentifier, NotebookRole>; }) {
     await notebookShare({ notebookId: share.notebookId, userRoles: Object.fromEntries(share.userRoles) });
   }
 

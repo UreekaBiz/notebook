@@ -58,7 +58,9 @@ export class UserProfileService {
   }
 
   // == Stats =====================================================================
-  public stats() { return {
-    // NOTE: currently none
-  }}
+  public stats() {
+    return {
+      // NOTE: currently none
+    };
+  }
 }

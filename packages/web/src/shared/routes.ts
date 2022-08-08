@@ -1,4 +1,4 @@
-import { NotebookIdentifier, PublishedNotebookIdentifier } from '@ureeka-notebook/service-common';
+import { NotebookIdentifier, PublishedNotebookIdentifier } from '@ureeka-notebook/web-service';
 
 // FIXME: Find a better way to share routes!
 // NOTE: This routes are used also on the client-side, when modifying any of the

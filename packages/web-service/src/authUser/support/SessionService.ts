@@ -53,7 +53,7 @@ export default class SessionService extends AbstractService {
   public constructor(parentContexts: string[], private readonly userId: UserIdentifier, private readonly sessionId: SessionIdentifier) {
     super(...parentContexts);
 
-    this.idleService = new IdleService(this.parentContexts, this)
+    this.idleService = new IdleService(this.parentContexts, this);
 
     // NOTE: unfortunately must be called first since onValue() *immediately* calls
     //       its callback (rather than on the next tick as expected!)
@@ -204,9 +204,10 @@ export default class SessionService extends AbstractService {
   private sessionWriteCount: number = 0;
 
   // ..............................................................................
-  public stats() { return {
-    connectionChanges: this.connectionChangeCount,
-
-    sessionWrites: this.sessionWriteCount,
-  }}
+  public stats() {
+    return {
+      connectionChanges: this.connectionChangeCount,
+      sessionWrites: this.sessionWriteCount,
+    };
+  }
 }

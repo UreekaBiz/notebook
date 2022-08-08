@@ -1,6 +1,6 @@
 import { CommandProps } from '@tiptap/core';
 
-import { getBoldMarkType, MarkName, CommandFunctionType } from '@ureeka-notebook/service-common';
+import { getBoldMarkType, CommandFunctionType, MarkName } from '@ureeka-notebook/web-service';
 
 import { toggleMarkInMarkHolder, getMarkHolder } from 'notebookEditor/extension/markHolder/util';
 
