@@ -1,7 +1,7 @@
 import Head from 'next/head';
 import * as Validate from 'yup';
 
-import { json, notebookPublishedContentDocument, wrapGetServerSideProps, Identifier_Schema, NotebookPublishedContent } from '@ureeka-notebook/ssr-service';
+import { json, notebookPublishedContentDocument, wrapGetServerSideProps, NotebookPublishedContent } from '@ureeka-notebook/ssr-service';
 
 import { WrappedPage } from 'core/wrapper';
 import { NotebookViewer } from 'notebookEditor/component/NotebookViewer';
@@ -13,7 +13,10 @@ import { FullPageLayout } from 'shared/layout/FullPageLayout';
 // == Types =======================================================================
 // NOTE: the params must match the route path
 export const PublishedNotebookPage_QueryParams_Schema = Validate.object({
-  publishedNotebookId: Identifier_Schema
+  // FIXME: want to use `Identifier_Schema` but then SSR fails with some odd missing
+  //        dependency problem (which doesn't make sense since it's just an alias for
+  //        what's there now)
+  publishedNotebookId: Validate.string()
       .required(),
 });
 export type PublishedNotebookPage_QueryParams = Readonly<Validate.InferType<typeof PublishedNotebookPage_QueryParams_Schema>>;
