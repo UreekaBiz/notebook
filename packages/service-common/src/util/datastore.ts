@@ -41,3 +41,17 @@ export type Updatable_Update<T extends Updatable> =
   & Modify<Pick<T, 'updateTimestamp'>, Readonly<{
       updateTimestamp: FieldValue/*write-on-edit server-side*/;
     }>>;
+
+// ................................................................................
+export type CreatableUpdatable_Create<T extends Creatable & Updatable> =
+    Pick<T, 'createdBy' | 'lastUpdatedBy'>/*required*/
+  & Modify<Pick<T, 'createTimestamp' | 'updateTimestamp'>, Readonly<{
+      updateTimestamp: FieldValue/*write-on-edit server-side*/;
+      createTimestamp: FieldValue/*write-on-edit server-side*/;
+    }>>;
+
+export type CreatableUpdatable_Update<T extends Creatable & Updatable> =
+    Pick<T, 'lastUpdatedBy'>/*required*/
+  & Modify<Pick<T, 'updateTimestamp'>, Readonly<{
+      updateTimestamp: FieldValue/*write-on-edit server-side*/;
+    }>>;
