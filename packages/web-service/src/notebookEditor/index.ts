@@ -256,6 +256,7 @@ export {
 
   // -- Misc ----------------------------------------------------------------------
   computeRemovedNodeObjs,
+  extractDocumentName,
   findContentDifferencePositions,
   findLastNodeById,
   getParentNode,

@@ -2,11 +2,10 @@ import { Button } from '@chakra-ui/react';
 import { useState } from 'react';
 import { RiFileAddLine } from 'react-icons/ri';
 
-import { getLogger, NotebookService, Logger } from '@ureeka-notebook/web-service';
+import { extractDocumentName, getLogger, Logger, NotebookService } from '@ureeka-notebook/web-service';
 
 import { EditorToolComponentProps } from 'notebookEditor/toolbar/type';
 import { useNotebookEditor } from 'notebookEditor/hook/useNotebookEditor';
-import { extractDocumentName } from '@ureeka-notebook/service-common';
 
 const log = getLogger(Logger.NOTEBOOK);
 

@@ -1,7 +1,7 @@
 import { Select } from '@chakra-ui/react';
 import { ChangeEventHandler } from 'react';
 
-import { NotebookRole } from '@ureeka-notebook/service-common';
+import { NotebookRole } from '@ureeka-notebook/web-service';
 
 import { getReadableNotebookRole } from 'user/type';
 
