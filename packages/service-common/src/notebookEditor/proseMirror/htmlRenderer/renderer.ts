@@ -50,10 +50,10 @@ export const convertContentToHTML = (content: NotebookDocumentContent): HTMLStri
   const rootNode = contentToJSONNode(content);
 
   const state = computeState(rootNode);
-  return convertJSONContentToHTML(rootNode, state);
+  return convertJSONContentToHTML(rootNode, state, true/*last child by definition*/);
 };
 
-export const convertJSONContentToHTML = (node: JSONNode, state: RendererState): HTMLString => {
+export const convertJSONContentToHTML = (node: JSONNode, state: RendererState, lastChild: boolean): HTMLString => {
   const { type, content, text } = node;
   const nodeRendererSpec = NodeRendererSpecs[type];
 
@@ -66,14 +66,14 @@ export const convertJSONContentToHTML = (node: JSONNode, state: RendererState): 
     // Replace last newline with a br tag. This tag is used to mimic the
     // functionality of ProseMirror, this includes the same class name as the <br>
     // in ProseMirror
-    if(text.at(text.length - 1) === '\n') return `${text}<br class="ProseMirror-trailingBreak">`;
+    if(text.at(text.length - 1) === '\n' && lastChild/*only add break line if it's last child*/) return `${text}<br class="ProseMirror-trailingBreak">`;
 
     return text;
   } // else -- is not text node
 
   // gets the direct children Nodes using the Node content. An empty string is
   // equivalent to having no content when rendering the HTML.
-  let children = content ? content.reduce((acc, child) => `${acc}${convertJSONContentToHTML(child, state)}`, '') : ''/*no children*/;
+  let children = content ? content.reduce((acc, child, index) => `${acc}${convertJSONContentToHTML(child, state, index === content.length - 1)}`, '') : ''/*no children*/;
 
   // in the case that the Node is a Node View Renderer let the Node renderer use
   // its own render function to render the Node and its children.
