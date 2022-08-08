@@ -69,7 +69,7 @@ export const convertJSONContentToHTML = (node: JSONNode, state: RendererState): 
     if(text.at(text.length - 1) === '\n') return `${text}<br class="ProseMirror-trailingBreak">`;
 
     return text;
-  }
+  } // else -- is not text node
 
   // gets the direct children Nodes using the Node content. An empty string is
   // equivalent to having no content when rendering the HTML.
