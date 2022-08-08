@@ -77,7 +77,7 @@ export class NotebookEditorService {
    * @param editor the new {@link Editor} that this service will listen to
    */
   public updateEditor(editor: Editor) {
-console.error(`match`, this.editor === editor);
+    if(this.editor !== editor) log.error(`Unexpected editor change ${this.logContext()}.`);
   }
 
   // ------------------------------------------------------------------------------
