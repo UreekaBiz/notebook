@@ -88,7 +88,10 @@ export const SideBar = () => {
       return/*nothing else to do*/;
     });
     return toolbars;
-  }, [editor, handleDepthSelection, selectedDepth]);
+    // NOTE: This value depend on the editor state but it's not being explicitly
+    //       used.
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [editor, editor.state, handleDepthSelection, selectedDepth]);
 
   return (
     <Flex flexDir='column' minH={0} width='100%' height='100%' background='#FCFCFC' borderLeft='1px solid' borderColor='gray.300' overflow='hidden'>
