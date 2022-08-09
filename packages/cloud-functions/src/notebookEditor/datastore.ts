@@ -1,6 +1,6 @@
 import { CollectionReference } from 'firebase-admin/firestore';
 
-import { nameof, Checkpoint, CheckpointIdentifier, Checkpoint_Storage, NotebookIdentifier, NotebookVersion, NotebookVersionIdentifier, NotebookVersion_Storage, NOTEBOOK_CHECKPOINTS, NOTEBOOK_VERSIONS } from '@ureeka-notebook/service-common';
+import { nameof, CheckpointIdentifier, Checkpoint_Storage, NotebookIdentifier, NotebookVersionIdentifier, NotebookVersion_Storage, NOTEBOOK_CHECKPOINTS, NOTEBOOK_VERSIONS } from '@ureeka-notebook/service-common';
 
 import { notebookDocument } from '../notebook/datastore';
 
@@ -25,23 +25,23 @@ export const checkpointDocument = (notebookId: NotebookIdentifier, versionId: Ch
 // -- Version ---------------------------------------------------------------------
 export const versionRangeQuery = (notebookId: NotebookIdentifier, minIndex/*exclusive*/: number, maxIndex/*inclusive*/: number) =>
   versionCollection(notebookId)
-    .where(nameof<NotebookVersion>('index'), '>'/*exclusive*/, minIndex)
-    .where(nameof<NotebookVersion>('index'), '<='/*inclusive*/, maxIndex)
-    .orderBy(nameof<NotebookVersion>('index'), 'asc')/*ordered by contract*/;
+    .where(nameof<NotebookVersion_Storage>('index'), '>'/*exclusive*/, minIndex)
+    .where(nameof<NotebookVersion_Storage>('index'), '<='/*inclusive*/, maxIndex)
+    .orderBy(nameof<NotebookVersion_Storage>('index'), 'asc')/*ordered by contract*/;
 
 // ................................................................................
 export const lastVersionsQuery = (notebookId: NotebookIdentifier, minIndex/*exclusive*/: number) =>
   versionCollection(notebookId)
-    .where(nameof<NotebookVersion>('index'), '>'/*exclusive*/, minIndex)
-    .orderBy(nameof<NotebookVersion>('index'), 'asc')/*ordered by contract*/;
+    .where(nameof<NotebookVersion_Storage>('index'), '>'/*exclusive*/, minIndex)
+    .orderBy(nameof<NotebookVersion_Storage>('index'), 'asc')/*ordered by contract*/;
 
 export const lastVersionQuery = (notebookId: NotebookIdentifier) =>
   versionCollection(notebookId)
-    .orderBy(nameof<NotebookVersion>('index'), 'desc')
+    .orderBy(nameof<NotebookVersion_Storage>('index'), 'desc')
     .limit(1/*last document*/);
 
 // -- Checkpoint ------------------------------------------------------------------
 export const lastCheckpointQuery = (notebookId: NotebookIdentifier) =>
   checkpointCollection(notebookId)
-    .orderBy(nameof<Checkpoint>('index'), 'desc')
+    .orderBy(nameof<Checkpoint_Storage>('index'), 'desc')
     .limit(1/*last document*/);
