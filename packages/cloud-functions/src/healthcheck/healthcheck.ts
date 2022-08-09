@@ -55,6 +55,7 @@ const endpointNames = [
   'notebookPublish',
   'notebookShare',
 
+  'notebookEditorInsertNumbers',
   'notebookEditorInsertText',
 
   'loggingClient',
