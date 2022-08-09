@@ -1,9 +1,12 @@
-import { generateNotebookVersionIdentifier, getRandomSystemUserId, NotebookIdentifier, NotebookVersion_Write, UserIdentifier, NO_NOTEBOOK_VERSION } from '@ureeka-notebook/service-common';
+import { logger } from 'firebase-functions';
+
+import { generateNotebookVersionIdentifier, getEditorState, getRandomSystemUserId, NotebookIdentifier, NotebookVersion_Write, UserIdentifier, NO_NOTEBOOK_VERSION } from '@ureeka-notebook/service-common';
 
 import { firestore } from '../firebase';
+import { notebookDocument } from '../notebook/datastore';
 import { ApplicationError } from '../util/error';
 import { ServerTimestamp } from '../util/firestore';
-import { notebookDocument } from '../notebook/datastore';
+import { getNotebookContent } from './checkpoint';
 import { versionDocument } from './datastore';
 import { getLastVersion } from './version';
 
@@ -25,7 +28,6 @@ export const insertText = async (
       if(!notebookSnapshot.exists) throw new ApplicationError('functions/not-found', `Cannot insertText for non-existing Notebook (${notebookId}) for User (${userId}).`);
       const notebook = notebookSnapshot.data()!;
       if(notebook.deleted) throw new ApplicationError('data/deleted', `Cannot insertText for soft-deleted Notebook (${notebookId}) for User (${userId}).`);
-      // TODO: allow editors to publish Notebooks? (Likely need a 'Publisher' role)
       if(!notebook.editors.includes(userId) && notebook.createdBy !== userId) throw new ApplicationError('functions/permission-denied', `Only Editors of a Notebook (${notebookId}) may perform insertText for User (${userId}).`);
 
       // gets the last version of the Notebook and gets the reference for the next
@@ -36,6 +38,14 @@ export const insertText = async (
             nextVersionId = generateNotebookVersionIdentifier(nextVersionIndex),
             nextVersionRef = versionDocument(notebookId, nextVersionId);
 
+      // gets the content at the given version if it exists.
+      const notebookContent = lastVersionIndex ? await getNotebookContent(transaction, notebook.schemaVersion, notebookId, lastVersionIndex) : undefined/*no content*/;
+      const editorState = getEditorState(notebook.schemaVersion, notebookContent);
+
+      logger.log(editorState);
+      logger.log(editorState?.doc.toJSON());
+      logger.log(editorState?.schema);
+
       // Creates a unique identifier for the clientId.
       const clientId = getRandomSystemUserId();
 
@@ -44,13 +54,13 @@ export const insertText = async (
       //        the corresponding change that generates the step.
       const pmStep = {
         stepType: 'replace',
-        from:1,
-        to:1,
+        from: 1,
+        to: 1,
         slice:{ content:[{ type: 'text', text }] },
       };
 
       const write: NotebookVersion_Write = {
-        schemaVersion: notebook.schemaVersion/*latest by contract*/,
+        schemaVersion: notebook.schemaVersion/*matching Notebook for consistency*/,
 
         index: nextVersionIndex,
         clientId,
@@ -60,7 +70,8 @@ export const insertText = async (
         createTimestamp: ServerTimestamp/*by contract*/,
       };
 
-      transaction.set(nextVersionRef, write);
+      // using create instead of set to ensure that the document is created
+      transaction.create(nextVersionRef, write);
     });
   } catch(error) {
     if(error instanceof ApplicationError) throw error;
