@@ -78,6 +78,9 @@ export {
 
   ParagraphAttributes,
 
+  isInlineNodeWithContent,
+  INLINE_NODE_CONTAINER_CLASS,
+
   ImageAttributes,
   DefaultImageAttributes,
   MAX_IMAGE_HEIGHT,
