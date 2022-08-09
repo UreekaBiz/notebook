@@ -170,20 +170,17 @@ class PaginatedQueryObservable<T, R> implements Pagination<R> {
 
   // ..............................................................................
   private recordPage(direction: Direction, previousPage: Page<T> | undefined/*initial*/, snapshot: QuerySnapshot<T>): void {
+log.debug(`${this.label}: Got Snapshot: ${snapshot.size}; Page: ${this.pages.length}; Direction: ${direction}`);
+
+    // when 'previous' then pop off the current Page and it will be 'replaced' with
+    // a new one
     // NOTE: when 'previous' then the Page has already been recorded (by definition)
     //       since the Page is being 'replayed'
-    let recordedPage = (direction === 'previous')/*set to true when non-empty Page recorded; set to false when Page is empty*/;
-log.debug(`${this.label}: Got Snapshot: ${snapshot.size}; Page: ${this.pages.length}; AlreadyRecorded: ${recordedPage}`);
-
-    // if the page has already been recorded then pop() it off so that it is
-    // re-recorded with possibly new bounds
-    if(recordedPage) this.pages.pop()/*remove*/;
+    if(direction === 'previous') this.pages.pop()/*remove*/;
 
     if(snapshot.empty) {
-      recordedPage = false/*reset since page empty*/;
-
       // if the direction is 'next' and there are no documents then either the list
-      // size changed or there were an integral number of pages and this 'next'd
+      // size changed or there were an integral number of Pages and this 'next'd
       // past the end of the list. (See special case below.)
       if(direction === 'previous') { log.warn(`Paginated Listener ${this.label} got no results on 'previous'. Either faulty logic or list became empty.`); return/*nothing to do*/; }
       else if(direction === 'next') {
@@ -197,7 +194,6 @@ log.debug(`${this.label}: Got Snapshot: ${snapshot.size}; Page: ${this.pages.len
         // really matter what it is.
         // NOTE: 'previousPage' exists by contract (see logic above)
         this.pages.push(createPage(previousPage!.lastDocumentSnapshot, previousPage!.lastDocumentSnapshot));
-        recordedPage = true/*flag that page has been recorded*/;
       } else /*direction === undefined*/ log.debug(`Paginated Listener ${this.label} has no documents.`);
     } else { /*there is at least one document*/
       this.pages.push((this.pages.length < 1)
@@ -205,7 +201,6 @@ log.debug(`${this.label}: Got Snapshot: ${snapshot.size}; Page: ${this.pages.len
                       : createPage(snapshot.docs[0/*first document*/],
                                   snapshot.docs[snapshot.size - 1/*last document*/]));
 log.debug(`${this.label}: Recorded Page: ${this.pages.length}`);
-      recordedPage = true/*flag that page has been recorded*/;
     }
   }
 

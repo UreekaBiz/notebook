@@ -103,7 +103,7 @@ export const writeBatch = async <T>(iterator: IterableIterator<T>, callback: Wri
     const batch = firestore.batch();
 
     let batchCount = 0/*reset with each batch*/;
-    while(!exhausted && (batchCount < FIRESTORE_BATCH_SIZE)) {
+    while(batchCount < FIRESTORE_BATCH_SIZE) { /*NOTE: no check for !exhausted since will always be true. If logic changes, re-evaluate presence of condition*/
       const entry = iterator.next();
       if(entry.done) {
         exhausted = true/*by definition*/;

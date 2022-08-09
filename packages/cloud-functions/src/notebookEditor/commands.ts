@@ -1,0 +1,71 @@
+import { generateNotebookVersionIdentifier, getRandomSystemUserId, NotebookIdentifier, NotebookVersion_Write, UserIdentifier, NO_NOTEBOOK_VERSION } from '@ureeka-notebook/service-common';
+
+import { firestore } from '../firebase';
+import { ApplicationError } from '../util/error';
+import { ServerTimestamp } from '../util/firestore';
+import { notebookDocument } from '../notebook/datastore';
+import { versionDocument } from './datastore';
+import { getLastVersion } from './version';
+
+// ********************************************************************************
+// == Command =====================================================================
+// inserts the specified text at the start of the the specified notebook.
+export const insertText = async (
+  userId: UserIdentifier,
+  notebookId: NotebookIdentifier,
+  text: string
+): Promise<NotebookIdentifier> => {
+  try {
+    await firestore.runTransaction(async transaction => {
+      // ensure that the Notebook document still exists (i.e. has not been deleted
+      // either hard or soft) and that the caller has the right permissions to edit
+      // its content.
+      const notebookRef = notebookDocument(notebookId);
+      const notebookSnapshot = await transaction.get(notebookRef);
+      if(!notebookSnapshot.exists) throw new ApplicationError('functions/not-found', `Cannot insertText for non-existing Notebook (${notebookId}) for User (${userId}).`);
+      const notebook = notebookSnapshot.data()!;
+      if(notebook.deleted) throw new ApplicationError('data/deleted', `Cannot insertText for soft-deleted Notebook (${notebookId}) for User (${userId}).`);
+      // TODO: allow editors to publish Notebooks? (Likely need a 'Publisher' role)
+      if(!notebook.editors.includes(userId) && notebook.createdBy !== userId) throw new ApplicationError('functions/permission-denied', `Only Editors of a Notebook (${notebookId}) may perform insertText for User (${userId}).`);
+
+      // gets the last version of the Notebook and gets the reference for the next
+      // logical version. If no version exists then the next version is the first
+      const lastVersion = await getLastVersion(transaction, notebookId),
+            lastVersionIndex = lastVersion?.index;
+      const nextVersionIndex = lastVersionIndex ? lastVersionIndex + 1 : NO_NOTEBOOK_VERSION/*start of document if no last version*/,
+            nextVersionId = generateNotebookVersionIdentifier(nextVersionIndex),
+            nextVersionRef = versionDocument(notebookId, nextVersionId);
+
+      // Creates a unique identifier for the clientId.
+      const clientId = getRandomSystemUserId();
+
+      // FIXME: This is a hardcoded value that inserts the given text at the start
+      //        of the notebook, in a real example it will crate a editor and make
+      //        the corresponding change that generates the step.
+      const pmStep = {
+        stepType: 'replace',
+        from:1,
+        to:1,
+        slice:{ content:[{ type: 'text', text }] },
+      };
+
+      const write: NotebookVersion_Write = {
+        schemaVersion: notebook.schemaVersion/*latest by contract*/,
+
+        index: nextVersionIndex,
+        clientId,
+        content: JSON.stringify(pmStep)/*FIXME: refactor into a function*/,
+
+        createdBy: userId,
+        createTimestamp: ServerTimestamp/*by contract*/,
+      };
+
+      transaction.set(nextVersionRef, write);
+    });
+  } catch(error) {
+    if(error instanceof ApplicationError) throw error;
+    throw new ApplicationError('datastore/write', `Error inserting text for notebook (${notebookId}) for User (${userId}). Reason: `, error);
+  }
+
+  return notebookId;
+};
