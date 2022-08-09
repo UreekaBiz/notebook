@@ -46,7 +46,7 @@ export type UserProfile_Core = Readonly<Partial<Validate.InferType<typeof UserPr
 export type UserProfile_Internal = Readonly<{
   /** (optional) email from Firebase Auth */
   // TODO: this would be the first candidate for a 'hide'able' field
-  email?: string,
+  email?: string;
 
   /** is the User Active, Idle or Offline? */
   presence: PresenceState;

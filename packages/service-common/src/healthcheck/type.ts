@@ -6,13 +6,13 @@ export const VERSION_REQUEST = `__version`;
 
 // ================================================================================
 type Result = Readonly<({
-  result: false/*didn't return*/,
+  result: false/*didn't return*/;
 } | {
-  elapsedTime: number/*elapsed time to return healthcheck*/,
-  result: VersionResponse,
+  elapsedTime: number/*elapsed time to return healthcheck*/;
+  result: VersionResponse;
 })>;
 export type HealthcheckStatus = Readonly<{
-  name: string/*name of function*/,
+  name: string/*name of function*/;
 }> & Result;
 
 // ................................................................................

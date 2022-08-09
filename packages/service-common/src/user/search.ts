@@ -33,7 +33,7 @@ const normalizeUserPrefixString = (s: string) => {
   // NOTE: order matters!
   s = s.toLocaleLowerCase();
   s = s.replace(/[_-]/g, ' ');
-  s = s.normalize('NFD').replace(/[\u0300-\u036f]/g, '')/*normalize diacritics*/
+  s = s.normalize('NFD').replace(/[\u0300-\u036f]/g, '')/*normalize diacritics*/;
   s = s.replace(/[^\w]/ig, '')/*also removes whitespace*/;
   return s.trim();
 };

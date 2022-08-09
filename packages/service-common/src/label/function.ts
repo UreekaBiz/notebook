@@ -84,7 +84,7 @@ export const LabelShare_Rest_Schema = Validate.object({
   userRoles: Validate.lazy(object => Validate.object(
       mapValues(object as Record<UserIdentifier, string>, () => Validate.string()
           .oneOf(Object.values(ShareRole))
-          .required(),
+          .required()
       ))),
 }).noUnknown();
 export type LabelShare_Rest = Modify<Validate.InferType<typeof LabelShare_Rest_Schema>, Readonly<{

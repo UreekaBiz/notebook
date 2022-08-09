@@ -15,7 +15,7 @@ export type HashtagSearchResult = string/*hashtag*/;
 const searchNormalizeHashtag = (s: string) => {
   // NOTE: order matters!
   s = normalizeHashtag(s);
-  s = s.normalize('NFD').replace(/[\u0300-\u036f]/g, '')/*normalize diacritics*/
+  s = s.normalize('NFD').replace(/[\u0300-\u036f]/g, '')/*normalize diacritics*/;
   s = s.replace(/[\s]/ig, '')/*removes whitespace*/;
   return s.trim();
 };

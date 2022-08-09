@@ -3,7 +3,7 @@
 // REF: https://github.com/tc39/proposal-array-from-async
 export const fromAsync = async <T>(iterator: AsyncIterable<T>): Promise<T[]> => {
   const result: T[] = [];
-  for await(const item of iterator) {
+  for await (const item of iterator) {
     result.push(item);
   }
   return result;
