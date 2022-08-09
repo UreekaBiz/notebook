@@ -1,4 +1,5 @@
 export * from './attribute';
+export * from './command';
 export * from './document';
 export * from './htmlRenderer/attribute';
 export * from './htmlRenderer/renderer';

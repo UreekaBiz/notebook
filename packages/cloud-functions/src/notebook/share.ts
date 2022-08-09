@@ -1,6 +1,6 @@
 import { DocumentReference } from 'firebase-admin/firestore';
 
-import { difference, NotebookIdentifier, NotebookRole, Notebook_Storage, Notebook_Share, UserIdentifier, MAX_NOTEBOOK_SHARE_USERS } from '@ureeka-notebook/service-common';
+import { difference, ShareRole, NotebookIdentifier, Notebook_Storage, Notebook_Share, UserIdentifier, MAX_NOTEBOOK_SHARE_USERS } from '@ureeka-notebook/service-common';
 
 import { firestore } from '../firebase';
 import { ApplicationError } from '../util/error';
@@ -12,20 +12,20 @@ import { TARGET_NOTEBOOK_SHARE_BATCH_NOTIFICATION } from './task';
 
 // Notebook sharing
 // ********************************************************************************
-export const shareNotebook = async (userId: UserIdentifier, notebookId: NotebookIdentifier, userRoles: Map<UserIdentifier, NotebookRole>) => {
+export const shareNotebook = async (userId: UserIdentifier, notebookId: NotebookIdentifier, userRoles: Map<UserIdentifier, ShareRole>) => {
   // optimistically force the caller to be the Creator of the Notebook
   // NOTE: the Transaction ensures that the caller -is- the Creator of the Notebook
-  userRoles.set(userId!/*auth'd*/, NotebookRole.Creator);
+  userRoles.set(userId!/*auth'd*/, ShareRole.Creator);
 
   // bound to MAX_NOTEBOOK_SHARE_USERS and ensure that there is only a single Creator
   if(userRoles.size > MAX_NOTEBOOK_SHARE_USERS) throw new ApplicationError('functions/invalid-argument', `Cannot Share a Notebook (${notebookId}) with more than ${MAX_NOTEBOOK_SHARE_USERS} (${userRoles.size} > ${MAX_NOTEBOOK_SHARE_USERS}) Users.`);
-  const creatorUserIds = [...userRoles.values()].filter(role => role === NotebookRole.Creator);
+  const creatorUserIds = [...userRoles.values()].filter(role => role === ShareRole.Creator);
   if(creatorUserIds.length > 1) throw new ApplicationError('functions/invalid-argument', `Cannot Share a Notebook (${notebookId}) with more than one Creator (${creatorUserIds.length} > 1).`);
 
   // NOTE: each of viewers and editor must be unique by UserIdentifier by contract
   // NOTE: all Editors (and Creator) are Viewers by contract
-  const viewers = new Map<UserIdentifier, NotebookRole>(userRoles.entries())/*all roles are at least Viewer*/,
-        editors = new Map<UserIdentifier, NotebookRole>([...userRoles.entries()].filter(([_, role]) => ((role === NotebookRole.Editor) || (role === NotebookRole.Creator))/*explicit for sanity / security*/));
+  const viewers = new Map<UserIdentifier, ShareRole>(userRoles.entries())/*all roles are at least Viewer*/,
+        editors = new Map<UserIdentifier, ShareRole>([...userRoles.entries()].filter(([_, role]) => ((role === ShareRole.Editor) || (role === ShareRole.Creator))/*explicit for sanity / security*/));
   const viewerUserIds = [...viewers.keys()],
         editorUserIds = [...editors.keys()];
 

@@ -2,6 +2,7 @@ import { LabelIdentifier } from '../label/type';
 import { NotebookDocumentContent } from '../notebookEditor/proseMirror/document';
 import { NotebookSchemaVersion } from '../notebookEditor/proseMirror/schema';
 import { Creatable, ObjectTuple, Updatable } from '../util/datastore';
+import { ShareRole } from '../util/share';
 import { UserIdentifier } from '../util/user';
 import { Identifier } from '../util/type';
 
@@ -70,18 +71,6 @@ export type Notebook = Creatable & Updatable & Readonly<{ /*Firestore*/
 }>;
 export type NotebookTuple = ObjectTuple<NotebookIdentifier, Notebook>;
 
-// ................................................................................
-// these are used when communicating the the shared state of a Notebook. They get
-// translated into Notebook#viewers and Notebook#editors
-// TODO: remove in favor of ShareRole
-export enum NotebookRole {
-  /** a Creator is an Editor and a Viewer */
-  Creator = 'creator',
-  /** an Editor is a Viewer */
-  Editor = 'editor',
-  Viewer = 'viewer',
-}
-
 // -- Version ---------------------------------------------------------------------
 // SEE: /notebookEditor/type.ts
 
@@ -101,8 +90,8 @@ export type NotebookLabelUser = Creatable & Readonly<{ /*Firestore*/
    *  @see Label#editors */
   userId: UserIdentifier;
 
-  /** a set of Label-NotebookRole pairs for this Notebook-User */
-  labels: Record<LabelIdentifier, NotebookRole>;
+  /** a set of Label-ShareRole pairs for this Notebook-User */
+  labels: Record<LabelIdentifier, ShareRole>;
 }>;
 
 // == Notebook Published ==========================================================

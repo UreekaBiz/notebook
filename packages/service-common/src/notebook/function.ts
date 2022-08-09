@@ -2,9 +2,10 @@ import * as Validate from 'yup';
 
 import { mapValues } from '../util/object';
 import { stringMedSchema } from '../util/schema';
+import { ShareRole } from '../util/share';
 import { Identifier_Schema, Modify } from '../util/type';
 import { UserIdentifier } from '../util/user';
-import { NotebookRole, NotebookType, MAX_NOTEBOOK_HASHTAGS } from './type';
+import { NotebookType, MAX_NOTEBOOK_HASHTAGS } from './type';
 
 // ********************************************************************************
 // == Notebook ====================================================================
@@ -50,12 +51,12 @@ export const NotebookShare_Rest_Schema = Validate.object({
 
   userRoles: Validate.lazy(object => Validate.object(
       mapValues(object as Record<UserIdentifier, string>, () => Validate.string()
-          .oneOf(Object.values(NotebookRole))
+          .oneOf(Object.values(ShareRole))
           .required(),
       ))),
 }).noUnknown();
 export type NotebookShare_Rest = Modify<Validate.InferType<typeof NotebookShare_Rest_Schema>, Readonly<{
-  userRoles: Record<UserIdentifier, NotebookRole>/*explicit*/;
+  userRoles: Record<UserIdentifier, ShareRole>/*explicit*/;
 }>>;
 
 // -- Publish ---------------------------------------------------------------------

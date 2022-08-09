@@ -1,5 +1,5 @@
 import * as firebase from 'firebase-admin';
-import { DocumentSnapshot, WriteBatch } from 'firebase-admin/firestore';
+import { DocumentReference, DocumentSnapshot, Query, QuerySnapshot, Transaction, WriteBatch } from 'firebase-admin/firestore';
 import * as functions from 'firebase-functions';
 
 import { nameof, TimestampValue, Updatable } from '@ureeka-notebook/service-common';
@@ -45,6 +45,19 @@ export const TimestampFromValueOf = (timestampValue: TimestampValue) => {
   const match = timestampValue.match(/^([^\.]+).([^$]+)$/);
   if(!match || (match.length !== 3/*2 + 1*/)) throw new ApplicationError('functions/invalid-argument', `Invalid Timestamp#valueOf() '${timestampValue}'.`);
   return new firebase.firestore.Timestamp(Number(match[/*$*/1]), Number(match[/*$*/2]));
+};
+
+// ................................................................................
+export function getSnapshot<T>(transaction: Transaction | undefined, documentRef: DocumentReference<T>): Promise<DocumentSnapshot<T>>
+export function getSnapshot<T>(transaction: Transaction | undefined, query: Query<T>): Promise<QuerySnapshot<T>>;
+export function getSnapshot<T>(transaction: Transaction | undefined, documentRefOrQuery: DocumentReference<T> | Query<T>): Promise<DocumentSnapshot<T> | QuerySnapshot<T>>{
+  // use transaction if available
+  if(transaction) {
+    // NOTE: this is required to avoid a TypesScript error.
+    if(documentRefOrQuery instanceof DocumentReference) return transaction.get(documentRefOrQuery);
+    return transaction.get(documentRefOrQuery);
+  } // else -- use firestore directly
+  return documentRefOrQuery.get();
 };
 
 // == Trigger Change ==============================================================

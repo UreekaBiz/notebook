@@ -1,7 +1,7 @@
 import { Select } from '@chakra-ui/react';
 import { ChangeEventHandler } from 'react';
 
-import { NotebookRole } from '@ureeka-notebook/web-service';
+import { ShareRole } from '@ureeka-notebook/web-service';
 
 import { getReadableNotebookRole } from 'user/type';
 
@@ -11,19 +11,19 @@ const REMOVE_VALUE = 'remove';
 
 // ********************************************************************************
 interface Props {
-  value: NotebookRole;
+  value: ShareRole;
   disabled: boolean;
 
   /** the 'Remove' option is displayed */
   canRemove?: boolean;
 
-  /** disable Selector when value is creator */
+  /** disable Selector when value is 'Creator' */
   disableCreatorOption?: boolean;
   /** show the 'Creator' option? If the actual value is 'Creator' the option will be
-   * shown anyways */
+   *  shown anyways */
   hideCreatorOption?: boolean;
 
-  onChange: (role: NotebookRole) => void;
+  onChange: (role: ShareRole) => void;
   /** the remove option is selected */
   onRemove?: () => void;
 }
@@ -37,13 +37,13 @@ export const NotebookRoleSelector: React.FC<Props> = ({ canRemove = false, disab
       return/*nothing left to do*/;
     } /* else -- a NotebookValue was selected */
 
-    onChange(value as NotebookRole/*by definition*/);
+    onChange(value as ShareRole/*by definition*/);
   };
 
   // == UI ========================================================================
   return (
     <Select
-      disabled={disabled || disableCreatorOption && value === NotebookRole.Creator}
+      disabled={disabled || disableCreatorOption && value === ShareRole.Creator}
       value={value}
       width={110}
       paddingInlineEnd={0}
@@ -51,10 +51,10 @@ export const NotebookRoleSelector: React.FC<Props> = ({ canRemove = false, disab
     >
       {/* empty value that serves as a placeholder */}
       <option value='' disabled>Role</option>
-      {Object.values(NotebookRole).map((role) => (
+      {Object.values(ShareRole).map((role) => (
         // hides 'Creator' option if hideCreatorOption is true and the current value
         // if other than 'Creator'
-        (hideCreatorOption && value !== NotebookRole.Creator && role === NotebookRole.Creator) ? null : (
+        (hideCreatorOption && value !== ShareRole.Creator && role === ShareRole.Creator) ? null : (
           <option key={role} value={role}>
             {getReadableNotebookRole(role)}
           </option>

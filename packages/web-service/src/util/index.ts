@@ -27,6 +27,9 @@ export {
   hashString,
   stringHashCode,
 
+  // SEE: @ureeka-notebook/service-common: util/map.ts
+  mapEquals,
+
   // SEE: @ureeka-notebook/service-common: util/object.ts
   generateRange,
   range,

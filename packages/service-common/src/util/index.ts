@@ -6,6 +6,7 @@ export * from './error';
 export * from './firestore';
 export * from './hash';
 export * from './http';
+export * from './map';
 export * from './number';
 export * from './object';
 export * from './predicate';

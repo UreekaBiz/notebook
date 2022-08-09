@@ -5,7 +5,7 @@ import { collapseVersions, generateCheckpointIdentifier, Checkpoint, Checkpoint_
 
 import { firestore } from '../firebase';
 import { getEnv } from '../util/environment';
-import { ServerTimestamp } from '../util/firestore';
+import { getSnapshot, ServerTimestamp } from '../util/firestore';
 import { notebookDocument } from '../notebook/datastore';
 import { updateNotebookRename } from '../notebook/notebook';
 import { checkpointDocument, lastCheckpointQuery, versionRangeQuery } from './datastore';
@@ -71,7 +71,7 @@ export const createCheckpoint = async (notebookId: NotebookIdentifier, index: nu
 // ................................................................................
 // returns the content of a Notebook at the given index
 export const getNotebookContent = async (
-  transaction: Transaction,
+  transaction: Transaction | undefined/*outside transaction*/,
   version: NotebookSchemaVersion, notebookId: NotebookIdentifier, index: number
 ): Promise<NotebookDocumentContent> => {
   const lastCheckpoint = await getLastCheckpoint(transaction, notebookId),
@@ -79,7 +79,7 @@ export const getNotebookContent = async (
 
   // (within the Transaction) get the NotebookVersions between the last Checkpoint
   // (exclusive) and the current index (inclusive)
-  const versionSnapshot = await transaction.get(versionRangeQuery(notebookId, lastCheckpointIndex/*exclusive*/, index/*inclusive*/));
+  const versionSnapshot = await getSnapshot(transaction, versionRangeQuery(notebookId, lastCheckpointIndex/*exclusive*/, index/*inclusive*/));
 //logger.log(`NotebookVersions: ${versionSnapshot.size}`);
   const versions = versionSnapshot.docs.map(doc => doc.data());
 
@@ -89,8 +89,8 @@ export const getNotebookContent = async (
 // ................................................................................
 // returns the last known Checkpoint using the specified Transaction. If there
 // are no existing Checkpoints then `undefined`
-export const getLastCheckpoint = async (transaction: Transaction, notebookId: NotebookIdentifier) => {
-  const snapshot = await transaction.get(lastCheckpointQuery(notebookId));
+export const getLastCheckpoint = async (transaction: Transaction | undefined/*outside transaction*/, notebookId: NotebookIdentifier) => {
+  const snapshot = await getSnapshot(transaction, lastCheckpointQuery(notebookId));
   if(snapshot.empty) return undefined/*by contract*/;
 
   if(snapshot.size > 1) logger.warn(`Expected a single last Checkpoint but received ${snapshot.size}. Ignoring all but first.`);
