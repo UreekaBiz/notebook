@@ -1,6 +1,6 @@
 import { EditorState } from 'prosemirror-state';
 
-import { generateNotebookVersionIdentifier, ClientIdentifier, Command, NotebookIdentifier, NotebookSchemaVersion, NotebookVersion_Write, UserIdentifier } from '@ureeka-notebook/service-common';
+import { generateNotebookVersionIdentifier, ApplicationError, ClientIdentifier, Command, NotebookIdentifier, NotebookSchemaVersion, NotebookVersion_Write, UserIdentifier } from '@ureeka-notebook/service-common';
 
 import { firestore } from '../firebase';
 import { ServerTimestamp } from '../util/firestore';
@@ -16,7 +16,18 @@ notebookId: NotebookIdentifier, schemaVersion: NotebookSchemaVersion, userId: Us
 clientId: ClientIdentifier, initialVersionIndex: number, editorState: EditorState, command: Command
 ): Promise<void> => {
   return firestore.runTransaction(async transaction => {
-    // starts a new transaction
+    // NOTE: only checks against first Version since if that doesn't exist then no
+    //       other Version can exist by definition (since monotonically increasing)
+    // NOTE: if other Versions *do* get written as this writes then the Transaction
+    //       will be aborted internally by Firestore (by definition). When re-run
+    //       then the Version would exist and this returns false.
+    const firstVersionId = generateNotebookVersionIdentifier(initialVersionIndex),
+          firstVersionRef = versionDocument(notebookId, firstVersionId);
+    const snapshot = await transaction.get(firstVersionRef);
+    // log.debug(`Trying to write Notebook Versions ${startingIndex} - ${startingIndex + versions.length - 1}`);
+    if(snapshot.exists) throw new ApplicationError('functions/already-exists', `Step with index ${initialVersionIndex} already exists.`); /*abort -- NotebookVersion with startingIndex already exists*/;
+
+    // starts a new EditorStateTransaction
     const tr = editorState.tr;
     // TODO: handle errors while applying the command
     // applies the command to the transaction
