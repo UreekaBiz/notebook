@@ -5,7 +5,7 @@ import { QueryObservable } from '../util/observableCollection';
 import { documentOnce } from '../util/observableDocument';
 import { queryTuples } from '../util/observableTupleCollection';
 import { documentTuple } from '../util/observableTupleDocument';
-import { notebookDocument, notebookPublishedContentDocument, notebookPublishedQuery, notebookQuery } from './datastore';
+import { notebookDocument, notebookPublishedContentDocument, notebookPublishedDocument, notebookPublishedQuery, notebookQuery } from './datastore';
 import { NotebookFilter, NotebookPublishedFilter } from './type';
 
 // ********************************************************************************
@@ -19,6 +19,11 @@ export const notebookTupleById$ = (notebookId: NotebookIdentifier) =>
   documentTuple(notebookDocument(notebookId), defaultDocumentTupleConverter);
 
 // -- Notebook Published ----------------------------------------------------------
+// NOTE: these are used in cases (e.g. Label => Notebook) where there is only a
+//       NotebookIdentifier and must join to NotebookPublished
+export const notebookPublishedTupleOnceById$ = (notebookId: NotebookIdentifier) =>
+  documentTuple(notebookPublishedDocument(notebookId), defaultDocumentTupleConverter);
+
 // NOTE: single document accessors so the content *is* included
 export const notebookPublishedContentOnceById$ = (notebookId: NotebookIdentifier) =>
   documentOnce(notebookPublishedContentDocument(notebookId), defaultDocumentConverter);

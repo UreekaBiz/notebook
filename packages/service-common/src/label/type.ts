@@ -85,14 +85,6 @@ export type LabelNotebook = Creatable & Readonly<{ /*Firestore*/
   //       entries start at '0' (ensuring that they're always less than the current
   //       timestamp). New Notebooks are added using the ServerTimestamp.
   order: Timestamp/*write-many server-written*/;
-
-  // FIXME: remove!
-  // /** the Label's viewers to facilitate collection-group queries
-  //  *  @see Label#viewers */
-  // viewers: UserIdentifier[]/*write-many server-written*/;
-  // /** the Label's editors to facilitate collection-group queries
-  //  *  @see Label#editors */
-  // editors: UserIdentifier[]/*write-many server-written*/;
 }>;
 export type LabelNotebookTuple = ObjectTuple<NotebookIdentifier, LabelNotebook>;
 

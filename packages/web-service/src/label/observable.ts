@@ -1,7 +1,8 @@
 import { map } from 'rxjs';
 
-import { isDefined, isTupleNotNull, LabelIdentifier, LabelTuple, Label_Storage, LabelPublished_Storage, LabelNotebook_Storage, LabelNotebookTuple, LabelPublishedTuple, NotebookTuple } from '@ureeka-notebook/service-common';
+import { isDefined, isTupleNotNull, LabelIdentifier, LabelTuple, Label_Storage, LabelPublished_Storage, LabelNotebook_Storage, LabelNotebookTuple, LabelPublishedTuple, NotebookPublishedTuple, NotebookTuple } from '@ureeka-notebook/service-common';
 
+import { notebookPublishedTupleOnceById$, notebookTupleOnceById$ } from '../notebook/observable';
 import { defaultDocumentConverter, defaultDocumentTupleConverter, defaultTupleConverter } from '../util/firestore';
 import { joinDetail$ } from '../util/observable';
 import { QueryObservable, QuerySnapshotObservable } from '../util/observableCollection';
@@ -10,7 +11,6 @@ import { queryTuples, snapshotTuplesOnce } from '../util/observableTupleCollecti
 import { documentTuple } from '../util/observableTupleDocument';
 import { labelDocument, labelQuery, labelPublishedDocument, labelPublishedQuery } from './datastore';
 import { LabelFilter, LabelPublishedFilter } from './type';
-import { notebookTupleOnceById$ } from '../notebook/observable';
 
 // ********************************************************************************
 // == Label =======================================================================
@@ -50,8 +50,18 @@ export const labelPublishedById$ = (labelId: LabelIdentifier) =>
   documentTuple(labelPublishedDocument(labelId), defaultDocumentTupleConverter);
 
 // -- Notebook --------------------------------------------------------------------
-export const labelNotebooksPublishedSnapshot$: QuerySnapshotObservable<LabelNotebook_Storage, LabelNotebookTuple> =
+export const labelNotebookPublishedsSnapshot$: QuerySnapshotObservable<LabelNotebook_Storage, LabelNotebookTuple> =
   snapshot => snapshotTuplesOnce(snapshot, defaultTupleConverter);
+
+// ................................................................................
+// detail-joins Notebook (filtering out any missing Notebooks)
+export const notebookPublishedsSnapshot$: QuerySnapshotObservable<LabelNotebook_Storage, NotebookPublishedTuple> =
+  snapshot => joinDetail$(
+                labelNotebookPublishedsSnapshot$(snapshot),
+                ({ id: notebookId }) => notebookPublishedTupleOnceById$(notebookId),
+                (_, detail) => isTupleNotNull(detail) ? detail : undefined/*not-found -- filtered below*/
+              )
+              .pipe(map(results => results.filter(isDefined))/*filter out any not-found Published Notebooks*/);
 
 // -- Search ----------------------------------------------------------------------
 export const labelPublishedsQuery$: QueryObservable<LabelPublished_Storage, LabelPublishedTuple> =
