@@ -18,6 +18,11 @@ export const DEFAULT_NOTEBOOK_NAME = 'Untitled';
 export type NotebookIdentifier = Identifier;
 
 // ................................................................................
+/** the maximum number of Hashtags that any Notebook may have. This limit is to
+ *  create a sense of scarcity to ensure that the Hashtags are meaningful. It also
+ *  keeps the size of the document small. */
+export const MAX_NOTEBOOK_HASHTAGS = 10;
+
 /** the maximum number of Users that any Notebook may be shared with. This limit is
  *  to both satisfy Collaboration constraints and to keep the size of the Notebook
  *  document small. */
@@ -36,6 +41,10 @@ export type Notebook = Creatable & Updatable & Readonly<{ /*Firestore*/
    *  characters. Can be modified at any time.
    *  @see #DEFAULT_NOTEBOOK_NAME  */
   name: string/*write-many server-written*/;
+
+  /** set of normalized hashtags associated with the Notebook. Hashtags become part
+   *  of a Published Notebook (i.e. they become public when published) */
+  hashtags: string[]/*write-many server-written*/;
 
   /** has this Notebook been published? If published then a separate (public)
    *  Published document exists. Notebooks are not published by default. */
@@ -113,6 +122,9 @@ export type NotebookPublished = Creatable & Updatable & Readonly<{ /*Firestore*/
   title: string;
   image?: string;
   snippet?: string;
+
+  /** set of normalized hashtags associated with the Published Notebook */
+  hashtags: string[]/*write-many server-written*/;
 
   // NOTE: the content is not stored on this view since it may be large
   // SEE: NotebookPublishedContent

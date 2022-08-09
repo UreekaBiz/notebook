@@ -60,6 +60,8 @@ export const publishNotebook = async (
         image,
         snippet,
 
+        hashtags: notebook.hashtags/*clone*/,
+
         lastUpdatedBy: userId,
         updateTimestamp: ServerTimestamp/*by contract*/,
       };

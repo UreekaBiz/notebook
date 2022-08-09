@@ -53,6 +53,9 @@ export type Notebook_Create = Modify<Notebook_Storage, Readonly<{
   updateTimestamp: FieldValue/*always-write server-set*/;
 }>>;
 
+export type Notebook_Hashtag = Modify<Pick<Notebook_Storage, 'hashtags' | 'updateTimestamp' | 'lastUpdatedBy'>, Readonly<{
+  updateTimestamp: FieldValue/*always-write server-set*/;
+}>>;
 export type Notebook_Publish = Modify<Pick<Notebook_Storage, 'isPublished' | 'updateTimestamp' | 'lastUpdatedBy'>, Readonly<{
   updateTimestamp: FieldValue/*always-write server-set*/;
 }>>;

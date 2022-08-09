@@ -1,9 +1,9 @@
 import * as functions from 'firebase-functions';
 
-import { isBlank, NotebookCreate_Rest, NotebookCreate_Rest_Schema, NotebookDelete_Rest, NotebookDelete_Rest_Schema, NotebookIdentifier, NotebookPublish_Rest, NotebookPublish_Rest_Schema, NotebookShare_Rest, NotebookShare_Rest_Schema } from '@ureeka-notebook/service-common';
+import { isBlank, normalizeHashtag, NotebookCreate_Rest, NotebookCreate_Rest_Schema, NotebookDelete_Rest, NotebookDelete_Rest_Schema, NotebookHashtag_Rest, NotebookHashtag_Rest_Schema, NotebookIdentifier, NotebookPublish_Rest, NotebookPublish_Rest_Schema, NotebookShare_Rest, NotebookShare_Rest_Schema } from '@ureeka-notebook/service-common';
 
 import { wrapCall } from '../util/function';
-import { createNotebook, deleteNotebook } from './notebook';
+import { createNotebook, deleteNotebook, hashtagNotebook } from './notebook';
 import { publishNotebook } from './publish';
 import { shareNotebook } from './share';
 
@@ -20,6 +20,16 @@ export const notebookDelete = functions.https.onCall(wrapCall<NotebookDelete_Res
 { name: 'notebookDelete', schema: NotebookDelete_Rest_Schema, convertNullToUndefined: true, requiresAuth: true },
 async (data, context, userId) => {
   await deleteNotebook(userId!/*auth'd*/, data.notebookId);
+}));
+
+// -- Hashtag ---------------------------------------------------------------------
+export const notebookHashtag = functions.https.onCall(wrapCall<NotebookHashtag_Rest>(
+{ name: 'notebookHashtag', schema: NotebookHashtag_Rest_Schema, convertNullToUndefined: true, requiresAuth: true },
+async (data, context, userId) => {
+  const hashtags = new Set(data.hashtags
+                                .map(hashtag => normalizeHashtag(hashtag))/*normalize by contract*/
+                                .filter(hashtag => !isBlank(hashtag))/*sanity*/);
+  await hashtagNotebook(userId!/*auth'd*/, data.notebookId, hashtags);
 }));
 
 // -- Share -----------------------------------------------------------------------

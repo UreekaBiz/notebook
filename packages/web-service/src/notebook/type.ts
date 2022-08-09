@@ -1,4 +1,4 @@
-import { Notebook, NotebookCreate_Rest, NotebookCreate_Rest_Schema, NotebookDelete_Rest, NotebookDelete_Rest_Schema, NotebookPublished, NotebookPublish_Rest, NotebookPublish_Rest_Schema, UserIdentifier } from '@ureeka-notebook/service-common';
+import { Notebook, NotebookCreate_Rest, NotebookCreate_Rest_Schema, NotebookDelete_Rest, NotebookDelete_Rest_Schema, NotebookHashtag_Rest, NotebookHashtag_Rest_Schema, NotebookPublished, NotebookPublish_Rest, NotebookPublish_Rest_Schema, UserIdentifier } from '@ureeka-notebook/service-common';
 
 import { SortableFilter } from '../util/firestore';
 
@@ -31,6 +31,10 @@ export type Notebook_Create = NotebookCreate_Rest;
 export const Notebook_Delete_Schema = NotebookDelete_Rest_Schema;
 export type Notebook_Delete = NotebookDelete_Rest;
 
+// ................................................................................
+export const Notebook_Hashtag_Schema = NotebookHashtag_Rest_Schema;
+export type Notebook_Hashtag = NotebookHashtag_Rest;
+
 export const Notebook_Publish_Schema = NotebookPublish_Rest_Schema;
 export type Notebook_Publish = NotebookPublish_Rest;
 
@@ -59,6 +63,12 @@ export type NotebookFilter = SortableFilter<NotebookSortField> & Readonly<{
   /** only show Notebooks that were created by this User */
   createdBy?: UserIdentifier;
 
+  /** only show Notebooks that have *any* of the specified hashtags. At most
+   *  {@link MAX_ARRAY_CONTAINS_ANY} hashtags can be specified. (Any additional are
+   *  ignored.) */
+  // NOTE: this *cannot* be used with the 'viewableBy' or 'editableBy' filters
+  hashtags?: string[];
+
   // .. Deleted ...................................................................
   /** also include (soft) deleted Notebooks (`false` by default) */
   deleted?: boolean;
@@ -82,6 +92,11 @@ export type NotebookPublishedFilter = SortableFilter<NotebookPublishedSortField>
   // NOTE: this supports only *exact* *match*
   title?: string;
 
-  /** only show entries that were created by this User */
+  /** only show Published Notebooks that were created by this User */
   createdBy?: UserIdentifier;
+
+  /** only show Published Notebooks that have *any* of the specified hashtags. At
+   *  most {@link MAX_ARRAY_CONTAINS_ANY} hashtags can be specified. (Any additional
+   *  are ignored.) */
+  hashtags?: string[];
 }>;

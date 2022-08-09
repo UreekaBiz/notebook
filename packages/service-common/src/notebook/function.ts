@@ -4,7 +4,7 @@ import { mapValues } from '../util/object';
 import { stringMedSchema } from '../util/schema';
 import { Identifier_Schema, Modify } from '../util/type';
 import { UserIdentifier } from '../util/user';
-import { NotebookRole, NotebookType } from './type';
+import { NotebookRole, NotebookType, MAX_NOTEBOOK_HASHTAGS } from './type';
 
 // ********************************************************************************
 // == Notebook ====================================================================
@@ -28,6 +28,20 @@ export const NotebookDelete_Rest_Schema = Validate.object({
       .required(),
 }).noUnknown();
 export type NotebookDelete_Rest = Readonly<Validate.InferType<typeof NotebookDelete_Rest_Schema>>;
+
+// -- Hashtag ---------------------------------------------------------------------
+export const NotebookHashtag_Rest_Schema = Validate.object({
+  notebookId: Identifier_Schema
+      .required(),
+
+  /** set of normalized hashtags associated with Published Notebook. If any hashtags
+   *  are not normalized then they will be normalized and deduplicated */
+  hashtags: Validate.array()
+      .of(stringMedSchema.required())
+      .max(MAX_NOTEBOOK_HASHTAGS)
+      .required(),
+}).noUnknown();
+export type NotebookHashtag_Rest = Validate.InferType<typeof NotebookHashtag_Rest_Schema>;
 
 // -- Share -----------------------------------------------------------------------
 export const NotebookShare_Rest_Schema = Validate.object({
