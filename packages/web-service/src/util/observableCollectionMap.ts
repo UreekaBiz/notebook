@@ -17,7 +17,7 @@ export const queryMap = <I, F, T>(query: Query<F>, project: ProjectOperation<I, 
   collectionMap(queryCollectionChanges(query), project);
 export const collectionMap = <I, F, T>(observable: Observable<DocumentChange<F>[]>, project: ProjectOperation<I, F, T>): Observable<Map<I, T>> =>
   observable.pipe(
-    scan((accumulator: Map<I, T>, current: DocumentChange<F>[]) => processDocumentChanges(accumulator, current, project), new Map<I, T>()),
+    scan((accumulator: Map<I, T>, current: DocumentChange<F>[]) => processDocumentChanges(accumulator, current, project), new Map<I, T>())
   );
 
 // --------------------------------------------------------------------------------

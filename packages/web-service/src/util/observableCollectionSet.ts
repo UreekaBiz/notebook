@@ -17,7 +17,7 @@ export const querySet = <T, R>(query: Query<T>, project: ProjectOperation<T, R>)
   collectionSet(queryCollectionChanges(query), project);
 export const collectionSet = <T, R>(observable: Observable<DocumentChange<T>[]>, project: ProjectOperation<T, R>): Observable<Set<R>> =>
   observable.pipe(
-    scan((accumulator: Set<R>, current: DocumentChange<T>[]) => processDocumentChanges(accumulator, current, project), new Set<R>()),
+    scan((accumulator: Set<R>, current: DocumentChange<T>[]) => processDocumentChanges(accumulator, current, project), new Set<R>())
   );
 
 // --------------------------------------------------------------------------------

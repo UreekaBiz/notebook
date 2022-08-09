@@ -74,7 +74,7 @@ class ScrollableQueryObservable<T, R> implements Scrollable<R> {
     this._documents$ = this.desiredDocumentCount$
       .pipe(
         tap(() => {
-          this.isLoading = true/*by definition*/
+          this.isLoading = true/*by definition*/;
 log.debug(`${this.label}:documents$: desiredDocumentCount changed; isExhausted: ${this.isExhausted()}; currentDocumentCount: ${this.currentDocumentCount}; desiredDocumentCount: ${this.desiredDocumentCount}`);
         }),
         // FIXME: cannot use `switchMap` since it unsubscribes from the previous

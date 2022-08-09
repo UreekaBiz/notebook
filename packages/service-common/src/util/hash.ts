@@ -13,7 +13,7 @@ export const hashNumber = (n: number): string => hashString(n.toString());
 export const stringHashCode = (s: string) => {
   if(s.length < 1) return 0/*default for zero-length string*/;
 
-  var hash = 0;
+  let hash = 0;
   for(let i=0; i<s.length; i++)
     hash = ((hash << 5) - hash + s.charCodeAt(i)) << 0/*convert to 32-bit integer*/;
   return hash;

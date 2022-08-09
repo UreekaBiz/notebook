@@ -22,13 +22,13 @@ export const joinDetail$ = <M, D, R>(master$: Observable<M[]>, detail$: (value: 
             detail$(masterValue)/*get detail for the master value*/
               .pipe(
                 take(1)/*only the first value is taken from detail$ regardless if it completes or not*/,
-                map(detailValue => join(masterValue, detailValue))/*join to resulting type*/,
+                map(detailValue => join(masterValue, detailValue))/*join to resulting type*/
 //tap(() => console.error(`    joinDetail$: master-detail join`)),
               )
             )
           ) /*wait for the detail value to be retrieved*/
         ) /*ensures that something is emitted even if 'masterValues' is empty*/
-      ) /*switch to which ever values are the latest (cancelling any inner lookups if they weren't complete)*/,
+      ) /*switch to which ever values are the latest (cancelling any inner lookups if they weren't complete)*/
 //tap(() => console.error(`joinDetail$ - joined`)),
     );
 
