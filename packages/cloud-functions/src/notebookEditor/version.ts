@@ -2,9 +2,10 @@ import { Transaction } from 'firebase-admin/firestore';
 import { logger } from 'firebase-functions';
 import { Step as ProseMirrorStep } from 'prosemirror-transform';
 
-import { generateNotebookVersionIdentifier, ApplicationError, ClientIdentifier, NotebookIdentifier, NotebookSchemaVersion, NotebookVersion_Storage, NotebookVersion_Write, UserIdentifier } from '@ureeka-notebook/service-common';
+import { generateNotebookVersionIdentifier, ClientIdentifier, NotebookIdentifier, NotebookSchemaVersion, NotebookVersion_Storage, NotebookVersion_Write, UserIdentifier } from '@ureeka-notebook/service-common';
 
 import { firestore } from '../firebase';
+import { ApplicationError } from '../util/error';
 import { getSnapshot, ServerTimestamp } from '../util/firestore';
 import { lastVersionQuery, versionDocument } from './datastore';
 
