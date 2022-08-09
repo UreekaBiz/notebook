@@ -15,10 +15,11 @@ interface Props {
   marginTop: string;
   currentChips: string[];
   updateChipsInputCallback: (addedChipValue: string) => boolean;
+  chipClickCallback: (chipText: string) => void;
   chipDropCallback: (item: ChipDraggableItem) => void;
   chipCloseButtonCallback: (deletedIndex: number) => void;
 }
-export const ChipTool: React.FC<Props> = ({ name, width, marginTop, currentChips, updateChipsInputCallback, chipDropCallback, chipCloseButtonCallback }) => {
+export const ChipTool: React.FC<Props> = ({ name, width, marginTop, currentChips, updateChipsInputCallback, chipClickCallback, chipDropCallback, chipCloseButtonCallback }) => {
   // == State =====================================================================
   const [inputValue, setInputValue] = useState('');
 
@@ -48,6 +49,7 @@ export const ChipTool: React.FC<Props> = ({ name, width, marginTop, currentChips
         <DndProvider backend={HTML5Backend}>
           <ChipContainer
             chipStringArray={currentChips}
+            chipClickCallback={chipClickCallback}
             chipDropCallback={chipDropCallback}
             chipCloseButtonCallback={chipCloseButtonCallback}
           />

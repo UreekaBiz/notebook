@@ -11,10 +11,11 @@ type Chip = { id: number; text: string; }
 // == Component ===================================================================
 interface Props {
   chipStringArray: string[];
+  chipClickCallback: (chipText: string) => void;
   chipDropCallback: (item: ChipDraggableItem) => void;
   chipCloseButtonCallback: (deletedIndex: number) => void;
 }
-export const ChipContainer: React.FC<Props> = ({ chipStringArray, chipDropCallback, chipCloseButtonCallback }) => {
+export const ChipContainer: React.FC<Props> = ({ chipStringArray, chipClickCallback, chipDropCallback, chipCloseButtonCallback }) => {
   // == State =====================================================================
   const [chips, setChips] = useState<Chip[]>([]);
 
@@ -48,8 +49,9 @@ export const ChipContainer: React.FC<Props> = ({ chipStringArray, chipDropCallba
           id={chip.id.toString()}
           text={chip.text}
           moveChip={moveChip}
+          clickCallback={chipClickCallback}
           dropCallback={(item) => chipDropCallback(item)}
-          chipCloseButtonCallback={chipCloseButtonCallback}
+          closeButtonCallback={chipCloseButtonCallback}
         />
       )}
     </Flex>

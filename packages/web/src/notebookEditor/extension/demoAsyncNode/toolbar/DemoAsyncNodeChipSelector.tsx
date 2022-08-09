@@ -1,5 +1,6 @@
 import { isDemoAsyncNode, swap, AttributeType, NodeName } from '@ureeka-notebook/web-service';
 
+import { getCodeBlockViewStorage } from 'notebookEditor/extension/codeblock/nodeView/storage';
 import { isValidCodeBlockReference, visualIdsFromCodeBlockReferences } from 'notebookEditor/extension/codeBlockAsyncNode/util';
 import { ChipDraggableItem } from 'notebookEditor/extension/shared/component/chipTool/Chip';
 import { ChipTool } from 'notebookEditor/extension/shared/component/chipTool/ChipTool';
@@ -25,6 +26,17 @@ export const DemoAsyncNodeChipSelector: React.FC<Props> = ({ editor }) => {
                  .updateAttributes(NodeName.DEMO_ASYNC_NODE, { ...attrs, codeBlockReferences: [...codeBlockReferences, codeBlockReference.codeBlockId] })
                  .setNodeSelection(selection.$anchor.pos)
                  .run();
+  };
+
+  const handleChipClick = (codeBlockVisualId: string) => {
+    const codeBlockReference = isValidCodeBlockReference(editor, attrs, codeBlockVisualId);
+    if(!codeBlockReference.isValid) return false/*ignore call*/;
+
+    const codeBlockStorage = getCodeBlockViewStorage(editor);
+    const codeBlockNodeView = codeBlockStorage.getNodeView(codeBlockReference.codeBlockId);
+    if(!codeBlockNodeView) return false/*ignore call*/;
+
+    return editor.commands.focus(codeBlockNodeView.getPos() + 1/*inside the CodeBlock*/ + codeBlockNodeView.node.textContent.length/*at the end of its content*/, { scrollIntoView: true/*scroll into view*/ });
   };
 
   const handleChipDrop = ({ id, index }: ChipDraggableItem) => {
@@ -61,6 +73,7 @@ export const DemoAsyncNodeChipSelector: React.FC<Props> = ({ editor }) => {
       marginTop='10px'
       currentChips={selectedChips}
       updateChipsInputCallback={handleChipsInputUpdate}
+      chipClickCallback={handleChipClick}
       chipDropCallback={handleChipDrop}
       chipCloseButtonCallback={handleChipClose}
     />

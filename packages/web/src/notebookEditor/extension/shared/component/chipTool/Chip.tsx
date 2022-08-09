@@ -16,11 +16,20 @@ interface Props {
   text: string;
   index: number;
   moveChip: (dragIndex: number, hoverIndex: number) => void;
+  clickCallback: (chipText: string) => void;
   dropCallback: (item: ChipDraggableItem) => void;
-  chipCloseButtonCallback: (deletedIndex: number) => void;
+  closeButtonCallback: (deletedIndex: number) => void;
 }
-export const Chip: React.FC<Props> = ({ id, text, index, moveChip, dropCallback, chipCloseButtonCallback }) => {
+export const Chip: React.FC<Props> = ({ id, text, index, moveChip, clickCallback, dropCallback, closeButtonCallback }) => {
   const ref = useRef<HTMLDivElement>(null);
+
+  // == Handler ===================================================================
+  const handleClick = () => clickCallback(text);
+
+  const handleDelete = (event: React.MouseEvent<HTMLSpanElement, MouseEvent>) => {
+    event.stopPropagation()/*do not trigger handleClick*/;
+    closeButtonCallback(index);
+  };
 
   // == Drag ======================================================================
   const [{ isDragging }, drag] = useDrag({
@@ -77,9 +86,9 @@ export const Chip: React.FC<Props> = ({ id, text, index, moveChip, dropCallback,
   // == UI ========================================================================
   const opacity = isDragging ? 0 : 1;
   return (
-    <div ref={ref} className={CHIP_CLASS} style={{ opacity }} data-handler-id={handlerId}>
+    <div ref={ref} className={CHIP_CLASS} style={{ opacity }} data-handler-id={handlerId} onClick={handleClick}>
       {text}
-      <span className={CHIP_CLOSE_BUTTON_CLASS} tabIndex={0/* (SEE: notebookEditor/toolbar/type) */} onClick={() => chipCloseButtonCallback(index)}>&times;</span>
+      <span className={CHIP_CLOSE_BUTTON_CLASS} tabIndex={0/*(SEE: notebookEditor/toolbar/type)*/} onClick={handleDelete}>&times;</span>
     </div>
   );
 };
