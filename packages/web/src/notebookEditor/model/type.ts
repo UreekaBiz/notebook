@@ -20,6 +20,7 @@ export enum ExtensionName {
   GAP_CURSOR_ALLOW = 'allowGapCursor'/*CHECK: is this the right place for this?*/,
   HIGHLIGHT = 'highlight',
   HISTORY = 'history',
+  INLINE_NODE_WITH_CONTENT = 'inlineNodeWithContent',
   NODEVIEW_REMOVAL = 'nodeViewRemoval',
   SET_DEFAULT_MARKS = 'setDefaultMarks',
   STYLE = 'style',
