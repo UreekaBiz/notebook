@@ -12,10 +12,7 @@ import { isInlineNodeWithContent, NotebookSchemaType } from '@ureeka-notebook/we
 
 // == Class =======================================================================
 class InlineNodeWithContent {
-  constructor(public inBetweenInlineNodes: boolean) {
-    // whether the selection is currently in between two inline Nodes with Content
-    this.inBetweenInlineNodes = inBetweenInlineNodes;
-  }
+  constructor(public inBetweenInlineNodes: boolean) {/*nothing additional*/}
 
   apply(tr: Transaction, thisPluginState: InlineNodeWithContent, oldEditorState: EditorState, newEditorState: EditorState) { /*produce a new plugin state*/
     if(!tr.selection.empty) {
@@ -48,7 +45,7 @@ export const InlineNodeWithContentPlugin = () => {
 
     // -- State -------------------------------------------------------------------
     state: {
-      init(_, state) { return new InlineNodeWithContent(false/*default not in between inline Nodes with Content */); },
+      init(_, state) { return new InlineNodeWithContent(false/*default not in between inline Nodes with Content*/); },
       apply(transaction, thisPluginState, oldState, newState) { return thisPluginState.apply(transaction, thisPluginState, oldState, newState); },
     },
 
