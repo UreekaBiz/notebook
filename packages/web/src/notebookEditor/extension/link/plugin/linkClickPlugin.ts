@@ -23,7 +23,7 @@ type LinkClickMeta = { isClickable: boolean; };
 
 // == Class =======================================================================
 class LinkClick {
-  constructor(public isClickable: boolean ) { this.isClickable = isClickable; }
+  constructor(public isClickable: boolean ) {/*nothing additional*/}
 
   apply(tr: Transaction, thisPluginState: LinkClick, oldEditorState: EditorState, newEditorState: EditorState) { /*produce a new plugin state*/
     const { isClickable } = getLinkClickMeta(tr);
