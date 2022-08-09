@@ -2,7 +2,7 @@ import { useToast, Box, Button, Flex, Modal, ModalBody, ModalCloseButton, ModalC
 import { useEffect, useState } from 'react';
 import { FiUsers } from 'react-icons/fi';
 
-import { areNotebookShareRolesEqual, getNotebookShareRoles, getLogger, userProfileComparator, Logger, NotebookService, ObjectTuple, ShareRole, UserIdentifier, UserProfilePublic, UserProfileService, MAX_NOTEBOOK_SHARE_USERS } from '@ureeka-notebook/web-service';
+import { getNotebookShareRoles, getLogger, mapEquals, userProfileComparator, Logger, NotebookService, ObjectTuple, ShareRole, UserIdentifier, UserProfilePublic, UserProfileService, MAX_NOTEBOOK_SHARE_USERS } from '@ureeka-notebook/web-service';
 
 import { useAuthedUser } from 'authUser/hook/useAuthedUser';
 import { useNotebook } from 'notebook/hook/useNotebook';
@@ -37,20 +37,19 @@ export const ShareNotebookDialog: React.FC = () => {
   const isMounted = useIsMounted();
 
   // ..............................................................................
-  // Compare the initial value of the Roles from Notebook with the current state
+  // compares the initial value of the Roles from Notebook with the current state
   const isDirty = (shareRoles !== null)/*not dirty if not loaded yet */ &&
-                  !areNotebookShareRolesEqual(getNotebookShareRoles(notebook), removeUserPublicProfilesFromMap(shareRoles));
+                  !mapEquals(getNotebookShareRoles(notebook), removeUserPublicProfilesFromMap(shareRoles));
 
-  // Current auth'ed User has the Creator Role
+  // current auth'ed User has the Creator Role
   const isCreator = authedUser?.authedUser.userId === notebook.createdBy;
 
   // == Effect ====================================================================
   // resolves (loads) the User Profile for the initial Roles
   useEffect(() => {
     if(!isModalOpen) return/*nothing to do*/;
-    // This useEffect can be re-run if any of the dependencies changes, a flag must
-    // be used to indicate if this is the current effect in order to avoid race
-    // conditions.
+    // can be re-run if any of the dependencies changes. A flag must be used to
+    // indicate if this is the current effect in order to avoid race conditions
     let isCurrentEffect = true;
     const resolveUsersProfiles = async () => {
       // gets the Profile and store if in the map for each User
@@ -81,7 +80,7 @@ export const ShareNotebookDialog: React.FC = () => {
 
     resolveUsersProfiles();
     return () => { isCurrentEffect = false/*by definition*/; };
-    // NOTE: Only executed when component is mounted. If this is meant to be executed
+    // NOTE: only executed when component is mounted. If this is meant to be executed
     //       each time the Notebook gets updated update the dependency array below
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [isModalOpen]);
@@ -97,7 +96,7 @@ export const ShareNotebookDialog: React.FC = () => {
   // -- Modal handlers ------------------------------------------------------------
   const handleOpen = () => setIsModalOpen(true);
   const handleClose = () => {
-    // Prevent modal from being closed while loading
+    // prevent modal from being closed while loading
     if(status === 'loading') return/*nothing to do*/;
     if(isDirty) { setIsAYSOpen(true); return/*nothing else to do*/; }
 
@@ -114,7 +113,7 @@ export const ShareNotebookDialog: React.FC = () => {
   };
 
   // -- Role handlers -------------------------------------------------------------
-  // Add new record of userId and current Role.
+  // add new record of userId and current Role
   const handleUserProfileSelect = (userId: UserIdentifier, role: ShareRole, userProfile: UserProfilePublic) => {
     const newShareRoles = new Map(shareRoles);
     newShareRoles.set(userId, { role, userProfile });
