@@ -4,7 +4,7 @@ import { nodeToTagId, AttributeType, DemoAsyncNodeType } from '@ureeka-notebook/
 // == Common Element ==============================================================
 export const createTextSpan = (node: DemoAsyncNodeType) => {
   const textSpan = document.createElement('span');
-  textSpan.setAttribute('id', nodeToTagId(node));
-  textSpan.innerHTML = node.attrs[AttributeType.Text] ?? ''/*default none*/;
+        textSpan.setAttribute('id', nodeToTagId(node));
+        textSpan.innerHTML = node.attrs[AttributeType.Text] ?? ''/*default none*/;
   return textSpan;
 };

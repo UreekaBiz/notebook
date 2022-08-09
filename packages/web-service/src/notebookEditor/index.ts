@@ -129,7 +129,7 @@ export {
   isAsyncNode,
 
   CodeBlockNodeType,
-  getCodeblockNodeType,
+  getCodeBlockNodeType,
   isCodeBlockNode,
 
   CodeBlockAsyncNodeType,

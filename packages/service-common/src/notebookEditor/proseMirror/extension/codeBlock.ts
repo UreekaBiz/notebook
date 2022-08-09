@@ -83,9 +83,9 @@ export const isCodeBlockAttributes = (attrs: any): attrs is CodeBlockAttributes 
 export type CodeBlockNodeType = ProseMirrorNode<NotebookSchemaType> & { attrs: CodeBlockAttributes; };
 export const isCodeBlockNode = (node: ProseMirrorNode<NotebookSchemaType>): node is CodeBlockNodeType => node.type.name === NodeName.CODEBLOCK;
 
-export const getCodeblockNodeType = (schema: NotebookSchemaType) => schema.nodes[NodeName.CODEBLOCK];
-export const createCodeblockNode = (schema: NotebookSchemaType, attributes?: CodeBlockAttributes, content?: ProseMirrorNodeContent, marks?: Mark<NotebookSchemaType>[]) =>
-  getCodeblockNodeType(schema).create(attributes, content, marks);
+export const getCodeBlockNodeType = (schema: NotebookSchemaType) => schema.nodes[NodeName.CODEBLOCK];
+export const createCodeBlockNode = (schema: NotebookSchemaType, attributes?: CodeBlockAttributes, content?: ProseMirrorNodeContent, marks?: Mark<NotebookSchemaType>[]) =>
+  getCodeBlockNodeType(schema).create(attributes, content, marks);
 
 
 // -- JSON Node Type --------------------------------------------------------------
