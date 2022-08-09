@@ -1,6 +1,7 @@
 import * as Validate from 'yup';
 
 import { createApplicationError } from './error';
+import { generateShortUuid } from './uuid';
 
 // common / shared types
 // ********************************************************************************
@@ -40,3 +41,5 @@ export const Identifier_Schema =
         .required();
 
 export const SystemUserId: Identifier = 'SystemUser'/*not guaranteed to be unique within all id-spaces but highly unlikely*/;
+// Appends a random string to the end of the User Id to make it unique between sessions.
+export const getRandomSystemUserId = (): Identifier => `${SystemUserId}-${generateShortUuid()}`/*not guaranteed to be unique within all id-spaces but highly unlikely*/;

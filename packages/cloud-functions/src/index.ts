@@ -28,4 +28,5 @@ export * from './migration/task';
 export * from './notebook/callable';
 export * from './notebook/task';
 export * from './notebookEditor/onCreate';
+export * from './notebookEditor/callable';
 export * from './export/schedule';
