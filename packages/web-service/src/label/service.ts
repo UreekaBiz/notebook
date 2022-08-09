@@ -1,20 +1,21 @@
 import { lastValueFrom, Observable } from 'rxjs';
 
-import { Label, LabelIdentifier, LabelTuple, ObjectTuple, LabelPublished, LabelPublishedTuple, LabelNotebookTuple, NotebookIdentifier, NotebookTuple, ShareRole, UserIdentifier } from '@ureeka-notebook/service-common';
+import { Label, LabelIdentifier, LabelTuple, ObjectTuple, LabelPublished, LabelPublishedTuple, LabelNotebookTuple, NotebookIdentifier, NotebookPublishedTuple, NotebookTuple, ShareRole, UserIdentifier } from '@ureeka-notebook/service-common';
 
 import { getLogger, ServiceLogger } from '../logging';
 import { ApplicationError } from '../util/error';
+import { paginatedQuery, Pagination } from '../util/observablePaginatedCollection';
 import { Scrollable, scrollableQuery } from '../util/observableScrolledCollection';
 import { labelNotebookPublishedQuery, labelNotebookQuery, labelPublishedQuery, labelQuery } from './datastore';
 import { labelCreate, labelDelete, labelNotebookAdd, labelNotebookRemove, labelNotebookReorder, labelShare, labelUpdate } from './function';
-import { labelById$, labelNotebooksPublishedSnapshot$, labelNotebooksSnapshot$, labelOnceById$, labelPublishedById$, labelPublishedOnceById$, labelPublishedsQuery$, labelsQuery$, notebooksSnapshot$ } from './observable';
+import { labelById$, labelNotebooksSnapshot$, labelOnceById$, labelPublishedById$, labelPublishedOnceById$, labelPublishedsQuery$, labelsQuery$, notebookPublishedsSnapshot$, notebooksSnapshot$ } from './observable';
 import { Label_Create, Label_Update, LabelFilter, LabelPublishedFilter } from './type';
-import { paginatedQuery, Pagination } from '../util/observablePaginatedCollection';
 
 const log = getLogger(ServiceLogger.LABEL);
 
 // ********************************************************************************
 export class LabelService {
+  protected static readonly DEFAULT_PAGE_SIZE = 24/*guess*/;
   protected static readonly DEFAULT_SCROLL_SIZE = 24/*guess*/;
 
   // == Singleton =================================================================
@@ -56,7 +57,7 @@ export class LabelService {
    * @param pageSize the number of Notebooks returned per page
    * @returns {@link Pagination} over the collection of {@link LabelNotebook}s
    */
-  public onLabelNotebooks(labelId: LabelIdentifier, pageSize: number = LabelService.DEFAULT_SCROLL_SIZE): Pagination<LabelNotebookTuple> {
+  public onLabelNotebooks(labelId: LabelIdentifier, pageSize: number = LabelService.DEFAULT_PAGE_SIZE): Pagination<LabelNotebookTuple> {
     return paginatedQuery(labelNotebookQuery(labelId), labelNotebooksSnapshot$, pageSize,
                           `Label (${labelId}}) Notebooks`);
   }
@@ -69,7 +70,8 @@ export class LabelService {
    * @param pageSize the number of Notebooks returned per batch
    * @returns {@link Pagination} over the collection of {@link Notebook}s
    */
-  public onNotebooks(labelId: LabelIdentifier, pageSize: number = LabelService.DEFAULT_SCROLL_SIZE): Pagination<NotebookTuple> {
+  public onNotebooks(labelId: LabelIdentifier, pageSize: number = LabelService.DEFAULT_PAGE_SIZE): Pagination<NotebookTuple> {
+    // NOTE: this must go through LabelNotebook since that's what has the ordering
     return paginatedQuery(labelNotebookQuery(labelId), notebooksSnapshot$, pageSize,
                           `Label (${labelId}}) Notebooks`);
   }
@@ -96,13 +98,14 @@ export class LabelService {
 
   // .. Notebook ..................................................................
   /**
-   * @param labelId the identifier of the {@link Label} for which the Published
-   *        {@link LabelNotebook}s are desired.
+   * @param labelId the identifier of the {@link Label} of the desired Published
+   *        {@link Notebook}s
    * @param pageSize the number of Published Notebooks returned per page
    * @returns {@link Pagination} over the collection of {@link LabelNotebook}s
    */
-  public onLabelNotebooksPublished(labelId: LabelIdentifier, pageSize: number = LabelService.DEFAULT_SCROLL_SIZE): Pagination<LabelNotebookTuple> {
-    return paginatedQuery(labelNotebookPublishedQuery(labelId), labelNotebooksPublishedSnapshot$, pageSize,
+  public onNotebookPublisheds(labelId: LabelIdentifier, pageSize: number = LabelService.DEFAULT_PAGE_SIZE): Pagination<NotebookPublishedTuple> {
+    // NOTE: this must go through LabelNotebook since that's what has the ordering
+    return paginatedQuery(labelNotebookPublishedQuery(labelId), notebookPublishedsSnapshot$, pageSize,
                           `Published Label (${labelId}}) Published Notebooks`);
   }
 
