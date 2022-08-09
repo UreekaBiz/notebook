@@ -135,7 +135,7 @@ service cloud.firestore {
     // NOTE: in theory, since 'viewers' *must* include anyone that can either view,
     //       edit or is the creator, the other checks are superfluous. *BUT* it
     //       seems that Firestore requires them to be aligned with the query so
-    //       therefore they're requried.
+    //       therefore they're required.
     function canUserViewNotebook(userId, notebook) {
       return   (userId in notebook.viewers)
             || (userId in notebook.editors)
@@ -170,7 +170,7 @@ service cloud.firestore {
         // NOTE: since the NotebookVersion is written by the client, it *must* be
         //       validated to ensure data integrity. At a minimum, security considerations
         //       must be accounted for. Unfortunately, semantic considerations such
-        //       as that the index is monotoically increasing cannot be easily enforced
+        //       as that the index is monotonically increasing cannot be easily enforced
         function isValid(version) {
           return    (version.schemaVersion != null) // schema version must exist (its value cannot be assured)
                  && (version.index != null) // index must exist (it's not possible to validate that it matches the hash of the versionId)
