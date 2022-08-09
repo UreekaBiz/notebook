@@ -11,6 +11,7 @@ import { Heading } from 'notebookEditor/extension/heading/Heading';
 import { Highlight } from 'notebookEditor/extension/highlight/Highlight';
 import { History } from 'notebookEditor/extension/history/History';
 import { Image } from 'notebookEditor/extension/image/Image';
+import { InlineNodeWithContent } from 'notebookEditor/extension/inlineNodeWithContent/InlineNodeWithContent';
 import { Link } from 'notebookEditor/extension/link/Link';
 import { MarkHolder } from 'notebookEditor/extension/markHolder/MarkHolder';
 import { NodeViewRemoval } from 'notebookEditor/extension/nodeViewRemoval/NodeViewRemoval';
@@ -43,6 +44,7 @@ export const editorDefinition = {
     Highlight,
     History,
     Image,
+    InlineNodeWithContent,
     Link,
     MarkHolder,
     NodeViewRemoval,
