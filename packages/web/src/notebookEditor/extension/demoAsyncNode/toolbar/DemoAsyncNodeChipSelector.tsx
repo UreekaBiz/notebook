@@ -68,7 +68,7 @@ export const DemoAsyncNodeChipSelector: React.FC<Props> = ({ editor }) => {
   // == UI ========================================================================
   return (
     <ChipTool
-      name='Referenced CodeBlocks'
+      name='Referenced Code Blocks'
       width='100%'
       marginTop='10px'
       currentChips={selectedChips}
