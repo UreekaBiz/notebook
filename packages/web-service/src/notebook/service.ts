@@ -1,6 +1,6 @@
 import { lastValueFrom, Observable } from 'rxjs';
 
-import { Notebook, NotebookIdentifier, NotebookPublishedContent, NotebookPublishedTuple, NotebookRole, NotebookTuple, ObjectTuple, UserIdentifier } from '@ureeka-notebook/service-common';
+import { Notebook, NotebookIdentifier, NotebookPublishedContent, NotebookPublishedTuple, NotebookTuple, ObjectTuple, ShareRole, UserIdentifier } from '@ureeka-notebook/service-common';
 
 import { getLogger, ServiceLogger } from '../logging';
 import { ApplicationError } from '../util/error';
@@ -161,10 +161,10 @@ export class NotebookService {
   // == Share =====================================================================
   /**
    * Updates the share for the Notebook with the specified {@link NotebookIdentifier}.
-   * This cannot be used to change the {@link NotebookRole#Creator} of the Notebook.
+   * This cannot be used to change the {@link ShareRole#Creator} of the Notebook.
    *
    * @param share identifies the {@link Notebook} by {@link NotebookIdentifier} that
-   *        is to be shared and the map of {@link UserIdentifier}s to {@link NotebookRole}s
+   *        is to be shared and the map of {@link UserIdentifier}s to {@link ShareRole}s
    *        that defines the all sharing Roles for the {@link Notebook}
    * @throws a {@link ApplicationError}:
    * - `permission-denied` if the caller is not the creator of the Notebook
@@ -176,7 +176,7 @@ export class NotebookService {
    * - `data/deleted` if the {@link Notebook} has already been flagged as deleted
    * - `datastore/write` if there was an error updating the share for the Notebook
    */
-  public async shareNotebook(share: { notebookId: NotebookIdentifier; userRoles: Map<UserIdentifier, NotebookRole>; }) {
+  public async shareNotebook(share: { notebookId: NotebookIdentifier; userRoles: Map<UserIdentifier, ShareRole>; }) {
     await notebookShare({ notebookId: share.notebookId, userRoles: Object.fromEntries(share.userRoles) });
   }
 

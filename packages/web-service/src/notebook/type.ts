@@ -14,7 +14,6 @@ export {
   NotebookPublished,
   NotebookPublishedContent,
   NotebookPublishedTuple,
-  NotebookRole,
   NotebookSchemaVersion,
   NotebookTuple,
   NotebookType,

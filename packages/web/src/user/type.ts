@@ -1,9 +1,10 @@
-import { NotebookRole } from '@ureeka-notebook/web-service';
+import { ShareRole } from '@ureeka-notebook/web-service';
 
 // ********************************************************************************
-export const ReadableNotebookRole: Record<NotebookRole, string> = {
-  [NotebookRole.Creator]: 'Creator',
-  [NotebookRole.Editor]: 'Editor',
-  [NotebookRole.Viewer]: 'Viewer',
+// maps from the enum to a UI-friendly string
+export const ReadableNotebookRole: Record<ShareRole, string> = {
+  [ShareRole.Creator]: 'Creator',
+  [ShareRole.Editor]: 'Editor',
+  [ShareRole.Viewer]: 'Viewer',
 };
-export const getReadableNotebookRole = (role: NotebookRole) => ReadableNotebookRole[role];
+export const getReadableNotebookRole = (role: ShareRole) => ReadableNotebookRole[role];

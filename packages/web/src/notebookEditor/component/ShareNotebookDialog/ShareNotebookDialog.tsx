@@ -2,7 +2,7 @@ import { useToast, Box, Button, Flex, Modal, ModalBody, ModalCloseButton, ModalC
 import { useEffect, useState } from 'react';
 import { FiUsers } from 'react-icons/fi';
 
-import { areNotebookShareRolesEqual, getNotebookShareRoles, getLogger, userProfileComparator, NotebookService, NotebookRole, Logger, ObjectTuple, UserIdentifier, UserProfilePublic, UserProfileService, MAX_NOTEBOOK_SHARE_USERS } from '@ureeka-notebook/web-service';
+import { areNotebookShareRolesEqual, getNotebookShareRoles, getLogger, userProfileComparator, Logger, NotebookService, ObjectTuple, ShareRole, UserIdentifier, UserProfilePublic, UserProfileService, MAX_NOTEBOOK_SHARE_USERS } from '@ureeka-notebook/web-service';
 
 import { useAuthedUser } from 'authUser/hook/useAuthedUser';
 import { useNotebook } from 'notebook/hook/useNotebook';
@@ -15,7 +15,7 @@ import { UserProfileListItem } from 'user/component/UserProfileListItem';
 const log = getLogger(Logger.NOTEBOOK);
 
 // ********************************************************************************
-type UserRole = { role: NotebookRole; userProfile: UserProfilePublic; };
+type UserRole = { role: ShareRole; userProfile: UserProfilePublic; };
 export const ShareNotebookDialog: React.FC = () => {
   const authedUser = useAuthedUser();
   const { notebookId, notebook } = useNotebook();
@@ -25,7 +25,7 @@ export const ShareNotebookDialog: React.FC = () => {
   // NOTE: shareRoles must have the User's profile in this map since it's
   //       needed to order the list of Users
   const [shareRoles, setShareRoles] = useState<Map<UserIdentifier, UserRole> | null/*not loaded yet*/>(null/*initially none*/);
-  const [currentRole, setCurrentRole] = useState<NotebookRole>(NotebookRole.Viewer/*default role*/);
+  const [currentRole, setCurrentRole] = useState<ShareRole>(ShareRole.Viewer/*default role*/);
   const [status, setStatus] = useAsyncStatus();
 
   // Modal state
@@ -63,7 +63,7 @@ export const ShareNotebookDialog: React.FC = () => {
           } catch(error) {
             // if the Public Profile fails to load, the User will simply not be
             // shown in the list. This could be the case that the User no longer
-            // exists but the NotebookRoles still have a reference for it. In this
+            // exists but the ShareRoles still have a reference for it. In this
             // case when the Creator update the roles it will be removed and the
             // roles will be 'self-healing'
             // NOTE: log for server-side forensics
@@ -90,7 +90,7 @@ export const ShareNotebookDialog: React.FC = () => {
   const resetState = () => {
     // Reset initial value
     setShareRoles(null/*initial value*/);
-    setCurrentRole(NotebookRole.Viewer);
+    setCurrentRole(ShareRole.Viewer);
     setStatus('idle');
   };
 
@@ -115,7 +115,7 @@ export const ShareNotebookDialog: React.FC = () => {
 
   // -- Role handlers -------------------------------------------------------------
   // Add new record of userId and current Role.
-  const handleUserProfileSelect = (userId: UserIdentifier, role: NotebookRole, userProfile: UserProfilePublic) => {
+  const handleUserProfileSelect = (userId: UserIdentifier, role: ShareRole, userProfile: UserProfilePublic) => {
     const newShareRoles = new Map(shareRoles);
     newShareRoles.set(userId, { role, userProfile });
 
@@ -128,7 +128,7 @@ export const ShareNotebookDialog: React.FC = () => {
     setShareRoles(newShareRoles);
   };
 
-  const handleCurrentRoleChange = (role: NotebookRole) => setCurrentRole(role);
+  const handleCurrentRoleChange = (role: ShareRole) => setCurrentRole(role);
 
   const handleSaveChanges = async () => {
     if(shareRoles === null) { log.error(`Execute handleSaveChanges in Notebook (${notebookId}) but Roles is null.`); return/*nothing to do*/; }
@@ -282,8 +282,8 @@ export const ShareNotebookDialog: React.FC = () => {
 // removes the User from the roles
 // NOTE: This function lives here since it's only needed to map the shareRoles to
 //       the service format. If it's needed elsewhere, move it to a separate file.
-const removeUserPublicProfilesFromMap = (shareRoles: Map<UserIdentifier, UserRole>): Map<UserIdentifier, NotebookRole> => {
-  const mappedSharedRoles = new Map<UserIdentifier, NotebookRole>();
+const removeUserPublicProfilesFromMap = (shareRoles: Map<UserIdentifier, UserRole>): Map<UserIdentifier, ShareRole> => {
+  const mappedSharedRoles = new Map<UserIdentifier, ShareRole>();
   shareRoles.forEach(({ role }, userId) => mappedSharedRoles.set(userId, role));
 
   return mappedSharedRoles;
