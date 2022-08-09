@@ -1,15 +1,14 @@
 import { Transaction } from 'firebase-admin/firestore';
 import { logger } from 'firebase-functions';
 
-import { NotebookIdentifier } from '@ureeka-notebook/service-common';
+import { NotebookIdentifier, NotebookVersion_Storage } from '@ureeka-notebook/service-common';
 
 import { lastVersionQuery } from './datastore';
 
 // ********************************************************************************
-// ================================================================================
-// returns the last known Version using the specified Transaction. If there are no
-// existing Versions then `undefined`
-export const getLastVersion = async (transaction: Transaction, notebookId: NotebookIdentifier) => {
+// == Get =========================================================================
+// returns the last known Version using the specified Transaction
+export const getLastVersion = async (transaction: Transaction, notebookId: NotebookIdentifier): Promise<NotebookVersion_Storage | undefined/*no Versions*/> => {
   const snapshot = await transaction.get(lastVersionQuery(notebookId));
   if(snapshot.empty) return undefined/*by contract*/;
 
