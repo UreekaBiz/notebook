@@ -57,6 +57,7 @@ const contextVariables = [
 //       variable name.
 const commonVariables = [
   'NOTEBOOK_CHECKPOINT_N_VERSIONS',
+  'NOTEBOOK_VERSION_MAX_ATTEMPTS',
 ];
 
 // ................................................................................

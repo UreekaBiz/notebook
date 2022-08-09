@@ -1,12 +1,16 @@
 import { EditorState } from 'prosemirror-state';
 
-import { getEditorState, getRandomSystemUserId, sleep,  ClientIdentifier, Command, NotebookIdentifier, UserIdentifier, NO_NOTEBOOK_VERSION } from '@ureeka-notebook/service-common';
+import { contentToStep, getSchema, getEditorState, getRandomSystemUserId, sleep,  ClientIdentifier, Command, NotebookIdentifier, UserIdentifier, NO_NOTEBOOK_VERSION, nodeToContent } from '@ureeka-notebook/service-common';
 
 import { notebookDocument } from '../notebook/datastore';
+import { getEnv } from '../util/environment';
 import { ApplicationError } from '../util/error';
 import { getSnapshot } from '../util/firestore';
 import { getNotebookContent } from './checkpoint';
+import { lastVersionsQuery } from './datastore';
 import { getLastVersion, writeVersions } from './version';
+
+const MAX_ATTEMPTS = Math.max(0, Number(getEnv('NOTEBOOK_VERSION_MAX_ATTEMPTS', '5'/*guess*/)));
 
 // ********************************************************************************
 // == Type ========================================================================
@@ -44,42 +48,83 @@ export const wrapCommandFunction = async (userId: UserIdentifier, notebookId: No
 
     // gets the last version of the Notebook and gets the reference for the next
     // logical version. If no version exists then the next version is the first
-    const lastVersion = await getLastVersion(undefined/*no transaction*/, notebookId),
-          lastVersionIndex = lastVersion?.index;
-    const nextVersionIndex = lastVersionIndex ? lastVersionIndex + 1 : NO_NOTEBOOK_VERSION/*start of document if no last version*/;
+    let currentVersion = await getLastVersion(undefined/*no transaction*/, notebookId),
+        currentVersionIndex = currentVersion?.index;
 
     // gets the content at the given version if it exists.
     if(collaborationDelay.readDelayMs > 0) await sleep(collaborationDelay.writeDelayMs);
-    const notebookContent = lastVersionIndex ? await getNotebookContent(undefined/*no transaction*/, notebook.schemaVersion, notebookId, lastVersionIndex) : undefined/*no content*/;
-    const editorState = getEditorState(notebook.schemaVersion, notebookContent);
-    if(!editorState) throw new ApplicationError('data/integrity', `Cannot create editorState for Notebook (${notebookId}) for version (${lastVersion}).`);
+    const notebookContent = currentVersionIndex ? await getNotebookContent(undefined/*no transaction*/, notebook.schemaVersion, notebookId, currentVersionIndex) : undefined/*no content*/;
+    let editorState = getEditorState(notebook.schemaVersion, notebookContent);
+    if(!editorState) throw new ApplicationError('data/integrity', `Cannot create editorState for Notebook (${notebookId}) for version (${currentVersion}).`);
 
     // Creates a unique identifier for the clientId.
     // FIXME: Consistency
     const clientId = getRandomSystemUserId();
 
-    const command = await func({ clientId, editorState, notebookId, userId, versionIndex: nextVersionIndex });
-    // create a new transaction
-    const tr = editorState.tr;
-    // execute the command in the transaction
-    command(tr);
+    let written = false/*not written by default*/;
+    // try to write the steps
+    for(let i=0;i<MAX_ATTEMPTS;i++) {
+      // get the missing versions from the last recorded version.
+      const versionSnapshot = await getSnapshot(undefined/*no transaction*/, lastVersionsQuery(notebookId, currentVersionIndex ?? NO_NOTEBOOK_VERSION - 1/*all existing versions*/));
+      const versions = versionSnapshot.docs.map(doc => doc.data());
+      // update current version to the most up to date version.
+      currentVersion = versions.reduce((acc, version) => {
+        if(!acc || acc.index < version.index) return version;
+        return acc;
+      }, currentVersion);
+      currentVersionIndex = currentVersion?.index;
+      const nextVersionIndex = currentVersionIndex ? currentVersionIndex + 1 : NO_NOTEBOOK_VERSION/*start of document if no last version*/;
 
-    if(collaborationDelay.writeDelayMs > 0) await sleep(collaborationDelay.writeDelayMs);
-    // TODO: Implement system to get new steps and sync in case of failure.
-    // write the versions from the steps generated on the command
-    await writeVersions(
-      notebookId,
-      notebook.schemaVersion/*matching Notebook for consistency*/,
-      userId,
-      clientId,
-      nextVersionIndex,
-      tr.steps
-    );
+      const schema = getSchema(notebook.schemaVersion);
+      let { doc } = editorState;
+      // collapse the steps into the document to create a new editorState.
+      versions.forEach(version => {
+        const prosemirrorStep = contentToStep(schema, version.content);
+
+        // ProseMirror takes a ProsemirrorStep and applies it to the Document as the
+        // last Step generating a new Document
+        // NOTE: this process can result in failure for multiple reasons such as the
+        //       Schema is invalid or the Step tried collide with another Step and the
+        //       result is invalid.
+        // NOTE: if the process fails then that failed Step can be safely ignored since
+        //       the ClientDocument will ignore it as well
+        const stepResult = prosemirrorStep.apply(doc);
+        if(stepResult.failed || !stepResult.doc) { console.error(`Invalid Notebook (${notebook.schemaVersion}) Version (${version.index}) '${version.content}' while performing command ${label}. Reason: ${stepResult.failed}. Ignoring.`); return/*ignore Version / Step*/; }
+        doc = stepResult.doc;
+      });
+      // create an editorState from the newly created document
+      editorState = getEditorState(notebook.schemaVersion, nodeToContent(doc));
+      if(!editorState) throw new ApplicationError('data/integrity', `Cannot create editorState for Notebook (${notebookId}) for version (${currentVersion}).`);
+
+      const command = await func({ clientId, editorState, notebookId, userId, versionIndex: nextVersionIndex });
+      // create a new transaction
+      const tr = editorState.tr;
+      // execute the command in the transaction
+      command(tr);
+
+      try {
+        if(collaborationDelay.writeDelayMs > 0) await sleep(collaborationDelay.writeDelayMs);
+        // write the versions from the steps generated on the command
+        await writeVersions(
+          notebookId,
+          notebook.schemaVersion/*matching Notebook for consistency*/,
+          userId,
+          clientId,
+          nextVersionIndex,
+          tr.steps
+        );
+        written = true;
+        break/*success - stop trying*/;
+      } catch(error){
+        if(error instanceof ApplicationError) continue/*handled error, try to write again*/;
+        throw error;
+      }
+    }
+    if(!written) throw new ApplicationError('functions/aborted', `Could not perform command ${label} for notebook (${notebookId}) for User (${userId}) due to too many attempts.`);
   } catch(error) {
     if(error instanceof ApplicationError) throw error;
     throw new ApplicationError('datastore/write', `Error performing command ${label} for notebook (${notebookId}) for User (${userId}). Reason: `, error);
   }
-
   return notebookId;
 };
 

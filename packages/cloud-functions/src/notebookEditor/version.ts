@@ -23,38 +23,37 @@ export const getLastVersion = async (transaction: Transaction | undefined/*outsi
 // == Write =======================================================================
 // writes the batch of ProseMirror Steps as NotebookVersions
 export const writeVersions = async (
-  notebookId: NotebookIdentifier, schemaVersion: NotebookSchemaVersion, userId: UserIdentifier,
-  clientId: ClientIdentifier, initialVersionIndex: number, pmSteps: ProseMirrorStep[]
-  ): Promise<void> => {
-    return firestore.runTransaction(async transaction => {
-      // NOTE: only checks against first Version since if that doesn't exist then no
-      //       other Version can exist by definition (since monotonically increasing)
-      // NOTE: if other Versions *do* get written as this writes then the Transaction
-      //       will be aborted internally by Firestore (by definition). When re-run
-      //       then the Version would exist and this returns false.
-      const firstVersionId = generateNotebookVersionIdentifier(initialVersionIndex),
-            firstVersionRef = versionDocument(notebookId, firstVersionId);
-      const snapshot = await transaction.get(firstVersionRef);
-      // log.debug(`Trying to write Notebook Versions ${startingIndex} - ${startingIndex + versions.length - 1}`);
-      if(snapshot.exists) throw new ApplicationError('functions/already-exists', `Step with index ${initialVersionIndex} already exists.`); /*abort -- NotebookVersion with startingIndex already exists*/;
+notebookId: NotebookIdentifier, schemaVersion: NotebookSchemaVersion, userId: UserIdentifier,
+clientId: ClientIdentifier, initialVersionIndex: number, pmSteps: ProseMirrorStep[]
+): Promise<void> => {
+  return firestore.runTransaction(async transaction => {
+    // NOTE: only checks against first Version since if that doesn't exist then no
+    //       other Version can exist by definition (since monotonically increasing)
+    // NOTE: if other Versions *do* get written as this writes then the Transaction
+    //       will be aborted internally by Firestore (by definition). When re-run
+    //       then the Version would exist and this returns false.
+    const firstVersionId = generateNotebookVersionIdentifier(initialVersionIndex),
+          firstVersionRef = versionDocument(notebookId, firstVersionId);
+    const snapshot = await transaction.get(firstVersionRef);
+    // log.debug(`Trying to write Notebook Versions ${startingIndex} - ${startingIndex + versions.length - 1}`);
+    if(snapshot.exists) throw new ApplicationError('functions/already-exists', `Step with index ${initialVersionIndex} already exists.`); /*abort -- NotebookVersion with startingIndex already exists*/;
 
+    pmSteps.forEach((pmStep, index) => {
+      const versionIndex = initialVersionIndex + index;
+      const versionId = generateNotebookVersionIdentifier(versionIndex),
+            versionDocumentRef = versionDocument(notebookId, versionId);
 
-      pmSteps.forEach((pmStep, index) => {
-        const versionIndex = initialVersionIndex + index;
-        const versionId = generateNotebookVersionIdentifier(versionIndex),
-              versionDocumentRef = versionDocument(notebookId, versionId);
+      const version: NotebookVersion_Write = {
+        schemaVersion,
 
-        const version: NotebookVersion_Write = {
-          schemaVersion,
+        index: versionIndex,
+        clientId,
+        content: JSON.stringify(pmStep.toJSON())/*FIXME: refactor into a function*/,
 
-          index: versionIndex,
-          clientId,
-          content: JSON.stringify(pmStep.toJSON())/*FIXME: refactor into a function*/,
-
-          createdBy: userId,
-          createTimestamp: ServerTimestamp/*by contract*/,
-        };
-        transaction.create(versionDocumentRef, version);
-      });
+        createdBy: userId,
+        createTimestamp: ServerTimestamp/*by contract*/,
+      };
+      transaction.create(versionDocumentRef, version);
     });
-  };
+  });
+};
