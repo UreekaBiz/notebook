@@ -3,6 +3,10 @@
 // (which has different API's for the client and server)
 // *********v**********************************************************************
 
+// REF: https://firebase.google.com/docs/firestore/query-data/queries#array_membership
+export const MAX_ARRAY_CONTAINS_ANY = 10/*see REF above*/;
+
+// ================================================================================
 // REF: https://firebase.google.com/docs/reference/node/firebase.firestore.FieldValue
 export declare class FieldValue {
   static arrayRemove(...elements: any[]): FieldValue;

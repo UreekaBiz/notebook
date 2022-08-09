@@ -51,6 +51,7 @@ const endpointNames = [
 
   'notebookCreate',
   'notebookDelete',
+  'notebookHashtag',
   'notebookPublish',
   'notebookShare',
 

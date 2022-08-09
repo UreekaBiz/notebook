@@ -61,6 +61,10 @@ export {
   emailSchema,
   urlSchema,
 
+  // SEE: @ureeka-notebook/service-common: util/set.ts
+  differenceSet,
+  intersectionSet,
+
   // SEE: @ureeka-notebook/service-common: util/share.ts
   ShareRole,
 

@@ -13,6 +13,7 @@ export * from './prefix';
 export * from './rtdb';
 export * from './schema';
 export * from './search';
+export * from './set';
 export * from './share';
 export * from './string';
 export * from './throttle';

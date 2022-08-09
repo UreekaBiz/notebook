@@ -1,14 +1,14 @@
 import { lastValueFrom, Observable } from 'rxjs';
 
-import { Notebook, NotebookIdentifier, NotebookRole, NotebookTuple, ObjectTuple, NotebookPublishedContent, NotebookPublishedTuple, UserIdentifier } from '@ureeka-notebook/service-common';
+import { Notebook, NotebookIdentifier, NotebookPublishedContent, NotebookPublishedTuple, NotebookRole, NotebookTuple, ObjectTuple, UserIdentifier } from '@ureeka-notebook/service-common';
 
 import { getLogger, ServiceLogger } from '../logging';
 import { ApplicationError } from '../util/error';
-import { Scrollable, scrollableQuery } from '../util/observableScrolledCollection';
-import { notebookQuery, notebookPublishedQuery } from './datastore';
-import { notebookCreate, notebookDelete, notebookShare, notebookPublish } from './function';
-import { notebookTupleById$, notebookOnceById$,  notebooksQuery$, notebookPublishedContentTupleById$, notebookPublishedContentOnceById$, notebookPublishedsQuery$ } from './observable';
-import { Notebook_Create, NotebookFilter, Notebook_Publish, NotebookPublishedFilter } from './type';
+import { scrollableQuery, Scrollable } from '../util/observableScrolledCollection';
+import { notebookPublishedQuery, notebookQuery } from './datastore';
+import { notebookCreate, notebookDelete, notebookHashtag, notebookPublish, notebookShare } from './function';
+import { notebookTupleById$, notebookOnceById$, notebookPublishedContentTupleById$, notebookPublishedContentOnceById$, notebookPublishedsQuery$, notebooksQuery$ } from './observable';
+import { NotebookFilter, NotebookPublishedFilter, Notebook_Create, Notebook_Hashtag, Notebook_Publish } from './type';
 
 const log = getLogger(ServiceLogger.NOTEBOOK);
 
@@ -109,7 +109,7 @@ export class NotebookService {
     return publishedNotebook;
   }
 
-  // == CUD =======================================================================
+  // == Create / Delete ===========================================================
   /**
    * @param create the Notebook that is to be created
    * @returns the {@link NotebookIdentifier} for the created {@link Notebook}
@@ -136,6 +136,28 @@ export class NotebookService {
     await notebookDelete({ notebookId });
   }
 
+  // == Hashtag =====================================================================
+  /**
+   * Updates the hashtags for the Notebook with the specified {@link NotebookIdentifier}.
+   *
+   * @param hashtag identifies the {@link Notebook} by {@link NotebookIdentifier} that
+   *        is to be shared and the set (as a list) of normalized hashtags. Hashtags
+   *        do *not* include the leading '#' character. They are normalized and
+   *        duplicated server-side for sanity. The complete desired set is specified.
+   *        If hashtags are to be removed then simply submit the set without those
+   *        hashtags. To remove all hashtags then submit an empty list.
+   * @throws a {@link ApplicationError}:
+   * - `permission-denied` if the caller is not the creator of the Notebook
+   * - `not-found` if the specified {@link NotebookIdentifier} does not represent a
+   *   known {@link Notebook}
+   * - `invalid-argument` if there are more than {@link #MAX_NOTEBOOK_HASHTAGS} specified
+   * - `data/deleted` if the {@link Notebook} has already been flagged as deleted
+   * - `datastore/write` if there was an error updating the share for the Notebook
+   */
+  public async hashtagNotebook(hashtag: Notebook_Hashtag) {
+    await notebookHashtag(hashtag);
+  }
+
   // == Share =====================================================================
   /**
    * Updates the share for the Notebook with the specified {@link NotebookIdentifier}.
@@ -151,6 +173,7 @@ export class NotebookService {
    * - `invalid-argument` if caller is not identified as the creator of the Notebook
    *   or that there is no or more than one creator identified or there are more
    *   than {@link #MAX_NOTEBOOK_SHARE_USERS} identified
+   * - `data/deleted` if the {@link Notebook} has already been flagged as deleted
    * - `datastore/write` if there was an error updating the share for the Notebook
    */
   public async shareNotebook(share: { notebookId: NotebookIdentifier; userRoles: Map<UserIdentifier, NotebookRole>; }) {
@@ -166,7 +189,7 @@ export class NotebookService {
    * - `not-found` if the specified {@link NotebookIdentifier} does not represent a
    *   known {@link Notebook} or it the specified version does not represent a known
    *   {@link NotebookVersion}
-   * - `data/deleted` if the {@link Notebook} has already been flagged as deleted (FIXME!!!!)
+   * - `data/deleted` if the {@link Notebook} has already been flagged as deleted
    * - `datastore/write` if there was an error setting the deleted flag on the {@link Notebook} (FIXME!!!)
    */
   public async publishNotebook(publish: Notebook_Publish) {

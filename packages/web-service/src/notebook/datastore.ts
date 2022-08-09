@@ -1,6 +1,6 @@
 import { collection, doc, query, where, CollectionReference, Query } from 'firebase/firestore';
 
-import { isBlank, nameof, Notebook_Storage, NotebookIdentifier, NotebookPublished_Storage, NotebookPublishedContent, NOTEBOOKS, NOTEBOOK_PUBLISHEDS, NOTEBOOK_PUBLISHED_CONTENTS } from '@ureeka-notebook/service-common';
+import { isBlank, nameof, normalizeHashtag, Notebook_Storage, NotebookIdentifier, NotebookPublished_Storage, NotebookPublishedContent, MAX_ARRAY_CONTAINS_ANY, NOTEBOOKS, NOTEBOOK_PUBLISHEDS, NOTEBOOK_PUBLISHED_CONTENTS } from '@ureeka-notebook/service-common';
 
 import { firestore } from '../util/firebase';
 import { buildSortQuery } from '../util/firestore';
@@ -29,6 +29,7 @@ export const notebookQuery = (filter: NotebookFilter) => {
     // TODO: support substring!!
     buildQuery = query(buildQuery, where(nameof<Notebook_Storage>('name'), '==', filter.name!));
   } /* else -- 'name' was not specified in the filter */
+
   // NOTE: these are waterfall'd by design
   if(!isBlank(filter.viewableBy)) {
     buildQuery = query(buildQuery, where(nameof<Notebook_Storage>('viewers'), 'array-contains', filter.viewableBy!));
@@ -39,6 +40,11 @@ export const notebookQuery = (filter: NotebookFilter) => {
   if(!isBlank(filter.createdBy)) {
     buildQuery = query(buildQuery, where(nameof<Notebook_Storage>('createdBy'), '==', filter.createdBy!));
   } /* else -- 'createdBy' was not specified in the filter */
+
+  const hashtags = normalizeHashtags(filter.hashtags);
+  if(hashtags.size > 0) {
+    buildQuery = query(buildQuery, where(nameof<Notebook_Storage>('hashtags'), 'array-contains-any', Array.from(hashtags).slice(0, MAX_ARRAY_CONTAINS_ANY)/*bounded by contract*/));
+  } /* else -- 'hashtags' was not specified in the filter (with valid hashtags) */
 
   // if no filter is applied then both deleted and non-deleted entries are included.
   // * If only-deleted then include only deleted = true
@@ -69,12 +75,24 @@ export const notebookPublishedQuery = (filter: NotebookPublishedFilter) => {
     // TODO: support substring!!
     buildQuery = query(buildQuery, where(nameof<NotebookPublished_Storage>('title'), '==', filter.title!));
   } /* else -- 'title' was not specified in the filter */
+
   if(!isBlank(filter.createdBy)) {
     buildQuery = query(buildQuery, where(nameof<NotebookPublished_Storage>('createdBy'), '==', filter.createdBy!));
   } /* else -- 'createdBy' was not specified in the filter */
+
+  const hashtags = normalizeHashtags(filter.hashtags);
+  if(hashtags.size > 0) {
+    buildQuery = query(buildQuery, where(nameof<NotebookPublished_Storage>('hashtags'), 'array-contains-any', Array.from(hashtags).slice(0, MAX_ARRAY_CONTAINS_ANY)/*bounded by contract*/));
+  } /* else -- 'hashtags' was not specified in the filter (with valid hashtags) */
 
   // sort
   buildQuery = buildSortQuery(buildQuery, filter, nameof<NotebookPublished_Storage>('title')/*default sort field*/);
 
   return buildQuery;
 };
+
+// ................................................................................
+const normalizeHashtags = (hashtags?: string[]) =>
+  new Set((hashtags ?? []/*none*/)
+              .map(hashtag => normalizeHashtag(hashtag))
+              .filter(hashtag => !isBlank(hashtag)));
