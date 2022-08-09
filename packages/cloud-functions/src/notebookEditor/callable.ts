@@ -11,5 +11,5 @@ import { insertText } from './commands';
 export const notebookEditorInsertText = functions.runWith(SmallMemory).https.onCall(wrapCall<NotebookEditorInsertText_Rest>(
 { name: 'authUserSessionClear', schema: NotebookEditorInsertText_Rest_Schema, requiresAuth: true },
 async (data, context, userId) => {
-  await insertText(userId!/*auth'd*/, data.notebookId, data.text);
+  await insertText(userId!/*auth'd*/, data.notebookId, data.text)/*throws on error*/;
 }));
