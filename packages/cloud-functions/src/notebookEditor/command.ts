@@ -16,8 +16,12 @@ type CollaborationDelay = Readonly<{
   /** time in millis to delay before writing. No delay if <= 0 */
   writeDelayMs: number;
 }>;
-const collaborationDelay: CollaborationDelay = { readDelayMs: 0, writeDelayMs: 0 };
+const collaborationDelay: CollaborationDelay = { readDelayMs: 2000, writeDelayMs: 2000 };
 
+// function that creates a command that interacts with the given state.
+// NOTE: the returned command can be executed multiple times in an attempt to save
+//       the steps. Any heavy computation should be done on the CommandGenerator
+//       i.e. doing an async operation.
 type CommandGenerator = (props: {
   userId: UserIdentifier;
   notebookId: NotebookIdentifier;
