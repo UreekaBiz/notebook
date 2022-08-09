@@ -40,7 +40,7 @@ export const DocumentNodeRendererSpec: NodeRendererSpec<DocumentAttributes> = {
 // -- Node Type -------------------------------------------------------------------
 // NOTE: this is the only way since PM does not provide a way to specify the type
 //       of the Attributes
-export type DocumentNodeType = ProseMirrorNode<NotebookSchemaType> & {/*nothing additional*/};
+export type DocumentNodeType = ProseMirrorNode<NotebookSchemaType> & { attrs: DocumentAttributes; };
 export const isDocumentNode = (node: ProseMirrorNode<NotebookSchemaType>): node is DocumentNodeType => node.type.name === NodeName.DOC;
 
 export const getDocumentNodeType = (schema: NotebookSchemaType) => schema.nodes[NodeName.DOC];

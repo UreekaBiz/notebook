@@ -1,9 +1,12 @@
-import { generateNotebookVersionIdentifier, getRandomSystemUserId, NotebookIdentifier, NotebookVersion_Write, UserIdentifier, NO_NOTEBOOK_VERSION } from '@ureeka-notebook/service-common';
+import { logger } from 'firebase-functions';
+
+import { generateNotebookVersionIdentifier, getEditorState, getRandomSystemUserId, NotebookIdentifier, NotebookVersion_Write, UserIdentifier, NO_NOTEBOOK_VERSION } from '@ureeka-notebook/service-common';
 
 import { firestore } from '../firebase';
 import { notebookDocument } from '../notebook/datastore';
 import { ApplicationError } from '../util/error';
 import { ServerTimestamp } from '../util/firestore';
+import { getNotebookContent } from './checkpoint';
 import { versionDocument } from './datastore';
 import { getLastVersion } from './version';
 
@@ -34,6 +37,14 @@ export const insertText = async (
       const nextVersionIndex = lastVersionIndex ? lastVersionIndex + 1 : NO_NOTEBOOK_VERSION/*start of document if no last version*/,
             nextVersionId = generateNotebookVersionIdentifier(nextVersionIndex),
             nextVersionRef = versionDocument(notebookId, nextVersionId);
+
+      // gets the content at the given version if it exists.
+      const notebookContent = lastVersionIndex ? await getNotebookContent(transaction, notebook.schemaVersion, notebookId, lastVersionIndex) : undefined/*no content*/;
+      const editorState = getEditorState(notebook.schemaVersion, notebookContent);
+
+      logger.log(editorState);
+      logger.log(editorState?.doc.toJSON());
+      logger.log(editorState?.schema);
 
       // Creates a unique identifier for the clientId.
       const clientId = getRandomSystemUserId();
