@@ -3,6 +3,7 @@ import { getEditorState, getRandomSystemUserId, Command, NotebookIdentifier, Use
 import { firestore } from '../firebase';
 import { notebookDocument } from '../notebook/datastore';
 import { ApplicationError } from '../util/error';
+import { getSnapshot } from '../util/firestore';
 import { getNotebookContent } from './checkpoint';
 import { saveEditorStateTransaction } from './transaction';
 import { getLastVersion } from './version';
@@ -17,54 +18,46 @@ export const insertNumbers = async (
   notebookId: NotebookIdentifier
 ): Promise<NotebookIdentifier> => {
   try {
-    // FIXME: This may not need to be a transaction. saveEditorStateTransaction
-    //        creates a new transaction when saving the steps instead of using the
-    //        existing transaction to prevent getting the editor content multiple
-    //        times. Since both are transactions that can run multiple times the
-    //        amount of operations is exponentially larger.
-    await firestore.runTransaction(async transaction => {
-      // ensure that the Notebook document still exists (i.e. has not been deleted
-      // either hard or soft) and that the caller has the right permissions to edit
-      // its content.
-      const notebookRef = notebookDocument(notebookId);
-      const notebookSnapshot = await transaction.get(notebookRef);
-      if(!notebookSnapshot.exists) throw new ApplicationError('functions/not-found', `Cannot perform command insertNumbers for non-existing Notebook (${notebookId}) for User (${userId}).`);
-      const notebook = notebookSnapshot.data()!;
-      if(notebook.deleted) throw new ApplicationError('data/deleted', `Cannot perform command insertNumbers for soft-deleted Notebook (${notebookId}) for User (${userId}).`);
-      if(!notebook.editors.includes(userId) && notebook.createdBy !== userId) throw new ApplicationError('functions/permission-denied', `Only Editors of a Notebook (${notebookId}) may perform command insertNumbers for User (${userId}).`);
+    // ensure that the Notebook document still exists (i.e. has not been deleted
+    // either hard or soft) and that the caller has the right permissions to edit
+    // its content.
+    const notebookRef = notebookDocument(notebookId), notebookSnapshot = await getSnapshot(undefined/*no transaction*/, notebookRef);
+    if(!notebookSnapshot.exists) throw new ApplicationError('functions/not-found', `Cannot perform command insertNumbers for non-existing Notebook (${notebookId}) for User (${userId}).`);
+    const notebook = notebookSnapshot.data()!;
+    if(notebook.deleted) throw new ApplicationError('data/deleted', `Cannot perform command insertNumbers for soft-deleted Notebook (${notebookId}) for User (${userId}).`);
+    if(!notebook.editors.includes(userId) && notebook.createdBy !== userId) throw new ApplicationError('functions/permission-denied', `Only Editors of a Notebook (${notebookId}) may perform command insertNumbers for User (${userId}).`);
 
-      // gets the last version of the Notebook and gets the reference for the next
-      // logical version. If no version exists then the next version is the first
-      const lastVersion = await getLastVersion(transaction, notebookId),
-            lastVersionIndex = lastVersion?.index;
-      const nextVersionIndex = lastVersionIndex ? lastVersionIndex + 1 : NO_NOTEBOOK_VERSION/*start of document if no last version*/;
+    // gets the last version of the Notebook and gets the reference for the next
+    // logical version. If no version exists then the next version is the first
+    const lastVersion = await getLastVersion(undefined/*no transaction*/, notebookId),
+          lastVersionIndex = lastVersion?.index;
+    const nextVersionIndex = lastVersionIndex ? lastVersionIndex + 1 : NO_NOTEBOOK_VERSION/*start of document if no last version*/;
 
-      // gets the content at the given version if it exists.
-      const notebookContent = lastVersionIndex ? await getNotebookContent(transaction, notebook.schemaVersion, notebookId, lastVersionIndex) : undefined/*no content*/;
-      const editorState = getEditorState(notebook.schemaVersion, notebookContent);
-      if(!editorState) throw new ApplicationError('data/integrity', `Cannot create editorState for Notebook (${notebookId}) for version (${lastVersion}).`);
+    // gets the content at the given version if it exists.
+    const notebookContent = lastVersionIndex ? await getNotebookContent(undefined/*no transaction*/, notebook.schemaVersion, notebookId, lastVersionIndex) : undefined/*no content*/;
+    const editorState = getEditorState(notebook.schemaVersion, notebookContent);
+    if(!editorState) throw new ApplicationError('data/integrity', `Cannot create editorState for Notebook (${notebookId}) for version (${lastVersion}).`);
 
-      const command: Command = (tr) => {
-        // inserts 10 characters at random positions in the document.
-        for(let i=0;i<10;i++) {
-          const position = Math.floor(Math.random() * tr.doc.content.size) + 1/*start of valid content*/;
-          tr.insertText(String(i), position, position);
-        }
-        return true/*command can be performed*/;
-      };
+    const command: Command = (tr) => {
+      // inserts 10 characters at random positions in the document.
+      for(let i=0;i<10;i++) {
+        const position = Math.floor(Math.random() * tr.doc.content.size) + 1/*start of valid content*/;
+        tr.insertText(String(i), position, position);
+      }
+      return true/*command can be performed*/;
+    };
 
-      // Creates a unique identifier for the clientId.
-      const clientId = getRandomSystemUserId();
-      await saveEditorStateTransaction(
-        notebookId,
-        notebook.schemaVersion/*matching Notebook for consistency*/,
-        userId,
-        clientId,
-        nextVersionIndex,
-        editorState,
-        command
-      );
-    });
+    // Creates a unique identifier for the clientId.
+    const clientId = getRandomSystemUserId();
+    await saveEditorStateTransaction(
+      notebookId,
+      notebook.schemaVersion/*matching Notebook for consistency*/,
+      userId,
+      clientId,
+      nextVersionIndex,
+      editorState,
+      command
+    );
   } catch(error) {
     if(error instanceof ApplicationError) throw error;
     throw new ApplicationError('datastore/write', `Error performing command insertNumbers for notebook (${notebookId}) for User (${userId}). Reason: `, error);
