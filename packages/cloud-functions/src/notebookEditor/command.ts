@@ -1,15 +1,13 @@
 import { EditorState } from 'prosemirror-state';
 import { logger } from 'firebase-functions';
 
-import { contentToStep, getSchema, getEditorState, getRandomSystemUserId, nodeToContent, sleep, ClientIdentifier, Command, NotebookIdentifier, ShareRole, UserIdentifier, NO_NOTEBOOK_VERSION } from '@ureeka-notebook/service-common';
+import { contentToStep, getSchema, getEditorState, getEditorStateFromDocAndVersions, getRandomSystemUserId, nodeToContent, sleep, ClientIdentifier, Command, NotebookIdentifier, ShareRole, UserIdentifier, NO_NOTEBOOK_VERSION } from '@ureeka-notebook/service-common';
 
 import { getNotebook } from '../notebook/notebook';
 import { getEnv } from '../util/environment';
 import { ApplicationError } from '../util/error';
-import { getSnapshot } from '../util/firestore';
 import { getContentAtVersion } from './content';
-import { lastVersionsQuery } from './datastore';
-import { getLastVersion, writeVersions } from './version';
+import { getLastVersion, getVersionsFromIndex, writeVersions } from './version';
 
 // ********************************************************************************
 const MAX_ATTEMPTS = Math.max(0, Number(getEnv('NOTEBOOK_VERSION_MAX_ATTEMPTS', '5'/*guess*/)));
@@ -42,65 +40,33 @@ type CommandGenerator = (props: {
 export const wrapCommandFunction = async (userId: UserIdentifier, notebookId: NotebookIdentifier, label: string, func: CommandGenerator): Promise<NotebookIdentifier> => {
   try {
     const notebook = await getNotebook(undefined/*no transaction*/, userId, notebookId, ShareRole.Editor, `perform command ${label}`);
-    const schemaVersion = notebook.schemaVersion/*for convenience*/,
-          schema = getSchema(schemaVersion);
+    const schemaVersion = notebook.schemaVersion/*for convenience*/;
 
     // gets the last Version of the Notebook and gets the reference for the next
     // logical Version. If no Version exists then the next Version is the first
     let currentVersion = await getLastVersion(undefined/*no transaction*/, notebookId),
-        currentVersionIndex = currentVersion?.index;
+        currentVersionIndex = currentVersion ? currentVersion.index : NO_NOTEBOOK_VERSION;
 
     // gets the content at the given Version if it exists
     if(collaborationDelay.readDelayMs > 0) await sleep(collaborationDelay.writeDelayMs);
     const notebookContent = currentVersionIndex ? await getContentAtVersion(undefined/*no transaction*/, schemaVersion, notebookId, currentVersionIndex) : undefined/*no content*/;
     let editorState = getEditorState(schemaVersion, notebookContent);
-    if(!editorState) throw new ApplicationError('data/integrity', `Cannot create Editor State for Notebook (${notebookId}) for Version (${currentVersion}).`);
-
-    // creates a unique identifier for the clientId
-    const clientId = getRandomSystemUserId()/*FIXME: consistency*/;
 
     // try to write the Steps
     let written = false/*not written by default*/;
     for(let i=0; i<MAX_ATTEMPTS; i++) {
-      // get the missing Versions from the last recorded Version
-      // FIXME: why does this get the latest Versions again? It *JUST* did it.
-      //        This should be at the *bottom* of the loop. Or the loop needs to
-      //        be inverted so that the first iteration is the one that gets the
-      //        full version, etc.
-      const versionSnapshot = await getSnapshot(undefined/*no transaction*/, lastVersionsQuery(notebookId, currentVersionIndex ?? NO_NOTEBOOK_VERSION - 1/*all existing versions*/));
-      const versions = versionSnapshot.docs.map(doc => doc.data());
-      // update current Version to the most up to date Version
-      // FIXME: what is this doing? Versions are pulled in order by contract.
-      //        If all of this is simply to get the last Version then just get it!!!
-      //        (Look at VersionListener's handleNewVersion()!!! Don't make things up!!!)
-      currentVersion = versions.reduce((acc, version) => {
-        if(!acc || acc.index < version.index) return version;
-        return acc;
-      }, currentVersion);
-      currentVersionIndex = currentVersion?.index;
-      const nextVersionIndex = currentVersionIndex ? currentVersionIndex + 1 : NO_NOTEBOOK_VERSION/*start of document if no last Version*/;
-
       let { doc } = editorState;
-      // collapse the Steps into the Document to create a new Editor State
-      // FIXME: this is effectively collapseVersions() (which just needs to be
-      //        refactored to handle this case as well)
-      versions.forEach(version => {
-        const prosemirrorStep = contentToStep(schema, version.content);
 
-        // ProseMirror takes a ProsemirrorStep and applies it to the Document as the
-        // last Step generating a new Document
-        // NOTE: this process can result in failure for multiple reasons such as the
-        //       Schema is invalid or the Step tried collide with another Step and the
-        //       result is invalid.
-        // NOTE: if the process fails then that failed Step can be safely ignored since
-        //       the ClientDocument will ignore it as well
-        const stepResult = prosemirrorStep.apply(doc);
-        if(stepResult.failed || !stepResult.doc) { logger.error(`Invalid Notebook (${schemaVersion}) Version (${version.index}) '${version.content}' while performing Command '${label}'. Ignoring. Reason: ${stepResult.failed}`); return/*ignore Version / Step*/; }
-        doc = stepResult.doc;
-      });
-      // create an Editor State from the newly created Document
-      editorState = getEditorState(schemaVersion, nodeToContent(doc));
-      if(!editorState) throw new ApplicationError('data/integrity', `Cannot create Editor State for Notebook (${notebookId}) for Version (${currentVersion}).`);
+      // get the missing Versions from the last recorded Version
+      const versions = await getVersionsFromIndex(undefined/*no transaction*/, notebookId, currentVersionIndex);
+      currentVersionIndex = (versions.length < 1) ? currentVersionIndex : versions[versions.length - 1].index;
+      const nextVersionIndex = currentVersionIndex + 1;
+
+      // collapse the Steps into the Document to create a new Editor State
+      editorState = getEditorStateFromDocAndVersions(schemaVersion, doc, versions);
+
+      // creates a unique identifier for the clientId
+      const clientId = getRandomSystemUserId()/*FIXME: consistency*/;
 
       // create the Command and create a new Transaction and execute the Command within it
       const command = await func({ userId, clientId, notebookId, versionIndex: nextVersionIndex, editorState });
@@ -112,7 +78,7 @@ export const wrapCommandFunction = async (userId: UserIdentifier, notebookId: No
         // write the Versions from the Steps generated on the Command
         await writeVersions(
           userId, clientId,
-          schemaVersion/*matching Notebook for consistency*/, notebookId,
+          schemaVersion, notebookId,
           nextVersionIndex, tr.steps
         );
         written = true;
