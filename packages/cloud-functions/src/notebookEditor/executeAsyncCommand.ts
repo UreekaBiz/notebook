@@ -42,7 +42,7 @@ export type CommandGenerator = (props: {
 }) => Promise<EditorStateCommand>;
 
 // == Utility =====================================================================
-export const wrapCommandFunction = async (userId: UserIdentifier, notebookId: NotebookIdentifier, asyncCommand: CommandGenerator): Promise<NotebookIdentifier> => {
+export const executeAsyncCommand = async (userId: UserIdentifier, notebookId: NotebookIdentifier, asyncCommand: CommandGenerator): Promise<NotebookIdentifier> => {
   const label = asyncCommand.name/*for context*/;
 
   // the client identifier is based on the calling User
@@ -104,43 +104,4 @@ export const wrapCommandFunction = async (userId: UserIdentifier, notebookId: No
     throw new ApplicationError('datastore/write', `Error performing Command '${label}' for Notebook (${notebookId}) for User (${userId}). Reason: `, error);
   }
   return notebookId;
-};
-
-// == Command =====================================================================
-// inserts multiple numbers at random positions in the Notebook
-export const insertNumbers = (): CommandGenerator => async () => {
-  // NOTE: there is no need to check the EditorState in this case
-
-  return ({
-    name: 'insertNumbers',
-    command: (editorState) => {
-      // TODO: ensure that the desired Node exists, etc.
-
-      return (tr) => {
-        // inserts 10 (arbitrary) characters at random positions in the document
-        for(let i=0; i<10; i++) {
-          const position = Math.floor(Math.random() * tr.doc.content.size) + 1/*start of valid content*/;
-          tr.insertText(String(i), position, position);
-        }
-        return true/*command can be performed*/;
-      };
-    },
-  });
-};
-
-// inserts the specified text at the start of the the specified Notebook
-export const insertText = (text: string): CommandGenerator => async () => {
-  // NOTE: there is no need to check the EditorState in this case
-
-  return ({
-    name: 'insertText',
-    command: (editorState) => {
-      // TODO: ensure that the desired Node exists, etc.
-
-      return (tr) => {
-        tr.insertText(text, 1, 1/*start of document*/);
-        return true/*Command can be performed*/;
-      };
-    },
-  });
 };
