@@ -7,10 +7,11 @@ import { generateNotebookVersionIdentifier, ClientIdentifier, NotebookIdentifier
 import { firestore } from '../firebase';
 import { ApplicationError } from '../util/error';
 import { getSnapshot, ServerTimestamp } from '../util/firestore';
-import { lastVersionQuery, versionDocument } from './datastore';
+import { lastVersionQuery, lastVersionsQuery, versionDocument } from './datastore';
 
 // ********************************************************************************
 // == Get =========================================================================
+// -- Latest ----------------------------------------------------------------------
 // returns the last known Version using the specified Transaction
 export const getLastVersion = async (transaction: Transaction | undefined/*outside transaction*/, notebookId: NotebookIdentifier): Promise<NotebookVersion_Storage | undefined/*no Versions*/> => {
   const snapshot = await getSnapshot(transaction, lastVersionQuery(notebookId));
@@ -18,6 +19,13 @@ export const getLastVersion = async (transaction: Transaction | undefined/*outsi
 
   if(snapshot.size > 1) logger.warn(`Expected a single last Version but received ${snapshot.size}. Ignoring all but first.`);
   return snapshot.docs[0/*only one by contract*/].data();
+};
+
+// --------------------------------------------------------------------------------
+// get NotebookVersions between the specified index and whatever the latest is
+export const getVersionsFromIndex = async (transaction: Transaction | undefined/*outside transaction*/, notebookId: NotebookIdentifier, index/*exclusive*/: number): Promise<NotebookVersion_Storage[]> => {
+  const snapshot = await getSnapshot(transaction, lastVersionsQuery(notebookId, index));
+  return snapshot.docs.map(doc => doc.data());
 };
 
 // == Write =======================================================================

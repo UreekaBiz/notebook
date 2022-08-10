@@ -54,6 +54,7 @@ export enum NotebookSchemaVersion {
   V1 = 'v1'/*initial version -- no longer used*/,
   V2 = 'v2'/*moved away from 'steps' and confusion around 'version' (schema vs. PM 'step'), etc*/,
 }
+export const NotebookSchemaVersionLatest = NotebookSchemaVersion.V2;
 
 // ................................................................................
 // NOTE: this schema must reflect the same Schema that is being used in the Editor

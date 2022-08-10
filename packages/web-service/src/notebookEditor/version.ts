@@ -1,12 +1,11 @@
 import { getDocs, onSnapshot, runTransaction, serverTimestamp } from 'firebase/firestore';
 import { Step as ProseMirrorStep } from 'prosemirror-transform';
 
-import { collapseVersions, generateNotebookVersionIdentifier, Checkpoint, ClientIdentifier, NotebookIdentifier, NotebookSchemaVersion, NotebookVersion, NotebookVersion_Write, JSONContent, UserIdentifier, NO_NOTEBOOK_VERSION } from '@ureeka-notebook/service-common';
+import { generateNotebookVersionIdentifier, ClientIdentifier, NotebookIdentifier, NotebookSchemaVersion, NotebookVersion, NotebookVersion_Write, UserIdentifier } from '@ureeka-notebook/service-common';
 
 import { getLogger, ServiceLogger } from '../logging';
 import { firestore } from '../util/firebase';
-import { getLastCheckpoint, getLastCheckpointIndex } from './checkpoint';
-import { fillGapQuery, notebookVersionDocument, lastVersionQuery } from './datastore';
+import { notebookVersionDocument, lastVersionQuery, lastVersionsQuery } from './datastore';
 
 const log = getLogger(ServiceLogger.NOTEBOOK_EDITOR);
 
@@ -29,43 +28,9 @@ export const onNewVersion = (callback: (version: NotebookVersion) => void, noteb
 
 // --------------------------------------------------------------------------------
 // get NotebookVersions between the specified index and whatever the latest is
-export const getVersionsFromIndex = async (notebookId: NotebookIdentifier, index: number): Promise<NotebookVersion[]> => {
-  const snapshot = await getDocs(fillGapQuery(notebookId, index));
+export const getVersionsFromIndex = async (notebookId: NotebookIdentifier, index/*exclusive*/: number): Promise<NotebookVersion[]> => {
+  const snapshot = await getDocs(lastVersionsQuery(notebookId, index));
   return snapshot.docs.map(doc => doc.data());
-};
-
-// --------------------------------------------------------------------------------
-export const getLatestContent = async (userId: UserIdentifier, schemaVersion: NotebookSchemaVersion, notebookId: NotebookIdentifier): Promise<{ latestIndex: number; jsonContent: JSONContent; }> => {
-  // get the latest Checkpoint (if there is one)
-  let checkpoint: Checkpoint | undefined/*no Checkpoint generated yet*/;
-  try {
-    checkpoint = await getLastCheckpoint(notebookId);
-  } catch(error) {
-    log.warn(`Unexpected error reading Checkpoint for Notebook (${notebookId}) for User (${userId}).`, error);
-    throw error/*rethrow*/;
-  }
-  const checkpointIndex = getLastCheckpointIndex(checkpoint);
-  log.debug(`${(checkpointIndex > NO_NOTEBOOK_VERSION) ? `Loaded Checkpoint at Version ${checkpointIndex}` : 'No Checkpoint'} for Notebook (${notebookId}) for User (${userId}).`);
-
-  // get the latest NotebookVersions starting from the last Checkpoint
-  let versions: NotebookVersion[];
-  try {
-    versions = await getVersionsFromIndex(notebookId, checkpointIndex);
-  } catch(error) {
-    log.warn(`Unexpected error reading latest Notebook Versions for Notebook (${notebookId}) for User (${userId}).`, error);
-    throw error/*rethrow*/;
-  }
-
-  // collapse the received NotebookVersions and the Checkpoint
-  const content = collapseVersions(schemaVersion, checkpoint, versions);
-  const jsonContent = JSON.parse(content)/*FIXME: jsonToContent()?*//*FIXME: handle exceptions!!!*/;
-
-  // if there are no NotebookVersions then the Checkpoint represents the last
-  // version. If there are NotebookVersions (which must be in order by contract)
-  // then the last one is the latest version
-  const latestIndex = (versions.length < 1) ? checkpointIndex : versions[versions.length - 1].index;
-
-  return { latestIndex, jsonContent };
 };
 
 // == Write =======================================================================

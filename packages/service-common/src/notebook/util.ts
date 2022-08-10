@@ -3,6 +3,11 @@ import { UserIdentifier } from '../util/user';
 import { Notebook } from './type';
 
 // ********************************************************************************
+// == Permission ==================================================================
+export const isNotebookEditor = (userId: UserIdentifier, notebook: Notebook): boolean =>
+  notebook.editors.includes(userId) || (notebook.createdBy === userId);
+
+// == Share =======================================================================
 // returns the Map of shared UserIdentifiers to ShareRole for the specified Notebook
 export const getNotebookShareRoles = (notebook: Notebook): Map<UserIdentifier, ShareRole> => {
   const userRoles = new Map<UserIdentifier, ShareRole>();
