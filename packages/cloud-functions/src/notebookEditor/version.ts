@@ -37,8 +37,8 @@ export const writeVersions = async (
     const firstVersionId = generateNotebookVersionIdentifier(startingIndex),
           firstVersionRef = versionDocument(notebookId, firstVersionId);
     const snapshot = await transaction.get(firstVersionRef);
-    // log.debug(`Trying to write Notebook Versions ${startingIndex} - ${startingIndex + versions.length - 1}`);
-    if(snapshot.exists) throw new ApplicationError('functions/already-exists', `Step with index ${startingIndex} already exists.`); /*abort -- NotebookVersion with startingIndex already exists*/;
+// logger.debug(`Trying to write Notebook Versions ${startingIndex} - ${startingIndex + versions.length - 1}`);
+    if(snapshot.exists) throw new ApplicationError('functions/already-exists', `Step with index ${startingIndex} already exists.`)/*abort -- NotebookVersion with startingIndex already exists*/;
 
     pmSteps.forEach((pmStep, index) => {
       const versionIndex = startingIndex + index;
