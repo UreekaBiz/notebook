@@ -42,7 +42,7 @@ export type CommandGenerator = (props: {
 }) => Promise<EditorStateCommand>;
 
 // == Utility =====================================================================
-export const executeAsyncCommand = async (userId: UserIdentifier, notebookId: NotebookIdentifier, asyncCommand: CommandGenerator): Promise<NotebookIdentifier> => {
+export const executeAsyncCommand = async (userId: UserIdentifier, notebookId: NotebookIdentifier, asyncCommand: CommandGenerator) => {
   const label = asyncCommand.name/*for context*/;
 
   // the client identifier is based on the calling User
@@ -103,5 +103,4 @@ export const executeAsyncCommand = async (userId: UserIdentifier, notebookId: No
     if(error instanceof ApplicationError) throw error;
     throw new ApplicationError('datastore/write', `Error performing Command '${label}' for Notebook (${notebookId}) for User (${userId}). Reason: `, error);
   }
-  return notebookId;
 };
