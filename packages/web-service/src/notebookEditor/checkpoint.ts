@@ -1,6 +1,6 @@
 import { getDocs } from 'firebase/firestore';
 
-import { NotebookIdentifier } from '@ureeka-notebook/service-common';
+import { Checkpoint_Storage, NotebookIdentifier } from '@ureeka-notebook/service-common';
 
 import { getLogger, ServiceLogger } from '../logging';
 import { lastCheckpointQuery } from './datastore';
@@ -8,7 +8,8 @@ import { lastCheckpointQuery } from './datastore';
 const log = getLogger(ServiceLogger.NOTEBOOK_EDITOR);
 
 // ********************************************************************************
-export const getLastCheckpoint = async (notebookId: NotebookIdentifier) => {
+// SEE: @ureeka-notebook/cloud-functions: notebookEditor/checkpoint.ts
+export const getLastCheckpoint = async (notebookId: NotebookIdentifier): Promise<Checkpoint_Storage | undefined/*none*/> => {
   const snapshot = await getDocs(lastCheckpointQuery(notebookId));
   if(snapshot.empty) return undefined/*by contract*/;
 
