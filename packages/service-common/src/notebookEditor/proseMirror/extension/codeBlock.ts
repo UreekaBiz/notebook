@@ -78,6 +78,9 @@ export const CodeBlockNodeRendererSpec: NodeRendererSpec<CodeBlockAttributes> = 
 // codeBlock gets removed, hence invalidating its visualId
 export const REMOVED_CODEBLOCK_VISUALID = 'Removed';
 
+// used as the hash when a CodeBlock is empty
+export const EMPTY_CODEBLOCK_HASH = 'EmptyString';
+
 export enum CodeBlockType { Text = 'Text', Code = 'Code'}
 export const isCodeBlockAttributes = (attrs: any): attrs is CodeBlockAttributes => attrs.id !== undefined;
 

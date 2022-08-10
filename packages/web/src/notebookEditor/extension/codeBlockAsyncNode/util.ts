@@ -1,10 +1,9 @@
 import { Editor } from '@tiptap/core';
 import { NodeSelection } from 'prosemirror-state';
 
-import { hashString, isBlank, isCodeBlockNode, AttributeType, CodeBlockAsyncNodeAttributes, CodeBlockAsyncNodeType, CodeBlockNodeType, CodeBlockReference, NodeIdentifier, NodeName, VisualId, REMOVED_CODEBLOCK_VISUALID } from '@ureeka-notebook/web-service';
+import { hashString, isBlank, isCodeBlockNode, AttributeType, CodeBlockAsyncNodeAttributes, CodeBlockAsyncNodeType, CodeBlockNodeType, CodeBlockReference, NodeIdentifier, NodeName, VisualId, EMPTY_CODEBLOCK_HASH, REMOVED_CODEBLOCK_VISUALID } from '@ureeka-notebook/web-service';
 
 import { getCodeBlockViewStorage } from 'notebookEditor/extension/codeblock/nodeView/storage';
-import { EMPTY_CODEBLOCK_HASH } from 'notebookEditor/extension/codeblock/type';
 import { HISTORY_META } from 'notebookEditor/extension/history/History';
 import { resolveNewSelection } from 'notebookEditor/extension/util/node';
 
