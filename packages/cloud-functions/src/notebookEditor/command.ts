@@ -1,6 +1,6 @@
 import { EditorState } from 'prosemirror-state';
 
-import { createEditorState, getEditorStateFromDocAndVersions, getRandomSystemUserId, sleep, Command, NotebookIdentifier, Notebook_Storage, ShareRole, UserIdentifier, NO_NOTEBOOK_VERSION } from '@ureeka-notebook/service-common';
+import { createEditorState, generateUuid, getEditorStateFromDocAndVersions, sleep, Command, NotebookIdentifier, Notebook_Storage, ShareRole, UserIdentifier, NO_NOTEBOOK_VERSION, generateClientIdentifier } from '@ureeka-notebook/service-common';
 
 import { getNotebook } from '../notebook/notebook';
 import { getEnv } from '../util/environment';
@@ -37,8 +37,9 @@ export type CommandGenerator = (props: {
 
 // == Utility =====================================================================
 export const wrapCommandFunction = async (userId: UserIdentifier, notebookId: NotebookIdentifier, label: string, func: CommandGenerator): Promise<NotebookIdentifier> => {
-  // creates a unique identifier for the clientId
-  const clientId = getRandomSystemUserId()/*FIXME: consistency*/;
+  // the client identifier is based on the calling User
+  // TODO: think about if it should be based on the System User
+  const clientId = generateClientIdentifier({ userId, sessionId: generateUuid()/*unique for this 'session'*/ });
 
   try {
     const notebook = await getNotebook(undefined/*no transaction*/, userId, notebookId, ShareRole.Editor, `perform Command ${label}`);
