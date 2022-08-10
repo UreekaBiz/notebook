@@ -299,7 +299,7 @@ export class VersionListener {
   private updateEditorWithVersions(versions: NotebookVersion[]) {
     // NOTE: 'clientId' is what ProseMirror calls them
     const clientIds = versions.map(({ clientId }) => clientId),
-          proseMirrorSteps = versions.map(({ content }) => contentToStep(this.editor.schema, content));
+          proseMirrorSteps = versions.map(({ content }) => contentToStep(this.schemaVersion, content));
 
     const transaction = collab.receiveTransaction(this.editor.view.state, proseMirrorSteps, clientIds, { mapSelectionBackward: true });
     this.editor.view.dispatch(transaction);

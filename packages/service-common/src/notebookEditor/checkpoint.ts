@@ -2,9 +2,9 @@ import { EditorState } from 'prosemirror-state';
 
 import { NotebookDocumentContent } from './proseMirror/document';
 import { getSchema, NotebookSchemaVersion } from './proseMirror/schema';
-import { contentToNode, nodeToContent } from './proseMirror/node';
+import { contentToNode } from './proseMirror/node';
+import { getContentFromDocAndVersions } from './content';
 import { Checkpoint, NotebookVersion, NO_NOTEBOOK_VERSION } from './type';
-import { contentToStep } from './version';
 
 // ********************************************************************************
 export const getLastCheckpointIndex = (checkpoint: Checkpoint | undefined/*none*/) => (checkpoint === undefined) ? NO_NOTEBOOK_VERSION/*by contract*/ : checkpoint.index;
@@ -23,23 +23,5 @@ export const collapseVersions = (schemaVersion: NotebookSchemaVersion, checkpoin
 
   // generate a new Document for each NotebookVersion using the previously generated Document
   let { doc } = editorState;
-  versions.forEach(version => {
-    const prosemirrorStep = contentToStep(schema, version.content);
-
-    // ProseMirror takes a ProsemirrorStep and applies it to the Document as the
-    // last Step generating a new Document
-    // NOTE: this process can result in failure for multiple reasons such as the
-    //       Schema is invalid or the Step tried collide with another Step and the
-    //       result is invalid.
-    // NOTE: if the process fails then that failed Step can be safely ignored since
-    //       the ClientDocument will ignore it as well
-    // FIXME: is below an 'error' or 'warning'? The comments above seem to indicate
-    //        that it's a warning.
-    const stepResult = prosemirrorStep.apply(doc);
-    if(stepResult.failed || !stepResult.doc) { console.error(`Invalid Notebook (${schemaVersion}) Version (${version.index}) '${version.content}'. Reason: ${stepResult.failed}. Ignoring.`); return/*ignore Version / Step*/; }
-
-    doc = stepResult.doc;
-  });
-
-  return nodeToContent(doc);
+  return getContentFromDocAndVersions(schemaVersion, doc, versions);
 };
