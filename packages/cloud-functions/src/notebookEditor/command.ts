@@ -70,6 +70,10 @@ export const wrapCommandFunction = async (userId: UserIdentifier, notebookId: No
     let written = false/*not written by default*/;
     for(let i=0; i<MAX_ATTEMPTS; i++) {
       // get the missing Versions from the last recorded Version
+      // FIXME: why does this get the latest Versions again? It *JUST* did it.
+      //        This should be at the *bottom* of the loop. Or the loop needs to
+      //        be inverted so that the first iteration is the one that gets the
+      //        full version, etc.
       const versionSnapshot = await getSnapshot(undefined/*no transaction*/, lastVersionsQuery(notebookId, currentVersionIndex ?? NO_NOTEBOOK_VERSION - 1/*all existing versions*/));
       const versions = versionSnapshot.docs.map(doc => doc.data());
       // update current Version to the most up to date Version
