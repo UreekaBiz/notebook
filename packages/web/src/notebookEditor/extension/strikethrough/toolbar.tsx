@@ -14,7 +14,7 @@ export const markStrikethrough: ToolItem = {
   label: MarkName.STRIKETHROUGH,
 
   icon: <BiStrikethrough size={16} />,
-  tooltip: 'Strikethrough (⌘ + Shift + X)',
+  tooltip: 'Strikethrough (⌘ + ⇧ + X)',
 
   shouldBeDisabled: (editor) => {
     const { selection } = editor.state;
