@@ -21,10 +21,12 @@ export const getLastVersion = async (transaction: Transaction | undefined/*outsi
 };
 
 // == Write =======================================================================
-// writes the batch of ProseMirror Steps as NotebookVersions
+// writes the batch of ProseMirror Steps as Notebook Versions
+// SEE: @web-service: notebookEditor/version.ts
 export const writeVersions = async (
-notebookId: NotebookIdentifier, schemaVersion: NotebookSchemaVersion, userId: UserIdentifier,
-clientId: ClientIdentifier, initialVersionIndex: number, pmSteps: ProseMirrorStep[]
+  userId: UserIdentifier, clientId: ClientIdentifier,
+  schemaVersion: NotebookSchemaVersion,  notebookId: NotebookIdentifier,
+  startingIndex: number, pmSteps: ProseMirrorStep[]
 ): Promise<void> => {
   return firestore.runTransaction(async transaction => {
     // NOTE: only checks against first Version since if that doesn't exist then no
@@ -32,14 +34,14 @@ clientId: ClientIdentifier, initialVersionIndex: number, pmSteps: ProseMirrorSte
     // NOTE: if other Versions *do* get written as this writes then the Transaction
     //       will be aborted internally by Firestore (by definition). When re-run
     //       then the Version would exist and this returns false.
-    const firstVersionId = generateNotebookVersionIdentifier(initialVersionIndex),
+    const firstVersionId = generateNotebookVersionIdentifier(startingIndex),
           firstVersionRef = versionDocument(notebookId, firstVersionId);
     const snapshot = await transaction.get(firstVersionRef);
     // log.debug(`Trying to write Notebook Versions ${startingIndex} - ${startingIndex + versions.length - 1}`);
-    if(snapshot.exists) throw new ApplicationError('functions/already-exists', `Step with index ${initialVersionIndex} already exists.`); /*abort -- NotebookVersion with startingIndex already exists*/;
+    if(snapshot.exists) throw new ApplicationError('functions/already-exists', `Step with index ${startingIndex} already exists.`); /*abort -- NotebookVersion with startingIndex already exists*/;
 
     pmSteps.forEach((pmStep, index) => {
-      const versionIndex = initialVersionIndex + index;
+      const versionIndex = startingIndex + index;
       const versionId = generateNotebookVersionIdentifier(versionIndex),
             versionDocumentRef = versionDocument(notebookId, versionId);
 

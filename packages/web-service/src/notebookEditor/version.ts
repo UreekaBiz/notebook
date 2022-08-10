@@ -70,6 +70,7 @@ export const getLatestContent = async (userId: UserIdentifier, schemaVersion: No
 
 // == Write =======================================================================
 // writes the batch of ProseMirror Steps as NotebookVersions
+// SEE: @cloud-functions: notebookEditor/version.ts
 export const writeVersions = async (userId: UserIdentifier, clientId: ClientIdentifier, schemaVersion: NotebookSchemaVersion, notebookId: NotebookIdentifier, startingIndex: number, pmSteps: ProseMirrorStep[]): Promise<boolean> => {
 // log.debug(`Start step transaction for startingIndex (${startingIndex})`);
   return runTransaction(firestore, async transaction => {
