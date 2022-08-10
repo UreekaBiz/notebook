@@ -46,7 +46,7 @@ export const HeadingNodeSpec: NodeSpec = {
 // -- Render Spec -----------------------------------------------------------------
 export const HeadingNodeRendererSpec: NodeRendererSpec<HeadingAttributes> = {
   tag: attributes => {
-    switch(attributes.level) {
+    switch(attributes[AttributeType.Level]) {
       default: /*use H1 if level is unknown*/
       case HeadingLevel.One:
         return 'h1';
