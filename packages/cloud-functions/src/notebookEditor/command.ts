@@ -1,9 +1,9 @@
 import { EditorState } from 'prosemirror-state';
 import { logger } from 'firebase-functions';
 
-import { contentToStep, getSchema, getEditorState, getRandomSystemUserId, isNotebookEditor, nodeToContent, sleep, ClientIdentifier, Command, NotebookIdentifier, UserIdentifier, NO_NOTEBOOK_VERSION } from '@ureeka-notebook/service-common';
+import { contentToStep, getSchema, getEditorState, getRandomSystemUserId, nodeToContent, sleep, ClientIdentifier, Command, NotebookIdentifier, ShareRole, UserIdentifier, NO_NOTEBOOK_VERSION } from '@ureeka-notebook/service-common';
 
-import { notebookDocument } from '../notebook/datastore';
+import { getNotebook } from '../notebook/notebook';
 import { getEnv } from '../util/environment';
 import { ApplicationError } from '../util/error';
 import { getSnapshot } from '../util/firestore';
@@ -41,14 +41,7 @@ type CommandGenerator = (props: {
 // == Utility =====================================================================
 export const wrapCommandFunction = async (userId: UserIdentifier, notebookId: NotebookIdentifier, label: string, func: CommandGenerator): Promise<NotebookIdentifier> => {
   try {
-    // ensure that the Notebook document still exists (i.e. has not been deleted
-    // either hard or soft) and that the caller has the right permissions to edit
-    // its content
-    const notebookRef = notebookDocument(notebookId), notebookSnapshot = await getSnapshot(undefined/*no transaction*/, notebookRef);
-    if(!notebookSnapshot.exists) throw new ApplicationError('functions/not-found', `Cannot perform command ${label} for non-existing Notebook (${notebookId}) for User (${userId}).`);
-    const notebook = notebookSnapshot.data()!;
-    if(notebook.deleted) throw new ApplicationError('data/deleted', `Cannot perform command ${label} for soft-deleted Notebook (${notebookId}) for User (${userId}).`);
-    if(!isNotebookEditor(userId, notebook)) throw new ApplicationError('functions/permission-denied', `Only Editors of a Notebook (${notebookId}) may perform Command '${label}' for User (${userId}).`);
+    const notebook = await getNotebook(undefined/*no transaction*/, userId, notebookId, ShareRole.Editor, `perform command ${label}`);
     const schemaVersion = notebook.schemaVersion/*for convenience*/,
           schema = getSchema(schemaVersion);
 
