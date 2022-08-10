@@ -64,7 +64,7 @@ export type JSONContent = { [key: string]: any; };
 // --------------------------------------------------------------------------------
 export const nodeToJSONNode = (node: ProseMirrorNode) => node.toJSON() as JSONNode;
 export const nodeToContent = (node: ProseMirrorNode<Schema>) => JSON.stringify(nodeToJSONNode(node)) as NodeContent;
-export const contentToJSONNode = (content: NodeContent) => JSON.parse(content) as JSONNode;
+export const contentToJSONNode = (content: NodeContent) => JSON.parse(content) as JSONNode;/*FIXME: handle exceptions!!!*/
 export const contentToNode = (schema: Schema, content?: NodeContent) => content ? ProseMirrorNode.fromJSON(schema, contentToJSONNode(content)) : undefined/*none*/;
 
 // == Manipulation ================================================================

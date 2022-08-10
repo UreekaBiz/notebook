@@ -1,4 +1,4 @@
-import { collapseVersions, getLastCheckpointIndex, Checkpoint, NotebookIdentifier, NotebookSchemaVersion, NotebookVersion, JSONContent, UserIdentifier, NO_NOTEBOOK_VERSION } from '@ureeka-notebook/service-common';
+import { collapseVersions, getLastCheckpointIndex, Checkpoint, DocumentNodeType, NotebookIdentifier, NotebookSchemaVersion, NotebookVersion, UserIdentifier, NO_NOTEBOOK_VERSION } from '@ureeka-notebook/service-common';
 
 import { getLogger, ServiceLogger } from '../logging';
 import { getLastCheckpoint } from './checkpoint';
@@ -7,8 +7,8 @@ import { getVersionsFromIndex } from './version';
 const log = getLogger(ServiceLogger.NOTEBOOK_EDITOR);
 
 // ********************************************************************************
-// SEE: @ureeka-notebook/cloud-functions: notebookEditor/content.ts
-export const getLatestContent = async (userId: UserIdentifier, schemaVersion: NotebookSchemaVersion, notebookId: NotebookIdentifier): Promise<{ latestIndex: number; jsonContent: JSONContent; }> => {
+// SEE: @ureeka-notebook/cloud-functions: notebookEditor/document.ts
+export const getLatestDocument = async (userId: UserIdentifier, schemaVersion: NotebookSchemaVersion, notebookId: NotebookIdentifier): Promise<{ latestIndex: number; document: DocumentNodeType; }> => {
   // get the latest Checkpoint (if there is one)
   let checkpoint: Checkpoint | undefined/*no Checkpoint generated yet*/;
   try {
@@ -25,18 +25,17 @@ export const getLatestContent = async (userId: UserIdentifier, schemaVersion: No
   try {
     versions = await getVersionsFromIndex(notebookId, checkpointIndex);
   } catch(error) {
-    log.warn(`Unexpected error reading latest Notebook Versions for Notebook (${notebookId}) for User (${userId}).`, error);
+    log.warn(`Unexpected error reading latest Notebook (${schemaVersion}) Versions for Notebook (${notebookId}) for User (${userId}).`, error);
     throw error/*rethrow*/;
   }
 
   // collapse the received NotebookVersions and the Checkpoint
-  const content = collapseVersions(schemaVersion, checkpoint, versions);
-  const jsonContent = JSON.parse(content)/*FIXME: jsonToContent()?*//*FIXME: handle exceptions!!!*/;
+  const document = collapseVersions(schemaVersion, checkpoint, versions);
 
   // if there are no NotebookVersions then the Checkpoint represents the last
   // version. If there are NotebookVersions (which must be in order by contract)
   // then the last one is the latest version
   const latestIndex = (versions.length < 1) ? checkpointIndex : versions[versions.length - 1].index;
 
-  return { latestIndex, jsonContent };
+  return { latestIndex, document };
 };

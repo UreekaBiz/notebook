@@ -1,7 +1,7 @@
 // ** Local ***********************************************************************
 export * from './service';
 
-// FIXME: Move to the service.
+// FIXME: Move to the service
 export * from './function';
 
 // ** Service-Common **************************************************************

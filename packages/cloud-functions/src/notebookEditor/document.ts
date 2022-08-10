@@ -1,7 +1,7 @@
 import { Transaction } from 'firebase-admin/firestore';
 import { logger } from 'firebase-functions';
 
-import { collapseVersions, getLastCheckpointIndex, Checkpoint, NotebookIdentifier, NotebookSchemaVersion, NotebookVersion, JSONContent, UserIdentifier, NO_NOTEBOOK_VERSION, NotebookDocumentContent } from '@ureeka-notebook/service-common';
+import { collapseVersions, getLastCheckpointIndex, Checkpoint, DocumentNodeType, NotebookIdentifier, NotebookSchemaVersion, NotebookVersion, UserIdentifier, NO_NOTEBOOK_VERSION } from '@ureeka-notebook/service-common';
 
 import { getSnapshot } from '../util/firestore';
 import { getLastCheckpoint } from './checkpoint';
@@ -10,11 +10,11 @@ import { getVersionsFromIndex } from './version';
 
 // ********************************************************************************
 // -- At Version ------------------------------------------------------------------
-// returns the content of a Notebook at the given Version index
-export const getContentAtVersion = async (
+// returns a ProseMirror Document from a Notebook at the given Version index
+export const getDocumentAtVersion = async (
   transaction: Transaction | undefined/*outside transaction*/,
   version: NotebookSchemaVersion, notebookId: NotebookIdentifier, index: number
-): Promise<NotebookDocumentContent> => {
+): Promise<DocumentNodeType> => {
   const lastCheckpoint = await getLastCheckpoint(transaction, notebookId),
         lastCheckpointIndex = getLastCheckpointIndex(lastCheckpoint);
 
@@ -28,12 +28,12 @@ export const getContentAtVersion = async (
 };
 
 // -- Latest ----------------------------------------------------------------------
-// SEE: @ureeka-notebook/web-service: notebookEditor/content.ts
-export const getLatestContent = async (
+// SEE: @ureeka-notebook/web-service: notebookEditor/document.ts
+export const getLatestDocument = async (
   transaction: Transaction | undefined/*outside transaction*/,
   userId: UserIdentifier,
   schemaVersion: NotebookSchemaVersion, notebookId: NotebookIdentifier
-): Promise<{ latestIndex: number; jsonContent: JSONContent; }> => {
+): Promise<{ latestIndex: number; document: DocumentNodeType; }> => {
   // get the latest Checkpoint (if there is one)
   let checkpoint: Checkpoint | undefined/*no Checkpoint generated yet*/;
   try {
@@ -55,13 +55,12 @@ export const getLatestContent = async (
   }
 
   // collapse the received NotebookVersions and the Checkpoint
-  const content = collapseVersions(schemaVersion, checkpoint, versions);
-  const jsonContent = JSON.parse(content)/*FIXME: jsonToContent()?*//*FIXME: handle exceptions!!!*/;
+  const document = collapseVersions(schemaVersion, checkpoint, versions);
 
   // if there are no NotebookVersions then the Checkpoint represents the last
   // version. If there are NotebookVersions (which must be in order by contract)
   // then the last one is the latest version
   const latestIndex = (versions.length < 1) ? checkpointIndex : versions[versions.length - 1].index;
 
-  return { latestIndex, jsonContent };
+  return { latestIndex, document };
 };

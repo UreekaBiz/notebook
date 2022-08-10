@@ -8,7 +8,7 @@ import { contentToStep, generateClientIdentifier, sleep, AuthedUser, NotebookIde
 import { getLogger, ServiceLogger } from '../logging/type';
 import { getEnvNumber } from '../util/environment';
 import { ApplicationError } from '../util/error';
-import { getLatestContent } from './content';
+import { getLatestDocument } from './document';
 import { getVersionsFromIndex, onNewVersion, writeVersions } from './version';
 
 const log = getLogger(ServiceLogger.NOTEBOOK_EDITOR);
@@ -195,7 +195,7 @@ export class VersionListener {
     if(this.initialContentLoaded) { log.warn(`Attempting to load initial content after being already loaded ${this.logContext()}.`); return/*nothing to do*/; }
 
     // get the latest content (from a combination of Checkpoint and NotebookVersions)
-    const { latestIndex, jsonContent } = await getLatestContent(this.clientId, this.schemaVersion, this.notebookId)/*throws on error*/;
+    const { latestIndex, document } = await getLatestDocument(this.clientId, this.schemaVersion, this.notebookId)/*throws on error*/;
     if(!this.initialized) return/*listener was terminated before finished initialization*/;
     log.debug(`Loaded initial content at Version ${latestIndex} ${this.logContext()}.`);
     this.lastReadIndex = latestIndex/*by definition*/;
@@ -204,7 +204,6 @@ export class VersionListener {
     // set the initial Editor content from what was just read
     // REF: https://github.com/ueberdosis/tiptap/issues/491
     const { doc, tr } = this.editor.view.state;
-    const document = this.editor.schema.nodeFromJSON(jsonContent);
     const selection = TextSelection.create(doc, 0, doc.content.size);
     const transaction = tr
             .setSelection(selection)

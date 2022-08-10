@@ -1,11 +1,53 @@
 import { Node as ProseMirrorNode } from 'prosemirror-model';
 
 import { DEFAULT_NOTEBOOK_NAME } from '../../notebook/type';
+import { Checkpoint, NotebookVersion } from '../type';
+import { contentToStep } from '../version';
+import { DocumentNodeType } from './extension/document';
+import { contentToNode } from './node';
+import { getSchema, NotebookSchemaVersion } from './schema';
+import { createEditorState } from './state';
 
 // ********************************************************************************
 // TODO: More specificity than string (this is the JSON.stringified version of the
 //       step / document)
 export type NotebookDocumentContent = string/*TODO: see TODO above*/;
+
+// ================================================================================
+export const getDocumentFromDocAndVersions = (schemaVersion: NotebookSchemaVersion, doc: DocumentNodeType | undefined/*none*/, versions: NotebookVersion[]): DocumentNodeType => {
+  let document = doc ?? createEditorState(schemaVersion).doc;
+
+  versions.forEach(version => {
+    const prosemirrorStep = contentToStep(schemaVersion, version.content);
+
+    // ProseMirror takes a ProsemirrorStep and applies it to the Document as the
+    // last Step generating a new Document
+    // NOTE: this process can result in failure for multiple reasons such as the
+    //       Schema is invalid or the Step tried collide with another Step and the
+    //       result is invalid.
+    // NOTE: if the process fails then that failed Step can be safely ignored since
+    //       the ClientDocument will ignore it as well
+    const stepResult = prosemirrorStep.apply(document);
+    if(stepResult.failed || !stepResult.doc) { console.error(`Invalid Notebook (${schemaVersion}) Version (${version.index}) '${version.content}' when combining Document and new Versions. Ignoring. Reason: `, stepResult.failed); return/*ignore Version / Step*/; }
+    document = stepResult.doc;
+  });
+
+  return document;
+};
+
+// --------------------------------------------------------------------------------
+// collapses the specified Checkpoint with the specified NotebookVersions (of which
+// there may be none as the Checkpoint may include the last Version)
+// NOTE: if any of the NotebookVersions fails to parse they can be safely ignored
+//       since all Clients will have the same Schema and will be also ignored
+// CHECK: is that true?!? What about after a version update where not all clients
+//        are at the same version? Specifically, how *are* clients upgraded safely?
+export const collapseVersions = (schemaVersion: NotebookSchemaVersion, checkpoint: Checkpoint | undefined/*none*/, versions: NotebookVersion[]): DocumentNodeType => {
+  // generate a new Document for each NotebookVersion using the previously generated Document
+  const schema = getSchema(schemaVersion);
+  const checkpointDocument = contentToNode(schema, checkpoint?.content);
+  return getDocumentFromDocAndVersions(schemaVersion, checkpointDocument, versions);
+};
 
 // ================================================================================
 // the maximum number of characters in a Notebook name

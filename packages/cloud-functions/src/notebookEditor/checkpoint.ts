@@ -1,14 +1,14 @@
 import { Transaction } from 'firebase-admin/firestore';
 import { logger } from 'firebase-functions';
 
-import { getLastCheckpointIndex, generateCheckpointIdentifier, Checkpoint_Storage, Checkpoint_Write, NotebookIdentifier, SystemUserId, NO_NOTEBOOK_VERSION } from '@ureeka-notebook/service-common';
+import { getLastCheckpointIndex, generateCheckpointIdentifier, Checkpoint_Storage, Checkpoint_Write, NotebookIdentifier, SystemUserId, NO_NOTEBOOK_VERSION, nodeToContent } from '@ureeka-notebook/service-common';
 
 import { firestore } from '../firebase';
 import { getEnv } from '../util/environment';
 import { getSnapshot, ServerTimestamp } from '../util/firestore';
 import { notebookDocument } from '../notebook/datastore';
 import { updateNotebookRename } from '../notebook/notebook';
-import { getContentAtVersion } from './content';
+import { getDocumentAtVersion } from './document';
 import { checkpointDocument, lastCheckpointQuery } from './datastore';
 
 // ********************************************************************************
@@ -58,7 +58,8 @@ export const createCheckpoint = async (notebookId: NotebookIdentifier, index: nu
     const notebook = snapshot.data()!;
     if(notebook.deleted) { logger.info(`Notebook (${notebookId}) soft-deleted. Checkpoint will not be written.`); return/*nothing more to do*/; }
 
-    const content = await getContentAtVersion(transaction, notebook.schemaVersion, notebookId, index);
+    const document = await getDocumentAtVersion(transaction, notebook.schemaVersion, notebookId, index),
+          content = nodeToContent(document);
 //logger.log(`Content: ${content}`);
 
     // *create* (not 'set') the Checkpoint so that duplicate events do not clobber
