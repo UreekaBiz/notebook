@@ -1,10 +1,13 @@
+import { sleep } from '@ureeka-notebook/service-common';
+
 import { CommandGenerator } from './executeAsyncCommand';
 
 // ********************************************************************************
 // == Command =====================================================================
 // inserts multiple numbers at random positions in the Notebook
 export const insertNumbers = (): CommandGenerator => async () => {
-  // NOTE: there is no need to check the EditorState in this case
+  // simulate some 'long running' async operation
+  await sleep(3000/*ms*/);
 
   return ({
     name: 'insertNumbers',
@@ -25,7 +28,8 @@ export const insertNumbers = (): CommandGenerator => async () => {
 
 // inserts the specified text at the start of the the specified Notebook
 export const insertText = (text: string): CommandGenerator => async () => {
-  // NOTE: there is no need to check the EditorState in this case
+  // simulate some 'long running' async operation
+  await sleep(3000/*ms*/);
 
   return ({
     name: 'insertText',
