@@ -27,7 +27,7 @@
   font-feature-settings: "liga" 0;
 }
 /* -- Actionable Node -------------------------------------------------------------- */
-.Editor-actionable * [actionable-node]:hover {
+.Editor-actionable [actionable-node]:hover {
   cursor: pointer;
 }
 

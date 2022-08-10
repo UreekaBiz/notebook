@@ -18,7 +18,7 @@ export const Editor = () => {
   const { editor, editorService } = useNotebookEditor();
 
   // == State =====================================================================
-  const [isActionModifierPressed, setIsActionModifierPressed] = useState(false);
+  const [isActionModifierPressed, setIsActionModifierPressed] = useState(false/*by contract*/);
 
   // == Effect ====================================================================
   useEffect(() => {
