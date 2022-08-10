@@ -70,6 +70,8 @@ export const wrapCommandFunction = async (userId: UserIdentifier, notebookId: No
       const versionSnapshot = await getSnapshot(undefined/*no transaction*/, lastVersionsQuery(notebookId, currentVersionIndex ?? NO_NOTEBOOK_VERSION - 1/*all existing versions*/));
       const versions = versionSnapshot.docs.map(doc => doc.data());
       // update current Version to the most up to date Version
+      // FIXME: what is this doing? Versions are pulled in order by contract.
+      //        If all of this is simply to get the last Version then just get it!!!
       currentVersion = versions.reduce((acc, version) => {
         if(!acc || acc.index < version.index) return version;
         return acc;
