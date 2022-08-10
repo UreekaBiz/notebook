@@ -1,47 +1,29 @@
 import { Transaction } from 'firebase-admin/firestore';
 import { logger } from 'firebase-functions';
 
-import { collapseVersions, generateCheckpointIdentifier, Checkpoint, Checkpoint_Write, NotebookDocumentContent, NotebookIdentifier, NotebookSchemaVersion, SystemUserId, NO_NOTEBOOK_VERSION } from '@ureeka-notebook/service-common';
+import { getLastCheckpointIndex, generateCheckpointIdentifier, Checkpoint_Storage, Checkpoint_Write, NotebookIdentifier, SystemUserId, NO_NOTEBOOK_VERSION } from '@ureeka-notebook/service-common';
 
 import { firestore } from '../firebase';
 import { getEnv } from '../util/environment';
 import { getSnapshot, ServerTimestamp } from '../util/firestore';
 import { notebookDocument } from '../notebook/datastore';
 import { updateNotebookRename } from '../notebook/notebook';
-import { checkpointDocument, lastCheckpointQuery, versionRangeQuery } from './datastore';
+import { getContentAtVersion } from './content';
+import { checkpointDocument, lastCheckpointQuery } from './datastore';
 
 // ********************************************************************************
 const N_VERSIONS = Math.max(0, Number(getEnv('NOTEBOOK_CHECKPOINT_N_VERSIONS', '100'/*guess (balance between # of Checkpoints and # of NotebookVersions clients need to read*/)));
 
 // == Get =========================================================================
-// returns the content of a Notebook at the given Version index
-export const getContentAtVersion = async (
-  transaction: Transaction | undefined/*outside transaction*/,
-  version: NotebookSchemaVersion, notebookId: NotebookIdentifier, index: number
-): Promise<NotebookDocumentContent> => {
-  const lastCheckpoint = await getLastCheckpoint(transaction, notebookId),
-        lastCheckpointIndex = getLastCheckpointIndex(lastCheckpoint);
-
-  // (within the Transaction) get the NotebookVersions between the last Checkpoint
-  // (exclusive) and the current index (inclusive)
-  const versionSnapshot = await getSnapshot(transaction, versionRangeQuery(notebookId, lastCheckpointIndex/*exclusive*/, index/*inclusive*/));
-//logger.log(`NotebookVersions: ${versionSnapshot.size}`);
-  const versions = versionSnapshot.docs.map(doc => doc.data());
-
-  return collapseVersions(version, lastCheckpoint, versions);
-};
-
-// ................................................................................
-// returns the last known Checkpoint using the specified Transaction. If there
-// are no existing Checkpoints then `undefined`
-export const getLastCheckpoint = async (transaction: Transaction | undefined/*outside transaction*/, notebookId: NotebookIdentifier) => {
+// returns the last known Checkpoint using the specified Transaction
+// SEE: @ureeka-notebook/web-service: notebookEditor/checkpoint.ts
+export const getLastCheckpoint = async (transaction: Transaction | undefined/*outside transaction*/, notebookId: NotebookIdentifier): Promise<Checkpoint_Storage | undefined/*none*/> => {
   const snapshot = await getSnapshot(transaction, lastCheckpointQuery(notebookId));
   if(snapshot.empty) return undefined/*by contract*/;
 
   if(snapshot.size > 1) logger.warn(`Expected a single last Checkpoint but received ${snapshot.size}. Ignoring all but first.`);
   return snapshot.docs[0/*only one by contract*/].data();
 };
-export const getLastCheckpointIndex = (checkpoint: Checkpoint | undefined/*none*/) => (checkpoint === undefined) ? NO_NOTEBOOK_VERSION/*by contract*/ : checkpoint.index;
 
 // == Create ======================================================================
 // creates a new Checkpoint after 'n' NotebookVersions for the specified Notebook
