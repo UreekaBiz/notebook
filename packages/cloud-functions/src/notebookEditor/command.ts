@@ -84,6 +84,8 @@ export const wrapCommandFunction = async (userId: UserIdentifier, notebookId: No
 
       let { doc } = editorState;
       // collapse the Steps into the Document to create a new Editor State
+      // FIXME: this is effectively collapseVersions() (which just needs to be
+      //        refactored to handle this case as well)
       versions.forEach(version => {
         const prosemirrorStep = contentToStep(schema, version.content);
 
