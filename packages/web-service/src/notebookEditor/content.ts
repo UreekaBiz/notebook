@@ -1,12 +1,13 @@
-import { collapseVersions, Checkpoint, NotebookIdentifier, NotebookSchemaVersion, NotebookVersion, JSONContent, UserIdentifier, NO_NOTEBOOK_VERSION } from '@ureeka-notebook/service-common';
+import { collapseVersions, getLastCheckpointIndex, Checkpoint, NotebookIdentifier, NotebookSchemaVersion, NotebookVersion, JSONContent, UserIdentifier, NO_NOTEBOOK_VERSION } from '@ureeka-notebook/service-common';
 
 import { getLogger, ServiceLogger } from '../logging';
-import { getLastCheckpoint, getLastCheckpointIndex } from './checkpoint';
+import { getLastCheckpoint } from './checkpoint';
 import { getVersionsFromIndex } from './version';
 
 const log = getLogger(ServiceLogger.NOTEBOOK_EDITOR);
 
 // ********************************************************************************
+// SEE: @ureeka-notebook/cloud-functions: notebookEditor/content.ts
 export const getLatestContent = async (userId: UserIdentifier, schemaVersion: NotebookSchemaVersion, notebookId: NotebookIdentifier): Promise<{ latestIndex: number; jsonContent: JSONContent; }> => {
   // get the latest Checkpoint (if there is one)
   let checkpoint: Checkpoint | undefined/*no Checkpoint generated yet*/;

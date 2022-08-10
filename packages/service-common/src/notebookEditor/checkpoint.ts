@@ -3,10 +3,13 @@ import { EditorState } from 'prosemirror-state';
 import { NotebookDocumentContent } from './proseMirror/document';
 import { getSchema, NotebookSchemaVersion } from './proseMirror/schema';
 import { contentToNode, nodeToContent } from './proseMirror/node';
-import { Checkpoint, NotebookVersion } from './type';
+import { Checkpoint, NotebookVersion, NO_NOTEBOOK_VERSION } from './type';
 import { contentToStep } from './version';
 
 // ********************************************************************************
+export const getLastCheckpointIndex = (checkpoint: Checkpoint | undefined/*none*/) => (checkpoint === undefined) ? NO_NOTEBOOK_VERSION/*by contract*/ : checkpoint.index;
+
+// ================================================================================
 // collapses the specified Checkpoint with the specified NotebookVersions (of which
 // there may be none as the Checkpoint may include the last Version)
 // NOTE: if any of the NotebookVersions fails to parse they can be safely ignored

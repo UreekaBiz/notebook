@@ -1,6 +1,6 @@
 import { getDocs } from 'firebase/firestore';
 
-import { Checkpoint, NotebookIdentifier, NO_NOTEBOOK_VERSION } from '@ureeka-notebook/service-common';
+import { NotebookIdentifier } from '@ureeka-notebook/service-common';
 
 import { getLogger, ServiceLogger } from '../logging';
 import { lastCheckpointQuery } from './datastore';
@@ -15,4 +15,3 @@ export const getLastCheckpoint = async (notebookId: NotebookIdentifier) => {
   if(snapshot.size > 1) log.warn(`Expected a single last Checkpoint for Notebook (${notebookId}) but received ${snapshot.size}. Ignoring all but first.`);
   return snapshot.docs[0/*only one by contract*/].data();
 };
-export const getLastCheckpointIndex = (checkpoint: Checkpoint | undefined/*none*/) => (checkpoint === undefined) ? NO_NOTEBOOK_VERSION/*by contract*/ : checkpoint.index;
