@@ -1,10 +1,10 @@
-import { generateNotebookVersionIdentifier, removeUndefined, Creatable_Create, NotebookIdentifier, NotebookPublished_Update, NotebookPublishedContent_Update, UserIdentifier } from '@ureeka-notebook/service-common';
+import { generateNotebookVersionIdentifier, nodeToContent, removeUndefined, Creatable_Create, NotebookIdentifier, NotebookPublished_Update, NotebookPublishedContent_Update, UserIdentifier } from '@ureeka-notebook/service-common';
 
 import { firestore } from '../firebase';
 import { ApplicationError } from '../util/error';
 import { ServerTimestamp } from '../util/firestore';
-import { getContentAtVersion } from '../notebookEditor/checkpoint';
 import { versionDocument } from '../notebookEditor/datastore';
+import { getDocumentAtVersion } from '../notebookEditor/document';
 import { notebookDocument, notebookPublishedContentDocument, notebookPublishedDocument } from './datastore';
 import { updateNotebookPublish } from './notebook';
 
@@ -38,7 +38,8 @@ export const publishNotebook = async (
 
       // read Notebook content
       // NOTE: all reads must come before writes in a Firestore transaction
-      const content = await getContentAtVersion(transaction, notebook.schemaVersion, notebookId, versionIndex);
+      const document = await getDocumentAtVersion(transaction, notebook.schemaVersion, notebookId, versionIndex),
+            content = nodeToContent(document);
 
       // if the Notebook isn't already published then update its state
       const isPublished = notebook.isPublished/*preserve state*/;
