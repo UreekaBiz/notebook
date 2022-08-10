@@ -5,8 +5,8 @@ import { createEditorState, generateClientIdentifier, generateUuid, getEditorSta
 import { getNotebook } from '../notebook/notebook';
 import { getEnv } from '../util/environment';
 import { ApplicationError } from '../util/error';
-import { getDocumentAtVersion } from './document';
-import { getLastVersion, getVersionsFromIndex, writeVersions } from './version';
+import { getLatestDocument } from './document';
+import { getVersionsFromIndex, writeVersions } from './version';
 
 // ********************************************************************************
 const MAX_ATTEMPTS = Math.max(0, Number(getEnv('NOTEBOOK_VERSION_MAX_ATTEMPTS', '5'/*guess*/)));
@@ -50,35 +50,28 @@ export const executeAsyncCommand = async (userId: UserIdentifier, notebookId: No
   const clientId = generateClientIdentifier({ userId, sessionId: generateUuid()/*unique for this 'session'*/ });
 
   try {
-    const notebook = await getNotebook(undefined/*no transaction*/, userId, notebookId, ShareRole.Editor, `perform Command '${label}'`);
-    // CHECK: is the right answer to always use NotebookSchemaVersionLatest?
-    const schemaVersion = notebook.schemaVersion/*for convenience*/;
+    // before running the async function, check that the Notebook exists and that
+    // the caller has permission to edit it
+    await getNotebook(undefined/*no transaction*/, userId, notebookId, ShareRole.Editor, `perform Command '${label}'`);
 
+    // run the async function
     const editorStateCommand = await asyncCommand({ userId, notebookId });
 
-    // gets the last Version of the Notebook
-    let currentVersion = await getLastVersion(undefined/*no transaction*/, notebookId),
-        currentVersionIndex = currentVersion ? currentVersion.index : NO_NOTEBOOK_VERSION;
+    // since the above async may have taken a long time, this ensures that the
+    // Notebook *still* exists and the caller still has permissions to edit it
+    const notebook = await getNotebook(undefined/*no transaction*/, userId, notebookId, ShareRole.Editor, 'execute D3AN');
+    // CHECK: is the right answer to always use NotebookSchemaVersionLatest?
+    const schemaVersion = notebook.schemaVersion/*matching that of the Notebook for any edits*/;
 
-    // gets the content at the given Version if it exists
-    if(collaborationDelay.readDelayMs > 0) await sleep(collaborationDelay.writeDelayMs);
-    const notebookContent = currentVersionIndex ? await getDocumentAtVersion(undefined/*no transaction*/, schemaVersion, notebookId, currentVersionIndex) : undefined/*no content*/;
-    let editorState = createEditorState(schemaVersion, notebookContent);
+    // gets the latest Version of the Notebook
+    const { latestIndex, document } = await getLatestDocument(undefined/*no transaction*/, userId, schemaVersion, notebookId)/*throws on error*/;
+    let currentVersionIndex = latestIndex;
+    let editorState = createEditorState(schemaVersion, document);
 
-    // try to write the Steps
+    // execute the Command and write the resulting ProseMirror Steps
     let written = false/*not written by default*/;
     for(let i=0; i<MAX_ATTEMPTS; i++) {
-      let { doc } = editorState;
-
-      // get the missing Versions from the last recorded Version
-      const versions = await getVersionsFromIndex(undefined/*no transaction*/, notebookId, currentVersionIndex);
-      currentVersionIndex = (versions.length < 1) ? currentVersionIndex : versions[versions.length - 1].index;
-      const nextVersionIndex = currentVersionIndex + 1;
-
-      // collapse the Steps into the Document to create a new Editor State
-      editorState = getEditorStateFromDocAndVersions(schemaVersion, doc, versions);
-
-      // create the Command and create a new Transaction and execute the Command within it
+      // execute the Command given the current Editor State
       const command = editorStateCommand.command(editorState);
       const tr = editorState.tr;
       command(tr);
@@ -89,14 +82,22 @@ export const executeAsyncCommand = async (userId: UserIdentifier, notebookId: No
         await writeVersions(
           userId, clientId,
           schemaVersion, notebookId,
-          nextVersionIndex, tr.steps
+          currentVersionIndex + 1/*next Version*/, tr.steps
         );
         written = true;
         break/*success - stop trying*/;
       } catch(error) {
-        if(error instanceof ApplicationError) continue/*handled error, try to write again*/;
-        throw error;
+        if(!(error instanceof ApplicationError)) throw error;
       }
+
+      // failed writing above (implying that there were later Versions yet to be read)
+      // so get the missing Versions from the last recorded Version and update the
+      // Editor State
+      const versions = await getVersionsFromIndex(undefined/*no transaction*/, notebookId, currentVersionIndex);
+      // FIXME: add check if there were no additional Versions (which means that
+      //        the above write *didn't* fail due to later Versions)
+      currentVersionIndex = (versions.length < 1) ? currentVersionIndex : versions[versions.length - 1].index;
+      editorState = getEditorStateFromDocAndVersions(schemaVersion, editorState.doc, versions);
     }
     if(!written) throw new ApplicationError('functions/aborted', `Could not write ProseMirror Steps for Command '${label}' for Notebook (${notebookId}) for User (${userId}) due to too many attempts.`);
   } catch(error) {
