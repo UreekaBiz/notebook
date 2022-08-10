@@ -1,12 +1,11 @@
 import { EditorState } from 'prosemirror-state';
-import { logger } from 'firebase-functions';
 
-import { contentToStep, getSchema, getEditorState, getEditorStateFromDocAndVersions, getRandomSystemUserId, nodeToContent, sleep, ClientIdentifier, Command, NotebookIdentifier, ShareRole, UserIdentifier, NO_NOTEBOOK_VERSION } from '@ureeka-notebook/service-common';
+import { createEditorState, getEditorStateFromDocAndVersions, getRandomSystemUserId, sleep, ClientIdentifier, Command, NotebookIdentifier, ShareRole, UserIdentifier, NO_NOTEBOOK_VERSION } from '@ureeka-notebook/service-common';
 
 import { getNotebook } from '../notebook/notebook';
 import { getEnv } from '../util/environment';
 import { ApplicationError } from '../util/error';
-import { getContentAtVersion } from './content';
+import { getDocumentAtVersion } from './document';
 import { getLastVersion, getVersionsFromIndex, writeVersions } from './version';
 
 // ********************************************************************************
@@ -49,8 +48,8 @@ export const wrapCommandFunction = async (userId: UserIdentifier, notebookId: No
 
     // gets the content at the given Version if it exists
     if(collaborationDelay.readDelayMs > 0) await sleep(collaborationDelay.writeDelayMs);
-    const notebookContent = currentVersionIndex ? await getContentAtVersion(undefined/*no transaction*/, schemaVersion, notebookId, currentVersionIndex) : undefined/*no content*/;
-    let editorState = getEditorState(schemaVersion, notebookContent);
+    const notebookContent = currentVersionIndex ? await getDocumentAtVersion(undefined/*no transaction*/, schemaVersion, notebookId, currentVersionIndex) : undefined/*no content*/;
+    let editorState = createEditorState(schemaVersion, notebookContent);
 
     // try to write the Steps
     let written = false/*not written by default*/;
