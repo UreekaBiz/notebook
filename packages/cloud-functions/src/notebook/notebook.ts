@@ -1,16 +1,37 @@
 import { DocumentReference, Transaction } from 'firebase-admin/firestore';
 import { logger } from 'firebase-functions';
 
-import { contentToNode, extractDocumentName, getSchema, setChange, NotebookDocumentContent, NotebookIdentifier, NotebookType, NotebookSchemaVersion, Notebook_Create, Notebook_Delete, Notebook_Hashtag, Notebook_Publish, Notebook_Rename, Notebook_Storage, SetChange, SystemUserId, UserIdentifier, DEFAULT_NOTEBOOK_NAME, MAX_NOTEBOOK_HASHTAGS } from '@ureeka-notebook/service-common';
+import { contentToNode, extractDocumentName, getSchema, isNotebookRole, setChange, NotebookDocumentContent, NotebookIdentifier, NotebookType, NotebookSchemaVersion, Notebook_Create, Notebook_Delete, Notebook_Hashtag, Notebook_Publish, Notebook_Rename, Notebook_Storage, SetChange, ShareRole, SystemUserId, UserIdentifier, DEFAULT_NOTEBOOK_NAME, MAX_NOTEBOOK_HASHTAGS } from '@ureeka-notebook/service-common';
 
 import { firestore } from '../firebase';
 import { updateHashtagOccurrences } from '../hashtag/hashtagSummary';
 import { ApplicationError } from '../util/error';
-import { ServerTimestamp } from '../util/firestore';
+import { getSnapshot, ServerTimestamp } from '../util/firestore';
 import { notebookCollection, notebookDocument } from './datastore';
 
 // ********************************************************************************
 // == Get =========================================================================
+export const getNotebook = async (
+  transaction: Transaction | undefined/*outside transaction*/,
+  userId: UserIdentifier,
+  notebookId: NotebookIdentifier, role: ShareRole,
+  label: string/*context*/
+): Promise<Notebook_Storage> => {
+  const notebookRef = notebookCollection.doc(notebookId);
+  const snapshot = await getSnapshot(transaction, notebookRef);
+  if(!snapshot.exists) throw new ApplicationError('functions/not-found', `Cannot ${label} on non-existing Notebook (${notebookId}) for User (${userId}).`);
+  const notebook = snapshot.data()!;
+
+  // FIXME: push down the ability to check the roles of the user specifically to
+  //        be able to check if the User is also an admin
+  if(!isNotebookRole(userId, notebook, role)) throw new ApplicationError('functions/permission-denied', `Cannot ${label} on Notebook (${notebookId}) where the User (${userId}) in not ${role}.`);
+
+  if(notebook.deleted) throw new ApplicationError('data/deleted', `Cannot ${label} on already deleted Notebook (${notebookId}) for User (${userId}).`);
+
+  return notebook;
+};
+
+// -- Name ------------------------------------------------------------------------
 // gets the Title of a Document from the specified content
 // NOTE: If there is no a valid title on the content from an Checkpoint it will
 //       default to 1) the first 'n' characters of the content or 2) DEFAULT_NOTEBOOK_NAME
