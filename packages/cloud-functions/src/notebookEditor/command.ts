@@ -48,6 +48,7 @@ export const wrapCommandFunction = async (userId: UserIdentifier, notebookId: No
     const notebook = notebookSnapshot.data()!;
     if(notebook.deleted) throw new ApplicationError('data/deleted', `Cannot perform command ${label} for soft-deleted Notebook (${notebookId}) for User (${userId}).`);
     if(!notebook.editors.includes(userId) && notebook.createdBy !== userId) throw new ApplicationError('functions/permission-denied', `Only Editors of a Notebook (${notebookId}) may perform Command '${label}' for User (${userId}).`);
+    const schemaVersion = notebook.schemaVersion/*for convenience*/;
 
     // gets the last Version of the Notebook and gets the reference for the next
     // logical Version. If no Version exists then the next Version is the first
@@ -56,8 +57,8 @@ export const wrapCommandFunction = async (userId: UserIdentifier, notebookId: No
 
     // gets the content at the given Version if it exists
     if(collaborationDelay.readDelayMs > 0) await sleep(collaborationDelay.writeDelayMs);
-    const notebookContent = currentVersionIndex ? await getNotebookContent(undefined/*no transaction*/, notebook.schemaVersion, notebookId, currentVersionIndex) : undefined/*no content*/;
-    let editorState = getEditorState(notebook.schemaVersion, notebookContent);
+    const notebookContent = currentVersionIndex ? await getNotebookContent(undefined/*no transaction*/, schemaVersion, notebookId, currentVersionIndex) : undefined/*no content*/;
+    let editorState = getEditorState(schemaVersion, notebookContent);
     if(!editorState) throw new ApplicationError('data/integrity', `Cannot create Editor State for Notebook (${notebookId}) for Version (${currentVersion}).`);
 
     // creates a unique identifier for the clientId
@@ -79,7 +80,7 @@ export const wrapCommandFunction = async (userId: UserIdentifier, notebookId: No
       currentVersionIndex = currentVersion?.index;
       const nextVersionIndex = currentVersionIndex ? currentVersionIndex + 1 : NO_NOTEBOOK_VERSION/*start of document if no last Version*/;
 
-      const schema = getSchema(notebook.schemaVersion);
+      const schema = getSchema(schemaVersion);
       let { doc } = editorState;
       // collapse the Steps into the Document to create a new Editor State
       versions.forEach(version => {
@@ -93,11 +94,11 @@ export const wrapCommandFunction = async (userId: UserIdentifier, notebookId: No
         // NOTE: if the process fails then that failed Step can be safely ignored since
         //       the ClientDocument will ignore it as well
         const stepResult = prosemirrorStep.apply(doc);
-        if(stepResult.failed || !stepResult.doc) { console.error(`Invalid Notebook (${notebook.schemaVersion}) Version (${version.index}) '${version.content}' while performing command ${label}. Reason: ${stepResult.failed}. Ignoring.`); return/*ignore Version / Step*/; }
+        if(stepResult.failed || !stepResult.doc) { console.error(`Invalid Notebook (${schemaVersion}) Version (${version.index}) '${version.content}' while performing command ${label}. Reason: ${stepResult.failed}. Ignoring.`); return/*ignore Version / Step*/; }
         doc = stepResult.doc;
       });
       // create an Editor State from the newly created Document
-      editorState = getEditorState(notebook.schemaVersion, nodeToContent(doc));
+      editorState = getEditorState(schemaVersion, nodeToContent(doc));
       if(!editorState) throw new ApplicationError('data/integrity', `Cannot create Editor State for Notebook (${notebookId}) for Version (${currentVersion}).`);
 
       // create the Command and create a new Transaction and execute the Command within it
@@ -110,7 +111,7 @@ export const wrapCommandFunction = async (userId: UserIdentifier, notebookId: No
         // write the Versions from the Steps generated on the Command
         await writeVersions(
           notebookId,
-          notebook.schemaVersion/*matching Notebook for consistency*/,
+          schemaVersion/*matching Notebook for consistency*/,
           userId,
           clientId,
           nextVersionIndex,
