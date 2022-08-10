@@ -63,8 +63,8 @@ export const wrapCommandFunction = async (userId: UserIdentifier, notebookId: No
     // creates a unique identifier for the clientId
     const clientId = getRandomSystemUserId()/*FIXME: consistency*/;
 
-    let written = false/*not written by default*/;
     // try to write the Steps
+    let written = false/*not written by default*/;
     for(let i=0; i<MAX_ATTEMPTS; i++) {
       // get the missing Versions from the last recorded Version
       const versionSnapshot = await getSnapshot(undefined/*no transaction*/, lastVersionsQuery(notebookId, currentVersionIndex ?? NO_NOTEBOOK_VERSION - 1/*all existing versions*/));
