@@ -1,6 +1,6 @@
 import { customAlphabet } from 'nanoid';
 import { Fragment, Node as ProseMirrorNode, Schema } from 'prosemirror-model';
-import { Selection, Transaction } from 'prosemirror-state';
+import { EditorState, Selection, Transaction } from 'prosemirror-state';
 
 import { Attributes, AttributeType } from './attribute';
 import { JSONMark } from './mark';
@@ -74,12 +74,15 @@ export type NodeFound = { node: ProseMirrorNode; position: number; };
 /** @returns the parent node of a {@link Selection} */
 export const getParentNode = (selection: Selection): ProseMirrorNode => selection.$anchor.parent;
 
-/** @returns the last Node (as a {@link NodeFound}) with the specified identifier */
-export const findLastNodeById = (rootNode: ProseMirrorNode, nodeId: NodeIdentifier): NodeFound | null/*not found*/ => {
+/** @returns the first Node (as a {@link NodeFound}) with the specified identifier */
+export const findNodeById = (editorState: EditorState, nodeId: NodeIdentifier): NodeFound | null/*not found*/ => {
   let nodeFound: NodeFound | null/*not found*/ = null/*not found*/;
-  rootNode.descendants((node, position) => {
-    if(node.attrs.id === nodeId) return/*doesn't match -- keep looking*/;
+  editorState.doc.descendants((node, position) => {
+    if(nodeFound) return false/*already found -- stop looking*/;
+    if(node.attrs[AttributeType.Id] !== nodeId) return/*doesn't match -- keep looking*/;
+
     nodeFound = { node, position };
+    return false/*stop searching*/;
   });
   return nodeFound;
 };

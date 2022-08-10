@@ -266,7 +266,7 @@ export {
   computeRemovedNodeObjs,
   extractDocumentName,
   findContentDifferencePositions,
-  findLastNodeById,
+  findNodeById,
   getParentNode,
   getWrapStyles,
   getNodesAffectedByStepMap,
