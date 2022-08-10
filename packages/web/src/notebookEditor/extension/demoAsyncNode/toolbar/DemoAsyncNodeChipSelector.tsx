@@ -1,4 +1,4 @@
-import { isDemoAsyncNode, swap, AttributeType, NodeName } from '@ureeka-notebook/web-service';
+import { isDemoAsyncNode, swap, AttributeType, NodeName, VisualId } from '@ureeka-notebook/web-service';
 
 import { getCodeBlockViewStorage } from 'notebookEditor/extension/codeblock/nodeView/storage';
 import { isValidCodeBlockReference, visualIdsFromCodeBlockReferences } from 'notebookEditor/extension/codeBlockAsyncNode/util';
@@ -18,7 +18,7 @@ export const DemoAsyncNodeChipSelector: React.FC<Props> = ({ editor }) => {
   const selectedChips = visualIdsFromCodeBlockReferences(editor, codeBlockReferences);
 
   // == Handler ===================================================================
-  const handleChipsInputUpdate = (codeBlockVisualId: string) => {
+  const handleChipsInputUpdate = (codeBlockVisualId: VisualId) => {
     const codeBlockReference = isValidCodeBlockReference(editor, attrs, codeBlockVisualId);
     if(!codeBlockReference.isValid) return false/*ignore call*/;
 
@@ -28,7 +28,7 @@ export const DemoAsyncNodeChipSelector: React.FC<Props> = ({ editor }) => {
                  .run();
   };
 
-  const handleChipClick = (codeBlockVisualId: string) => {
+  const handleChipClick = (codeBlockVisualId: VisualId) => {
     const codeBlockReference = isValidCodeBlockReference(editor, attrs, codeBlockVisualId);
     if(!codeBlockReference.isValid) return false/*ignore call*/;
 

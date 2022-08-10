@@ -32,7 +32,7 @@ export class CodeBlockStorage extends NodeViewStorage<CodeBlockController> {
     return this.visualIdMap[id];
   }
 
-  public getCodeBlockId(searchedVisualId: string): NodeIdentifier | undefined {
+  public getCodeBlockId(searchedVisualId: VisualId): NodeIdentifier | undefined {
     return Object.keys(this.visualIdMap).find(codeBlockId => this.visualIdMap[codeBlockId] === searchedVisualId);
   }
 }

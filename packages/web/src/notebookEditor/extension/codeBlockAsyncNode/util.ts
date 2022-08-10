@@ -1,7 +1,7 @@
 import { Editor } from '@tiptap/core';
 import { NodeSelection } from 'prosemirror-state';
 
-import { hashString, isBlank, isCodeBlockNode, AttributeType, CodeBlockAsyncNodeAttributes, CodeBlockAsyncNodeType, CodeBlockNodeType, CodeBlockReference, NodeIdentifier, NodeName, REMOVED_CODEBLOCK_VISUALID } from '@ureeka-notebook/web-service';
+import { hashString, isBlank, isCodeBlockNode, AttributeType, CodeBlockAsyncNodeAttributes, CodeBlockAsyncNodeType, CodeBlockNodeType, CodeBlockReference, NodeIdentifier, NodeName, VisualId, REMOVED_CODEBLOCK_VISUALID } from '@ureeka-notebook/web-service';
 
 import { getCodeBlockViewStorage } from 'notebookEditor/extension/codeblock/nodeView/storage';
 import { EMPTY_CODEBLOCK_HASH } from 'notebookEditor/extension/codeblock/type';
@@ -66,7 +66,7 @@ export const codeBlockHash = (node: CodeBlockNodeType) => {
 
 // ================================================================================
 type ValidCodeBlockReference = Readonly<{ isValid: false; } | { isValid: true; codeBlockId: NodeIdentifier; }>;
-export const isValidCodeBlockReference = (editor: Editor, attrs: CodeBlockAsyncNodeAttributes, visualId: string): ValidCodeBlockReference => {
+export const isValidCodeBlockReference = (editor: Editor, attrs: CodeBlockAsyncNodeAttributes, visualId: VisualId): ValidCodeBlockReference => {
   const codeBlockReferences = attrs[AttributeType.CodeBlockReferences];
 
   if(!codeBlockReferences || codeBlockReferences.includes(visualId)) return { isValid: false }/*already included or codeBlockReferences don't exists*/;
