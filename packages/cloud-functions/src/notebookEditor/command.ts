@@ -79,6 +79,7 @@ export const wrapCommandFunction = async (userId: UserIdentifier, notebookId: No
       // update current Version to the most up to date Version
       // FIXME: what is this doing? Versions are pulled in order by contract.
       //        If all of this is simply to get the last Version then just get it!!!
+      //        (Look at VersionListener's handleNewVersion()!!! Don't make things up!!!)
       currentVersion = versions.reduce((acc, version) => {
         if(!acc || acc.index < version.index) return version;
         return acc;
