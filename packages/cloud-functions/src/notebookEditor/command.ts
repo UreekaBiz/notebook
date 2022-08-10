@@ -22,15 +22,18 @@ type CollaborationDelay = Readonly<{
 }>;
 const collaborationDelay: CollaborationDelay = { readDelayMs: 2000, writeDelayMs: 2000 };
 
+// --------------------------------------------------------------------------------
 // function that creates a Command that interacts with the given Editor State
 // NOTE: the returned Command can be executed multiple times in an attempt to save
 //       the Steps. Any heavy computation should be done on the CommandGenerator
 //       (e.g doing an async operation)
 type CommandGenerator = (props: {
   userId: UserIdentifier;
-  notebookId: NotebookIdentifier;
   clientId: ClientIdentifier;
+
+  notebookId: NotebookIdentifier;
   versionIndex: number;
+
   editorState: EditorState;
 }) => Promise<Command>;
 
@@ -96,7 +99,7 @@ export const wrapCommandFunction = async (userId: UserIdentifier, notebookId: No
       if(!editorState) throw new ApplicationError('data/integrity', `Cannot create Editor State for Notebook (${notebookId}) for Version (${currentVersion}).`);
 
       // create the Command and create a new Transaction and execute the Command within it
-      const command = await func({ clientId, editorState, notebookId, userId, versionIndex: nextVersionIndex });
+      const command = await func({ userId, clientId, notebookId, versionIndex: nextVersionIndex, editorState });
       const tr = editorState.tr;
       command(tr);
 
