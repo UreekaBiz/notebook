@@ -3,7 +3,7 @@ import { generateNotebookVersionIdentifier, removeUndefined, Creatable_Create, N
 import { firestore } from '../firebase';
 import { ApplicationError } from '../util/error';
 import { ServerTimestamp } from '../util/firestore';
-import { getNotebookContent } from '../notebookEditor/checkpoint';
+import { getContentAtVersion } from '../notebookEditor/checkpoint';
 import { versionDocument } from '../notebookEditor/datastore';
 import { notebookDocument, notebookPublishedContentDocument, notebookPublishedDocument } from './datastore';
 import { updateNotebookPublish } from './notebook';
@@ -36,9 +36,9 @@ export const publishNotebook = async (
       const versionSnapshot = await transaction.get(versionRef);
       if(!versionSnapshot.exists) throw new ApplicationError('functions/not-found', `Cannot create Published Notebook for non-existing Version (${versionIndex}) in Notebook (${notebookId}) for User (${userId}).`);
 
-      // create Notebook content
+      // read Notebook content
       // NOTE: all reads must come before writes in a Firestore transaction
-      const content = await getNotebookContent(transaction, notebook.schemaVersion, notebookId, versionIndex);
+      const content = await getContentAtVersion(transaction, notebook.schemaVersion, notebookId, versionIndex);
 
       // if the Notebook isn't already published then update its state
       const isPublished = notebook.isPublished/*preserve state*/;

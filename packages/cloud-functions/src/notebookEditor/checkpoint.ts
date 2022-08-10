@@ -13,7 +13,37 @@ import { checkpointDocument, lastCheckpointQuery, versionRangeQuery } from './da
 // ********************************************************************************
 const N_VERSIONS = Math.max(0, Number(getEnv('NOTEBOOK_CHECKPOINT_N_VERSIONS', '100'/*guess (balance between # of Checkpoints and # of NotebookVersions clients need to read*/)));
 
-// ================================================================================
+// == Get =========================================================================
+// returns the content of a Notebook at the given Version index
+export const getContentAtVersion = async (
+  transaction: Transaction | undefined/*outside transaction*/,
+  version: NotebookSchemaVersion, notebookId: NotebookIdentifier, index: number
+): Promise<NotebookDocumentContent> => {
+  const lastCheckpoint = await getLastCheckpoint(transaction, notebookId),
+        lastCheckpointIndex = getLastCheckpointIndex(lastCheckpoint);
+
+  // (within the Transaction) get the NotebookVersions between the last Checkpoint
+  // (exclusive) and the current index (inclusive)
+  const versionSnapshot = await getSnapshot(transaction, versionRangeQuery(notebookId, lastCheckpointIndex/*exclusive*/, index/*inclusive*/));
+//logger.log(`NotebookVersions: ${versionSnapshot.size}`);
+  const versions = versionSnapshot.docs.map(doc => doc.data());
+
+  return collapseVersions(version, lastCheckpoint, versions);
+};
+
+// ................................................................................
+// returns the last known Checkpoint using the specified Transaction. If there
+// are no existing Checkpoints then `undefined`
+export const getLastCheckpoint = async (transaction: Transaction | undefined/*outside transaction*/, notebookId: NotebookIdentifier) => {
+  const snapshot = await getSnapshot(transaction, lastCheckpointQuery(notebookId));
+  if(snapshot.empty) return undefined/*by contract*/;
+
+  if(snapshot.size > 1) logger.warn(`Expected a single last Checkpoint but received ${snapshot.size}. Ignoring all but first.`);
+  return snapshot.docs[0/*only one by contract*/].data();
+};
+export const getLastCheckpointIndex = (checkpoint: Checkpoint | undefined/*none*/) => (checkpoint === undefined) ? NO_NOTEBOOK_VERSION/*by contract*/ : checkpoint.index;
+
+// == Create ======================================================================
 // creates a new Checkpoint after 'n' NotebookVersions for the specified Notebook
 // given the specified NotebookVersion#index
 // NOTE: if this fails for any reason (e.g. contention in the transaction, timeout,
@@ -46,7 +76,7 @@ export const createCheckpoint = async (notebookId: NotebookIdentifier, index: nu
     const notebook = snapshot.data()!;
     if(notebook.deleted) { logger.info(`Notebook (${notebookId}) soft-deleted. Checkpoint will not be written.`); return/*nothing more to do*/; }
 
-    const content = await getNotebookContent(transaction, notebook.schemaVersion, notebookId, index);
+    const content = await getContentAtVersion(transaction, notebook.schemaVersion, notebookId, index);
 //logger.log(`Content: ${content}`);
 
     // *create* (not 'set') the Checkpoint so that duplicate events do not clobber
@@ -67,33 +97,3 @@ export const createCheckpoint = async (notebookId: NotebookIdentifier, index: nu
     updateNotebookRename(transaction, notebookId, notebook.schemaVersion, content);
   });
 };
-
-// ................................................................................
-// returns the content of a Notebook at the given index
-export const getNotebookContent = async (
-  transaction: Transaction | undefined/*outside transaction*/,
-  version: NotebookSchemaVersion, notebookId: NotebookIdentifier, index: number
-): Promise<NotebookDocumentContent> => {
-  const lastCheckpoint = await getLastCheckpoint(transaction, notebookId),
-        lastCheckpointIndex = getLastCheckpointIndex(lastCheckpoint);
-
-  // (within the Transaction) get the NotebookVersions between the last Checkpoint
-  // (exclusive) and the current index (inclusive)
-  const versionSnapshot = await getSnapshot(transaction, versionRangeQuery(notebookId, lastCheckpointIndex/*exclusive*/, index/*inclusive*/));
-//logger.log(`NotebookVersions: ${versionSnapshot.size}`);
-  const versions = versionSnapshot.docs.map(doc => doc.data());
-
-  return collapseVersions(version, lastCheckpoint, versions);
-};
-
-// ................................................................................
-// returns the last known Checkpoint using the specified Transaction. If there
-// are no existing Checkpoints then `undefined`
-export const getLastCheckpoint = async (transaction: Transaction | undefined/*outside transaction*/, notebookId: NotebookIdentifier) => {
-  const snapshot = await getSnapshot(transaction, lastCheckpointQuery(notebookId));
-  if(snapshot.empty) return undefined/*by contract*/;
-
-  if(snapshot.size > 1) logger.warn(`Expected a single last Checkpoint but received ${snapshot.size}. Ignoring all but first.`);
-  return snapshot.docs[0/*only one by contract*/].data();
-};
-export const getLastCheckpointIndex = (checkpoint: Checkpoint | undefined/*none*/) => (checkpoint === undefined) ? NO_NOTEBOOK_VERSION/*by contract*/ : checkpoint.index;

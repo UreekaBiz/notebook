@@ -7,7 +7,7 @@ import { notebookDocument } from '../notebook/datastore';
 import { getEnv } from '../util/environment';
 import { ApplicationError } from '../util/error';
 import { getSnapshot } from '../util/firestore';
-import { getNotebookContent } from './checkpoint';
+import { getContentAtVersion } from './checkpoint';
 import { lastVersionsQuery } from './datastore';
 import { getLastVersion, writeVersions } from './version';
 
@@ -59,7 +59,7 @@ export const wrapCommandFunction = async (userId: UserIdentifier, notebookId: No
 
     // gets the content at the given Version if it exists
     if(collaborationDelay.readDelayMs > 0) await sleep(collaborationDelay.writeDelayMs);
-    const notebookContent = currentVersionIndex ? await getNotebookContent(undefined/*no transaction*/, schemaVersion, notebookId, currentVersionIndex) : undefined/*no content*/;
+    const notebookContent = currentVersionIndex ? await getContentAtVersion(undefined/*no transaction*/, schemaVersion, notebookId, currentVersionIndex) : undefined/*no content*/;
     let editorState = getEditorState(schemaVersion, notebookContent);
     if(!editorState) throw new ApplicationError('data/integrity', `Cannot create Editor State for Notebook (${notebookId}) for Version (${currentVersion}).`);
 
