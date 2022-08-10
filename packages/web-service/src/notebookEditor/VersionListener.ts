@@ -204,10 +204,11 @@ export class VersionListener {
     // set the initial Editor content from what was just read
     // REF: https://github.com/ueberdosis/tiptap/issues/491
     const { doc, tr } = this.editor.view.state;
+    const tipTapDocument = this.editor.schema.nodeFromJSON(document.toJSON())/*NOTE: seems to be required by TipTap given different Schemas?*/;
     const selection = TextSelection.create(doc, 0, doc.content.size);
     const transaction = tr
             .setSelection(selection)
-            .replaceSelectionWith(document, false/*don't inherit marks*/)
+            .replaceSelectionWith(tipTapDocument, false/*don't inherit marks*/)
             .setMeta('preventUpdate', true)
             .setMeta('addToHistory', false/*do not include initial step fetch into the history*/);
     this.editor.view.dispatch(transaction);
