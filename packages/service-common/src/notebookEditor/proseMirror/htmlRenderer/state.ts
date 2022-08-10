@@ -10,7 +10,7 @@ export const codeBlockLevel = Number.MAX_SAFE_INTEGER;
 
 // == Type ========================================================================
 type LevelValue = { level: number; value: number; };
-type VisualId = string/*alias*/;
+export type VisualId = string/*alias*/;
 export type VisualIdMap = Record<NodeIdentifier, VisualId>;
 export type CodeBlockRendererState = {
   visualIds: VisualIdMap;
