@@ -22,10 +22,9 @@ export const lastVersionQuery = (notebookId: NotebookIdentifier) =>
     limit(1/*last document*/)
   );
 
-// ................................................................................
-export const fillGapQuery = (notebookId: NotebookIdentifier, currentIndex: number) =>
+export const lastVersionsQuery = (notebookId: NotebookIdentifier, minIndex/*exclusive*/: number) =>
   query(notebookVersionCollection(notebookId),
-    where(nameof<NotebookVersion>('index'), '>'/*exclusive*/, currentIndex),
+    where(nameof<NotebookVersion>('index'), '>'/*exclusive*/, minIndex),
     orderBy(nameof<NotebookVersion>('index'), 'asc')
   );
 

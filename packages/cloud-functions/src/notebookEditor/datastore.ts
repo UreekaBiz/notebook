@@ -30,15 +30,15 @@ export const versionRangeQuery = (notebookId: NotebookIdentifier, minIndex/*excl
     .orderBy(nameof<NotebookVersion_Storage>('index'), 'asc')/*ordered by contract*/;
 
 // ................................................................................
-export const lastVersionsQuery = (notebookId: NotebookIdentifier, minIndex/*exclusive*/: number) =>
-  versionCollection(notebookId)
-    .where(nameof<NotebookVersion_Storage>('index'), '>'/*exclusive*/, minIndex)
-    .orderBy(nameof<NotebookVersion_Storage>('index'), 'asc')/*ordered by contract*/;
-
 export const lastVersionQuery = (notebookId: NotebookIdentifier) =>
   versionCollection(notebookId)
     .orderBy(nameof<NotebookVersion_Storage>('index'), 'desc')
     .limit(1/*last document*/);
+
+export const lastVersionsQuery = (notebookId: NotebookIdentifier, minIndex/*exclusive*/: number) =>
+  versionCollection(notebookId)
+    .where(nameof<NotebookVersion_Storage>('index'), '>'/*exclusive*/, minIndex)
+    .orderBy(nameof<NotebookVersion_Storage>('index'), 'asc')/*ordered by contract*/;
 
 // -- Checkpoint ------------------------------------------------------------------
 export const lastCheckpointQuery = (notebookId: NotebookIdentifier) =>

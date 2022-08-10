@@ -6,7 +6,7 @@ import { collapseVersions, generateNotebookVersionIdentifier, Checkpoint, Client
 import { getLogger, ServiceLogger } from '../logging';
 import { firestore } from '../util/firebase';
 import { getLastCheckpoint, getLastCheckpointIndex } from './checkpoint';
-import { fillGapQuery, notebookVersionDocument, lastVersionQuery } from './datastore';
+import { notebookVersionDocument, lastVersionQuery, lastVersionsQuery } from './datastore';
 
 const log = getLogger(ServiceLogger.NOTEBOOK_EDITOR);
 
@@ -29,8 +29,8 @@ export const onNewVersion = (callback: (version: NotebookVersion) => void, noteb
 
 // --------------------------------------------------------------------------------
 // get NotebookVersions between the specified index and whatever the latest is
-export const getVersionsFromIndex = async (notebookId: NotebookIdentifier, index: number): Promise<NotebookVersion[]> => {
-  const snapshot = await getDocs(fillGapQuery(notebookId, index));
+export const getVersionsFromIndex = async (notebookId: NotebookIdentifier, index/*exclusive*/: number): Promise<NotebookVersion[]> => {
+  const snapshot = await getDocs(lastVersionsQuery(notebookId, index));
   return snapshot.docs.map(doc => doc.data());
 };
 
