@@ -1,11 +1,25 @@
 import { ShareRole } from '../util/share';
+import { assertNever } from '../util/type';
 import { UserIdentifier } from '../util/user';
 import { Notebook } from './type';
 
 // ********************************************************************************
 // == Permission ==================================================================
+export const isNotebookCreator = (userId: UserIdentifier, notebook: Notebook): boolean =>
+  (notebook.createdBy === userId);
 export const isNotebookEditor = (userId: UserIdentifier, notebook: Notebook): boolean =>
-  notebook.editors.includes(userId) || (notebook.createdBy === userId);
+  notebook.editors.includes(userId) || isNotebookCreator(userId, notebook);
+export const isNotebookViewer = (userId: UserIdentifier, notebook: Notebook): boolean =>
+  notebook.viewers.includes(userId) || notebook.editors.includes(userId)/*pedantic*/ || isNotebookCreator(userId, notebook);
+
+export const isNotebookRole = (userId: UserIdentifier, notebook: Notebook, role: ShareRole): boolean => {
+  switch(role) {
+    case ShareRole.Creator: return isNotebookCreator(userId, notebook);
+    case ShareRole.Editor:  return isNotebookEditor(userId, notebook);
+    case ShareRole.Viewer:  return isNotebookViewer(userId, notebook);
+    default: return assertNever(role);
+  }
+};
 
 // == Share =======================================================================
 // returns the Map of shared UserIdentifiers to ShareRole for the specified Notebook
