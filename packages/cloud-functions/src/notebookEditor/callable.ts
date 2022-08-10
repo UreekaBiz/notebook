@@ -12,7 +12,7 @@ import { insertNumbers, insertText } from './testAsyncCommand';
 export const notebookEditorInsertNumbers = functions.runWith(SmallMemory).https.onCall(wrapCall<NotebookEditorInsertNumbers_Rest>(
 { name: 'notebookEditorInsertNumbers', schema: NotebookEditorInsertNumbers_Rest_Schema, requiresAuth: true },
 async (data, context, userId) => {
-  const asyncCommand = insertNumbers()
+  const asyncCommand = insertNumbers();
   await executeAsyncCommand(userId!/*auth'd*/, data.notebookId, asyncCommand)/*throws on error*/;
 }));
 
