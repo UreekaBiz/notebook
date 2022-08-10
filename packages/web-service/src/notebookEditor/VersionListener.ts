@@ -8,7 +8,8 @@ import { contentToStep, generateClientIdentifier, sleep, AuthedUser, NotebookIde
 import { getLogger, ServiceLogger } from '../logging/type';
 import { getEnvNumber } from '../util/environment';
 import { ApplicationError } from '../util/error';
-import { getLatestContent, getVersionsFromIndex, onNewVersion, writeVersions } from './version';
+import { getLatestContent } from './content';
+import { getVersionsFromIndex, onNewVersion, writeVersions } from './version';
 
 const log = getLogger(ServiceLogger.NOTEBOOK_EDITOR);
 
