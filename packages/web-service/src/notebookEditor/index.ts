@@ -51,11 +51,11 @@ export {
   CodeBlockAttributes,
   isCodeBlockAttributes,
   CodeBlockType,
+  REMOVED_CODEBLOCK_VISUALID,
 
   CodeBlockAsyncNodeAttributes,
   isCodeBlockAsyncNodeAttributes,
   CodeBlockReference,
-  REMOVED_CODEBLOCK_VISUALID,
 
   Demo2AsyncNodeAttributes,
   DEFAULT_DEMO_2_ASYNC_NODE_DELAY,

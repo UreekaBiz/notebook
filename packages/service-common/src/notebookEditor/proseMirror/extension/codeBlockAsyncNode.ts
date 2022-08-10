@@ -41,10 +41,6 @@ export type CodeBlockHash = string/*alias*/;
 export const DEFAULT_CODEBLOCK_ASYNC_NODE_ID = `Default CodeBlockAsyncNode ID`;
 export const DEFAULT_CODEBLOCK_ASYNC_NODE_STATUS = DEFAULT_ASYNC_NODE_STATUS/*alias*/;
 
-// the text that gets shown for codeBlockAsyncNode chips when the corresponding
-// codeBlock gets removed, hence invalidating its visualId
-export const REMOVED_CODEBLOCK_VISUALID = 'Removed';
-
 // -- Node Type -------------------------------------------------------------------
 // NOTE: this is the only way to ensure the right attributes will be available
 //       since PM does not provide a way to specify their type
