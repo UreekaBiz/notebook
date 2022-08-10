@@ -35,7 +35,7 @@ type CommandGenerator = (props: {
 }) => Promise<Command>;
 
 // == Utility =====================================================================
-export const wrapCommandFunction = async (userId: UserIdentifier, notebookId: NotebookIdentifier, label: string, func: CommandGenerator ): Promise<NotebookIdentifier> => {
+export const wrapCommandFunction = async (userId: UserIdentifier, notebookId: NotebookIdentifier, label: string, func: CommandGenerator): Promise<NotebookIdentifier> => {
   try {
     // ensure that the Notebook document still exists (i.e. has not been deleted
     // either hard or soft) and that the caller has the right permissions to edit
