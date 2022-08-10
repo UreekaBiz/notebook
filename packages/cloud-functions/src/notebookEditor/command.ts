@@ -110,7 +110,6 @@ export const wrapCommandFunction = async (userId: UserIdentifier, notebookId: No
       try {
         if(collaborationDelay.writeDelayMs > 0) await sleep(collaborationDelay.writeDelayMs);
         // write the Versions from the Steps generated on the Command
-        // FIXME: #writeVersions() returns a boolean that must be checked!!!!
         await writeVersions(
           userId, clientId,
           schemaVersion/*matching Notebook for consistency*/, notebookId,
@@ -118,7 +117,7 @@ export const wrapCommandFunction = async (userId: UserIdentifier, notebookId: No
         );
         written = true;
         break/*success - stop trying*/;
-      } catch(error){
+      } catch(error) {
         if(error instanceof ApplicationError) continue/*handled error, try to write again*/;
         throw error;
       }
