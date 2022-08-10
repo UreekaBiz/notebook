@@ -49,7 +49,8 @@ export const wrapCommandFunction = async (userId: UserIdentifier, notebookId: No
     const notebook = notebookSnapshot.data()!;
     if(notebook.deleted) throw new ApplicationError('data/deleted', `Cannot perform command ${label} for soft-deleted Notebook (${notebookId}) for User (${userId}).`);
     if(!notebook.editors.includes(userId) && notebook.createdBy !== userId) throw new ApplicationError('functions/permission-denied', `Only Editors of a Notebook (${notebookId}) may perform Command '${label}' for User (${userId}).`);
-    const schemaVersion = notebook.schemaVersion/*for convenience*/;
+    const schemaVersion = notebook.schemaVersion/*for convenience*/,
+          schema = getSchema(schemaVersion);
 
     // gets the last Version of the Notebook and gets the reference for the next
     // logical Version. If no Version exists then the next Version is the first
@@ -81,7 +82,6 @@ export const wrapCommandFunction = async (userId: UserIdentifier, notebookId: No
       currentVersionIndex = currentVersion?.index;
       const nextVersionIndex = currentVersionIndex ? currentVersionIndex + 1 : NO_NOTEBOOK_VERSION/*start of document if no last Version*/;
 
-      const schema = getSchema(schemaVersion);
       let { doc } = editorState;
       // collapse the Steps into the Document to create a new Editor State
       versions.forEach(version => {
