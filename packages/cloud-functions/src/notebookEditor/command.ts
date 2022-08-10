@@ -10,9 +10,9 @@ import { getNotebookContent } from './checkpoint';
 import { lastVersionsQuery } from './datastore';
 import { getLastVersion, writeVersions } from './version';
 
+// ********************************************************************************
 const MAX_ATTEMPTS = Math.max(0, Number(getEnv('NOTEBOOK_VERSION_MAX_ATTEMPTS', '5'/*guess*/)));
 
-// ********************************************************************************
 // == Type ========================================================================
 type CollaborationDelay = Readonly<{
   /** time in millis to delay before reading. No delay if <= 0 */
