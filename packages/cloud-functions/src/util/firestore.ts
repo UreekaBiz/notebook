@@ -47,7 +47,8 @@ export const TimestampFromValueOf = (timestampValue: TimestampValue) => {
   return new firebase.firestore.Timestamp(Number(match[/*$*/1]), Number(match[/*$*/2]));
 };
 
-// ................................................................................
+// ================================================================================
+// SEE: https://www.typescriptlang.org/docs/handbook/declaration-files/by-example.html#overloaded-functions
 export function getSnapshot<T>(transaction: Transaction | undefined, documentRef: DocumentReference<T>): Promise<DocumentSnapshot<T>>
 export function getSnapshot<T>(transaction: Transaction | undefined, query: Query<T>): Promise<QuerySnapshot<T>>;
 export function getSnapshot<T>(transaction: Transaction | undefined, documentRefOrQuery: DocumentReference<T> | Query<T>): Promise<DocumentSnapshot<T> | QuerySnapshot<T>>{
@@ -56,7 +57,7 @@ export function getSnapshot<T>(transaction: Transaction | undefined, documentRef
     // NOTE: this is required to avoid a TypesScript error.
     if(documentRefOrQuery instanceof DocumentReference) return transaction.get(documentRefOrQuery);
     return transaction.get(documentRefOrQuery);
-  } // else -- use firestore directly
+  } /* else -- use firestore directly */
   return documentRefOrQuery.get();
 };
 
