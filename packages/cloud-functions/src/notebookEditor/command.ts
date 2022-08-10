@@ -1,4 +1,5 @@
 import { EditorState } from 'prosemirror-state';
+import { logger } from 'firebase-functions';
 
 import { contentToStep, getSchema, getEditorState, getRandomSystemUserId, sleep,  ClientIdentifier, Command, NotebookIdentifier, UserIdentifier, NO_NOTEBOOK_VERSION, nodeToContent } from '@ureeka-notebook/service-common';
 
@@ -94,7 +95,7 @@ export const wrapCommandFunction = async (userId: UserIdentifier, notebookId: No
         // NOTE: if the process fails then that failed Step can be safely ignored since
         //       the ClientDocument will ignore it as well
         const stepResult = prosemirrorStep.apply(doc);
-        if(stepResult.failed || !stepResult.doc) { console.error(`Invalid Notebook (${schemaVersion}) Version (${version.index}) '${version.content}' while performing command ${label}. Reason: ${stepResult.failed}. Ignoring.`); return/*ignore Version / Step*/; }
+        if(stepResult.failed || !stepResult.doc) { logger.error(`Invalid Notebook (${schemaVersion}) Version (${version.index}) '${version.content}' while performing command ${label}. Reason: ${stepResult.failed}. Ignoring.`); return/*ignore Version / Step*/; }
         doc = stepResult.doc;
       });
       // create an Editor State from the newly created Document
