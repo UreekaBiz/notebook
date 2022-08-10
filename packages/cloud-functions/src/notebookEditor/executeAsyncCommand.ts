@@ -64,6 +64,7 @@ export const executeAsyncCommand = async (userId: UserIdentifier, notebookId: No
     const schemaVersion = notebook.schemaVersion/*matching that of the Notebook for any edits*/;
 
     // gets the latest Version of the Notebook
+    if(collaborationDelay.readDelayMs > 0) await sleep(collaborationDelay.readDelayMs);
     const { latestIndex, document } = await getLatestDocument(undefined/*no transaction*/, userId, schemaVersion, notebookId)/*throws on error*/;
     let currentVersionIndex = latestIndex;
     let editorState = createEditorState(schemaVersion, document);
@@ -93,6 +94,7 @@ export const executeAsyncCommand = async (userId: UserIdentifier, notebookId: No
       // failed writing above (implying that there were later Versions yet to be read)
       // so get the missing Versions from the last recorded Version and update the
       // Editor State
+      if(collaborationDelay.readDelayMs > 0) await sleep(collaborationDelay.readDelayMs);
       const versions = await getVersionsFromIndex(undefined/*no transaction*/, notebookId, currentVersionIndex);
       // FIXME: add check if there were no additional Versions (which means that
       //        the above write *didn't* fail due to later Versions)
