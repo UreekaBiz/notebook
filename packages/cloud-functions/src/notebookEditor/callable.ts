@@ -6,17 +6,17 @@ import { wrapCall, SmallMemory } from '../util/function';
 import { insertNumbers, insertText, wrapCommandFunction } from './command';
 
 // ********************************************************************************
-// == Session =====================================================================
+// == Command =====================================================================
 // inserts multiple numbers at random positions in the Notebook
 export const notebookEditorInsertNumbers = functions.runWith(SmallMemory).https.onCall(wrapCall<NotebookEditorInsertNumbers_Rest>(
 { name: 'notebookEditorInsertNumbers', schema: NotebookEditorInsertNumbers_Rest_Schema, requiresAuth: true },
 async (data, context, userId) => {
-  await wrapCommandFunction(userId!/*auth'd*/, data.notebookId, 'insertNumbers', insertNumbers())/*throws on error*/;
+  await wrapCommandFunction(userId!/*auth'd*/, data.notebookId, insertNumbers())/*throws on error*/;
 }));
 
 // inserts the given text at the start of the Notebook
 export const notebookEditorInsertText = functions.runWith(SmallMemory).https.onCall(wrapCall<NotebookEditorInsertText_Rest>(
 { name: 'notebookEditorInsertText', schema: NotebookEditorInsertText_Rest_Schema, requiresAuth: true },
 async (data, context, userId) => {
-  await wrapCommandFunction(userId!/*auth'd*/, data.notebookId, 'insertText', insertText(data.text))/*throws on error*/;
+  await wrapCommandFunction(userId!/*auth'd*/, data.notebookId, insertText(data.text))/*throws on error*/;
 }));

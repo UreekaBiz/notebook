@@ -1,6 +1,6 @@
 import { EditorState } from 'prosemirror-state';
 
-import { createEditorState, generateUuid, getEditorStateFromDocAndVersions, sleep, Command, NotebookIdentifier, Notebook_Storage, ShareRole, UserIdentifier, NO_NOTEBOOK_VERSION, generateClientIdentifier } from '@ureeka-notebook/service-common';
+import { createEditorState, generateClientIdentifier, generateUuid, getEditorStateFromDocAndVersions, sleep, Command, NotebookIdentifier, ShareRole, UserIdentifier, NO_NOTEBOOK_VERSION } from '@ureeka-notebook/service-common';
 
 import { getNotebook } from '../notebook/notebook';
 import { getEnv } from '../util/environment';
@@ -21,7 +21,13 @@ type CollaborationDelay = Readonly<{
 const collaborationDelay: CollaborationDelay = { readDelayMs: 2000, writeDelayMs: 2000 };
 
 // --------------------------------------------------------------------------------
-export type EditorStateCommand = (editorState: EditorState) => Command;
+export type EditorStateCommand = Readonly<{
+  /** context for logging */
+  name: string;
+
+  /** generates the {@link Command} based on the given {@link EditorState} */
+  command: (editorState: EditorState) => Command;
+}>;
 
 // function that potentially does work and creates a Command that interacts with
 // the given Editor State
@@ -31,22 +37,24 @@ export type EditorStateCommand = (editorState: EditorState) => Command;
 export type CommandGenerator = (props: {
   userId: UserIdentifier;
 
+  /** the {@link Notebook} being executed against (for context) */
   notebookId: NotebookIdentifier;
-  notebook: Notebook_Storage;
 }) => Promise<EditorStateCommand>;
 
 // == Utility =====================================================================
-export const wrapCommandFunction = async (userId: UserIdentifier, notebookId: NotebookIdentifier, label: string, func: CommandGenerator): Promise<NotebookIdentifier> => {
+export const wrapCommandFunction = async (userId: UserIdentifier, notebookId: NotebookIdentifier, asyncCommand: CommandGenerator): Promise<NotebookIdentifier> => {
+  const label = asyncCommand.name/*for context*/;
+
   // the client identifier is based on the calling User
   // TODO: think about if it should be based on the System User
   const clientId = generateClientIdentifier({ userId, sessionId: generateUuid()/*unique for this 'session'*/ });
 
   try {
-    const notebook = await getNotebook(undefined/*no transaction*/, userId, notebookId, ShareRole.Editor, `perform Command ${label}`);
+    const notebook = await getNotebook(undefined/*no transaction*/, userId, notebookId, ShareRole.Editor, `perform Command '${label}'`);
     // CHECK: is the right answer to always use NotebookSchemaVersionLatest?
     const schemaVersion = notebook.schemaVersion/*for convenience*/;
 
-    const editorStateCommand = await func({ userId, notebookId, notebook });
+    const editorStateCommand = await asyncCommand({ userId, notebookId });
 
     // gets the last Version of the Notebook
     let currentVersion = await getLastVersion(undefined/*no transaction*/, notebookId),
@@ -71,7 +79,7 @@ export const wrapCommandFunction = async (userId: UserIdentifier, notebookId: No
       editorState = getEditorStateFromDocAndVersions(schemaVersion, doc, versions);
 
       // create the Command and create a new Transaction and execute the Command within it
-      const command = editorStateCommand(editorState);
+      const command = editorStateCommand.command(editorState);
       const tr = editorState.tr;
       command(tr);
 
@@ -90,7 +98,7 @@ export const wrapCommandFunction = async (userId: UserIdentifier, notebookId: No
         throw error;
       }
     }
-    if(!written) throw new ApplicationError('functions/aborted', `Could not perform Command '${label}' for Notebook (${notebookId}) for User (${userId}) due to too many attempts.`);
+    if(!written) throw new ApplicationError('functions/aborted', `Could not write ProseMirror Steps for Command '${label}' for Notebook (${notebookId}) for User (${userId}) due to too many attempts.`);
   } catch(error) {
     if(error instanceof ApplicationError) throw error;
     throw new ApplicationError('datastore/write', `Error performing Command '${label}' for Notebook (${notebookId}) for User (${userId}). Reason: `, error);
@@ -101,32 +109,38 @@ export const wrapCommandFunction = async (userId: UserIdentifier, notebookId: No
 // == Command =====================================================================
 // inserts multiple numbers at random positions in the Notebook
 export const insertNumbers = (): CommandGenerator => async () => {
-  // DO GOO!
+  // NOTE: there is no need to check the EditorState in this case
 
-  // ensure that the state has what you need and get it
-  return (editorState) => {
-    // TODO: ensure that the desired Node exists, etc.
+  return ({
+    name: 'insertNumbers',
+    command: (editorState) => {
+      // TODO: ensure that the desired Node exists, etc.
 
-    return (tr) => {
-      // inserts 10 (arbitrary) characters at random positions in the document
-      for(let i=0; i<10; i++) {
-        const position = Math.floor(Math.random() * tr.doc.content.size) + 1/*start of valid content*/;
-        tr.insertText(String(i), position, position);
-      }
-      return true/*command can be performed*/;
-    };
-  };
+      return (tr) => {
+        // inserts 10 (arbitrary) characters at random positions in the document
+        for(let i=0; i<10; i++) {
+          const position = Math.floor(Math.random() * tr.doc.content.size) + 1/*start of valid content*/;
+          tr.insertText(String(i), position, position);
+        }
+        return true/*command can be performed*/;
+      };
+    },
+  });
 };
 
 // inserts the specified text at the start of the the specified Notebook
 export const insertText = (text: string): CommandGenerator => async () => {
-  // ensure that the state has what you need and get it
-  return (editorState) => {
-    // TODO: ensure that the desired Node exists, etc.
+  // NOTE: there is no need to check the EditorState in this case
 
-    return (tr) => {
-      tr.insertText(text, 1, 1/*start of document*/);
-      return true/*Command can be performed*/;
-    };
-  };
+  return ({
+    name: 'insertText',
+    command: (editorState) => {
+      // TODO: ensure that the desired Node exists, etc.
+
+      return (tr) => {
+        tr.insertText(text, 1, 1/*start of document*/);
+        return true/*Command can be performed*/;
+      };
+    },
+  });
 };
