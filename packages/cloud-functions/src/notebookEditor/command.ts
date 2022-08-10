@@ -22,10 +22,10 @@ type CollaborationDelay = Readonly<{
 }>;
 const collaborationDelay: CollaborationDelay = { readDelayMs: 2000, writeDelayMs: 2000 };
 
-// function that creates a command that interacts with the given state.
-// NOTE: the returned command can be executed multiple times in an attempt to save
-//       the steps. Any heavy computation should be done on the CommandGenerator
-//       i.e. doing an async operation.
+// function that creates a Command that interacts with the given Editor State
+// NOTE: the returned Command can be executed multiple times in an attempt to save
+//       the Steps. Any heavy computation should be done on the CommandGenerator
+//       (e.g doing an async operation)
 type CommandGenerator = (props: {
   userId: UserIdentifier;
   notebookId: NotebookIdentifier;
@@ -39,45 +39,44 @@ export const wrapCommandFunction = async (userId: UserIdentifier, notebookId: No
   try {
     // ensure that the Notebook document still exists (i.e. has not been deleted
     // either hard or soft) and that the caller has the right permissions to edit
-    // its content.
+    // its content
     const notebookRef = notebookDocument(notebookId), notebookSnapshot = await getSnapshot(undefined/*no transaction*/, notebookRef);
     if(!notebookSnapshot.exists) throw new ApplicationError('functions/not-found', `Cannot perform command ${label} for non-existing Notebook (${notebookId}) for User (${userId}).`);
     const notebook = notebookSnapshot.data()!;
     if(notebook.deleted) throw new ApplicationError('data/deleted', `Cannot perform command ${label} for soft-deleted Notebook (${notebookId}) for User (${userId}).`);
-    if(!notebook.editors.includes(userId) && notebook.createdBy !== userId) throw new ApplicationError('functions/permission-denied', `Only Editors of a Notebook (${notebookId}) may perform command ${label} for User (${userId}).`);
+    if(!notebook.editors.includes(userId) && notebook.createdBy !== userId) throw new ApplicationError('functions/permission-denied', `Only Editors of a Notebook (${notebookId}) may perform Command '${label}' for User (${userId}).`);
 
-    // gets the last version of the Notebook and gets the reference for the next
-    // logical version. If no version exists then the next version is the first
+    // gets the last Version of the Notebook and gets the reference for the next
+    // logical Version. If no Version exists then the next Version is the first
     let currentVersion = await getLastVersion(undefined/*no transaction*/, notebookId),
         currentVersionIndex = currentVersion?.index;
 
-    // gets the content at the given version if it exists.
+    // gets the content at the given Version if it exists
     if(collaborationDelay.readDelayMs > 0) await sleep(collaborationDelay.writeDelayMs);
     const notebookContent = currentVersionIndex ? await getNotebookContent(undefined/*no transaction*/, notebook.schemaVersion, notebookId, currentVersionIndex) : undefined/*no content*/;
     let editorState = getEditorState(notebook.schemaVersion, notebookContent);
-    if(!editorState) throw new ApplicationError('data/integrity', `Cannot create editorState for Notebook (${notebookId}) for version (${currentVersion}).`);
+    if(!editorState) throw new ApplicationError('data/integrity', `Cannot create Editor State for Notebook (${notebookId}) for Version (${currentVersion}).`);
 
-    // Creates a unique identifier for the clientId.
-    // FIXME: Consistency
-    const clientId = getRandomSystemUserId();
+    // creates a unique identifier for the clientId
+    const clientId = getRandomSystemUserId()/*FIXME: consistency*/;
 
     let written = false/*not written by default*/;
-    // try to write the steps
-    for(let i=0;i<MAX_ATTEMPTS;i++) {
-      // get the missing versions from the last recorded version.
+    // try to write the Steps
+    for(let i=0; i<MAX_ATTEMPTS; i++) {
+      // get the missing Versions from the last recorded Version
       const versionSnapshot = await getSnapshot(undefined/*no transaction*/, lastVersionsQuery(notebookId, currentVersionIndex ?? NO_NOTEBOOK_VERSION - 1/*all existing versions*/));
       const versions = versionSnapshot.docs.map(doc => doc.data());
-      // update current version to the most up to date version.
+      // update current Version to the most up to date Version
       currentVersion = versions.reduce((acc, version) => {
         if(!acc || acc.index < version.index) return version;
         return acc;
       }, currentVersion);
       currentVersionIndex = currentVersion?.index;
-      const nextVersionIndex = currentVersionIndex ? currentVersionIndex + 1 : NO_NOTEBOOK_VERSION/*start of document if no last version*/;
+      const nextVersionIndex = currentVersionIndex ? currentVersionIndex + 1 : NO_NOTEBOOK_VERSION/*start of document if no last Version*/;
 
       const schema = getSchema(notebook.schemaVersion);
       let { doc } = editorState;
-      // collapse the steps into the document to create a new editorState.
+      // collapse the Steps into the Document to create a new Editor State
       versions.forEach(version => {
         const prosemirrorStep = contentToStep(schema, version.content);
 
@@ -92,19 +91,18 @@ export const wrapCommandFunction = async (userId: UserIdentifier, notebookId: No
         if(stepResult.failed || !stepResult.doc) { console.error(`Invalid Notebook (${notebook.schemaVersion}) Version (${version.index}) '${version.content}' while performing command ${label}. Reason: ${stepResult.failed}. Ignoring.`); return/*ignore Version / Step*/; }
         doc = stepResult.doc;
       });
-      // create an editorState from the newly created document
+      // create an Editor State from the newly created Document
       editorState = getEditorState(notebook.schemaVersion, nodeToContent(doc));
-      if(!editorState) throw new ApplicationError('data/integrity', `Cannot create editorState for Notebook (${notebookId}) for version (${currentVersion}).`);
+      if(!editorState) throw new ApplicationError('data/integrity', `Cannot create Editor State for Notebook (${notebookId}) for Version (${currentVersion}).`);
 
+      // create the Command and create a new Transaction and execute the Command within it
       const command = await func({ clientId, editorState, notebookId, userId, versionIndex: nextVersionIndex });
-      // create a new transaction
       const tr = editorState.tr;
-      // execute the command in the transaction
       command(tr);
 
       try {
         if(collaborationDelay.writeDelayMs > 0) await sleep(collaborationDelay.writeDelayMs);
-        // write the versions from the steps generated on the command
+        // write the Versions from the Steps generated on the Command
         await writeVersions(
           notebookId,
           notebook.schemaVersion/*matching Notebook for consistency*/,
@@ -120,20 +118,20 @@ export const wrapCommandFunction = async (userId: UserIdentifier, notebookId: No
         throw error;
       }
     }
-    if(!written) throw new ApplicationError('functions/aborted', `Could not perform command ${label} for notebook (${notebookId}) for User (${userId}) due to too many attempts.`);
+    if(!written) throw new ApplicationError('functions/aborted', `Could not perform Command '${label}' for Notebook (${notebookId}) for User (${userId}) due to too many attempts.`);
   } catch(error) {
     if(error instanceof ApplicationError) throw error;
-    throw new ApplicationError('datastore/write', `Error performing command ${label} for notebook (${notebookId}) for User (${userId}). Reason: `, error);
+    throw new ApplicationError('datastore/write', `Error performing Command '${label}' for Notebook (${notebookId}) for User (${userId}). Reason: `, error);
   }
   return notebookId;
 };
 
 // == Command =====================================================================
-// inserts multiple numbers at random positions in the Notebook.
+// inserts multiple numbers at random positions in the Notebook
 export const insertNumbers = (): CommandGenerator => async () => {
   return (tr) => {
-    // inserts 10 characters at random positions in the document.
-    for(let i=0;i<10;i++) {
+    // inserts 10 (arbitrary) characters at random positions in the document
+    for(let i=0; i<10; i++) {
       const position = Math.floor(Math.random() * tr.doc.content.size) + 1/*start of valid content*/;
       tr.insertText(String(i), position, position);
     }
@@ -141,10 +139,10 @@ export const insertNumbers = (): CommandGenerator => async () => {
   };
 };
 
-// inserts the specified text at the start of the the specified notebook.
+// inserts the specified text at the start of the the specified Notebook
 export const insertText = (text: string): CommandGenerator =>  async () => {
   return (tr) => {
     tr.insertText(text, 1, 1/*start of document*/);
-    return true/*command can be performed*/;
+    return true/*Command can be performed*/;
   };
 };
