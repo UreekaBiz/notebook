@@ -253,6 +253,7 @@ export {
   codeBlockLevel,
   updateStack,
 
+  VisualId,
   VisualIdMap,
 
   // -- Async ---------------------------------------------------------------------

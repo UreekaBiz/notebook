@@ -1,11 +1,10 @@
 import { Editor } from '@tiptap/core';
 
-import { NodeIdentifier, NodeName, VisualIdMap } from '@ureeka-notebook/web-service';
+import { NodeIdentifier, NodeName, VisualId, VisualIdMap } from '@ureeka-notebook/web-service';
 
 import { NodeViewStorage } from 'notebookEditor/model/NodeViewStorage';
 import { computeState } from 'notebookEditor/shared/state';
 
-import { VisualId } from '../type';
 import { CodeBlockController } from './controller';
 
 // ********************************************************************************
