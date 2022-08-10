@@ -19,7 +19,7 @@ export const demo2AsyncNodeToolItem: ToolItem = {
   label: NodeName.DEMO_2_ASYNC_NODE,
 
   icon: <MdFindReplace size={16} />,
-  tooltip: 'Demo2AsyncNode (⌘ + Shift + Option + D)',
+  tooltip: 'Demo2AsyncNode (⌘ + ⇧ + ⌥ + D)',
 
   shouldBeDisabled: () => false,
   shouldShow: (editor, depth) => depth === undefined || editor.state.selection.$anchor.depth === depth/*direct parent*/,
