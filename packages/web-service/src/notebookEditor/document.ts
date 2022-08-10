@@ -24,6 +24,7 @@ export const getLatestDocument = async (userId: UserIdentifier, schemaVersion: N
   let versions: NotebookVersion[];
   try {
     versions = await getVersionsFromIndex(notebookId, checkpointIndex);
+    log.debug(`Loaded ${versions.length} Version(s) for Notebook (${notebookId}) for User (${userId}).`);
   } catch(error) {
     log.warn(`Unexpected error reading latest Notebook (${schemaVersion}) Versions for Notebook (${notebookId}) for User (${userId}).`, error);
     throw error/*rethrow*/;
