@@ -11,6 +11,9 @@ import { notebookCollection, notebookDocument } from './datastore';
 
 // ********************************************************************************
 // == Get =========================================================================
+// ensure that the Notebook document still exists (i.e. has not been deleted
+// either hard or soft) and that the caller has the right permissions based on the
+// specified ShareRole
 export const getNotebook = async (
   transaction: Transaction | undefined/*outside transaction*/,
   userId: UserIdentifier,
