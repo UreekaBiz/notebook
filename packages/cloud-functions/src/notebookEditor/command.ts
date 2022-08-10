@@ -7,7 +7,7 @@ import { notebookDocument } from '../notebook/datastore';
 import { getEnv } from '../util/environment';
 import { ApplicationError } from '../util/error';
 import { getSnapshot } from '../util/firestore';
-import { getContentAtVersion } from './checkpoint';
+import { getContentAtVersion } from './content';
 import { lastVersionsQuery } from './datastore';
 import { getLastVersion, writeVersions } from './version';
 
