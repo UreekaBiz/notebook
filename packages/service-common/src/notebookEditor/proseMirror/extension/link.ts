@@ -1,6 +1,6 @@
 import { Mark as ProseMirrorMark, MarkSpec } from 'prosemirror-model';
 
-import { noNodeOrMarkSpecAttributeDefaultValue, AttributesTypeFromNodeSpecAttributes, AttributeType } from '../attribute';
+import { noNodeOrMarkSpecAttributeDefaultValue, AttributesTypeFromNodeSpecAttributes, AttributeType, ACTIONABLE_NODE } from '../attribute';
 import { MarkRendererSpec } from '../htmlRenderer/type';
 import { JSONMark, MarkName } from '../mark';
 import { NotebookSchemaType } from '../schema';
@@ -57,8 +57,9 @@ export const LinkMarkRendererSpec: MarkRendererSpec<LinkAttributes> = {
   // NOTE: renderer tag must match toDOM tag
   tag: 'a',
   render: {
+    [ACTIONABLE_NODE]: ''/*just add the attribute*/,
     rel: 'noopener noreferrer nofollow'/*for general link sanity*/,
-    style: 'text-decoration: underline;cursor: inherit;',
+    style: 'text-decoration: underline;',
   },
 
   attributes: {/*use default renderer*/},

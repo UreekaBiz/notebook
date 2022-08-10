@@ -218,6 +218,7 @@ export {
   isTextStyleMark,
 
   // == HTML Renderer =============================================================
+  ACTIONABLE_NODE,
   DATA_MARK_TYPE,
   DATA_NODE_TYPE,
 

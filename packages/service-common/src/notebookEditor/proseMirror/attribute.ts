@@ -1,4 +1,9 @@
 // ********************************************************************************
+// -- Constant --------------------------------------------------------------------
+// nodes whose style changes based on some action (e.g. pressing CMD or CTRL)
+// get this attribute added to their renderer definition (SEE: index.css)
+export const ACTIONABLE_NODE = 'actionable-node';
+
 // -- Type ------------------------------------------------------------------------
 export enum SetAttributeType { STRING = 'string', BOOLEAN = 'boolean', NUMBER = 'number', ARRAY = 'array' }
 export type Attributes = Partial<Record<AttributeType, any>>;
