@@ -1,7 +1,7 @@
 import { EditorState } from 'prosemirror-state';
 import { logger } from 'firebase-functions';
 
-import { contentToStep, getSchema, getEditorState, getRandomSystemUserId, sleep,  ClientIdentifier, Command, NotebookIdentifier, UserIdentifier, NO_NOTEBOOK_VERSION, nodeToContent } from '@ureeka-notebook/service-common';
+import { contentToStep, getSchema, getEditorState, getRandomSystemUserId, isNotebookEditor, nodeToContent, sleep, ClientIdentifier, Command, NotebookIdentifier, UserIdentifier, NO_NOTEBOOK_VERSION } from '@ureeka-notebook/service-common';
 
 import { notebookDocument } from '../notebook/datastore';
 import { getEnv } from '../util/environment';
@@ -48,7 +48,7 @@ export const wrapCommandFunction = async (userId: UserIdentifier, notebookId: No
     if(!notebookSnapshot.exists) throw new ApplicationError('functions/not-found', `Cannot perform command ${label} for non-existing Notebook (${notebookId}) for User (${userId}).`);
     const notebook = notebookSnapshot.data()!;
     if(notebook.deleted) throw new ApplicationError('data/deleted', `Cannot perform command ${label} for soft-deleted Notebook (${notebookId}) for User (${userId}).`);
-    if(!notebook.editors.includes(userId) && notebook.createdBy !== userId) throw new ApplicationError('functions/permission-denied', `Only Editors of a Notebook (${notebookId}) may perform Command '${label}' for User (${userId}).`);
+    if(!isNotebookEditor(userId, notebook)) throw new ApplicationError('functions/permission-denied', `Only Editors of a Notebook (${notebookId}) may perform Command '${label}' for User (${userId}).`);
     const schemaVersion = notebook.schemaVersion/*for convenience*/,
           schema = getSchema(schemaVersion);
 
