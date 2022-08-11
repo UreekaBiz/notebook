@@ -33,12 +33,12 @@ export type NotebookDocument = Readonly<{
   /** the ProseMirror Document at the corresponding Version index */
   document: DocumentNodeType;
 }>;
-export const getDocument = async (userId: UserIdentifier, notebookId: NotebookIdentifier, role: ShareRole): Promise<NotebookDocument> => {
+export const getDocument = async (userId: UserIdentifier, notebookId: NotebookIdentifier): Promise<NotebookDocument> => {
   try {
     // NOTE: retrieved in a transaction to ensure that the schema, version and
     //       document are all mutually consistent
     return firestore.runTransaction(async transaction => {
-      const notebook = await getNotebook(transaction, userId, notebookId, role, `retrieve`)/*throws on error*/;
+      const notebook = await getNotebook(transaction, userId, notebookId, ShareRole.Viewer, `retrieve`)/*throws on error*/;
       const { latestIndex, document } = await getLatestDocument(transaction, userId, notebook.schemaVersion, notebookId)/*throws on error*/;
 
       return {
