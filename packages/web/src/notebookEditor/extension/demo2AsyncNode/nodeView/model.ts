@@ -63,7 +63,7 @@ export class Demo2AsyncNodeModel extends AbstractAsyncNodeModel<string, Demo2Asy
   }
 
   protected getStatusFromResult(result: string) {
-    return AsyncNodeStatus.SUCCESS/*by*/;
+    return AsyncNodeStatus.SUCCESS/*default for D2AN*/;
   }
 
   public isAsyncNodeDirty(): boolean {
