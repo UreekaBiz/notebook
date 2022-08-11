@@ -19,8 +19,11 @@ export const ExecuteDemo2AsyncNodeButton: React.FC<Props> = ({ editor }) => {
         demo2AsyncNodeView = demo2AsyncNodeViewStorage.getNodeView(id);
   if(!demo2AsyncNodeView) return null/*nothing to render -- silently fail*/;
 
-  const disabled = !(demo2AsyncNodeView.node.attrs.textToReplace && demo2AsyncNodeView.node.attrs.textToReplace.length > 0) ||
-                    (demo2AsyncNodeView.node.textContent.length < 1);
+  const { textContent } = demo2AsyncNodeView.node;
+  const { textToReplace } = demo2AsyncNodeView.node.attrs;
+  const disabled = !(textToReplace && textToReplace.length > 0) ||
+                    !(textContent.includes(textToReplace)) ||
+                    (textContent.length < 1);
 
   return (
     <ExecuteAsyncNodeButton
