@@ -66,6 +66,10 @@ img.ProseMirror-selectednode/*target inline nodes with content (e.g. asyncNodes)
 [data-node-type="codeBlockReference"] {
   position: relative;
   font-weight: bold;
+
+  /* ensure renderer CodeBlockReferences get displayed properly */
+  color: inherit;
+  text-decoration: inherit;
 }
 
 /* .. Visual id ................................................................ */
