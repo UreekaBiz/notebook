@@ -81,6 +81,7 @@ export const executeAsyncCommand = async (userId: UserIdentifier, notebookId: No
         // write the Versions from the Steps generated on the Command
         if(collaborationDelay.writeDelayMs > 0) await sleep(collaborationDelay.writeDelayMs);
         await writeVersions( /*FIXME: move back to returning a boolean if this fails and save the exceptions for exceptions*/
+          undefined/*no transaction*/,
           userId, clientId,
           schemaVersion, notebookId,
           currentVersionIndex + 1/*next Version*/, tr.steps
