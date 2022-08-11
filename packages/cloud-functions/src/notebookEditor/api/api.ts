@@ -1,10 +1,10 @@
 import { createEditorState, generateClientIdentifier, generateUuid, sleep, DocumentNodeType, NotebookIdentifier, NotebookSchemaVersion, ShareRole, UserIdentifier } from '@ureeka-notebook/service-common';
-import { writeVersions } from 'notebookEditor/version';
 
 import { firestore } from '../../firebase';
 import { getNotebook } from '../../notebook/notebook';
 import { ApplicationError } from '../../util/error';
 import { getLatestDocument } from '../document';
+import { writeVersions } from '../version';
 import { DocumentUpdate } from './type';
 
 // the API for server-side retrieving and modifying Notebooks
