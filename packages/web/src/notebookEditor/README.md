@@ -26,23 +26,30 @@ be customized and be node or mark specific.
 ## Keyboard Shortcuts
 This is the list of keyboard shortcuts that is built into the Notebook Editor.
 
-| Keyboard Shortcut                                   | Description                                                    |
-| --------------------------------------------------- | -------------------------------------------------------------- |
-| <kbd>cmd</kbd><kbd>B</kbd>                          | Toggle the **bold** Mark                                       |
-| <kbd>cmd</kbd><kbd>Shift</kbd><kbd>X</kbd>          | Toggle the ~~strikethrough~~ Mark                              |
-| <kbd>cmd</kbd><kbd>A</kbd>                          | Select all the text in the editor (when focused)               |
-| <kbd>cmd</kbd><kbd>C</kbd>                          | Copy the selected text or nodes to the clipboard               |
-| <kbd>cmd</kbd><kbd>V</kbd>                          | Paste the selected text or nodes to the editor                 |
-| <kbd>cmd</kbd><kbd>X</kbd>                          | Cut the selected text or nodes from the editor                 |
-| <kbd>cmd</kbd><kbd>Shift</kbd><kbd>Arrow Keys</kbd> | Select the corresponding text or nodes with the arrow keys     |
-| <kbd>cmd</kbd><kbd>option</kbd><kbd>0</kbd>         | Toggle a Paragraph Node                                        |
-| <kbd>cmd</kbd><kbd>option</kbd><kbd>1</kbd>         | Toggle a Heading1 Node                                         |
-| <kbd>cmd</kbd><kbd>option</kbd><kbd>2</kbd>         | Toggle a Heading2 Node                                         |
-| <kbd>cmd</kbd><kbd>option</kbd><kbd>3</kbd>         | Toggle a Heading3 Node                                         |
-| <kbd>ctrl</kbd><kbd>option</kbd><kbd>,</kbd>        | Preview Published Notebook                                     |
-| <kbd>ctrl</kbd><kbd>option</kbd><kbd>,</kbd>        | Toggle Development Mode                                        |
-| <kbd>cmd</kbd><kbd>option</kbd><kbd>,</kbd>         | Focus the Notebook Editor                                      |
-| <kbd>cmd</kbd><kbd>option</kbd><kbd>.</kbd>         | Focus the first available ToolItem in the toolbar              |
+| Keyboard Shortcut                                           | Description                                                    |
+| ----------------------------------------------------------- | -------------------------------------------------------------- |
+| <kbd>cmd</kbd><kbd>B</kbd>                                  | Toggle the **bold** Mark                                       |
+| <kbd>cmd</kbd><kbd>Shift</kbd><kbd>X</kbd>                  | Toggle the ~~strikethrough~~ Mark                              |
+| <kbd>cmd</kbd><kbd>K</kbd>                                  | Insert a Link                                                  |
+| <kbd>cmd</kbd><kbd>A</kbd>                                  | Select all the text in the editor (when focused)               |
+| <kbd>cmd</kbd><kbd>C</kbd>                                  | Copy the selected text or nodes to the clipboard               |
+| <kbd>cmd</kbd><kbd>V</kbd>                                  | Paste the selected text or nodes to the editor                 |
+| <kbd>cmd</kbd><kbd>X</kbd>                                  | Cut the selected text or nodes from the editor                 |
+| <kbd>cmd</kbd><kbd>Shift</kbd><kbd>Arrow Keys</kbd>         | Select the corresponding text or nodes with the arrow keys     |
+| <kbd>cmd</kbd><kbd>option</kbd><kbd>0</kbd>                 | Toggle a Paragraph Node                                        |
+| <kbd>cmd</kbd><kbd>option</kbd><kbd>1</kbd>                 | Toggle a Heading1 Node                                         |
+| <kbd>cmd</kbd><kbd>option</kbd><kbd>2</kbd>                 | Toggle a Heading2 Node                                         |
+| <kbd>cmd</kbd><kbd>option</kbd><kbd>3</kbd>                 | Toggle a Heading3 Node                                         |
+| <kbd>cmd</kbd><kbd>shift</kbd><kbd>Option</kbd><kbd>I</kbd> | Toggle an Image Node                                           |
+| <kbd>cmd</kbd><kbd>shift</kbd><kbd>C</kbd>                  | Toggle a CodeBlock Node                                        |
+| <kbd>cmd</kbd><kbd>shift</kbd><kbd>Option</kbd><kbd>C</kbd> | Insert a CodeBlockReference Node                               |
+| <kbd>cmd</kbd><kbd>shift</kbd><kbd>D</kbd>                  | Insert and select a DemoAsyncNode                              |
+| <kbd>cmd</kbd><kbd>shift</kbd><kbd>Option</kbd><kbd>D</kbd> | Insert a Demo2AsyncNode and place cursor inside                |
+| <kbd>shift</kbd><kbd>enter</kbd>                            | (When inside a CodeBlock Node), insert a Paragraph Node below  |
+| <kbd>ctrl</kbd><kbd>option</kbd><kbd>,</kbd>                | Preview Published Notebook                                     |
+| <kbd>ctrl</kbd><kbd>option</kbd><kbd>,</kbd>                | Toggle Development Mode                                        |
+| <kbd>cmd</kbd><kbd>option</kbd><kbd>,</kbd>                 | Focus the Notebook Editor                                      |
+| <kbd>cmd</kbd><kbd>option</kbd><kbd>.</kbd>                 | Focus the first available ToolItem in the toolbar              |
 
 ## Parse Rules
 This is the list of parse rules that are implemented in the editor
