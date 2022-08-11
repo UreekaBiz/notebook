@@ -31,6 +31,7 @@ const InternalToolItem: React.FC<Props> = ({ editor, tool, depth }) => {
     try {
       tool.onClick(editor, depth);
     } catch(error) {
+      console.error(`Error while executing the tool ${tool.label}. Reason: `, error);
       // TODO: ToolItems should throw an specific type of Error to be handled here.
       //       Get the message from the error or use a default message as a fallback.
       const message =  error instanceof Error ? error.message : `Unknown error.`;
