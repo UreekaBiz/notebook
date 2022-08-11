@@ -135,6 +135,7 @@ export {
   isAsyncNode,
 
   CodeBlockNodeType,
+  createCodeBlockNode,
   getCodeBlockNodeType,
   isCodeBlockNode,
 
@@ -142,7 +143,7 @@ export {
   isCodeBlockAsyncNode,
 
   CodeBlockReferenceNodeType,
-  createCodeBlockNode,
+  createCodeBlockReferenceNode,
   isCodeBlockReferenceNode,
   getCodeBlockReferenceNodeType,
 
