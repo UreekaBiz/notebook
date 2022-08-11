@@ -21,21 +21,32 @@ export const Editor = () => {
   const [isActionModifierPressed, setIsActionModifierPressed] = useState(false/*by contract*/);
 
   // == Effect ====================================================================
+  // prevent the user from navigate away from the page or reload the page if the
+  // editor has pending writes. A generic modal will be shown as a AYS to the user.
   useEffect(() => {
+    let hasPendingWrite = false/*not writing by default*/;
     const subscription = editorService.onPendingWrites$().subscribe({
-      next: (hasPendingWrite) => {
-        // FIXME: show somewhere in the Editor / Toolbar and tie it to the something
-        //        that prevents the User from navigating away from the page until the
-        //        until no longer pending (confirm with an AYS!)
-        console.log(hasPendingWrite ? 'Saving changes ...' : 'Changes saved!');
-      },
+      next: (value) => hasPendingWrite = value,
       error: (error) => {
         log.info(`Unexpected error listening Notebook Editor pending writes. Reason: `, error);
       },
     });
 
+    const beforeUnloadHandler = (event: BeforeUnloadEvent) => {
+      if(!hasPendingWrite) return/*no need to warn*/;
+
+      event.preventDefault();
+      // NOTE: The returnValue will be shown to some users based on the browser
+      //       settings. Modern browsers will show a generic string that we don't
+      //       have control of.
+      // SEE:  https://developer.mozilla.org/en-US/docs/Web/API/Window/beforeunload_event#compatibility_notes
+      event.returnValue = 'Changes you made may not be saved.'/*default message by the browser*/;
+    };
+    window.addEventListener('beforeunload', beforeUnloadHandler);
+
     return () => {
       subscription.unsubscribe();
+      window.removeEventListener('beforeunload', beforeUnloadHandler);
     };
   }, [editorService]);
 
