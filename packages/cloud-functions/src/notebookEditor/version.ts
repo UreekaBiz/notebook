@@ -32,11 +32,12 @@ export const getVersionsFromIndex = async (transaction: Transaction | undefined/
 // writes the batch of ProseMirror Steps as Notebook Versions
 // SEE: @web-service: notebookEditor/version.ts
 export const writeVersions = async (
+  transaction: Transaction | undefined/*outside transaction*/,
   userId: UserIdentifier, clientId: ClientIdentifier,
   schemaVersion: NotebookSchemaVersion,  notebookId: NotebookIdentifier,
   startingIndex: number, pmSteps: ProseMirrorStep[]
 ): Promise<void> => {
-  return firestore.runTransaction(async transaction => {
+  const transactionBody = async (transaction: Transaction) => {
     // NOTE: only checks against first Version since if that doesn't exist then no
     //       other Version can exist by definition (since monotonically increasing)
     // NOTE: if other Versions *do* get written as this writes then the Transaction
@@ -65,5 +66,9 @@ export const writeVersions = async (
       };
       transaction.create(versionDocumentRef, version);
     });
-  });
+  };
+
+  // if a Transaction is provided then use it, otherwise create a new one
+  if(transaction) await transactionBody(transaction);
+  else await firestore.runTransaction(transactionBody);
 };
