@@ -26,4 +26,5 @@ export * from './mark';
 export * from './node';
 export * from './schema';
 export * from './state';
+export * from './theme';
 export * from './type';

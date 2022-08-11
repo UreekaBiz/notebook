@@ -250,6 +250,15 @@ export {
   contentToJSONNode,
   nodeToContent,
 
+  // == Theme =====================================================================
+  Theme,
+  Themes,
+  ThemeName,
+
+  notebookEditorTheme,
+  getHeadingThemeValue,
+  getThemeValue,
+
   // == Utility ===================================================================
   // -- State ---------------------------------------------------------------------
   codeBlockLevel,
