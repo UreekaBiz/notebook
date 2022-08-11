@@ -6,7 +6,7 @@ import { visualIdFromCodeBlockReference } from 'notebookEditor/extension/codeBlo
 import { getSelectedNode } from 'notebookEditor/extension/util/node';
 import { useNotebookEditor } from 'notebookEditor/hook/useNotebookEditor';
 import { getNodeViewStorage } from 'notebookEditor/model/NodeViewStorage';
-import { EditorToolComponentProps } from 'notebookEditor/toolbar/type';
+import { EditorToolComponentProps, TOOL_ITEM_DATA_TYPE } from 'notebookEditor/toolbar/type';
 import { useAsyncStatus, useIsMounted } from 'shared/hook';
 
 import { DemoAsyncNodeStorageType } from '../nodeView/controller';
@@ -71,6 +71,7 @@ export const ExecuteServerSideDemoAsyncNodeButton: React.FC<Props> = ({ editor }
       marginY='5px'
       marginLeft='10px'
       aria-label='execute'
+      datatype={disabled ? ''/*none*/ : TOOL_ITEM_DATA_TYPE/*(SEE:notebookEditor/toolbar/type)*/}
       rounded={100}
       onClick={handleClick}
     />
