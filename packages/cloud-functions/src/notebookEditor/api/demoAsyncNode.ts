@@ -24,6 +24,6 @@ export class DemoAsyncNodeAttributeReplace implements DocumentUpdate {
           newNode.attrs[AttributeType.Text] = (this.status === AsyncNodeStatus.SUCCESS) ? this.text : 'Error'/*CHECK: what else?*/;
 
     // replace the node with the new node
-    tr.replaceWith(position, node.nodeSize, newNode);
+    tr.replaceWith(position, position + node.nodeSize, newNode);
   }
 }
