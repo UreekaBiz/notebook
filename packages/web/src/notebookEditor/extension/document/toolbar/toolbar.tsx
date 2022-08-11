@@ -65,6 +65,8 @@ export const DocumentToolbar: Toolbar = {
     ],
     [
       shareNotebookToolItem,
+    ],
+    [
       setThemeToolItem,
     ],
     [
