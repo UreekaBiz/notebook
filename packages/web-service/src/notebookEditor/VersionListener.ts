@@ -1,9 +1,11 @@
 import { Editor } from '@tiptap/core';
 import * as collab from 'prosemirror-collab';
 import { TextSelection } from 'prosemirror-state';
+import { Step as ProseMirrorStep } from 'prosemirror-transform';
+
 import { distinctUntilChanged, BehaviorSubject } from 'rxjs';
 
-import { contentToStep, generateClientIdentifier, sleep, AuthedUser, NotebookIdentifier, NotebookVersion, NotebookSchemaVersion, Unsubscribe, UserIdentifier, NO_NOTEBOOK_VERSION } from '@ureeka-notebook/service-common';
+import { generateClientIdentifier, sleep, AuthedUser, NotebookIdentifier, NotebookVersion, NotebookSchemaVersion, Unsubscribe, UserIdentifier, NO_NOTEBOOK_VERSION } from '@ureeka-notebook/service-common';
 
 import { getLogger, ServiceLogger } from '../logging/type';
 import { getEnvNumber } from '../util/environment';
@@ -298,8 +300,13 @@ export class VersionListener {
   // 'commit' the specified Versions to the Editor
   private updateEditorWithVersions(versions: NotebookVersion[]) {
     // NOTE: 'clientId' is what ProseMirror calls them
-    const clientIds = versions.map(({ clientId }) => clientId),
-          proseMirrorSteps = versions.map(({ content }) => contentToStep(this.schemaVersion, content));
+    const clientIds = versions.map(({ clientId }) => clientId);
+
+    // NOTE: seems to be required by TipTap given different Schemas?
+    const proseMirrorSteps = versions.map(({ content }) => {
+      const versionJson = JSON.parse(content)/*FIXME: contentToJson()?*//*FIXME: handle exceptions!*/;
+      return ProseMirrorStep.fromJSON(this.editor.schema, versionJson)/*FIXME: wrap and think about exception*/;
+    });
 
     const transaction = collab.receiveTransaction(this.editor.view.state, proseMirrorSteps, clientIds, { mapSelectionBackward: true });
     this.editor.view.dispatch(transaction);

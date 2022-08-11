@@ -5,8 +5,8 @@ import { useEffect, useState, ReactNode } from 'react';
 import { getLogger, Notebook, NotebookEditorService, NotebookIdentifier, Logger, NodeIdentifier } from '@ureeka-notebook/web-service';
 
 import { useAuthedUser } from 'authUser/hook/useAuthedUser';
-import { notebookEditorTheme } from 'notebookEditor/extension/theme/theme';
 import { focusEditor } from 'notebookEditor/focus';
+import { setThemeStylesheet } from 'notebookEditor/theme/theme';
 import { editorDefinition } from 'notebookEditor/type';
 import { Loading } from 'shared/component/Loading';
 import { useAsyncStatus, useIsMounted } from 'shared/hook';
@@ -68,7 +68,7 @@ export const NotebookEditorProvider: React.FC<Props> = ({ notebookId, notebook, 
 
   // sets the initial theme when the component mounts
   useEffect(() => {
-    notebookEditorTheme.setThemeStylesheet()/*sync stylesheet*/;
+    setThemeStylesheet()/*sync stylesheet*/;
   }, []);
 
   // ..............................................................................

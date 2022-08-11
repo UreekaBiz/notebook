@@ -1,9 +1,8 @@
 import { getMarkAttributes } from '@tiptap/core';
 
-import { isLinkMarkAttributes, AttributeType, MarkName } from '@ureeka-notebook/web-service';
+import { getThemeValue, isLinkMarkAttributes, AttributeType, MarkName } from '@ureeka-notebook/web-service';
 
 import { ColorPicker } from 'notebookEditor/extension/style/component/ColorPicker';
-import { getThemeValue } from 'notebookEditor/extension/theme/theme';
 import { textColors } from 'notebookEditor/theme/type';
 import { EditorToolComponentProps } from 'notebookEditor/toolbar/type';
 

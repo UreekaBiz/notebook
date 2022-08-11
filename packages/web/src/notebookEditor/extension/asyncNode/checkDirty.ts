@@ -43,11 +43,9 @@ export const checkDirty = (transaction: Transaction, editor: Editor) => {
 
       if(typeof controller.nodeModel.isAsyncNodeDirty !== 'function') return/*cannot compute*/;
 
-      // Update model and view
+      // update model and view
       const isDirty = controller.nodeModel.isAsyncNodeDirty();
       controller.setDirty(isDirty);
     });
   }
-
 };
-

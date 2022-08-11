@@ -1,4 +1,8 @@
-import { Attributes, AttributeType, HeadingLevel, MarkName, NodeName, TextAlign, VerticalAlign, DATA_MARK_TYPE, DATA_NODE_TYPE } from '@ureeka-notebook/web-service';
+import { Attributes, AttributeType, TextAlign, VerticalAlign } from '../attribute';
+import { HeadingLevel } from '../extension/heading';
+import { DATA_MARK_TYPE, DATA_NODE_TYPE } from '../htmlRenderer/type';
+import { MarkName } from '../mark';
+import { NodeName } from '../node';
 
 // ********************************************************************************
 // == Element =====================================================================

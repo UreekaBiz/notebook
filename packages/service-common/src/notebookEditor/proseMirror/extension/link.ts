@@ -57,7 +57,7 @@ export const LinkMarkRendererSpec: MarkRendererSpec<LinkAttributes> = {
   // NOTE: renderer tag must match toDOM tag
   tag: 'a',
   render: {
-    [ACTIONABLE_NODE]: ''/*just add the attribute*/,
+    [ACTIONABLE_NODE]: ''/*add actionable style*/,
     rel: 'noopener noreferrer nofollow'/*for general link sanity*/,
     style: 'text-decoration: underline;',
   },
