@@ -1,28 +1,38 @@
 import { Editor } from '@tiptap/core';
 import { Transaction } from 'prosemirror-state';
 
-import { getNodesAffectedByStepMap, isHeadingNode, NodeName } from '@ureeka-notebook/web-service';
+import { getNodesAffectedByStepMap, isHeadingNode, AttributeType, NodeName } from '@ureeka-notebook/web-service';
+
+import { getNodeViewStorage } from 'notebookEditor/model/NodeViewStorage';
 
 import { CodeBlockStorage } from './nodeView/storage';
 
 // ********************************************************************************
+// Check to see if a transaction adds or removes a Heading or a CodeBlock, or if
+// it changes the level of a Heading. Recompute the necessary CodeBlock visual IDs
+// if this is the case
+
+// NOTE: it is the responsibility of this onTransaction to update all NodeViews
+//       that depend on CodeBlocks or Headings (e.g. CodeBlockReferences besides
+//       CodeBlocks themselves) to avoid duplication of onTransactions, and have
+//       a SSoT for the conditions that trigger these changes
+
 // == Constant ====================================================================
 const codeBlockHeadingNodeNames = new Set([NodeName.CODEBLOCK, NodeName.HEADING]);
 
 // == Transaction =================================================================
-// Check to see if a transaction adds or removes a Heading or a CodeBlock, or if
-// it changes the level of a Heading. Recompute the necessary CodeBlock visual IDs
-// if this is the case
-export const codeBlockOnTransaction = (transaction: Transaction, editor: Editor, storage: CodeBlockStorage) => {
+export const codeBlockOnTransaction = (transaction: Transaction, editor: Editor, codeBlockStorage: CodeBlockStorage) => {
   if(transaction.doc === transaction.before) return/*no changes*/;
 
   if(!codeBlocksOrHeadingsChanged(transaction)) return/*nothing changed*/;
 
   // update all of the visual IDs based on the new structure
-  storage.updateVisualIds(editor);
-  storage.forEachNodeView(codeBlockView => {
-    codeBlockView.nodeView.updateView();
-  });
+  codeBlockStorage.updateVisualIds(editor);
+  codeBlockStorage.forEachNodeView(codeBlockView => codeBlockView.nodeView.updateView());
+
+  // update all of the CodeBlockReferences based on the new structure
+  const codeBlockReferenceStorage = getNodeViewStorage(editor, NodeName.CODEBLOCK_REFERENCE);
+  codeBlockReferenceStorage.forEachNodeView(codeBlockReferenceView => codeBlockReferenceView.nodeView.updateView());
 };
 
 // ................................................................................
@@ -59,7 +69,7 @@ const codeBlocksOrHeadingsChanged = (transaction: Transaction) => {
 
         // -- check for same Heading levels ---------------------------------------
         if(isHeadingNode(oldNodeObjs[i].node) && isHeadingNode(newNodeObjs[i].node)) {
-          if(newNodeObjs[i].node.attrs.level !== oldNodeObjs[i].node.attrs.level) {
+          if(newNodeObjs[i].node.attrs[AttributeType.Level] !== oldNodeObjs[i].node.attrs[AttributeType.Level]) {
             shouldUpdate = true/*Heading level changed*/;
             return/*something changed*/;
           } /* else -- same level, keep checking */

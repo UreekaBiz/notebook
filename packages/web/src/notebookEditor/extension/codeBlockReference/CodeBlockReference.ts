@@ -8,7 +8,6 @@ import { NoOptions } from 'notebookEditor/model/type';
 import { setAttributeParsingBehavior } from '../util/attribute';
 import { insertAndSelectCodeBlockReference } from './command';
 import { CodeBlockReferenceController, CodeBlockReferenceStorageType } from './nodeView/controller';
-import { codeBlockReferenceOnTransaction } from './transaction';
 
 // ********************************************************************************
 // == Node ========================================================================
@@ -39,11 +38,6 @@ export const CodeBlockReference = Node.create<NoOptions, CodeBlockReferenceStora
 
   // -- Storage -------------------------------------------------------------------
   addStorage() { return new NodeViewStorage<CodeBlockReferenceController>(); },
-
-  // -- Transaction ---------------------------------------------------------------
-  // check to see if a Transaction affects a CodeBlock. If it does, update
-  // CodeBlockReferences NodeViews so that they match the state
-  onTransaction({ transaction }) { return codeBlockReferenceOnTransaction(transaction, this.storage); },
 
   // -- View ----------------------------------------------------------------------
   // NOTE: NodeViews are supposed to be unique for each Node (based on the id of
