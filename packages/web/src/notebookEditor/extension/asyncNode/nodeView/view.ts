@@ -36,10 +36,9 @@ export abstract class AbstractAsyncNodeView<T, NodeType extends AsyncNodeType, S
 
   // ------------------------------------------------------------------------------
   public updateView() {
-    const isDirty = this.model.getIsDirty(),
-          performingAsyncOperation = this.model.getPerformingAsyncOperation();
+    const isDirty = this.model.getIsDirty();
 
-    if(isDirty && !performingAsyncOperation) this.content.setAttribute(ASYNC_NODE_DIRTY_DATATYPE, ''/*does not need a value*/);
+    if(isDirty) this.content.setAttribute(ASYNC_NODE_DIRTY_DATATYPE, ''/*does not need a value*/);
     else this.content.removeAttribute(ASYNC_NODE_DIRTY_DATATYPE);
   }
 }
