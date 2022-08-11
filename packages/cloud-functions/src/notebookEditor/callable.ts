@@ -35,5 +35,5 @@ async (data, context, userId) => {
 export const notebookEditorDemoAsyncNodeExecute = functions.runWith(SmallMemory).https.onCall(wrapCall<NotebookEditorDemoAsyncNodeExecute_Rest>(
 { name: 'notebookEditorDemoAsyncNodeExecute', schema: NotebookEditorDemoAsyncNodeExecute_Rest_Schema, requiresAuth: true },
 async (data, context, userId) => {
-  await executeDemoAsyncNode(userId!/*auth'd*/, data.notebookId, data.nodeId, data.content)/*throws on error*/;
+  await executeDemoAsyncNode(userId!/*auth'd*/, data.notebookId, data.nodeId, data.hashes, data.content)/*throws on error*/;
 }));

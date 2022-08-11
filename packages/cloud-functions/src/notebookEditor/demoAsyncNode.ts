@@ -6,7 +6,7 @@ import { updateDocument } from './api/api';
 import { DemoAsyncNodeAttributeReplace } from './api/demoAsyncNode';
 
 // ********************************************************************************
-export const executeDemoAsyncNode = async (userId: UserIdentifier, notebookId: NotebookIdentifier, nodeId: NodeIdentifier, content: string) => {
+export const executeDemoAsyncNode = async (userId: UserIdentifier, notebookId: NotebookIdentifier, nodeId: NodeIdentifier, hashes: string[], content: string) => {
   // simulate a long-running operation
   let status: AsyncNodeStatus = AsyncNodeStatus.PROCESSING;
   let text: string | undefined/*error*/ = undefined/*default to error*/;
@@ -22,5 +22,5 @@ export const executeDemoAsyncNode = async (userId: UserIdentifier, notebookId: N
   }
 
   // update the identified Demo3AsyncNode with the result
-  await updateDocument(userId, notebookId, [ new DemoAsyncNodeAttributeReplace(nodeId, status, text) ]);
+  await updateDocument(userId, notebookId, [ new DemoAsyncNodeAttributeReplace(nodeId, status, hashes, text) ]);
 };

@@ -8,7 +8,7 @@ import { DocumentUpdate } from './type';
 // ********************************************************************************
 /** Updates the identified DemoAsyncNode with the specified status and text */
 export class DemoAsyncNodeAttributeReplace implements DocumentUpdate {
-  public constructor(private readonly nodeId: NodeIdentifier, private readonly status: AsyncNodeStatus, private readonly text?: string) {/*nothing additional*/}
+  public constructor(private readonly nodeId: NodeIdentifier, private readonly status: AsyncNodeStatus, private readonly hashes: string[], private readonly text?: string) {/*nothing additional*/}
 
   // == DocumentUpdate ============================================================
   public update(editorState: EditorState, tr: Transaction ) {
@@ -19,7 +19,7 @@ export class DemoAsyncNodeAttributeReplace implements DocumentUpdate {
     if(!isDemoAsyncNode(node)) throw new ApplicationError('functions/invalid-argument', `Node (${this.nodeId}) is not a Demo Async Node.`);
 
     const newNode = node.copy() as CodeBlockAsyncNodeType/*guaranteed by above check*/;
-          // NOTE: AttributeType.CodeBlockHashes remain unchanged
+          newNode.attrs[AttributeType.CodeBlockHashes] = this.hashes;
           newNode.attrs[AttributeType.Status] = this.status;
           newNode.attrs[AttributeType.Text] = (this.status === AsyncNodeStatus.SUCCESS) ? this.text : 'Error'/*CHECK: what else?*/;
 

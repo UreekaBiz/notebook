@@ -35,5 +35,11 @@ export const NotebookEditorDemoAsyncNodeExecute_Rest_Schema = Validate.object({
   /** the combined content of all of the Code Blocks associated with the Node */
   content: stringVLongSchema
       .required(),
+
+  /** the corresponding hashes in order of all of the CodeBLocks associated with
+   *  the node */
+  hashes: Validate.array()
+      .of(stringMedSchema.required())
+      .required(),
 }).noUnknown();
 export type NotebookEditorDemoAsyncNodeExecute_Rest = Readonly<Validate.InferType<typeof NotebookEditorDemoAsyncNodeExecute_Rest_Schema>>;
