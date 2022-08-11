@@ -8,6 +8,7 @@ import { ExtensionPriority, NoOptions } from 'notebookEditor/model/type';
 import { DialogStorage } from 'notebookEditor/model/DialogStorage';
 
 import { setLinkCommand, toggleLinkCommand, unsetLinkCommand } from './command';
+import { linkClickPlugin } from './plugin/LinkClickPlugin';
 import { linkCreatePlugin } from './plugin/linkCreatePlugin';
 import { linkPastePlugin } from './plugin/linkPastePlugin';
 
@@ -42,7 +43,7 @@ export const Link = Mark.create<NoOptions, DialogStorage>({
   addStorage() { return new DialogStorage(); },
 
   // -- Plugin --------------------------------------------------------------------
-  addProseMirrorPlugins() { return [linkCreatePlugin(undefined/*no validation at the moment*/), linkPastePlugin(this.editor)]; },
+  addProseMirrorPlugins() { return [linkCreatePlugin(undefined/*no validation at the moment*/), linkClickPlugin(), linkPastePlugin(this.editor)]; },
 
   // -- Create --------------------------------------------------------------------
   onCreate() { LINK_PROTOCOLS.forEach(registerCustomProtocol); },
