@@ -1,11 +1,11 @@
 import { Editor } from '@tiptap/core';
 
-import { getRenderAttributes, getWrapStyles, AttributeType, CodeBlockNodeRendererSpec, CodeBlockNodeSpec, CodeBlockNodeType,  NodeName } from '@ureeka-notebook/web-service';
+import { getRenderAttributes, getWrapStyles, AttributeType, CodeBlockNodeRendererSpec, CodeBlockNodeSpec, CodeBlockNodeType,  NodeName, DATA_VISUAL_ID } from '@ureeka-notebook/web-service';
 
 import { getPosType } from 'notebookEditor/extension/util/node';
 import { AbstractNodeView } from 'notebookEditor/model/AbstractNodeView';
 
-import { createCodeBlock, DATA_VISUAL_ID } from '../ui';
+import { createCodeBlock } from '../ui';
 import { CodeBlockModel } from './model';
 import { CodeBlockStorage } from './storage';
 

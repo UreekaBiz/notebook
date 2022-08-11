@@ -61,7 +61,7 @@ const renderCodeBlockNodeView = (attributes: CodeBlockAttributes, content: strin
   //       (hence it is a single line below)
   // NOTE: createNodeDataTypeAttribute must be used for all nodeRenderSpecs
   //       that define their own renderNodeView
-  return `<div ${createNodeDataTypeAttribute(NodeName.CODEBLOCK)} data-visualid="${visualId}" style="${renderAttributes.style ?? ''/*empty string if not defined*/}"><div><p style="${getWrapStyles(isWrap)}">${content}</p></div></div>`;
+  return `<div id=${id} ${createNodeDataTypeAttribute(NodeName.CODEBLOCK)} data-visualid="${visualId}" style="${renderAttributes.style ?? ''/*empty string if not defined*/}"><div><p style="${getWrapStyles(isWrap)}">${content}</p></div></div>`;
 };
 
 export const CodeBlockNodeRendererSpec: NodeRendererSpec<CodeBlockAttributes> = {
@@ -76,6 +76,10 @@ export const CodeBlockNodeRendererSpec: NodeRendererSpec<CodeBlockAttributes> = 
 // == Type ========================================================================
 // alias for the hash of the Content of a CodeBlock
 export type CodeBlockHash = string;
+
+// the attribute that ensures that VisualId for a CodeBlock appears
+// to the right of the CodeBlock (SEE: index.css)
+export const DATA_VISUAL_ID = 'data-visualid';
 
 // the text that gets shown for Chips when the corresponding
 // codeBlock gets removed, hence invalidating its visualId

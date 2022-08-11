@@ -57,13 +57,16 @@ const renderCodeBlockReferenceNodeView = (attributes: CodeBlockReferenceAttribut
     } /* else -- do not change default */
   } /* else -- do not change default */
 
+  // TODO: find a better way to focus CodeBlock on CodeBlockReference renderer click
+  const focusCodeBlockFunction = `try{document.getElementById('${codeBlockReference}').focus()}catch(error){/*do nothing on error*/}`;
+
   // CHECK: is there any reason this can't use JSX to define the structure?
   // NOTE: must not contain white space, else the renderer has issues
   //       (hence it is a single line below)
   // NOTE: createNodeDataTypeAttribute must be used for all nodeRenderSpecs
   //       that define their own renderNodeView
   const codeBlockReferenceInState = codeBlockReference && Object.keys(state.codeBlock.visualIds).includes(codeBlockReference);
-  return `<a href="#${codeBlockReferenceInState ? codeBlockReference : ''}" ${createNodeDataTypeAttribute(NodeName.CODEBLOCK_REFERENCE)} style="cursor: ${codeBlockReferenceInState ? "pointer": "auto"}"><span>${computeCodeBlockReferenceText(attributes, text)}</span></a>`;
+  return `<a href="#${codeBlockReferenceInState ? codeBlockReference : ''}" ${createNodeDataTypeAttribute(NodeName.CODEBLOCK_REFERENCE)} style="cursor: ${codeBlockReferenceInState ? "pointer": "auto"}" onclick="${focusCodeBlockFunction}"><span>${computeCodeBlockReferenceText(attributes, text)}</span></a>`;
 };
 
 export const CodeBlockReferenceNodeRendererSpec: NodeRendererSpec<CodeBlockReferenceAttributes> = {

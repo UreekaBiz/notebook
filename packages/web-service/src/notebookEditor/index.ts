@@ -52,6 +52,7 @@ export {
   isCodeBlockAttributes,
   CodeBlockType,
   EMPTY_CODEBLOCK_HASH,
+  DATA_VISUAL_ID,
   REMOVED_CODEBLOCK_VISUALID,
 
   CodeBlockAsyncNodeAttributes,
