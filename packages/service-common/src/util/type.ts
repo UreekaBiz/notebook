@@ -1,7 +1,6 @@
 import * as Validate from 'yup';
 
 import { createApplicationError } from './error';
-import { generateShortUuid } from './uuid';
 
 // common / shared types
 // ********************************************************************************
