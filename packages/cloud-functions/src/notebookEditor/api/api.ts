@@ -73,6 +73,7 @@ export const updateDocument = async (userId: UserIdentifier, notebookId: Noteboo
 
   try {
     // TODO: wrap in bounded retry IFF 'functions/already-exists' is thrown
+    //       (and IFF a specific Version index was *not* specified)
     await firestore.runTransaction(async transaction => {
       // get the Notebook and latest Document ensuring they match the User's requests
       if(collaborationDelay.readDelayMs > 0) await sleep(collaborationDelay.readDelayMs);
