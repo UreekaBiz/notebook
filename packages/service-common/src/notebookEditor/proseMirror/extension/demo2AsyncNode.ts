@@ -4,7 +4,7 @@ import { noNodeOrMarkSpecAttributeDefaultValue, AttributesTypeFromNodeSpecAttrib
 import { getRenderAttributes } from '../htmlRenderer/attribute';
 import { createNodeDataTypeAttribute, NodeRendererSpec } from '../htmlRenderer/type';
 import { getAllowedMarks, MarkName } from '../mark';
-import { JSONNode, NodeName, ProseMirrorNodeContent } from '../node';
+import { JSONNode, NodeGroup, NodeName, ProseMirrorNodeContent } from '../node';
 import { NotebookSchemaType } from '../schema';
 import { AsyncNodeAttributeSpec, DEFAULT_ASYNC_NODE_STATUS } from './asyncNode';
 
@@ -42,7 +42,7 @@ export const Demo2AsyncNodeSpec: NodeSpec = {
   content: `${NodeName.TEXT}*`,
   marks: getAllowedMarks([MarkName.BOLD, MarkName.STRIKETHROUGH, MarkName.TEXT_STYLE, MarkName.REPLACED_TEXT_MARK]),
 
-  group: 'block',
+  group: NodeGroup.BLOCK,
   defining: true/*important parent node during replace operations, parent of content preserved on replace operations*/,
   allowGapCursor: true,
 

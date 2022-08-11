@@ -4,7 +4,7 @@ import { AttributesTypeFromNodeSpecAttributes, AttributeType, noNodeOrMarkSpecAt
 import { getRenderAttributes } from '../htmlRenderer/attribute';
 import { createNodeDataTypeAttribute, NodeRendererSpec } from '../htmlRenderer/type';
 import { getAllowedMarks } from '../mark';
-import { JSONNode, NodeName, ProseMirrorNodeContent } from '../node';
+import { JSONNode, NodeGroup, NodeName, ProseMirrorNodeContent } from '../node';
 import { NotebookSchemaType } from '../schema';
 import { AsyncNodeStatus, asyncNodeStatusToColor } from './asyncNode';
 import { CodeBlockAsyncNodeAttributeSpec, createDefaultCodeBlockAsyncNodeAttributes, DEFAULT_CODEBLOCK_ASYNC_NODE_STATUS } from './codeBlockAsyncNode';
@@ -27,7 +27,7 @@ export const DemoAsyncNodeSpec: NodeSpec = {
 
   marks: getAllowedMarks([/*no Marks allowed for DemoAsyncNode*/]),
 
-  group: 'inline',
+  group: NodeGroup.INLINE,
   atom: true/*node does not have directly editable content*/,
   leaf: true/*node does not have directly editable content*/,
   inline: true,
