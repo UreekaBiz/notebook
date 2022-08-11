@@ -1,9 +1,10 @@
 import { Node as ProseMirrorNode } from 'prosemirror-model';
 
 import { noNodeOrMarkSpecAttributeDefaultValue, AttributeType, AttributesTypeFromNodeSpecAttributes } from '../attribute';
-import { NodeIdentifier, NodeName } from '../node';
+import { NodeName } from '../node';
 import { NotebookSchemaType } from '../schema';
 import { createDefaultAsyncNodeAttributes, AsyncNodeAttributeSpec, DEFAULT_ASYNC_NODE_STATUS } from './asyncNode';
+import { CodeBlockReference } from './codeBlockReference';
 
 // ********************************************************************************
 // NOTE: codeBlockAsyncNodes are meant to be an abstraction for all async nodes
@@ -34,8 +35,6 @@ export const isCodeBlockAsyncNodeAttributes = (attrs: any): attrs is CodeBlockAs
 // the set of Node 'types' that are codeBlockAsyncNodes (the 'inclusion set')
 export const codeBlockAsyncNodes: Set<NodeName> = new Set([NodeName.DEMO_ASYNC_NODE]);
 
-// semantic differentiation: references are only inside codeBlockAsyncNodes
-export type CodeBlockReference = NodeIdentifier;
 export type CodeBlockHash = string/*alias*/;
 
 export const DEFAULT_CODEBLOCK_ASYNC_NODE_ID = `Default CodeBlockAsyncNode ID`;
