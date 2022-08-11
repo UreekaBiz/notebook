@@ -56,7 +56,11 @@ export {
 
   CodeBlockAsyncNodeAttributes,
   isCodeBlockAsyncNodeAttributes,
+
   CodeBlockReference,
+  CodeBlockReferenceAttributes,
+  computeCodeBlockReferenceText,
+  DEFAULT_CODEBLOCK_REFERENCE_NODE_TEXT,
 
   Demo2AsyncNodeAttributes,
   DEFAULT_DEMO_2_ASYNC_NODE_DELAY,
@@ -114,6 +118,7 @@ export {
   // -- Node Specs ----------------------------------------------------------------
   NodeSpecs,
   CodeBlockNodeSpec,
+  CodeBlockReferenceNodeSpec,
   DemoAsyncNodeSpec,
   Demo2AsyncNodeSpec,
   DocumentNodeSpec,
@@ -135,6 +140,11 @@ export {
 
   CodeBlockAsyncNodeType,
   isCodeBlockAsyncNode,
+
+  CodeBlockReferenceNodeType,
+  createCodeBlockNode,
+  isCodeBlockReferenceNode,
+  getCodeBlockReferenceNodeType,
 
   Demo2AsyncNodeType,
   createDemo2AsyncNodeNode,
@@ -227,6 +237,7 @@ export {
 
   // -- HTML Render Specs ---------------------------------------------------------
   CodeBlockNodeRendererSpec,
+  CodeBlockReferenceNodeRendererSpec,
   Demo2AsyncNodeRendererSpec,
   DemoAsyncNodeRendererSpec,
   DocumentNodeRendererSpec,
