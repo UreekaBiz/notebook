@@ -26,20 +26,21 @@ export class CodeBlockReferenceController extends AbstractNodeController<CodeBlo
 
   // called by ProseMirror when the node is removed
   protected destroy() {
-    this.nodeView.viewElement.removeEventListener('click', this.handleViewElementClick);
+    this.nodeView.viewElement.removeEventListener('mousedown', this.handleViewElementMouseDown);
   }
 
   // -- Event ---------------------------------------------------------------------
   private addEventListenerToView() {
-    this.nodeView.viewElement.addEventListener('click', this.handleViewElementClick.bind(this/*maintain reference to same scope*/));
+    this.nodeView.viewElement.addEventListener('mousedown', this.handleViewElementMouseDown.bind(this/*maintain reference to same scope*/));
   }
 
-  private handleViewElementClick(event: MouseEvent) {
+  private handleViewElementMouseDown(event: MouseEvent) {
     if(!(event.metaKey || event.ctrlKey)) return/*do not focus referenced CodeBlock if Cmd/Ctrl not pressed*/;
 
     const { codeBlockReference } = this.node.attrs;
     if(!codeBlockReference) return/*nothing to do*/;
 
+    event.preventDefault()/*do not trigger PM NodeSelection*/;
     const codeBlockViewStorage = getCodeBlockViewStorage(this.editor);
     const codeBlockVisualId = codeBlockViewStorage.getVisualId(codeBlockReference);
     focusCodeBlock(this.editor, codeBlockVisualId);
