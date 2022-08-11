@@ -1,4 +1,3 @@
-import { logger } from 'firebase-functions';
 import { EditorState, Transaction } from 'prosemirror-state';
 
 import { findNodeById, isDemoAsyncNode, AsyncNodeStatus, AttributeType, CodeBlockAsyncNodeType, NodeIdentifier } from '@ureeka-notebook/service-common';
@@ -24,11 +23,7 @@ export class DemoAsyncNodeAttributeReplace implements DocumentUpdate {
           newNode.attrs[AttributeType.Status] = this.status;
           newNode.attrs[AttributeType.Text] = (this.status === AsyncNodeStatus.SUCCESS) ? this.text : 'Error'/*CHECK: what else?*/;
 
-logger.debug(position);
-    // FINISH!!!!
-    // tr.doc.resolve(replacementPosition);
-    //       tr.setSelection(new NodeSelection(replacedNodePos))
-    //         .replaceSelectionWith(newNode)
-    //         .setSelection(resolveNewSelection(editor.state.selection, tr));
+    // replace the node with the new node
+    tr.replaceWith(position, node.nodeSize, newNode);
   }
 }
