@@ -4,6 +4,7 @@ import { noNodeOrMarkSpecAttributeDefaultValue, AttributeType, AttributesTypeFro
 import { NodeName } from '../node';
 import { NotebookSchemaType } from '../schema';
 import { createDefaultAsyncNodeAttributes, AsyncNodeAttributeSpec, DEFAULT_ASYNC_NODE_STATUS } from './asyncNode';
+import { CodeBlockHash } from './codeBlock';
 import { CodeBlockReference } from './codeBlockReference';
 
 // ********************************************************************************
@@ -34,8 +35,6 @@ export const isCodeBlockAsyncNodeAttributes = (attrs: any): attrs is CodeBlockAs
 // == Type ========================================================================
 // the set of Node 'types' that are codeBlockAsyncNodes (the 'inclusion set')
 export const codeBlockAsyncNodes: Set<NodeName> = new Set([NodeName.DEMO_ASYNC_NODE]);
-
-export type CodeBlockHash = string/*alias*/;
 
 export const DEFAULT_CODEBLOCK_ASYNC_NODE_ID = `Default CodeBlockAsyncNode ID`;
 export const DEFAULT_CODEBLOCK_ASYNC_NODE_STATUS = DEFAULT_ASYNC_NODE_STATUS/*alias*/;
