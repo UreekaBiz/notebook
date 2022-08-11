@@ -2,10 +2,10 @@ import Head from 'next/head';
 import * as Validate from 'yup';
 
 import { json, notebookPublishedContentDocument, wrapGetServerSideProps, NotebookPublishedContent } from '@ureeka-notebook/ssr-service';
+import { notebookEditorTheme } from '@ureeka-notebook/web-service';
 
 import { WrappedPage } from 'core/wrapper';
 import { NotebookViewer } from 'notebookEditor/component/NotebookViewer';
-import { notebookEditorTheme } from 'notebookEditor/extension/theme/theme';
 import { FullPageLayout } from 'shared/layout/FullPageLayout';
 
 // ********************************************************************************
