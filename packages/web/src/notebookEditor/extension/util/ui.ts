@@ -1,10 +1,12 @@
-import { nodeToTagId, AttributeType, DemoAsyncNodeType } from '@ureeka-notebook/web-service';
+import { Node as ProseMirrorNode } from 'prosemirror-model';
+
+import { nodeToTagId } from '@ureeka-notebook/web-service';
 
 // ********************************************************************************
 // == Common Element ==============================================================
-export const createTextSpan = (node: DemoAsyncNodeType) => {
+export const createTextSpan = (node: ProseMirrorNode, innerHTML: string) => {
   const textSpan = document.createElement('span');
         textSpan.setAttribute('id', nodeToTagId(node));
-        textSpan.innerHTML = node.attrs[AttributeType.Text] ?? ''/*default none*/;
+        textSpan.innerHTML = innerHTML;
   return textSpan;
 };

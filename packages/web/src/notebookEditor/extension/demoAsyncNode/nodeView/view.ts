@@ -1,7 +1,7 @@
-import { asyncNodeStatusToColor, getRenderAttributes, AsyncNodeStatus, AttributeType, DemoAsyncNodeRendererSpec, DemoAsyncNodeSpec, DemoAsyncNodeType, NodeName, DEMO_ASYNC_NODE_TEXT_STYLE, DEMO_ASYNC_NODE_STATUS_COLOR, DEMO_ASYNC_NODE_BORDER_COLOR, DEMO_ASYNC_NODE_DATA_STATE } from '@ureeka-notebook/web-service';
+import { asyncNodeStatusToColor, getRenderAttributes, AsyncNodeStatus, AttributeType, DemoAsyncNodeRendererSpec, DemoAsyncNodeSpec, DemoAsyncNodeType, NodeName, DEMO_ASYNC_NODE_TEXT_STYLE, DEMO_ASYNC_NODE_STATUS_COLOR, DEMO_ASYNC_NODE_BORDER_COLOR, DEMO_ASYNC_NODE_DATA_STATE, DEFAULT_DEMO_ASYNC_NODE_TEXT } from '@ureeka-notebook/web-service';
 
 import { AbstractCodeBlockAsyncNodeView } from 'notebookEditor/extension/codeBlockAsyncNode/nodeView/view';
-import { createTextSpan } from 'notebookEditor/extension/codeBlockAsyncNode/ui';
+import { createTextSpan } from 'notebookEditor/extension/util/ui';
 
 import { DemoAsyncNodeStorageType } from './controller';
 import { DemoAsyncNodeModel } from './model';
@@ -11,7 +11,9 @@ export class DemoAsyncNodeView extends AbstractCodeBlockAsyncNodeView<string, De
   // -- Creation ------------------------------------------------------------------
   // Creates the DOM element that will be used to display the node's content.
   protected createViewElement(node: DemoAsyncNodeType): HTMLElement {
-    return createTextSpan(node);
+    const text  = node.attrs.text ?? DEFAULT_DEMO_ASYNC_NODE_TEXT/*default*/;
+
+    return createTextSpan(node, text);
   }
 
   // -- Update --------------------------------------------------------------------
