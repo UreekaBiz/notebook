@@ -85,8 +85,19 @@ export const updateDocument = async (userId: UserIdentifier, notebookId: Noteboo
 
       // execute the updates against the EditorState
       let editorState = createEditorState(schemaVersion, document);
+
+      // starts a new transaction that will be transformed by all the updates.
+      // NOTE: this transaction must maintain the reference between calls to
+      //       the DocumentUpdate functions so the steps and the resulting
+      //       value is preserved.
+      const tr = editorState.tr/*`get` method that creates new transaction*/;
       updates.forEach(update => {
-        update.update(editorState);
+        // creates an editor state based on the initial state applying the
+        // transaction up until this point. This is needed to do this way to
+        // preserve the reference to the transaction while still having access to
+        // the up to date state.
+        const currentState = editorState.apply(tr);
+        update.update(currentState, tr);
       });
 
       // write the Versions from the Steps generated from the Document Updates
@@ -95,7 +106,7 @@ export const updateDocument = async (userId: UserIdentifier, notebookId: Noteboo
         transaction,
         userId, clientId,
         schemaVersion, notebookId,
-        latestIndex + 1/*next Version*/, editorState.tr.steps
+        latestIndex + 1/*next Version*/, tr.steps
       );
     });
   } catch(error) {

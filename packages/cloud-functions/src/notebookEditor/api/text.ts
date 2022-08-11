@@ -1,4 +1,4 @@
-import { EditorState } from 'prosemirror-state';
+import { EditorState, Transaction } from 'prosemirror-state';
 
 import { DocumentUpdate } from './type';
 
@@ -7,7 +7,7 @@ import { DocumentUpdate } from './type';
  *  @see Transaction#insertText() */
 export class InsertText implements DocumentUpdate {
   public constructor(private readonly text: string, private readonly from?: number, private readonly to?: number) {/*nothing additional*/}
-  public update({ tr }: EditorState) {
+  public update(editorState: EditorState, tr: Transaction ) {
     tr.insertText(this.text, this.from, this.to);
   }
 }
