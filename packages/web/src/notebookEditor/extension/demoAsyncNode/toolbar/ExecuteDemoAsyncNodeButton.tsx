@@ -1,7 +1,7 @@
 import { isDemoAsyncNode, AttributeType, NodeName, REMOVED_CODEBLOCK_VISUALID } from '@ureeka-notebook/web-service';
 
 import { ExecuteAsyncNodeButton } from 'notebookEditor/extension/asyncNode/component/ExecuteAsyncNodeButton';
-import { visualIdFromCodeBlockReference } from 'notebookEditor/extension/codeBlockAsyncNode/util';
+import { visualIdFromCodeBlockReference } from 'notebookEditor/extension/codeBlockReference/util';
 import { getSelectedNode } from 'notebookEditor/extension/util/node';
 import { getNodeViewStorage } from 'notebookEditor/model/NodeViewStorage';
 import { EditorToolComponentProps } from 'notebookEditor/toolbar/type';
