@@ -7,7 +7,7 @@ import { Toolbar, ToolItem } from 'notebookEditor/toolbar/type';
 
 import { DemoAsyncNodeChipSelector } from './DemoAsyncNodeChipSelector';
 import { DemoAsyncNodeDelaySlider } from './DemoAsyncNodeDelaySlider';
-import { ExecuteDemoAsyncNodeButton } from './ExecuteDemoAsyncNodeButton';
+import { ExecuteButtons } from './ExecuteButtons';
 
 //*********************************************************************************
 // == Tool Items ==================================================================
@@ -52,7 +52,7 @@ const demoAsyncNodeChipTool: ToolItem = {
 export const DemoAsyncNodeToolbar: Toolbar = {
   title: 'Demo Async Node',
   name: NodeName.DEMO_ASYNC_NODE,
-  rightContent: ExecuteDemoAsyncNodeButton,
+  rightContent: ExecuteButtons,
   toolsCollections: [
     [
       demoAsyncNodeDelayTool,

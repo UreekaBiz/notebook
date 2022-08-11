@@ -1,8 +1,9 @@
 import { Editor } from '@tiptap/core';
 
-import { DemoAsyncNodeType } from '@ureeka-notebook/web-service';
+import { AttributeType, DemoAsyncNodeType, NotebookEditorService, NotebookIdentifier } from '@ureeka-notebook/web-service';
 
 import { AbstractCodeBlockAsyncNodeController } from 'notebookEditor/extension/codeBlockAsyncNode/nodeView/controller';
+import { getCodeBlocksContent, hashesFromCodeBlockReferences } from 'notebookEditor/extension/codeBlockAsyncNode/util';
 import { getPosType } from 'notebookEditor/extension/util/node';
 import { NodeViewStorage } from 'notebookEditor/model/NodeViewStorage';
 
@@ -18,6 +19,30 @@ export class DemoAsyncNodeController extends AbstractCodeBlockAsyncNodeControlle
           view = new DemoAsyncNodeView(model, editor, node, storage, getPos);
 
     super(model, view, editor, node, storage, getPos);
+  }
+
+  // == Execution =================================================================
+  public async executeServerSide(notebookId: NotebookIdentifier, editorService: NotebookEditorService): Promise<void>{
+    if(this.nodeModel.getPerformingAsyncOperation()) return/*nothing to do*/;
+
+    const { attrs } = this.node as DemoAsyncNodeType;
+    const id = attrs[AttributeType.Id];
+    if(!id) return/*nothing to render -- silently fail*/;
+    const codeBlockReferences = attrs[AttributeType.CodeBlockReferences] ?? []/*default*/;
+
+    this.nodeModel.setPerformingAsyncOperation(true);
+    this.nodeView.updateView();
+    try {
+      const content = getCodeBlocksContent(this.editor, codeBlockReferences),
+            hashes = hashesFromCodeBlockReferences(this.editor, codeBlockReferences);
+      await editorService.executeDemoAsyncNode({ content, hashes, nodeId: id, notebookId });
+    } catch(error){
+      throw error/*rethrow*/;
+    } finally {
+      this.nodeModel.setPerformingAsyncOperation(false);
+      this.nodeView.updateView();
+    }
+    return;
   }
 
   // .. Mutation ..................................................................

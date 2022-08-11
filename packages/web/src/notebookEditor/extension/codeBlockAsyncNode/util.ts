@@ -22,6 +22,22 @@ export const replaceInlineCodeBlockAsyncNode = (editor: Editor, newAsyncNode: Co
         .setMeta(HISTORY_META, false/*once executed, an async node cannot go back to non-executed*/)
         .run();
 
+// == Content =====================================================================
+export const getCodeBlocksContent = (editor: Editor, codeBlockReferences: CodeBlockReference[]) => {
+  const codeBlockViewStorage = getCodeBlockViewStorage(editor);
+
+  const codeBlocksContent = codeBlockReferences.map(codeBlockReference => {
+    const codeBlockView = codeBlockViewStorage.getNodeView(codeBlockReference);
+    if(!codeBlockView) return undefined/*no node view*/;
+    const { node } = codeBlockView;
+    return node.textContent ?? '';
+  });
+
+  // FIXME: Do we want this as a delimiter?
+  const content = codeBlocksContent.filter(value => value !== undefined).join('\n');
+  return content;
+};
+
 // == Visual Id ===================================================================
 // Gets the visual ids from the code block references given.
 // NOTE: The order and duplicated values are preserved.
