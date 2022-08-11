@@ -8,9 +8,9 @@ import { ExtensionPriority, NoOptions } from 'notebookEditor/model/type';
 import { DialogStorage } from 'notebookEditor/model/DialogStorage';
 
 import { setLinkCommand, toggleLinkCommand, unsetLinkCommand } from './command';
-import { linkClickPlugin } from './plugin/LinkClickPlugin';
-import { linkCreatePlugin } from './plugin/linkCreatePlugin';
-import { linkPastePlugin } from './plugin/linkPastePlugin';
+import { linkClick } from './plugin/linkClick';
+import { linkCreate } from './plugin/linkCreate';
+import { linkPaste } from './plugin/linkPaste';
 
 // ********************************************************************************
 // REF: https://github.com/ueberdosis/tiptap/blob/main/packages/extension-link/src/link.ts
@@ -43,7 +43,7 @@ export const Link = Mark.create<NoOptions, DialogStorage>({
   addStorage() { return new DialogStorage(); },
 
   // -- Plugin --------------------------------------------------------------------
-  addProseMirrorPlugins() { return [linkCreatePlugin(undefined/*no validation at the moment*/), linkClickPlugin(), linkPastePlugin(this.editor)]; },
+  addProseMirrorPlugins() { return [linkClick(), linkCreate(undefined/*no validation at the moment*/), linkPaste(this.editor)]; },
 
   // -- Create --------------------------------------------------------------------
   onCreate() { LINK_PROTOCOLS.forEach(registerCustomProtocol); },

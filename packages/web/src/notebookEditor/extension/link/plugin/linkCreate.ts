@@ -13,7 +13,7 @@ import { NoPluginState } from 'notebookEditor/model/type';
 
 // == Plugin ======================================================================
 const linkCreateKey = new PluginKey<NoPluginState, NotebookSchemaType>('linkCreateKey');
-export const linkCreatePlugin = (validate?: (url: string) => boolean): Plugin => {
+export const linkCreate = (validate?: (url: string) => boolean): Plugin => {
   return new Plugin({
     // -- Setup -------------------------------------------------------------------
     key: linkCreateKey,

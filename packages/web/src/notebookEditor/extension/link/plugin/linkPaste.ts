@@ -12,7 +12,7 @@ import { NoPluginState } from 'notebookEditor/model/type';
 
 // == Plugin ======================================================================
 const linkPasteKey = new PluginKey<NoPluginState, NotebookSchemaType>('linkPasteKey');
-export const linkPastePlugin = (editor: Editor): Plugin => {
+export const linkPaste = (editor: Editor): Plugin => {
   return new Plugin({
     key: linkPasteKey,
     props: {

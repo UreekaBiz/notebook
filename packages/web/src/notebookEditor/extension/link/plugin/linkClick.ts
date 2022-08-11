@@ -18,7 +18,7 @@ import { sanitizeLinkInput } from '../util';
 
 // == Plugin ======================================================================
 const linkClickKey = new PluginKey<NoPluginState, NotebookSchemaType>('linkClickKey');
-export const linkClickPlugin = (): Plugin => {
+export const linkClick = (): Plugin => {
   return new Plugin({
     // -- Setup -------------------------------------------------------------------
     key: linkClickKey,
