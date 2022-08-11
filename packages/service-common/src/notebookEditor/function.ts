@@ -32,14 +32,16 @@ export const NotebookEditorDemoAsyncNodeExecute_Rest_Schema = Validate.object({
   nodeId: Identifier_Schema
       .required(),
 
-  /** the combined content of all of the Code Blocks associated with the Node */
-  content: stringVLongSchema
-      .required(),
-
-  /** the corresponding hashes in order of all of the CodeBLocks associated with
-   *  the node */
+  /** the corresponding hashes in order of all of the Code Blocks associated with
+   *  the Node. This is used to define the (not) dirty state once execution is
+   *  complete */
   hashes: Validate.array()
       .of(stringMedSchema.required())
+      .required(),
+  /** the combined content of all of the Code Blocks associated with the Node. This
+   *  content must correspond to the text in the Code Blocks for which the hashes
+   *  are provided */
+  content: stringVLongSchema
       .required(),
 }).noUnknown();
 export type NotebookEditorDemoAsyncNodeExecute_Rest = Readonly<Validate.InferType<typeof NotebookEditorDemoAsyncNodeExecute_Rest_Schema>>;
