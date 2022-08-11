@@ -57,6 +57,7 @@ const endpointNames = [
 
   'notebookEditorInsertNumbers',
   'notebookEditorInsertText',
+  'notebookEditorDemoAsyncNodeExecute',
 
   'loggingClient',
 ];

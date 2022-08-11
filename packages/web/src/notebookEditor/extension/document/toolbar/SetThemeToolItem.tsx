@@ -1,4 +1,4 @@
-import { Select } from '@chakra-ui/react';
+import { Box, Flex, Select } from '@chakra-ui/react';
 import { useState, ChangeEventHandler } from 'react';
 
 import { notebookEditorTheme, ThemeName, Themes } from '@ureeka-notebook/web-service';
@@ -7,22 +7,31 @@ import { EditorToolComponentProps } from 'notebookEditor/toolbar/type';
 
 // ********************************************************************************
 interface Props extends EditorToolComponentProps {/*no additional*/}
-export const SetThemeToolItem: React.FC<Props> = ({ editor }) => {
+export const SetThemeToolItem: React.FC<Props> = () => {
+  // == State =====================================================================
   const [theme, setTheme] = useState<ThemeName>(ThemeName.Default);
 
   // == Handler ===================================================================
   const handleChange: ChangeEventHandler<HTMLSelectElement> = (event) => {
     const value = event.target.value as ThemeName/*by contract*/;
-    setTheme(value);
-
     const theme = Themes[value];
+
+    if(!theme) return/*invalid value -- ignore*/;
+    setTheme(value);
     notebookEditorTheme.setTheme(theme);
   };
 
   // == UI ========================================================================
   return (
-    <Select value={theme} onChange={handleChange} flexBasis='30%' placeholder='Theme' size='sm' width={200}>
-      {Object.entries(ThemeName).map(([key, value]) => (<option key={key} value={value}>{value}</option>))}
-    </Select>
+    <Box>
+      Theme
+      <Flex marginTop='5px'>
+        <Select value={theme} onChange={handleChange} size='sm' width={200}>
+          {/*placeholder*/}
+          <option disabled value=''>Theme</option>
+          {Object.entries(ThemeName).map(([key, value]) => (<option key={key} value={value}>{value}</option>))}
+        </Select>
+      </Flex>
+    </Box>
   );
 };

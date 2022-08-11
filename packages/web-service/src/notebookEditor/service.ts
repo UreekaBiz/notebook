@@ -5,6 +5,8 @@ import { AuthedUser, NotebookIdentifier, NotebookSchemaVersion } from '@ureeka-n
 
 import { getLogger, ServiceLogger } from '../logging';
 import { ApplicationError } from '../util';
+import { notebookEditorDemoAsyncNodeExecute } from './function';
+import { NotebookEditorDemoAsyncNode_Execute } from './type';
 import { VersionListener } from './VersionListener';
 
 const log = getLogger(ServiceLogger.NOTEBOOK_EDITOR);
@@ -92,6 +94,25 @@ export class NotebookEditorService {
     //        let the caller know that the last Edit hasn't been 'committed' yet and
     //        return only the last written version
     return this.versionListener.getEditorIndex();
+  }
+
+  // == Server-side Execute =======================================================
+  /**
+   * @param execute identifies the {@link Notebook} by {@link NotebookIdentifier}
+   *        and specific D3AN node by {@link NodeIdentifier} FINISH
+   * @throws a {@link ApplicationError}:
+   * - `permission-denied` if the caller is not the Editor of the Notebook
+   * - `not-found` if the specified {@link NotebookIdentifier} does not represent a
+   *   known {@link Notebook} or if the specified {@link NodeIdentifier} does not
+   *   represent a known D3AN node XXX
+   * - `invalid-argument` if there are XXXX
+   * - `data/deleted` if the {@link Notebook} has already been flagged as deleted
+   * - `datastore/write` if there was an error updating the share for the Notebook
+   */
+  // TODO: think through naming. It's interesting that all of the various Extensions
+  //       need to express their server-side goo through this single service
+  public async executeDemoAsyncNode(execute: NotebookEditorDemoAsyncNode_Execute) {
+    await notebookEditorDemoAsyncNodeExecute(execute);
   }
 
   // == Logging ===================================================================
