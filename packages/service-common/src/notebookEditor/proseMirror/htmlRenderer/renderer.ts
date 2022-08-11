@@ -77,26 +77,28 @@ export const convertJSONContentToHTML = (node: JSONNode, state: RendererState, l
   // equivalent to having no content when rendering the HTML.
   let children = content ? content.reduce((acc, child, index) => `${acc}${convertJSONContentToHTML(child, state, index === content.length - 1)}`, '') : ''/*no children*/;
 
+  let nodeContent;
   // in the case that the Node is a Node View Renderer let the Node renderer use
   // its own render function to render the Node and its children.
-  if(nodeRendererSpec.isNodeViewRenderer) return nodeRendererSpec.renderNodeView(node.attrs ?? {/*empty attributes*/}, children, state)/*nothing else to do*/;
+  if(nodeRendererSpec.isNodeViewRenderer){
+    nodeContent = nodeRendererSpec.renderNodeView(node.attrs ?? {/*empty attributes*/}, children, state);
+  } else {
+    // NOTE: in the Editor, a paragraph with no content is displayed as having a
+    //       br node as it only child, this is an attempt to mimic that functionality
+    //       and keep the HTML output consistent
+    if(isParagraphJSONNode(node) && children.length < 1) children = `<br />`;
 
-  // NOTE: in the Editor, a paragraph with no content is displayed as having a
-  //       br node as it only child, this is an attempt to mimic that functionality
-  //       and keep the HTML output consistent
-  if(isParagraphJSONNode(node) && children.length < 1) children = `<br />`;
+    const tag = getRenderTag(node.attrs, nodeRendererSpec);
+    const nodeSpec = NodeSpecs[node.type];
+    const nodeRenderAttributes = getNodeRenderAttributes(node, nodeRendererSpec, nodeSpec);
+    const stringAttributes = renderAttributesToString(nodeRenderAttributes);
 
-  const tag = getRenderTag(node.attrs, nodeRendererSpec);
-  const nodeSpec = NodeSpecs[node.type];
-  const nodeRenderAttributes = getNodeRenderAttributes(node, nodeRendererSpec, nodeSpec);
-  const stringAttributes = renderAttributesToString(nodeRenderAttributes);
-
-  const nodeContent = `<${tag} ${DATA_NODE_TYPE}="${node.type}" ${stringAttributes}>${text ?? ''}${children}</${tag}>`;
+    nodeContent = `<${tag} ${DATA_NODE_TYPE}="${node.type}" ${stringAttributes}>${text ?? ''}${children}</${tag}>`;
+  }
 
   // Wraps the Node Content in the given wraps if the Node has any.
   if(!node.marks) return nodeContent/*nothing else to do*/;
   return node.marks.reduce((acc, mark) => convertJSONMarkToHTML(mark, acc), nodeContent/*children to wrap*/);
-
 };
 
 // Converts the Mark into a HTMLString and  wraps the given children in it
