@@ -2,6 +2,7 @@ import { NodeName } from '@ureeka-notebook/web-service';
 
 import { markBold } from 'notebookEditor/extension/bold/toolbar';
 import { codeBlockToolItem } from 'notebookEditor/extension/codeblock/toolbar';
+import { codeBlockReferenceToolItem } from 'notebookEditor/extension/codeBlockReference/toolbar';
 import { demo2AsyncNodeToolItem } from 'notebookEditor/extension/demo2AsyncNode/toolbar';
 import { demoAsyncNodeToolItem } from 'notebookEditor/extension/demoAsyncNode/toolbar';
 import { heading1, heading2, heading3 } from 'notebookEditor/extension/heading/toolbar';
@@ -27,6 +28,7 @@ export const ParagraphToolbar: Toolbar = {
       demo2AsyncNodeToolItem,
       demoAsyncNodeToolItem,
       codeBlockToolItem,
+      codeBlockReferenceToolItem,
       heading1,
       heading2,
       heading3,
