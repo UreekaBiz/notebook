@@ -67,16 +67,6 @@ img.ProseMirror-selectednode/*target inline nodes with content (e.g. asyncNodes)
   position: relative;
   font-weight: bold;
 }
-[data-node-type="codeBlockReference"] > span/*target CodeBlockReference text container*/ {
-  padding: 4px;
-  margin-left: 4px;
-  margin-right: 4px;
-  border: 1px solid;
-  border-color: #CBD5E0;
-  border-radius: 4px;
-  background: #EDF2F7;
-  word-break: break-word;
-}
 
 /* .. Visual id ................................................................ */
 [data-node-type="codeBlock"]::after{
