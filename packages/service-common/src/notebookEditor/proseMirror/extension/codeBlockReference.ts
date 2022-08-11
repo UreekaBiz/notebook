@@ -62,7 +62,8 @@ const renderCodeBlockReferenceNodeView = (attributes: CodeBlockReferenceAttribut
   //       (hence it is a single line below)
   // NOTE: createNodeDataTypeAttribute must be used for all nodeRenderSpecs
   //       that define their own renderNodeView
-  return `<span ${createNodeDataTypeAttribute(NodeName.CODEBLOCK_REFERENCE)}><span>${computeCodeBlockReferenceText(attributes, text)}</span></span>`;
+  const codeBlockReferenceInState = codeBlockReference && Object.keys(state.codeBlock.visualIds).includes(codeBlockReference);
+  return `<a href="#${codeBlockReferenceInState ? codeBlockReference : ''}" ${createNodeDataTypeAttribute(NodeName.CODEBLOCK_REFERENCE)} style="cursor: ${codeBlockReferenceInState ? "pointer": "auto"}"><span>${computeCodeBlockReferenceText(attributes, text)}</span></a>`;
 };
 
 export const CodeBlockReferenceNodeRendererSpec: NodeRendererSpec<CodeBlockReferenceAttributes> = {
