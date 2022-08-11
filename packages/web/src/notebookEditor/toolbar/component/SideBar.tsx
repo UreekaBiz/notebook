@@ -3,7 +3,6 @@ import { useCallback, useEffect, useMemo, useState } from 'react';
 
 import { getMarkName, getNodeName } from '@ureeka-notebook/web-service';
 
-import { NotebookTopBar } from 'notebook/component/NotebookTopBar';
 import { getAllMarksFromSelection } from 'notebookEditor/extension/util/mark';
 import { getAllAscendantsFromSelection } from 'notebookEditor/extension/util/node';
 import { useValidatedEditor } from 'notebookEditor/hook/useValidatedEditor';
@@ -13,6 +12,7 @@ import { getToolbar } from '../toolbar';
 import { Debugger } from './Debugger';
 import { Toolbar } from './Toolbar';
 import { ToolbarBreadcrumbs } from './ToolbarBreadcrumbs';
+import { SidebarTopbar } from './SidebarTopbar';
 
 // ********************************************************************************
 export const SideBar = () => {
@@ -95,7 +95,7 @@ export const SideBar = () => {
 
   return (
     <Flex flexDir='column' minH={0} width='100%' height='100%' background='#FCFCFC' borderLeft='1px solid' borderColor='gray.300' overflow='hidden'>
-      <NotebookTopBar background='#f3f3f3' />
+      <SidebarTopbar background='#f3f3f3' />
       <ToolbarBreadcrumbs onSelection={handleDepthSelection} selectedDepth={selectedDepth} />
       <Flex flexDir='column' flex='1 1'>
         <VStack divider={<Divider />} spacing={0} flex='1 1 0' alignItems='stretch' overflowY='scroll'>
