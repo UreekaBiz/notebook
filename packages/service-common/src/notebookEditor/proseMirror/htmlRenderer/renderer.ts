@@ -4,6 +4,7 @@ import {  Attributes, HTMLAttributes } from '../attribute';
 import { NotebookDocumentContent } from '../document';
 import { BoldMarkRendererSpec } from '../extension/bold';
 import { CodeBlockNodeRendererSpec } from '../extension/codeBlock';
+import { CodeBlockReferenceNodeRendererSpec } from '../extension/codeBlockReference';
 import { Demo2AsyncNodeRendererSpec } from '../extension/demo2AsyncNode';
 import { DemoAsyncNodeRendererSpec } from '../extension/demoAsyncNode';
 import { DocumentNodeRendererSpec } from '../extension/document';
@@ -27,6 +28,7 @@ import { getRenderTag, HTMLString, MarkRendererSpec, NodeRendererSpec, DATA_MARK
 // == Type ========================================================================
 export const NodeRendererSpecs: Record<NodeName, NodeRendererSpec> = {
   [NodeName.CODEBLOCK]: CodeBlockNodeRendererSpec as any/*FIXME!!!*/,
+  [NodeName.CODEBLOCK_REFERENCE]: CodeBlockReferenceNodeRendererSpec as any/*FIXME!!!*/,
   [NodeName.DEMO_2_ASYNC_NODE]: Demo2AsyncNodeRendererSpec as any/*FIXME!!!*/,
   [NodeName.DEMO_ASYNC_NODE]: DemoAsyncNodeRendererSpec as any/*FIXME!!!*/,
   [NodeName.DOC]: DocumentNodeRendererSpec,

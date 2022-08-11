@@ -69,6 +69,10 @@ export const DefaultTheme: Theme = {
       [AttributeType.MarginTop]: '0.5rem',
       [AttributeType.MarginBottom]: '0.5rem',
     },
+    [NodeName.CODEBLOCK_REFERENCE]: {
+      [AttributeType.LeftDelimiter]: '(',
+      [AttributeType.RightDelimiter]: ')',
+    },
     [NodeName.DOC]: {/*no defined value*/},
     [NodeName.DEMO_2_ASYNC_NODE]: {
       [AttributeType.TextColor]: '#000',
@@ -150,6 +154,10 @@ export const GoogleDocsTheme: Theme = {
       [AttributeType.MarginRight]: '62px'/*spacing for visual id -- max content equals to "0.0.0.0"*/,
       [AttributeType.MarginTop]: '0.5rem',
       [AttributeType.MarginBottom]: '0.5rem',
+    },
+    [NodeName.CODEBLOCK_REFERENCE]: {
+      [AttributeType.LeftDelimiter]: '[',
+      [AttributeType.RightDelimiter]: ']',
     },
     [NodeName.DOC]: {/*no defined value*/},
     [NodeName.DEMO_2_ASYNC_NODE]: {

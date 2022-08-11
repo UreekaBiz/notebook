@@ -74,6 +74,9 @@ export const CodeBlockNodeRendererSpec: NodeRendererSpec<CodeBlockAttributes> = 
 };
 
 // == Type ========================================================================
+// alias for the hash of the Content of a CodeBlock
+export type CodeBlockHash = string;
+
 // the text that gets shown for Chips when the corresponding
 // codeBlock gets removed, hence invalidating its visualId
 export const REMOVED_CODEBLOCK_VISUALID = 'Removed';

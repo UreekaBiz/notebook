@@ -1,6 +1,7 @@
 import { AsyncNode } from 'notebookEditor/extension/asyncNode/AsyncNode';
 import { Bold } from 'notebookEditor/extension/bold/Bold';
 import { CodeBlock } from 'notebookEditor/extension/codeblock/CodeBlock';
+import { CodeBlockReference } from 'notebookEditor/extension/codeBlockReference/CodeBlockReference';
 import { CodeBlockAsyncNode } from 'notebookEditor/extension/codeBlockAsyncNode/CodeBlockAsyncNode';
 import { Demo2AsyncNode } from 'notebookEditor/extension/demo2AsyncNode/Demo2AsyncNode';
 import { DemoAsyncNode } from 'notebookEditor/extension/demoAsyncNode/DemoAsyncNode';
@@ -35,6 +36,7 @@ export const editorDefinition = {
     Bold,
     CodeBlock,
     CodeBlockAsyncNode,
+    CodeBlockReference,
     Demo2AsyncNode,
     DemoAsyncNode,
     DropCursor,

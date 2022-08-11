@@ -1,7 +1,7 @@
-import { isDemoAsyncNode, swap, AttributeType, NodeName, VisualId } from '@ureeka-notebook/web-service';
+import { isDemoAsyncNode, swap, AttributeType, NodeName } from '@ureeka-notebook/web-service';
 
-import { getCodeBlockViewStorage } from 'notebookEditor/extension/codeblock/nodeView/storage';
-import { isValidCodeBlockReference, visualIdsFromCodeBlockReferences } from 'notebookEditor/extension/codeBlockAsyncNode/util';
+import { visualIdsFromCodeBlockReferences } from 'notebookEditor/extension/codeBlockAsyncNode/util';
+import { isValidCodeBlockReference } from 'notebookEditor/extension/codeBlockReference/util';
 import { ChipDraggableItem } from 'notebookEditor/extension/shared/component/chipTool/Chip';
 import { ChipTool } from 'notebookEditor/extension/shared/component/chipTool/ChipTool';
 import { isNodeSelection } from 'notebookEditor/extension/util/node';
@@ -18,25 +18,25 @@ export const DemoAsyncNodeChipSelector: React.FC<Props> = ({ editor }) => {
   const selectedChips = visualIdsFromCodeBlockReferences(editor, codeBlockReferences);
 
   // == Handler ===================================================================
-  const handleChipsInputUpdate = (codeBlockVisualId: VisualId) => {
-    const codeBlockReference = isValidCodeBlockReference(editor, attrs, codeBlockVisualId);
+  const handleChipsInputUpdate = (codeBlockVisualId: string) => {
+    const codeBlockReference = isValidCodeBlockReference(editor, codeBlockVisualId);
     if(!codeBlockReference.isValid) return false/*ignore call*/;
 
+    const addedCodeBlockReference = codeBlockReference.codeBlockView.node.attrs.id;
+    if(!addedCodeBlockReference) return false/*ignore call*/;
+
     return editor.chain()
-                 .updateAttributes(NodeName.DEMO_ASYNC_NODE, { ...attrs, codeBlockReferences: [...codeBlockReferences, codeBlockReference.codeBlockId] })
+                 .updateAttributes(NodeName.DEMO_ASYNC_NODE, { ...attrs, codeBlockReferences: [...codeBlockReferences, addedCodeBlockReference ] })
                  .setNodeSelection(selection.$anchor.pos)
                  .run();
   };
 
-  const handleChipClick = (codeBlockVisualId: VisualId) => {
-    const codeBlockReference = isValidCodeBlockReference(editor, attrs, codeBlockVisualId);
+  const handleChipClick = (codeBlockVisualId: string) => {
+    const codeBlockReference = isValidCodeBlockReference(editor, codeBlockVisualId);
     if(!codeBlockReference.isValid) return false/*ignore call*/;
 
-    const codeBlockStorage = getCodeBlockViewStorage(editor);
-    const codeBlockNodeView = codeBlockStorage.getNodeView(codeBlockReference.codeBlockId);
-    if(!codeBlockNodeView) return false/*ignore call*/;
-
-    return editor.commands.focus(codeBlockNodeView.getPos() + 1/*inside the CodeBlock*/ + codeBlockNodeView.node.textContent.length/*at the end of its content*/, { scrollIntoView: true/*scroll into view*/ });
+    const { codeBlockView } = codeBlockReference;
+    return editor.commands.focus(codeBlockView.getPos() + 1/*inside the CodeBlock*/ + codeBlockView.node.textContent.length/*at the end of its content*/, { scrollIntoView: true/*scroll into view*/ });
   };
 
   const handleChipDrop = ({ id, index }: ChipDraggableItem) => {

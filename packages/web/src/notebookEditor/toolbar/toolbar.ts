@@ -1,6 +1,7 @@
 import { MarkName, NodeName } from '@ureeka-notebook/web-service';
 
 import { CodeBlockToolbar } from 'notebookEditor/extension/codeblock/toolbar';
+import { CodeBlockReferenceToolbar } from 'notebookEditor/extension/codeBlockReference/toolbar';
 import { Demo2AsyncNodeToolbar } from 'notebookEditor/extension/demo2AsyncNode/toolbar';
 import { DemoAsyncNodeToolbar } from 'notebookEditor/extension/demoAsyncNode/toolbar';
 import { DocumentToolbar } from 'notebookEditor/extension/document/toolbar';
@@ -16,6 +17,7 @@ import { Toolbar } from './type';
 // in the collection then nothing will be shown.
 const TOOLBAR_MAP: Record<NodeName | MarkName, Toolbar | null> = {
   [NodeName.CODEBLOCK]: CodeBlockToolbar,
+  [NodeName.CODEBLOCK_REFERENCE]: CodeBlockReferenceToolbar,
   [NodeName.DEMO_2_ASYNC_NODE]: Demo2AsyncNodeToolbar,
   [NodeName.DEMO_ASYNC_NODE]: DemoAsyncNodeToolbar,
   [NodeName.DOC]: DocumentToolbar,

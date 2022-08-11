@@ -35,6 +35,7 @@ export enum AttributeType {
   // -- Custom --------------------------------------------------------------------
   // .. General ...................................................................
   Id = 'id',
+  Text = 'text',
 
   // .. AsyncNode .................................................................
   Status = 'status',
@@ -43,10 +44,14 @@ export enum AttributeType {
   Type = 'type',
   Wrap = 'wrap',
 
+  // .. CodeBlockReference ........................................................
+  CodeBlockReference = 'codeBlockReference',
+  LeftDelimiter = 'leftDelimiter',
+  RightDelimiter = 'rightDelimiter',
+
   // .. Demo AsyncNode ............................................................
   CodeBlockReferences = 'codeBlockReferences',
   CodeBlockHashes = 'codeBlockHashes',
-  Text = 'text',
   Delay = 'delay',
 
   // .. Demo 2 AsyncNode ..........................................................

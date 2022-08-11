@@ -43,16 +43,12 @@ export class Demo2AsyncNodeView extends AbstractAsyncNodeView<string, Demo2Async
   // -- Creation ------------------------------------------------------------------
   // creates the DOM element that will be used to contain the node
   protected createDomElement(): HTMLElement {
-    const outerContainer = document.createElement('div');
-
-    return outerContainer;
+    return document.createElement('div');
   }
 
   // creates the DOM element that will be used to display the node's content
   protected createViewElement(node: Demo2AsyncNodeType): HTMLElement {
-    const content = document.createElement('div');
-
-    return content;
+    return document.createElement('div');
   }
 
   // -- Update --------------------------------------------------------------------
