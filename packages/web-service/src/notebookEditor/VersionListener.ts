@@ -302,11 +302,11 @@ export class VersionListener {
     // NOTE: 'clientId' is what ProseMirror calls them
     const clientIds = versions.map(({ clientId }) => clientId);
 
-    // NOTE: seems to be required by TipTap given different Schemas?;
+    // NOTE: seems to be required by TipTap given different Schemas?
     const proseMirrorSteps = versions.map(({ content }) => {
-            const versionJson = JSON.parse(content)/*FIXME: contentToJson()?*//*FIXME: handle exceptions!*/;
-            return ProseMirrorStep.fromJSON(this.editor.schema, versionJson)/*FIXME: wrap and think about exception*/;
-          });
+      const versionJson = JSON.parse(content)/*FIXME: contentToJson()?*//*FIXME: handle exceptions!*/;
+      return ProseMirrorStep.fromJSON(this.editor.schema, versionJson)/*FIXME: wrap and think about exception*/;
+    });
 
     const transaction = collab.receiveTransaction(this.editor.view.state, proseMirrorSteps, clientIds, { mapSelectionBackward: true });
     this.editor.view.dispatch(transaction);
