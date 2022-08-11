@@ -16,6 +16,6 @@ declare module '@tiptap/core' {
 export const toggleDemo2AsyncNodeCommand = () => ({ commands, editor }: CommandProps) => {
   if(isDemo2AsyncNode(getParentNode(editor.state.selection))) {
     return false/*do not allow demo2AsyncNodes to be toggable*/;
-  }/* else -- create a demo2AsyncNode */
+  } /* else -- create a demo2AsyncNode */
 
   return commands.setNode(NodeName.DEMO_2_ASYNC_NODE, { [AttributeType.Id]: generateNodeId() });};

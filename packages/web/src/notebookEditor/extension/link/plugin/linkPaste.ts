@@ -46,7 +46,7 @@ export const linkPaste = (editor: Editor): Plugin => {
           const isUrl = urlSchema.validateSync(text);
           if(isUrl) {
             text += ' ';
-          }/* else -- not an url, do not add space */
+          } /* else -- not an url, do not add space */
           return text;
         } catch(error) {
           return text/*not an url, return text without modification*/;

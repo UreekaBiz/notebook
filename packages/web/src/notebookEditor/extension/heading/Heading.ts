@@ -72,7 +72,7 @@ export const Heading = Node.create<HeadingOptions, NoStorage>({
 
           if(!startPos.node(-1/*top level*/).canReplaceWith(startPos.index(-1/*top level*/), startPos.indexAfter(-1/*top level*/), this.type)) {
             return null/*the resulting Node Content is not valid, do nothing*/;
-          }/* else -- the resulting Node Content is valid, set Heading Block Type */
+          } /* else -- the resulting Node Content is valid, set Heading Block Type */
 
           const { tr } = state;
           const storedMarks = JSON.stringify([createBoldMark(state.schema)]);

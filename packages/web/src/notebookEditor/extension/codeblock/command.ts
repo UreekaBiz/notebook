@@ -18,7 +18,7 @@ declare module '@tiptap/core' {
 export const toggleCodeBlockCommand = () => ({ editor, commands }: CommandProps) => {
   if(isCodeBlockNode(getParentNode(editor.state.selection))) {
     return false/*do not allow codeBlocks to be toggable*/;
-  }/* else -- create a codeBlock */
+  } /* else -- create a codeBlock */
 
   return commands.setNode(NodeName.CODEBLOCK, { [AttributeType.Id]: generateNodeId() });
 };

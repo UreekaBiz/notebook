@@ -65,26 +65,26 @@ export abstract class AbstractCodeBlockAsyncNodeModel
     let isDirty = false/*default*/;
     if(codeBlockReferences.length !== codeBlockHashes.length) {
       isDirty = true;
-    }/* else -- do not change default */
+    } /* else -- do not change default */
 
     for(let j=0; j<codeBlockReferences.length; j++) {
       // -- check if node is not dirty already ------------------------------------
       if(isDirty) {
         break/*already know node is dirty*/;
-      }/* else -- same amount of references and hashes */
+      } /* else -- same amount of references and hashes */
 
       // -- check that codeBlock exists -----------------------------------------
       const referencedCodeBlockView = codeBlockViewStorage.getNodeView(codeBlockReferences[j]);
       if(!referencedCodeBlockView) {
         isDirty = true/*reference no longer exists*/;
         break/*nothing else to check*/;
-      }/* else -- reference still exists */
+      } /* else -- reference still exists */
 
       // -- check that hash matches ---------------------------------------------
       if(codeBlockHash(referencedCodeBlockView.node) !== codeBlockHashes[j]) {
         isDirty = true/*order of hashes is different or content changed*/;
         break/*nothing else to check*/;
-      }/* else -- hash matches, node is not dirty */
+      } /* else -- hash matches, node is not dirty */
     }
 
     return isDirty;
