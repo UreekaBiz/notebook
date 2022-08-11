@@ -5,7 +5,7 @@ import { getRenderAttributes } from '../htmlRenderer/attribute';
 import { RendererState } from '../htmlRenderer/state';
 import { createNodeDataTypeAttribute, NodeRendererSpec } from '../htmlRenderer/type';
 import { getAllowedMarks, MarkName } from '../mark';
-import { JSONNode, NodeIdentifier, NodeName, ProseMirrorNodeContent } from '../node';
+import { JSONNode, NodeGroup, NodeIdentifier, NodeName, ProseMirrorNodeContent } from '../node';
 import { NotebookSchemaType } from '../schema';
 
 // ********************************************************************************
@@ -40,7 +40,7 @@ export const CodeBlockNodeSpec: NodeSpec = {
   content: `${NodeName.TEXT}*`,
   marks: getAllowedMarks([MarkName.BOLD, MarkName.STRIKETHROUGH]),
 
-  group: 'block',
+  group: NodeGroup.BLOCK,
   defining: true/*important parent node during replace operations, parent of content preserved on replace operations*/,
   code: true/*indicate that the block contains code, which causes some commands (e.g. enter) to behave differently*/,
   allowGapCursor: true,
