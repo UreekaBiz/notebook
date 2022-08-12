@@ -1,6 +1,6 @@
 import { CommandProps } from '@tiptap/core';
 
-import { CommandFunctionType, NodeName } from '@ureeka-notebook/web-service';
+import { getBlockNodeRange, CommandFunctionType, NodeName } from '@ureeka-notebook/web-service';
 
 // ********************************************************************************
 // NOTE: ambient module to ensure command is TypeScript-registered for TipTap
@@ -14,16 +14,10 @@ declare module '@tiptap/core' {
 }
 
 // --------------------------------------------------------------------------------
-export const setParagraphCommand = () => ({ state, chain }: CommandProps) => {
-  const { selection } = state;
-  const { parentOffset } = selection.$anchor,
-        from = selection.$anchor.pos - parentOffset,
-        to = from + selection.$anchor.parent.nodeSize - 2/*inside the paragraph*/;
-
-  return chain()
-          .setTextSelection({ from, to })
-          .unsetAllMarks()
-          .setNode(NodeName.PARAGRAPH)
-          .setTextSelection(to)
-        .run();
-};
+export const setParagraphCommand = () => ({ state, chain }: CommandProps) =>
+  chain()
+    .setTextSelection(getBlockNodeRange(state.selection))
+    .unsetAllMarks()
+    .setNode(NodeName.PARAGRAPH)
+    .setTextSelection(state.selection.$anchor.pos)
+    .run();
