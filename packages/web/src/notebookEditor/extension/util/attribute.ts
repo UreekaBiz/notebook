@@ -1,9 +1,7 @@
 import { Attribute, Editor } from '@tiptap/core';
 import { Node as ProseMirrorNode } from 'prosemirror-model';
 
-import { getHeadingThemeValue, getMarkValue, getNodeName, getThemeValue, isHeadingNode, isTextNode, mergeAttributeValues, AttributeType, HeadingLevel, InvalidMergedAttributeValue, MarkName, MergedAttributeValue, SetAttributeType } from '@ureeka-notebook/web-service';
-
-import { getSelectedNode } from './node';
+import { getHeadingThemeValue, getMarkValue, getNodeName, getSelectedNode, getThemeValue, isHeadingNode, isTextNode, mergeAttributeValues, AttributeType, HeadingLevel, InvalidMergedAttributeValue, MarkName, MergedAttributeValue, SetAttributeType } from '@ureeka-notebook/web-service';
 
 // ********************************************************************************
 // == Util ========================================================================

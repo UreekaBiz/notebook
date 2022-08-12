@@ -1,9 +1,8 @@
 import { Box, Divider, Flex, Text, VStack } from '@chakra-ui/react';
 
-import { MarkName, NodeName } from '@ureeka-notebook/web-service';
+import { MarkName, NodeName, SelectionDepth } from '@ureeka-notebook/web-service';
 
 import { useValidatedEditor } from 'notebookEditor/hook/useValidatedEditor';
-import { SelectionDepth } from 'notebookEditor/model/type';
 import { Toolbar as ToolbarType } from 'notebookEditor/toolbar/type';
 
 import { ToolItemComponent } from './ToolItem';

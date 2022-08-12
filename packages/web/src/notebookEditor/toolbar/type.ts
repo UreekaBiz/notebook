@@ -1,9 +1,7 @@
 import { Editor } from '@tiptap/core';
 import { ReactNode } from 'react';
 
-import { MarkName, NodeName } from '@ureeka-notebook/web-service';
-
-import { SelectionDepth } from 'notebookEditor/model/type';
+import { MarkName, NodeName, SelectionDepth } from '@ureeka-notebook/web-service';
 
 // ********************************************************************************
 // == Toolbar =====================================================================

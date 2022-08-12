@@ -1,9 +1,8 @@
 import { CommandProps, Editor } from '@tiptap/core';
 
-import { isTextNode, AttributeType, CommandFunctionType } from '@ureeka-notebook/web-service';
+import { getSelectedNode, isTextNode, AttributeType, CommandFunctionType, SelectionDepth } from '@ureeka-notebook/web-service';
 
-import { getSelectedNode } from 'notebookEditor/extension/util/node';
-import { ExtensionName, SelectionDepth } from 'notebookEditor/model/type';
+import { ExtensionName } from 'notebookEditor/model/type';
 
 // ********************************************************************************
 // == Command =====================================================================

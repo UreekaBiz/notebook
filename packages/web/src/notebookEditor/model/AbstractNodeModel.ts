@@ -1,7 +1,7 @@
 import { Editor } from '@tiptap/core';
 import { Node as ProseMirrorNode } from 'prosemirror-model';
 
-import { getPosType, isGetPos } from 'notebookEditor/extension/util/node';
+import { getPosType, isGetPos } from '@ureeka-notebook/web-service';
 
 import { NodeViewStorage } from './NodeViewStorage';
 import { AbstractNodeController } from './AbstractNodeController';

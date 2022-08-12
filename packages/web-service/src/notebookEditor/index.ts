@@ -299,7 +299,16 @@ export {
   NodeFound,
 
   // .. Selection .................................................................
+  getAllAscendantsFromSelection,
   getBlockNodeRange,
+  getPosType,
+  getSelectedNode,
+  isGetPos,
+  isNodeSelection,
+  replaceAndSelectNode,
+  resolveNewSelection,
+  selectionIsOfType,
+  SelectionDepth,
 
   // ..............................................................................
   getWrapStyles,

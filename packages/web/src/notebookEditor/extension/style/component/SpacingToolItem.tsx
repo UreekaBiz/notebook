@@ -1,7 +1,6 @@
-import { AttributeType, Margin, Padding } from '@ureeka-notebook/web-service';
+import { getSelectedNode, AttributeType, Margin, Padding } from '@ureeka-notebook/web-service';
 
 import { getTextDOMRenderedValue } from 'notebookEditor/extension/util/attribute';
-import { getSelectedNode } from 'notebookEditor/extension/util/node';
 import { Unit } from 'notebookEditor/theme/type';
 import { EditorToolComponentProps } from 'notebookEditor/toolbar/type';
 

@@ -1,7 +1,6 @@
-import { AttributeType, InvalidMergedAttributeValue, MarkName } from '@ureeka-notebook/web-service';
+import { getSelectedNode, AttributeType, InvalidMergedAttributeValue, MarkName } from '@ureeka-notebook/web-service';
 
 import { getTextDOMRenderedValue } from 'notebookEditor/extension/util/attribute';
-import { getSelectedNode } from 'notebookEditor/extension/util/node';
 import { EditorToolComponentProps } from 'notebookEditor/toolbar/type';
 
 import { UnitPickerInput } from './UnitPickerInput';

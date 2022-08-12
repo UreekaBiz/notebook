@@ -1,12 +1,10 @@
 import { Divider, Flex, VStack } from '@chakra-ui/react';
 import { useCallback, useEffect, useMemo, useState } from 'react';
 
-import { getMarkName, getNodeName } from '@ureeka-notebook/web-service';
+import { getAllAscendantsFromSelection, getMarkName, getNodeName, SelectionDepth } from '@ureeka-notebook/web-service';
 
 import { getAllMarksFromSelection } from 'notebookEditor/extension/util/mark';
-import { getAllAscendantsFromSelection } from 'notebookEditor/extension/util/node';
 import { useValidatedEditor } from 'notebookEditor/hook/useValidatedEditor';
-import { SelectionDepth } from 'notebookEditor/model/type';
 
 import { getToolbar } from '../toolbar';
 import { Debugger } from './Debugger';

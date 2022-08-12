@@ -2,11 +2,10 @@ import { useToast, Center, Tooltip } from '@chakra-ui/react';
 import { Editor } from '@tiptap/core';
 import { useCallback } from 'react';
 
-import { NodeName } from '@ureeka-notebook/web-service';
+import { NodeName, SelectionDepth } from '@ureeka-notebook/web-service';
 
 import ErrorBoundary from 'core/component/ErrorBoundary';
 import { isHeadingToolActive } from 'notebookEditor/extension/heading/toolbar';
-import { SelectionDepth } from 'notebookEditor/model/type';
 import { ACTIVE_BUTTON_COLOR, ICON_BUTTON_CLASS } from 'notebookEditor/theme/theme';
 import { ToolItem, TOOL_ITEM_DATA_TYPE } from 'notebookEditor/toolbar/type';
 

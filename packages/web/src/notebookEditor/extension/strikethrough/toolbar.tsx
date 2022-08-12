@@ -1,9 +1,8 @@
 import { BiStrikethrough } from 'react-icons/bi';
 
-import { getStrikethroughMarkType, MarkName } from '@ureeka-notebook/web-service';
+import { getStrikethroughMarkType, isNodeSelection, MarkName } from '@ureeka-notebook/web-service';
 
 import { getMarkHolder, inMarkHolder, toggleMarkInMarkHolder } from 'notebookEditor/extension/markHolder/util';
-import { isNodeSelection } from 'notebookEditor/extension/util/node';
 import { ToolItem } from 'notebookEditor/toolbar/type';
 
 // ********************************************************************************

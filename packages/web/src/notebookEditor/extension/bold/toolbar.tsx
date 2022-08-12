@@ -1,9 +1,8 @@
 import { BiBold } from 'react-icons/bi';
 
-import { getBoldMarkType, MarkName } from '@ureeka-notebook/web-service';
+import { getBoldMarkType, isNodeSelection, MarkName } from '@ureeka-notebook/web-service';
 
 import { getMarkHolder, inMarkHolder, toggleMarkInMarkHolder } from 'notebookEditor/extension/markHolder/util';
-import { isNodeSelection } from 'notebookEditor/extension/util/node';
 import { ToolItem } from 'notebookEditor/toolbar/type';
 
 // ********************************************************************************
