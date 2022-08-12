@@ -1,6 +1,6 @@
 import { logger } from 'firebase-functions';
 
-import { hashString, sleep, NodeIdentifier, NotebookIdentifier, UserIdentifier, AsyncNodeStatus } from '@ureeka-notebook/service-common';
+import { hashString, sleep, AsyncNodeStatus, NodeIdentifier, NotebookIdentifier, UserIdentifier } from '@ureeka-notebook/service-common';
 
 import { updateDocument } from './api/api';
 import { DemoAsyncNodeAttributeReplace } from './api/demoAsyncNode';
@@ -17,11 +17,11 @@ export const executeDemoAsyncNode = async (userId: UserIdentifier, notebookId: N
     // produce an arbitrary result based on the specified content
     text = `Content contains ${content.length} characters and has a hash of '${hashString(content)}'`;
   } catch(error) {
-    logger.error(`Error executing Demo3AsyncNode: ${error}`);
+    logger.error(`Error executing DemoAsyncNode: ${error}`);
     status = AsyncNodeStatus.ERROR;
     text = 'Error'/*CHECK: anything else?*/;
   }
 
-  // update the identified Demo3AsyncNode with the result
+  // update the identified DemoAsyncNode with the result
   await updateDocument(userId, notebookId, [ new DemoAsyncNodeAttributeReplace(nodeId, hashes, status, text) ]);
 };
