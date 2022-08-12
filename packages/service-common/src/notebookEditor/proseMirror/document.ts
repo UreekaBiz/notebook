@@ -1,6 +1,6 @@
-import { Node as ProseMirrorNode } from 'prosemirror-model';
-
-import { DEFAULT_NOTEBOOK_NAME } from '../../notebook/type';
+import { NotebookIdentifier, DEFAULT_NOTEBOOK_NAME } from '../../notebook/type';
+import { createApplicationError } from '../../util/error';
+import { assertNever } from '../../util/type';
 import { Checkpoint, NotebookVersion } from '../type';
 import { contentToStep } from '../version';
 import { DocumentNodeType } from './extension/document';
@@ -54,7 +54,19 @@ export const collapseVersions = (schemaVersion: NotebookSchemaVersion, checkpoin
 // TODO: make a configuration parameter
 const MAX_NOTEBOOK_NAME_LENGTH = 1024/*SEE: Notebook*/;
 
-export const extractDocumentName = (document: ProseMirrorNode) => {
+// NOTE: If there is no a valid title on the Document from an Checkpoint it will
+//       default to 1) the first 'n' characters of the content or 2) DEFAULT_NOTEBOOK_NAME
+export const extractDocumentName = (schemaVersion: NotebookSchemaVersion, notebookId: NotebookIdentifier, document: DocumentNodeType) => {
+  switch(schemaVersion) {
+    case NotebookSchemaVersion.V1: throw createApplicationError('devel/unhandled', `Notebook (${notebookId}) schema version '${NotebookSchemaVersion.V1}' is no longer supported.`);
+    case NotebookSchemaVersion.V2:
+      return extractDocumentNameV2(document);
+
+    default: return assertNever(schemaVersion);
+  }
+};
+
+const extractDocumentNameV2 = (document: DocumentNodeType) => {
   // if there is a Title Node then retrieve its content otherwise take the
   // first 'n' chars of the content
 
