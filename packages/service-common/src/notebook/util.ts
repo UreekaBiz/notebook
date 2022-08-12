@@ -3,6 +3,7 @@ import { assertNever } from '../util/type';
 import { UserIdentifier } from '../util/user';
 import { Notebook } from './type';
 
+// TODO: refactor into a 'Sharable' interface
 // ********************************************************************************
 // == Permission ==================================================================
 export const isNotebookCreator = (userId: UserIdentifier, notebook: Notebook): boolean =>
