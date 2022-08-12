@@ -145,21 +145,6 @@ export const getNodesAffectedByStepMap = (transaction: Transaction, stepMapIndex
   return nodesOfType;
 };
 
-// -- Sizing ----------------------------------------------------------------------
-/**
- * @param parentNode The parent Node of the {@link childNode} whose offset is being calculated
- * @param childNode The {@link childNode} whose offset is being calculated
- * @returns The offset of the {@link childNode} into its {@link parentNode}
- */
- export const getNodeOffset = (parentNode: ProseMirrorNode, childNode: ProseMirrorNode) => {
-  let offset = 0/*default*/;
-  parentNode.content.descendants((node, nodePos) => {
-    if(node.attrs[AttributeType.Id] === childNode.attrs[AttributeType.Id]) offset = nodePos + 1/*account for 0 indexing*/;
-  });
-
-  return offset;
-};
-
 // -- Creation --------------------------------------------------------------------
 /** Creates a {@link Fragment} with the content of the input Node plus the given {@link appendedNode} */
 export const createFragmentWithAppendedContent = (node: ProseMirrorNode, appendedNode: ProseMirrorNode) =>

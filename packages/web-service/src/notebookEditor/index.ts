@@ -112,7 +112,6 @@ export {
   NodeIdentifier,
   generateNodeId,
   getNodeName,
-  getNodeOffset,
 
   asyncNodes,
 
