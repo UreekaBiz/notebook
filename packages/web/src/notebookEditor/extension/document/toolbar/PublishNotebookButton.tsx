@@ -25,7 +25,7 @@ export const PublishNotebookButton: React.FC<Props> = () => {
     setIsLoading(true);
 
     const versionIndex = editorService.getVersionIndex();
-    const title = extractDocumentName(editor.state.doc)/*default to extracted Document name*/;
+    const title = extractDocumentName(notebook!.schemaVersion, notebookId, editor.state.doc)/*default to extracted Document name*/;
     const snippet = ''/*FIXME*/;
     const image = ''/*FIXME*/;
     try {

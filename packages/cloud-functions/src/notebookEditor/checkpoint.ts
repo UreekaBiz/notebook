@@ -77,6 +77,6 @@ export const createCheckpoint = async (notebookId: NotebookIdentifier, index: nu
     transaction.create(checkpointRef, checkpoint)/*by contract*/;
 
     // also extract the dependent Notebook meta-data and update the Notebook as needed
-    updateNotebookRename(transaction, notebookId, notebook.schemaVersion, content);
+    updateNotebookRename(transaction, notebook.schemaVersion, notebookId, notebook.name, document);
   });
 };

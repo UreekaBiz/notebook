@@ -1,7 +1,6 @@
 import { DocumentReference, Transaction } from 'firebase-admin/firestore';
-import { logger } from 'firebase-functions';
 
-import { contentToNode, extractDocumentName, getSchema, isNotebookRole, setChange, NotebookDocumentContent, NotebookIdentifier, NotebookType, NotebookSchemaVersion, Notebook_Create, Notebook_Delete, Notebook_Hashtag, Notebook_Publish, Notebook_Rename, Notebook_Storage, SetChange, ShareRole, SystemUserId, UserIdentifier, DEFAULT_NOTEBOOK_NAME, MAX_NOTEBOOK_HASHTAGS } from '@ureeka-notebook/service-common';
+import { extractDocumentName, isNotebookRole, setChange, DocumentNodeType, NotebookIdentifier, NotebookType, NotebookSchemaVersion, Notebook_Create, Notebook_Delete, Notebook_Hashtag, Notebook_Publish, Notebook_Rename, Notebook_Storage, SetChange, ShareRole, SystemUserId, UserIdentifier, MAX_NOTEBOOK_HASHTAGS } from '@ureeka-notebook/service-common';
 
 import { firestore } from '../firebase';
 import { updateHashtagOccurrences } from '../hashtag/hashtagSummary';
@@ -32,25 +31,6 @@ export const getNotebook = async (
   if(notebook.deleted) throw new ApplicationError('data/deleted', `Cannot ${label} on already deleted Notebook (${notebookId}) for User (${userId}).`);
 
   return notebook;
-};
-
-// -- Name ------------------------------------------------------------------------
-// gets the Title of a Document from the specified content
-// NOTE: If there is no a valid title on the content from an Checkpoint it will
-//       default to 1) the first 'n' characters of the content or 2) DEFAULT_NOTEBOOK_NAME
-export const getNotebookName = (notebookId: NotebookIdentifier, version: NotebookSchemaVersion, content: NotebookDocumentContent): string =>  {
-  switch(version) {
-    case NotebookSchemaVersion.V1: throw new ApplicationError('devel/unhandled', `Notebook schema version '${NotebookSchemaVersion.V1}' is no longer supported.`);
-    case NotebookSchemaVersion.V2:
-      const document = contentToNode(getSchema(version), content);
-      if(!document) { logger.error(`Trying to get Notebook (${version}; ${notebookId}) without valid content.`); return DEFAULT_NOTEBOOK_NAME /*nothing to do*/;}
-
-      return extractDocumentName(document);
-
-    default:
-      logger.error(`Unknown Notebook version (${version}) while retrieving name from Notebook (${notebookId}).`);
-      return DEFAULT_NOTEBOOK_NAME/*default to default*/;
-  }
 };
 
 // == Create ======================================================================
@@ -142,9 +122,14 @@ export const updateNotebookPublish = (transaction: Transaction, notebookId: Note
 // -- Rename ----------------------------------------------------------------------
 // extracts meta-data (e.g. the Title) from the specified Notebook and updates the
 // Notebook document (using the specified Transaction) as needed
-// NOTE: currently only run on Checkpoints
-export const updateNotebookRename = (transaction: Transaction, notebookId: NotebookIdentifier, version: NotebookSchemaVersion, content: NotebookDocumentContent) => {
-  const name = getNotebookName(notebookId, version, content);
+// NOTE: currently only runs when Checkpoints are created
+export const updateNotebookRename = (
+  transaction: Transaction,
+  version: NotebookSchemaVersion, notebookId: NotebookIdentifier,
+  existingName: string, document: DocumentNodeType
+) => {
+  const name = extractDocumentName(version, notebookId, document);
+  if(name === existingName) return/*nothing changed so don't bother to write*/;
 
   const notebookRef = notebookDocument(notebookId);
   const notebook: Notebook_Rename = {
