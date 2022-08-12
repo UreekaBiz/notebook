@@ -56,17 +56,13 @@ function NotebookEditorPage() {
 //       separated is that to render the metadata of the page it needs access to
 //       the loaded notebook and that comes from the NotebookProvider.
 const InternalNotebookEditorPage: React.FC = () => {
-  const { notebook, notebookId, status } = useNotebook();
-
-  if(status === 'error') return <NotFoundPage message='Unexpected error happened while loading Notebook.' />;
-  if(status === 'complete' && notebook === null) return <NotFoundPage message='Notebook not found.' />;
-  if(!notebook) return <LoadingPage />;
+  const { notebook, notebookId } = useNotebook();
 
   return (
     <>
      <Head>
-        <title>{notebook?.name}</title>
-        <meta property="og:title" content={notebook?.name} key="title" />
+        <title>{notebook.name}</title>
+        <meta property="og:title" content={notebook.name} key="title" />
      </Head>
       <NotebookEditorProvider notebookId={notebookId} notebook={notebook}>
         <SideBarLayout sidebar={<SideBar />}>

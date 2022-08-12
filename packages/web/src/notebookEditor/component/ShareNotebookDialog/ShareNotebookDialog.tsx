@@ -19,7 +19,6 @@ type UserRole = { role: ShareRole; userProfile: UserProfilePublic; };
 export const ShareNotebookDialog: React.FC = () => {
   const authedUser = useAuthedUser();
   const { notebookId, notebook } = useNotebook();
-  if(!notebook) throw new Error('Share Dialog must be rendered when a valid Notebook is available.');
 
   // == State =====================================================================
   // NOTE: shareRoles must have the User's profile in this map since it's
