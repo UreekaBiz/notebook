@@ -1,30 +1,13 @@
-import { CommandProps, Editor } from '@tiptap/core';
+import { Editor } from '@tiptap/core';
 import { GapCursor } from 'prosemirror-gapcursor';
 import { Node as ProseMirrorNode } from 'prosemirror-model';
 import { EditorState, NodeSelection, Selection, TextSelection, Transaction } from 'prosemirror-state';
 
-import { getNodeOffset, NodeName, NotebookSchemaType } from '@ureeka-notebook/web-service';
+import { NodeName, NotebookSchemaType } from '@ureeka-notebook/web-service';
 
 import { ExtensionName, SelectionDepth } from 'notebookEditor/model/type';
 
 // ********************************************************************************
-// == Toggle ======================================================================
-/** Toggles a block Node if its currently active, or focuses it back if the type of
- *  the current selection is {@link ExtensionName.GAP_CURSOR} */
-export const toggleBlockNode = (props: CommandProps, nodeName: NodeName) => {
-  if(props.editor.isActive(nodeName)) {
-    return props.commands.clearNodes();
-  } /* else -- insert node */
-
-  const { selection } = props.view.state,
-        prevPos = selection.$anchor.pos;
-
-  if(selection.toJSON().type === ExtensionName.GAP_CURSOR) return props.chain().focus().setTextSelection(prevPos).run();
-
-  return props.chain().setNode(nodeName).setTextSelection(prevPos).run();
-};
-
-// ================================================================================
 // -- Backspace --------------------------------------------------------------------
 /** Ensures the block at the selection is deleted on backspace if its empty */
 export const handleBlockBackspace = (editor: Editor, nodeName: NodeName) => {
@@ -115,15 +98,6 @@ export const selectionIsOfType = (selection: Selection<NotebookSchemaType>, type
   return selectedNode;
 };
 
-export const isFullySelected = (state: EditorState, node: ProseMirrorNode, pos: number): boolean => {
-  const { selection } = state;
-  const start = selection.$from.pos,
-        end = selection.$to.pos;
-
-  // does the selection fully contain the Node?
-  return pos >= start - 1 && end > pos + node.content.size;
-};
-
 /** Gets all the ascendants of the current selected Node */
  export const getAllAscendantsFromSelection = (state: EditorState): (ProseMirrorNode | null | undefined)[] => {
   const { selection } = state;
@@ -162,23 +136,6 @@ export const resolveNewSelection = (selection: Selection<NotebookSchemaType>, tr
   } /* else -- selection is empty */
 
   return Selection.near(tr.doc.resolve(selection.$anchor.pos), bias ? bias : SelectionBias.LEFT/*default*/);
-};
-
-// ................................................................................
-/** @returns the {@link ResolvedPos} of the anchor of the selection of the given {@link Transaction} */
-export const getResolvedAnchorPos = (tr: Transaction<NotebookSchemaType>, extraOffset: number) => {
-  const nodeBefore = getNodeBefore(tr.selection),
-        nodeBeforeSize = nodeBefore?.nodeSize ?? 0/*no node before -- no size*/;
-
-  const resolvedPos = tr.doc.resolve((tr.selection.anchor + extraOffset) - nodeBeforeSize);
-  return resolvedPos;
-};
-
-/** @returns the {@link ResolvedPos} of the Node that is parent of the current {@link NodeSelection}'s Node */
-export const getResolvedParentSelectionByAnchorOffset = (selection: NodeSelection, tr: Transaction) => {
-  const nodeOffset = getNodeOffset(selection.$anchor.parent, selection.node);
-  const resolvedPos = tr.doc.resolve(selection.$anchor.pos - nodeOffset);
-  return new NodeSelection<NotebookSchemaType>(resolvedPos);
 };
 
 // ................................................................................
