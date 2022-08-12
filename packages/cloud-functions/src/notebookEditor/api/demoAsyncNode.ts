@@ -8,7 +8,7 @@ import { DocumentUpdate } from './type';
 // ********************************************************************************
 /** Updates the identified DemoAsyncNode with the specified status and text */
 export class DemoAsyncNodeAttributeReplace implements DocumentUpdate {
-  public constructor(private readonly nodeId: NodeIdentifier, private readonly status: AsyncNodeStatus, private readonly hashes: string[], private readonly text?: string) {/*nothing additional*/}
+  public constructor(private readonly nodeId: NodeIdentifier, private readonly hashes: string[], private readonly status: AsyncNodeStatus, private readonly text?: string) {/*nothing additional*/}
 
   // == DocumentUpdate ============================================================
   public update(editorState: EditorState, tr: Transaction ) {

@@ -22,5 +22,5 @@ export const executeDemoAsyncNode = async (userId: UserIdentifier, notebookId: N
   }
 
   // update the identified Demo3AsyncNode with the result
-  await updateDocument(userId, notebookId, [ new DemoAsyncNodeAttributeReplace(nodeId, status, hashes, text) ]);
+  await updateDocument(userId, notebookId, [ new DemoAsyncNodeAttributeReplace(nodeId, hashes, status, text) ]);
 };

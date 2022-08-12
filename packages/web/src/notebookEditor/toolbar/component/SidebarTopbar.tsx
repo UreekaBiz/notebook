@@ -4,7 +4,7 @@ import { useCallback, useEffect, useState } from 'react';
 import { BsBook } from 'react-icons/bs';
 import { RiFileAddLine } from 'react-icons/ri';
 
-import { getLogger, NotebookService, NotebookType, Logger } from '@ureeka-notebook/web-service';
+import { debounce, getLogger, NotebookService, NotebookType, Logger } from '@ureeka-notebook/web-service';
 
 import { AuthAvatar } from 'authUser/component/AuthAvatar';
 import { useNotebookEditor } from 'notebookEditor/hook/useNotebookEditor';
@@ -29,12 +29,22 @@ export const SidebarTopbar: React.FC<Props> = ({ background }) => {
 
   // == State =====================================================================
   const [isLoading, setIsLoading] = useState<boolean>(false/*default not loading*/);
-  const [hasPendingWrite, setHasPendingWrite] = useState(true/*default not writting*/);
+  const [hasPendingWrite, setHasPendingWrite] = useState(false/*default not writing*/);
 
   // == Effect ====================================================================
   useEffect(() => {
+    // debounce setting setHasPendingWrite to true to avoid flashing the text in
+    // each save.
+    const debounced = debounce((value: boolean) => setHasPendingWrite(value), 1000);
+
     const subscription = editorService.onPendingWrites$().subscribe({
-      next: (hasPendingWrite) => setHasPendingWrite(hasPendingWrite),
+      next: (hasPendingWrite) => {
+        // cancel previous call to setHasPendingWrite if it's still pending
+        debounced(hasPendingWrite);
+
+        // immediately set isLoading to false if there are no pending writes
+        if(!hasPendingWrite) setHasPendingWrite(false);
+      },
       error: (error) => {
         log.info(`Unexpected error listening Notebook Editor pending writes. Reason: `, error);
       },
@@ -90,24 +100,22 @@ export const SidebarTopbar: React.FC<Props> = ({ background }) => {
     >
       <Flex align='center' _hover={{ cursor: 'pointer' }} onClick={handleAppNameClick}>
         <BsBook size={20} />
-          <Text marginLeft={2} fontSize={20}>Notebook</Text>
-          {hasPendingWrite ? (
-            <Flex
-              alignItems='center'
-              alignSelf='flex-end'
-              marginLeft={2}
-              fontSize={12}
-              lineHeight='25px'
-              color='#555'
-              fontWeight={600}
-            >
-              <MdLoop size={14}/>
-              <Text marginLeft={1}>Saving...</Text>
-            </Flex>
-          ): null/*nothing*/}
+        <Text marginLeft={2} fontSize={20}>Notebook</Text>
       </Flex>
-
       <Flex align='center'>
+        {hasPendingWrite ? (
+          <Flex
+            alignItems='center'
+            marginLeft={2}
+            fontSize={12}
+            lineHeight='25px'
+            color='#555'
+            fontWeight={600}
+          >
+            <MdLoop size={14}/>
+            <Text marginLeft={1}>Saving...</Text>
+          </Flex>
+        ): null/*nothing*/}
         {isLoading ?
           (
             <Button disabled colorScheme='gray' variant='ghost' size='sm' leftIcon={<Spinner size='sm' />} >
