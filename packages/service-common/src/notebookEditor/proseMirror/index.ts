@@ -26,7 +26,7 @@ export * from './extension/textStyle';
 export * from './mark';
 export * from './node';
 export * from './schema';
-export * from './range';
+export * from './selection';
 export * from './state';
 export * from './step';
 export * from './theme';

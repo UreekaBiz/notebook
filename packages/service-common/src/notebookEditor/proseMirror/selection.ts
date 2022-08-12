@@ -1,6 +1,7 @@
 import { Selection } from 'prosemirror-state';
 
 // ********************************************************************************
+// == Range =======================================================================
 /**
  * computes the Range that holds all Nodes in between the start and end of the
  * Blocks located at the anchor and head of the given {@link Selection},
