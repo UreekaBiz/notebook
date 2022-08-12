@@ -1,6 +1,6 @@
 import { AiOutlineClockCircle } from 'react-icons/ai';
 
-import { isAsyncNode, selectionIsOfType, NodeName } from '@ureeka-notebook/web-service';
+import { isAsyncNode, getSelectedNode, isDemoAsyncNode, NodeName } from '@ureeka-notebook/web-service';
 
 import { Toolbar, ToolItem } from 'notebookEditor/toolbar/type';
 
@@ -10,6 +10,7 @@ import { ExecuteButtons } from './ExecuteButtons';
 
 //*********************************************************************************
 // == Tool Items ==================================================================
+// disable tool item if current selected node or its parent is a CodeBlock node
 export const demoAsyncNodeToolItem: ToolItem = {
   toolType: 'button',
   name: NodeName.DEMO_ASYNC_NODE,
@@ -18,15 +19,15 @@ export const demoAsyncNodeToolItem: ToolItem = {
   icon: <AiOutlineClockCircle size={16} />,
   tooltip: 'DemoAsyncNode (⌘ + ⌥ + D)',
 
-  // disable tool item if current selected node or its parent is a CodeBlock node
   shouldBeDisabled: (editor) => {
+    const node = getSelectedNode(editor.state);
     const { selection } = editor.state;
-    if(selectionIsOfType(selection, NodeName.DEMO_ASYNC_NODE)) return true;
+    if(node && isDemoAsyncNode(node)) return true/*(SEE: comment above)*/;
 
     const parentNode = selection.$anchor.parent;
-    if(isAsyncNode(parentNode)) return true;
+    if(isAsyncNode(parentNode)) return true/*(SEE: comment above)*/;
 
-    return false;
+    return false/*enabled*/;
   },
   onClick: (editor) => editor.chain().focus().insertDemoAsyncNode().run(),
 };
@@ -36,7 +37,12 @@ const demoAsyncNodeDelayTool: ToolItem = {
   name: 'demoAsyncNodeDelayTool',
 
   component: DemoAsyncNodeDelaySlider,
-  shouldShow: (editor) => selectionIsOfType(editor.state.selection, NodeName.DEMO_ASYNC_NODE),
+  shouldShow: (editor) => {
+    const node = getSelectedNode(editor.state);
+    if(node && isDemoAsyncNode(node)) return true/*(SEE: comment above)*/;
+
+    return false/*enabled*/;
+  },
 };
 
 const demoAsyncNodeChipTool: ToolItem = {
@@ -44,7 +50,12 @@ const demoAsyncNodeChipTool: ToolItem = {
   name: 'demoAsyncNodeChipTool',
 
   component: DemoAsyncNodeChipSelector,
-  shouldShow: (editor) => selectionIsOfType(editor.state.selection, NodeName.DEMO_ASYNC_NODE),
+  shouldShow: (editor) => {
+    const node = getSelectedNode(editor.state);
+    if(node && isDemoAsyncNode(node)) return true/*(SEE: comment above)*/;
+
+    return false/*enabled*/;
+  },
 };
 
 // == Toolbar =====================================================================
