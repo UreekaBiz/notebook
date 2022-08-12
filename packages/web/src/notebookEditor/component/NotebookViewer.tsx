@@ -1,5 +1,7 @@
 import { convertContentToHTML, NotebookDocumentContent } from '@ureeka-notebook/web-service';
 
+import { EDITOR_CLASS_NAME, EDITOR_PREVIEW_CLASS_NAME } from 'core/theme';
+
 // ********************************************************************************
 interface Props {
   content: NotebookDocumentContent;
@@ -10,6 +12,6 @@ export const NotebookViewer: React.FC<Props>= ({ content }) => {
   // Notebook at the moment.
   const htmlContent = convertContentToHTML(content);
   return (
-    <div className='Editor'/*SEE: /index.css*/ dangerouslySetInnerHTML={{ __html: htmlContent ?? '' }} />
+    <div className={`${EDITOR_CLASS_NAME} ${EDITOR_PREVIEW_CLASS_NAME}`}/*SEE: /index.css*/ dangerouslySetInnerHTML={{ __html: htmlContent ?? '' }} />
   );
 };

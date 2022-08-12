@@ -1,3 +1,4 @@
+import { EDITOR_CLASS_NAME, EDITOR_EDITABLE_CLASS_NAME } from 'core/theme';
 import { AsyncNode } from 'notebookEditor/extension/asyncNode/AsyncNode';
 import { Bold } from 'notebookEditor/extension/bold/Bold';
 import { CodeBlock } from 'notebookEditor/extension/codeblock/CodeBlock';
@@ -57,7 +58,7 @@ export const editorDefinition = {
     Text,
     TextStyle,
   ],
-  editorProps: { attributes: { class: 'Editor'/*SEE: /index.css*/ } },
+  editorProps: { attributes: { class: `${EDITOR_CLASS_NAME} ${EDITOR_EDITABLE_CLASS_NAME}`/*SEE: /index.css*/ } },
 
   autofocus: true/*initially has focus*/,
   content: ''/*initially empty*/,

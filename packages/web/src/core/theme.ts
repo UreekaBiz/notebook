@@ -2,6 +2,8 @@ import { extendTheme } from '@chakra-ui/react';
 
 // ********************************************************************************
 export const EDITOR_CLASS_NAME = 'Editor';
+export const EDITOR_EDITABLE_CLASS_NAME = 'Editor--editable';
+export const EDITOR_PREVIEW_CLASS_NAME = 'Editor--preview';
 
 export const DEFAULT_H1_COLOR = '#1C5987';
 export const DEFAULT_H2_COLOR = '#4E7246';
@@ -59,11 +61,6 @@ export const theme = extendTheme({
         mt:'2',
         mb:'2',
       },
-
-      // --- Editor Specific ------------------------------------------------------
-      // [`.${EDITOR_CLASS_NAME} > div`]: { fontSize: TEXT_STYLE_DEFAULT_PARAGRAPH_FONT_SIZE, fontWeight: 400, my:4 },
-      // [`.${EDITOR_CLASS_NAME} > ul, .${EDITOR_CLASS_NAME} > ol`]: { my:4 },
-      // [`.${EDITOR_CLASS_NAME}`]: { p: 4, fontSize: TEXT_STYLE_DEFAULT_PARAGRAPH_FONT_SIZE, outline: 'none' },
 
       // --- Bullet List Specific -------------------------------------------------
       ul: { pl: 6, listStyleType: 'none' },
