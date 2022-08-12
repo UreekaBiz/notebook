@@ -18,6 +18,9 @@ export {
   ObjectTuple,
   Timestamp,
 
+  // SEE: @ureeka-notebook/service-common: util/debounce.ts
+  debounce,
+
   // SEE: @ureeka-notebook/service-common: util/environment.ts
   isClientSide,
   isServerSide,
