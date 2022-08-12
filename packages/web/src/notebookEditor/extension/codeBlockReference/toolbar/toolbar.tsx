@@ -1,6 +1,6 @@
 import { VscReferences } from 'react-icons/vsc';
 
-import { selectionIsOfType, NodeName } from '@ureeka-notebook/web-service';
+import { getSelectedNode, isCodeBlockReferenceNode, NodeName } from '@ureeka-notebook/web-service';
 
 import { Toolbar, ToolItem } from 'notebookEditor/toolbar/type';
 
@@ -19,8 +19,8 @@ export const codeBlockReferenceToolItem: ToolItem = {
 
   // disable tool item if current selected node is a CodeBlockReference node
   shouldBeDisabled: (editor) => {
-    const { selection } = editor.state;
-    if(selectionIsOfType(selection, NodeName.CODEBLOCK_REFERENCE)) return true;
+    const node = getSelectedNode(editor.state);
+    if(node && isCodeBlockReferenceNode(node)) return true/*(SEE: comment above)*/;
 
     return false;
   },

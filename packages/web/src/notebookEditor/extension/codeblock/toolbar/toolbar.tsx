@@ -1,6 +1,6 @@
 import { BiCodeAlt } from 'react-icons/bi';
 
-import { getParentNode, isCodeBlockNode, selectionIsOfType, NodeName } from '@ureeka-notebook/web-service';
+import { getParentNode, getSelectedNode, isCodeBlockNode, NodeName } from '@ureeka-notebook/web-service';
 
 import { markBold } from 'notebookEditor/extension/bold/toolbar';
 import { markStrikethrough } from 'notebookEditor/extension/strikethrough/toolbar';
@@ -23,11 +23,10 @@ export const codeBlockToolItem: ToolItem = {
 
   // Disable tool item if current selected node or its parent is a CodeBlock node
   shouldBeDisabled: (editor) => {
-    const { selection } = editor.state;
-    if(selectionIsOfType(selection, NodeName.CODEBLOCK)) return true;
+    const node = getSelectedNode(editor.state);
+    if(node && isCodeBlockNode(node)) return true/*(SEE: comment above)*/;
 
-    const parentNode = selection.$anchor.parent;
-    if(isCodeBlockNode(parentNode)) return true;
+    if(isCodeBlockNode(editor.state.selection.$anchor.parent)) return true/*(SEE: comment above)*/;
 
     return false/*enabled*/;
   },
