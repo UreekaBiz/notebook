@@ -8,8 +8,8 @@ import { DemoAsyncNodeAttributeReplace } from './api/demoAsyncNode';
 // ********************************************************************************
 export const executeDemoAsyncNode = async (userId: UserIdentifier, notebookId: NotebookIdentifier, nodeId: NodeIdentifier, hashes: string[], content: string) => {
   // simulate a long-running operation
-  let status: AsyncNodeStatus = AsyncNodeStatus.PROCESSING;
-  let text: string | undefined/*error*/ = undefined/*default to error*/;
+  let status: AsyncNodeStatus;
+  let text: string;
   try {
     await sleep(3000/*3s*/);
     status = AsyncNodeStatus.SUCCESS;
@@ -19,6 +19,7 @@ export const executeDemoAsyncNode = async (userId: UserIdentifier, notebookId: N
   } catch(error) {
     logger.error(`Error executing Demo3AsyncNode: ${error}`);
     status = AsyncNodeStatus.ERROR;
+    text = 'Error'/*CHECK: anything else?*/;
   }
 
   // update the identified Demo3AsyncNode with the result
