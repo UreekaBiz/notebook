@@ -1,10 +1,11 @@
 import * as functions from 'firebase-functions';
 
-import { NotebookEditorDemoAsyncNodeExecute_Rest, NotebookEditorDemoAsyncNodeExecute_Rest_Schema, NotebookEditorInsertNumbers_Rest, NotebookEditorInsertNumbers_Rest_Schema, NotebookEditorInsertText_Rest, NotebookEditorInsertText_Rest_Schema } from '@ureeka-notebook/service-common';
+import { NotebookEditorDemo2AsyncNodeExecute_Rest, NotebookEditorDemo2AsyncNodeExecute_Rest_Schema, NotebookEditorDemoAsyncNodeExecute_Rest, NotebookEditorDemoAsyncNodeExecute_Rest_Schema, NotebookEditorInsertNumbers_Rest, NotebookEditorInsertNumbers_Rest_Schema, NotebookEditorInsertText_Rest, NotebookEditorInsertText_Rest_Schema } from '@ureeka-notebook/service-common';
 
 import { wrapCall, SmallMemory } from '../util/function';
 import { getDocument, updateDocument } from './api/api';
 import { InsertText } from './api/text';
+import { executeDemo2AsyncNode } from './demo2AsyncNode';
 import { executeDemoAsyncNode } from './demoAsyncNode';
 
 // ********************************************************************************
@@ -30,6 +31,13 @@ export const notebookEditorInsertText = functions.runWith(SmallMemory).https.onC
 async (data, context, userId) => {
   await updateDocument(userId!/*auth'd*/, data.notebookId, [ new InsertText(data.text) ])/*throws on error*/;
 }));
+
+// == Demo 2 Async Node =============================================================
+export const notebookEditorDemo2AsyncNodeExecute = functions.runWith(SmallMemory).https.onCall(wrapCall<NotebookEditorDemo2AsyncNodeExecute_Rest>(
+  { name: 'notebookEditorDemo2AsyncNodeExecute', schema: NotebookEditorDemo2AsyncNodeExecute_Rest_Schema, requiresAuth: true },
+  async (data, context, userId) => {
+    await executeDemo2AsyncNode(userId!/*auth'd*/, data.notebookId, data.nodeId, data.content, data.replace)/*throws on error*/;
+  }));
 
 // == Demo Async Node =============================================================
 export const notebookEditorDemoAsyncNodeExecute = functions.runWith(SmallMemory).https.onCall(wrapCall<NotebookEditorDemoAsyncNodeExecute_Rest>(

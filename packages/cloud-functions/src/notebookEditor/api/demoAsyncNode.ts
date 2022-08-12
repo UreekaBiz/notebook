@@ -1,12 +1,12 @@
 import { EditorState, Transaction } from 'prosemirror-state';
 
-import { findNodeById, isDemoAsyncNode, AsyncNodeStatus, AttributeType, CodeBlockAsyncNodeType, NodeIdentifier } from '@ureeka-notebook/service-common';
+import { findNodeById, isDemoAsyncNode, AsyncNodeStatus, AttributeType, DemoAsyncNodeType, NodeIdentifier } from '@ureeka-notebook/service-common';
 
 import { ApplicationError } from '../../util/error';
 import { DocumentUpdate } from './type';
 
 // ********************************************************************************
-/** Updates the identified DemoAsyncNode with the specified status and text */
+/** Updates the identified DemoAsyncNode with the specified hashes, status and text */
 export class DemoAsyncNodeAttributeReplace implements DocumentUpdate {
   public constructor(private readonly nodeId: NodeIdentifier, private readonly hashes: string[], private readonly status: AsyncNodeStatus, private readonly text: string) {/*nothing additional*/}
 
@@ -18,7 +18,7 @@ export class DemoAsyncNodeAttributeReplace implements DocumentUpdate {
     const { node, position } = result;
     if(!isDemoAsyncNode(node)) throw new ApplicationError('functions/invalid-argument', `Node (${this.nodeId}) is not a Demo Async Node.`);
 
-    const newNode = node.copy() as CodeBlockAsyncNodeType/*guaranteed by above check*/;
+    const newNode = node.copy() as DemoAsyncNodeType/*guaranteed by above check*/;
           newNode.attrs[AttributeType.CodeBlockHashes] = this.hashes;
           newNode.attrs[AttributeType.Status] = this.status;
           newNode.attrs[AttributeType.Text] = this.text;
