@@ -1,10 +1,9 @@
 import { Editor } from '@tiptap/core';
 
-import { CodeBlockReferenceNodeType } from '@ureeka-notebook/web-service';
+import { getPosType, CodeBlockReferenceNodeType } from '@ureeka-notebook/web-service';
 
 import { getCodeBlockViewStorage } from 'notebookEditor/extension/codeblock/nodeView/storage';
 import { focusCodeBlock } from 'notebookEditor/extension/codeblock/util';
-import { getPosType } from 'notebookEditor/extension/util/node';
 import { AbstractNodeController } from 'notebookEditor/model/AbstractNodeController';
 import { NodeViewStorage } from 'notebookEditor/model/NodeViewStorage';
 

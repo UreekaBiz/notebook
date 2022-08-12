@@ -1,10 +1,9 @@
 import { BiCodeAlt } from 'react-icons/bi';
 
-import { getParentNode, isCodeBlockNode, NodeName } from '@ureeka-notebook/web-service';
+import { getParentNode, isCodeBlockNode, selectionIsOfType, NodeName } from '@ureeka-notebook/web-service';
 
 import { markBold } from 'notebookEditor/extension/bold/toolbar';
 import { markStrikethrough } from 'notebookEditor/extension/strikethrough/toolbar';
-import { selectionIsOfType } from 'notebookEditor/extension/util/node';
 import { spacingToolItem } from 'notebookEditor/extension/textStyle/toolbar';
 import { Toolbar, ToolItem } from 'notebookEditor/toolbar/type';
 

@@ -1,11 +1,10 @@
 import { Editor } from '@tiptap/core';
 
-import { AttributeType, CodeBlockAsyncNodeType, isCodeBlockAsyncNode } from '@ureeka-notebook/web-service';
+import { getPosType, AttributeType, CodeBlockAsyncNodeType, isCodeBlockAsyncNode } from '@ureeka-notebook/web-service';
 
 import { AbstractAsyncNodeModel } from 'notebookEditor/extension/asyncNode/nodeView/model';
 import { getCodeBlockViewStorage } from 'notebookEditor/extension/codeblock/nodeView/storage';
 import { codeBlockHash, hashesFromCodeBlockReferences } from 'notebookEditor/extension/codeBlockAsyncNode/util';
-import { getPosType } from 'notebookEditor/extension/util/node';
 
 import { AbstractCodeBlockAsyncNodeStorageType } from './controller';
 

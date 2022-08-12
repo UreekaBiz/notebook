@@ -1,8 +1,7 @@
 import { Editor } from '@tiptap/core';
 
-import { CodeBlockNodeType } from '@ureeka-notebook/web-service';
+import { getPosType, CodeBlockNodeType } from '@ureeka-notebook/web-service';
 
-import { getPosType } from 'notebookEditor/extension/util/node';
 import { AbstractNodeController } from 'notebookEditor/model/AbstractNodeController';
 
 import { CodeBlockModel } from './model';

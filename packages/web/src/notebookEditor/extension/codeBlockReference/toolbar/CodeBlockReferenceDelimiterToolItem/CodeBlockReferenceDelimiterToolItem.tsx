@@ -1,8 +1,7 @@
 import { Box, Flex } from '@chakra-ui/react';
 
-import { isCodeBlockReferenceNode, AttributeType, NodeName, InvalidMergedAttributeValue } from '@ureeka-notebook/web-service';
+import { isCodeBlockReferenceNode, isNodeSelection, AttributeType, NodeName, InvalidMergedAttributeValue } from '@ureeka-notebook/web-service';
 
-import { isNodeSelection } from 'notebookEditor/extension/util/node';
 import { EditorToolComponentProps } from 'notebookEditor/toolbar/type';
 import { useLocalValue } from 'notebookEditor/shared/hook/useLocalValue';
 import { separateUnitFromString } from 'notebookEditor/theme/type';

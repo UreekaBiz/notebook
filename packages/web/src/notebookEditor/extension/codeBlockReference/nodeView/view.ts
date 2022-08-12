@@ -1,10 +1,9 @@
 import { Editor } from '@tiptap/core';
 
-import { computeCodeBlockReferenceText, isBlank, AttributeType, CodeBlockReferenceNodeType, ACTIONABLE_NODE, DEFAULT_CODEBLOCK_REFERENCE_NODE_TEXT } from '@ureeka-notebook/web-service';
+import { computeCodeBlockReferenceText, getPosType, isBlank, AttributeType, CodeBlockReferenceNodeType, ACTIONABLE_NODE, DEFAULT_CODEBLOCK_REFERENCE_NODE_TEXT } from '@ureeka-notebook/web-service';
 
 import { getCodeBlockViewStorage } from 'notebookEditor/extension/codeblock/nodeView/storage';
 import { createInlineNodeContainer } from 'notebookEditor/extension/inlineNodeWithContent/util';
-import { getPosType } from 'notebookEditor/extension/util/node';
 import { createTextSpan } from 'notebookEditor/extension/util/ui';
 import { AbstractNodeView } from 'notebookEditor/model/AbstractNodeView';
 

@@ -1,8 +1,6 @@
 import { CommandProps } from '@tiptap/core';
 
-import { createCodeBlockReferenceNode, generateNodeId, AttributeType, CommandFunctionType, NodeName } from '@ureeka-notebook/web-service';
-
-import { replaceAndSelectNode, selectionIsOfType } from 'notebookEditor/extension/util/node';
+import { createCodeBlockReferenceNode, generateNodeId, replaceAndSelectNode, selectionIsOfType, AttributeType, CommandFunctionType, NodeName } from '@ureeka-notebook/web-service';
 
 // == Type ========================================================================
 // NOTE: Usage of ambient module to ensure command is TypeScript-registered

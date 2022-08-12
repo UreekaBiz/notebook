@@ -1,8 +1,7 @@
 import { VscReferences } from 'react-icons/vsc';
 
-import { NodeName } from '@ureeka-notebook/web-service';
+import { selectionIsOfType, NodeName } from '@ureeka-notebook/web-service';
 
-import { selectionIsOfType } from 'notebookEditor/extension/util/node';
 import { Toolbar, ToolItem } from 'notebookEditor/toolbar/type';
 
 import { CodeBlockReferenceChipSelector } from './CodeBlockReferenceChipSelector';

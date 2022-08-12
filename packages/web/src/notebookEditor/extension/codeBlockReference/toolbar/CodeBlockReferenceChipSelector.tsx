@@ -1,9 +1,8 @@
-import { isCodeBlockReferenceNode, AttributeType, NodeName, VisualId } from '@ureeka-notebook/web-service';
+import { isCodeBlockReferenceNode, isNodeSelection, AttributeType, NodeName, VisualId } from '@ureeka-notebook/web-service';
 
 import { getCodeBlockViewStorage } from 'notebookEditor/extension/codeblock/nodeView/storage';
 import { focusCodeBlock } from 'notebookEditor/extension/codeblock/util';
 import { ChipTool } from 'notebookEditor/extension/shared/component/chipTool/ChipTool';
-import { isNodeSelection } from 'notebookEditor/extension/util/node';
 import { EditorToolComponentProps } from 'notebookEditor/toolbar/type';
 
 import { isValidCodeBlockReference, visualIdFromCodeBlockReference } from '../util';
