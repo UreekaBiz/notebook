@@ -1,3 +1,5 @@
+import { Box, Tooltip } from '@chakra-ui/react';
+
 import { isDemo2AsyncNode, AttributeType, NodeName } from '@ureeka-notebook/web-service';
 
 import { ExecuteAsyncNodeButton } from 'notebookEditor/extension/asyncNode/component/ExecuteAsyncNodeButton';
@@ -26,10 +28,14 @@ export const ExecuteDemo2AsyncNodeButton: React.FC<Props> = ({ editor }) => {
                     (textContent.length < 1);
 
   return (
-    <ExecuteAsyncNodeButton
-      editor={editor}
-      asyncNodeView={demo2AsyncNodeView}
-      disabled={disabled}
-    />
+    <Tooltip label={disabled ? ''/*none*/ : 'Execute Demo 2 Async Node Locally'} hasArrow>
+      <Box>
+        <ExecuteAsyncNodeButton
+          editor={editor}
+          asyncNodeView={demo2AsyncNodeView}
+          disabled={disabled}
+        />
+      </Box>
+    </Tooltip>
   );
 };

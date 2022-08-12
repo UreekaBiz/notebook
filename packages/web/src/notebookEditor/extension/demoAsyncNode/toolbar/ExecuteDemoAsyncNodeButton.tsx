@@ -1,4 +1,6 @@
-import { isDemoAsyncNode, AttributeType, NodeName, REMOVED_CODEBLOCK_VISUALID } from '@ureeka-notebook/web-service';
+import { Box, Tooltip } from '@chakra-ui/react';
+
+import { isDemoAsyncNode, AttributeType, NodeName } from '@ureeka-notebook/web-service';
 
 import { ExecuteAsyncNodeButton } from 'notebookEditor/extension/asyncNode/component/ExecuteAsyncNodeButton';
 import { visualIdFromCodeBlockReference } from 'notebookEditor/extension/codeBlockReference/util';
@@ -24,14 +26,18 @@ export const ExecuteDemoAsyncNodeButton: React.FC<Props> = ({ editor }) => {
   if(!demoAsyncNodeView) return null/*nothing to render -- silently fail*/;
 
   const disabled = codeBlockReferences.length < 1
-                || codeBlockReferences.some((reference) => visualIdFromCodeBlockReference(editor, reference) === REMOVED_CODEBLOCK_VISUALID)
+                || codeBlockReferences.some((reference) => !visualIdFromCodeBlockReference(editor, reference))
                 || demoAsyncNodeView.nodeModel.getPerformingAsyncOperation();
 
   return (
-    <ExecuteAsyncNodeButton
-      editor={editor}
-      asyncNodeView={demoAsyncNodeView}
-      disabled={disabled}
-    />
+    <Tooltip label={disabled ? ''/*none*/ : 'Execute Demo Async Node Locally'} hasArrow>
+      <Box>
+        <ExecuteAsyncNodeButton
+          editor={editor}
+          asyncNodeView={demoAsyncNodeView}
+          disabled={disabled}
+        />
+      </Box>
+    </Tooltip>
   );
 };
