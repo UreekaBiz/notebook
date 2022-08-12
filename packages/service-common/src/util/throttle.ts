@@ -1,16 +1,18 @@
+// CHECK: should this and debounce be in a single file?
 // ********************************************************************************
 // throttles execution of the specified function
-export const throttle = <T>(fn: (args: T) => void, time = 1000) => {
+export const throttle = <T extends (...args: any[]) => void>(fn: T, time = 1000): T => {
   let isWaiting = true;
-
   setTimeout(() => isWaiting = false, time);
 
-  return (args: T) => {
+  const throttled = (...args: Parameters<T>) => {
     if(isWaiting) return/*nothing to do*/;
 
     isWaiting = true;
-    fn(args);
+    fn(...args);
 
     setTimeout(() => isWaiting = false, time);
   };
+
+  return throttled as T;
 };

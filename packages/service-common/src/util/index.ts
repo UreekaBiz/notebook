@@ -1,6 +1,7 @@
 export * from './array';
 export * from './asyncAwait';
 export * from './datastore';
+export * from './debounce';
 export * from './environment';
 export * from './error';
 export * from './firestore';
