@@ -81,8 +81,3 @@ export enum ParseRulePriority {
   //       when being parsed (SEE: MarkHolder.ts)
   MARK_HOLDER = 52,
 }
-
-// == Selection ===================================================================
-// the depth of the selection from the current Node. 0 is the base Node,
-// `selection.depth` is the parent Node.
-export type SelectionDepth = number | undefined/*current Node*/;
