@@ -1,10 +1,9 @@
-import { isDemoAsyncNode, swap, AttributeType, NodeName } from '@ureeka-notebook/web-service';
+import { isDemoAsyncNode, isNodeSelection, swap, AttributeType, NodeName } from '@ureeka-notebook/web-service';
 
 import { visualIdsFromCodeBlockReferences } from 'notebookEditor/extension/codeBlockAsyncNode/util';
 import { isValidCodeBlockReference } from 'notebookEditor/extension/codeBlockReference/util';
 import { ChipDraggableItem } from 'notebookEditor/extension/shared/component/chipTool/Chip';
 import { ChipTool } from 'notebookEditor/extension/shared/component/chipTool/ChipTool';
-import { isNodeSelection } from 'notebookEditor/extension/util/node';
 import { EditorToolComponentProps } from 'notebookEditor/toolbar/type';
 
 // ********************************************************************************

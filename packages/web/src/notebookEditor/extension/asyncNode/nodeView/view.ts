@@ -1,9 +1,8 @@
 import { Editor } from '@tiptap/core';
 import { Node as ProseMirrorNode } from 'prosemirror-model';
 
-import { AsyncNodeType, ASYNC_NODE_DIRTY_DATATYPE } from '@ureeka-notebook/web-service';
+import { getPosType, AsyncNodeType, ASYNC_NODE_DIRTY_DATATYPE } from '@ureeka-notebook/web-service';
 
-import { getPosType } from 'notebookEditor/extension/util/node';
 import { AbstractNodeView } from 'notebookEditor/model/AbstractNodeView';
 
 import { AbstractAsyncNodeStorageType } from './controller';

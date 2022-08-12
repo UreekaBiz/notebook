@@ -1,10 +1,9 @@
 import { Editor } from '@tiptap/core';
 
-import { AttributeType, DemoAsyncNodeType, NotebookEditorService, NotebookIdentifier } from '@ureeka-notebook/web-service';
+import { getPosType, AttributeType, DemoAsyncNodeType, NotebookEditorService, NotebookIdentifier } from '@ureeka-notebook/web-service';
 
 import { AbstractCodeBlockAsyncNodeController } from 'notebookEditor/extension/codeBlockAsyncNode/nodeView/controller';
 import { getCodeBlocksContent, hashesFromCodeBlockReferences } from 'notebookEditor/extension/codeBlockAsyncNode/util';
-import { getPosType } from 'notebookEditor/extension/util/node';
 import { NodeViewStorage } from 'notebookEditor/model/NodeViewStorage';
 
 import { DemoAsyncNodeModel } from './model';

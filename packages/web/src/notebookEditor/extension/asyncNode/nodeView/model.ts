@@ -1,8 +1,7 @@
 import { Editor } from '@tiptap/core';
 
-import { AsyncNodeType, AsyncNodeStatus } from '@ureeka-notebook/web-service';
+import { getPosType, AsyncNodeType, AsyncNodeStatus } from '@ureeka-notebook/web-service';
 
-import { getPosType } from 'notebookEditor/extension/util/node';
 import { AbstractNodeModel } from 'notebookEditor/model/AbstractNodeModel';
 
 import { AbstractAsyncNodeStorageType } from './controller';

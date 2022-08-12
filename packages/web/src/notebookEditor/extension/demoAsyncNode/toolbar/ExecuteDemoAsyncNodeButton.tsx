@@ -1,10 +1,9 @@
 import { Box, Tooltip } from '@chakra-ui/react';
 
-import { isDemoAsyncNode, AttributeType, NodeName } from '@ureeka-notebook/web-service';
+import { getSelectedNode, isDemoAsyncNode, AttributeType, NodeName } from '@ureeka-notebook/web-service';
 
 import { ExecuteAsyncNodeButton } from 'notebookEditor/extension/asyncNode/component/ExecuteAsyncNodeButton';
 import { visualIdFromCodeBlockReference } from 'notebookEditor/extension/codeBlockReference/util';
-import { getSelectedNode } from 'notebookEditor/extension/util/node';
 import { getNodeViewStorage } from 'notebookEditor/model/NodeViewStorage';
 import { EditorToolComponentProps } from 'notebookEditor/toolbar/type';
 

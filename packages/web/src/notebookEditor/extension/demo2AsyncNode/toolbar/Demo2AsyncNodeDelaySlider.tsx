@@ -1,7 +1,6 @@
-import { isDemo2AsyncNode, AttributeType, NodeName } from '@ureeka-notebook/web-service';
+import { getSelectedNode, isDemo2AsyncNode, AttributeType, NodeName } from '@ureeka-notebook/web-service';
 
 import { SliderTool } from 'notebookEditor/extension/shared/component/SliderTool';
-import { getSelectedNode } from 'notebookEditor/extension/util/node';
 import { EditorToolComponentProps } from 'notebookEditor/toolbar/type';
 
 // ********************************************************************************

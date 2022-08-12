@@ -1,8 +1,7 @@
 import { AiOutlineClockCircle } from 'react-icons/ai';
 
-import { isAsyncNode, NodeName } from '@ureeka-notebook/web-service';
+import { isAsyncNode, selectionIsOfType, NodeName } from '@ureeka-notebook/web-service';
 
-import { selectionIsOfType } from 'notebookEditor/extension/util/node';
 import { Toolbar, ToolItem } from 'notebookEditor/toolbar/type';
 
 import { DemoAsyncNodeChipSelector } from './DemoAsyncNodeChipSelector';
