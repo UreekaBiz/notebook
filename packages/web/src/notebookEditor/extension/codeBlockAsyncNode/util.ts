@@ -63,7 +63,7 @@ export const hashesFromCodeBlockReferences = (editor: Editor, codeBlockReference
 const hashFromCodeBlockReference = (editor: Editor, codeBlockReference: CodeBlockReference) => {
   const codeBlockStorage = getCodeBlockViewStorage(editor),
         codeBlockView = codeBlockStorage.getNodeView(codeBlockReference);
-  if(!codeBlockView) throw new Error(`${NodeName.CODEBLOCK} (${codeBlockReference}) no longer exists.`);
+  if(!codeBlockView) throw new Error(`Referenced Code Block no longer exists.`)/*displayed as a Toast by React*/;
   if(!isCodeBlockNode(codeBlockView.node))  throw new Error(`codeBlockReference (${codeBlockReference}) is not a ${NodeName.CODEBLOCK} node.`);
 
   return codeBlockHash(codeBlockView.node);
