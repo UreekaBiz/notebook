@@ -41,7 +41,7 @@ export const SidebarTopbar: React.FC<Props> = ({ background }) => {
         debounced(hasPendingWrite);
 
         // immediately set isLoading to false if there are no pending writes
-        if(!hasPendingWrite) setIsLoading(false);
+        if(!hasPendingWrite) setHasPendingWrite(false);
       },
       error: (error) => {
         log.info(`Unexpected error listening Notebook Editor pending writes. Reason: `, error);
