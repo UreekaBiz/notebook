@@ -285,14 +285,22 @@ export {
   ASYNC_NODE_DIRTY_DATATYPE,
 
   // -- Misc ----------------------------------------------------------------------
-  computeRemovedNodeObjs,
+  // .. Document ..................................................................
   extractDocumentName,
+
+  // .. Node .....................................................................
+  computeRemovedNodeObjs,
   findContentDifferencePositions,
   findNodeById,
   getParentNode,
-  getWrapStyles,
   getNodesAffectedByStepMap,
   nodeToTagId,
   wereNodesAffectedByTransaction,
   NodeFound,
+
+  // .. Range ....................................................................
+  getNodeBlockRange,
+
+  // ..............................................................................
+  getWrapStyles,
 } from '@ureeka-notebook/service-common';

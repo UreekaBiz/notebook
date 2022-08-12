@@ -1,7 +1,7 @@
 import { CommandProps } from '@tiptap/core';
 import { Selection } from 'prosemirror-state';
 
-import { createBoldMark, isHeadingLevel, AttributeType, CommandFunctionType, HeadingLevel, NodeName, MarkName } from '@ureeka-notebook/web-service';
+import { createBoldMark, getNodeBlockRange, isHeadingLevel, AttributeType, CommandFunctionType, HeadingLevel, NodeName, MarkName } from '@ureeka-notebook/web-service';
 
 import { createMarkHolderJSONNode } from 'notebookEditor/extension/markHolder/util';
 
@@ -59,23 +59,8 @@ const applyBoldToHeadingContent = (props: CommandProps) => {
   if(tr.selection.$anchor.parent.content.size < 0) return false/*command cannot be executed, the Heading has no content to apply the Bold Mark*/;
 
   if(dispatch) {
-    // apply Bold Mark to anchor parent Content
-    const currentAnchorPos = tr.selection.$anchor.pos;
-    const anchorOffset = tr.selection.$anchor.parentOffset,
-          anchorParentPos = currentAnchorPos - anchorOffset;
-    tr.addMark(anchorParentPos, anchorParentPos + tr.selection.$anchor.parent.nodeSize - 2/*account for the start and end of the parent Node*/, createBoldMark(editor.schema));
-
-    // apply Bold Mark to head parent Content
-    const currentHeadPos = tr.selection.$head.pos;
-    const headOffset = tr.selection.$head.parentOffset,
-          headParentPos = currentHeadPos - headOffset;
-    tr.addMark(headParentPos, headParentPos + tr.selection.$head.parent.nodeSize - 2/*account for the start and end of the parent Node*/, createBoldMark(editor.schema));
-
-    // apply Bold Mark to any nodes in between anchor and head
-    currentHeadPos > currentAnchorPos/*check which position is bigger to add Mark correctly*/
-      ? tr.addMark(currentAnchorPos, currentHeadPos, createBoldMark(editor.schema))
-      : tr.addMark(currentHeadPos, currentAnchorPos, createBoldMark(editor.schema));
-
+    const { from, to } = getNodeBlockRange(editor.state.selection);
+    tr.addMark(from, to, createBoldMark(editor.schema));
     dispatch(tr);
   } /* else -- called from can() (SEE: src/notebookEditor/README.md/#Commands) */
 
@@ -85,3 +70,4 @@ const applyBoldToHeadingContent = (props: CommandProps) => {
 // a MarkHolder should be inserted if the Selection is empty, the anchor and the
 // head are in the same place, and the parent of the selection has no content
 const shouldInsertMarkHolder = (selection: Selection) => selection.empty && selection.$anchor.pos === selection.$head.pos && selection.$anchor.parent.content.size < 1;
+
