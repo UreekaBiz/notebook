@@ -1,6 +1,7 @@
-import { IconButton, Spinner, useToast } from '@chakra-ui/react';
-import { isDemoAsyncNode, AttributeType, NodeName, REMOVED_CODEBLOCK_VISUALID, getLogger, Logger } from '@ureeka-notebook/web-service';
+import { useToast, IconButton, Spinner, Tooltip } from '@chakra-ui/react';
 import { FiPlay } from 'react-icons/fi';
+
+import { isDemoAsyncNode, getLogger, AttributeType, Logger, NodeName, REMOVED_CODEBLOCK_VISUALID } from '@ureeka-notebook/web-service';
 
 import { visualIdFromCodeBlockReference } from 'notebookEditor/extension/codeBlockReference/util';
 import { getSelectedNode } from 'notebookEditor/extension/util/node';
@@ -63,17 +64,19 @@ export const ExecuteServerSideDemoAsyncNodeButton: React.FC<Props> = ({ editor }
 
   // == UI ========================================================================
   return (
-    <IconButton
-      isDisabled={status === 'loading' || disabled}
-      icon={status === 'loading' ? <Spinner size='sm' /> : <FiPlay color='blue' fill='blue' size='16px' />}
-      size='xs'
-      variant='ghost'
-      marginY='5px'
-      marginLeft='10px'
-      aria-label='execute'
-      datatype={disabled ? ''/*none*/ : TOOL_ITEM_DATA_TYPE/*(SEE:notebookEditor/toolbar/type)*/}
-      rounded={100}
-      onClick={handleClick}
-    />
+    <Tooltip label={disabled ? ''/*none*/ : 'Execute Demo Async Node on the Server'} hasArrow>
+      <IconButton
+        isDisabled={status === 'loading' || disabled}
+        icon={status === 'loading' ? <Spinner size='sm' /> : <FiPlay color='blue' fill='blue' size='16px' />}
+        size='xs'
+        variant='ghost'
+        marginY='5px'
+        marginLeft='10px'
+        aria-label='execute'
+        datatype={disabled ? ''/*none*/ : TOOL_ITEM_DATA_TYPE/*(SEE:notebookEditor/toolbar/type)*/}
+        rounded={100}
+        onClick={handleClick}
+      />
+    </Tooltip>
   );
 };
