@@ -307,7 +307,6 @@ export {
   isNodeSelection,
   replaceAndSelectNode,
   resolveNewSelection,
-  selectionIsOfType,
   SelectionDepth,
 
   // ..............................................................................

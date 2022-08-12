@@ -23,10 +23,6 @@ export const isGetPos = (object: any): object is (() => number) => typeof object
 /** Type guard that defines if a {@link Selection} is a {@link NodeSelection} */
 export const isNodeSelection = (selection: Selection<NotebookSchemaType>): selection is NodeSelection<NotebookSchemaType> => 'node' in selection;
 
-/** Checks to see whether a {@link NodeSelection}'s node is of the given {@link type} */
-export const selectionIsOfType = (selection: Selection<NotebookSchemaType>, type: string): selection is NodeSelection<NotebookSchemaType> =>
-  isNodeSelection(selection) && selection.node.type.name === type;
-
 // == Node ========================================================================
 /** @returns currently selected Node. The Node selection is based on the depth of
  *           the selection */
