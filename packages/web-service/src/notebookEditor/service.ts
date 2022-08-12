@@ -99,13 +99,15 @@ export class NotebookEditorService {
   // == Server-side Execute =======================================================
   /**
    * @param execute identifies the {@link Notebook} by {@link NotebookIdentifier}
-   *        and specific D3AN node by {@link NodeIdentifier} FINISH
+   *        and specific DAN node by {@link NodeIdentifier}, includes the combined
+   *        content of all of the Code Blocks associated with the Node along with
+   *        their corresponding hashes.
    * @throws a {@link ApplicationError}:
    * - `permission-denied` if the caller is not the Editor of the Notebook
    * - `not-found` if the specified {@link NotebookIdentifier} does not represent a
    *   known {@link Notebook} or if the specified {@link NodeIdentifier} does not
-   *   represent a known D3AN node XXX
-   * - `invalid-argument` if there are XXXX
+   *   represent a known DAN node.
+   * - `invalid-argument` if the specified content or hashes is not valid (e.g. empty)
    * - `data/deleted` if the {@link Notebook} has already been flagged as deleted
    * - `datastore/write` if there was an error updating the share for the Notebook
    */

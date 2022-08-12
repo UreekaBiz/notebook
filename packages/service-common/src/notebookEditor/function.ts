@@ -23,12 +23,12 @@ export type NotebookEditorInsertText_Rest = Validate.InferType<typeof NotebookEd
 
 // -- Execute ---------------------------------------------------------------------
 export const NotebookEditorDemoAsyncNodeExecute_Rest_Schema = Validate.object({
-  /** the {@link NotebookIdentifier} of the {@link Notebook} in which the D3AN is
+  /** the {@link NotebookIdentifier} of the {@link Notebook} in which the DAN is
    *  executed */
   notebookId: Identifier_Schema
       .required(),
 
-  /** the unique {@link NodeIdentifier} for the D3AN that is being executed */
+  /** the unique {@link NodeIdentifier} for the DAN that is being executed */
   nodeId: Identifier_Schema
       .required(),
 
