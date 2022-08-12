@@ -13,10 +13,11 @@ const log = getLogger(Logger.NOTEBOOK);
 // ********************************************************************************
 interface Props extends EditorToolComponentProps {/*no additional*/}
 export const PublishNotebookButton: React.FC<Props> = () => {
-  // == States ====================================================================
   // FIXME: move to using correct Async states, toasts, etc.
   const { notebookId, editor, editorService } = useNotebookEditor();
-  const { notebook } = useNotebook()/*FIXME: want one that guarantees that the Notebook exists!*/;
+  const { notebook } = useNotebook();
+
+  // == States ====================================================================
   const [isLoading, setIsLoading] = useState(false/*by contract*/);
 
   // == Handler ===================================================================
@@ -25,7 +26,7 @@ export const PublishNotebookButton: React.FC<Props> = () => {
     setIsLoading(true);
 
     const versionIndex = editorService.getVersionIndex();
-    const title = extractDocumentName(notebook!.schemaVersion, notebookId, editor.state.doc)/*default to extracted Document name*/;
+    const title = extractDocumentName(notebook.schemaVersion, notebookId, editor.state.doc)/*default to extracted Document name*/;
     const snippet = ''/*FIXME*/;
     const image = ''/*FIXME*/;
     try {
@@ -48,7 +49,7 @@ export const PublishNotebookButton: React.FC<Props> = () => {
       width={160}
       onClick={handlePublishNotebook}
     >
-      {isLoading ? 'Publishing...' : (notebook?.isPublished ? 'Republish Notebook' : 'Publish Notebook')}
+      {isLoading ? 'Publishing...' : (notebook.isPublished ? 'Republish Notebook' : 'Publish Notebook')}
     </Button>
   );
 };

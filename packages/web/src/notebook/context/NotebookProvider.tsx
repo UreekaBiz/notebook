@@ -5,6 +5,7 @@ import { ApplicationError, getLogger, Notebook, NotebookIdentifier, NotebookServ
 
 import { Loading } from 'shared/component/Loading';
 import { useAsyncStatus, useIsMounted } from 'shared/hook';
+import { NotFoundPage } from 'shared/pages/NotFoundPage';
 
 import { NotebookContext } from './NotebookContext';
 
@@ -57,7 +58,10 @@ export const NotebookProvider: React.FC<Props> = ({ notebookId, children }) => {
   }, [isMounted, notebookId, toast, setStatus]);
 
   // -- UI ------------------------------------------------------------------------
-  if(status === 'loading' || status === 'idle') return <Loading />;
+  if(status === 'complete' && (notebook === null)) return <NotFoundPage message='Notebook not found.' />;
+  if(status === 'complete' && (notebook !== null)) return <NotebookContext.Provider value={{ notebookId, notebook: notebook! }}>{children}</NotebookContext.Provider>;
 
-  return <NotebookContext.Provider value={{ notebook, notebookId, status }}>{children}</NotebookContext.Provider>;
+  const content = status === 'error' ? <NotFoundPage message='An unexpected error has occurred' />
+                : <Loading />;
+  return <NotebookContext.Provider value={null/*not initialized*/}>{content}</NotebookContext.Provider>;
 };

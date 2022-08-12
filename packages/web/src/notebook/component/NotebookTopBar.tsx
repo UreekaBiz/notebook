@@ -4,7 +4,7 @@ import { useCallback, useState } from 'react';
 import { BsBook } from 'react-icons/bs';
 import { RiFileAddLine } from 'react-icons/ri';
 
-import { getLogger, NotebookService, NotebookType, Logger } from '@ureeka-notebook/web-service';
+import { getLogger, Logger, NotebookService, NotebookType } from '@ureeka-notebook/web-service';
 
 import { AuthAvatar } from 'authUser/component/AuthAvatar';
 import { useIsMounted } from 'shared/hook';

@@ -2,15 +2,15 @@ import { useToast, Button, Flex, Spinner, Text } from '@chakra-ui/react';
 import { useRouter } from 'next/router';
 import { useCallback, useEffect, useState } from 'react';
 import { BsBook } from 'react-icons/bs';
+import { MdLoop } from 'react-icons/md';
 import { RiFileAddLine } from 'react-icons/ri';
 
-import { debounce, getLogger, NotebookService, NotebookType, Logger } from '@ureeka-notebook/web-service';
+import { debounce, getLogger, Logger, NotebookService, NotebookType } from '@ureeka-notebook/web-service';
 
 import { AuthAvatar } from 'authUser/component/AuthAvatar';
 import { useNotebookEditor } from 'notebookEditor/hook/useNotebookEditor';
 import { useIsMounted } from 'shared/hook';
 import { coreRoutes, notebookRoute } from 'shared/routes';
-import { MdLoop } from 'react-icons/md';
 
 const log = getLogger(Logger.NOTEBOOK);
 
@@ -28,14 +28,18 @@ export const SidebarTopbar: React.FC<Props> = ({ background }) => {
   const toast = useToast();
 
   // == State =====================================================================
-  const [isLoading, setIsLoading] = useState<boolean>(false/*default not loading*/);
   const [hasPendingWrite, setHasPendingWrite] = useState(false/*default not writing*/);
+  const [isLoading, setIsLoading] = useState<boolean>(false/*default not loading*/);
 
   // == Effect ====================================================================
   useEffect(() => {
-    // debounce setting setHasPendingWrite to true to avoid flashing the text on
-    // each save
-    const debounced = debounce((value: boolean) => setHasPendingWrite(value), 1000/*T&E*/);
+    // debounce setting setHasPendingWrite to true to avoid flashing the text onn
+    // each save.
+    const debounced = debounce((value: boolean) => {
+      // prevent updating state in unmounted component
+      if(!isMounted()) return/*nothing to do*/;
+      setHasPendingWrite(value);
+    }, 1000/*T&E*/);
 
     const subscription = editorService.onPendingWrites$().subscribe({
       next: (hasPendingWrite) => {
@@ -53,7 +57,7 @@ export const SidebarTopbar: React.FC<Props> = ({ background }) => {
     return () => {
       subscription.unsubscribe();
     };
-  }, [editorService]);
+  }, [editorService, isMounted]);
 
   // == Handler ===================================================================
   const handleAppNameClick = useCallback(() => {
