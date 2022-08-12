@@ -1,6 +1,6 @@
 import { Mark, Node as ProseMirrorNode, NodeSpec } from 'prosemirror-model';
 
-import { noNodeOrMarkSpecAttributeDefaultValue, AttributeType, AttributesTypeFromNodeSpecAttributes } from '../attribute';
+import { getWrapStyles, noNodeOrMarkSpecAttributeDefaultValue, AttributeType, AttributesTypeFromNodeSpecAttributes } from '../attribute';
 import { getRenderAttributes } from '../htmlRenderer/attribute';
 import { RendererState } from '../htmlRenderer/state';
 import { createNodeDataTypeAttribute, NodeRendererSpec } from '../htmlRenderer/type';
@@ -105,6 +105,3 @@ export const createCodeBlockNode = (schema: NotebookSchemaType, attributes?: Cod
 // -- JSON Node Type --------------------------------------------------------------
 export type CodeBlockJSONNodeType = JSONNode<CodeBlockAttributes> & { type: NodeName.CODEBLOCK; };
 export const isCodeBlockJSONNode = (node: JSONNode): node is CodeBlockJSONNodeType => node.type === NodeName.CODEBLOCK;
-
-// == CSS =========================================================================
-export const getWrapStyles = (isWrap: boolean) => `white-space: ${isWrap ? 'break-spaces' : 'pre'};`;

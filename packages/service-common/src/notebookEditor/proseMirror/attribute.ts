@@ -112,6 +112,7 @@ const styleAttributeSet = new Set([
   AttributeType.PaddingRight,
 ]);
 export const isStyleAttribute = (property: any) => styleAttributeSet.has(property);
+export const getWrapStyles = (isWrap: boolean) => `white-space: ${isWrap ? 'break-spaces' : 'pre'};`;
 
 // -- Spacing ---------------------------------------------------------------------
 /** record of margin attributes and merge attribute value */

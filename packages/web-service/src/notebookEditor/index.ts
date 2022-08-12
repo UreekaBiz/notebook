@@ -44,6 +44,7 @@ export {
   mergeAttributeValues,
   getRenderAttributes,
   isStyleAttribute,
+  getWrapStyles,
 
   AsyncNodeAttributes,
   isAsyncNodeAttributes,
@@ -310,5 +311,4 @@ export {
   SelectionDepth,
 
   // ..............................................................................
-  getWrapStyles,
 } from '@ureeka-notebook/service-common';
