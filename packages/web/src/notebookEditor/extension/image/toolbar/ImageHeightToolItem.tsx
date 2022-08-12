@@ -1,7 +1,6 @@
-import { isImageNode, AttributeType, NodeName, MAX_IMAGE_HEIGHT, MIN_IMAGE_HEIGHT } from '@ureeka-notebook/web-service';
+import { isImageNode, isNodeSelection, AttributeType, NodeName, MAX_IMAGE_HEIGHT, MIN_IMAGE_HEIGHT } from '@ureeka-notebook/web-service';
 
 import { UnitPickerInput } from 'notebookEditor/extension/style/component/UnitPickerInput';
-import { isNodeSelection } from 'notebookEditor/extension/util/node';
 import { separateUnitFromString } from 'notebookEditor/theme/type';
 import { EditorToolComponentProps } from 'notebookEditor/toolbar/type';
 

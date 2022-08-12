@@ -1,8 +1,6 @@
 import { CommandProps, Editor } from '@tiptap/core';
 
-import { AttributeType, CommandFunctionType, ImageAttributes, ImageNodeType, NotebookSchemaType, NodeName, VerticalAlign } from '@ureeka-notebook/web-service';
-
-import { isNodeSelection, replaceAndSelectNode } from 'notebookEditor/extension/util/node';
+import { isNodeSelection, replaceAndSelectNode, AttributeType, CommandFunctionType, ImageAttributes, ImageNodeType, NotebookSchemaType, NodeName, VerticalAlign } from '@ureeka-notebook/web-service';
 
 // ********************************************************************************
 // == Type ========================================================================

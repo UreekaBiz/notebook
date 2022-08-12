@@ -1,7 +1,6 @@
-import { isImageNode, AttributeType, NodeName } from '@ureeka-notebook/web-service';
+import { isImageNode, isNodeSelection, AttributeType, NodeName } from '@ureeka-notebook/web-service';
 
 import { InputTool } from 'notebookEditor/extension/shared/component/InputTool';
-import { isNodeSelection } from 'notebookEditor/extension/util/node';
 import { EditorToolComponentProps } from 'notebookEditor/toolbar/type';
 
 // ********************************************************************************

@@ -3,9 +3,8 @@ import { useFormik, Field, FormikProvider } from 'formik';
 import { KeyboardEventHandler } from 'react';
 import * as Validate from 'yup';
 
-import { isImageNode, urlSchema, AttributeType, NodeName } from '@ureeka-notebook/web-service';
+import { isImageNode, isNodeSelection, urlSchema, AttributeType, NodeName } from '@ureeka-notebook/web-service';
 
-import { isNodeSelection } from 'notebookEditor/extension/util/node';
 import { EditorToolComponentProps, TOOL_ITEM_DATA_TYPE } from 'notebookEditor/toolbar/type';
 
 // ********************************************************************************
