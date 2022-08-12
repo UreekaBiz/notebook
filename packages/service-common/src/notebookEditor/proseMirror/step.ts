@@ -1,8 +1,22 @@
 import { Transaction } from 'prosemirror-state';
+import { Step as ProseMirrorStep } from 'prosemirror-transform';
 
+import { NotebookVersionContent } from '../type';
 import { NotebookSchemaType } from './schema';
 
 // ********************************************************************************
+// == JSON ========================================================================
+/** JSON representation of a ProseMirror Step */
+// NOTE: opaque at this time
+export type JSONStep = { [key: string]: any; };
+
+// NOTE: NotebookVersionContent is a synonym for 'StepContent' (which wasn't explicitly
+//       defined as it would be redundant)
+
+export const stepToJSONStep = (step: ProseMirrorStep) => step.toJSON() as JSONStep;
+export const contentToJSONStep = (content: NotebookVersionContent) => JSON.parse(content) as JSONStep;/*FIXME: handle exceptions!!!*/
+
+// ================================================================================
 /**
  * @param transaction The transactions whose steps are being mapped
  * @param stepMapIndex The stepMapIndex of the step that is currently being mapped

@@ -33,16 +33,16 @@ export const SidebarTopbar: React.FC<Props> = ({ background }) => {
 
   // == Effect ====================================================================
   useEffect(() => {
-    // debounce setting setHasPendingWrite to true to avoid flashing the text in
-    // each save.
-    const debounced = debounce((value: boolean) => setHasPendingWrite(value), 1000);
+    // debounce setting setHasPendingWrite to true to avoid flashing the text on
+    // each save
+    const debounced = debounce((value: boolean) => setHasPendingWrite(value), 1000/*T&E*/);
 
     const subscription = editorService.onPendingWrites$().subscribe({
       next: (hasPendingWrite) => {
         // cancel previous call to setHasPendingWrite if it's still pending
         debounced(hasPendingWrite);
 
-        // immediately set isLoading to false if there are no pending writes
+        // immediately set setHasPendingWrite to false if there are no pending writes
         if(!hasPendingWrite) setHasPendingWrite(false);
       },
       error: (error) => {

@@ -5,7 +5,7 @@ import { Step as ProseMirrorStep } from 'prosemirror-transform';
 
 import { distinctUntilChanged, BehaviorSubject } from 'rxjs';
 
-import { generateClientIdentifier, sleep, AuthedUser, NotebookIdentifier, NotebookVersion, NotebookSchemaVersion, Unsubscribe, UserIdentifier, NO_NOTEBOOK_VERSION } from '@ureeka-notebook/service-common';
+import { contentToJSONStep, generateClientIdentifier, sleep, AuthedUser, NotebookIdentifier, NotebookVersion, NotebookSchemaVersion, Unsubscribe, UserIdentifier, NO_NOTEBOOK_VERSION } from '@ureeka-notebook/service-common';
 
 import { getLogger, ServiceLogger } from '../logging/type';
 import { getEnvNumber } from '../util/environment';
@@ -303,10 +303,8 @@ export class VersionListener {
     const clientIds = versions.map(({ clientId }) => clientId);
 
     // NOTE: seems to be required by TipTap given different Schemas?
-    const proseMirrorSteps = versions.map(({ content }) => {
-      const versionJson = JSON.parse(content)/*FIXME: contentToJson()?*//*FIXME: handle exceptions!*/;
-      return ProseMirrorStep.fromJSON(this.editor.schema, versionJson)/*FIXME: wrap and think about exception*/;
-    });
+    // SEE: @ureeka-notebook/service-common: /notebookEditor/version.ts
+    const proseMirrorSteps = versions.map(({ content }) => ProseMirrorStep.fromJSON(this.editor.schema, contentToJSONStep(content)));
 
     const transaction = collab.receiveTransaction(this.editor.view.state, proseMirrorSteps, clientIds, { mapSelectionBackward: true });
     this.editor.view.dispatch(transaction);

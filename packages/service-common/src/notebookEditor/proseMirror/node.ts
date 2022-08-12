@@ -59,10 +59,6 @@ export type NodeContent = string/*alias*/;
 export type ProseMirrorNodeContent = Fragment<NotebookSchemaType> | ProseMirrorNode<NotebookSchemaType> | ProseMirrorNode<NotebookSchemaType>[];
 
 // --------------------------------------------------------------------------------
-// JSON as seen from Schema#nodeFromJSON() or Schema#markFromJSON()
-export type JSONContent = { [key: string]: any; };
-
-// --------------------------------------------------------------------------------
 export const nodeToJSONNode = (node: ProseMirrorNode) => node.toJSON() as JSONNode;
 export const nodeToContent = (node: ProseMirrorNode<Schema>) => JSON.stringify(nodeToJSONNode(node)) as NodeContent;
 export const contentToJSONNode = (content: NodeContent) => JSON.parse(content) as JSONNode;/*FIXME: handle exceptions!!!*/
