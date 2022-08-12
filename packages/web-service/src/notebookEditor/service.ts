@@ -5,8 +5,8 @@ import { AuthedUser, NotebookIdentifier, NotebookSchemaVersion } from '@ureeka-n
 
 import { getLogger, ServiceLogger } from '../logging';
 import { ApplicationError } from '../util';
-import { notebookEditorDemoAsyncNodeExecute } from './function';
-import { NotebookEditorDemoAsyncNode_Execute } from './type';
+import { notebookEditorDemo2AsyncNodeExecute, notebookEditorDemoAsyncNodeExecute } from './function';
+import { NotebookEditorDemo2AsyncNode_Execute, NotebookEditorDemoAsyncNode_Execute } from './type';
 import { VersionListener } from './VersionListener';
 
 const log = getLogger(ServiceLogger.NOTEBOOK_EDITOR);
@@ -97,6 +97,26 @@ export class NotebookEditorService {
   }
 
   // == Server-side Execute =======================================================
+  /**
+   * @param execute identifies the {@link Notebook} by {@link NotebookIdentifier}
+   *        and specific D2AN node by {@link NodeIdentifier}, includes the content
+   *        of the D2AN node with the replace text that is going to replaced.
+   * @throws a {@link ApplicationError}:
+   * - `permission-denied` if the caller is not the Editor of the Notebook
+   * - `not-found` if the specified {@link NotebookIdentifier} does not represent a
+   *   known {@link Notebook} or if the specified {@link NodeIdentifier} does not
+   *   represent a known DAN node.
+   * - `invalid-argument` if the specified content or replace is not valid (e.g. empty)
+   *   or if the replace text is not present in the content.
+   * - `data/deleted` if the {@link Notebook} has already been flagged as deleted
+   * - `datastore/write` if there was an error updating the share for the Notebook
+   */
+  // TODO: think through naming. It's interesting that all of the various Extensions
+  //       need to express their server-side goo through this single service
+  public async executeDemo2AsyncNode(execute: NotebookEditorDemo2AsyncNode_Execute) {
+    await notebookEditorDemo2AsyncNodeExecute(execute);
+  }
+
   /**
    * @param execute identifies the {@link Notebook} by {@link NotebookIdentifier}
    *        and specific DAN node by {@link NodeIdentifier}, includes the combined

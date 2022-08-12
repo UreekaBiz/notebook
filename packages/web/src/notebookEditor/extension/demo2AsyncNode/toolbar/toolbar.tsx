@@ -9,7 +9,7 @@ import { Toolbar, ToolItem } from 'notebookEditor/toolbar/type';
 
 import { Demo2AsyncNodeDelaySlider } from './Demo2AsyncNodeDelaySlider';
 import { Demo2AsyncNodeReplaceTextToolItem } from './Demo2AsyncNodeReplaceTextToolItem';
-import { ExecuteDemo2AsyncNodeButton } from './ExecuteDemo2AsyncNodeButton';
+import { ExecuteButtons } from './ExecuteButtons';
 
 //*********************************************************************************
 // == Tool Items ==================================================================
@@ -44,7 +44,7 @@ const demo2AsyncNodeDelaySlider: ToolItem = {
 export const Demo2AsyncNodeToolbar: Toolbar = {
   title: 'Demo 2 Async Node',
   name: NodeName.DEMO_2_ASYNC_NODE/*Expected and guaranteed to be unique.*/,
-  rightContent: ExecuteDemo2AsyncNodeButton,
+  rightContent: ExecuteButtons,
 
   toolsCollections: [
     [

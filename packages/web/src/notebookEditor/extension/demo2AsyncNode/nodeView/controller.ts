@@ -1,6 +1,6 @@
 import { Editor } from '@tiptap/core';
 
-import { Demo2AsyncNodeType } from '@ureeka-notebook/web-service';
+import { ApplicationError, AttributeType, Demo2AsyncNodeType, NotebookEditorService, NotebookIdentifier } from '@ureeka-notebook/web-service';
 
 import { AbstractAsyncNodeController } from 'notebookEditor/extension/asyncNode/nodeView/controller';
 import { getPosType } from 'notebookEditor/extension/util/node';
@@ -17,6 +17,31 @@ export class Demo2AsyncNodeController extends AbstractAsyncNodeController<string
     const model = new Demo2AsyncNodeModel(editor, node, storage, getPos),
           view = new Demo2AsyncNodeView(model, editor, node, storage, getPos);
     super(model, view, editor, node, storage, getPos);
+  }
+
+  // == Execution =================================================================
+  public async executeServerSide(notebookId: NotebookIdentifier, editorService: NotebookEditorService): Promise<void>{
+    if(this.nodeModel.getPerformingAsyncOperation()) return/*nothing to do*/;
+
+    const { attrs } = this.node as Demo2AsyncNodeType;
+    const id = attrs[AttributeType.Id];
+    if(!id) return/*nothing to render -- silently fail*/;
+    const content = this.node.textContent,
+          replace = attrs[AttributeType.TextToReplace];
+
+    if(!replace) throw new ApplicationError('functions/invalid-argument', 'Missing textToReplace');
+
+    this.nodeModel.setPerformingAsyncOperation(true);
+    this.nodeView.updateView();
+    try {
+      await editorService.executeDemo2AsyncNode({ nodeId: id, notebookId, content, replace });
+    } catch(error){
+      throw error/*rethrow*/;
+    } finally {
+      this.nodeModel.setPerformingAsyncOperation(false);
+      this.nodeView.updateView();
+    }
+    return;
   }
 
   // .. Mutation ..................................................................

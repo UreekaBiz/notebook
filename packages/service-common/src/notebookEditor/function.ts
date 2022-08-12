@@ -22,6 +22,26 @@ export const NotebookEditorInsertText_Rest_Schema = Validate.object({
 export type NotebookEditorInsertText_Rest = Validate.InferType<typeof NotebookEditorInsertText_Rest_Schema>;
 
 // -- Execute ---------------------------------------------------------------------
+export const NotebookEditorDemo2AsyncNodeExecute_Rest_Schema = Validate.object({
+  /** the {@link NotebookIdentifier} of the {@link Notebook} in which the D2AN is
+   *  executed */
+  notebookId: Identifier_Schema
+      .required(),
+
+  /** the unique {@link NodeIdentifier} for the D2AN that is being executed */
+  nodeId: Identifier_Schema
+      .required(),
+
+  /** the text content D2AN from which the text will be replaced */
+  content: stringVLongSchema
+      .required(),
+  /** the text that is going to be replaced inside the content */
+  replace: stringVLongSchema
+      .required(),
+
+}).noUnknown();
+export type NotebookEditorDemo2AsyncNodeExecute_Rest = Readonly<Validate.InferType<typeof NotebookEditorDemo2AsyncNodeExecute_Rest_Schema>>;
+
 export const NotebookEditorDemoAsyncNodeExecute_Rest_Schema = Validate.object({
   /** the {@link NotebookIdentifier} of the {@link Notebook} in which the DAN is
    *  executed */
