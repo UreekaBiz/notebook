@@ -10,6 +10,21 @@ export const fromAsync = async <T>(iterator: AsyncIterable<T>): Promise<T[]> => 
 };
 
 // ================================================================================
+// deduplicates the specified array while preserving order. Elements found earlier
+// in the array are preferred over elements found later in the array
+export const deduplicate = <T>(array: T[]) => {
+  const set = new Set<T>();
+  return array.filter(item => {
+    if(set.has(item)) {
+      return false/*exclude*/;
+    } else { /*doesn't already exist*/
+      set.add(item);
+      return true/*include*/;
+    }
+  });
+};
+
+// --------------------------------------------------------------------------------
 // returns an array of values that exist in `previous` that do not exist in `final`.
 // If there are no values that have been removed in `final` then an *empty* array
 // is returned. Additional values in `final` that do not appear in `previous` (i.e.
