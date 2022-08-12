@@ -3,14 +3,15 @@ import { assertNever } from '../util/type';
 import { UserIdentifier } from '../util/user';
 import { Notebook } from './type';
 
+// TODO: refactor into a 'Sharable' interface
 // ********************************************************************************
 // == Permission ==================================================================
 export const isNotebookCreator = (userId: UserIdentifier, notebook: Notebook): boolean =>
   (notebook.createdBy === userId);
 export const isNotebookEditor = (userId: UserIdentifier, notebook: Notebook): boolean =>
-  notebook.editors.includes(userId) || isNotebookCreator(userId, notebook);
+  notebook.editors.includes(userId) || isNotebookCreator(userId, notebook)/*pedantic*/;
 export const isNotebookViewer = (userId: UserIdentifier, notebook: Notebook): boolean =>
-  notebook.viewers.includes(userId) || notebook.editors.includes(userId)/*pedantic*/ || isNotebookCreator(userId, notebook);
+  notebook.viewers.includes(userId) || notebook.editors.includes(userId)/*pedantic*/ || isNotebookCreator(userId, notebook)/*pedantic*/;
 
 export const isNotebookRole = (userId: UserIdentifier, notebook: Notebook, role: ShareRole): boolean => {
   switch(role) {

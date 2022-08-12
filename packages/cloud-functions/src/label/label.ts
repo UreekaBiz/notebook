@@ -17,9 +17,9 @@ export const createLabel = async (
 ): Promise<LabelIdentifier> => {
   if(isBlank(name)) throw new ApplicationError('functions/invalid-argument', `Cannot create a Label with a blank name.`);
 
+  const labelRef = labelCollection.doc(/*create new*/) as DocumentReference<Label_Create>,
+        labelId = labelRef.id;
   try {
-    const labelRef = labelCollection.doc(/*create new*/) as DocumentReference<Label_Create>,
-          labelId = labelRef.id;
     const label: Label_Create = {
       name,
       visibility,
@@ -37,18 +37,18 @@ export const createLabel = async (
       updateTimestamp: ServerTimestamp/*by contract*/,
     };
     await labelRef.create(label)/*create by definition*/;
-
-    // NOTE: it *is* possible for the Summary to fail. Cleanup *should* either
-    //       retry or remove the parent Label and error out.
-    await createLabelSummary(userId, labelId, visibility)/*logs on error*/;
-
-    // FIXME: publish if visibility === LabelVisibility.Public
-
-    return labelId;
   } catch(error) {
     if(error instanceof ApplicationError) throw error;
     throw new ApplicationError('datastore/write', `Error creating new Label for User (${userId}). Reason: `, error);
   }
+
+  // NOTE: it *is* possible for the Summary to fail. Cleanup *should* either
+  //       retry or remove the parent Label and error out.
+  await createLabelSummary(userId, labelId, visibility)/*logs on error*/;
+
+  // FIXME: publish if visibility === LabelVisibility.Public
+
+  return labelId;
 };
 
 // == Update ======================================================================
@@ -108,14 +108,13 @@ export const deleteLabel = async (userId: UserIdentifier, labelId: LabelIdentifi
 
       transaction.delete(labelRef);
     });
-
-    await removeAllNotebooks(userId, labelId)/*logs on error*/;
-    await deleteLabelSummary(userId, labelId)/*logs on error*/;
-
-    // FIXME: remove any published labels!!! (do it in all cases for sanity)
-
   } catch(error) {
     if(error instanceof ApplicationError) throw error;
     throw new ApplicationError('datastore/write', `Error deleting Label (${labelId}) for User (${userId}). Reason: `, error);
   }
+
+  await removeAllNotebooks(userId, labelId)/*logs on error*/;
+  await deleteLabelSummary(userId, labelId)/*logs on error*/;
+
+  // FIXME: remove any published labels!!! (do it in all cases for sanity)
 };
