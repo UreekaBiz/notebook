@@ -1,7 +1,7 @@
 import { CommandProps } from '@tiptap/core';
 import { Selection } from 'prosemirror-state';
 
-import { createBoldMark, getNodeBlockRange, isHeadingLevel, AttributeType, CommandFunctionType, HeadingLevel, NodeName, MarkName } from '@ureeka-notebook/web-service';
+import { createBoldMark, getBlockNodeRange, isHeadingLevel, AttributeType, CommandFunctionType, HeadingLevel, NodeName, MarkName } from '@ureeka-notebook/web-service';
 
 import { createMarkHolderJSONNode } from 'notebookEditor/extension/markHolder/util';
 
@@ -59,7 +59,7 @@ const applyBoldToHeadingContent = (props: CommandProps) => {
   if(tr.selection.$anchor.parent.content.size < 0) return false/*command cannot be executed, the Heading has no content to apply the Bold Mark*/;
 
   if(dispatch) {
-    const { from, to } = getNodeBlockRange(editor.state.selection);
+    const { from, to } = getBlockNodeRange(editor.state.selection);
     tr.addMark(from, to, createBoldMark(editor.schema));
     dispatch(tr);
   } /* else -- called from can() (SEE: src/notebookEditor/README.md/#Commands) */

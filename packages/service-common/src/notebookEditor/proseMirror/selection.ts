@@ -7,7 +7,7 @@ import { Selection } from 'prosemirror-state';
  * Blocks located at the anchor and head of the given {@link Selection},
  * regardless of where the anchor and head are located in those Blocks
  */
-export const getNodeBlockRange = (selection: Selection) => {
+export const getBlockNodeRange = (selection: Selection) => {
   const { pos: anchorPos } = selection.$anchor,
         { pos: headPos } = selection.$head;
 
