@@ -91,7 +91,7 @@ export type Demo2AsyncNodeType = ProseMirrorNode<NotebookSchemaType> & { attrs: 
 export const isDemo2AsyncNode = (node: ProseMirrorNode<NotebookSchemaType>): node is Demo2AsyncNodeType => node.type.name === NodeName.DEMO_2_ASYNC_NODE;
 
 export const getDemo2AsyncNodeNodeType = (schema: NotebookSchemaType) => schema.nodes[NodeName.DEMO_2_ASYNC_NODE];
-export const createDemo2AsyncNodeNode = (schema: NotebookSchemaType, attributes?: Demo2AsyncNodeAttributes, content?: ProseMirrorNodeContent, marks?: Mark<NotebookSchemaType>[]) =>
+export const createDemo2AsyncNodeNode = (schema: NotebookSchemaType, attributes?: Partial<Demo2AsyncNodeAttributes>, content?: ProseMirrorNodeContent, marks?: Mark<NotebookSchemaType>[]) =>
   getDemo2AsyncNodeNodeType(schema).create(attributes, content, marks);
 
 // -- JSON Node Type --------------------------------------------------------------
