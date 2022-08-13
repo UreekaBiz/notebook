@@ -1,7 +1,7 @@
 {
 	"name": "@ureeka-notebook/web",
 	"description": "Web Application (Desktop)",
-	"version": "1.0.0",
+	"version": "1.1.0",
 	"main": "dist/index.js",
 	"types": "dist/index.d.ts",
 	"publishConfig": {
@@ -22,10 +22,10 @@
   },
 	"devDependencies": {
     "@types/compression": "1.7.2",
-    "@types/node": "18.6.1",
+    "@types/node": "18.7.3",
     "@types/react": "18.0.15",
     "@types/react-dom": "18.0.6",
-		"firebase-tools": "11.4.0",
+		"firebase-tools": "11.6.0",
     "typescript": "4.7.4"
 	},
 	"dependencies": {
@@ -40,8 +40,8 @@
 		"compression": "1.7.4",
 		"dotenv": "16.0.1",
 		"feather-icons": "4.29.0",
-		"firebase": "9.9.1",
-		"firebase-admin": "11.0.0",
+		"firebase": "9.9.2",
+		"firebase-admin": "11.0.1",
 		"firebase-functions": "3.22.0",
     "framer-motion": "6.5.1",
 		"helmet": "5.1.1",

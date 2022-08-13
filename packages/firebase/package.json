@@ -1,6 +1,6 @@
 {
   "name": "@ureeka-notebook/firebase",
-  "version": "1.0.0",
+  "version": "1.1.0",
   "private": true,
 
   "scripts": {
@@ -12,8 +12,8 @@
   },
 
   "devDependencies": {
-    "firebase-functions-test": "2.2.0",
-    "firebase-tools": "11.2.2"
+    "firebase-functions-test": "2.3.0",
+    "firebase-tools": "11.6.0"
   },
   "dependencies": {}
 }
