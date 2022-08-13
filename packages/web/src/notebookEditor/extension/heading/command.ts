@@ -1,7 +1,6 @@
 import { CommandProps } from '@tiptap/core';
-import { Selection } from 'prosemirror-state';
 
-import { createBoldMark, getBlockNodeRange, isHeadingLevel, AttributeType, CommandFunctionType, HeadingLevel, NodeName, MarkName } from '@ureeka-notebook/web-service';
+import { createBoldMark, getBlockNodeRange, generateNodeId, isHeadingLevel, isHeadingNode, AttributeType, CommandFunctionType, HeadingLevel, NodeName, MarkName, NodeIdentifier } from '@ureeka-notebook/web-service';
 
 import { createMarkHolderJSONNode } from 'notebookEditor/extension/markHolder/util';
 
@@ -10,8 +9,8 @@ import { createMarkHolderJSONNode } from 'notebookEditor/extension/markHolder/ut
 declare module '@tiptap/core' {
   interface Commands<ReturnType> {
     [NodeName.HEADING/*Expected and guaranteed to be unique. (SEE: /notebookEditor/model/node)*/]: {
+      /** create a Heading and set the cursor inside of it */
       setHeading: CommandFunctionType<typeof setHeadingCommand, ReturnType>;
-      toggleHeading: CommandFunctionType<typeof toggleHeadingCommand, ReturnType>;
     };
   }
 }
@@ -20,42 +19,22 @@ declare module '@tiptap/core' {
 export const setHeadingCommand = (attributes: { level: HeadingLevel; }) => ({ editor, chain }: CommandProps) => {
   if(!isHeadingLevel(attributes[AttributeType.Level])) return false/*invalid command, level for heading not supported*/;
 
-  if(shouldInsertMarkHolder(editor.state.selection)) {
-    return chain().setNode(NodeName.HEADING, attributes)
-                  .insertContent(createMarkHolderJSONNode(editor, [MarkName.BOLD]))
-                  .run();
-   } /* else -- no need to add MarkHolder */
-
-  return chain().setNode(NodeName.HEADING, attributes)
-                .command(applyBoldToHeadingContent)
-                .run();
-};
-
-
-export const toggleHeadingCommand = (attributes: { level: HeadingLevel; }) => ({ editor, chain }: CommandProps) => {
-  if(!isHeadingLevel(attributes[AttributeType.Level])) {
-    return false/*invalid command, level for heading not supported*/;
-  } /* else -- valid level */
-
-  if(editor.isActive(NodeName.HEADING) && editor.state.selection.$anchor.parent.attrs[AttributeType.Level] === attributes[AttributeType.Level]/*is the same heading -- toggle*/) {
-    return chain().toggleNode(NodeName.PARAGRAPH, NodeName.HEADING, attributes).run();
-  } /* else -- set heading normally */
-
-  if(shouldInsertMarkHolder(editor.state.selection)) {
-    return chain().toggleNode(NodeName.HEADING, NodeName.PARAGRAPH, attributes)
-                  .insertContent(createMarkHolderJSONNode(editor, [MarkName.BOLD]))
-                  .run();
+  const { parent } = editor.state.selection.$anchor;
+  if(editor.state.selection.empty && parent.content.size < 1) {
+    return chain().setNode(NodeName.HEADING, attributes).insertContent(createMarkHolderJSONNode(editor, [MarkName.BOLD])).run();
   } /* else -- no need to add MarkHolder */
 
-  return chain().toggleNode(NodeName.HEADING, NodeName.PARAGRAPH, attributes)
-                .command(applyBoldToHeadingContent)
-                .run();
+  return chain()
+        .setNode(NodeName.HEADING, attributes)
+        .command(applyBoldToHeadingContent)
+        .command(setIdsToNewHeadings)
+        .run();
 };
 
 // == Util ========================================================================
 // applies the Bold Mark to the whole content of the parents of the selection
 const applyBoldToHeadingContent = (props: CommandProps) => {
-  const { editor, dispatch,  tr } = props;
+  const { editor, dispatch, tr } = props;
   if(tr.selection.$anchor.parent.content.size < 0) return false/*command cannot be executed, the Heading has no content to apply the Bold Mark*/;
 
   if(dispatch) {
@@ -67,7 +46,29 @@ const applyBoldToHeadingContent = (props: CommandProps) => {
   return true/*command can be executed*/;
 };
 
-// a MarkHolder should be inserted if the Selection is empty, the anchor and the
-// head are in the same place, and the parent of the selection has no content
-const shouldInsertMarkHolder = (selection: Selection) => selection.empty && selection.$anchor.pos === selection.$head.pos && selection.$anchor.parent.content.size < 1;
+// if new Headings are created while setting the block type, ensure they do
+// not get repeated Ids
+const setIdsToNewHeadings = (props: CommandProps) => {
+  const seenIds = new Set<NodeIdentifier>();
+  const { editor, dispatch, tr } = props;
+
+  if(dispatch) {
+    const { from, to } = getBlockNodeRange(editor.state.selection);
+    tr.doc.nodesBetween(from, to, (node, nodePos) => {
+      const id = node.attrs[AttributeType.Id];
+      if(!id) return/*nothing left to do*/;
+
+      if(id && isHeadingNode(node) && seenIds.has(id)) {
+        tr.setNodeMarkup(nodePos, node.type, { ...node.attrs, [AttributeType.Id]: generateNodeId() });
+        return/*nothing left to do*/;
+      } /* else -- add to seen ids */
+
+      seenIds.add(id);
+    });
+
+    dispatch(tr);
+  } /* else -- called from can() (SEE: src/notebookEditor/README.md/#Commands) */
+
+  return true/*command can be executed*/;
+};
 
