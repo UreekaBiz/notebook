@@ -14,7 +14,7 @@ const log = getLogger(Logger.NOTEBOOK);
 
 // ********************************************************************************
 interface Props extends EditorToolComponentProps {/*no additional*/ }
-export const ExecuteServerSideDemo2AsyncNodeButton: React.FC<Props> = ({ editor, depth }) => {
+export const ExecuteRemoteDemo2AsyncNodeButton: React.FC<Props> = ({ editor, depth }) => {
   const { editorService, notebookId } = useNotebookEditor();
   const isMounted = useIsMounted();
   const toast = useToast();

@@ -11,7 +11,7 @@ import { DemoAsyncNodeStorageType } from '../nodeView/controller';
 
 // ********************************************************************************
 interface Props extends EditorToolComponentProps {/*no additional*/ }
-export const ExecuteDemoAsyncNodeButton: React.FC<Props> = ({ editor }) => {
+export const ExecuteLocalDemoAsyncNodeButton: React.FC<Props> = ({ editor }) => {
   const node = getSelectedNode(editor.state);
   if(!node || !isDemoAsyncNode(node)) return null/*nothing to render -- silently fail*/;
   const { attrs } = node;

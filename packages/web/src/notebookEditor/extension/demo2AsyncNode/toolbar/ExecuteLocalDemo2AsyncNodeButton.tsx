@@ -10,7 +10,7 @@ import { Demo2AsyncNodeStorageType } from '../nodeView/controller';
 
 // ********************************************************************************
 interface Props extends EditorToolComponentProps {/*no additional*/ }
-export const ExecuteDemo2AsyncNodeButton: React.FC<Props> = ({ editor }) => {
+export const ExecuteLocalDemo2AsyncNodeButton: React.FC<Props> = ({ editor }) => {
   const parentNode = editor.state.selection.$anchor.parent;
   if(!isDemo2AsyncNode(parentNode)) return null/*nothing to render -- silently fail*/;
 
