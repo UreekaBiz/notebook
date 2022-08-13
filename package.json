@@ -1,7 +1,7 @@
 {
   "name": "@ureeka-notebook/notebook",
-  "version": "1.1.0",
   "description": "ProseMirror, Firebase Collaborative Editor",
+  "version": "1.1.0",
   "repository": {
     "type": "git",
     "url": "git+https://github.com/UreekaBiz/pm-fb-collab.git"
