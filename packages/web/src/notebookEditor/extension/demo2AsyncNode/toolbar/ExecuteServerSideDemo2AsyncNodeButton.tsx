@@ -1,9 +1,8 @@
 import { useToast, IconButton, Spinner, Tooltip } from '@chakra-ui/react';
 import { FiPlay } from 'react-icons/fi';
 
-import { isDemo2AsyncNode, getLogger, AttributeType, Logger, NodeName } from '@ureeka-notebook/web-service';
+import { getSelectedNode, isDemo2AsyncNode, getLogger, AttributeType, Logger, NodeName } from '@ureeka-notebook/web-service';
 
-import { getSelectedNode } from 'notebookEditor/extension/util/node';
 import { useNotebookEditor } from 'notebookEditor/hook/useNotebookEditor';
 import { getNodeViewStorage } from 'notebookEditor/model/NodeViewStorage';
 import { EditorToolComponentProps, TOOL_ITEM_DATA_TYPE } from 'notebookEditor/toolbar/type';
