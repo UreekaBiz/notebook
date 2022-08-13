@@ -13,7 +13,7 @@ import { DocumentUpdate } from './api/type';
 export const executeDemo2AsyncNode = async (userId: UserIdentifier, notebookId: NotebookIdentifier, nodeId: NodeIdentifier, content: string, replace: string) => {
   // simulate a long-running operation
   let status: AsyncNodeStatus = AsyncNodeStatus.PROCESSING;
-  let replacedText: string | undefined/*error*/ = undefined/*default to error*/;
+  let result: string;
   try {
     await sleep(3000/*3s*/);
     status = AsyncNodeStatus.SUCCESS;
@@ -21,21 +21,22 @@ export const executeDemo2AsyncNode = async (userId: UserIdentifier, notebookId: 
     if(!content.includes(replace)) throw new ApplicationError('functions/invalid-argument', `Demo2AsyncNode ${nodeId} in notebook ${notebookId} does not contain '${replace}'.`);
 
     // produce an arbitrary result based on the specified content
-    replacedText = `Previous text contained ${replace.length} characters and has a hash of '${hashString(replace)}'`;
+    result = `Previous text contained ${replace.length} characters and has a hash of '${hashString(replace)}'`;
   } catch(error) {
     logger.error(`Error executing Demo2AsyncNode: ${error}`);
     status = AsyncNodeStatus.ERROR;
+    result = 'Error'/*CHECK: anything else?*/;
   }
 
   // update the node with the result
-  updateNode(userId, notebookId, nodeId, content, replace, status, replacedText);
+  updateNode(userId, notebookId, nodeId, content, replace, status, result);
 };
 
 // ................................................................................
 const updateNode = async (
   userId: UserIdentifier,
   notebookId: NotebookIdentifier, nodeId: NodeIdentifier, content: string, replace: string,
-  status: AsyncNodeStatus, replacedText?: string
+  status: AsyncNodeStatus.SUCCESS | AsyncNodeStatus.ERROR, resultText: string
 ) => {
   const { document, schemaVersion } = await getDocument(userId, notebookId);
   const editorState = createEditorState(schemaVersion, document);
@@ -50,20 +51,20 @@ const updateNode = async (
   const updates: DocumentUpdate[] = [ new Demo2AsyncNodeAttributeReplace(nodeId, status) ];
 
   // wrap the replaced text in a mark if it was successful
-  if(status === AsyncNodeStatus.SUCCESS && replacedText){
+  if(status === AsyncNodeStatus.SUCCESS) {
     const textStart = position + 1/*start of node*/ + content.indexOf(replace),
           textEnd = textStart + replace.length;
 
     // replaces text with result
-    updates.push(new InsertText(replacedText, textStart, textEnd));
+    updates.push(new InsertText(resultText, textStart, textEnd));
 
     // creates a range of the replaced text
     const markStart = textStart,
-          markEnd = markStart + replacedText.length;
+          markEnd = markStart + resultText.length;
     updates.push(new AddMark(MarkName.REPLACED_TEXT_MARK, markStart, markEnd));
-  } else {
+  } else { /*AsyncNodeStatus.ERROR*/
     // replaces D2AN text with error message
-    updates.push(new InsertText(`Error`, position + 1/*start of node*/, node.content.size));
+    updates.push(new InsertText(resultText, position + 1/*start of node*/, node.content.size));
   }
 
   // update the identified Demo2AsyncNode with the result
