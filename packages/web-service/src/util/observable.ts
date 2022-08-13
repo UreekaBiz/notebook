@@ -1,6 +1,11 @@
 import { forkJoin, iif, lastValueFrom, map, of, switchMap, take, Observable, Subject } from 'rxjs';
 
 // ********************************************************************************
+// NOTE: parallels QuerySnapshotObservable
+// SEE: #paginatedArray()
+export type ArrayObservable<T, R> = (array: T[]) => Observable<R[]>;
+
+// ********************************************************************************
 // lastValueFrom() assumes tht the stream has completed. This does a take(1) to
 // ensure that the stream is complete before getting the last value
 export const lastValueFromStream = <T>(source: Observable<T>) => {
