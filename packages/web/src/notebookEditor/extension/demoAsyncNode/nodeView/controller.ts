@@ -21,7 +21,7 @@ export class DemoAsyncNodeController extends AbstractCodeBlockAsyncNodeControlle
   }
 
   // == Execution =================================================================
-  public async executeServerSide(notebookId: NotebookIdentifier, editorService: NotebookEditorService): Promise<void>{
+  public async executeRemote(notebookId: NotebookIdentifier, editorService: NotebookEditorService): Promise<void>{
     if(this.nodeModel.getPerformingAsyncOperation()) return/*nothing to do*/;
 
     const { attrs } = this.node as DemoAsyncNodeType;

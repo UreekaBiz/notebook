@@ -42,9 +42,9 @@ export const ExecuteRemoteDemo2AsyncNodeButton: React.FC<Props> = ({ editor, dep
 
     setStatus('loading');
     try {
-      await demo2AsyncNodeView.executeServerSide(notebookId, editorService);
+      await demo2AsyncNodeView.executeRemote(notebookId, editorService);
     } catch(error){
-      log.error(`Error ocurred while executing Demo2AsyncNode ${id} in notebook ${notebookId}`, error);
+      log.error(`Error ocurred while executing Demo2AsyncNode (${id}) in Notebook (${notebookId})`, error);
       if(!isMounted()) return/*nothing to do*/;
       toast({
         title:' Error ocurred while executing Demo2AsyncNode',
