@@ -15,8 +15,6 @@ import { NotebookEditorProvider } from 'notebookEditor/context/NotebookEditorPro
 import { SideBar } from 'notebookEditor/toolbar/component/SideBar';
 import { SideBarLayout } from 'shared/layout/SideBarLayout';
 import { coreRoutes } from 'shared/routes';
-import { LoadingPage } from 'shared/pages/LoadingPage';
-import { NotFoundPage } from 'shared/pages/NotFoundPage';
 import { UserProfileServiceWrapper } from 'user/UserProfileServiceWrapper';
 
 const log = getLogger(Logger.NOTEBOOK);
