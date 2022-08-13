@@ -1,8 +1,6 @@
 import { Editor } from '@tiptap/core';
 
-import { AttributeType, VerticalAlign } from '@ureeka-notebook/web-service';
-
-import { isNodeSelection } from 'notebookEditor/extension/util/node';
+import { isNodeSelection, AttributeType, VerticalAlign } from '@ureeka-notebook/web-service';
 
 // ********************************************************************************
 /**
