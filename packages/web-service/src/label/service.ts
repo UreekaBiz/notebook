@@ -1,14 +1,15 @@
 import { lastValueFrom, Observable } from 'rxjs';
 
-import { Label, LabelIdentifier, LabelTuple, ObjectTuple, LabelPublished, LabelPublishedTuple, LabelNotebookTuple, NotebookIdentifier, NotebookPublishedTuple, NotebookTuple, ShareRole, UserIdentifier } from '@ureeka-notebook/service-common';
+import { Label, LabelIdentifier, LabelTuple, ObjectTuple, LabelPublished, LabelPublishedTuple, NotebookIdentifier, NotebookPublishedTuple, NotebookTuple, ShareRole, UserIdentifier } from '@ureeka-notebook/service-common';
 
 import { getLogger, ServiceLogger } from '../logging';
 import { ApplicationError } from '../util/error';
-import { paginatedQuery, Pagination } from '../util/observablePaginatedCollection';
+import { Pagination } from '../util/pagination';
+import { paginatedArray } from '../util/observablePaginatedArray';
 import { Scrollable, scrollableQuery } from '../util/observableScrolledCollection';
-import { labelNotebookPublishedQuery, labelNotebookQuery, labelPublishedQuery, labelQuery } from './datastore';
+import { labelPublishedQuery, labelQuery } from './datastore';
 import { labelCreate, labelDelete, labelNotebookAdd, labelNotebookRemove, labelNotebookReorder, labelShare, labelUpdate } from './function';
-import { labelById$, labelNotebooksSnapshot$, labelOnceById$, labelPublishedById$, labelPublishedOnceById$, labelPublishedsQuery$, labelsQuery$, notebookPublishedsSnapshot$, notebooksSnapshot$ } from './observable';
+import { labelById$, labelNotebookPublisheds$, labelNotebooks$, labelOnceById$, labelPublishedById$, labelPublishedOnceById$, labelPublishedsQuery$, labelsQuery$, notebookPublishedsArray$, notebooksArray$ } from './observable';
 import { Label_Create, Label_Update, LabelFilter, LabelPublishedFilter } from './type';
 
 const log = getLogger(ServiceLogger.LABEL);
@@ -44,8 +45,7 @@ export class LabelService {
   /**
    * @param labelId the {@link LabelIdentifier} of the desired {@link Label}
    * @returns Observable over {@link Label} with the specified identifier. If
-   *          no such Label exists then `null` is returned. Note that the Label
-   *          _may be_ soft deleted {@link Label#deleted}.
+   *          no such Label exists then `null` is returned.
    */
   public onLabel$(labelId: LabelIdentifier): Observable<ObjectTuple<LabelIdentifier, Label | null/*not found*/>> {
     return labelById$(labelId);
@@ -53,26 +53,16 @@ export class LabelService {
 
   // .. Notebook ..................................................................
   /**
-   * @param labelId the identifier of the {@link Label} for the desired {@link LabelNotebook}s
-   * @param pageSize the number of Notebooks returned per page
-   * @returns {@link Pagination} over the collection of {@link LabelNotebook}s
-   */
-  public onLabelNotebooks(labelId: LabelIdentifier, pageSize: number = LabelService.DEFAULT_PAGE_SIZE): Pagination<LabelNotebookTuple> {
-    return paginatedQuery(labelNotebookQuery(labelId), labelNotebooksSnapshot$, pageSize,
-                          `Label (${labelId}}) Notebooks`);
-  }
-
-  /**
    * @param labelId the identifier of the {@link Label} for the desired {@link Notebook}s.
    *        Permission denied will occur in the Observable if the caller is not a
    *        Creator of the {@link Label} or listed as one of the {@link Label#viewers}
    *        or {@link Label#editors}.
    * @param pageSize the number of Notebooks returned per batch
-   * @returns {@link Pagination} over the collection of {@link Notebook}s
+   * @returns {@link Pagination} over the collection of {@link Notebook}s. The
+   *          Observable will have an error thrown if the Label does not exist.
    */
   public onNotebooks(labelId: LabelIdentifier, pageSize: number = LabelService.DEFAULT_PAGE_SIZE): Pagination<NotebookTuple> {
-    // NOTE: this must go through LabelNotebook since that's what has the ordering
-    return paginatedQuery(labelNotebookQuery(labelId), notebooksSnapshot$, pageSize,
+    return paginatedArray(labelNotebooks$(labelId), notebooksArray$, pageSize,
                           `Label (${labelId}}) Notebooks`);
   }
 
@@ -101,11 +91,11 @@ export class LabelService {
    * @param labelId the identifier of the {@link Label} of the desired Published
    *        {@link Notebook}s
    * @param pageSize the number of Published Notebooks returned per page
-   * @returns {@link Pagination} over the collection of {@link LabelNotebook}s
+   * @returns {@link Pagination} over the collection of Published {@link Notebook}s.
+   *          The Observable will have an error thrown if the Label does not exist.
    */
   public onNotebookPublisheds(labelId: LabelIdentifier, pageSize: number = LabelService.DEFAULT_PAGE_SIZE): Pagination<NotebookPublishedTuple> {
-    // NOTE: this must go through LabelNotebook since that's what has the ordering
-    return paginatedQuery(labelNotebookPublishedQuery(labelId), notebookPublishedsSnapshot$, pageSize,
+    return paginatedArray(labelNotebookPublisheds$(labelId), notebookPublishedsArray$, pageSize,
                           `Published Label (${labelId}}) Published Notebooks`);
   }
 
@@ -212,7 +202,9 @@ export class LabelService {
    * - `permission-denied` if the caller is not the creator of the Label
    * - `not-found` if the specified {@link LabelIdentifier} does not represent a
    *   known {@link Label} or if the specified {@link NotebookIdentifier} does not
-   *   represent a known {@link Notebook}
+   *   represent a known and non-deleted {@link Notebook}
+   * - `invalid-argument` if there are {@link #MAX_LABEL_NOTEBOOKS} Notebooks already
+   *   associated with the Label
    * - `datastore/write` if there was an error associating the Notebook with the Label
    * @see #removeNotebook()
    * @see #reorderNotebooks()
@@ -226,7 +218,8 @@ export class LabelService {
    *        disassociated from it
    * @param notebookId the identifier of the {@link Notebook} that is to be
    *        disassociated from the Label. If the Notebook isn't associated with
-   *        the Label then this has no effect
+   *        the Label or if the Notebook itself doesn't exist or is deleted then
+   *        this has no effect or
    * @throws a {@link ApplicationError}:
    * - `permission-denied` if the caller is not the creator of the Label
    * - `not-found` if the specified {@link LabelIdentifier} does not represent a
@@ -256,6 +249,8 @@ export class LabelService {
    * - `not-found` if the specified {@link LabelIdentifier} does not represent a
    *   known {@link Label}. Any specified {@link NotebookIdentifier} that does not
    *   represent a known {@link Notebook} is silently ignored.
+   * - `invalid-argument` if there are more than {@link #MAX_LABEL_NOTEBOOKS}
+   *   Notebooks specified
    * - `datastore/write` if there was an error associating the Notebook with the Label
    * @see #addNotebook()
    * @see #removeNotebook()

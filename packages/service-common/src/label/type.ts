@@ -1,6 +1,5 @@
 import { NotebookIdentifier } from '../notebook/type';
 import { Creatable, ObjectTuple, Updatable } from '../util/datastore';
-import { Timestamp } from '../util/firestore';
 import { Identifier } from '../util/type';
 import { UserIdentifier } from '../util/user';
 
@@ -26,6 +25,11 @@ export enum LabelVisibility {
 // NOTE: if increased then move share Users to a separate sub-collection
 export const MAX_LABEL_SHARE_USERS = 10;
 
+/** the maximum number of Notebooks that any Label may be shared with. This limit
+ *  is to keep the size of the Label document bounded and small. */
+// NOTE: if increased then move share Users to a separate sub-collection
+export const MAX_LABEL_NOTEBOOKS = 100;
+
 // --------------------------------------------------------------------------------
 // NOTE: Labels (and all dependent documents) are *hard* deleted
 export type Label = Creatable & Updatable & Readonly<{ /*Firestore*/
@@ -40,6 +44,9 @@ export type Label = Creatable & Updatable & Readonly<{ /*Firestore*/
   /** `true` if this Label represents an ordered collection. By default, Notebooks
    *   are ordered by when they were added to this Label. */
   ordered: boolean/*write-many server-written*/;
+  /** the (ordered) list of non-deleted {@link NotebookIdentifier}'s associated
+   *  with this Label. Bounded by {@link #MAX_LABEL_NOTEBOOKS}. */
+  notebooks: NotebookIdentifier[]/*write-many server-written*/;
 
   // NOTE: because Firestore does not have 'OR' queries, 'viewers' contains *all*
   //       Users that can view associated Notebooks (including Editors) so that it
@@ -62,32 +69,6 @@ export type Label = Creatable & Updatable & Readonly<{ /*Firestore*/
 }>;
 export type LabelTuple = ObjectTuple<LabelIdentifier, Label>;
 
-// ................................................................................
-// a sub-collection of Labels whose document ID is the Notebook Identifier. The
-// number of Notebooks for a given Label is reflected in the corresponding summary.
-// NOTE: documents are always fully written on any change to Label
-// LabelSummary (in RTDB)
-export type LabelNotebook = Creatable & Readonly<{ /*Firestore*/
-  /** the parent Label (for convenience when indexing) */
-  labelId: LabelIdentifier/*write-once server-written*/;
-  /** the Notebook (for convenience when indexing) */
-  notebookId: NotebookIdentifier/*write-once server-written*/;
-
-  /** the Label's name to facilitate collection-group queries
-   *  @see Label#name */
-  name: string/*write-many server-written*/;
-
-  /** the Notebook's order within the Label. For unordered Labels, this is unused
-   *  but still has a valid value. This value is *not* explicitly dense -- it may
-   *  be sparse. */
-  // NOTE: the use of Timestamp is the poor man's way to always ensure that the
-  //       last-added Notebook is ordered last. Specifically, any manually ordered
-  //       entries start at '0' (ensuring that they're always less than the current
-  //       timestamp). New Notebooks are added using the ServerTimestamp.
-  order: Timestamp/*write-many server-written*/;
-}>;
-export type LabelNotebookTuple = ObjectTuple<NotebookIdentifier, LabelNotebook>;
-
 // -- Label Published (Firestore) -------------------------------------------------
 // to ensure that no internal information (e.g. viewer/editor lists) is exposed to
 // public Users, this copy of Label (where `visibility === 'public'`) is created
@@ -102,6 +83,9 @@ export type LabelPublished = Creatable & Readonly<{ /*Firestore*/
   /** `true` if this Label represents an ordered collection. By default, Notebooks
    *   are ordered by when they were added to this Label. */
   ordered: boolean/*write-many server-written*/;
+  /** the (ordered) list of non-deleted and published {@link NotebookIdentifier}'s
+   *  associated with this Label. Bounded by {@link #MAX_LABEL_NOTEBOOKS}. */
+  notebooks: NotebookIdentifier[]/*write-many server-written*/;
 
   /** in order to support fast prefix (typeahead find) searches, at most
    *  #MAX_PREFIX_COUNT normalized prefixes of the Label's name */
@@ -111,11 +95,6 @@ export type LabelPublished = Creatable & Readonly<{ /*Firestore*/
   sortName: string/*write-many server-written*/;
 }>;
 export type LabelPublishedTuple = ObjectTuple<LabelIdentifier, LabelPublished>;
-
-// ................................................................................
-// NOTE: LabelNotebook is used for both public and private Labels. Specifically,
-//       there is no LabelNotebookPublished type -- LabelNotebook is used (though
-//       an alias could easily be added)
 
 // == Label Summary (RTDB) ========================================================
 // SEE: ./datastore.ts: LABEL_SUMMARY

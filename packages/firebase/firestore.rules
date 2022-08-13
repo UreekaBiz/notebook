@@ -54,42 +54,12 @@ service cloud.firestore {
       return canViewLabel(getLabel(labelId));
     }
 
-    function canViewLabelNotebook(labelNotebook) {
-      // NOTE: *could* just use #canViewLabelId() but that would require an additional
-      //       read for the Label
-      // NOTE: *could* duck-type and just use #canViewLabel() but that's brittle
-      return    isAdmin()
-             || (   isUser()
-                 && (   (request.auth.uid in labelNotebook.viewers)
-                     || (request.auth.uid in labelNotebook.editors)
-                     || (labelNotebook.createdBy == request.auth.uid) ) );
-    }
-
     // -- Label -------------------------------------------------------------------
     match /labels/{labelId} {
       allow create: if false; // server-only created
       allow update: if false; // server-side only
       allow read:   if canViewLabel(resource.data);
       allow delete: if false; // server-side hard-delete
-
-      // .. Notebooks .............................................................
-      // NOTE: document id matches that of the Notebook
-      match /label-notebooks/{notebookId} {
-        allow create: if false; // server-only created
-        allow update: if false; // server-side only
-        // NOTE: by design a Notebook Creator / Editor / Viewer *cannot* determine
-        //       what Labels are associated with that Notebook *unless* that Label
-        //       is shared with them explicitly.
-        allow read:   if canViewLabelId(labelId);
-        allow delete: if false; // server-side hard-delete
-      }
-    }
-    // collection-group rules
-    match /{path=**}/label-notebooks/{notebookId} {
-      allow create: if false; // managed server-side
-      allow update: if false; // managed server-side
-      allow read: if canViewLabelNotebook(resource.data);
-      allow delete: if false; // managed server-side
     }
 
     // -- Label Published ---------------------------------------------------------
@@ -100,24 +70,6 @@ service cloud.firestore {
       allow update: if false; // server-side only
       allow read:   if true; 	// Published Labels are public by definition
       allow delete: if false; // server-side hard-delete
-
-      // .. Published Notebooks ...................................................
-      // NOTE: document id matches that of the Notebook Published
-      // NOTE: when a Notebook is unpublished then the corresponding entry in this
-      //       sub-collection is removed
-      match /label-notebook-publisheds/{notebookId} {
-        allow create: if false; // server-only created
-        allow update: if false; // server-side only
-        allow read:   if true; 	// Published Label's Published Notebooks are public by definition
-        allow delete: if false; // server-side hard-delete
-      }
-    }
-    // collection-group rules
-    match /{path=**}/label-notebooks/{notebookId} {
-      allow create: if false; // managed server-side
-      allow update: if false; // managed server-side
-      allow read: if canViewLabelNotebook(resource.data);
-      allow delete: if false; // managed server-side
     }
 
     // === Notebook ===============================================================

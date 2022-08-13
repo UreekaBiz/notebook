@@ -1,6 +1,6 @@
 import * as functions from 'firebase-functions';
 
-import { isBlank, LabelCreate_Rest, LabelCreate_Rest_Schema, LabelDelete_Rest, LabelDelete_Rest_Schema, LabelIdentifier, LabelNotebookAdd_Rest, LabelNotebookAdd_Rest_Schema, LabelNotebookRemove_Rest, LabelNotebookRemove_Rest_Schema, LabelNotebookReorder_Rest, LabelNotebookReorder_Rest_Schema, LabelShare_Rest, LabelShare_Rest_Schema, LabelUpdate_Rest, LabelUpdate_Rest_Schema, NotebookIdentifier } from '@ureeka-notebook/service-common';
+import { deduplicate, isBlank, LabelCreate_Rest, LabelCreate_Rest_Schema, LabelDelete_Rest, LabelDelete_Rest_Schema, LabelIdentifier, LabelNotebookAdd_Rest, LabelNotebookAdd_Rest_Schema, LabelNotebookRemove_Rest, LabelNotebookRemove_Rest_Schema, LabelNotebookReorder_Rest, LabelNotebookReorder_Rest_Schema, LabelShare_Rest, LabelShare_Rest_Schema, LabelUpdate_Rest, LabelUpdate_Rest_Schema, NotebookIdentifier } from '@ureeka-notebook/service-common';
 
 import { wrapCall } from '../util/function';
 import { createLabel, deleteLabel, updateLabel } from './label';
@@ -55,5 +55,5 @@ async (data, context, userId) => {
 export const labelNotebookReorder = functions.https.onCall(wrapCall<LabelNotebookReorder_Rest, NotebookIdentifier[]>(
 { name: 'labelNotebookReorder', schema: LabelNotebookReorder_Rest_Schema, convertNullToUndefined: true, requiresAuth: true },
 async (data, context, userId) => {
-  return await reorderNotebooks(userId!/*auth'd*/, data.labelId, data.order);
+  return await reorderNotebooks(userId!/*auth'd*/, data.labelId, deduplicate(data.order)/*dedup by contract*/);
 }));

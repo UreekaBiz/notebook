@@ -5,6 +5,8 @@ import { isType, LabelIdentifier, LabelSummary_Create, LabelSummary_Update, Labe
 import { DatabaseIncrement } from '../util/rtdb';
 import { labelSummaryRef } from './datastore';
 
+// TODO: make this per-Notebook (specifically, so that Notebooks know how many Labels
+//       are associated with them)
 // ********************************************************************************
 // == Create ======================================================================
 // NOTE: doesn't throw by design

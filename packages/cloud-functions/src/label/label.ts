@@ -24,6 +24,7 @@ export const createLabel = async (
       name,
       visibility,
       ordered,
+      notebooks: [/*none by default on create*/],
 
       viewers: [userId/*creator must be a viewer by contract*/],
       editors: [userId/*creator must be an editor by contract*/],
@@ -93,6 +94,9 @@ export const updateLabel = async (
     throw new ApplicationError('datastore/write', `Error deleting Label (${labelId}) for User (${userId}). Reason: `, error);
   }
 };
+
+// -- Notebook --------------------------------------------------------------------
+// SEE ./labelNotebook.ts
 
 // == Delete ======================================================================
 export const deleteLabel = async (userId: UserIdentifier, labelId: LabelIdentifier) => {

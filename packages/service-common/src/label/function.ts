@@ -6,7 +6,7 @@ import { stringMedSchema } from '../util/schema';
 import { ShareRole } from '../util/share';
 import { Identifier_Schema, Modify } from '../util/type';
 import { UserIdentifier } from '../util/user';
-import { LabelVisibility } from './type';
+import { LabelVisibility, MAX_LABEL_NOTEBOOKS } from './type';
 
 // ********************************************************************************
 // == Label =======================================================================
@@ -69,7 +69,8 @@ export const LabelNotebookReorder_Rest_Schema = Validate.object({
   /** the full ordered collection of Notebooks. This can be used to both add and
    *  remove Notebooks as well. */
   order: Validate.array()
-      .of(Identifier_Schema)/*specifically Notebook identifiers*/
+      .of(Identifier_Schema.required())/*specifically Notebook identifiers*/
+      .max(MAX_LABEL_NOTEBOOKS)
       .required(),
 }).noUnknown();
 export type LabelNotebookReorder_Rest = Modify<Validate.InferType<typeof LabelNotebookReorder_Rest_Schema>, Readonly<{

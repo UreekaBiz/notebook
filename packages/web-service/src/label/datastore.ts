@@ -1,7 +1,7 @@
 import { ref } from 'firebase/database';
 import { collection, doc, limit, orderBy, query, where, CollectionReference, Query } from 'firebase/firestore';
 
-import { computeLabelPrefixQueryString, isBlank, nameof, LabelIdentifier, LabelNotebook_Storage, LabelPublished_Storage, Label_Storage, NotebookIdentifier, LABELS, LABEL_NOTEBOOK_PUBLISHEDS, LABEL_NOTEBOOKS, LABEL_PUBLISHEDS, LABEL_SUMMARIES, MAX_LABEL_SEARCH_RESULTS } from '@ureeka-notebook/service-common';
+import { computeLabelPrefixQueryString, isBlank, nameof, LabelIdentifier, LabelPublished_Storage, Label_Storage, LABELS, LABEL_PUBLISHEDS, LABEL_SUMMARIES, MAX_LABEL_SEARCH_RESULTS } from '@ureeka-notebook/service-common';
 
 import { database, firestore } from '../util/firebase';
 import { buildSortQuery } from '../util/firestore';
@@ -13,17 +13,9 @@ import { LabelFilter, LabelPublishedFilter } from './type';
 export const labelCollection = collection(firestore, LABELS) as CollectionReference<Label_Storage>;
 export const labelDocument = (labelId: LabelIdentifier) => doc(labelCollection, labelId);
 
-// .. Label Notebook ..............................................................
-export const labelNotebookCollection = (labelId: LabelIdentifier) => collection(labelDocument(labelId), LABEL_NOTEBOOKS) as CollectionReference<LabelNotebook_Storage>;
-export const labelNotebookDocument = (labelId: LabelIdentifier, notebookId: NotebookIdentifier) => doc(labelNotebookCollection(labelId), notebookId);
-
 // -- Label Published -------------------------------------------------------------
 export const labelPublishedCollection = collection(firestore, LABEL_PUBLISHEDS) as CollectionReference<LabelPublished_Storage>;
 export const labelPublishedDocument = (labelId: LabelIdentifier) => doc(labelPublishedCollection, labelId);
-
-// .. Label Notebook Published ....................................................
-export const labelNotebookPublishedCollection = (labelId: LabelIdentifier) => collection(labelPublishedDocument(labelId), LABEL_NOTEBOOK_PUBLISHEDS) as CollectionReference<LabelNotebook_Storage>;
-export const labelNotebookPublishedDocument = (labelId: LabelIdentifier, notebookId: NotebookIdentifier) => doc(labelNotebookPublishedCollection(labelId), notebookId);
 
 // == Query =======================================================================
 // -- Label -----------------------------------------------------------------------
@@ -52,10 +44,6 @@ export const labelQuery = (filter: LabelFilter) => {
   return buildQuery;
 };
 
-// .. Notebook ....................................................................
-export const labelNotebookQuery = (labelId: LabelIdentifier) =>
-  query(labelNotebookCollection(labelId), orderBy(nameof<LabelNotebook_Storage>('order'), 'asc'));
-
 // .. Search (Published) ..........................................................
 export const sortedLabelQuery =
   query(labelPublishedCollection, orderBy(nameof<Label_Storage>('name'), 'asc'));
@@ -83,10 +71,6 @@ export const labelPublishedQuery = (filter: LabelPublishedFilter) => {
 
   return buildQuery;
 };
-
-// .. Notebook ....................................................................
-export const labelNotebookPublishedQuery = (labelId: LabelIdentifier) =>
-  query(labelNotebookPublishedCollection(labelId), orderBy(nameof<LabelNotebook_Storage>('order'), 'asc'));
 
 // ** RTDB ************************************************************************
 // == Collection ==================================================================

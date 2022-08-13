@@ -7,8 +7,6 @@ export {
   // SEE: @ureeka-notebook/service-common: label/type.ts
   Label,
   LabelIdentifier,
-  LabelNotebook,
-  LabelNotebookTuple,
   LabelPublished,
   LabelPublishedTuple,
   LabelSummary,
