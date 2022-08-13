@@ -66,6 +66,7 @@ export const contentToNode = (schema: Schema, content?: NodeContent) => content 
 
 // == Manipulation ================================================================
 // -- Search ----------------------------------------------------------------------
+// FIXME: rename to 'NodePosition'
 export type NodeFound = { node: ProseMirrorNode; position: number; };
 
 /** @returns the parent node of a {@link Selection} */
