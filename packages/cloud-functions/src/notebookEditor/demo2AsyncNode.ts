@@ -50,7 +50,7 @@ const updateNode = async (
   // update status attribute
   const updates: DocumentUpdate[] = [ new Demo2AsyncNodeAttributeReplace(nodeId, status) ];
 
-  // wrap the replaced text in a mark if it was successful
+  // wrap the replaced text in a Mark if it was successful
   if(status === AsyncNodeStatus.SUCCESS) {
     const textStart = position + 1/*start of node*/ + content.indexOf(replace),
           textEnd = textStart + replace.length;
@@ -64,6 +64,10 @@ const updateNode = async (
     updates.push(new AddMark(MarkName.REPLACED_TEXT_MARK, markStart, markEnd));
   } else { /*AsyncNodeStatus.ERROR*/
     // replaces D2AN text with error message
+    // TODO: a better answer is to leave the replace token in place (i.e. leave the
+    //       text unchanged) and set some error state on the D2AN. This would allow
+    //       the User to deal with the error (e.g. retry) without having to manually
+    //       re-replace the text.
     updates.push(new InsertText(resultText, position + 1/*start of node*/, node.content.size));
   }
 
