@@ -45,7 +45,7 @@ export type ReplacedTextMarkMarkType = ProseMirrorMark<NotebookSchemaType> & { a
 export const isReplacedTextMarkMark = (mark: ProseMirrorMark<NotebookSchemaType>): mark is ReplacedTextMarkMarkType => mark.type.name === MarkName.REPLACED_TEXT_MARK;
 
 export const getReplacedTextMarkMarkType = (schema: NotebookSchemaType) => schema.marks[MarkName.REPLACED_TEXT_MARK];
-export const createReplacedTextMarkMark = (schema: NotebookSchemaType, attributes?: ReplacedTextMarkAttributes) => getReplacedTextMarkMarkType(schema).create(attributes);
+export const createReplacedTextMarkMark = (schema: NotebookSchemaType, attributes?: Partial<ReplacedTextMarkAttributes>) => getReplacedTextMarkMarkType(schema).create(attributes);
 
 // -- JSON Mark Type --------------------------------------------------------------
 export type ReplacedTextMarkJSONMarkType = JSONMark<ReplacedTextMarkAttributes> & { type: MarkName.REPLACED_TEXT_MARK; };

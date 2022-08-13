@@ -54,7 +54,7 @@ export type ParagraphNodeType = ProseMirrorNode<NotebookSchemaType> & { attrs: P
 export const isParagraphNode = (node: ProseMirrorNode<NotebookSchemaType>): node is ParagraphNodeType => node.type.name === NodeName.PARAGRAPH;
 
 export const getParagraphNodeType = (schema: NotebookSchemaType) => schema.nodes[NodeName.PARAGRAPH];
-export const createParagraphNode = (schema: NotebookSchemaType, attributes?: ParagraphAttributes, content?: ProseMirrorNodeContent, marks?: Mark<NotebookSchemaType>[]) =>
+export const createParagraphNode = (schema: NotebookSchemaType, attributes?: Partial<ParagraphAttributes>, content?: ProseMirrorNodeContent, marks?: Mark<NotebookSchemaType>[]) =>
   getParagraphNodeType(schema).create(attributes, content, marks);
 
 // -- JSON Node Type --------------------------------------------------------------

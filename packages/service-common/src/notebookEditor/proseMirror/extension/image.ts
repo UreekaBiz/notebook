@@ -53,7 +53,7 @@ export type ImageNodeType = ProseMirrorNode<NotebookSchemaType> & { attrs: Image
 export const isImageNode = (node: ProseMirrorNode<NotebookSchemaType>): node is ImageNodeType => node.type.name === NodeName.IMAGE;
 
 export const getImageNodeType = (schema: NotebookSchemaType) => schema.nodes[NodeName.IMAGE];
-export const createImageNode = (schema: NotebookSchemaType, attributes?: ImageAttributes, content?: ProseMirrorNodeContent, marks?: Mark<NotebookSchemaType>[]) =>
+export const createImageNode = (schema: NotebookSchemaType, attributes?: Partial<ImageAttributes>, content?: ProseMirrorNodeContent, marks?: Mark<NotebookSchemaType>[]) =>
   getImageNodeType(schema).create(attributes, content, marks);
 
 // -- JSON Node Type --------------------------------------------------------------

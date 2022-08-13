@@ -45,7 +45,7 @@ export type StrikethroughMarkType = ProseMirrorMark<NotebookSchemaType> & { attr
 export const isStrikethroughMark = (mark: ProseMirrorMark<NotebookSchemaType>): mark is StrikethroughMarkType => mark.type.name === MarkName.STRIKETHROUGH;
 
 export const getStrikethroughMarkType = (schema: NotebookSchemaType) => schema.marks[MarkName.STRIKETHROUGH];
-export const createStrikethroughMark = (schema: NotebookSchemaType, attributes?: StrikethroughAttributes) => getStrikethroughMarkType(schema).create(attributes);
+export const createStrikethroughMark = (schema: NotebookSchemaType, attributes?: Partial<StrikethroughAttributes>) => getStrikethroughMarkType(schema).create(attributes);
 
 // -- JSON Mark Type --------------------------------------------------------------
 export type StrikethroughJSONMarkType = JSONMark<StrikethroughAttributes> & { type: MarkName.STRIKETHROUGH; };

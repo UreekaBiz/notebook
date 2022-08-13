@@ -61,7 +61,7 @@ export type MarkHolderNodeType = ProseMirrorNode<NotebookSchemaType> & { attrs: 
 export const isMarkHolderNode = (node: ProseMirrorNode<NotebookSchemaType>): node is MarkHolderNodeType => node.type.name === NodeName.MARK_HOLDER;
 
 export const getMarkHolderNodeType = (schema: NotebookSchemaType) => schema.nodes[NodeName.MARK_HOLDER];
-export const createMarkHolderNode = (schema: NotebookSchemaType, attributes?: MarkHolderAttributes, content?: ProseMirrorNodeContent, marks?: Mark<NotebookSchemaType>[]) =>
+export const createMarkHolderNode = (schema: NotebookSchemaType, attributes?: Partial<MarkHolderAttributes>, content?: ProseMirrorNodeContent, marks?: Mark<NotebookSchemaType>[]) =>
   getMarkHolderNodeType(schema).create(attributes, content, marks);
 
 // -- JSON Node Type --------------------------------------------------------------

@@ -82,7 +82,7 @@ export type HeadingNodeType = ProseMirrorNode<NotebookSchemaType> & { attrs: Hea
 export const isHeadingNode = (node: ProseMirrorNode<NotebookSchemaType>): node is HeadingNodeType => node.type.name === NodeName.HEADING;
 
 export const getHeadingNodeType = (schema: NotebookSchemaType) => schema.nodes[NodeName.HEADING];
-export const createHeadingNode = (schema: NotebookSchemaType, attributes?: HeadingAttributes, content?: ProseMirrorNodeContent, marks?: Mark<NotebookSchemaType>[]) =>
+export const createHeadingNode = (schema: NotebookSchemaType, attributes?: Partial<HeadingAttributes>, content?: ProseMirrorNodeContent, marks?: Mark<NotebookSchemaType>[]) =>
   getHeadingNodeType(schema).create(attributes, content, marks);
 
 // -- JSON Node Type --------------------------------------------------------------
