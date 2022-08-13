@@ -39,9 +39,12 @@ const updateNode = async (
   status: AsyncNodeStatus.SUCCESS | AsyncNodeStatus.ERROR, resultText: string
 ) => {
   const { document, schemaVersion, versionIndex } = await getDocument(userId, notebookId);
-  const editorState = createEditorState(schemaVersion, document);
 
   // get the Demo 2 Async Node for the given Node Identifier
+  // FIXME: simply 'fix' findNodeById so that it takes 'document' rather than the
+  //        'too large' EditorState (i.e. limit functions to what they need rather
+  //        passing them the kitchen sink!!!)
+  const editorState = createEditorState(schemaVersion, document);
   const result = findNodeById(editorState, nodeId);
   if(!result) throw new ApplicationError('functions/not-found', `Cannot find Demo 2 Async Node (${nodeId}).`);
   const { node, position } = result;
