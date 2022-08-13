@@ -12,7 +12,7 @@ import { DocumentUpdate } from './api/type';
 // ********************************************************************************
 export const executeDemo2AsyncNode = async (userId: UserIdentifier, notebookId: NotebookIdentifier, nodeId: NodeIdentifier, content: string, replace: string) => {
   // simulate a long-running operation
-  let status: AsyncNodeStatus = AsyncNodeStatus.PROCESSING;
+  let status: AsyncNodeStatus.ERROR | AsyncNodeStatus.SUCCESS;
   let result: string;
   try {
     await sleep(3000/*3s*/);
