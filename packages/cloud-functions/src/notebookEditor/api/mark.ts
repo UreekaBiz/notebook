@@ -2,8 +2,8 @@ import { EditorState, Transaction } from 'prosemirror-state';
 
 import { createMark, MarkName } from '@ureeka-notebook/service-common';
 
-import { DocumentUpdate } from './type';
 import { ApplicationError } from '../../util/error';
+import { DocumentUpdate } from './type';
 
 // ********************************************************************************
 /** add the specified mark in the specified range
