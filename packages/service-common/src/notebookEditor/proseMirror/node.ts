@@ -73,6 +73,8 @@ export type NodeFound = { node: ProseMirrorNode; position: number; };
 export const getParentNode = (selection: Selection): ProseMirrorNode => selection.$anchor.parent;
 
 /** @returns the first Node (as a {@link NodeFound}) with the specified identifier */
+// FIXME: this is completely wrong!!! The boolean returned in the iterator determines
+//        if the Node is descended into or not. NOT the result of the search!!!
 export const findNodeById = (editorState: EditorState, nodeId: NodeIdentifier): NodeFound | null/*not found*/ => {
   let nodeFound: NodeFound | null/*not found*/ = null/*not found*/;
   editorState.doc.descendants((node, position) => {
