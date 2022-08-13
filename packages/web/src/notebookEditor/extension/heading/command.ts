@@ -27,7 +27,7 @@ export const setHeadingCommand = (attributes: { level: HeadingLevel; }) => ({ ed
   return chain()
         .setNode(NodeName.HEADING, attributes)
         .command(applyBoldToHeadingContent)
-        .command(setIdsToNewHeadings)
+        .command(setIdsToNewHeadings/*TODO: find a better way to address this issue once commands are standardized*/)
         .run();
 };
 
