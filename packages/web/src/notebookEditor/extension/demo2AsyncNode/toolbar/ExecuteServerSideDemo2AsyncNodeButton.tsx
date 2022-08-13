@@ -58,7 +58,7 @@ export const ExecuteServerSideDemo2AsyncNodeButton: React.FC<Props> = ({ editor,
 
   // == UI ========================================================================
   return (
-    <Tooltip label={disabled ? ''/*none*/ : 'Execute Demo 2 Async Node on the Server'} hasArrow>
+    <Tooltip label={disabled ? ''/*none*/ : 'Execute Remotely'} hasArrow>
       <IconButton
         isDisabled={status === 'loading' || disabled}
         icon={status === 'loading' ? <Spinner size='sm' /> : <FiPlay color='blue' fill='blue' size='16px' />}

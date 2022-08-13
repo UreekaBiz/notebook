@@ -28,7 +28,7 @@ export const ExecuteDemo2AsyncNodeButton: React.FC<Props> = ({ editor }) => {
                     (textContent.length < 1);
 
   return (
-    <Tooltip label={disabled ? ''/*none*/ : 'Execute Demo 2 Async Node Locally'} hasArrow>
+    <Tooltip label={disabled ? ''/*none*/ : 'Execute Locally'} hasArrow>
       <Box>
         <ExecuteAsyncNodeButton
           editor={editor}
