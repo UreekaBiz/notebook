@@ -38,7 +38,7 @@ const updateNode = async (
   notebookId: NotebookIdentifier, nodeId: NodeIdentifier, content: string, replace: string,
   status: AsyncNodeStatus.SUCCESS | AsyncNodeStatus.ERROR, resultText: string
 ) => {
-  const { document, schemaVersion } = await getDocument(userId, notebookId);
+  const { document, schemaVersion, versionIndex } = await getDocument(userId, notebookId);
   const editorState = createEditorState(schemaVersion, document);
 
   // get the Demo 2 Async Node for the given Node Identifier
@@ -72,5 +72,5 @@ const updateNode = async (
   }
 
   // update the identified Demo2AsyncNode with the result
-  await updateDocument(userId, notebookId, updates);
+  await updateDocument(userId, notebookId, updates, { versionIndex });
 };
