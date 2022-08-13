@@ -1,10 +1,13 @@
 import { customAlphabet } from 'nanoid';
 import { Fragment, Node as ProseMirrorNode, Schema } from 'prosemirror-model';
-import { EditorState, Selection, Transaction } from 'prosemirror-state';
+import { EditorState, Selection, TextSelection, Transaction } from 'prosemirror-state';
 
 import { Attributes, AttributeType } from './attribute';
+import { Command } from './command';
+import { createTextNode } from './extension/text';
 import { JSONMark } from './mark';
 import { NotebookSchemaType } from './schema';
+import { getBlockNodeRange } from './selection';
 import { mapOldStartAndOldEndThroughHistory } from './step';
 
 // ********************************************************************************
@@ -151,7 +154,23 @@ export const getNodesAffectedByStepMap = (transaction: Transaction, stepMapIndex
 // -- Creation --------------------------------------------------------------------
 /** Creates a {@link Fragment} with the content of the input Node plus the given {@link appendedNode} */
 export const createFragmentWithAppendedContent = (node: ProseMirrorNode, appendedNode: ProseMirrorNode) =>
-    node.content.append(Fragment.from(appendedNode));
+  node.content.append(Fragment.from(appendedNode));
+
+// -- Setter ----------------------------------------------------------------------
+/**
+ * Sets a Block Node across the range covered by the entirety
+ * of the current selection
+ */
+export const setBlockNodeAcrossNodes = (schema: NotebookSchemaType, blockNodeName: NodeName, attributes: Partial<Attributes>): Command => (tr, dispatch) => {
+  const { from, to } = getBlockNodeRange(tr.selection);
+  const textContent = tr.doc.textBetween(from, to, '\n'/*insert for every Block Node*/);
+
+  tr.setSelection(new TextSelection(tr.doc.resolve(from - 1/*account for start of parent at from*/), tr.doc.resolve(to)))
+    .replaceSelectionWith(schema.nodes[blockNodeName].create(attributes, createTextNode(schema, textContent)));
+
+  if(dispatch) dispatch(tr);
+  return true/*can be done*/;
+};
 
 // -- Transaction -----------------------------------------------------------------
 /**

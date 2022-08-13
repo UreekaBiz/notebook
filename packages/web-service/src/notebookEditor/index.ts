@@ -297,6 +297,7 @@ export {
   getParentNode,
   getNodesAffectedByStepMap,
   nodeToTagId,
+  setBlockNodeAcrossNodes,
   wereNodesAffectedByTransaction,
   NodeFound,
 
