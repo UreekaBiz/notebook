@@ -1,6 +1,6 @@
 import { logger } from 'firebase-functions';
 
-import { createEditorState, findNodeById, hashString, isDemo2AsyncNode, sleep, AsyncNodeStatus, MarkName, NodeIdentifier, NotebookIdentifier, UserIdentifier } from '@ureeka-notebook/service-common';
+import { findNodeById, hashString, isDemo2AsyncNode, sleep, AsyncNodeStatus, MarkName, NodeIdentifier, NotebookIdentifier, UserIdentifier } from '@ureeka-notebook/service-common';
 
 import { ApplicationError } from '../util/error';
 import { getDocument, updateDocument } from './api/api';
@@ -38,14 +38,10 @@ const updateNode = async (
   notebookId: NotebookIdentifier, nodeId: NodeIdentifier, content: string, replace: string,
   status: AsyncNodeStatus.SUCCESS | AsyncNodeStatus.ERROR, resultText: string
 ) => {
-  const { document, schemaVersion, versionIndex } = await getDocument(userId, notebookId);
+  const { document, versionIndex } = await getDocument(userId, notebookId);
 
-  // get the Demo 2 Async Node for the given Node Identifier
-  // FIXME: simply 'fix' findNodeById so that it takes 'document' rather than the
-  //        'too large' EditorState (i.e. limit functions to what they need rather
-  //        passing them the kitchen sink!!!)
-  const editorState = createEditorState(schemaVersion, document);
-  const result = findNodeById(editorState, nodeId);
+  // get the Demo 2 Async Node for the given Node Identifier to find its position
+  const result = findNodeById(document, nodeId);
   if(!result) throw new ApplicationError('functions/not-found', `Cannot find Demo 2 Async Node (${nodeId}).`);
   const { node, position } = result;
   if(!isDemo2AsyncNode(node)) throw new ApplicationError('functions/invalid-argument', `Node (${nodeId}) is not a Demo 2 Async Node.`);

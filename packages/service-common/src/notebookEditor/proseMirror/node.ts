@@ -1,9 +1,10 @@
 import { customAlphabet } from 'nanoid';
 import { Fragment, Node as ProseMirrorNode, Schema } from 'prosemirror-model';
-import { EditorState, Selection, TextSelection, Transaction } from 'prosemirror-state';
+import { Selection, TextSelection, Transaction } from 'prosemirror-state';
 
 import { Attributes, AttributeType } from './attribute';
 import { Command } from './command';
+import { DocumentNodeType } from './extension/document';
 import { createTextNode } from './extension/text';
 import { JSONMark } from './mark';
 import { NotebookSchemaType } from './schema';
@@ -76,16 +77,14 @@ export type NodeFound = { node: ProseMirrorNode; position: number; };
 export const getParentNode = (selection: Selection): ProseMirrorNode => selection.$anchor.parent;
 
 /** @returns the first Node (as a {@link NodeFound}) with the specified identifier */
-// FIXME: this is completely wrong!!! The boolean returned in the iterator determines
-//        if the Node is descended into or not. NOT the result of the search!!!
-export const findNodeById = (editorState: EditorState, nodeId: NodeIdentifier): NodeFound | null/*not found*/ => {
+export const findNodeById = (document: DocumentNodeType, nodeId: NodeIdentifier): NodeFound | null/*not found*/ => {
   let nodeFound: NodeFound | null/*not found*/ = null/*not found*/;
-  editorState.doc.descendants((node, position) => {
-    if(nodeFound) return false/*already found -- stop looking*/;
-    if(node.attrs[AttributeType.Id] !== nodeId) return/*doesn't match -- keep looking*/;
+  document.descendants((node, position) => {
+    if(nodeFound) return false/*don't bother to descend since already found*/;
+    if(node.attrs[AttributeType.Id] !== nodeId) return true/*not a match but descendants might be so descend*/;
 
     nodeFound = { node, position };
-    return false/*stop searching*/;
+    return false/*don't bother to descend since already found*/;
   });
   return nodeFound;
 };

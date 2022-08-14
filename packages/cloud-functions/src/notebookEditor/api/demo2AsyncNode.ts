@@ -13,7 +13,7 @@ export class Demo2AsyncNodeAttributeReplace implements DocumentUpdate {
   // == DocumentUpdate ============================================================
   public update(editorState: EditorState, tr: Transaction ) {
     // get the Demo 2 Async Node for the Node Identifier
-    const result = findNodeById(editorState, this.nodeId);
+    const result = findNodeById(editorState.doc, this.nodeId);
     if(!result) throw new ApplicationError('functions/not-found', `Cannot Replace Attributes in non-existing Demo 2 Async Node (${this.nodeId}).`);
     const { node, position } = result;
     if(!isDemo2AsyncNode(node)) throw new ApplicationError('functions/invalid-argument', `Node (${this.nodeId}) is not a Demo 2 Async Node.`);

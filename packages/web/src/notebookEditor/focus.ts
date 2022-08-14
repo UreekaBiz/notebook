@@ -16,7 +16,7 @@ export const focusEditor = (editor: Editor, focusedElementId: NodeIdentifier | u
     return/*nothing else to do*/;
   } /* else -- there is an Editor and the caller wants to focus a specific Element */
 
-  const focusedNodeObject = findNodeById(editor.state, focusedElementId);
+  const focusedNodeObject = findNodeById(editor.state.doc, focusedElementId);
   if(!focusedNodeObject) {
     editor.commands.focus('start')/*set focus to start since there's no other option*/;
     return/*node with given id does not exist anymore / yet*/;
