@@ -52,24 +52,24 @@ const codeBlocksOrHeadingsChanged = (transaction: Transaction) => {
     maps[stepMapIndex].forEach((unmappedOldStart, unmappedOldEnd) => {
       if(shouldUpdate) return/*something changed*/;
 
-      const { oldNodeObjs, newNodeObjs } = getNodesAffectedByStepMap(transaction, stepMapIndex, unmappedOldStart, unmappedOldEnd, codeBlockHeadingNodeNames);
+      const { oldNodePositions, newNodePositions } = getNodesAffectedByStepMap(transaction, stepMapIndex, unmappedOldStart, unmappedOldEnd, codeBlockHeadingNodeNames);
 
       // -- check for same Node length --------------------------------------------
-      if(oldNodeObjs.length !== newNodeObjs.length) {
+      if(oldNodePositions.length !== newNodePositions.length) {
         shouldUpdate = true/*Heading or CodeBlock was added or removed*/;
         return/*something changed*/;
       } /* else -- same number of Nodes */
 
-      for(let i=0; i<oldNodeObjs.length; i++) {
+      for(let i=0; i<oldNodePositions.length; i++) {
         // -- check for same Node types -------------------------------------------
-        if(oldNodeObjs[i].node.type.name !== newNodeObjs[i].node.type.name) {
+        if(oldNodePositions[i].node.type.name !== newNodePositions[i].node.type.name) {
           shouldUpdate = true/*Heading or CodeBlock was added or removed*/;
           return/*something changed*/;
         } /* else - same type, keep checking */
 
         // -- check for same Heading levels ---------------------------------------
-        if(isHeadingNode(oldNodeObjs[i].node) && isHeadingNode(newNodeObjs[i].node)) {
-          if(newNodeObjs[i].node.attrs[AttributeType.Level] !== oldNodeObjs[i].node.attrs[AttributeType.Level]) {
+        if(isHeadingNode(oldNodePositions[i].node) && isHeadingNode(newNodePositions[i].node)) {
+          if(newNodePositions[i].node.attrs[AttributeType.Level] !== oldNodePositions[i].node.attrs[AttributeType.Level]) {
             shouldUpdate = true/*Heading level changed*/;
             return/*something changed*/;
           } /* else -- same level, keep checking */

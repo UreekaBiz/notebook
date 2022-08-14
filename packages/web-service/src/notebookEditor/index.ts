@@ -291,7 +291,7 @@ export {
   extractDocumentName,
 
   // .. Node .....................................................................
-  computeRemovedNodeObjs,
+  computeRemovedNodePositions,
   findContentDifferencePositions,
   findNodeById,
   getParentNode,
@@ -299,7 +299,7 @@ export {
   nodeToTagId,
   setBlockNodeAcrossNodes,
   wereNodesAffectedByTransaction,
-  NodeFound,
+  NodePosition,
 
   // .. Selection .................................................................
   getAllAscendantsFromSelection,

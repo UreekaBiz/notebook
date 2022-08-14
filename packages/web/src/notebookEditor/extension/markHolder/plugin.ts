@@ -39,19 +39,19 @@ export const MarkHolderPlugin = () => new Plugin<NotebookSchemaType>({
     for(let i=0;i<transactions.length;i++) {
       const { maps } = transactions[i].mapping;
 
-      // Iterate over all maps in the Transaction
-      for(let stepMapIndex=0;stepMapIndex<maps.length;stepMapIndex++) {
+      // iterate over all maps in the Transaction
+      for(let stepMapIndex=0; stepMapIndex<maps.length; stepMapIndex++) {
         // (SEE: NOTE above)
         maps[stepMapIndex].forEach((unmappedOldStart, unmappedOldEnd) => {
-          const { oldNodeObjs, newNodeObjs } = getNodesAffectedByStepMap(transactions[i], stepMapIndex, unmappedOldStart, unmappedOldEnd, blockNodesThatPreserveMarks);
+          const { oldNodePositions, newNodePositions } = getNodesAffectedByStepMap(transactions[i], stepMapIndex, unmappedOldStart, unmappedOldEnd, blockNodesThatPreserveMarks);
 
-          if(oldNodeObjs.length < newNodeObjs.length) return/*Nodes were added, they should not have MarkHolders*/;
+          if(oldNodePositions.length < newNodePositions.length) return/*Nodes were added, they should not have MarkHolders*/;
           /* else -- Nodes were removed or modified, see if MarkHolders must be added*/
 
           const { storedMarks } = transactions[i];
-          for(let j=0;j<newNodeObjs.length;j++) {
-            if(newNodeObjs[j].node.content.size > 0/*has content*/ || !storedMarks /*no storedMarks*/) continue/*nothing to do*/;
-            tr.insert(newNodeObjs[j].position + 1/*inside the parent*/, createMarkHolderNode(newState.schema, { storedMarks: JSON.stringify(storedMarks) }));
+          for(let j=0; j<newNodePositions.length; j++) {
+            if(newNodePositions[j].node.content.size > 0/*has content*/ || !storedMarks /*no storedMarks*/) continue/*nothing to do*/;
+            tr.insert(newNodePositions[j].position + 1/*inside the parent*/, createMarkHolderNode(newState.schema, { storedMarks: JSON.stringify(storedMarks) }));
           }
         });
       }

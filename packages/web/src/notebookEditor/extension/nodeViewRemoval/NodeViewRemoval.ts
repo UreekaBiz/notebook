@@ -1,7 +1,7 @@
 import { Extension } from '@tiptap/core';
 import { Transaction } from 'prosemirror-state';
 
-import { computeRemovedNodeObjs, getNodesAffectedByStepMap, AttributeType, NotebookSchemaType, NodeFound, NodeName } from '@ureeka-notebook/web-service';
+import { computeRemovedNodePositions, getNodesAffectedByStepMap, AttributeType, NotebookSchemaType, NodePosition, NodeName } from '@ureeka-notebook/web-service';
 
 import { ExtensionName, ExtensionPriority, NoOptions, NoStorage } from 'notebookEditor/model/type';
 
@@ -18,15 +18,15 @@ export const NodeViewRemoval = Extension.create<NoOptions, NoStorage>({
 
   // -- Transaction ---------------------------------------------------------------
   onTransaction({ transaction }) {
-    const removedNodeObjs = getRemovedNodes(transaction);
-    removedNodeObjs.forEach(removedObj => this.editor.storage[removedObj.node.type.name].removeNodeView(removedObj.node.attrs[AttributeType.Id]));
+    const removedNodePositions = getRemovedNodes(transaction);
+    removedNodePositions.forEach(removedObj => this.editor.storage[removedObj.node.type.name].removeNodeView(removedObj.node.attrs[AttributeType.Id]));
   },
 });
 
 // == Util ========================================================================
 const getRemovedNodes = (transaction: Transaction<NotebookSchemaType>) => {
   const { maps } = transaction.mapping;
-  let removedNodeObjs: NodeFound[] = [/*empty by default*/];
+  let removedNodePositions: NodePosition[] = [/*empty by default*/];
   // NOTE: not using 'wereNodesAffectedByTransaction' since the required check is
   //       for nodes that were removed by the transaction
   // NOTE: Since certain operations (e.g. dragging and dropping a node) occur
@@ -42,9 +42,9 @@ const getRemovedNodes = (transaction: Transaction<NotebookSchemaType>) => {
   //       as this will depend on their specific intent
   for(let stepMapIndex=0; stepMapIndex < maps.length; stepMapIndex++) {
     maps[stepMapIndex].forEach((unmappedOldStart, unmappedOldEnd) => {
-      const { oldNodeObjs, newNodeObjs } = getNodesAffectedByStepMap(transaction, stepMapIndex, unmappedOldStart, unmappedOldEnd, nodesWithNodeView);
-      removedNodeObjs = computeRemovedNodeObjs(oldNodeObjs, newNodeObjs);
+      const { oldNodePositions, newNodePositions } = getNodesAffectedByStepMap(transaction, stepMapIndex, unmappedOldStart, unmappedOldEnd, nodesWithNodeView);
+      removedNodePositions = computeRemovedNodePositions(oldNodePositions, newNodePositions);
     });
   }
-  return removedNodeObjs;
+  return removedNodePositions;
 };

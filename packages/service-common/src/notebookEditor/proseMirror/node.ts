@@ -69,16 +69,15 @@ export const contentToJSONNode = (content: NodeContent) => JSON.parse(content) a
 export const contentToNode = (schema: Schema, content?: NodeContent) => content ? ProseMirrorNode.fromJSON(schema, contentToJSONNode(content)) : undefined/*none*/;
 
 // == Manipulation ================================================================
-// -- Search ----------------------------------------------------------------------
-// FIXME: rename to 'NodePosition'
-export type NodeFound = { node: ProseMirrorNode; position: number; };
-
 /** @returns the parent node of a {@link Selection} */
 export const getParentNode = (selection: Selection): ProseMirrorNode => selection.$anchor.parent;
 
-/** @returns the first Node (as a {@link NodeFound}) with the specified identifier */
-export const findNodeById = (document: DocumentNodeType, nodeId: NodeIdentifier): NodeFound | null/*not found*/ => {
-  let nodeFound: NodeFound | null/*not found*/ = null/*not found*/;
+// -- Search ----------------------------------------------------------------------
+export type NodePosition = Readonly<{ node: ProseMirrorNode; position: number; }>;
+
+/** @returns the first Node (as a {@link NodePosition}) with the specified identifier */
+export const findNodeById = (document: DocumentNodeType, nodeId: NodeIdentifier): NodePosition | null/*not found*/ => {
+  let nodeFound: NodePosition | null/*not found*/ = null/*not found*/;
   document.descendants((node, position) => {
     if(nodeFound) return false/*don't bother to descend since already found*/;
     if(node.attrs[AttributeType.Id] !== nodeId) return true/*not a match but descendants might be so descend*/;
@@ -120,26 +119,24 @@ export const findNodeById = (document: DocumentNodeType, nodeId: NodeIdentifier)
  *          of the Transaction before the steps were applied, and the Nodes of the
  *          specified types that exist after the Steps have been applied
  */
-// NOTE: Separated into its own method since all logic that needs to check whether
+// NOTE: separated into its own method since all logic that needs to check whether
 //       some node was deleted in a transaction uses this approach
 export const getNodesAffectedByStepMap = (transaction: Transaction, stepMapIndex: number, unmappedOldStart: number, unmappedOldEnd: number, nodeNames: Set<NodeName>) => {
   // map to get the oldStart, oldEnd that account for history
-  const { mappedOldStart, mappedOldEnd, mappedNewStart, mappedNewEnd } = mapOldStartAndOldEndThroughHistory(transaction, stepMapIndex, unmappedOldStart, unmappedOldEnd),
+  const { mappedOldStart, mappedOldEnd, mappedNewStart, mappedNewEnd } = mapOldStartAndOldEndThroughHistory(transaction, stepMapIndex, unmappedOldStart, unmappedOldEnd);
 
-  oldNodeObjs = getNodesBetween(transaction.before, mappedOldStart, mappedOldEnd, nodeNames),
-  newNodeObjs = getNodesBetween(transaction.doc, mappedNewStart, mappedNewEnd, nodeNames);
+  const oldNodePositions = getNodesBetween(transaction.before, mappedOldStart, mappedOldEnd, nodeNames),
+        newNodePositions = getNodesBetween(transaction.doc, mappedNewStart, mappedNewEnd, nodeNames);
 
-  return { oldNodeObjs, newNodeObjs };
+  return { oldNodePositions, newNodePositions };
 };
 
-/**
- * Creates and returns an array of {@link NodeFound} by looking at the Nodes between
- * {@link #from} and {@link #to} in the given {@link #rootNode}, adding those Nodes
- * whose type name is included in the given {@link #nodeNames} set. Very similar to
- * doc.nodesBetween, but specifically for {@link NodeFound} objects.
- */
- export const getNodesBetween = (rootNode: ProseMirrorNode, from: number, to: number, nodeNames: Set<NodeName>) => {
-  const nodesOfType: NodeFound[] = [];
+// Creates and returns an array of {@link NodePosition}s by looking at the Nodes between
+// {@link #from} and {@link #to} in the given {@link #rootNode}, adding those Nodes
+// whose type name is included in the given {@link #nodeNames} set. Very similar to
+// doc.nodesBetween, but specifically for {@link NodePosition} objects.
+const getNodesBetween = (rootNode: ProseMirrorNode, from: number, to: number, nodeNames: Set<NodeName>) => {
+  const nodesOfType: NodePosition[] = [];
   rootNode.nodesBetween(from, to, (node, position) => {
     const nodeName = getNodeName(node);
     if(nodeNames.has(nodeName)) {
@@ -175,7 +172,7 @@ export const setBlockNodeAcrossNodes = (schema: NotebookSchemaType, blockNodeNam
 /**
  * @param transaction The transaction that will be checked
  * @param nodeNameSet The set of node names that will be looked for in the
- *        {@link NodeFound} array of Nodes affected by the Transaction's stepMaps
+ *        {@link NodePosition} array of Nodes affected by the Transaction's stepMaps
  * @returns `true` if any of the stepMaps in the Transaction modified Nodes whose
  *          type name is included in the given nodeNameSet. `false` otherwise
  */
@@ -189,9 +186,9 @@ export const wereNodesAffectedByTransaction = (transaction: Transaction, nodeNam
     maps[stepMapIndex].forEach((unmappedOldStart, unmappedOldEnd) => {
       if(nodesOfTypeAffected) return/*already know nodes were affected*/;
 
-      const { oldNodeObjs, newNodeObjs } = getNodesAffectedByStepMap(transaction, stepMapIndex, unmappedOldStart, unmappedOldEnd, nodeNameSet);
-      const oldNodesAffected = nodeFoundArrayContainsNodesOfType(oldNodeObjs, nodeNameSet),
-        newNodesAffected = nodeFoundArrayContainsNodesOfType(newNodeObjs, nodeNameSet);
+      const { oldNodePositions, newNodePositions } = getNodesAffectedByStepMap(transaction, stepMapIndex, unmappedOldStart, unmappedOldEnd, nodeNameSet);
+      const oldNodesAffected = nodeFoundArrayContainsNodesOfType(oldNodePositions, nodeNameSet),
+            newNodesAffected = nodeFoundArrayContainsNodesOfType(newNodePositions, nodeNameSet);
 
       if((oldNodesAffected || newNodesAffected)) {
         nodesOfTypeAffected = true;
@@ -204,19 +201,19 @@ export const wereNodesAffectedByTransaction = (transaction: Transaction, nodeNam
 
   return false/*nodes were not affected*/;
 };
-const nodeFoundArrayContainsNodesOfType = (nodeObjs: NodeFound[], nodeNameSet: Set<NodeName>) =>
+const nodeFoundArrayContainsNodesOfType = (nodeObjs: NodePosition[], nodeNameSet: Set<NodeName>) =>
   nodeObjs.some(({ node }) => nodeNameSet.has(node.type.name as NodeName/*by definition*/));
 
 /**
  * @param transaction The transaction whose stepMaps will be looked through
  * @param nodeNameSet The set of nodeNames that will be looked for deletions in
  *        the Transaction's stepMaps
- * @returns an array of {@link NodeFound} with the Nodes of the specified types
+ * @returns an array of {@link NodePosition} with the Nodes of the specified types
  *          that were deleted by the Transaction if any
  */
 export const getRemovedNodesByTransaction = (transaction: Transaction, nodeNameSet: Set<NodeName>) => {
   const { maps } = transaction.mapping;
-  let removedNodeObjs: NodeFound[] = [/*empty by default*/];
+  let removedNodeObjs: NodePosition[] = [/*empty by default*/];
   // NOTE: since certain operations (e.g. dragging and dropping a Node) occur
   //       throughout more than one stepMapIndex, returning as soon as possible
   //       from this method can lead to incorrect behavior (e.g. the dragged Node's
@@ -230,15 +227,15 @@ export const getRemovedNodesByTransaction = (transaction: Transaction, nodeNameS
   //       their specific intent
   for(let stepMapIndex=0; stepMapIndex < maps.length; stepMapIndex++) {
     maps[stepMapIndex].forEach((unmappedOldStart, unmappedOldEnd) => {
-      const { oldNodeObjs, newNodeObjs } = getNodesAffectedByStepMap(transaction, stepMapIndex, unmappedOldStart, unmappedOldEnd, nodeNameSet);
-      removedNodeObjs = computeRemovedNodeObjs(oldNodeObjs, newNodeObjs);
+      const { oldNodePositions, newNodePositions } = getNodesAffectedByStepMap(transaction, stepMapIndex, unmappedOldStart, unmappedOldEnd, nodeNameSet);
+      removedNodeObjs = computeRemovedNodePositions(oldNodePositions, newNodePositions);
     });
   }
   return removedNodeObjs;
 };
 
-/** Get Nodes that are no longer present in the newArray */
-export const computeRemovedNodeObjs = (oldArray: NodeFound[], newArray: NodeFound[]) =>
+/** Get Node-Positions that are no longer present in the newArray */
+export const computeRemovedNodePositions = (oldArray: NodePosition[], newArray: NodePosition[]) =>
   oldArray.filter(oldNodeObj => !newArray.some(newNodeObj => newNodeObj.node.attrs[AttributeType.Id] === oldNodeObj.node.attrs[AttributeType.Id]));
 
 // == Unique Node Id ==============================================================
