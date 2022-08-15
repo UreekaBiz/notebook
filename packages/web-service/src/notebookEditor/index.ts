@@ -231,8 +231,11 @@ export {
 
   // == HTML Renderer =============================================================
   ACTIONABLE_NODE,
-  DATA_MARK_TYPE,
+  createNodeDataAttribute,
   DATA_NODE_TYPE,
+  createNodeDataTypeAttribute,
+  DATA_MARK_TYPE,
+  createMarkDataTypeAttribute,
 
   convertContentToHTML,
   getRenderTag,

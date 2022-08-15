@@ -68,10 +68,12 @@ img.ProseMirror-selectednode/*target inline nodes with content (e.g. asyncNodes)
   width: 100%;
   overflow: auto;
 }
-
 [data-node-type="codeBlock"] > div > p{
   min-height: 1.5em;
   font-size: 16px;
+}
+[data-node-type="codeBlock"][data-attribute-type="Code"] {
+  font-family: 'Courier New', monospace;
 }
 
 /* .. CodeBlockReference ....................................................... */

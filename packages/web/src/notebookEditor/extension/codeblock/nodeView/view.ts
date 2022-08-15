@@ -1,6 +1,6 @@
 import { Editor } from '@tiptap/core';
 
-import { getPosType, getRenderAttributes, getWrapStyles, AttributeType, CodeBlockNodeRendererSpec, CodeBlockNodeSpec, CodeBlockNodeType,  NodeName, DATA_VISUAL_ID } from '@ureeka-notebook/web-service';
+import { createNodeDataAttribute, getPosType, getRenderAttributes, getWrapStyles, AttributeType, CodeBlockNodeRendererSpec, CodeBlockNodeSpec, CodeBlockNodeType, CodeBlockType,  NodeName, DATA_VISUAL_ID } from '@ureeka-notebook/web-service';
 
 import { AbstractNodeView } from 'notebookEditor/model/AbstractNodeView';
 
@@ -50,6 +50,7 @@ export class CodeBlockView extends AbstractNodeView<CodeBlockNodeType, CodeBlock
   public updateView() {
     const { attrs } = this.node;
     const id = attrs[AttributeType.Id],
+          type = attrs[AttributeType.Type] ?? CodeBlockType.Code/*default*/,
           wrap = attrs[AttributeType.Wrap] ?? false/*default*/;
 
     // Update styles
@@ -63,5 +64,6 @@ export class CodeBlockView extends AbstractNodeView<CodeBlockNodeType, CodeBlock
 
     const visualId = this.storage.getVisualId(id);
     this.dom.setAttribute(DATA_VISUAL_ID, visualId);
+    this.dom.setAttribute(createNodeDataAttribute(AttributeType.Type), type);
   }
 }
