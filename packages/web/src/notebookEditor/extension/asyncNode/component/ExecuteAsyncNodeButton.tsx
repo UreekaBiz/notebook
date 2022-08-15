@@ -1,4 +1,4 @@
-import { useToast } from '@chakra-ui/react';
+import { useToast, Spinner } from '@chakra-ui/react';
 import { Editor } from '@tiptap/core';
 import { useCallback } from 'react';
 import { FiPlay } from 'react-icons/fi';
@@ -39,6 +39,10 @@ export const ExecuteAsyncNodeButton: React.FC<Props> = ({ editor, asyncNodeView,
 
   // == UI ========================================================================
   return (
-    <RightContentButton isDisabled={status === 'loading' || disabled} icon={<FiPlay size='16px' />} clickCallback={executeAsyncNode}/>
+    <RightContentButton
+      isDisabled={status === 'loading' || disabled}
+      icon={(status === 'loading' || asyncNodeView.nodeModel.getPerformingAsyncOperation()) ? <Spinner size='sm' /> : <FiPlay size='16px' />}
+      clickCallback={executeAsyncNode}
+    />
   );
 };

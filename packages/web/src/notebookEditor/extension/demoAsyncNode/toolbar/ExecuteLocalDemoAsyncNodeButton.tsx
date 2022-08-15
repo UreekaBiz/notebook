@@ -24,9 +24,10 @@ export const ExecuteLocalDemoAsyncNodeButton: React.FC<Props> = ({ editor }) => 
         demoAsyncNodeView = demoAsyncNodeViewStorage.getNodeView(id);
   if(!demoAsyncNodeView) return null/*nothing to render -- silently fail*/;
 
-  const disabled = codeBlockReferences.length < 1
-                || codeBlockReferences.some((reference) => !visualIdFromCodeBlockReference(editor, reference))
-                || demoAsyncNodeView.nodeModel.getPerformingAsyncOperation();
+  const performingAsyncOperation = demoAsyncNodeView.nodeModel.getPerformingAsyncOperation();
+  const disabled = codeBlockReferences.length < 1 ||
+                   codeBlockReferences.some((reference) => !visualIdFromCodeBlockReference(editor, reference)) ||
+                   performingAsyncOperation;
 
   return (
     <Tooltip label={disabled ? ''/*none*/ : 'Execute Locally'} hasArrow>

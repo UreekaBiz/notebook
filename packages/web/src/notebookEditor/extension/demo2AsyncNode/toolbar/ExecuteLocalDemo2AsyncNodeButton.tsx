@@ -23,9 +23,11 @@ export const ExecuteLocalDemo2AsyncNodeButton: React.FC<Props> = ({ editor }) =>
 
   const { textContent } = demo2AsyncNodeView.node;
   const { textToReplace } = demo2AsyncNodeView.node.attrs;
+  const performingAsyncOperation = demo2AsyncNodeView.nodeModel.getPerformingAsyncOperation();
   const disabled = !(textToReplace && textToReplace.length > 0) ||
                     !(textContent.includes(textToReplace)) ||
-                    (textContent.length < 1);
+                    (textContent.length < 1) ||
+                    performingAsyncOperation;
 
   return (
     <Tooltip label={disabled ? ''/*none*/ : 'Execute Locally'} hasArrow>
