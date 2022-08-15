@@ -1,10 +1,16 @@
-import { createEditorState, generateClientIdentifier, generateUuid, sleep, DocumentNodeType, NotebookIdentifier, NotebookSchemaVersion, ShareRole, UserIdentifier } from '@ureeka-notebook/service-common';
+import { logger } from 'firebase-functions';
+import * as collab from 'prosemirror-collab';
+import { EditorState } from 'prosemirror-state';
+import { Step as ProseMirrorStep } from 'prosemirror-transform';
 
+import { generateClientIdentifier, generateUuid, getSchema, sleep, DocumentNodeType, NotebookIdentifier, NotebookSchemaVersion, ShareRole, UserIdentifier, contentToJSONStep } from '@ureeka-notebook/service-common';
+
+import { getEnv } from '../../util/environment';
 import { firestore } from '../../firebase';
 import { getNotebook } from '../../notebook/notebook';
 import { ApplicationError } from '../../util/error';
 import { getLatestDocument } from '../document';
-import { writeVersions } from '../version';
+import { getVersionsFromIndex, writeVersions } from '../version';
 import { DocumentUpdate } from './type';
 
 // the API for server-side retrieving and modifying Notebooks
@@ -15,7 +21,10 @@ type CollaborationDelay = Readonly<{
   /** time in millis to delay before writing. No delay if <= 0 */
   writeDelayMs: number;
 }>;
-const collaborationDelay: CollaborationDelay = { readDelayMs: 2000, writeDelayMs: 2000 }/*FIXME: make configurable*/;
+const collaborationDelay: CollaborationDelay = { readDelayMs: 5000, writeDelayMs: 5000 }/*FIXME: make configurable*/;
+
+// --------------------------------------------------------------------------------
+const MAX_RETRIES = Math.max(1, Number(getEnv('NOTEBOOK_UPDATE_DOCUMENT_MAX_ATTEMPTS', '5'/*T&E*/)));
 
 // ********************************************************************************
 // == Get =========================================================================
@@ -78,36 +87,46 @@ export const updateDocument = async (userId: UserIdentifier, notebookId: Noteboo
       // get the Notebook and latest Document ensuring they match the User's requests
       if(collaborationDelay.readDelayMs > 0) await sleep(collaborationDelay.readDelayMs);
       const notebook = await getNotebook(transaction, userId, notebookId, ShareRole.Editor/*by definition*/, `update`)/*throws on error*/;
-      const schemaVersion = notebook.schemaVersion/*for convenience*/;
+      const schemaVersion = notebook.schemaVersion/*for convenience*/,
+            schema = getSchema(schemaVersion);
       if(options?.schemaVersion && schemaVersion !== options.schemaVersion) throw new ApplicationError('functions/aborted', `Notebook (${notebookId}) Schema Version does not match requested version (${schemaVersion} !== ${options?.schemaVersion}) for User (${userId}).`);
-      const { latestIndex, document } = await getLatestDocument(transaction, userId, schemaVersion, notebookId)/*throws on error*/;
+      const { latestIndex, document: doc } = await getLatestDocument(transaction, userId, schemaVersion, notebookId)/*throws on error*/;
       if(options?.versionIndex && latestIndex !== options.versionIndex) throw new ApplicationError('functions/aborted', `Notebook (${notebookId}) Version does not match requested version (${latestIndex} !== ${options?.versionIndex}) for User (${userId}).`);
+      logger.debug(`Read latest Version (${latestIndex}) for Notebook (${notebookId}) for User (${userId})`);
 
-      // execute the updates against the EditorState
-      let editorState = createEditorState(schemaVersion, document);
+      // establish an Editor State associated with Collaboration for the Document
+      let editorState = EditorState.create({ schema, doc, plugins: [collab.collab({ clientID: clientId, version: latestIndex })] });
 
-      // starts a new transaction that will be transformed by all the updates.
-      // NOTE: this transaction must maintain the reference between calls to
-      //       the DocumentUpdate functions so the steps and the resulting
-      //       value is preserved.
-      const tr = editorState.tr/*`get` method that creates new transaction*/;
+      // execute the updates against the Editor State
+      // NOTE: the collab plugin maintains the set of Steps that have been applied
       updates.forEach(update => {
-        // creates an editor state based on the initial state applying the
-        // transaction up until this point. This is needed to do this way to
-        // preserve the reference to the transaction while still having access to
-        // the up to date state.
-        const currentState = editorState.apply(tr);
-        update.update(currentState, tr);
+        // each update is in a separate Transaction which is then applied to update
+        // the Editor State
+        const tr = editorState.tr/*creates new transaction from the Editor State*/;
+          update.update(editorState, tr);
+        editorState = editorState.apply(tr);
       });
 
-      // write the Versions from the Steps generated from the Document Updates
-      if(collaborationDelay.writeDelayMs > 0) await sleep(collaborationDelay.writeDelayMs);
-      await writeVersions(
-        transaction,
-        userId, clientId,
-        schemaVersion, notebookId,
-        latestIndex + 1/*next Version*/, tr.steps
-      );
+      // write the Versions from the Steps generated from the updates
+      for(let i=0; i<MAX_RETRIES; i++) {
+        const sendableStep = collab.sendableSteps(editorState);
+        if(!sendableStep || sendableStep.steps.length < 1) { logger.warn(`Expected ProseMirror Steps but found none for Notebook (${notebookId}).`); return/*nothing to do*/; }
+
+        // NOTE: doesn't batch-write Steps since all-or-nothing (by contract)
+        if(collaborationDelay.writeDelayMs > 0) await sleep(collaborationDelay.writeDelayMs);
+        const result = await writeVersions(transaction, userId, clientId, schemaVersion, notebookId, latestIndex + 1/*next Version*/, sendableStep.steps);
+        if(result === true) {
+          logger.debug(`Wrote Notebook Versions from ${latestIndex + 1} to ${latestIndex + sendableStep.steps.length} for Notebook (${notebookId}).`);
+          return/*Steps written successfully so done*/;
+        } /* else -- newer Versions exist */
+
+        // there were newer Versions so read, rebase and retry
+        logger.debug(`Could not write Notebook Versions starting at index ${latestIndex + 1} for Notebook (${notebookId}). Must read and try again.`);
+        const versions = await getVersionsFromIndex(transaction, notebookId, latestIndex);
+        const clientIds = versions.map(({ clientId }) => clientId);
+        const proseMirrorSteps = versions.map(({ content }) => ProseMirrorStep.fromJSON(schema, contentToJSONStep(content)));
+        collab.receiveTransaction(editorState, proseMirrorSteps, clientIds, { mapSelectionBackward: true });
+      }
     });
   } catch(error) {
     if(error instanceof ApplicationError) throw error;
