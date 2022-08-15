@@ -72,6 +72,8 @@ const updateNode = async (
   }
 
   // update the identified Demo2AsyncNode with the result
+  // NOTE: no Update Options are specified. The API will rebase and retry if the
+  //       Document changed from the retrieve above
   logger.debug(`Updating Node (${nodeId}) in Notebook (${notebookId}) with Status (${status}) and Result (${resultText}).`);
   await editorApi.updateDocument(userId, notebookId, updates);
 };
