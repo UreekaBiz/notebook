@@ -54,7 +54,7 @@ export const ExecuteButtons: React.FC<Props> = ({ editor }) => {
       log.error(`Error ocurred while executing Demo Async Node (${id}) in Notebook (${notebookId})`, error);
       if(!isMounted()) return/*nothing to do*/;
       toast({
-        title: ' Error ocurred while executing Demo Async cNode',
+        title: ' Error ocurred while executing Demo Async Node',
         status: 'error',
       });
     } finally {
