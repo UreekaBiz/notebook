@@ -1,4 +1,4 @@
-import { Avatar, Button, Menu, MenuButton, MenuDivider, MenuItem, MenuList } from '@chakra-ui/react';
+import { Button, Menu, MenuButton, MenuDivider, MenuItem, MenuList } from '@chakra-ui/react';
 import Link from 'next/link';
 import { AiOutlineFileText } from 'react-icons/ai';
 import { BiHomeAlt, BiLogOut } from 'react-icons/bi';
@@ -9,6 +9,7 @@ import { getEnvBoolean, isLoggedOut } from '@ureeka-notebook/web-service';
 import { useAuthedUser } from 'authUser/hook/useAuthedUser';
 import { useRouter } from 'next/router';
 import { coreRoutes } from 'shared/routes';
+import { UserProfileAvatar } from 'user/component/UserProfileAvatar';
 import { getPrivateDisplayName } from 'user/util';
 
 // displays the User's avatar and menu (ala a 'hamburger')
@@ -59,14 +60,16 @@ export const AuthAvatar: React.FC<Props> = ({ avatarSize, buttonSize, showLogIn 
   // ..............................................................................
   return (
     <Menu computePositionOnMount/**prevents sideways overflow in parent container */>
-      <MenuButton
-        as={Avatar}
-        name={getPrivateDisplayName(authedUser.profilePrivate)}
-        src={authedUser.profilePrivate.profileImageUrl}
-        size={avatarSize}
-        marginLeft={4}
-        _hover={{ cursor: 'pointer' }}
-      />
+      <MenuButton name={getPrivateDisplayName(authedUser.profilePrivate)}>
+        <UserProfileAvatar
+          userId={authedUser.authedUser.userId}
+          userPrivateProfile={authedUser.profilePrivate}
+          width='32px'
+          height='32px'
+          borderRadius='32px'
+          _hover={{ cursor: 'pointer' }}
+        />
+      </MenuButton>
       {/* FIXME: make that it so that options can be a prop from the component? */}
       <MenuList>
         <MenuItem icon={<BiHomeAlt />} onClick={handleHomeClick}>Home</MenuItem>

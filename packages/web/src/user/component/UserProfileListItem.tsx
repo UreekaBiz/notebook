@@ -1,4 +1,4 @@
-import { Box, Flex, Image } from '@chakra-ui/react';
+import { Box, Flex } from '@chakra-ui/react';
 import { useEffect, useState } from 'react';
 
 import { getLogger, ApplicationError, Logger, UserIdentifier, UserProfilePublic_Storage, UserProfileService } from '@ureeka-notebook/web-service';
@@ -6,6 +6,8 @@ import { getLogger, ApplicationError, Logger, UserIdentifier, UserProfilePublic_
 import { useAuthedUser } from 'authUser/hook/useAuthedUser';
 import { useAsyncStatus, useIsMounted } from 'shared/hook';
 import { getPublicDisplayName } from 'user/util';
+
+import { UserProfileAvatar } from './UserProfileAvatar';
 
 const log = getLogger(Logger.UTIL);
 
@@ -66,13 +68,13 @@ export const UserProfileListItem: React.FC<Props> = ({ userId, showYouLabel = tr
   return (
     <Flex alignItems='center' justifyContent='space-between' width='full'>
       <Box marginRight={4}>
-        {userProfilePublic.profileImageUrl ?
-          <Image
-            src={userProfilePublic.profileImageUrl}
-            width='40px'
-            height='40px'
-            borderRadius={50}
-          /> : null}
+        <UserProfileAvatar
+          userId={userId}
+          userPublicProfile={userProfilePublic}
+          width='40px'
+          height='40px'
+          borderRadius={50}
+        />
       </Box>
       <Box flex='1 1'/*span remaining space*/ marginRight={4} overflow='hidden' whiteSpace='nowrap'>
         <Box marginBottom='-6px' fontSize={16} fontWeight='500'>
