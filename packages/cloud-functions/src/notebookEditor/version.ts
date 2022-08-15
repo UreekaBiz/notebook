@@ -5,7 +5,6 @@ import { Step as ProseMirrorStep } from 'prosemirror-transform';
 import { generateNotebookVersionIdentifier, ClientIdentifier, NotebookIdentifier, NotebookSchemaVersion, NotebookVersion_Storage, NotebookVersion_Write, UserIdentifier } from '@ureeka-notebook/service-common';
 
 import { firestore } from '../firebase';
-import { ApplicationError } from '../util/error';
 import { getSnapshot, ServerTimestamp } from '../util/firestore';
 import { lastVersionQuery, lastVersionsQuery, versionDocument } from './datastore';
 
@@ -36,8 +35,8 @@ export const writeVersions = async (
   userId: UserIdentifier, clientId: ClientIdentifier,
   schemaVersion: NotebookSchemaVersion,  notebookId: NotebookIdentifier,
   startingIndex: number, pmSteps: ProseMirrorStep[]
-): Promise<void> => {
-  const transactionBody = async (transaction: Transaction) => {
+): Promise<boolean> => {
+  const transactionBody = async (transaction: Transaction): Promise<boolean> => {
     // NOTE: only checks against first Version since if that doesn't exist then no
     //       other Version can exist by definition (since monotonically increasing)
     // NOTE: if other Versions *do* get written as this writes then the Transaction
@@ -47,7 +46,7 @@ export const writeVersions = async (
           firstVersionRef = versionDocument(notebookId, firstVersionId);
     const snapshot = await transaction.get(firstVersionRef);
 // logger.debug(`Trying to write Notebook Versions ${startingIndex} - ${startingIndex + versions.length - 1}`);
-    if(snapshot.exists) throw new ApplicationError('functions/already-exists', `Step with index ${startingIndex} already exists.`)/*abort -- NotebookVersion with startingIndex already exists*/;
+    if(snapshot.exists) return false/*abort -- NotebookVersion with startingIndex already exists*/;
 
     pmSteps.forEach((pmStep, index) => {
       const versionIndex = startingIndex + index;
@@ -64,11 +63,13 @@ export const writeVersions = async (
         createdBy: userId,
         createTimestamp: ServerTimestamp/*by contract*/,
       };
-      transaction.create(versionDocumentRef, version);
+      transaction.create(versionDocumentRef, version)/*create will throw if already exists (which is desired!)*/;
     });
+
+    return true/*successfully written*/;
   };
 
   // if a Transaction is provided then use it, otherwise create a new one
-  if(transaction) await transactionBody(transaction);
-  else await firestore.runTransaction(transactionBody);
+  if(transaction) return await transactionBody(transaction);
+  else return await firestore.runTransaction(transactionBody);
 };
