@@ -45,11 +45,11 @@ export const UserProfileInline: React.FC<Props> = ({ userProfile, onClick, userI
       <UserProfileAvatar
         userId={userId}
         userPublicProfile={userProfile}
+        size='sm'
         width={5}
         height={5}
         marginRight={2}
         borderRadius={5}
-        fontSize={10}
       />
       <Heading
         // truncates the text
