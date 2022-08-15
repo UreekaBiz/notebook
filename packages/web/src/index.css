@@ -73,7 +73,7 @@ img.ProseMirror-selectednode/*target inline nodes with content (e.g. asyncNodes)
   font-size: 16px;
 }
 [data-node-type="codeBlock"][data-attribute-type="Code"] {
-  font-family: 'Courier New', monospace;
+  font-family: monospace;
 }
 
 /* .. CodeBlockReference ....................................................... */
