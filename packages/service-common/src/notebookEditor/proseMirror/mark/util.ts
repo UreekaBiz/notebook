@@ -3,6 +3,7 @@ import { Node as ProseMirrorNode, Schema } from 'prosemirror-model';
 import { Attributes, AttributeType, AttributeValue } from '../attribute';
 import { MarkName } from './type';
 
+// ********************************************************************************
 // gets the given Mark from the given Node. Returns `undefined` if the Mark is not found.
 export const getMark = (node: ProseMirrorNode, markName: MarkName) => {
   return node.marks.find(mark => mark.type.name === markName);
