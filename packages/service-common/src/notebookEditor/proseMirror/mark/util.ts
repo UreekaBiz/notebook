@@ -1,26 +1,8 @@
-import { Mark as ProseMirrorMark, Node as ProseMirrorNode, Schema } from 'prosemirror-model';
+import { Node as ProseMirrorNode, Schema } from 'prosemirror-model';
 
-import { Attributes, AttributeType, AttributeValue } from './attribute';
+import { Attributes, AttributeType, AttributeValue } from '../attribute';
+import { MarkName } from './type';
 
-// ********************************************************************************
-export type JSONMark<A extends Attributes = {}> = {
-  type: MarkName;
-
-  // Attributes are not required in a mark and potentially not be present.
-  attrs?: Partial<A>;
-};
-
-// ================================================================================
-export enum MarkName {
-  BOLD = 'bold',
-  LINK = 'link',
-  REPLACED_TEXT_MARK = 'replacedTextMark',
-  STRIKETHROUGH = 'strikethrough',
-  TEXT_STYLE = 'textStyle',
-}
-export const getMarkName = (mark: ProseMirrorMark) => mark.type.name as MarkName;
-
-// == Util ========================================================================
 // gets the given Mark from the given Node. Returns `undefined` if the Mark is not found.
 export const getMark = (node: ProseMirrorNode, markName: MarkName) => {
   return node.marks.find(mark => mark.type.name === markName);
