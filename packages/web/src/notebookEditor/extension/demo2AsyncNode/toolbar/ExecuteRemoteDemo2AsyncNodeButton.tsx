@@ -33,7 +33,11 @@ export const ExecuteRemoteDemo2AsyncNodeButton: React.FC<Props> = ({ editor, dep
         demo2AsyncNodeView = demo2AsyncNodeViewStorage.getNodeView(id);
   if(!demo2AsyncNodeView) return null/*nothing to render -- silently fail*/;
 
-  const disabled = false/*FIXME -- development*/;
+  const { textContent } = demo2AsyncNodeView.node;
+  const { textToReplace } = demo2AsyncNodeView.node.attrs;
+  const disabled = !(textToReplace && textToReplace.length > 0) ||
+                    !(textContent.includes(textToReplace)) ||
+                    (textContent.length < 1);
 
   // == Handler ===================================================================
   // executes the async call in the Demo2AsyncNode node view
