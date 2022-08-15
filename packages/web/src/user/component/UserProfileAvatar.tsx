@@ -16,8 +16,23 @@ type Props = AvatarProps & {
  * profileImageUrl is available, a fallback image will be displayed.
  */
 export const UserProfileAvatar: React.FC<Props> = ({ userId, ...props }) => {
-  const name = 'userPublicProfile' in props ? getPublicDisplayName(props.userPublicProfile) : getPrivateDisplayName(props.userPrivateProfile);
-  const profileImageUrl = 'userPublicProfile' in props ? props.userPublicProfile.profileImageUrl : props.userPrivateProfile.profileImageUrl;
+  let name: string;
+  let profileImageUrl: string | undefined;
+  // NOTE: using rest to pass the rest of the parameters to the Avatar component
+  //       but avoid passing the userPublicProfile and userPrivateProfile props
+  //       since they are invalid and cannot be rendered into the DOM.
+  let rest: Partial<Props>;
+  if('userPublicProfile' in props){
+    const { userPublicProfile, ...otherProps } = props;
+    rest = otherProps;
+    name = getPublicDisplayName(userPublicProfile);
+    profileImageUrl = userPublicProfile.profileImageUrl;
+  } else {
+    const { userPrivateProfile, ...otherProps } = props;
+    rest = otherProps;
+    name = getPrivateDisplayName(userPrivateProfile);
+    profileImageUrl = userPrivateProfile.profileImageUrl;
+  }
 
-  return <Avatar name={name} src={profileImageUrl} {...props} />;
+  return <Avatar name={name} src={profileImageUrl} {...rest} />;
 };
