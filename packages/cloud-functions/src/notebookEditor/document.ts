@@ -1,7 +1,7 @@
 import { Transaction } from 'firebase-admin/firestore';
 import { logger } from 'firebase-functions';
 
-import { collapseVersions, getLastCheckpointIndex, Checkpoint, DocumentNodeType, NotebookIdentifier, NotebookSchemaVersion, NotebookVersion, UserIdentifier, NO_NOTEBOOK_VERSION } from '@ureeka-notebook/service-common';
+import { collapseVersions, getDocumentFromDocAndVersions, getLastCheckpointIndex, Checkpoint, DocumentNodeType, NotebookIdentifier, NotebookSchemaVersion, NotebookVersion, UserIdentifier, NO_NOTEBOOK_VERSION } from '@ureeka-notebook/service-common';
 
 import { getSnapshot } from '../util/firestore';
 import { getLastCheckpoint } from './checkpoint';
@@ -63,4 +63,22 @@ export const getLatestDocument = async (
   const latestIndex = (versions.length < 1) ? checkpointIndex : versions[versions.length - 1].index;
 
   return { latestIndex, document };
+};
+
+// ................................................................................
+export const getOrUpdateToLatestDocument = async (
+  transaction: Transaction | undefined/*outside transaction*/,
+  userId: UserIdentifier,
+  schemaVersion: NotebookSchemaVersion, notebookId: NotebookIdentifier,
+  existingDocument?: { versionIndex: number; document: DocumentNodeType; }
+): Promise<{ latestIndex: number; doc: DocumentNodeType; }> => {
+  if(existingDocument) { /*has an existing Document -- fill in the gap*/
+    const { versionIndex, document } = existingDocument;
+    const versions = await getVersionsFromIndex(transaction, notebookId, versionIndex);
+    const newDocument = getDocumentFromDocAndVersions(schemaVersion, document, versions);
+    return { latestIndex: versionIndex, doc: newDocument };
+  } else { /*didn't already retrieve the Document -- get whole Document*/
+    const { latestIndex, document } = await getLatestDocument(transaction, userId, schemaVersion, notebookId)/*throws on error*/;
+    return { latestIndex, doc: document };
+  }
 };

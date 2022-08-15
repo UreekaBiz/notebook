@@ -299,12 +299,12 @@ export class VersionListener {
   // ..............................................................................
   // 'commit' the specified Versions to the Editor
   private updateEditorWithVersions(versions: NotebookVersion[]) {
-    // NOTE: 'clientId' is what ProseMirror calls them
-    const clientIds = versions.map(({ clientId }) => clientId);
-
     // NOTE: seems to be required by TipTap given different Schemas?
     // SEE: @ureeka-notebook/service-common: /notebookEditor/version.ts
     const proseMirrorSteps = versions.map(({ content }) => ProseMirrorStep.fromJSON(this.editor.schema, contentToJSONStep(content)));
+
+    // NOTE: 'clientId' is what ProseMirror calls them
+    const clientIds = versions.map(({ clientId }) => clientId);
 
     const transaction = collab.receiveTransaction(this.editor.view.state, proseMirrorSteps, clientIds, { mapSelectionBackward: true });
     this.editor.view.dispatch(transaction);

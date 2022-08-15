@@ -2,7 +2,7 @@ import { logger } from 'firebase-functions';
 
 import { hashString, sleep, AsyncNodeStatus, NodeIdentifier, NotebookIdentifier, UserIdentifier } from '@ureeka-notebook/service-common';
 
-import { updateDocument } from './api/api';
+import { EditorApi } from './api/api';
 import { DemoAsyncNodeAttributeReplace } from './api/demoAsyncNode';
 
 // ********************************************************************************
@@ -23,5 +23,6 @@ export const executeDemoAsyncNode = async (userId: UserIdentifier, notebookId: N
   }
 
   // update the identified DemoAsyncNode with the result
-  await updateDocument(userId, notebookId, [ new DemoAsyncNodeAttributeReplace(nodeId, hashes, status, text) ]);
+  const editorApi = new EditorApi();
+  await editorApi.updateDocument(userId, notebookId, [ new DemoAsyncNodeAttributeReplace(nodeId, hashes, status, text) ]);
 };

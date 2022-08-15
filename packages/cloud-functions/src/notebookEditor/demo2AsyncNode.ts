@@ -3,7 +3,7 @@ import { logger } from 'firebase-functions';
 import { findNodeById, hashString, isDemo2AsyncNode, sleep, AsyncNodeStatus, MarkName, NodeIdentifier, NotebookIdentifier, UserIdentifier } from '@ureeka-notebook/service-common';
 
 import { ApplicationError } from '../util/error';
-import { getDocument, updateDocument } from './api/api';
+import { EditorApi } from './api/api';
 import { Demo2AsyncNodeAttributeReplace } from './api/demo2AsyncNode';
 import { AddMark } from './api/mark';
 import { InsertText } from './api/text';
@@ -38,7 +38,8 @@ const updateNode = async (
   notebookId: NotebookIdentifier, nodeId: NodeIdentifier, content: string, replace: string,
   status: AsyncNodeStatus.SUCCESS | AsyncNodeStatus.ERROR, resultText: string
 ) => {
-  const { document, versionIndex } = await getDocument(userId, notebookId);
+  const editorApi = new EditorApi();
+  const { document } = await editorApi.getDocument(userId, notebookId);
 
   // get the Demo 2 Async Node for the given Node Identifier to find its position
   const result = findNodeById(document, nodeId);
@@ -72,5 +73,5 @@ const updateNode = async (
 
   // update the identified Demo2AsyncNode with the result
   logger.debug(`Updating Node (${nodeId}) in Notebook (${notebookId}) with Status (${status}) and Result (${resultText}).`);
-  await updateDocument(userId, notebookId, updates, { versionIndex });
+  await editorApi.updateDocument(userId, notebookId, updates);
 };
