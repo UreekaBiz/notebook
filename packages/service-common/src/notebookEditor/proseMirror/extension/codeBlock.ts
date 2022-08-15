@@ -3,7 +3,7 @@ import { Mark, Node as ProseMirrorNode, NodeSpec } from 'prosemirror-model';
 import { getWrapStyles, noNodeOrMarkSpecAttributeDefaultValue, AttributeType, AttributesTypeFromNodeSpecAttributes } from '../attribute';
 import { getRenderAttributes } from '../htmlRenderer/attribute';
 import { RendererState } from '../htmlRenderer/state';
-import { createNodeDataTypeAttribute, NodeRendererSpec } from '../htmlRenderer/type';
+import { createNodeDataAttribute, createNodeDataTypeAttribute, NodeRendererSpec } from '../htmlRenderer/type';
 import { getAllowedMarks, MarkName } from '../mark';
 import { JSONNode, NodeGroup, NodeIdentifier, NodeName, ProseMirrorNodeContent } from '../node';
 import { NotebookSchemaType } from '../schema';
@@ -61,7 +61,7 @@ const renderCodeBlockNodeView = (attributes: CodeBlockAttributes, content: strin
   //       (hence it is a single line below)
   // NOTE: createNodeDataTypeAttribute must be used for all nodeRenderSpecs
   //       that define their own renderNodeView
-  return `<div id=${id} ${createNodeDataTypeAttribute(NodeName.CODEBLOCK)} data-visualid="${visualId}" style="${renderAttributes.style ?? ''/*empty string if not defined*/}"><div><p style="${getWrapStyles(isWrap)}">${content}</p></div></div>`;
+  return `<div id=${id} ${createNodeDataTypeAttribute(NodeName.CODEBLOCK)} ${createNodeDataAttribute(AttributeType.Type)}="${attributes.type}" ${DATA_VISUAL_ID}="${visualId}" style="${renderAttributes.style ?? ''/*empty string if not defined*/}"><div><p style="${getWrapStyles(isWrap)}">${content}</p></div></div>`;
 };
 
 export const CodeBlockNodeRendererSpec: NodeRendererSpec<CodeBlockAttributes> = {
@@ -100,7 +100,6 @@ export const isCodeBlockNode = (node: ProseMirrorNode<NotebookSchemaType>): node
 export const getCodeBlockNodeType = (schema: NotebookSchemaType) => schema.nodes[NodeName.CODEBLOCK];
 export const createCodeBlockNode = (schema: NotebookSchemaType, attributes?: Partial<CodeBlockAttributes>, content?: ProseMirrorNodeContent, marks?: Mark<NotebookSchemaType>[]) =>
   getCodeBlockNodeType(schema).create(attributes, content, marks);
-
 
 // -- JSON Node Type --------------------------------------------------------------
 export type CodeBlockJSONNodeType = JSONNode<CodeBlockAttributes> & { type: NodeName.CODEBLOCK; };
