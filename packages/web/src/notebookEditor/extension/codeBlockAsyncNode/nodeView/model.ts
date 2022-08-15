@@ -97,5 +97,4 @@ export abstract class AbstractCodeBlockAsyncNodeModel
    * @returns a boolean indicating whether or not the replacement was successful
    */
   protected abstract replaceCodeBlockAsyncNode(editor: Editor, node: CodeBlockAsyncNodeType, position: number): boolean;
-
 }
