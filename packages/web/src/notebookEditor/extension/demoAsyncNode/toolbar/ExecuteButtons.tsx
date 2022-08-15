@@ -15,7 +15,7 @@ const log = getLogger(Logger.NOTEBOOK);
 
 // ********************************************************************************
 interface Props extends EditorToolComponentProps {/*no additional*/ }
-export const ExecuteButtons: React.FC<Props> = ({ editor, depth }) => {
+export const ExecuteButtons: React.FC<Props> = ({ editor }) => {
   const { editorService, notebookId } = useNotebookEditor();
   const isMounted = useIsMounted();
   const toast = useToast();
