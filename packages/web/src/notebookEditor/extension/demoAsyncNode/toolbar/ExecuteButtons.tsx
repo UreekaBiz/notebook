@@ -51,10 +51,10 @@ export const ExecuteButtons: React.FC<Props> = ({ editor, depth }) => {
     try {
       await demoAsyncNodeView.executeRemote(notebookId, editorService);
     } catch(error) {
-      log.error(`Error ocurred while executing DemoAsyncNode (${id}) in Notebook (${notebookId})`, error);
+      log.error(`Error ocurred while executing Demo Async Node (${id}) in Notebook (${notebookId})`, error);
       if(!isMounted()) return/*nothing to do*/;
       toast({
-        title: ' Error ocurred while executing DemoAsyncNode',
+        title: ' Error ocurred while executing Demo Async cNode',
         status: 'error',
       });
     } finally {
@@ -72,10 +72,10 @@ export const ExecuteButtons: React.FC<Props> = ({ editor, depth }) => {
     try {
       await demoAsyncNodeView.executeAsyncCall();
     } catch(error) {
-      log.error(`Error ocurred while executing DemoAsyncNode (${id}) in Notebook (${notebookId})`, error);
+      log.error(`Error ocurred while executing Demo Async Node (${id}) in Notebook (${notebookId})`, error);
       if(!isMounted()) return/*nothing to do*/;
       toast({
-        title: ' Error ocurred while executing DemoAsyncNode',
+        title: ' Error ocurred while executing Demo Async Node',
         status: 'error',
       });
     } finally {
