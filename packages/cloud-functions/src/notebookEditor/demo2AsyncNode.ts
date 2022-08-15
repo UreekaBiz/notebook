@@ -29,7 +29,7 @@ export const executeDemo2AsyncNode = async (userId: UserIdentifier, notebookId: 
   }
 
   // update the node with the result
-  updateNode(userId, notebookId, nodeId, content, replace, status, result);
+  await updateNode(userId, notebookId, nodeId, content, replace, status, result);
 };
 
 // ................................................................................
@@ -71,5 +71,6 @@ const updateNode = async (
   }
 
   // update the identified Demo2AsyncNode with the result
+  logger.debug(`Updating Node (${nodeId}) in Notebook (${notebookId}) with Status (${status}) and Result (${resultText}).`);
   await updateDocument(userId, notebookId, updates, { versionIndex });
 };
