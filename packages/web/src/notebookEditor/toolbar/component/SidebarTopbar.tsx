@@ -130,7 +130,7 @@ export const SidebarTopbar: React.FC<Props> = ({ background }) => {
               New
             </Button>
           )}
-        <AuthAvatar avatarSize='sm' />
+        <AuthAvatar />
       </Flex>
     </Flex>
   );
