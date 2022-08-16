@@ -33,6 +33,7 @@ export const Document = Node.create<NoOptions, NoStorage>({
     ];
   },
 
+  // -- Update --------------------------------------------------------------------
   // update the Route of the browser so that it gets the Id of the currently
   // selected Node if any, otherwise do nothing
   onSelectionUpdate() {
