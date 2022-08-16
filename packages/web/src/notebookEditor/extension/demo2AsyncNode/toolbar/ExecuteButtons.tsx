@@ -1,14 +1,15 @@
 import { useToast, Box, Flex, IconButton, Tooltip, Spinner } from '@chakra-ui/react';
+import { useEffect } from 'react';
 import { FiPlay } from 'react-icons/fi';
 
-import { getSelectedNode, getLogger, isDemo2AsyncNode, AttributeType, Logger, NodeName } from '@ureeka-notebook/web-service';
+import { getSelectedNode, getLogger, isDemo2AsyncNode, AttributeType, Logger, NodeName, NotebookEditorService, NotebookIdentifier } from '@ureeka-notebook/web-service';
 
 import { useNotebookEditor } from 'notebookEditor/hook/useNotebookEditor';
 import { getNodeViewStorage } from 'notebookEditor/model/NodeViewStorage';
 import { EditorToolComponentProps, TOOL_ITEM_DATA_TYPE } from 'notebookEditor/toolbar/type';
 import { useIsMounted } from 'shared/hook';
 
-import { Demo2AsyncNodeStorageType } from '../nodeView/controller';
+import { Demo2AsyncNodeController, Demo2AsyncNodeStorageType } from '../nodeView/controller';
 
 const log = getLogger(Logger.NOTEBOOK);
 
@@ -79,6 +80,7 @@ export const ExecuteButtons: React.FC<Props> = ({ editor, depth }) => {
   // == UI ========================================================================
   return (
     <Flex>
+      <ExecuteShortcut editorService={editorService} demo2AsyncNodeView={demo2AsyncNodeView} notebookId={notebookId} />
       <Box marginRight={1} >
         <Tooltip label={disabled ? ''/*none*/ : 'Execute Remotely'} hasArrow>
           <IconButton
@@ -111,4 +113,29 @@ export const ExecuteButtons: React.FC<Props> = ({ editor, depth }) => {
       </Box>
     </Flex>
   );
+};
+
+// ================================================================================
+// TODO: Refactor into some kind of general component that handle shortcuts.
+type ExecuteShortcutProps = {
+  notebookId: NotebookIdentifier;
+  editorService: NotebookEditorService;
+  demo2AsyncNodeView: Demo2AsyncNodeController;
+}
+const ExecuteShortcut: React.FC<ExecuteShortcutProps> = ({ demo2AsyncNodeView, editorService, notebookId }) => {
+  // == Effect ====================================================================
+  // executed the DAN when the user presses CMD + Enter
+  useEffect(() => {
+    const handler = (event: KeyboardEvent) => {
+      if(demo2AsyncNodeView.nodeModel.getPerformingAsyncOperation()) return/*don't execute if already loading*/;
+      if(event.key !== 'Enter' || !event.metaKey) return/*nothing to do*/;
+
+      demo2AsyncNodeView.executeRemote(notebookId, editorService);
+    };
+
+    window.addEventListener('keydown', handler);
+    return () => { window.removeEventListener('keydown', handler); };
+  }, [editorService, demo2AsyncNodeView, notebookId]);
+
+  return null;
 };

@@ -1,7 +1,8 @@
 import { useToast, Box, Flex, IconButton, Tooltip, Spinner } from '@chakra-ui/react';
 import { FiPlay } from 'react-icons/fi';
+import { useEffect } from 'react';
 
-import { getLogger, getSelectedNode, isDemoAsyncNode, AttributeType, Logger, NodeName, REMOVED_CODEBLOCK_VISUALID } from '@ureeka-notebook/web-service';
+import { getLogger, getSelectedNode, isDemoAsyncNode, AttributeType, Logger, NodeName, NotebookEditorService, NotebookIdentifier, REMOVED_CODEBLOCK_VISUALID } from '@ureeka-notebook/web-service';
 
 import { visualIdFromCodeBlockReference } from 'notebookEditor/extension/codeBlockReference/util';
 import { useNotebookEditor } from 'notebookEditor/hook/useNotebookEditor';
@@ -9,7 +10,7 @@ import { getNodeViewStorage } from 'notebookEditor/model/NodeViewStorage';
 import { EditorToolComponentProps, TOOL_ITEM_DATA_TYPE } from 'notebookEditor/toolbar/type';
 import { useIsMounted } from 'shared/hook';
 
-import { DemoAsyncNodeStorageType } from '../nodeView/controller';
+import { DemoAsyncNodeController, DemoAsyncNodeStorageType } from '../nodeView/controller';
 
 const log = getLogger(Logger.NOTEBOOK);
 
@@ -37,6 +38,7 @@ export const ExecuteButtons: React.FC<Props> = ({ editor, depth }) => {
   const disabled = codeBlockReferences.length < 1
                 || codeBlockReferences.some((reference) => visualIdFromCodeBlockReference(editor, reference) === REMOVED_CODEBLOCK_VISUALID)
                 || isLoading;
+
 
   // == Handler ===================================================================
   // executes the remote async call in the DemoAsyncNode node view
@@ -80,6 +82,7 @@ export const ExecuteButtons: React.FC<Props> = ({ editor, depth }) => {
   // == UI ========================================================================
   return (
     <Flex>
+      <ExecuteShortcut editorService={editorService} demoAsyncNodeView={demoAsyncNodeView} notebookId={notebookId} />
       <Box marginRight={1} >
         <Tooltip label={disabled ? ''/*none*/ : 'Execute Remotely'} hasArrow>
           <IconButton
@@ -112,4 +115,29 @@ export const ExecuteButtons: React.FC<Props> = ({ editor, depth }) => {
       </Box>
     </Flex>
   );
+};
+
+// ================================================================================
+// TODO: Refactor into some kind of general component that handle shortcuts.
+type ExecuteShortcutProps = {
+  notebookId: NotebookIdentifier;
+  editorService: NotebookEditorService;
+  demoAsyncNodeView: DemoAsyncNodeController;
+}
+const ExecuteShortcut: React.FC<ExecuteShortcutProps> = ({ editorService, demoAsyncNodeView, notebookId }) => {
+  // == Effect ====================================================================
+  // executed the DAN when the user presses CMD + Enter
+  useEffect(() => {
+    const handler = (event: KeyboardEvent) => {
+      if(demoAsyncNodeView.nodeModel.getPerformingAsyncOperation()) return/*don't execute if already loading*/;
+      if(event.key !== 'Enter' || !event.metaKey) return/*nothing to do*/;
+
+      demoAsyncNodeView.executeRemote(notebookId, editorService);
+    };
+
+    window.addEventListener('keydown', handler);
+    return () => { window.removeEventListener('keydown', handler); };
+  }, [editorService, demoAsyncNodeView, notebookId]);
+
+  return null;
 };
