@@ -9,7 +9,7 @@ export type NoStorage = unknown/*alias*/;
 
 // == Plugin ======================================================================
 export class NoPluginState {
-  constructor() {/*currently nothing*/ }
+  constructor() {/*currently nothing*/}
   apply(tr: Transaction, thisPluginState: NoPluginState, oldEditorState: EditorState, newEditorState: EditorState) { return this; }
 }
 
