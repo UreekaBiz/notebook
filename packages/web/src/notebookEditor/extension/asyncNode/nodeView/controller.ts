@@ -27,7 +27,6 @@ export abstract class AbstractAsyncNodeController<T/*value returned by the async
       await this.nodeModel.executeAsyncCall();
     } catch(error) {
       // NOTE: Caller should handle the error, otherwise this bubbles to React
-      //       as a toast (SEE: ExecuteAsyncNodeButton.tsx)
       throw new Error(`${error}`);
     } finally {
       this.nodeModel.setPerformingAsyncOperation(false)/*by definition*/;

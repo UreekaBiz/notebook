@@ -1,10 +1,11 @@
-import { useToast } from '@chakra-ui/react';
+import { useToast, Spinner } from '@chakra-ui/react';
 import { Editor } from '@tiptap/core';
-import { useCallback, useState } from 'react';
+import { useCallback } from 'react';
 import { FiPlay } from 'react-icons/fi';
 
 import { AbstractAsyncNodeController } from 'notebookEditor/extension/asyncNode/nodeView/controller';
 import { RightContentButton } from 'notebookEditor/extension/shared/component/RightContentButton';
+import { useAsyncStatus } from 'shared/hook';
 
 // ********************************************************************************
 // NOTE: see NOTE at top of AbstractAsyncNodeController for 'any' type explanation
@@ -15,8 +16,7 @@ interface Props {
 }
 export const ExecuteAsyncNodeButton: React.FC<Props> = ({ editor, asyncNodeView, disabled = false }) => {
   const toast = useToast();
-  // FIXME: use useAsyncStatus instead of useState
-  const [status, setStatus] = useState<'idle' | 'loading' | 'done'>('idle'/*by contract*/);
+  const [status, setStatus] = useAsyncStatus();
 
   // == Callback ==================================================================
   const executeAsyncNode = useCallback(async () => {
@@ -33,12 +33,16 @@ export const ExecuteAsyncNodeButton: React.FC<Props> = ({ editor, asyncNodeView,
       //       (SEE: notebookEditor/extension/asyncNode/nodeView/AbstractAsyncNodeController)
       toast({ title: (error as Error).message.slice(6/*trim 'Error:'*/)/*guaranteed by above note*/, status: 'warning' });
     } finally {
-      setStatus('done');
+      setStatus('complete');
     }
-  }, [asyncNodeView, editor.commands, toast]);
+  }, [asyncNodeView, editor.commands, setStatus, toast]);
 
   // == UI ========================================================================
   return (
-    <RightContentButton isDisabled={status === 'loading' || disabled} icon={<FiPlay size='16px' />} clickCallback={executeAsyncNode}/>
+    <RightContentButton
+      isDisabled={status === 'loading' || disabled}
+      icon={(status === 'loading' || asyncNodeView.nodeModel.getPerformingAsyncOperation()) ? <Spinner size='sm' /> : <FiPlay size='16px' />}
+      clickCallback={executeAsyncNode}
+    />
   );
 };
