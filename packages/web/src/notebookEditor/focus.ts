@@ -4,28 +4,30 @@ import { findNodeById, NodeIdentifier } from '@ureeka-notebook/web-service';
 
 import { EDITOR_CONTAINER_ID } from 'notebookEditor/component/Editor';
 
-// convenience functions pertaining to the focus of the Editor
 // ********************************************************************************
-export const focusEditor = (editor: Editor, focusedElementId: NodeIdentifier | undefined/*none*/) => {
-  // if there is no Editor (specifically the div that contains it) or the caller
-  // doesn't want to focus a specific Element then simply set the focus to the start
-  // of the Editor
-  const editorDiv = document.getElementById(EDITOR_CONTAINER_ID);
-  if(!editorDiv || !focusedElementId) {
+// == Focus =======================================================================
+export const focusEditor = (editor: Editor, nodeId: NodeIdentifier | undefined/*none*/) => {
+  // if there is no Editor (specifically the container that contains it) or the
+  // caller doesn't want to focus a specific Element then simply set the focus to
+  // the start of the Editor
+  const container = document.getElementById(EDITOR_CONTAINER_ID);
+  if(!container || !nodeId) {
     editor.commands.focus('start');
     return/*nothing else to do*/;
   } /* else -- there is an Editor and the caller wants to focus a specific Element */
 
-  const focusedNodeObject = findNodeById(editor.state.doc, focusedElementId);
-  if(!focusedNodeObject) {
-    editor.commands.focus('start')/*set focus to start since there's no other option*/;
-    return/*node with given id does not exist anymore / yet*/;
-  } /* else -- focused node exists */
+  const nodeFound = findNodeById(editor.state.doc, nodeId);
+  if(!nodeFound) {
+    // set focus to start since there's no other option
+    editor.commands.focus('start');
+    return/*nothing else to do*/;
+  } /* else -- node exists */
 
+  // scrolls to the selected node and focus it
   // NOTE: the choice of scrolling and focusing instead of checking for a Node
   //       existing in the position and selecting it is T&E. (In the future a
   //       special function that checks for the initial render selection type
   //       and chooses what to do based on the type of the node might be used.)
-  editorDiv.scrollTo(0, editor.view.coordsAtPos(focusedNodeObject.position).top/*T&E*/);
-  editor.commands.focus(focusedNodeObject.position);
+  container.scrollTo(0, editor.view.coordsAtPos(nodeFound.position).top/*T&E*/);
+  editor.commands.focus(nodeFound.position);
 };
