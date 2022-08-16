@@ -78,7 +78,7 @@ export const Editor = () => {
     if(!editor) return/*nothing to do*/;
     if(editor.isFocused) return/*already focused*/;
 
-    editor.commands.focus(editor.state.selection.$anchor.pos);
+    editor.commands.focus(editor.state.doc.nodeSize/*go to the end of the doc*/);
   };
 
   // == UI ========================================================================
