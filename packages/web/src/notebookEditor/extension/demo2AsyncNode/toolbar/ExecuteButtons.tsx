@@ -1,7 +1,7 @@
 import { useToast, Box, Flex, IconButton, Tooltip, Spinner } from '@chakra-ui/react';
 import { FiPlay } from 'react-icons/fi';
 
-import { getLogger, isDemo2AsyncNode, AttributeType, Logger, NodeName } from '@ureeka-notebook/web-service';
+import { getSelectedNode, getLogger, isDemo2AsyncNode, AttributeType, Logger, NodeName } from '@ureeka-notebook/web-service';
 
 import { useNotebookEditor } from 'notebookEditor/hook/useNotebookEditor';
 import { getNodeViewStorage } from 'notebookEditor/model/NodeViewStorage';
@@ -14,14 +14,14 @@ const log = getLogger(Logger.NOTEBOOK);
 
 // ********************************************************************************
 interface Props extends EditorToolComponentProps {/*no additional*/ }
-export const ExecuteButtons: React.FC<Props> = ({ editor }) => {
+export const ExecuteButtons: React.FC<Props> = ({ editor, depth }) => {
   const { editorService, notebookId } = useNotebookEditor();
   const isMounted = useIsMounted();
   const toast = useToast();
 
-  const parentNode = editor.state.selection.$anchor.parent;
-  if(!isDemo2AsyncNode(parentNode)) return null/*nothing to render -- silently fail*/;
-  const id = parentNode.attrs[AttributeType.Id];
+  const node = getSelectedNode(editor.state, depth);
+  if(!node || !isDemo2AsyncNode(node)) return null/*nothing to render -- silently fail*/;
+  const id = node.attrs[AttributeType.Id];
   if(!id) return null/*nothing to render -- silently fail*/;
 
   const demo2AsyncNodeViewStorage = getNodeViewStorage<Demo2AsyncNodeStorageType>(editor, NodeName.DEMO_2_ASYNC_NODE),

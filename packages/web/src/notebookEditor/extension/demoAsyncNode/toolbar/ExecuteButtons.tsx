@@ -15,12 +15,12 @@ const log = getLogger(Logger.NOTEBOOK);
 
 // ********************************************************************************
 interface Props extends EditorToolComponentProps {/*no additional*/ }
-export const ExecuteButtons: React.FC<Props> = ({ editor }) => {
+export const ExecuteButtons: React.FC<Props> = ({ editor, depth }) => {
   const { editorService, notebookId } = useNotebookEditor();
   const isMounted = useIsMounted();
   const toast = useToast();
 
-  const node = getSelectedNode(editor.state);
+  const node = getSelectedNode(editor.state, depth);
   if(!node || !isDemoAsyncNode(node)) return null/*nothing to render -- silently fail*/;
   const { attrs } = node;
 
