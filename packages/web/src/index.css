@@ -45,7 +45,7 @@
   position: relative;
   display: inline;
 }
-.ProseMirror-selectednode > span/*target inline nodes with content (e.g. asyncNodes)*/{
+.ProseMirror-selectednode > span:first-child/*target inline nodes with content (e.g. asyncNodes)*/{
   outline: 1px solid #666;
 }
 img.ProseMirror-selectednode/*target inline nodes with content (e.g. asyncNodes)*/{
@@ -117,6 +117,18 @@ img.ProseMirror-selectednode/*target inline nodes with content (e.g. asyncNodes)
 }
 
 /* .. DemoAsyncNode ............................................................ */
+[data-node-type="demoAsyncNode"] > span:first-child {
+  position: relative;
+  display: inline;
+  margin-left: 4px;
+  margin-right: 4px;
+  padding: 4px;
+  word-break: break-word;
+  border: 1px solid;
+  border-color: #CBD5E0;
+  border-radius: 4px;
+  background: #EDF2F7;
+}
 [data-node-type="demoAsyncNode"] > [data-async-node-dirty] {
   border-color: red !important;
 }
@@ -208,6 +220,37 @@ img.ProseMirror-selectednode/*target inline nodes with content (e.g. asyncNodes)
 }
 
 .ProseMirror-focused .ProseMirror-gapcursor { display: block; }
+
+/* -- Tooltip ------------------------------------------------------------------ */
+.node_tooltip {
+  z-index: 200;
+  width: max-content;
+  max-width: 400px;
+  display: none;
+  position: absolute;
+  top: 0%;
+  left: 50%;
+  transform: translateX(-50%);
+  padding-top: 30px;
+}
+.node_tooltip--hidden {
+  display: none !important;
+}
+
+.node_tooltip > div   {
+  max-height: 100px;
+  background-color: #eeeeee;
+  border: 1px solid #cccccc;
+  padding: 4px 8px;
+  border-radius: 2px;
+
+  overflow-y: auto;
+  text-overflow: clip;
+}
+
+*:hover > .node_tooltip {
+  display: inline-block;
+}
 
 /* == Toolbar ================================================================== */
 .iconButton {

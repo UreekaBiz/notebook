@@ -52,7 +52,7 @@ const renderDemoAsyncNodeView = (attributes: DemoAsyncNodeAttributes) => {
   //       (hence it is a single line below)
   // NOTE: createNodeDataTypeAttribute must be used for all nodeRenderSpecs
   //       that define their own renderNodeView
-  return `<span ${createNodeDataTypeAttribute(NodeName.DEMO_ASYNC_NODE)} style="position: relative; display: inline; ${renderAttributes.style ?? ''}"><span style="${DEMO_ASYNC_NODE_TEXT_STYLE} ${DEMO_ASYNC_NODE_STATUS_COLOR}: ${asyncNodeStatusToColor(status)};" ${DEMO_ASYNC_NODE_DATA_STATE}="">${text}</span></span>`;
+  return `<span ${createNodeDataTypeAttribute(NodeName.DEMO_ASYNC_NODE)} ${renderAttributes.style ?? ''}"><span style="${DEMO_ASYNC_NODE_STATUS_COLOR}: ${asyncNodeStatusToColor(status)};" ${DEMO_ASYNC_NODE_DATA_STATE}="">${text}</span></span>`;
 };
 
 export const DemoAsyncNodeRendererSpec: NodeRendererSpec<DemoAsyncNodeAttributes> = {
@@ -88,7 +88,5 @@ export const createDefaultDemoAsyncNodeAttributes = (): Partial<DemoAsyncNodeAtt
   ({ ...createDefaultCodeBlockAsyncNodeAttributes(), [AttributeType.Delay]: DEFAULT_DEMO_ASYNC_NODE_DELAY });
 
 // == CSS =========================================================================
-export const DEMO_ASYNC_NODE_TEXT_STYLE = 'padding: 4px; margin-left: 4px; margin-right: 4px; border: 1px solid; border-color: #CBD5E0; border-radius: 4px; background: #EDF2F7; word-break: break-word;';
 export const DEMO_ASYNC_NODE_STATUS_COLOR = '--status-color';
 export const DEMO_ASYNC_NODE_DATA_STATE = 'data-demoasyncnodestate';
-export const DEMO_ASYNC_NODE_BORDER_COLOR = 'border-color: #CBD5E0;';
