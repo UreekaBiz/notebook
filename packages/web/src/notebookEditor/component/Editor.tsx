@@ -1,8 +1,9 @@
 import { Box } from '@chakra-ui/react';
 import { EditorContent } from '@tiptap/react';
+import Router from 'next/router';
 import { useEffect, useState } from 'react';
 
-import { getLogger, Logger } from '@ureeka-notebook/web-service';
+import { findNodeById, getLogger, Logger } from '@ureeka-notebook/web-service';
 
 import { useNotebookEditor } from 'notebookEditor/hook/useNotebookEditor';
 
@@ -72,6 +73,20 @@ export const Editor = () => {
       window.removeEventListener('keyup', unsetActionableClass);
     };
   }, []);
+
+  // ensure that the Node present in the Route of the Editor receives focus
+  // once the Editor has been created and rendered (and hence its content loaded)
+  useEffect(() => {
+    const nodePosition = findNodeById(editor.state.doc, Router.asPath.split('#')[1/*after the '#'*/]);
+    if(!nodePosition) return/*nothing to do, Node does not exist*/;
+
+    if(nodePosition.node.isTextblock) {
+      editor.commands.focus(nodePosition.position + 1/*inside the node*/);
+    } else {
+      editor.chain().focus().setNodeSelection(nodePosition.position).run();
+    }
+  // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [/*explicitly only on the first render*/]);
 
   // == Handler ===================================================================
   const handleClick = () => {

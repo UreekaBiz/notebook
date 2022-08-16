@@ -1,8 +1,9 @@
 import { Node } from '@tiptap/core';
 import { Plugin } from 'prosemirror-state';
 import { EditorView } from 'prosemirror-view';
+import Router from 'next/router';
 
-import { DocumentNodeSpec, NotebookSchemaType } from '@ureeka-notebook/web-service';
+import { getSelectedNode, AttributeType, DocumentNodeSpec, NotebookSchemaType } from '@ureeka-notebook/web-service';
 
 import { NoOptions, NoStorage } from 'notebookEditor/model/type';
 
@@ -30,5 +31,27 @@ export const Document = Node.create<NoOptions, NoStorage>({
         },
       }),
     ];
+  },
+
+  // update the Route of the browser so that it gets the Id of the currently
+  // selected Node if any, otherwise do nothing
+  onSelectionUpdate() {
+    let node = getSelectedNode(this.editor.state);
+    if(!node) {
+      node = this.editor.state.selection.$anchor.parent;
+    } /* else -- in a NodeSelection, get its Id */
+
+    const nodeId = node.attrs[AttributeType.Id];
+    if(!nodeId) return/*nothing to do*/;
+
+    Router.replace(
+      {
+        pathname: Router.pathname/*keep same path*/,
+        query: { ...Router.query }/*keep same query*/,
+      },
+      // update route (masking the url for the browser)
+      `${Router.query.notebookId}#${nodeId}`,
+      { shallow: true/*do not re-run NextJS methods*/ }
+    );
   },
 });
