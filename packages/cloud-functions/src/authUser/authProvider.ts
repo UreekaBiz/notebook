@@ -23,5 +23,5 @@ export const extractProfile = (user: UserRecord): Profile => {
     if(isBlank(displayName)) displayName = provider.displayName;
   }
 
-  return { email, displayName };
+  return { email, photoURL, displayName };
 };

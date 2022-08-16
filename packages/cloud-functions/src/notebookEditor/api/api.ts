@@ -60,11 +60,13 @@ export class EditorApi {
 
   // == Get =======================================================================
   public async getDocument(userId: UserIdentifier, notebookId: NotebookIdentifier): Promise<NotebookDocument> {
+    // FIXME: this isn't complete as the Document may be out of date. Use
+    //        `getOrUpdateToLatestDocument` instead within the transaction below
     if(this.documentCache.has(notebookId)) return this.documentCache.get(notebookId)!;
 
     try {
-      // NOTE: retrieved in a transaction to ensure that the schema, version and
-      //       document are all mutually consistent
+      // NOTE: retrieved in a transaction to ensure that the Schema, version and
+      //       Document are all mutually consistent
       const document = await firestore.runTransaction(async transaction => {
         const notebook = await getNotebook(transaction, userId, notebookId, ShareRole.Viewer, `retrieve`)/*throws on error*/;
         const { latestIndex, document } = await getLatestDocument(transaction, userId, notebook.schemaVersion, notebookId)/*throws on error*/;

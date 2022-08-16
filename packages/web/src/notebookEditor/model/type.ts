@@ -3,13 +3,13 @@ import { EditorState, Transaction } from 'prosemirror-state';
 // ********************************************************************************
 // == Option & Storage ============================================================
 // represents that the extension has no options or storage, and such the type must
-// be unknown to avoid using them and make the compiler to throw errors when tried.
+// be 'unknown' to avoid using them and make the compiler to throw errors when tried
 export type NoOptions = unknown/*alias*/;
 export type NoStorage = unknown/*alias*/;
 
 // == Plugin ======================================================================
 export class NoPluginState {
-  constructor() {/*currently nothing*/ }
+  constructor() {/*currently nothing*/}
   apply(tr: Transaction, thisPluginState: NoPluginState, oldEditorState: EditorState, newEditorState: EditorState) { return this; }
 }
 
