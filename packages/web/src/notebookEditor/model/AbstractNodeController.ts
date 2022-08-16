@@ -11,7 +11,7 @@ import { AbstractNodeModel } from './AbstractNodeModel';
 
 // ********************************************************************************
 // == Class =======================================================================
-export abstract class AbstractNodeController<NodeType extends ProseMirrorNode, Storage extends NodeViewStorage<AbstractNodeController<NodeType, any, any, any>> | NoStorage = any, NodeModel extends AbstractNodeModel<NodeType, any> = any, NodeView extends AbstractNodeView<NodeType, Storage, NodeModel> = any>implements ProseMirrorNodeView {
+export abstract class AbstractNodeController<NodeType extends ProseMirrorNode, Storage extends NodeViewStorage<AbstractNodeController<NodeType, any, any, any>> | NoStorage, NodeModel extends AbstractNodeModel<NodeType, any> = any, NodeView extends AbstractNodeView<NodeType, Storage, NodeModel> = any>implements ProseMirrorNodeView {
   // == ProseMirror NodeView ======================================================
   public readonly dom: HTMLElement;
   public contentDOM?: HTMLElement | null | undefined;
@@ -34,7 +34,7 @@ export abstract class AbstractNodeController<NodeType extends ProseMirrorNode, S
     this.storage = storage;
 
     // only add the Storage if it is a NodeViewStorage (so NoStorage is not added)
-    if(storage && isNodeViewStorage(storage)) this.storage.addNodeView(node.attrs[AttributeType.Id], this);
+    if(this.storage && isNodeViewStorage(this.storage)) this.storage.addNodeView(node.attrs[AttributeType.Id], this);
 
     this.nodeModel = nodeModel;
     this.nodeView = nodeView;
@@ -58,7 +58,7 @@ export abstract class AbstractNodeController<NodeType extends ProseMirrorNode, S
     if(this.node.type.name !== node.type.name) return false/*different node so nothing was updated*/;
 
     // update both storage and our reference to the Node
-    this.storage.addNodeView(this.node.attrs[AttributeType.Id], this);
+    if(this.storage && isNodeViewStorage(this.storage)) this.storage.addNodeView(this.node.attrs[AttributeType.Id], this);
     // updates node in the model and view
     this.node = node as NodeType/*above check guarantees*/;
     this.nodeModel.node = node as NodeType/*above check guarantees*/;

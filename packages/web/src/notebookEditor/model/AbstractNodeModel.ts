@@ -3,6 +3,7 @@ import { Node as ProseMirrorNode } from 'prosemirror-model';
 
 import { getPosType, isGetPos } from '@ureeka-notebook/web-service';
 
+import { NoStorage } from './type';
 import { NodeViewStorage } from './NodeViewStorage';
 import { AbstractNodeController } from './AbstractNodeController';
 
@@ -10,7 +11,7 @@ import { AbstractNodeController } from './AbstractNodeController';
 // the model is left to the subclasses.
 // SEE: AbstractNodeController
 // ********************************************************************************
-export abstract class AbstractNodeModel<NodeType extends ProseMirrorNode, Storage extends NodeViewStorage<AbstractNodeController<NodeType, any, any, any>>> {
+export abstract class AbstractNodeModel<NodeType extends ProseMirrorNode, Storage extends NodeViewStorage<AbstractNodeController<NodeType, any, any, any>> | NoStorage>  {
   public readonly editor: Editor;
   public readonly storage: Storage;
   public node: NodeType;
