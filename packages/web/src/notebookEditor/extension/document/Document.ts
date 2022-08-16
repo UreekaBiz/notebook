@@ -45,14 +45,17 @@ export const Document = Node.create<NoOptions, NoStorage>({
     const nodeId = node.attrs[AttributeType.Id];
     if(!nodeId) return/*nothing to do*/;
 
-    Router.replace(
-      {
-        pathname: Router.pathname/*keep same path*/,
-        query: { ...Router.query }/*keep same query*/,
-      },
-      // update route (masking the url for the browser)
-      `${Router.query.notebookId}#${nodeId}`,
-      { shallow: true/*do not re-run NextJS methods*/ }
-    );
+    // FIXME: Cancel rendering route
+    // Router.replace(
+    //   {
+    //     pathname: Router.pathname/*keep same path*/,
+    //     query: { ...Router.query }/*keep same query*/,
+    //   },
+
+    //   // update route (masking the url for the browser)
+    //   `${Router.query.notebookId}#${nodeId}`,
+
+    //   { shallow: true/*do not re-run NextJS methods*/ }
+    // );
   },
 });
