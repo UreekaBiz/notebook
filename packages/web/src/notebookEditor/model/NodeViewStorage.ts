@@ -16,7 +16,7 @@ export const getNodeViewStorage = <Storage extends NodeViewStorage<any>>(editor:
 
 // ********************************************************************************
 // provides common properties to all storage objects used by AbstractNodeController
-export class NodeViewStorage<V extends AbstractNodeController<any>> {
+export class NodeViewStorage<V extends AbstractNodeController<any, any>> {
   private readonly nodeViewMap = new Map<NodeIdentifier, V>();
 
   // == Life-cycle ================================================================

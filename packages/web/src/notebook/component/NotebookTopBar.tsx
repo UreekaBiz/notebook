@@ -83,7 +83,7 @@ export const NotebookTopBar: React.FC<Props> = ({ background }) => {
               New
             </Button>
           )}
-        <AuthAvatar avatarSize='sm' />
+        <AuthAvatar />
       </Flex>
     </Flex>
   );

@@ -23,7 +23,7 @@ export const HomeHeader: React.FC = () => {
           <Text marginRight={6} color='#555' fontSize={16} fontWeight={500}>Features</Text>
           <Text marginRight={6} color='#555' fontSize={16} fontWeight={500}>About</Text>
           <Text marginRight={6} color='#555' fontSize={16} fontWeight={500}>GitHub</Text>
-          <AuthAvatar avatarSize='md' buttonSize='sm' />
+          <AuthAvatar buttonSize='sm' />
         </Flex>
       </Flex>
     </Box>
