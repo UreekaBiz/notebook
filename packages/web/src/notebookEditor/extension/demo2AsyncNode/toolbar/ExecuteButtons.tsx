@@ -6,7 +6,7 @@ import { getLogger, isDemo2AsyncNode, AttributeType, Logger, NodeName } from '@u
 import { useNotebookEditor } from 'notebookEditor/hook/useNotebookEditor';
 import { getNodeViewStorage } from 'notebookEditor/model/NodeViewStorage';
 import { EditorToolComponentProps, TOOL_ITEM_DATA_TYPE } from 'notebookEditor/toolbar/type';
-import { useAsyncStatus, useIsMounted } from 'shared/hook';
+import { useIsMounted } from 'shared/hook';
 
 import { Demo2AsyncNodeStorageType } from '../nodeView/controller';
 
@@ -19,11 +19,6 @@ export const ExecuteButtons: React.FC<Props> = ({ editor }) => {
   const isMounted = useIsMounted();
   const toast = useToast();
 
-  // == State =====================================================================
-  const [executeRemoteStatus, setExecuteRemoteStatus] = useAsyncStatus();
-  const [executeLocalStatus, setExecuteLocalStatus] = useAsyncStatus();
-
-  // ------------------------------------------------------------------------------
   const parentNode = editor.state.selection.$anchor.parent;
   if(!isDemo2AsyncNode(parentNode)) return null/*nothing to render -- silently fail*/;
   const id = parentNode.attrs[AttributeType.Id];
@@ -35,16 +30,17 @@ export const ExecuteButtons: React.FC<Props> = ({ editor }) => {
 
   const { textContent } = demo2AsyncNodeView.node;
   const { textToReplace } = demo2AsyncNodeView.node.attrs;
-  const disabled = !(textToReplace && textToReplace.length > 0) ||
-                    !(textContent.includes(textToReplace)) ||
-                    (textContent.length < 1) ||
-                    demo2AsyncNodeView.nodeModel.getPerformingAsyncOperation();
+
+  const isLoading = demo2AsyncNodeView.nodeModel.getPerformingAsyncOperation();
+  const disabled = !(textToReplace && textToReplace.length > 0)
+                || !(textContent.includes(textToReplace))
+                || (textContent.length < 1)
+                || isLoading;
 
   // == Handler ===================================================================
   // executes the remote async call in the Demo2AsyncNode NodeView
   const handleRemoteClick = async () => {
-    if(executeRemoteStatus === 'loading') return/*nothing to do*/;
-    setExecuteRemoteStatus('loading');
+    if(isLoading) return/*nothing to do*/;
     editor.commands.focus();
 
     try {
@@ -58,14 +54,12 @@ export const ExecuteButtons: React.FC<Props> = ({ editor }) => {
       });
     } finally {
       if(!isMounted()) return/*nothing to do*/;
-      setExecuteRemoteStatus('complete');
     }
   };
 
   // executes the local async call in the DemoAsyncNode NodeView
   const handleLocalClick = async () => {
-    if(executeLocalStatus === 'loading') return/*nothing to do*/;
-    setExecuteLocalStatus('loading');
+    if(isLoading) return/*nothing to do*/;
     editor.commands.focus();
 
     try {
@@ -79,7 +73,6 @@ export const ExecuteButtons: React.FC<Props> = ({ editor }) => {
       });
     } finally {
       if(!isMounted()) return/*nothing to do*/;
-      setExecuteLocalStatus('complete');
     }
   };
 
@@ -89,8 +82,8 @@ export const ExecuteButtons: React.FC<Props> = ({ editor }) => {
       <Box marginRight={1} >
         <Tooltip label={disabled ? ''/*none*/ : 'Execute Remotely'} hasArrow>
           <IconButton
-            isDisabled={executeRemoteStatus === 'loading' || disabled}
-            icon={executeRemoteStatus === 'loading' ? <Spinner size='sm' /> : <FiPlay color='blue' fill='blue' size='16px' />}
+            isDisabled={disabled}
+            icon={isLoading ? <Spinner size='sm' /> : <FiPlay color='blue' fill='blue' size='16px' />}
             size='xs'
             variant='ghost'
             marginY='5px'
@@ -103,8 +96,8 @@ export const ExecuteButtons: React.FC<Props> = ({ editor }) => {
         </Tooltip>
         <Tooltip label={disabled ? ''/*none*/ : 'Execute Locally'} hasArrow>
           <IconButton
-            isDisabled={executeLocalStatus === 'loading' || disabled}
-            icon={executeLocalStatus === 'loading' ? <Spinner size='sm' /> : <FiPlay size='16px' />}
+            isDisabled={disabled}
+            icon={isLoading ? <Spinner size='sm' /> : <FiPlay size='16px' />}
             size='xs'
             variant='ghost'
             marginY='5px'

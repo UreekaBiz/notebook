@@ -7,7 +7,7 @@ import { visualIdFromCodeBlockReference } from 'notebookEditor/extension/codeBlo
 import { useNotebookEditor } from 'notebookEditor/hook/useNotebookEditor';
 import { getNodeViewStorage } from 'notebookEditor/model/NodeViewStorage';
 import { EditorToolComponentProps, TOOL_ITEM_DATA_TYPE } from 'notebookEditor/toolbar/type';
-import { useAsyncStatus, useIsMounted } from 'shared/hook';
+import { useIsMounted } from 'shared/hook';
 
 import { DemoAsyncNodeStorageType } from '../nodeView/controller';
 
@@ -20,11 +20,6 @@ export const ExecuteButtons: React.FC<Props> = ({ editor }) => {
   const isMounted = useIsMounted();
   const toast = useToast();
 
-  // == State =====================================================================
-  const [executeRemoteStatus, setExecuteRemoteStatus] = useAsyncStatus();
-  const [executeLocalStatus, setExecuteLocalStatus] = useAsyncStatus();
-
-  // ------------------------------------------------------------------------------
   const node = getSelectedNode(editor.state);
   if(!node || !isDemoAsyncNode(node)) return null/*nothing to render -- silently fail*/;
   const { attrs } = node;
@@ -37,15 +32,16 @@ export const ExecuteButtons: React.FC<Props> = ({ editor }) => {
     demoAsyncNodeView = demoAsyncNodeViewStorage.getNodeView(id);
   if(!demoAsyncNodeView) return null/*nothing to render -- silently fail*/;
 
+  const isLoading = demoAsyncNodeView.nodeModel.getPerformingAsyncOperation();
+
   const disabled = codeBlockReferences.length < 1
-    || codeBlockReferences.some((reference) => visualIdFromCodeBlockReference(editor, reference) === REMOVED_CODEBLOCK_VISUALID)
-    || demoAsyncNodeView.nodeModel.getPerformingAsyncOperation();
+                || codeBlockReferences.some((reference) => visualIdFromCodeBlockReference(editor, reference) === REMOVED_CODEBLOCK_VISUALID)
+                || isLoading;
 
   // == Handler ===================================================================
   // executes the remote async call in the DemoAsyncNode node view
   const handleRemoteClick = async () => {
-    if(executeRemoteStatus === 'loading') return/*nothing to do*/;
-    setExecuteRemoteStatus('loading');
+    if(isLoading) return/*nothing to do*/;
     editor.commands.focus();
 
     try {
@@ -59,14 +55,12 @@ export const ExecuteButtons: React.FC<Props> = ({ editor }) => {
       });
     } finally {
       if(!isMounted()) return/*nothing to do*/;
-      setExecuteRemoteStatus('complete');
     }
   };
 
   // executes the local async call in the DemoAsyncNode node view
   const handleLocalClick = async () => {
-    if(executeLocalStatus === 'loading') return/*nothing to do*/;
-    setExecuteLocalStatus('loading');
+    if(isLoading) return/*nothing to do*/;
     editor.commands.focus();
 
     try {
@@ -80,7 +74,6 @@ export const ExecuteButtons: React.FC<Props> = ({ editor }) => {
       });
     } finally {
       if(!isMounted()) return/*nothing to do*/;
-      setExecuteLocalStatus('complete');
     }
   };
 
@@ -90,8 +83,8 @@ export const ExecuteButtons: React.FC<Props> = ({ editor }) => {
       <Box marginRight={1} >
         <Tooltip label={disabled ? ''/*none*/ : 'Execute Remotely'} hasArrow>
           <IconButton
-            isDisabled={executeRemoteStatus === 'loading' || disabled}
-            icon={executeRemoteStatus === 'loading' ? <Spinner size='sm' /> : <FiPlay color='blue' fill='blue' size='16px' />}
+            isDisabled={disabled}
+            icon={isLoading ? <Spinner size='sm' /> : <FiPlay color='blue' fill='blue' size='16px' />}
             size='xs'
             variant='ghost'
             marginY='5px'
@@ -104,8 +97,8 @@ export const ExecuteButtons: React.FC<Props> = ({ editor }) => {
         </Tooltip>
         <Tooltip label={disabled ? ''/*none*/ : 'Execute Locally'} hasArrow>
           <IconButton
-            isDisabled={executeLocalStatus === 'loading' || disabled}
-            icon={executeLocalStatus === 'loading' ? <Spinner size='sm' /> : <FiPlay size='16px' />}
+            isDisabled={disabled}
+            icon={isLoading ? <Spinner size='sm' /> : <FiPlay size='16px' />}
             size='xs'
             variant='ghost'
             marginY='5px'
