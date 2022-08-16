@@ -4,10 +4,10 @@ import { NodeView as ProseMirrorNodeView } from 'prosemirror-view';
 
 import { getPosType, isGetPos, AttributeType, NotebookSchemaType } from '@ureeka-notebook/web-service';
 
-import { NoStorage } from './type';
-import { isNodeViewStorage, NodeViewStorage } from './NodeViewStorage';
 import { AbstractNodeView } from './AbstractNodeView';
 import { AbstractNodeModel } from './AbstractNodeModel';
+import { isNodeViewStorage, NodeViewStorage } from './NodeViewStorage';
+import { NoStorage } from './type';
 
 // ********************************************************************************
 // == Class =======================================================================

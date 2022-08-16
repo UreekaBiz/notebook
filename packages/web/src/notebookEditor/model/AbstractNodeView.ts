@@ -3,10 +3,10 @@ import { Node as ProseMirrorNode } from 'prosemirror-model';
 
 import { getPosType, DATA_NODE_TYPE } from '@ureeka-notebook/web-service';
 
-import { NoStorage } from './type';
-import { NodeViewStorage } from './NodeViewStorage';
 import { AbstractNodeController } from './AbstractNodeController';
 import { AbstractNodeModel } from './AbstractNodeModel';
+import { NodeViewStorage } from './NodeViewStorage';
+import { NoStorage } from './type';
 
 // Abstract class renders the corresponding DOM nodes for a NodeController
 // SEE: {@link AbstractNodeController}
