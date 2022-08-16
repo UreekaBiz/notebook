@@ -81,7 +81,7 @@ export const Editor = () => {
     if(!nodePosition) return/*nothing to do, Node does not exist*/;
 
     if(nodePosition.node.isTextblock) {
-      editor.commands.focus(nodePosition.position + 1/*inside the node*/);
+      editor.commands.focus(nodePosition.position + nodePosition.node.nodeSize/*at the end of the node*/ - 1/*still inside of it*/);
     } else {
       editor.chain().focus().setNodeSelection(nodePosition.position).run();
     }
