@@ -26,12 +26,10 @@ interface Props {
   showLogIn?: boolean;
 
   // FIXME: get the options from chakra
-  /** the size of the avatar */
-  avatarSize?: 'sm' | 'md' | 'lg' | 'xl';
   /** the size of the login button */
   buttonSize?: 'sm' | 'md' | 'lg' | 'xl';
 }
-export const AuthAvatar: React.FC<Props> = ({ avatarSize, buttonSize, showLogIn = true }) => {
+export const AuthAvatar: React.FC<Props> = ({ buttonSize, showLogIn = true }) => {
   const authedUser = useAuthedUser();
 
   const router = useRouter();
@@ -64,6 +62,7 @@ export const AuthAvatar: React.FC<Props> = ({ avatarSize, buttonSize, showLogIn 
         <UserProfileAvatar
           userId={authedUser.authedUser.userId}
           userPrivateProfile={authedUser.profilePrivate}
+          size='sm'
           width='32px'
           height='32px'
           borderRadius='32px'
