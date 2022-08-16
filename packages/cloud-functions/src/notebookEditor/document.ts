@@ -9,6 +9,23 @@ import { versionRangeQuery } from './datastore';
 import { getVersionsFromIndex } from './version';
 
 // ********************************************************************************
+// convenience structure for working with a specific Version of a Notebook
+export type NotebookDocument = Readonly<{
+  /** the {@link NotebookSchemaVersion} of the {@link Notebook} */
+  schemaVersion: NotebookSchemaVersion;
+  /** the {@link NotebookIdentifier} of the {@link Notebook} */
+  notebookId: NotebookIdentifier;
+
+  /** the last known Version of the {@link Notebook}. Zero if a new Notebook that
+   *  has never been written to. Greater than zero if the Notebook has been written
+   *  to. */
+  versionIndex: number;
+
+  /** the ProseMirror Document at the corresponding Version index */
+  document: DocumentNodeType;
+}>;
+
+// == Get =========================================================================
 // -- At Version ------------------------------------------------------------------
 // returns a ProseMirror Document from a Notebook at the given Version index
 export const getDocumentAtVersion = async (
@@ -28,12 +45,29 @@ export const getDocumentAtVersion = async (
 };
 
 // -- Latest ----------------------------------------------------------------------
+export const getOrUpdateToLatestDocument = async (
+  transaction: Transaction | undefined/*outside transaction*/,
+  userId: UserIdentifier,
+  schemaVersion: NotebookSchemaVersion, notebookId: NotebookIdentifier,
+  existingNotebookDocument?: NotebookDocument
+): Promise<NotebookDocument> => {
+  if(existingNotebookDocument) { /*has an existing Document -- fill in the gap*/
+    const { versionIndex, document } = existingNotebookDocument/*for convenience*/;
+    const versions = await getVersionsFromIndex(transaction, notebookId, versionIndex);
+    const newDocument = getDocumentFromDocAndVersions(schemaVersion, document, versions);
+    return { schemaVersion, notebookId, versionIndex, document: newDocument };
+  } else { /*didn't already retrieve the Document -- get whole Document*/
+    return await getLatestDocument(transaction, userId, schemaVersion, notebookId)/*throws on error*/;
+  }
+};
+
+// ................................................................................
 // SEE: @ureeka-notebook/web-service: notebookEditor/document.ts
-export const getLatestDocument = async (
+const getLatestDocument = async (
   transaction: Transaction | undefined/*outside transaction*/,
   userId: UserIdentifier,
   schemaVersion: NotebookSchemaVersion, notebookId: NotebookIdentifier
-): Promise<{ latestIndex: number; document: DocumentNodeType; }> => {
+): Promise<NotebookDocument> => {
   // get the latest Checkpoint (if there is one)
   let checkpoint: Checkpoint | undefined/*no Checkpoint generated yet*/;
   try {
@@ -60,25 +94,17 @@ export const getLatestDocument = async (
   // if there are no NotebookVersions then the Checkpoint represents the last
   // version. If there are NotebookVersions (which must be in order by contract)
   // then the last one is the latest version
-  const latestIndex = (versions.length < 1) ? checkpointIndex : versions[versions.length - 1].index;
+  const versionIndex = (versions.length < 1) ? checkpointIndex : versions[versions.length - 1].index;
 
-  return { latestIndex, document };
+  return { schemaVersion, notebookId, versionIndex, document };
 };
 
 // ................................................................................
-export const getOrUpdateToLatestDocument = async (
-  transaction: Transaction | undefined/*outside transaction*/,
-  userId: UserIdentifier,
-  schemaVersion: NotebookSchemaVersion, notebookId: NotebookIdentifier,
-  existingDocument?: { versionIndex: number; document: DocumentNodeType; }
-): Promise<{ latestIndex: number; doc: DocumentNodeType; }> => {
-  if(existingDocument) { /*has an existing Document -- fill in the gap*/
-    const { versionIndex, document } = existingDocument;
-    const versions = await getVersionsFromIndex(transaction, notebookId, versionIndex);
-    const newDocument = getDocumentFromDocAndVersions(schemaVersion, document, versions);
-    return { latestIndex: versionIndex, doc: newDocument };
-  } else { /*didn't already retrieve the Document -- get whole Document*/
-    const { latestIndex, document } = await getLatestDocument(transaction, userId, schemaVersion, notebookId)/*throws on error*/;
-    return { latestIndex, doc: document };
-  }
+// convenience wrapper around #getDocumentFromDocAndVersions()
+export const getUpdatedDocument = async (notebookDocument: NotebookDocument, versions: NotebookVersion[]): Promise<NotebookDocument> => {
+  const newDocument = getDocumentFromDocAndVersions(notebookDocument.schemaVersion, notebookDocument.document, versions),
+        versionIndex = (versions.length < 1)
+                          ? notebookDocument.versionIndex/*no new Versions so Notebook Document is latest*/
+                          : versions[versions.length - 1].index/*since in order by contract, must be last*/;
+  return { ...notebookDocument, versionIndex, document: newDocument };
 };
