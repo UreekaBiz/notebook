@@ -13,10 +13,8 @@ export abstract class AbstractCodeBlockAsyncNodeView<
   T/*value returned by the async function*/,
   NodeType extends CodeBlockAsyncNodeType,
   Storage extends AbstractCodeBlockAsyncNodeStorageType,
-  NodeModel extends AbstractCodeBlockAsyncNodeModel<T, NodeType, Storage>>
-
-  // .. AbstractAsyncNodeView Generics ............................................
-  extends AbstractAsyncNodeView<T, NodeType, Storage, NodeModel> {
+  NodeModel extends AbstractCodeBlockAsyncNodeModel<T, NodeType, Storage>
+  > extends AbstractAsyncNodeView<T, NodeType, Storage, NodeModel> {
 
   // ==============================================================================
   public constructor(model: NodeModel, editor: Editor, node: NodeType, asyncNodeStorage: Storage, getPos: getPosType) {

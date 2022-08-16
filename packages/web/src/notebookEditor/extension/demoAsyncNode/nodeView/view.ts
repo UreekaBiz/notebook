@@ -11,7 +11,7 @@ export class DemoAsyncNodeView extends AbstractCodeBlockAsyncNodeView<string, De
   // -- Creation ------------------------------------------------------------------
   // Creates the DOM element that will be used to display the node's content.
   protected createViewElement(node: DemoAsyncNodeType): HTMLElement {
-    const text  = node.attrs.text ?? DEFAULT_DEMO_ASYNC_NODE_TEXT/*default*/;
+    const text = node.attrs.text ?? DEFAULT_DEMO_ASYNC_NODE_TEXT/*default*/;
 
     return createTextSpan(node, text);
   }

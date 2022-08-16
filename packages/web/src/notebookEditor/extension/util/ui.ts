@@ -4,9 +4,9 @@ import { nodeToTagId } from '@ureeka-notebook/web-service';
 
 // ********************************************************************************
 // == Common Element ==============================================================
-export const createTextSpan = (node: ProseMirrorNode, innerHTML: string) => {
+export const createTextSpan = (node: ProseMirrorNode, innerText: string) => {
   const textSpan = document.createElement('span');
         textSpan.setAttribute('id', nodeToTagId(node));
-        textSpan.innerHTML = innerHTML;
+        textSpan.innerText = innerText;
   return textSpan;
 };
