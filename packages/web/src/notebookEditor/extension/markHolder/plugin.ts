@@ -2,7 +2,7 @@ import { Fragment, Mark, Node as ProseMirrorNode, Slice } from 'prosemirror-mode
 import { Plugin, TextSelection } from 'prosemirror-state';
 import { EditorView } from 'prosemirror-view';
 
-import { createMarkHolderNode, createParagraphNode, getNodesAffectedByStepMap, isMarkHolderNode, AttributeType, JSONMark, NodeName, NotebookSchemaType } from '@ureeka-notebook/web-service';
+import { createMarkHolderNode, createParagraphNode, getNodesAffectedByStepMap, isHeadingNode, isMarkHolderNode, isParagraphNode, AttributeType, JSONMark, MarkName, NodeIdentifier, NodeName, NotebookSchemaType } from '@ureeka-notebook/web-service';
 
 import { parseStoredMarks } from './util';
 
@@ -31,6 +31,10 @@ export const MarkHolderPlugin = () => new Plugin<NotebookSchemaType>({
       tr.setSelection(new TextSelection(tr.doc.resolve(newState.selection.$anchor.pos + 1)));
     } /* else -- no need to modify selection */
 
+    // since transactions do not modify the state until they are dispatched,
+    // ensure that nodes do not receive MarkHolders twice
+    const nodesWithAddedMarkHolder = new Set<NodeIdentifier>();
+
     // NOTE: this Transaction has to step through all stepMaps without leaving
     //       early since any of them can leave a Block Node of the inclusion
     //       Set empty, and none should be missed, regardless of whether or not
@@ -40,18 +44,28 @@ export const MarkHolderPlugin = () => new Plugin<NotebookSchemaType>({
       const { maps } = transactions[i].mapping;
 
       // iterate over all maps in the Transaction
-      for(let stepMapIndex=0; stepMapIndex<maps.length; stepMapIndex++) {
+      for(let stepMapIndex=0;stepMapIndex<maps.length;stepMapIndex++) {
         // (SEE: NOTE above)
         maps[stepMapIndex].forEach((unmappedOldStart, unmappedOldEnd) => {
-          const { oldNodePositions, newNodePositions } = getNodesAffectedByStepMap(transactions[i], stepMapIndex, unmappedOldStart, unmappedOldEnd, blockNodesThatPreserveMarks);
-
-          if(oldNodePositions.length < newNodePositions.length) return/*Nodes were added, they should not have MarkHolders*/;
-          /* else -- Nodes were removed or modified, see if MarkHolders must be added*/
-
+          const { newNodePositions } = getNodesAffectedByStepMap(transactions[i], stepMapIndex, unmappedOldStart, unmappedOldEnd, blockNodesThatPreserveMarks);
           const { storedMarks } = transactions[i];
-          for(let j=0; j<newNodePositions.length; j++) {
-            if(newNodePositions[j].node.content.size > 0/*has content*/ || !storedMarks /*no storedMarks*/) continue/*nothing to do*/;
-            tr.insert(newNodePositions[j].position + 1/*inside the parent*/, createMarkHolderNode(newState.schema, { storedMarks: JSON.stringify(storedMarks) }));
+
+          for(let j=0;j<newNodePositions.length;j++) {
+            // new Paragraphs must not inherit marks
+            if(isParagraphNode(newNodePositions[j].node)) continue/*do not add MarkHolder*/;
+
+            if(newNodePositions[j].node.content.size < 1/*no content*/ &&
+                isHeadingNode(newNodePositions[i].node/*new Heading*/) &&
+                !nodesWithAddedMarkHolder.has(newNodePositions[j].node.attrs[AttributeType.Id])/*previous Transactions haven't added a MarkHolder*/)
+              {
+                const marksArray = [newState.schema.marks[MarkName.BOLD].create()]/*empty Headings default to having Bold Mark*/;
+                storedMarks?.forEach(mark => marksArray.push(mark))/*include any other stored Marks*/;
+
+                tr.insert(newNodePositions[j].position + 1/*inside the parent Heading*/, createMarkHolderNode(newState.schema, { storedMarks: JSON.stringify(marksArray) }));
+                nodesWithAddedMarkHolder.add(newNodePositions[j].node.attrs[AttributeType.Id]);
+
+                continue/*nothing left to do*/;
+              }/* else -- not a Heading, do not add MarkHolder */
           }
         });
       }
