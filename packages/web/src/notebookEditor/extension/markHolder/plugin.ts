@@ -108,10 +108,11 @@ export const MarkHolderPlugin = () => new Plugin<NotebookSchemaType>({
         const parentEndPos = parentPos + view.state.selection.$anchor.parent.nodeSize;
 
         // insert Paragraph below and set the Selection to the start of the inserted
-        // Paragraph
+        // Paragraph (-2 = -1 to account for the end of the new Paragraph,
+        // another -1 since its inside of it)
         tr.setSelection(new TextSelection(tr.doc.resolve(parentEndPos), tr.doc.resolve(parentEndPos)))
           .insert(tr.selection.$anchor.pos, createParagraphNode(view.state.schema))
-          .setSelection(new TextSelection(tr.doc.resolve(Math.max(0/*don't go outside limits*/, tr.selection.$anchor.pos - 1/*start of inserted Paragraph*/))));
+          .setSelection(new TextSelection(tr.doc.resolve(Math.max(0/*don't go outside limits*/, tr.selection.$anchor.pos - 2/*start of inserted Paragraph*/))));
         dispatch(tr);
         return true/*event handled*/;
       } /* else -- not handling Enter */
