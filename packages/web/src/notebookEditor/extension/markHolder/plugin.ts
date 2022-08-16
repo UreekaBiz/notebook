@@ -1,5 +1,5 @@
 import { Fragment, Mark, Node as ProseMirrorNode, Slice } from 'prosemirror-model';
-import { Plugin, TextSelection } from 'prosemirror-state';
+import { NodeSelection, Plugin, TextSelection } from 'prosemirror-state';
 import { EditorView } from 'prosemirror-view';
 
 import { createMarkHolderNode, createParagraphNode, getNodesAffectedByStepMap, isHeadingNode, isMarkHolderNode, isParagraphNode, AttributeType, JSONMark, MarkName, NodeIdentifier, NodeName, NotebookSchemaType } from '@ureeka-notebook/web-service';
@@ -80,10 +80,32 @@ export const MarkHolderPlugin = () => new Plugin<NotebookSchemaType>({
     // delete the MarkHolder and ensure the User's input gets the MarkHolder marks
     // applied to it
     handleKeyDown: (view: EditorView, event: KeyboardEvent) => {
-      const { dispatch, tr, posBeforeAnchorPos } = getUtilsFromView(view),
-            markHolder = view.state.doc.nodeAt(posBeforeAnchorPos);
-      if(!markHolder || !isMarkHolderNode(markHolder)) return false/*let PM handle the event*/;
+      const { dispatch, tr, posBeforeAnchorPos } = getUtilsFromView(view);
 
+      // since default PM Backspace behavior is different depending on whether
+      // the Block-level NodeBefore of the Selection has content or not,
+      // and since MarkHolders should mimic 'empty content', if a BackSpace
+      // occurs and the TextBlock Node before it only has a MarkHolder as its
+      // content, remove it (effectively setting up the conditions
+      // for default behavior) and let PM handle the default behavior.
+      // This is the first checked condition since it does not deal with the
+      // behavior of the MarkHolder, but rather being consistent with
+      // the default behavior of PM Block Nodes
+      if(event.key === 'Backspace' && (posBeforeAnchorPos-1/*parent at the previous block level*/ > 0/*not at the start of the doc*/)) {
+          const posInsidePrevBlockNode = tr.doc.resolve(posBeforeAnchorPos-1/*Node before the current parent, block-level wise*/);
+          const { parent: previousNodeParent } = posInsidePrevBlockNode;
+
+          if(previousNodeParent.isTextblock && previousNodeParent.content.size === 1/*sanity check, only 1 child*/ &&  previousNodeParent.firstChild && isMarkHolderNode(previousNodeParent.firstChild) ) {
+            tr.setSelection(new NodeSelection(tr.doc.resolve(posInsidePrevBlockNode.pos - posInsidePrevBlockNode.parentOffset - 1/*select the whole previous parent*/)))
+              .replaceSelectionWith(previousNodeParent.copy());
+            dispatch(tr);
+
+            return false/*let PM handle the rest of the event*/;
+          } /* else -- previous Node is not a TextBlock or its first child is not a MarkHolder, do nothing */
+      } /* else -- not handling a Backspace or not a valid position to do the check */
+
+      const markHolder = view.state.doc.nodeAt(posBeforeAnchorPos);
+      if(!markHolder || !isMarkHolderNode(markHolder)) return false/*let PM handle the event*/;
       const parentPos = Math.max(0/*don't go outside limits*/, posBeforeAnchorPos - 1)/*by contract --  MarkHolder gets inserted at start of parent Node*/;
 
       // NOTE: since the selection is not allowed to be behind a MarkHolder but
