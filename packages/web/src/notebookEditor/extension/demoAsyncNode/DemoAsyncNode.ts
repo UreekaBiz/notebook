@@ -5,6 +5,7 @@ import { getNodeOutputSpec, isDemoAsyncNode, AttributeType, DemoAsyncNodeSpec, N
 import { setAttributeParsingBehavior, uniqueIdParsingBehavior } from 'notebookEditor/extension/util/attribute';
 import { NodeViewStorage } from 'notebookEditor/model/NodeViewStorage';
 import { NoOptions } from 'notebookEditor/model/type';
+import { focusChipToolInput } from 'notebookEditor/util';
 
 import { insertAndSelectDemoAsyncNode } from './command';
 import { DemoAsyncNodeController, DemoAsyncNodeStorageType } from './nodeView/controller';
@@ -35,8 +36,18 @@ export const DemoAsyncNode = Node.create<NoOptions, DemoAsyncNodeStorageType>({
   addKeyboardShortcuts() {
     return {
       // create a demo async node
-      'Shift-Mod-d': () => this.editor.commands.insertDemoAsyncNode(),
-      'Shift-Mod-D': () => this.editor.commands.insertDemoAsyncNode(),
+      'Shift-Mod-d': () => {
+        const id = generateNodeId();
+        this.editor.commands.insertDemoAsyncNode({ id });
+        focusChipToolInput(id);
+        return true/*command executed*/;
+      },
+      'Shift-Mod-D': () => {
+        const id = generateNodeId();
+        this.editor.commands.insertDemoAsyncNode({ id });
+        focusChipToolInput(id);
+        return true/*command executed*/;
+      },
     };
   },
 

@@ -4,6 +4,9 @@ import { findNodeById, NodeIdentifier } from '@ureeka-notebook/web-service';
 
 import { EDITOR_CONTAINER_ID } from 'notebookEditor/component/Editor';
 
+import { CHIP_TOOL_INPUT } from './extension/shared/component/chipTool/ChipTool';
+
+// convenience functions pertaining to the Editor or Toolbar
 // ********************************************************************************
 // == Focus =======================================================================
 export const focusEditor = (editor: Editor, nodeId: NodeIdentifier | undefined/*none*/) => {
@@ -31,3 +34,9 @@ export const focusEditor = (editor: Editor, nodeId: NodeIdentifier | undefined/*
   container.scrollTo(0, editor.view.coordsAtPos(nodeFound.position).top/*T&E*/);
   editor.commands.focus(nodeFound.position);
 };
+
+/**
+ * focus the ChipTool input after a Command that inserts a new Node
+ * (SEE: ChipTool.tsx)
+ */
+export const focusChipToolInput = (id: NodeIdentifier) => setTimeout(() => document.getElementById(`${id}-${CHIP_TOOL_INPUT}`)?.focus(), 100/*after React renders changes*/);

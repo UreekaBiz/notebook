@@ -54,6 +54,7 @@ export const CodeBlockReferenceChipSelector: React.FC<Props> = ({ editor }) => {
   // == UI ========================================================================
   return (
     <ChipTool
+      nodeId={`${attrs[AttributeType.Id]}`}
       name='Referenced Code Block'
       width='100%'
       marginTop='10px'

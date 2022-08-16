@@ -1,8 +1,9 @@
 import { VscReferences } from 'react-icons/vsc';
 
-import { getSelectedNode, isCodeBlockReferenceNode, NodeName } from '@ureeka-notebook/web-service';
+import { generateNodeId, getSelectedNode, isCodeBlockReferenceNode, NodeName } from '@ureeka-notebook/web-service';
 
 import { Toolbar, ToolItem } from 'notebookEditor/toolbar/type';
+import { focusChipToolInput } from 'notebookEditor/util';
 
 import { CodeBlockReferenceChipSelector } from './CodeBlockReferenceChipSelector';
 import { CodeBlockReferenceDelimiterToolItem } from './CodeBlockReferenceDelimiterToolItem/CodeBlockReferenceDelimiterToolItem';
@@ -24,7 +25,11 @@ export const codeBlockReferenceToolItem: ToolItem = {
 
     return false;
   },
-  onClick: (editor) => editor.chain().focus().insertCodeBlockReference().run(),
+  onClick: (editor) => {
+    const id = generateNodeId();
+    editor.chain().focus().insertCodeBlockReference({ id }).run();
+    focusChipToolInput(id);
+  },
 };
 
 const codeBlockReferenceDelimiterToolItem: ToolItem = {

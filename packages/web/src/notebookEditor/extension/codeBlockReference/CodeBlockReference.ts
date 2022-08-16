@@ -5,6 +5,7 @@ import { getNodeOutputSpec, isCodeBlockReferenceNode, AttributeType, CodeBlockRe
 import { setAttributeParsingBehavior, uniqueIdParsingBehavior } from 'notebookEditor/extension/util/attribute';
 import { NodeViewStorage } from 'notebookEditor/model/NodeViewStorage';
 import { NoOptions } from 'notebookEditor/model/type';
+import { focusChipToolInput } from 'notebookEditor/util';
 
 import { insertAndSelectCodeBlockReference } from './command';
 import { CodeBlockReferenceController, CodeBlockReferenceStorageType } from './nodeView/controller';
@@ -31,8 +32,18 @@ export const CodeBlockReference = Node.create<NoOptions, CodeBlockReferenceStora
   addKeyboardShortcuts() {
     return {
       // insert a CodeBlockReference
-      'Shift-Alt-Mod-c': () => this.editor.commands.insertCodeBlockReference(),
-      'Shift-Alt-Mod-C': () => this.editor.commands.insertCodeBlockReference(),
+      'Shift-Alt-Mod-c': () => {
+        const id = generateNodeId();
+        this.editor.commands.insertCodeBlockReference({ id });
+        focusChipToolInput(id);
+        return true/*command executed*/;
+      },
+      'Shift-Alt-Mod-C': () => {
+        const id = generateNodeId();
+        this.editor.commands.insertCodeBlockReference({ id });
+        focusChipToolInput(id);
+        return true/*command executed*/;
+      },
     };
   },
 
