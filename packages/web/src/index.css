@@ -76,6 +76,19 @@ img.ProseMirror-selectednode/*target inline nodes with content (e.g. asyncNodes)
   font-family: monospace;
 }
 
+/* .. Visual id ................................................................ */
+[data-node-type="codeBlock"]::after{
+  content: attr(data-visualid);
+  position: absolute;
+  top: 50%;
+  left: calc(100% + 8px);
+  transform: translateY(-50%);
+  color: rgba(0,0,0,.3);
+  font-weight: 600;
+  /** use default font instead of inherit from parent*/
+  font-family: var(--chakra-fonts-body);
+}
+
 /* .. CodeBlockReference ....................................................... */
 [data-node-type="codeBlockReference"] {
   position: relative;
@@ -86,16 +99,6 @@ img.ProseMirror-selectednode/*target inline nodes with content (e.g. asyncNodes)
   text-decoration: inherit;
 }
 
-/* .. Visual id ................................................................ */
-[data-node-type="codeBlock"]::after{
-  content: attr(data-visualid);
-  position: absolute;
-  top: 50%;
-  left: calc(100% + 8px);
-  transform: translateY(-50%);
-  color: rgba(0,0,0,.3);
-  font-weight: 600;
-}
 /* .. Demo2AsyncNode ........................................................... */
 [data-node-type="demo2AsyncNode"] {
   background: rgba(0,0,0,0.1);
