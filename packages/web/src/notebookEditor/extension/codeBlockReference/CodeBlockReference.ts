@@ -1,11 +1,11 @@
 import { Node } from '@tiptap/core';
 
-import { generateNodeId, getNodeOutputSpec, isCodeBlockReferenceNode, AttributeType, CodeBlockReferenceNodeSpec, NodeName, SetAttributeType } from '@ureeka-notebook/web-service';
+import { getNodeOutputSpec, isCodeBlockReferenceNode, AttributeType, CodeBlockReferenceNodeSpec, NodeName, SetAttributeType } from '@ureeka-notebook/web-service';
 
+import { setAttributeParsingBehavior, uniqueIdParsingBehavior } from 'notebookEditor/extension/util/attribute';
 import { NodeViewStorage } from 'notebookEditor/model/NodeViewStorage';
 import { NoOptions } from 'notebookEditor/model/type';
 
-import { setAttributeParsingBehavior } from '../util/attribute';
 import { insertAndSelectCodeBlockReference } from './command';
 import { CodeBlockReferenceController, CodeBlockReferenceStorageType } from './nodeView/controller';
 
@@ -18,7 +18,7 @@ export const CodeBlockReference = Node.create<NoOptions, CodeBlockReferenceStora
   addAttributes() {
     return {
       // Creates a new id for the node when it is created.
-      [AttributeType.Id]: { parseHTML: () => generateNodeId() },
+      [AttributeType.Id]: uniqueIdParsingBehavior(this.storage),
 
       [AttributeType.LeftDelimiter]: setAttributeParsingBehavior(AttributeType.LeftDelimiter, SetAttributeType.STRING),
       [AttributeType.CodeBlockReference]: setAttributeParsingBehavior(AttributeType.CodeBlockReference, SetAttributeType.STRING),

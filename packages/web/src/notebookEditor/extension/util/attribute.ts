@@ -1,7 +1,9 @@
 import { Attribute, Editor } from '@tiptap/core';
 import { Node as ProseMirrorNode } from 'prosemirror-model';
 
-import { getHeadingThemeValue, getMarkValue, getNodeName, getSelectedNode, getThemeValue, isHeadingNode, isTextNode, mergeAttributeValues, AttributeType, HeadingLevel, InvalidMergedAttributeValue, MarkName, MergedAttributeValue, SetAttributeType } from '@ureeka-notebook/web-service';
+import { generateNodeId, getHeadingThemeValue, getMarkValue, getNodeName, getSelectedNode, getThemeValue, isHeadingNode, isTextNode, mergeAttributeValues, AttributeType, HeadingLevel, InvalidMergedAttributeValue, MarkName, MergedAttributeValue, SetAttributeType } from '@ureeka-notebook/web-service';
+
+import { NodeViewStorage } from 'notebookEditor/model/NodeViewStorage';
 
 // ********************************************************************************
 // == Util ========================================================================
@@ -43,6 +45,26 @@ export const setAttributeParsingBehavior = (name: string, type: SetAttributeType
     default: defaultValue,
     parseHTML,
     keepOnSplit: false/*don't keep by default*/,
+  };
+};
+
+// --------------------------------------------------------------------------------
+/** the default parsing behavior that should be used when working with unique ids.
+ *  It creates a new id for each node that is created and when copy and paste is
+ *  performed. */
+// NOTE: Pasting a node will only create a new unique id when there is already a
+//       node of the same type with the same id.
+export const uniqueIdParsingBehavior = (storage: NodeViewStorage<any>) => {
+  return {
+    default: undefined/*no default*/,
+    parseHTML: (element: HTMLElement) => {
+      const id = element.getAttribute(AttributeType.Id);
+      const nodeView = id ? storage.getNodeView(id) : undefined/*none*/;
+
+      // use existing id if it doesn't exist in storage and it's valid.
+      if(!nodeView && id) return id;
+      return generateNodeId();
+    },
   };
 };
 

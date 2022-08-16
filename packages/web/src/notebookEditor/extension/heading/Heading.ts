@@ -1,8 +1,8 @@
 import { Node, InputRule } from '@tiptap/core';
 
-import { createBoldMark, createMarkHolderNode, getHeadingLevelFromTag, generateNodeId, getNodeOutputSpec, AttributeType, HeadingLevel, HeadingNodeSpec, SetAttributeType } from '@ureeka-notebook/web-service';
+import { createBoldMark, createMarkHolderNode, getHeadingLevelFromTag, getNodeOutputSpec, AttributeType, HeadingLevel, HeadingNodeSpec, SetAttributeType } from '@ureeka-notebook/web-service';
 
-import { setAttributeParsingBehavior } from 'notebookEditor/extension/util/attribute';
+import { setAttributeParsingBehavior, uniqueIdParsingBehavior } from 'notebookEditor/extension/util/attribute';
 import { NoStorage } from 'notebookEditor/model/type';
 
 import { setHeadingCommand } from './command';
@@ -18,7 +18,8 @@ export const Heading = Node.create<HeadingOptions, NoStorage>({
   addAttributes() {
     return {
       // Creates a new id for the node when it is created.
-      [AttributeType.Id]: { parseHTML: () => generateNodeId() },
+      [AttributeType.Id]: uniqueIdParsingBehavior(this.storage),
+
       [AttributeType.Level]: { default: HeadingLevel.One, parseHTML: element => getHeadingLevelFromTag(element.tagName) },
 
       [AttributeType.FontSize]: setAttributeParsingBehavior(AttributeType.FontSize, SetAttributeType.STRING),
