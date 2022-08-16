@@ -39,8 +39,8 @@ export class CodeBlockReferenceView extends AbstractNodeView<CodeBlockReferenceN
   protected createViewElement(node: CodeBlockReferenceNodeType): HTMLElement {
     // gets referenced visual id
     const referencedVisualId = this.getReferencedVisualId();
-    const innerHTML = computeCodeBlockReferenceText(this.node.attrs, referencedVisualId);
-    return createTextSpan(node, innerHTML);
+    const text = computeCodeBlockReferenceText(this.node.attrs, referencedVisualId);
+    return createTextSpan(node, text);
   }
 
   // -- Update --------------------------------------------------------------------
