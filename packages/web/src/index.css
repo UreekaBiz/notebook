@@ -223,18 +223,21 @@ img.ProseMirror-selectednode/*target inline nodes with content (e.g. asyncNodes)
 
 /* -- Tooltip ------------------------------------------------------------------ */
 .node_tooltip {
+  overflow: hidden;
   z-index: 200;
   width: max-content;
   max-width: 400px;
-  display: none;
+  height: 0;
+  opacity: 0;
   position: absolute;
   top: 0%;
   left: 50%;
   transform: translateX(-50%);
   padding-top: 30px;
+  transition: height 0ms 500ms, opacity 0ms 500ms;
 }
 .node_tooltip--hidden {
-  display: none !important;
+  height: 0 !important;
 }
 
 .node_tooltip > div   {
@@ -249,7 +252,8 @@ img.ProseMirror-selectednode/*target inline nodes with content (e.g. asyncNodes)
 }
 
 *:hover > .node_tooltip {
-  display: inline-block;
+  height: auto;
+  opacity: 1;
 }
 
 /* == Toolbar ================================================================== */
