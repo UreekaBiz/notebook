@@ -4,6 +4,7 @@ import Head from 'next/head';
 
 import { AuthUserProvider } from 'authUser/context/AuthUserProvider';
 import ErrorBoundary from 'core/component/ErrorBoundary';
+import { RuntimeErrorLogger } from 'core/component/RuntimeErrorLogger';
 import { theme } from 'core/theme';
 import { getPageWrapper, WrappedPage } from 'core/wrapper';
 import { FullPageLayout } from 'shared/layout/FullPageLayout';
@@ -34,6 +35,7 @@ function App({ Component, pageProps }: Props) {
             </AuthUserProvider>
           </FullPageLayout>
         </ErrorBoundary>
+        <RuntimeErrorLogger />
       </ChakraProvider>
     </>
   );

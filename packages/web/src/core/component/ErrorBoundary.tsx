@@ -10,6 +10,10 @@ const log = getLogger(Logger.DEFAULT);
 
 // REF: https://react-typescript-cheatsheet.netlify.app/docs/basic/getting-started/error_boundaries/
 // ******************************************************************************************
+/** catch any error on the React child component tree */
+// NOTE: This is different to the RuntimeErrorLogger since this only catches errors caused
+//       during the rendering process for the child components while the RuntimeErrorLogger
+//       log any runtime uncaught errors.
 interface Props { children: ReactNode; }
 interface State { hasError: boolean; }
 class ErrorBoundary extends Component<Props, State> {
