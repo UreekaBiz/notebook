@@ -1,8 +1,8 @@
 import { Fragment, Mark, Node as ProseMirrorNode, Slice } from 'prosemirror-model';
-import { Plugin, TextSelection } from 'prosemirror-state';
+import { NodeSelection, Plugin, TextSelection } from 'prosemirror-state';
 import { EditorView } from 'prosemirror-view';
 
-import { createMarkHolderNode, createParagraphNode, getNodesAffectedByStepMap, isHeadingNode, isMarkHolderNode, isParagraphNode, AttributeType, JSONMark, MarkName, NodeIdentifier, NodeName, NotebookSchemaType } from '@ureeka-notebook/web-service';
+import { createMarkHolderNode, createParagraphNode, getNodesAffectedByStepMap, isHeadingNode, isMarkHolderNode, AttributeType, JSONMark, NodeName, NotebookSchemaType, MarkName } from '@ureeka-notebook/web-service';
 
 import { parseStoredMarks } from './util';
 
@@ -31,11 +31,7 @@ export const MarkHolderPlugin = () => new Plugin<NotebookSchemaType>({
       tr.setSelection(new TextSelection(tr.doc.resolve(newState.selection.$anchor.pos + 1)));
     } /* else -- no need to modify selection */
 
-    // since transactions do not modify the state until they are dispatched,
-    // ensure that nodes do not receive MarkHolders twice
-    const nodesWithAddedMarkHolder = new Set<NodeIdentifier>();
-
-    // NOTE: this Transaction has to step through all stepMaps without leaving
+   // NOTE: this Transaction has to step through all stepMaps without leaving
     //       early since any of them can leave a Block Node of the inclusion
     //       Set empty, and none should be missed, regardless of whether or not
     //       they had Content before (i.e. what matters is that there are Marks
@@ -44,28 +40,22 @@ export const MarkHolderPlugin = () => new Plugin<NotebookSchemaType>({
       const { maps } = transactions[i].mapping;
 
       // iterate over all maps in the Transaction
-      for(let stepMapIndex=0;stepMapIndex<maps.length;stepMapIndex++) {
+      for(let stepMapIndex=0; stepMapIndex<maps.length; stepMapIndex++) {
         // (SEE: NOTE above)
         maps[stepMapIndex].forEach((unmappedOldStart, unmappedOldEnd) => {
           const { newNodePositions } = getNodesAffectedByStepMap(transactions[i], stepMapIndex, unmappedOldStart, unmappedOldEnd, blockNodesThatPreserveMarks);
+
           const { storedMarks } = transactions[i];
+          for(let j=0; j<newNodePositions.length; j++) {
 
-          for(let j=0;j<newNodePositions.length;j++) {
-            // new Paragraphs must not inherit marks
-            if(isParagraphNode(newNodePositions[j].node)) continue/*do not add MarkHolder*/;
+            // Headings should default to MarkHolder with Bold
+            if(newNodePositions[j].node.content.size < 1/*no content*/ && isHeadingNode(newNodePositions[j].node)) {
+              tr.insert(newNodePositions[j].position + 1/*inside the parent*/, createMarkHolderNode(newState.schema, { storedMarks: JSON.stringify([newState.schema.marks[MarkName.BOLD].create()]) }));
+              continue/*nothing left to do*/;
+            } /* else -- not an empty Heading, perform default checks */
 
-            if(newNodePositions[j].node.content.size < 1/*no content*/ &&
-                isHeadingNode(newNodePositions[i].node/*new Heading*/) &&
-                !nodesWithAddedMarkHolder.has(newNodePositions[j].node.attrs[AttributeType.Id])/*previous Transactions haven't added a MarkHolder*/)
-              {
-                const marksArray = [newState.schema.marks[MarkName.BOLD].create()]/*empty Headings default to having Bold Mark*/;
-                storedMarks?.forEach(mark => marksArray.push(mark))/*include any other stored Marks*/;
-
-                tr.insert(newNodePositions[j].position + 1/*inside the parent Heading*/, createMarkHolderNode(newState.schema, { storedMarks: JSON.stringify(marksArray) }));
-                nodesWithAddedMarkHolder.add(newNodePositions[j].node.attrs[AttributeType.Id]);
-
-                continue/*nothing left to do*/;
-              }/* else -- not a Heading, do not add MarkHolder */
+            if(newNodePositions[j].node.content.size > 0/*has content*/ || !storedMarks /*no storedMarks*/) continue/*nothing to do*/;
+            tr.insert(newNodePositions[j].position + 1/*inside the parent*/, createMarkHolderNode(newState.schema, { storedMarks: JSON.stringify(storedMarks) }));
           }
         });
       }
@@ -80,10 +70,32 @@ export const MarkHolderPlugin = () => new Plugin<NotebookSchemaType>({
     // delete the MarkHolder and ensure the User's input gets the MarkHolder marks
     // applied to it
     handleKeyDown: (view: EditorView, event: KeyboardEvent) => {
-      const { dispatch, tr, posBeforeAnchorPos } = getUtilsFromView(view),
-            markHolder = view.state.doc.nodeAt(posBeforeAnchorPos);
-      if(!markHolder || !isMarkHolderNode(markHolder)) return false/*let PM handle the event*/;
+      const { dispatch, tr, posBeforeAnchorPos } = getUtilsFromView(view);
 
+      // since default PM Backspace behavior is different depending on whether
+      // the Block-level NodeBefore of the Selection has content or not,
+      // and since MarkHolders should mimic 'empty content', if a BackSpace
+      // occurs and the TextBlock Node before it only has a MarkHolder as its
+      // content, remove it (effectively setting up the conditions
+      // for default behavior) and let PM handle the default behavior.
+      // This is the first checked condition since it does not deal with the
+      // behavior of the MarkHolder, but rather being consistent with
+      // the default behavior of PM Block Nodes
+      if(event.key === 'Backspace' && (posBeforeAnchorPos-1/*parent at the previous block level*/ > 0/*not at the start of the doc*/)) {
+          const posInsidePrevBlockNode = tr.doc.resolve(posBeforeAnchorPos-1/*Node before the current parent, block-level wise*/);
+          const { parent: previousNodeParent } = posInsidePrevBlockNode;
+
+          if(previousNodeParent.isTextblock && previousNodeParent.content.size === 1/*sanity check, only 1 child*/ &&  previousNodeParent.firstChild && isMarkHolderNode(previousNodeParent.firstChild) ) {
+            tr.setSelection(new NodeSelection(tr.doc.resolve(posInsidePrevBlockNode.pos - posInsidePrevBlockNode.parentOffset - 1/*select the whole previous parent*/)))
+              .replaceSelectionWith(previousNodeParent.copy());
+            dispatch(tr);
+
+            return false/*let PM handle the rest of the event*/;
+          } /* else -- previous Node is not a TextBlock or its first child is not a MarkHolder, do nothing */
+      } /* else -- not handling a Backspace or not a valid position to do the check */
+
+      const markHolder = view.state.doc.nodeAt(posBeforeAnchorPos);
+      if(!markHolder || !isMarkHolderNode(markHolder)) return false/*let PM handle the event*/;
       const parentPos = Math.max(0/*don't go outside limits*/, posBeforeAnchorPos - 1)/*by contract --  MarkHolder gets inserted at start of parent Node*/;
 
       // NOTE: since the selection is not allowed to be behind a MarkHolder but
@@ -96,10 +108,11 @@ export const MarkHolderPlugin = () => new Plugin<NotebookSchemaType>({
         const parentEndPos = parentPos + view.state.selection.$anchor.parent.nodeSize;
 
         // insert Paragraph below and set the Selection to the start of the inserted
-        // Paragraph
+        // Paragraph (-2 = -1 to account for the end of the new Paragraph,
+        // another -1 since its inside of it)
         tr.setSelection(new TextSelection(tr.doc.resolve(parentEndPos), tr.doc.resolve(parentEndPos)))
           .insert(tr.selection.$anchor.pos, createParagraphNode(view.state.schema))
-          .setSelection(new TextSelection(tr.doc.resolve(Math.max(0/*don't go outside limits*/, tr.selection.$anchor.pos - 1/*start of inserted Paragraph*/))));
+          .setSelection(new TextSelection(tr.doc.resolve(Math.max(0/*don't go outside limits*/, tr.selection.$anchor.pos - 2/*start of inserted Paragraph*/))));
         dispatch(tr);
         return true/*event handled*/;
       } /* else -- not handling Enter */

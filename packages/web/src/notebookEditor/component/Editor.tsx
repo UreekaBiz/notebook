@@ -1,8 +1,9 @@
 import { Box } from '@chakra-ui/react';
 import { EditorContent } from '@tiptap/react';
 import { useEffect, useState } from 'react';
+import Router from 'next/router';
 
-import { getLogger, Logger } from '@ureeka-notebook/web-service';
+import { findNodeById, getLogger, Logger } from '@ureeka-notebook/web-service';
 
 import { useNotebookEditor } from 'notebookEditor/hook/useNotebookEditor';
 
@@ -21,6 +22,24 @@ export const Editor = () => {
   const [isActionModifierPressed, setIsActionModifierPressed] = useState(false/*by contract*/);
 
   // == Effect ====================================================================
+  // ensure that the Node present in the Route of the Editor receives focus
+  // once the Editor has been created and rendered (and hence its content loaded)
+  // (SEE; Document.ts)
+  useEffect(() => {
+    const nodeId = Router.asPath.split('#')[1/*after the '#'*/];
+    if(!nodeId) return/*no nodeId specified, nothing to do*/;
+
+    const nodePosition = findNodeById(editor.state.doc, nodeId);
+    if(!nodePosition) return/*nothing to do, Node does not exist*/;
+
+    if(nodePosition.node.isBlock) {
+      editor.commands.focus(nodePosition.position + nodePosition.node.nodeSize/*at the end of the node*/ - 1/*still inside of it*/);
+    } else {
+      editor.chain().focus().setNodeSelection(nodePosition.position).run();
+    }
+  // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [/*explicitly only on the first render*/]);
+
   // prevent the user from navigate away from the page or reload the page if the
   // editor has pending writes. A generic modal will be shown as a AYS to the user.
   useEffect(() => {
