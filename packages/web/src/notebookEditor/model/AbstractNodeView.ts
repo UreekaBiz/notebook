@@ -66,5 +66,5 @@ export abstract class AbstractNodeView<NodeType extends ProseMirrorNode, Storage
   // functionality on Node removal (e.g. removing EventListeners).
   // The destruction of the View elements themselves is
   // handled by default by ProseMirror
-  public abstract destroy(): void;
+  public destroy() {/*currently nothing*/}
 }

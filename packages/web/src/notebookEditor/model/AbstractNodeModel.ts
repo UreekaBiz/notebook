@@ -36,5 +36,5 @@ export abstract class AbstractNodeModel<NodeType extends ProseMirrorNode, Storag
   // This method is meant to be used to perform model-specific
   // functionality on Node removal. The remaining removal behavior is
   // handled by default by ProseMirror
-  public abstract destroy(): void;
+  public destroy() {/*currently nothing*/}
 }
