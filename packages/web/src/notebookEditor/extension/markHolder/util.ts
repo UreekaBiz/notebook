@@ -2,7 +2,7 @@ import { ChainedCommands, Editor } from '@tiptap/core';
 import { Mark, MarkType } from 'prosemirror-model';
 import { TextSelection } from 'prosemirror-state';
 
-import { createMarkHolderNode, getMarkName, isMarkHolderNode, stringifyMarksArray, AttributeType, JSONMark, JSONNode, MarkHolderNodeType, MarkName, NotebookSchemaType } from '@ureeka-notebook/web-service';
+import { createMarkHolderNode, getMarkName, isMarkHolderNode, parseStringifiedMarksArray, stringifyMarksArray, AttributeType, JSONNode, MarkHolderNodeType, MarkName, NotebookSchemaType } from '@ureeka-notebook/web-service';
 
 // ********************************************************************************
 // creates a MarkHolder Node holding the Marks corresponding to the given MarkNames
@@ -35,7 +35,7 @@ export const getMarkHolder = (editor: Editor) => {
  *       error gets thrown. This is the reason why the used chain is not taken from
  *       the editor parameter
  */
- export const toggleMarkInMarkHolder = (editor: Editor, chain: () => ChainedCommands/*(SEE: NOTE above)*/, markHolder: MarkHolderNodeType, appliedMarkType: MarkType) => {
+export const toggleMarkInMarkHolder = (editor: Editor, chain: () => ChainedCommands/*(SEE: NOTE above)*/, markHolder: MarkHolderNodeType, appliedMarkType: MarkType) => {
   let newMarksArray: Mark[] = [];
   const storedMarks  = markHolder.attrs[AttributeType.StoredMarks];
   if(!storedMarks) return false/*nothing to do*/;
@@ -79,9 +79,5 @@ export const inMarkHolder = (editor: Editor, markName: MarkName) => {
 };
 
 /** Parses the stringified array of Marks and returns it as a {@link Mark} array*/
-export const parseStoredMarks = (schema: NotebookSchemaType, stringifiedStoredMarks: string) => {
-  const JSONMarks = JSON.parse(stringifiedStoredMarks) as JSONMark[]/*by contract*/;
-  const storedMarks = JSONMarks.map(markName => Mark.fromJSON(schema, markName));
-
-  return storedMarks;
-};
+export const parseStoredMarks = (schema: NotebookSchemaType, stringifiedStoredMarks: string) =>
+  parseStringifiedMarksArray(stringifiedStoredMarks).map(markName => Mark.fromJSON(schema, markName));
