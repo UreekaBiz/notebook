@@ -22,3 +22,4 @@ export const getMarkName = (mark: ProseMirrorMark) => mark.type.name as MarkName
 
 // --------------------------------------------------------------------------------
 export const stringifyMarksArray = (marks: ProseMirrorMark[]) => JSON.stringify(marks);
+export const parseStringifiedMarksArray = (stringifiedMarks: string) => JSON.parse(stringifiedMarks) as JSONMark[]/*FIXME: handle exceptions!!!*/;

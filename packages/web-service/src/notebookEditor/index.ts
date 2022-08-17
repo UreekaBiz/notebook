@@ -192,6 +192,7 @@ export {
   getMarkName,
   getMarkValue,
   stringifyMarksArray,
+  parseStringifiedMarksArray,
 
   // -- Mark Specs ----------------------------------------------------------------
   BoldMarkSpec,
