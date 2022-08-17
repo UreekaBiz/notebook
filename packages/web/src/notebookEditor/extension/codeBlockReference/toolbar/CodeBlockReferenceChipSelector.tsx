@@ -31,6 +31,7 @@ export const CodeBlockReferenceChipSelector: React.FC<Props> = ({ editor }) => {
     if(!referencedCodeBlockId) return false/*ignore call*/;
 
     return editor.chain()
+                 .focus()
                  .updateAttributes(NodeName.CODEBLOCK_REFERENCE, { ...attrs, codeBlockReference: referencedCodeBlockId })
                  .setNodeSelection(selection.$anchor.pos)
                  .run();
