@@ -60,4 +60,11 @@ export abstract class AbstractNodeView<NodeType extends ProseMirrorNode, Storage
   //       an external state (e.g. the visualId of the CodeBlockView) and thus
   //       needs to be called from outside the class.
   public abstract updateView(): void;
+
+  // called by the Controller when the NodeView's Node is removed.
+  // This method is meant to be used to perform view-specific
+  // functionality on Node removal (e.g. removing EventListeners).
+  // The destruction of the View elements themselves is
+  // handled by default by ProseMirror
+  public abstract destroy(): void;
 }

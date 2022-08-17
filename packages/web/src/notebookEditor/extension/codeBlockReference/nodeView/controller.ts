@@ -23,8 +23,7 @@ export class CodeBlockReferenceController extends AbstractNodeController<CodeBlo
     this.addEventListenerToView();
   }
 
-  // called by ProseMirror when the node is removed
-  protected destroy() {
+  public destroy() {
     this.nodeView.viewElement.removeEventListener('mousedown', this.handleViewElementMouseDown);
   }
 

@@ -31,4 +31,10 @@ export abstract class AbstractNodeModel<NodeType extends ProseMirrorNode, Storag
   public updateProps(getPos: (() => number)){
     this.getPos = getPos;
   }
+
+  // called by the Controller when the NodeModel's Node is removed.
+  // This method is meant to be used to perform model-specific
+  // functionality on Node removal. The remaining removal behavior is
+  // handled by default by ProseMirror
+  public abstract destroy(): void;
 }
