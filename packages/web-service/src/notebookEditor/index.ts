@@ -190,6 +190,7 @@ export {
   MarkName,
   getMarkName,
   getMarkValue,
+  stringifyMarksArray,
 
   // -- Mark Specs ----------------------------------------------------------------
   BoldMarkSpec,

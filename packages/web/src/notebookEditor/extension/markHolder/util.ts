@@ -2,13 +2,13 @@ import { ChainedCommands, Editor } from '@tiptap/core';
 import { Mark, MarkType } from 'prosemirror-model';
 import { TextSelection } from 'prosemirror-state';
 
-import { createMarkHolderNode, getMarkName, isMarkHolderNode, AttributeType, JSONMark, JSONNode, MarkHolderNodeType, MarkName, NotebookSchemaType } from '@ureeka-notebook/web-service';
+import { createMarkHolderNode, getMarkName, isMarkHolderNode, stringifyMarksArray, AttributeType, JSONMark, JSONNode, MarkHolderNodeType, MarkName, NotebookSchemaType } from '@ureeka-notebook/web-service';
 
 // ********************************************************************************
 // creates a MarkHolder Node holding the Marks corresponding to the given MarkNames
 export const createMarkHolderJSONNode = (editor: Editor, markNames: MarkName[]): JSONNode => {
   const storedMarks = markNames.map(markName => editor.schema.marks[markName].create());
-  const markHolder = createMarkHolderNode(editor.schema, { storedMarks: JSON.stringify(storedMarks) });
+  const markHolder = createMarkHolderNode(editor.schema, { storedMarks: stringifyMarksArray(storedMarks) });
 
   return markHolder.toJSON() as JSONNode;
 };
@@ -58,7 +58,7 @@ export const getMarkHolder = (editor: Editor) => {
     const { pos: startingPos } = tr.selection.$anchor;
     if(dispatch) {
       tr.setSelection(new TextSelection(startOfParentNodePos, tr.doc.resolve(startOfParentNodePos.pos + markHolder.nodeSize)))
-        .setNodeMarkup(tr.selection.$anchor.pos, undefined/*maintain type*/, { storedMarks: JSON.stringify(newMarksArray) })
+        .setNodeMarkup(tr.selection.$anchor.pos, undefined/*maintain type*/, { storedMarks: stringifyMarksArray(newMarksArray) })
         .setSelection(new TextSelection(tr.doc.resolve(startingPos)));
       dispatch(tr);
     } /* else -- called from can() (SEE: src/notebookEditor/README.md/#Commands) */

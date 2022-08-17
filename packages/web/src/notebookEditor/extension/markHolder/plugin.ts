@@ -2,7 +2,7 @@ import { Fragment, Mark, Node as ProseMirrorNode, Slice } from 'prosemirror-mode
 import { NodeSelection, Plugin, TextSelection } from 'prosemirror-state';
 import { EditorView } from 'prosemirror-view';
 
-import { createMarkHolderNode, createParagraphNode, getNodesAffectedByStepMap, isHeadingNode, isMarkHolderNode, AttributeType, JSONMark, NodeName, NotebookSchemaType, MarkName } from '@ureeka-notebook/web-service';
+import { createMarkHolderNode, createParagraphNode, getNodesAffectedByStepMap, isHeadingNode, isMarkHolderNode, stringifyMarksArray, AttributeType, JSONMark, NodeName, NotebookSchemaType, MarkName } from '@ureeka-notebook/web-service';
 
 import { parseStoredMarks } from './util';
 
@@ -50,12 +50,12 @@ export const MarkHolderPlugin = () => new Plugin<NotebookSchemaType>({
 
             // Headings should default to MarkHolder with Bold
             if(newNodePositions[j].node.content.size < 1/*no content*/ && isHeadingNode(newNodePositions[j].node)) {
-              tr.insert(newNodePositions[j].position + 1/*inside the parent*/, createMarkHolderNode(newState.schema, { storedMarks: JSON.stringify([newState.schema.marks[MarkName.BOLD].create()]) }));
+              tr.insert(newNodePositions[j].position + 1/*inside the parent*/, createMarkHolderNode(newState.schema, { storedMarks: stringifyMarksArray([newState.schema.marks[MarkName.BOLD].create()]) }));
               continue/*nothing left to do*/;
             } /* else -- not an empty Heading, perform default checks */
 
             if(newNodePositions[j].node.content.size > 0/*has content*/ || !storedMarks /*no storedMarks*/) continue/*nothing to do*/;
-            tr.insert(newNodePositions[j].position + 1/*inside the parent*/, createMarkHolderNode(newState.schema, { storedMarks: JSON.stringify(storedMarks) }));
+            tr.insert(newNodePositions[j].position + 1/*inside the parent*/, createMarkHolderNode(newState.schema, { storedMarks: stringifyMarksArray(storedMarks) }));
           }
         });
       }
