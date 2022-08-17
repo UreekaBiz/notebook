@@ -19,3 +19,6 @@ export enum MarkName {
   TEXT_STYLE = 'textStyle',
 }
 export const getMarkName = (mark: ProseMirrorMark) => mark.type.name as MarkName;
+
+// --------------------------------------------------------------------------------
+export const stringifyMarksArray = (marks: ProseMirrorMark[]) => JSON.stringify(marks);

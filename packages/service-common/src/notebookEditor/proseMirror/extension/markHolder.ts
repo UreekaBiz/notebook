@@ -40,7 +40,7 @@ export const MarkHolderNodeRendererSpec: NodeRendererSpec<MarkHolderAttributes> 
   tag: 'div',
 
   attributes: {
-    // Render the marks in the DOM to ensure that the copy/paste functionality works
+    // render the marks in the DOM to ensure that the copy/paste functionality works
     [AttributeType.StoredMarks]: (attributes) => {
       const storedMarks = attributes[AttributeType.StoredMarks];
       if(!storedMarks) { return { [AttributeType.StoredMarks]: ''/*no stored marks*/ }; }
