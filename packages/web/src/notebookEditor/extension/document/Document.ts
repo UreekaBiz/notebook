@@ -46,6 +46,9 @@ export const Document = Node.create<NoOptions, NoStorage>({
     // REF: https://developer.mozilla.org/en-US/docs/Web/API/History/replaceState
     // NOTE: using window.history since there is no need to interact with NextJS
     //       other than to get the notebookId
-    window.history.replaceState(undefined/*no data*/, ''/*(SEE: REF above)*/, `${Router.query.notebookId}#${nodeId}`);
+    const { notebookId } = Router.query;
+    if(!notebookId) return/*nothing to do*/;
+
+    window.history.replaceState(undefined/*no data*/, ''/*(SEE: REF above)*/, `${notebookId}#${nodeId}`);
   },
 });
