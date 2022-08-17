@@ -17,11 +17,6 @@ export const theme = extendTheme({
     global: {
 
       // --- HTML Tags ------------------------------------------------------------
-      blockquote: {
-        borderLeft: '2px solid #CECCCC',
-        paddingLeft: '1rem',
-      },
-
       code: {
         borderRadius:'5',
         display: 'fit-content',
