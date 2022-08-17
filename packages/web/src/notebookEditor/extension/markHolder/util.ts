@@ -2,7 +2,7 @@ import { ChainedCommands, Editor } from '@tiptap/core';
 import { Mark, MarkType } from 'prosemirror-model';
 import { TextSelection } from 'prosemirror-state';
 
-import { createMarkHolderNode, getMarkName, isMarkHolderNode, parseStringifiedMarksArray, stringifyMarksArray, AttributeType, JSONNode, MarkHolderNodeType, MarkName, NotebookSchemaType } from '@ureeka-notebook/web-service';
+import { createMarkHolderNode, getMarkName, isMarkHolderNode, markFromJSONMark, parseStringifiedMarksArray, stringifyMarksArray, AttributeType, JSONNode, MarkHolderNodeType, MarkName, NotebookSchemaType } from '@ureeka-notebook/web-service';
 
 // ********************************************************************************
 // creates a MarkHolder Node holding the Marks corresponding to the given MarkNames
@@ -80,4 +80,4 @@ export const inMarkHolder = (editor: Editor, markName: MarkName) => {
 
 /** Parses the stringified array of Marks and returns it as a {@link Mark} array*/
 export const parseStoredMarks = (schema: NotebookSchemaType, stringifiedStoredMarks: string) =>
-  parseStringifiedMarksArray(stringifiedStoredMarks).map(markName => Mark.fromJSON(schema, markName));
+  parseStringifiedMarksArray(stringifiedStoredMarks).map(jsonMark => markFromJSONMark(schema, jsonMark));

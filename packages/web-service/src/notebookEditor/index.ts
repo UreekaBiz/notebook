@@ -191,6 +191,7 @@ export {
   MarkName,
   getMarkName,
   getMarkValue,
+  markFromJSONMark,
   stringifyMarksArray,
   parseStringifiedMarksArray,
 

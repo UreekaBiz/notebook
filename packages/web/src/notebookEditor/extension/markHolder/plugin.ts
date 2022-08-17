@@ -1,8 +1,8 @@
-import { Fragment, Mark, Node as ProseMirrorNode, Slice } from 'prosemirror-model';
+import { Fragment, Node as ProseMirrorNode, Slice } from 'prosemirror-model';
 import { NodeSelection, Plugin, TextSelection } from 'prosemirror-state';
 import { EditorView } from 'prosemirror-view';
 
-import { createMarkHolderNode, createParagraphNode, getNodesAffectedByStepMap, isHeadingNode, isMarkHolderNode, parseStringifiedMarksArray, stringifyMarksArray, AttributeType, NodeName, NotebookSchemaType, MarkName } from '@ureeka-notebook/web-service';
+import { createMarkHolderNode, createParagraphNode, getNodesAffectedByStepMap, isHeadingNode, isMarkHolderNode, markFromJSONMark, parseStringifiedMarksArray, stringifyMarksArray, AttributeType, NodeName, NotebookSchemaType, MarkName } from '@ureeka-notebook/web-service';
 
 import { parseStoredMarks } from './util';
 
@@ -156,7 +156,7 @@ export const MarkHolderPlugin = () => new Plugin<NotebookSchemaType>({
             to = tr.doc.resolve(posBeforeAnchorPos + markHolder.nodeSize).pos;
 
       // Create marks from the stored marks attribute
-      const marks = parseStringifiedMarksArray(stringifiedMarksArray).map(markName => Mark.fromJSON(view.state.schema, markName));
+      const marks = parseStringifiedMarksArray(stringifiedMarksArray).map(jsonMark => markFromJSONMark(view.state.schema, jsonMark));
 
       // Insert the text and apply every stored mark into it
       tr.insertText(event.key, from, to);
