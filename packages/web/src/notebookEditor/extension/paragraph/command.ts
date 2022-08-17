@@ -17,7 +17,7 @@ declare module '@tiptap/core' {
 // --------------------------------------------------------------------------------
 export const setParagraphCommand = () => ({ tr, dispatch, view }: CommandProps) => ((tr, dispatch, view) => {
   const { from, to } = getBlockNodeRange(tr.selection);
-  const textContent = tr.doc.textBetween(from, to, '\n');
+  const textContent = tr.doc.textBetween(from, to, '\n'/*insert for every Block Node*/);
   const resolvedFrom = tr.doc.resolve(from - 1/*select the whole parent*/),
         resolvedTo = tr.doc.resolve(to + 1/*select the whole parent*/);
 
