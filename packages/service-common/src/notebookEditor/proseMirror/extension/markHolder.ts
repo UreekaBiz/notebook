@@ -42,13 +42,11 @@ export const MarkHolderNodeRendererSpec: NodeRendererSpec<MarkHolderAttributes> 
   attributes: {
     // render the marks in the DOM to ensure that the copy/paste functionality works
     [AttributeType.StoredMarks]: (attributes) => {
-      const storedMarks = attributes[AttributeType.StoredMarks];
-      if(!storedMarks) { return { [AttributeType.StoredMarks]: ''/*no stored marks*/ }; }
+      const attributeStoredMarks = attributes[AttributeType.StoredMarks];
+      if(!attributeStoredMarks) { return { [AttributeType.StoredMarks]: ''/*no stored marks*/ }; }
 
-      // NOTE: to prevent any issues with the renderer, the marks get stringified
-      //       with single quotes. When they are parsed back, they MUST replaced
-      //       back with double quotes (SEE: MarkHolder.ts)
-      return { [AttributeType.StoredMarks]: JSON.stringify(storedMarks).replaceAll("\"", "'") };
+      // (SEE: #storedMarksToDOM below)
+      return { [AttributeType.StoredMarks]: storedMarksToDOM(attributeStoredMarks) };
     },
   },
 };
@@ -67,3 +65,14 @@ export const createMarkHolderNode = (schema: NotebookSchemaType, attributes?: Pa
 // -- JSON Node Type --------------------------------------------------------------
 export type MarkHolderJSONNodeType = JSONNode<MarkHolderAttributes> & { type: NodeName.MARK_HOLDER; };
 export const isMarkHolderJSONNode = (node: JSONNode): node is MarkHolderJSONNodeType => node.type === NodeName.MARK_HOLDER;
+
+// == Util ========================================================================
+// NOTE: to prevent any issues with the renderer, the marks get stringified
+//       with single quotes. When they are parsed back, they MUST replaced
+//       back with double quotes (SEE: MarkHolder.ts)
+const storedMarksToDOM = (attributeStoredMarks: string) => JSON.stringify(attributeStoredMarks).replaceAll("\"", "'");
+
+// NOTE: exported since its used by the parseHTML behavior for the MarkHolder
+// parse the Marks to the right format when copy pasting
+// (SEE: #storedMarksToDOM above)
+export const storedMarksFromDOM = (attributeStoredMarks: string) => JSON.parse(attributeStoredMarks.replaceAll("'", "\""));

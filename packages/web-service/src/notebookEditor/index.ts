@@ -174,6 +174,7 @@ export {
   createMarkHolderNode,
   getMarkHolderNodeType,
   isMarkHolderNode,
+  storedMarksFromDOM,
 
   ParagraphNodeType,
   createParagraphNode,
