@@ -23,7 +23,7 @@ const createHeadingTool = (level: HeadingLevel, icon: ReactElement): ToolItem =>
   label: `${NodeName.HEADING}${level}`,
 
   icon,
-  tooltip: `Heading${level} (⌘ + ⌥ + ${level})`,
+  tooltip: `Heading ${level} (⌘ + ⌥ + ${level})`,
 
   shouldShow: (editor, depth) => depth === 1/*only show on the direct parent node of a TextNode*/,
   onClick: (editor) => editor.chain().focus().setHeading(createDefaultHeadingAttributes(level)).run(),
