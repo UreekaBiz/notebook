@@ -49,41 +49,6 @@ export const theme = extendTheme({
         maxWidth: '100%',
         maxHeight: '100%',
       },
-
-      /*horizontal alignments*/
-      '&.left': { /*currently nothing*/ },
-      '&.center': { ml: 'auto', mr: 'auto' },
-      '&.right': { ml: 'auto' },
-      '&.justify': { /*currently nothing*/ },
-
-      hr: {
-        borderTop: '1px solid #CECCCC',
-        mt:'2',
-        mb:'2',
-      },
-
-      // --- Bullet List Specific -------------------------------------------------
-      ul: { pl: 6, listStyleType: 'none' },
-
-      // --- Ordered List Specific ------------------------------------------------
-      ol: { pl: 6 },
-
-      // --- Task List Specific ---------------------------------------------------
-      'li[data-checked]': {
-        display: 'flex',
-        gap: '0.5rem',
-      },
-      'li[data-checked] > div': {
-        flex: '1 1',
-      },
-      'li[data-checked] > div > p': {
-        width: '100%',
-      },
-      'li[data-checked="true"] > div > p:first-child': {
-        paddingTop: '0px',
-        paddingBottom: '0px',
-        textDecoration: 'line-through',
-      },
     },
   },
 });
