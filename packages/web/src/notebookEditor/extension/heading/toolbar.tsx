@@ -1,5 +1,5 @@
 import { Editor } from '@tiptap/core';
-import { ReactNode } from 'react';
+import { ReactElement } from 'react';
 import { BiHeading } from 'react-icons/bi';
 import { FaHeading } from 'react-icons/fa';
 import { RiHeading } from 'react-icons/ri';
@@ -17,7 +17,7 @@ import { createDefaultHeadingAttributes } from './type';
 // == Tool Items ==================================================================
 // This utility function severs as a generator for HeadingToolItems since they
 // share most of the functionality and only differ by the heading level.
-const createHeadingTool = (level: HeadingLevel, icon: ReactNode): ToolItem => ({
+const createHeadingTool = (level: HeadingLevel, icon: ReactElement): ToolItem => ({
   toolType: 'button',
   name: `${NodeName.HEADING}${level}`,
   label: `${NodeName.HEADING}${level}`,

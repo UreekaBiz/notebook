@@ -1,5 +1,5 @@
 import { Editor } from '@tiptap/core';
-import { ReactNode } from 'react';
+import { ReactElement } from 'react';
 
 import { MarkName, NodeName, SelectionDepth } from '@ureeka-notebook/web-service';
 
@@ -13,7 +13,7 @@ export type Toolbar = Readonly<{
   name: NodeName | MarkName;
 
   /** Optional component that will be displayed on the right side of the title. */
-  rightContent?: (props: EditorToolComponentProps) => ReactNode | null/*allow to be rendered conditionally*/;
+  rightContent?: (props: EditorToolComponentProps) => ReactElement | null/*allow to be rendered conditionally*/;
 
   /** A collection of EditorToolItems that correspond to the toolbar. */
   toolsCollections: ToolItem[][];
@@ -87,7 +87,7 @@ export type EditorToolComponent = Readonly<{
   //       added to the desired element so that the keyboard shortcut that focuses
   //       the sideBar provides good UX (SEE: EditorUserInteractions.tsx)
   toolType: 'component';
-  component: ({ editor, depth }: EditorToolComponentProps) => ReactNode | null/*allow to be rendered conditionally*/;
+  component: ({ editor, depth }: EditorToolComponentProps) => ReactElement | null/*allow to be rendered conditionally*/;
 }>;
 
 // -- Button ----------------------------------------------------------------------
@@ -99,7 +99,7 @@ export type EditorToolButton = Readonly<{
 
   /** Optional icon to display on the button. If no icon is provided the label is
    *  be used instead */
-  icon?: ReactNode;
+  icon?: ReactElement;
   /** A label that will be shown when the user mouses over the button.*/
   tooltip: string;
 
