@@ -1,6 +1,6 @@
 import { CommandProps } from '@tiptap/core';
 
-import { generateNodeId, getParentNode, isDemo2AsyncNode, setBlockNodeAcrossNodes, AttributeType, CommandFunctionType, NodeName } from '@ureeka-notebook/web-service';
+import { generateNodeId, getParentNode, isDemo2AsyncNode, AttributeType, CommandFunctionType, NodeName, createBlockNodeBelow } from '@ureeka-notebook/web-service';
 
 // == Type ========================================================================
 // NOTE: Usage of ambient module to ensure command is TypeScript-registered
@@ -18,9 +18,5 @@ export const toggleDemo2AsyncNodeCommand = () => ({ editor, commands, tr, dispat
     return false/*do not allow demo2AsyncNodes to be toggable*/;
   } /* else -- create a demo2AsyncNode */
 
-  if(editor.state.selection.empty) {
-    return commands.setNode(NodeName.DEMO_2_ASYNC_NODE, { [AttributeType.Id]: generateNodeId() });
-  } /* else -- ensure selected Content gets transformed into Demo2AsyncNode correctly */
-
-  return setBlockNodeAcrossNodes(editor.schema, NodeName.DEMO_2_ASYNC_NODE, { [AttributeType.Id]: generateNodeId() })(tr, dispatch, view);
+  return createBlockNodeBelow(editor.schema, NodeName.DEMO_2_ASYNC_NODE, { [AttributeType.Id]: generateNodeId() })(tr, dispatch, view);
 };
