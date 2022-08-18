@@ -7,10 +7,9 @@ export const ACTIONABLE_NODE = 'actionable-node';
 // -- Type ------------------------------------------------------------------------
 export enum SetAttributeType { STRING = 'string', BOOLEAN = 'boolean', NUMBER = 'number', ARRAY = 'array' }
 export type Attributes = Partial<Record<AttributeType, any>>;
-export type HTMLAttributes = Record<string, string>;
+export type AttributeValue = string | number | undefined;
+export type HTMLAttributes = Record<string, AttributeValue>;
 
-// Is there any other type of attribute that is not a string? If so add it below.
-export type AttributeValue = string;
 export enum AttributeType {
   // -- CSS Styles ----------------------------------------------------------------
   Width = 'width',

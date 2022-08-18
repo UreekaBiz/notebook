@@ -111,6 +111,7 @@ export {
   NodeIdentifier,
   generateNodeId,
   getNodeName,
+  isNodeType,
 
   asyncNodes,
 

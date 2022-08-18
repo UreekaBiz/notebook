@@ -55,7 +55,7 @@ export class CodeBlockView extends AbstractNodeView<CodeBlockNodeType, CodeBlock
 
     // Update styles
     const renderAttributes = getRenderAttributes(NodeName.CODEBLOCK, attrs, CodeBlockNodeRendererSpec, CodeBlockNodeSpec);
-    this.dom.setAttribute('style', renderAttributes.style ?? ''/*empty string if not defined*/);
+    this.dom.setAttribute('style', String(renderAttributes.style ?? '')/*empty string if not defined*/);
 
     this.contentDOM.setAttribute('style', getWrapStyles(wrap));
 

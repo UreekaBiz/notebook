@@ -25,6 +25,6 @@ export const FontSizeToolItem: React.FC<Props> = ({ editor, depth }) => {
 
   // == UI ========================================================================
   return (
-    <UnitPickerInput name='Font Size' onChange={handleChange} valueWithUnit={inputValue ?? ''} />
+    <UnitPickerInput name='Font Size' onChange={handleChange} valueWithUnit={String(inputValue ?? '')} />
   );
 };

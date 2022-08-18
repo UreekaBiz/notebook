@@ -1,6 +1,6 @@
 import { MarkSpec, NodeSpec } from 'prosemirror-model';
 
-import { HTMLAttributes, isStyleAttribute, snakeCaseToKebabCase } from '../attribute';
+import {  isStyleAttribute, snakeCaseToKebabCase, AttributeValue, HTMLAttributes } from '../attribute';
 import { MarkName } from '../mark';
 import { NodeName } from '../node';
 import { AttributeRenderer, MarkRendererSpec, NodeRendererSpec } from './type';
@@ -20,9 +20,9 @@ import { AttributeRenderer, MarkRendererSpec, NodeRendererSpec } from './type';
 // NOTE: it's defined as function to use function overloads.
 
 // SEE: https://www.typescriptlang.org/docs/handbook/declaration-files/by-example.html#overloaded-functions
-export function getRenderAttributes(nodeOrMarkName: NodeName | MarkName, attrs?: Record<string, string | undefined>, rendererSpec?: NodeRendererSpec<any>, nodeOrMarkSpec?: NodeSpec): HTMLAttributes;
-export function getRenderAttributes(nodeOrMarkName: NodeName | MarkName, attrs?: Record<string, string | undefined>, rendererSpec?: MarkRendererSpec<any>, nodeOrMarkSpec?: MarkSpec): HTMLAttributes;
-export function getRenderAttributes(nodeOrMarkName: NodeName | MarkName, attrs: Record<string, string | undefined> = {}, rendererSpec?: NodeRendererSpec<any> | MarkRendererSpec, nodeOrMarkSpec?: NodeSpec | MarkSpec): HTMLAttributes {
+export function getRenderAttributes(nodeOrMarkName: NodeName | MarkName, attrs?: HTMLAttributes, rendererSpec?: NodeRendererSpec<any>, nodeOrMarkSpec?: NodeSpec): HTMLAttributes;
+export function getRenderAttributes(nodeOrMarkName: NodeName | MarkName, attrs?: HTMLAttributes, rendererSpec?: MarkRendererSpec<any>, nodeOrMarkSpec?: MarkSpec): HTMLAttributes;
+export function getRenderAttributes(nodeOrMarkName: NodeName | MarkName, attrs: HTMLAttributes = {}, rendererSpec?: NodeRendererSpec<any> | MarkRendererSpec, nodeOrMarkSpec?: NodeSpec | MarkSpec): HTMLAttributes {
   // If the renderer spec doesn't any default attributes to render use and empty
   // object.
   let renderAttributes = rendererSpec?.render ??  {};
@@ -50,7 +50,7 @@ export function getRenderAttributes(nodeOrMarkName: NodeName | MarkName, attrs: 
 // Renderer Spec to get the Attributes, if there is not a defined Renderer Spec for
 // the given Attribute then #defaultAttributeRenderer() is used instead. If there
 // is no value defined for the Attribute the current Theme is used.
-const getRenderValue = (nodeOrMarkName: NodeName | MarkName, rendererSpec: NodeRendererSpec | MarkRendererSpec | undefined, attribute: string, attrs: Record<string, string | undefined>): HTMLAttributes => {
+const getRenderValue = (nodeOrMarkName: NodeName | MarkName, rendererSpec: NodeRendererSpec | MarkRendererSpec | undefined, attribute: string, attrs: HTMLAttributes): HTMLAttributes => {
   // if the renderer spec has a renderer for this attribute use it.
   if(rendererSpec && attribute in rendererSpec.attributes) {
     const renderValue = rendererSpec.attributes[attribute as keyof typeof rendererSpec.attributes] as AttributeRenderer<any>;
@@ -63,7 +63,7 @@ const getRenderValue = (nodeOrMarkName: NodeName | MarkName, rendererSpec: NodeR
 // Attributes defined on the Node Spec that don't define an Attribute renderer on
 // the Node Renderer Spec use this default renderer. If there is no value
 // defined for the attribute the current theme is used.
-const defaultAttributeRenderer = (nodeOrMarkName: NodeName | MarkName, attribute: string, value: string | undefined): HTMLAttributes => {
+const defaultAttributeRenderer = (nodeOrMarkName: NodeName | MarkName, attribute: string, value: AttributeValue): HTMLAttributes => {
   // if not defined return an empty object
   if(!value) return {}/*nothing to render*/;
 
@@ -87,7 +87,7 @@ export const mergeAttributes = (a: HTMLAttributes, b: HTMLAttributes): HTMLAttri
 
 // merges two attributes values into a single value. If there is no way to merge this
 // values the second one are used
-const mergeAttribute = (attribute: string, a: string | undefined, b: string | undefined ): string | undefined => {
+const mergeAttribute = (attribute: string, a: AttributeValue, b: AttributeValue ): AttributeValue => {
   if(!a) return b;
   if(!b) return a;
   // else -- they are both defined, will try to merge them.
