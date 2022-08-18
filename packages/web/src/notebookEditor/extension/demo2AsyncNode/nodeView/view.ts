@@ -56,7 +56,7 @@ export class Demo2AsyncNodeView extends AbstractAsyncNodeView<string, Demo2Async
 
     // Update styles
     const renderAttributes = getRenderAttributes(NodeName.DEMO_2_ASYNC_NODE, attrs, Demo2AsyncNodeRendererSpec, Demo2AsyncNodeSpec);
-    this.dom.setAttribute('style', renderAttributes.style ?? ''/*empty string if not present*/);
+    this.dom.setAttribute('style', String(renderAttributes.style ?? ''/*empty string if not present*/));
 
     // check model
     const performingAsyncOperation = this.model.getPerformingAsyncOperation();
