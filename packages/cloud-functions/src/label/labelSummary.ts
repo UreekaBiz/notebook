@@ -19,7 +19,7 @@ export const createLabelSummary = async (userId: UserIdentifier, labelId: LabelI
     };
     await labelSummaryRef(labelId).set(record);
   } catch(error) {
-    logger.error(`Error setting RTDB Label Summary (${labelId}) for User (${userId}). Reason: `, error);
+    logger.error(`Error creating RTDB Label Summary (${labelId}) for User (${userId}). Reason: `, error);
   }
 };
 
@@ -45,6 +45,6 @@ export const deleteLabelSummary = async (userId: UserIdentifier, labelId: LabelI
   try {
     await labelSummaryRef(labelId).remove();
   } catch(error) {
-    logger.error(`Error setting RTDB Label Summary (${labelId}) for User (${userId}). Reason: `, error);
+    logger.error(`Error deleting RTDB Label Summary (${labelId}) for User (${userId}). Reason: `, error);
   }
 };
