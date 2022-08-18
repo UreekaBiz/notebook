@@ -43,7 +43,7 @@ export const SliderToolItem: React.FC<Props> = ({ editor, depth, attributeType, 
   const value = node.attrs[attributeType] ?? minValue /*default*/;
   // normalize the value to be between 0 and 100
   const normalized = (value - minValue) / (maxValue - minValue) * 100;
-  console.log(normalized);
+
   return (
     <SliderTool
       name={name}
