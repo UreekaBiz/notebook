@@ -97,8 +97,7 @@ export const createFragmentWithAppendedContent = (node: ProseMirrorNode, appende
 // REF: https://github.com/ProseMirror/prosemirror-commands/blob/20fa086dfe21f7ce03e5a05b842cf04e0a91e653/src/commands.ts
 /** Creates a Block Node below the current Selection */
 export const createBlockNodeBelow = (schema: NotebookSchemaType, blockNodeName: NodeName, attributes: Partial<Attributes>): Command => (tr, dispatch) => {
-  const { $head, $anchor } = tr.selection;
-  if(!$head.sameParent($anchor)) return false/*head and anchor in different Nodes*/;
+  const { $head } = tr.selection;
 
   const above = $head.node(-1/*document level*/),
         after = $head.indexAfter(-1/*document level*/);
@@ -111,8 +110,9 @@ export const createBlockNodeBelow = (schema: NotebookSchemaType, blockNodeName: 
     const newBlockNode = blockNodeType.createAndFill(attributes);
     if(!newBlockNode) return false/*no fitting wrapping found, Block Node not created*/;
 
-    tr.replaceWith(creationPos, creationPos, newBlockNode);
-    tr.setSelection(Selection.near(tr.doc.resolve(creationPos), 1/*look forwards first*/));
+    tr.replaceWith(creationPos, creationPos, newBlockNode)
+      .setSelection(Selection.near(tr.doc.resolve(creationPos), 1/*look forwards first*/));
+
     dispatch(tr.scrollIntoView());
   }
 
