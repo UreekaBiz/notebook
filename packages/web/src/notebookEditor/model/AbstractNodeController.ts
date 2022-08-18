@@ -67,4 +67,12 @@ export abstract class AbstractNodeController<NodeType extends ProseMirrorNode, S
     this.nodeView.updateView();
     return true/*as far as this implementation is concerned, an update occurred*/;
   }
+
+  // called by ProseMirror when the node is removed
+  public destroy() {
+    // NOTE: the View and the Model are destroyed in the inverse order of
+    //       their creation to prevent any issues with the View
+    this.nodeView.destroy();
+    this.nodeModel.destroy();
+  }
 }

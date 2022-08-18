@@ -174,6 +174,7 @@ export {
   createMarkHolderNode,
   getMarkHolderNodeType,
   isMarkHolderNode,
+  storedMarksFromDOM,
 
   ParagraphNodeType,
   createParagraphNode,
@@ -190,6 +191,9 @@ export {
   MarkName,
   getMarkName,
   getMarkValue,
+  markFromJSONMark,
+  stringifyMarksArray,
+  parseStringifiedMarksArray,
 
   // -- Mark Specs ----------------------------------------------------------------
   BoldMarkSpec,

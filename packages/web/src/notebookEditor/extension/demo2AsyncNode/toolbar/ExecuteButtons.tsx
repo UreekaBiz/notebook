@@ -80,7 +80,7 @@ export const ExecuteButtons: React.FC<Props> = ({ editor, depth }) => {
   // == UI ========================================================================
   return (
     <Flex>
-      <ExecuteShortcut editorService={editorService} demo2AsyncNodeView={demo2AsyncNodeView} notebookId={notebookId} />
+      <ExecuteShortcut notebookId={notebookId} editorService={editorService} demo2AsyncNodeView={demo2AsyncNodeView} disabled={disabled} />
       <Box marginRight={1} >
         <Tooltip label={disabled ? ''/*none*/ : 'Execute Remotely'} hasArrow>
           <IconButton
@@ -121,12 +121,14 @@ type ExecuteShortcutProps = {
   notebookId: NotebookIdentifier;
   editorService: NotebookEditorService;
   demo2AsyncNodeView: Demo2AsyncNodeController;
+  disabled: boolean;
 }
-const ExecuteShortcut: React.FC<ExecuteShortcutProps> = ({ demo2AsyncNodeView, editorService, notebookId }) => {
+const ExecuteShortcut: React.FC<ExecuteShortcutProps> = ({ editorService, notebookId, demo2AsyncNodeView, disabled }) => {
   // == Effect ====================================================================
   // executed the DAN when the user presses CMD + Enter
   useEffect(() => {
     const handler = (event: KeyboardEvent) => {
+      if(disabled) return/*execution not allowed, nothing to do*/;
       if(demo2AsyncNodeView.nodeModel.getPerformingAsyncOperation()) return/*don't execute if already loading*/;
       if(event.key !== 'Enter' || !event.metaKey) return/*nothing to do*/;
 
@@ -135,7 +137,7 @@ const ExecuteShortcut: React.FC<ExecuteShortcutProps> = ({ demo2AsyncNodeView, e
 
     window.addEventListener('keydown', handler);
     return () => { window.removeEventListener('keydown', handler); };
-  }, [editorService, demo2AsyncNodeView, notebookId]);
+  }, [notebookId, editorService, demo2AsyncNodeView, disabled]);
 
   return null;
 };

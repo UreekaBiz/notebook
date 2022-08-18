@@ -1,6 +1,6 @@
 import { Node, InputRule } from '@tiptap/core';
 
-import { createBoldMark, createMarkHolderNode, generateNodeId, getHeadingLevelFromTag, getNodeOutputSpec, AttributeType, HeadingLevel, HeadingNodeSpec, SetAttributeType } from '@ureeka-notebook/web-service';
+import { createBoldMark, createMarkHolderNode, generateNodeId, getHeadingLevelFromTag, getNodeOutputSpec, stringifyMarksArray, AttributeType, HeadingLevel, HeadingNodeSpec, SetAttributeType } from '@ureeka-notebook/web-service';
 
 import { setAttributeParsingBehavior } from 'notebookEditor/extension/util/attribute';
 import { NoStorage } from 'notebookEditor/model/type';
@@ -73,7 +73,7 @@ export const Heading = Node.create<HeadingOptions, NoStorage>({
           } /* else -- the resulting Node Content is valid, set Heading Block Type */
 
           const { tr } = state;
-          const storedMarks = JSON.stringify([createBoldMark(state.schema)]);
+          const storedMarks = stringifyMarksArray([createBoldMark(state.schema)]);
 
           tr.delete(range.from, range.to)
             .setBlockType(range.from, range.from, this.type, { level })

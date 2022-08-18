@@ -82,7 +82,7 @@ export const ExecuteButtons: React.FC<Props> = ({ editor, depth }) => {
   // == UI ========================================================================
   return (
     <Flex>
-      <ExecuteShortcut editorService={editorService} demoAsyncNodeView={demoAsyncNodeView} notebookId={notebookId} />
+      <ExecuteShortcut notebookId={notebookId} editorService={editorService} demoAsyncNodeView={demoAsyncNodeView} disabled={disabled} />
       <Box marginRight={1} >
         <Tooltip label={disabled ? ''/*none*/ : 'Execute Remotely'} hasArrow>
           <IconButton
@@ -118,17 +118,19 @@ export const ExecuteButtons: React.FC<Props> = ({ editor, depth }) => {
 };
 
 // ================================================================================
-// TODO: Refactor into some kind of general component that handle shortcuts.
+// TODO: refactor into some kind of general component that handle shortcuts
 type ExecuteShortcutProps = {
   notebookId: NotebookIdentifier;
   editorService: NotebookEditorService;
   demoAsyncNodeView: DemoAsyncNodeController;
+  disabled: boolean;
 }
-const ExecuteShortcut: React.FC<ExecuteShortcutProps> = ({ editorService, demoAsyncNodeView, notebookId }) => {
+const ExecuteShortcut: React.FC<ExecuteShortcutProps> = ({ editorService, notebookId, demoAsyncNodeView, disabled }) => {
   // == Effect ====================================================================
   // executed the DAN when the user presses CMD + Enter
   useEffect(() => {
     const handler = (event: KeyboardEvent) => {
+      if(disabled) return/*execution not allowed, nothing to do*/;
       if(demoAsyncNodeView.nodeModel.getPerformingAsyncOperation()) return/*don't execute if already loading*/;
       if(event.key !== 'Enter' || !event.metaKey) return/*nothing to do*/;
 
@@ -137,7 +139,7 @@ const ExecuteShortcut: React.FC<ExecuteShortcutProps> = ({ editorService, demoAs
 
     window.addEventListener('keydown', handler);
     return () => { window.removeEventListener('keydown', handler); };
-  }, [editorService, demoAsyncNodeView, notebookId]);
+  }, [notebookId, editorService, demoAsyncNodeView, disabled]);
 
   return null;
 };

@@ -31,6 +31,15 @@
   cursor: pointer;
 }
 
+/* --  Node -------------------------------------------------------------------- */
+/*
+  REF: https://github.com/ueberdosis/tiptap/issues/911
+  make it so that the Cursor does not disappear on empty Nodes (SEE: REF above)
+*/
+[data-node-type] {
+  min-width: 1px;
+}
+
 /* == Editor Editable ========================================================== */
 /* currently nothing  */
 

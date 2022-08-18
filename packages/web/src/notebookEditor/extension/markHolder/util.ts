@@ -2,13 +2,13 @@ import { ChainedCommands, Editor } from '@tiptap/core';
 import { Mark, MarkType } from 'prosemirror-model';
 import { TextSelection } from 'prosemirror-state';
 
-import { createMarkHolderNode, getMarkName, isMarkHolderNode, AttributeType, JSONMark, JSONNode, MarkHolderNodeType, MarkName, NotebookSchemaType } from '@ureeka-notebook/web-service';
+import { createMarkHolderNode, getMarkName, isMarkHolderNode, markFromJSONMark, parseStringifiedMarksArray, stringifyMarksArray, AttributeType, JSONNode, MarkHolderNodeType, MarkName, NotebookSchemaType } from '@ureeka-notebook/web-service';
 
 // ********************************************************************************
 // creates a MarkHolder Node holding the Marks corresponding to the given MarkNames
 export const createMarkHolderJSONNode = (editor: Editor, markNames: MarkName[]): JSONNode => {
   const storedMarks = markNames.map(markName => editor.schema.marks[markName].create());
-  const markHolder = createMarkHolderNode(editor.schema, { storedMarks: JSON.stringify(storedMarks) });
+  const markHolder = createMarkHolderNode(editor.schema, { storedMarks: stringifyMarksArray(storedMarks) });
 
   return markHolder.toJSON() as JSONNode;
 };
@@ -35,7 +35,7 @@ export const getMarkHolder = (editor: Editor) => {
  *       error gets thrown. This is the reason why the used chain is not taken from
  *       the editor parameter
  */
- export const toggleMarkInMarkHolder = (editor: Editor, chain: () => ChainedCommands/*(SEE: NOTE above)*/, markHolder: MarkHolderNodeType, appliedMarkType: MarkType) => {
+export const toggleMarkInMarkHolder = (editor: Editor, chain: () => ChainedCommands/*(SEE: NOTE above)*/, markHolder: MarkHolderNodeType, appliedMarkType: MarkType) => {
   let newMarksArray: Mark[] = [];
   const storedMarks  = markHolder.attrs[AttributeType.StoredMarks];
   if(!storedMarks) return false/*nothing to do*/;
@@ -58,7 +58,7 @@ export const getMarkHolder = (editor: Editor) => {
     const { pos: startingPos } = tr.selection.$anchor;
     if(dispatch) {
       tr.setSelection(new TextSelection(startOfParentNodePos, tr.doc.resolve(startOfParentNodePos.pos + markHolder.nodeSize)))
-        .setNodeMarkup(tr.selection.$anchor.pos, undefined/*maintain type*/, { storedMarks: JSON.stringify(newMarksArray) })
+        .setNodeMarkup(tr.selection.$anchor.pos, undefined/*maintain type*/, { storedMarks: stringifyMarksArray(newMarksArray) })
         .setSelection(new TextSelection(tr.doc.resolve(startingPos)));
       dispatch(tr);
     } /* else -- called from can() (SEE: src/notebookEditor/README.md/#Commands) */
@@ -79,9 +79,5 @@ export const inMarkHolder = (editor: Editor, markName: MarkName) => {
 };
 
 /** Parses the stringified array of Marks and returns it as a {@link Mark} array*/
-export const parseStoredMarks = (schema: NotebookSchemaType, stringifiedStoredMarks: string) => {
-  const JSONMarks = JSON.parse(stringifiedStoredMarks) as JSONMark[]/*by contract*/;
-  const storedMarks = JSONMarks.map(markName => Mark.fromJSON(schema, markName));
-
-  return storedMarks;
-};
+export const parseStoredMarks = (schema: NotebookSchemaType, stringifiedStoredMarks: string) =>
+  parseStringifiedMarksArray(stringifiedStoredMarks).map(jsonMark => markFromJSONMark(schema, jsonMark));

@@ -104,7 +104,7 @@ export const setBlockNodeAcrossNodes = (schema: NotebookSchemaType, blockNodeNam
   const textContent = tr.doc.textBetween(from, to, '\n'/*insert for every Block Node*/);
 
   tr.setSelection(new TextSelection(tr.doc.resolve(from - 1/*account for start of parent at from*/), tr.doc.resolve(to)))
-    .replaceSelectionWith(schema.nodes[blockNodeName].create(attributes, schema.text(textContent)));
+    .replaceSelectionWith(schema.nodes[blockNodeName].create(attributes, textContent.length > 0 ? schema.text(textContent) : undefined/*no content*/));
 
   if(dispatch) dispatch(tr);
   return true/*can be done*/;

@@ -18,7 +18,7 @@ export const demoAsyncNodeToolItem: ToolItem = {
   label: NodeName.DEMO_ASYNC_NODE,
 
   icon: <AiOutlineClockCircle size={16} />,
-  tooltip: 'DemoAsyncNode (⌘ + ⌥ + D)',
+  tooltip: 'Demo Async Node (⌘ + ⌥ + D)',
 
   shouldBeDisabled: (editor) => {
     const node = getSelectedNode(editor.state);
