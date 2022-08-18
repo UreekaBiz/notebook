@@ -5,7 +5,7 @@ import { ToolContainer } from 'notebookEditor/toolbar/ToolbarContainer';
 import { useLocalValue } from 'notebookEditor/shared/hook/useLocalValue';
 
 // ********************************************************************************
-type SliderMarkValue = {
+export type SliderMarkValue = {
   /** the position of the mark from 0-100 */
   value: number;
   /** the label of the mark */
