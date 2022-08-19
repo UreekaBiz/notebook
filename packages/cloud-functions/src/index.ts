@@ -15,6 +15,8 @@ admin.initializeApp(functions.config().firebase);
 // ********************************************************************************
 
 // NOTE:  each file must be added manually!
+export * from './asset/callable';
+export * from './asset/onStorage';
 export * from './authUser/callable';
 export * from './authUser/onCreate';
 export * from './authUser/onWrite';

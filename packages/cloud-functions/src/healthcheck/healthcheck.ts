@@ -13,10 +13,11 @@ import { getFunctionDomain, validateData } from '../util/function';
 const excludedEndpointNames = [
   'healthcheck'/*ensures no circular dependency*/,
 
-  // Firestore and RTDB triggers
+  // Firestore, RTDB and Storage triggers
   'onCreateFirebaseUser',
   'onCreateHashtagSummary',
   'onCreateNotebookVersion',
+  'onStorageAssetCreate',
   'onWriteUserProfilePrivate',
   'onWriteUserSessionUser',
 
@@ -35,6 +36,9 @@ const endpointNames = [
   // SEE: #excludedEndpointNames()
 
   'adminHashtagRemoveUpdate',
+
+  'assetDelete',
+  'assetUpdate',
 
   'authUserSessionClear',
   'authUserSessionHeartbeat',

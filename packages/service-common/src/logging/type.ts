@@ -15,6 +15,7 @@ export const isServiceLogger = (logger: ServiceLogger | Logger | string/*log-lev
 export enum ServiceLogger {
   DEFAULT = 'service.default'/*for generic cases*/,
 
+  ASSET = 'service.asset',
   AUTH_USER = 'service.auth_user',
   HASHTAG = 'service.hashtag',
   LABEL = 'service.label',

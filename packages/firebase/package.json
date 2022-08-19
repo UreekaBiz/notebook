@@ -6,9 +6,10 @@
   "scripts": {
     "list-indexes": "cross-env-shell firebase -P '$NEXT_PUBLIC_FIREBASE_PROJECT_ID' firestore:indexes",
     "indexes": "cross-env-shell npx firebase -P '$NEXT_PUBLIC_FIREBASE_PROJECT_ID' deploy --only firestore:indexes",
-    "rules": "npm run database-rules && npm run firestore-rules",
+    "rules": "npm run database-rules && npm run firestore-rules && npm run storage-rules",
     "database-rules": "cross-env-shell npx firebase -P '$NEXT_PUBLIC_FIREBASE_PROJECT_ID' deploy --only database",
-    "firestore-rules": "cross-env-shell npx firebase -P '$NEXT_PUBLIC_FIREBASE_PROJECT_ID' deploy --only firestore:rules"
+    "firestore-rules": "cross-env-shell npx firebase -P '$NEXT_PUBLIC_FIREBASE_PROJECT_ID' deploy --only firestore:rules",
+    "storage-rules": "cross-env-shell npx firebase -P '$NEXT_PUBLIC_FIREBASE_PROJECT_ID' deploy --only storage"
   },
 
   "devDependencies": {

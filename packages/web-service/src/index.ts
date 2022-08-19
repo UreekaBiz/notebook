@@ -6,6 +6,7 @@ configureLogging();
 export * from './util/firebase'/*NOTE: must be before all local imports / exports!*/;
 
 // ********************************************************************************
+export * from './asset';
 export * from './authUser';
 export * from './integration';
 export * from './notebook';

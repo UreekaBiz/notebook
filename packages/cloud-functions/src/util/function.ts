@@ -68,6 +68,9 @@ type OnWriteHandler<T, C extends ContextParams> = (change: functions.Change<T>, 
 // .. Firebase Auth ...............................................................
 type AuthOnCreateOrDeleteHandler<C extends ContextParams> = (user: functions.auth.UserRecord, context: EventContext<C>) => PromiseLike<any> | any;
 
+// .. Firebase Storage ............................................................
+type OnFinalize<C extends ContextParams> = (object: functions.storage.ObjectMetadata, context: EventContext<C>) => PromiseLike<any> | any;
+
 // ********************************************************************************
 // retrieves the host and domain for the HTTPS Cloud Function being called
 export const getFunctionDomain = () => {
@@ -286,6 +289,30 @@ export const wrapAuthOnCreateOrDelete = <C extends ContextParams = {}>(handler: 
 
     try {
       return await handler(user, context);
+    } catch(error) {
+      // TODO: allow -some- Exception to propagate out so that the trigger could be
+      //       retried
+
+      // NOTE: ApplicationErrors are logged by design so there's no need to log again
+      if(!(error instanceof ApplicationError)) {
+        logger.error('devel/unhandled', error);
+      } /* else -- ApplicationError has already been logged */
+    }
+  };
+  return func;
+};
+
+// == Firebase Storage ============================================================
+// -- onFinalize ------------------------------------------------------------------
+export const wrapOnFinalize = <C extends ContextParams = {}>(handler: OnFinalize<C>): OnFinalize<any/*Firestore API doesn't expect a type*/> => {
+  const func = async (object: functions.storage.ObjectMetadata, context: EventContext<C>) => {
+    // prevent runaway retries
+    // REF: https://cloud.google.com/functions/docs/bestpractices/retries#set_an_end_condition_to_avoid_infinite_retry_loops
+    const eventAgeMillis = Date.now() - Date.parse(context.timestamp);
+    if(eventAgeMillis > MAX_EVENT_AGE) { logger.warn(`Storage On-Finalize trigger retry aborted due to timeout (${eventAgeMillis}ms).`); return/*avoid an infinite loop of retries*/; }
+
+    try {
+      return await handler(object, context);
     } catch(error) {
       // TODO: allow -some- Exception to propagate out so that the trigger could be
       //       retried

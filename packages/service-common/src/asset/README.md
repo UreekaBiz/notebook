@@ -1,0 +1,3 @@
+# Asset
+
+Assets are defined in Google Cloud Storage (GCS) and are by default public but are 'protected' via security-by-obscurity. They are stored per User (by User Identifier) and are given a unique Firestore document identifier. (Theoretically there's no reason to partition by User but it was done to simplify User-based admin functions (e.g. deleting all assets for a User independent of any record of them in Firestore).) Each successfully uploaded Asset is also associated with a Firestore document which contains other User-friendly information (such as a name and description). The total number of Assets as well as the total size is stored in a per-User RTDB summary record.

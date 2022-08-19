@@ -3,6 +3,7 @@ import { getAuth, signInWithPopup, GoogleAuthProvider } from 'firebase/auth';
 import { getDatabase } from 'firebase/database';
 import { getFirestore } from 'firebase/firestore';
 import { getFunctions } from 'firebase/functions';
+import { getStorage } from 'firebase/storage';
 
 // ********************************************************************************
 const firebaseConfig = {
@@ -34,6 +35,7 @@ if(client.getApps().length < 1/*no other app has been initialized*/) {
 export const database  = getDatabase(client.getApp());
 export const firestore = getFirestore(client.getApp());
 export const functions = getFunctions(client.getApp());
+export const storage = getStorage(client.getApp());
 
 // -- Auth ------------------------------------------------------------------------
 // TODO: configure Auth to reduce dependencies

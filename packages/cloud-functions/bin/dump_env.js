@@ -83,6 +83,8 @@ const commonVariables = [
   // SEE: https://cloud.google.com/functions/docs/env-var#nodejs_10_and_subsequent_runtimes
   'NEXT_PUBLIC_FIREBASE_FUNCTION_REGION',
   'NEXT_PUBLIC_FIREBASE_PROJECT_ID',
+  // NOTE: this follows the same pattern as above for sanity (but is not required to)
+  'NEXT_PUBLIC_FIREBASE_STORAGE_BUCKET',
 
   'NOTEBOOK_CHECKPOINT_N_VERSIONS',
   'NOTEBOOK_UPDATE_DOCUMENT_MAX_ATTEMPTS',

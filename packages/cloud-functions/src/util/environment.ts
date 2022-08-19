@@ -32,6 +32,7 @@ export const ENVIRONMENT: EnvironmentType = (() => {
 // REF: '/bin/dump_env.js'
 export const PROJECT_ID = process.env['NEXT_PUBLIC_FIREBASE_PROJECT_ID']!;
 export const FUNCTION_REGION = process.env['NEXT_PUBLIC_FIREBASE_FUNCTION_REGION']!;
+export const STORAGE_BUCKET = process.env['NEXT_PUBLIC_FIREBASE_STORAGE_BUCKET']!;
 
 export const SERVICE_ACCOUNT_EMAIL = `${PROJECT_ID}@appspot.gserviceaccount.com`;
 

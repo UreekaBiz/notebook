@@ -1,9 +1,74 @@
 rules_version = '2';
+
+// Cloud Storage Security Rules
+// REF: https://firebase.google.com/docs/storage/security/
+
+// Deploy using:
+//   npm run storage-rules
+// ********************************************************************************
+
+// == Auth ========================================================================
+// SEE: ./firstore.rules
+
+// is the User is signed and associated with a valid 'auth' context?
+function isSignedIn() {
+  return (request.auth != null) && (request.auth.uid != null);
+}
+
+// is the User authenticated with a valid token?
+function isUser() {
+  return    isSignedIn()
+          && (request.auth.token != null);
+}
+
+// NOTE: note currently used
+// // is User signed in, authenticated and posses the 'admin' role?
+// function isAdmin() {
+//   return hasRole('admin');
+// }
+
+// ..............................................................................
+// NOTE: note currently used
+// // is the specified User the same as the logged in User?
+// function isSameSignedInUser(userId) {
+//   return    isSignedIn()
+//           && (request.auth.uid == userId);
+// }
+
+// is the specified User the same as the logged in User?
+function isSameUser(userId) {
+  return    isUser()
+          && (request.auth.uid == userId);
+}
+
+// == Image =======================================================================
+// is the associated resource an image and less than the specified size in Mb?
+function isImageSmallerThan(maxSizeMb) {
+  return    request.resource.contentType.matches('image/.*')
+         && request.resource.size < maxSizeMb * 1024 * 1024;
+}
+
+// ================================================================================
 service firebase.storage {
   match /b/{bucket}/o {
+    // default deny
     match /{allPaths=**} {
-      // default deny
       allow read, write: if false;
+    }
+
+    // == Asset ===================================================================
+    // CHECK: use image meta-data to determine visibility?
+    // TODO: investiage 'group private' for Shared Notebooks
+    // REF: https://firebase.google.com/docs/storage/security/rules-conditions#group_private
+    match /a/{userId}/{assetId} {
+      // TODO: update the custom claims on the server side to include the total
+      //       number of MB's stored and then update this rule to check that the
+      //       size of the asset plus what's in the claim is less than the maximum allowed
+      allow create: if isSameUser(userId) && isImageSmallerThan(30);
+      allow update: if false; // server-side only
+      allow get:    if isUser();  // TODO: permissive for Shared Notebooks (see above TODO)
+      allow list:   if false; // cannot list all images
+      allow delete: if false; // server-side only
     }
   }
 }

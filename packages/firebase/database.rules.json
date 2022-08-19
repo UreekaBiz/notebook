@@ -1,5 +1,12 @@
 {
   "rules": {
+    "asset-summaries": {
+      "$uid": {
+        ".read": "auth !== null && auth.uid === $uid",
+        ".write": "false"
+      }
+    },
+
     "hashtag-summaries": {
       "$hashtag": {
         ".read": "auth !== null",

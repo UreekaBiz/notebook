@@ -1,3 +1,4 @@
+export * from './asset';
 export * from './authUser';
 export * from './hashtag';
 export * from './healthcheck';

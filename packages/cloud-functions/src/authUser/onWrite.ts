@@ -4,6 +4,7 @@ import { logger } from 'firebase-functions';
 
 import { UserProfilePrivateParams, UserProfilePrivate_Storage, UserSession, UserSessionUsersParams, USER_PROFILE_PRIVATE, USER_SESSIONS_USER } from '@ureeka-notebook/service-common';
 
+import { deleteAssetUserSummary } from '../asset/assetUserSummary';
 import { deleteUserProfilePublic } from '../user/userProfilePublic';
 import { getChangeState } from '../util/firestore';
 import { wrapOnWrite, MediumMemory } from '../util/function';
@@ -58,6 +59,14 @@ export const onWriteUserProfilePrivate = functions.runWith(MediumMemory)
   const { isLatest, latestDocument } = await getChangeState(change, `User Private Profile V2 (${userId})`);
   if(!latestDocument) {
     await deleteUserProfilePublic(userId)/*data consistency -- logs on error*/;
+
+    // TODO: do the remainder in a Task?
+
+    // TODO: think about how Notebooks are handled (especially those that are shared)
+
+    // TODO: delete all Assets associated with the User
+    await deleteAssetUserSummary(userId)/*data consistency -- logs on error*/;
+
     return/*admin deleted data in console -- ignore*/;
   } /* else -- the document has not been deleted */
   if(!isLatest) return/*don't update since not latest (*that* trigger will update)*/;
