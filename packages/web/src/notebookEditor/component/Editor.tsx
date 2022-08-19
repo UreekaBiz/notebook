@@ -93,7 +93,13 @@ export const Editor = () => {
   }, []);
 
   // == Handler ===================================================================
-  const handleClick = () => {
+  const handleClick = (event: React.MouseEvent<HTMLDivElement, MouseEvent>) => {
+    // NOTE: since this Event Handler runs before other view element event
+    //       handlers (e.g. TaskListItem checkboxes), ensure that it is a Div that
+    //       is being clicked so that the Selection is not being modified
+    //       incorrectly. More checks might have to be added in the future
+    if(!(event.target instanceof HTMLDivElement)) return/*(SEE: NOTE above)*/;
+
     if(!editor) return/*nothing to do*/;
     if(editor.isFocused) return/*already focused*/;
 
@@ -102,7 +108,7 @@ export const Editor = () => {
 
   // == UI ========================================================================
   return (
-    <Box id={EDITOR_CONTAINER_ID} className={isActionModifierPressed ? EDITOR_ACTIONABLE_CLASS : ''} height='full' overflowY='auto' onClick={handleClick}>
+    <Box id={EDITOR_CONTAINER_ID} className={isActionModifierPressed ? EDITOR_ACTIONABLE_CLASS : ''} height='full' overflowY='auto' onClick={(event) => handleClick(event)}>
       <EditorUserInteractions />
       <EditorContent editor={editor} />
     </Box>
