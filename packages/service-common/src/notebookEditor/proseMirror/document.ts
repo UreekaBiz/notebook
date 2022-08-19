@@ -15,7 +15,8 @@ export type NotebookDocumentContent = string/*TODO: see TODO above*/;
 
 // ================================================================================
 export const getDocumentFromDocAndVersions = (schemaVersion: NotebookSchemaVersion, doc: DocumentNodeType | undefined/*none*/, versions: NotebookVersion[]): DocumentNodeType => {
-  let document = doc ?? createEditorState(schemaVersion).doc;
+  const schema = getSchema(schemaVersion);
+  let document = doc ?? createEditorState(schema).doc;
 
   versions.forEach(version => {
     const prosemirrorStep = contentToStep(schemaVersion, version.content);
