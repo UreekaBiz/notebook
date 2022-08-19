@@ -304,7 +304,6 @@ export {
   getParentNode,
   getNodesAffectedByStepMap,
   nodeToTagId,
-  setBlockNodeAcrossNodes,
   wereNodesAffectedByTransaction,
   NodePosition,
 
