@@ -3,6 +3,7 @@ import { useState, ChangeEventHandler } from 'react';
 
 import { notebookEditorTheme, ThemeName, Themes } from '@ureeka-notebook/web-service';
 
+import { setThemeStylesheet } from 'notebookEditor/theme/theme';
 import { EditorToolComponentProps } from 'notebookEditor/toolbar/type';
 
 // ********************************************************************************
@@ -17,8 +18,11 @@ export const SetThemeToolItem: React.FC<Props> = () => {
     const theme = Themes[value];
 
     if(!theme) return/*invalid value -- ignore*/;
+
+    // update theme
     setTheme(value);
     notebookEditorTheme.setTheme(theme);
+    setThemeStylesheet();
   };
 
   // == UI ========================================================================
