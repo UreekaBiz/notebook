@@ -1,6 +1,6 @@
 import { CommandProps } from '@tiptap/core';
 
-import { generateNodeId, getParentNode, isCodeBlockNode, setBlockNodeAcrossNodes, AttributeType, CommandFunctionType, NodeName } from '@ureeka-notebook/web-service';
+import { createBlockNodeBelow, generateNodeId, getParentNode, isCodeBlockNode, AttributeType, CommandFunctionType, NodeName } from '@ureeka-notebook/web-service';
 
 // ********************************************************************************
 // == Type ========================================================================
@@ -20,9 +20,5 @@ export const toggleCodeBlockCommand = () => ({ editor, commands, tr, dispatch, v
     return false/*do not allow codeBlocks to be toggable*/;
   } /* else -- create a codeBlock */
 
-  if(editor.state.selection.empty) {
-    return commands.setNode(NodeName.CODEBLOCK, { [AttributeType.Id]: generateNodeId() });
-  } /* else -- ensure selected Content gets transformed into CodeBlock correctly */
-
-  return setBlockNodeAcrossNodes(editor.schema, NodeName.CODEBLOCK, { [AttributeType.Id]: generateNodeId() })(tr, dispatch, view);
+  return createBlockNodeBelow(editor.schema, NodeName.CODEBLOCK, { [AttributeType.Id]: generateNodeId() })(tr, dispatch, view);
 };

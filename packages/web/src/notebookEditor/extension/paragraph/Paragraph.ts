@@ -1,9 +1,8 @@
 import { Node } from '@tiptap/core';
 
-import { getNodeOutputSpec, Attributes, AttributeType, ParagraphNodeSpec, SetAttributeType } from '@ureeka-notebook/web-service';
+import { getNodeOutputSpec, Attributes, AttributeType, NodeName, ParagraphNodeSpec, SetAttributeType, DATA_NODE_TYPE } from '@ureeka-notebook/web-service';
 
 import { setAttributeParsingBehavior } from 'notebookEditor/extension/util/attribute';
-import { safeParseTag } from 'notebookEditor/extension/util/parse';
 import { ExtensionPriority, NoStorage } from 'notebookEditor/model/type';
 
 import { setParagraphCommand } from './command';
@@ -41,6 +40,6 @@ export const Paragraph = Node.create<ParagraphOptions, NoStorage>({
   addKeyboardShortcuts() { return { 'Mod-Alt-0': () => this.editor.commands.setParagraph() }; },
 
   // -- View ----------------------------------------------------------------------
-  parseHTML() { return [safeParseTag('div')]; },
+  parseHTML() { return [ { tag: `div[${DATA_NODE_TYPE}="${NodeName.PARAGRAPH}"]` } ]; },
   renderHTML({ node, HTMLAttributes }) { return getNodeOutputSpec(node, HTMLAttributes); },
 });

@@ -1,6 +1,6 @@
 import { Node } from '@tiptap/core';
 
-import { getNodeOutputSpec, storedMarksFromDOM, AttributeType, MarkHolderNodeSpec, NodeName } from '@ureeka-notebook/web-service';
+import { getNodeOutputSpec, storedMarksFromDOM, AttributeType, MarkHolderNodeSpec, NodeName, DATA_NODE_TYPE } from '@ureeka-notebook/web-service';
 
 import { NoOptions, NoStorage, ParseRulePriority } from 'notebookEditor/model/type';
 
@@ -37,7 +37,7 @@ export const MarkHolder = Node.create<NoOptions, NoStorage>({
 
   // -- View ----------------------------------------------------------------------
   parseHTML() { return [{
-    tag: `div[data-node-type="${NodeName.MARK_HOLDER}"]`,
+    tag: `div[${DATA_NODE_TYPE}="${NodeName.MARK_HOLDER}"]`,
     priority: ParseRulePriority.MARK_HOLDER, /*(SEE: ParseRulePriority)*/
   }];
 },
