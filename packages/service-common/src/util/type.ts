@@ -24,6 +24,11 @@ export type PartialRecord<K extends keyof any, T> = {
 /** redefine a type of a member */
 export type Modify<T, R> = Omit<T, keyof R> & R;
 
+/** unions the specified type onto each value */
+export type UnionType<T, U> = {
+  [P in keyof T]: T[P] | U;
+};
+
 /** override a 'readonly' type */
 export type Mutable<T extends object> = { -readonly [K in keyof T]: T[K]; };
 export const mutable = <T>(t: T): { -readonly [K in keyof T]: T[K] } => t;
