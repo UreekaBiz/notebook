@@ -130,6 +130,8 @@ export class VersionListener {
     this.listenEditor();
     // listen to Versions from Firestore and apply them to the Editor
     this.listenFirestore();
+
+    log.debug(`Version Listener initialized with write batch-size of ${versionBatchSize} ${this.logContext()}.`);
   }
 
   /**
