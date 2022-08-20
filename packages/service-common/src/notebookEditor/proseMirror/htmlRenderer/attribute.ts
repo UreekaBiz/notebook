@@ -1,6 +1,6 @@
 import { MarkSpec, NodeSpec } from 'prosemirror-model';
 
-import {  isStyleAttribute, snakeCaseToKebabCase, AttributeValue, HTMLAttributes } from '../attribute';
+import { isStyleAttribute, snakeCaseToKebabCase, AttributeValue, HTMLAttributes } from '../attribute';
 import { MarkName } from '../mark';
 import { NodeName } from '../node';
 import { AttributeRenderer, MarkRendererSpec, NodeRendererSpec } from './type';
