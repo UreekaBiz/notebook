@@ -1,3 +1,5 @@
+import { EditorState } from 'prosemirror-state';
+
 import { NotebookIdentifier, DEFAULT_NOTEBOOK_NAME } from '../../notebook/type';
 import { createApplicationError } from '../../util/error';
 import { assertNever } from '../../util/type';
@@ -6,7 +8,6 @@ import { contentToStep } from '../version';
 import { DocumentNodeType } from './extension/document';
 import { contentToNode } from './node';
 import { getSchema, NotebookSchemaVersion } from './schema';
-import { createEditorState } from './state';
 
 // ********************************************************************************
 // TODO: More specificity than string (this is the JSON.stringified version of the
@@ -16,7 +17,7 @@ export type NotebookDocumentContent = string/*TODO: see TODO above*/;
 // ================================================================================
 export const getDocumentFromDocAndVersions = (schemaVersion: NotebookSchemaVersion, doc: DocumentNodeType | undefined/*none*/, versions: NotebookVersion[]): DocumentNodeType => {
   const schema = getSchema(schemaVersion);
-  let document = doc ?? createEditorState(schema).doc;
+  let document = doc ?? EditorState.create({ schema }).doc;
 
   versions.forEach(version => {
     const prosemirrorStep = contentToStep(schemaVersion, version.content);
