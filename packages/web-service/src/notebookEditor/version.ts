@@ -47,7 +47,7 @@ export const writeVersions = async (userId: UserIdentifier, clientId: ClientIden
     const firstVersionId = generateNotebookVersionIdentifier(startingIndex),
           firstVersionRef = notebookVersionDocument(notebookId, firstVersionId);
     const snapshot = await transaction.get(firstVersionRef);
-// log.debug(`Trying to write Notebook Versions ${startingIndex} - ${startingIndex + versions.length - 1}`);
+// log.debug(`Trying to write Notebook Versions ${startingIndex} - ${startingIndex + pmSteps.length - 1}`);
     if(snapshot.exists()) return false/*abort -- NotebookVersion with startingIndex already exists*/;
 
     pmSteps.forEach((pmStep, index) => {
