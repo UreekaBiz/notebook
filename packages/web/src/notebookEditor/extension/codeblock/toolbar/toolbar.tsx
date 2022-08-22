@@ -31,7 +31,7 @@ export const codeBlockToolItem: ToolItem = {
 
     return false/*enabled*/;
   },
-  onClick: (editor) => shortcutCommandWrapper(editor, createBlockNodeBelow(editor.schema, NodeName.CODEBLOCK, { [AttributeType.Id]: generateNodeId() })),
+  onClick: (editor) => shortcutCommandWrapper(editor, createBlockNodeBelow(NodeName.CODEBLOCK, { [AttributeType.Id]: generateNodeId() })),
 };
 
 const codeBlockTypeToolItem: ToolItem = {
