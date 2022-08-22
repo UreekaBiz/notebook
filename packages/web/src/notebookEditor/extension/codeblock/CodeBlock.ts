@@ -1,12 +1,12 @@
 import { textblockTypeInputRule, Node } from '@tiptap/core';
 
-import { getNodeOutputSpec, isCodeBlockNode, AttributeType, CodeBlockNodeSpec, CodeBlockType, NodeName, SetAttributeType } from '@ureeka-notebook/web-service';
+import { createBlockNodeBelow, generateNodeId, getNodeOutputSpec, isCodeBlockNode, AttributeType, CodeBlockNodeSpec, CodeBlockType, NodeName, SetAttributeType } from '@ureeka-notebook/web-service';
 
 import { setAttributeParsingBehavior, uniqueIdParsingBehavior } from 'notebookEditor/extension/util/attribute';
 import { handleBlockArrowDown, handleBlockArrowUp, handleBlockBackspace } from 'notebookEditor/extension/util/node';
 import { NoOptions } from 'notebookEditor/model/type';
 
-import { toggleCodeBlockCommand } from './command';
+import { shortcutCommandWrapper } from '../util/command';
 import { CodeBlockController } from './nodeView/controller';
 import { CodeBlockStorage } from './nodeView/storage';
 import { codeBlockOnTransaction } from './transaction';
@@ -38,12 +38,11 @@ export const CodeBlock = Node.create<NoOptions, CodeBlockStorage>({
   },
 
   // -- Command -------------------------------------------------------------------
-  addCommands() { return { toggleCodeBlock: toggleCodeBlockCommand }; },
   addKeyboardShortcuts() {
     return {
       // toggle a code block
-      'Shift-Mod-c': () => this.editor.commands.toggleCodeBlock(),
-      'Shift-Mod-C': () => this.editor.commands.toggleCodeBlock(),
+      'Shift-Mod-c': () => shortcutCommandWrapper(this.editor, createBlockNodeBelow(this.editor.schema, NodeName.CODEBLOCK, { [AttributeType.Id]: generateNodeId() })),
+      'Shift-Mod-C': () => shortcutCommandWrapper(this.editor, createBlockNodeBelow(this.editor.schema, NodeName.CODEBLOCK, { [AttributeType.Id]: generateNodeId() })),
 
       // remove code block when at start of document or code block is empty
       'Backspace': ({ editor }) => handleBlockBackspace(editor, NodeName.CODEBLOCK),

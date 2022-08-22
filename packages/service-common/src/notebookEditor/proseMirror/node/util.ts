@@ -95,7 +95,12 @@ export const createFragmentWithAppendedContent = (node: ProseMirrorNode, appende
 
 // REF: https://github.com/ProseMirror/prosemirror-commands/blob/20fa086dfe21f7ce03e5a05b842cf04e0a91e653/src/commands.ts
 /** Creates a Block Node below the current Selection */
-export const createBlockNodeBelow = (schema: NotebookSchemaType, blockNodeName: NodeName, attributes: Partial<Attributes>): Command => (tr, dispatch) => {
+export const createBlockNodeBelow = (schema: NotebookSchemaType, blockNodeName: NodeName, attributes: Partial<Attributes>): Command => (state, dispatch) => {
+  if(state.selection.$anchor.sameParent(state.selection.$head) && state.selection.$anchor.parent.type.name === blockNodeName) {
+    return false/*do not allow codeBlocks to be toggable*/;
+  } /* else -- try to create Block below */
+
+  const { tr } = state;
   const { $head } = tr.selection;
 
   const above = $head.node(-1/*document level*/),
