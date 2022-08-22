@@ -1,6 +1,6 @@
 import { MdFindReplace } from 'react-icons/md';
 
-import { createBlockNodeBelow, generateNodeId, AttributeType, NodeName } from '@ureeka-notebook/web-service';
+import { createBlockNode, generateNodeId, AttributeType, NodeName } from '@ureeka-notebook/web-service';
 
 import { markBold } from 'notebookEditor/extension/bold/toolbar';
 import { markStrikethrough } from 'notebookEditor/extension/strikethrough/toolbar';
@@ -24,7 +24,7 @@ export const demo2AsyncNodeToolItem: ToolItem = {
 
   shouldBeDisabled: () => false,
   shouldShow: (editor, depth) => depth === undefined || editor.state.selection.$anchor.depth === depth/*direct parent*/,
-  onClick: (editor) => shortcutCommandWrapper(editor, createBlockNodeBelow(NodeName.CODEBLOCK, { [AttributeType.Id]: generateNodeId() })),
+  onClick: (editor) => shortcutCommandWrapper(editor, createBlockNode(NodeName.CODEBLOCK, { [AttributeType.Id]: generateNodeId() })),
 };
 
 const demo2AsyncNodeReplaceTextToolItem: ToolItem = {
