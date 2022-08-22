@@ -37,7 +37,7 @@ export const CodeBlock = Node.create<NoOptions, CodeBlockStorage>({
     };
   },
 
-  // -- Command -------------------------------------------------------------------
+  // -- Keyboard Shortcut ---------------------------------------------------------
   addKeyboardShortcuts() {
     return {
       // toggle a code block
