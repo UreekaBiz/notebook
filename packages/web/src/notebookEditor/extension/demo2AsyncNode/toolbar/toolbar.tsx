@@ -1,10 +1,11 @@
 import { MdFindReplace } from 'react-icons/md';
 
-import { NodeName } from '@ureeka-notebook/web-service';
+import { createBlockNodeBelow, generateNodeId, AttributeType, NodeName } from '@ureeka-notebook/web-service';
 
 import { markBold } from 'notebookEditor/extension/bold/toolbar';
 import { markStrikethrough } from 'notebookEditor/extension/strikethrough/toolbar';
 import { fontSizeToolItem, spacingToolItem, textColorToolItem } from 'notebookEditor/extension/textStyle/toolbar';
+import { shortcutCommandWrapper } from 'notebookEditor/extension/util/command';
 import { Toolbar, ToolItem } from 'notebookEditor/toolbar/type';
 
 import { Demo2AsyncNodeDelaySlider } from './Demo2AsyncNodeDelaySlider';
@@ -23,7 +24,7 @@ export const demo2AsyncNodeToolItem: ToolItem = {
 
   shouldBeDisabled: () => false,
   shouldShow: (editor, depth) => depth === undefined || editor.state.selection.$anchor.depth === depth/*direct parent*/,
-  onClick: (editor) => editor.chain().focus().toggleDemo2AsyncNode().run(),
+  onClick: (editor) => shortcutCommandWrapper(editor, createBlockNodeBelow(NodeName.CODEBLOCK, { [AttributeType.Id]: generateNodeId() })),
 };
 
 const demo2AsyncNodeReplaceTextToolItem: ToolItem = {

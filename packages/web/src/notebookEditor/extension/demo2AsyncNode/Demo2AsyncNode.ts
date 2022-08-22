@@ -1,13 +1,13 @@
 import { Node } from '@tiptap/core';
 
-import { getNodeOutputSpec, isDemo2AsyncNode, AttributeType, Demo2AsyncNodeSpec, NodeName, SetAttributeType, DEFAULT_DEMO_2_ASYNC_NODE_DELAY, DEFAULT_DEMO_2_ASYNC_NODE_STATUS } from '@ureeka-notebook/web-service';
+import { createBlockNodeBelow, generateNodeId, getNodeOutputSpec, isDemo2AsyncNode, AttributeType, Demo2AsyncNodeSpec, NodeName, SetAttributeType, DEFAULT_DEMO_2_ASYNC_NODE_DELAY, DEFAULT_DEMO_2_ASYNC_NODE_STATUS } from '@ureeka-notebook/web-service';
 
 import { setAttributeParsingBehavior, uniqueIdParsingBehavior } from 'notebookEditor/extension/util/attribute';
 import { NodeViewStorage } from 'notebookEditor/model/NodeViewStorage';
 import { NoOptions } from 'notebookEditor/model/type';
 
+import { shortcutCommandWrapper } from '../util/command';
 import { handleBlockBackspace, handleBlockArrowUp, handleBlockArrowDown } from '../util/node';
-import { toggleDemo2AsyncNodeCommand } from './command';
 import { Demo2AsyncNodeController, Demo2AsyncNodeStorageType } from './nodeView/controller';
 
 // ********************************************************************************
@@ -41,13 +41,12 @@ export const Demo2AsyncNode = Node.create<NoOptions, Demo2AsyncNodeStorageType>(
     };
   },
 
-  // -- Command -------------------------------------------------------------------
-  addCommands() { return { toggleDemo2AsyncNode: toggleDemo2AsyncNodeCommand }; },
+  // -- Keyboard Shortcut ---------------------------------------------------------
   addKeyboardShortcuts() {
     return {
       // toggle a demo2 async node
-      'Shift-Alt-Mod-d': () => this.editor.commands.toggleDemo2AsyncNode(),
-      'Shift-Alt-Mod-D': () => this.editor.commands.toggleDemo2AsyncNode(),
+      'Shift-Alt-Mod-d': () => shortcutCommandWrapper(this.editor, createBlockNodeBelow(NodeName.DEMO_2_ASYNC_NODE, { [AttributeType.Id]: generateNodeId() })),
+      'Shift-Alt-Mod-D': () => shortcutCommandWrapper(this.editor, createBlockNodeBelow(NodeName.DEMO_2_ASYNC_NODE, { [AttributeType.Id]: generateNodeId() })),
 
       // remove code block when at start of document or code block is empty
       'Backspace': ({ editor }) => handleBlockBackspace(editor, NodeName.DEMO_2_ASYNC_NODE),
