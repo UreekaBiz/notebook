@@ -5,6 +5,7 @@ import { getNodeOutputSpec, Attributes, AttributeType, NodeName, ParagraphNodeSp
 import { setAttributeParsingBehavior } from 'notebookEditor/extension/util/attribute';
 import { ExtensionPriority, NoStorage } from 'notebookEditor/model/type';
 
+import { shortcutCommandWrapper } from '../util/command';
 import { setParagraphCommand } from './command';
 
 // ********************************************************************************
@@ -35,9 +36,8 @@ export const Paragraph = Node.create<ParagraphOptions, NoStorage>({
   },
   addOptions() { return { HTMLAttributes: {/*currently nothing*/} }; },
 
-  // -- Command -------------------------------------------------------------------
-  addCommands() { return { setParagraph: setParagraphCommand }; },
-  addKeyboardShortcuts() { return { 'Mod-Alt-0': () => this.editor.commands.setParagraph() }; },
+  // -- Keyboard Shortcut ---------------------------------------------------------
+  addKeyboardShortcuts() { return { 'Mod-Alt-0': () => shortcutCommandWrapper(this.editor, setParagraphCommand) }; },
 
   // -- View ----------------------------------------------------------------------
   parseHTML() { return [ { tag: `div[${DATA_NODE_TYPE}="${NodeName.PARAGRAPH}"]` } ]; },
