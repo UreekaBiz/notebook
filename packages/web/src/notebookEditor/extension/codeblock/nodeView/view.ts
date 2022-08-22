@@ -4,7 +4,6 @@ import { createNodeDataAttribute, getPosType, getRenderAttributes, getWrapStyles
 
 import { AbstractNodeView } from 'notebookEditor/model/AbstractNodeView';
 
-import { createCodeBlock } from '../ui';
 import { CodeBlockModel } from './model';
 import { CodeBlockStorage } from './storage';
 
@@ -26,14 +25,14 @@ export class CodeBlockView extends AbstractNodeView<CodeBlockNodeType, CodeBlock
 
     // .. UI ......................................................................
     // Create DOM elements and append it to the outer container (dom).
-    const { innerContainer, paragraph } = createCodeBlock();
+    const innerContainer = document.createElement('div');
     this.innerContainer = innerContainer;
     this.dom.appendChild(this.innerContainer);
 
     // .. ProseMirror .............................................................
     // Tell PM that the content fo the node must go into the paragraph element,
     // by delegating keeping track of the it to PM (SEE: NodeView#contentDOM)
-    this.contentDOM = paragraph;
+    this.contentDOM = this.innerContainer;
 
     // Sync view with current state
     this.updateView();

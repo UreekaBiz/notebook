@@ -9,14 +9,8 @@ import { Demo2AsyncNodeModel } from './model';
 
 // ********************************************************************************
 export class Demo2AsyncNodeView extends AbstractAsyncNodeView<string, Demo2AsyncNodeType, Demo2AsyncNodeStorageType, Demo2AsyncNodeModel> {
-  // The paragraph where the text content of the demo2AsyncNodeView is rendered
+  // The div where the text content of the demo2AsyncNodeView is rendered
   readonly contentDOM: HTMLElement;
-
-  // The div that holds the paragraph holding the content of the Demo2AsyncNodeView.
-  // This is present since specific styles must be applied to the outer div
-  // (this.dom), and the inner div (innerContainer). Other NodeViews may specify
-  // as much local elements as their view requires them to.
-  private innerContainer: HTMLDivElement;
 
   // == Lifecycle =================================================================
   public constructor(model: Demo2AsyncNodeModel, editor: Editor, node: Demo2AsyncNodeType, codeBlockStorage: Demo2AsyncNodeStorageType, getPos: getPosType) {
@@ -24,16 +18,12 @@ export class Demo2AsyncNodeView extends AbstractAsyncNodeView<string, Demo2Async
 
     // .. UI ......................................................................
     // Create DOM elements and append it to the outer container (dom).
-    const innerContainer = document.createElement('div');
-    this.innerContainer = innerContainer;
-    this.innerContainer.appendChild(this.content);
-
-    this.dom.appendChild(this.innerContainer);
+    this.dom.appendChild(this.content);
 
     // .. ProseMirror .............................................................
     // Tell PM that the content fo the node must go into the paragraph element,
     // by delegating keeping track of the it to PM (SEE: NodeView#contentDOM)
-    this.contentDOM = this.content/*created by createViewElement call*/;
+    this.contentDOM = this.content;
 
     // Sync view with current state
     this.updateView();
