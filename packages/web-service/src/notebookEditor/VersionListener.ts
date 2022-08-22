@@ -130,6 +130,8 @@ export class VersionListener {
     this.listenEditor();
     // listen to Versions from Firestore and apply them to the Editor
     this.listenFirestore();
+
+    log.debug(`Version Listener initialized with write batch-size of ${versionBatchSize} ${this.logContext()}.`);
   }
 
   /**
@@ -356,6 +358,10 @@ export class VersionListener {
           const result = await writeVersions(this.user.userId, this.clientId, this.schemaVersion, this.notebookId, this.lastWriteIndex + 1/*next Version*/, pmSteps);
           if(!this.initialized) return/*listener was terminated before finished transaction*/;
           if(!result) { /*PM Steps were not written*/
+            // FIXME: it's possible that the write failed and that the reads that
+            //        would have brought it back up to date already happened while
+            //        the write-failure was being handled. Net-net: this can't just
+            //        always set isWaitingForNewVersions = true. It needs to check!
             log.debug(`Failed to write Notebook Versions at index ${editorIndex + 1} ${this.logContext()}. Will wait for latest to be read and retry.`);
             this.isWaitingForNewVersions = true/*by definition*/;
             return/*stop writing changes to wait for new Versions to be read*/;

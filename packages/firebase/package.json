@@ -14,7 +14,7 @@
 
   "devDependencies": {
     "firebase-functions-test": "2.3.0",
-    "firebase-tools": "11.6.0"
+    "firebase-tools": "11.7.0"
   },
   "dependencies": {}
 }

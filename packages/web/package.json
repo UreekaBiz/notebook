@@ -40,7 +40,7 @@
 		"compression": "1.7.4",
 		"dotenv": "16.0.1",
 		"feather-icons": "4.29.0",
-		"firebase": "9.9.2",
+		"firebase": "9.9.3",
 		"firebase-admin": "11.0.1",
 		"firebase-functions": "3.22.0",
     "framer-motion": "6.5.1",
