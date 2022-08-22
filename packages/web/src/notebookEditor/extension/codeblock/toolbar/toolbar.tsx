@@ -1,10 +1,11 @@
 import { BiCodeAlt } from 'react-icons/bi';
 
-import { getParentNode, getSelectedNode, isCodeBlockNode, NodeName } from '@ureeka-notebook/web-service';
+import { createBlockNodeBelow, generateNodeId, getParentNode, getSelectedNode, isCodeBlockNode, AttributeType, NodeName } from '@ureeka-notebook/web-service';
 
 import { markBold } from 'notebookEditor/extension/bold/toolbar';
 import { markStrikethrough } from 'notebookEditor/extension/strikethrough/toolbar';
 import { spacingToolItem } from 'notebookEditor/extension/textStyle/toolbar';
+import { shortcutCommandWrapper } from 'notebookEditor/extension/util/command';
 import { Toolbar, ToolItem } from 'notebookEditor/toolbar/type';
 
 import { CodeBlockTypeToolItem } from './CodeBlockTypeToolItem';
@@ -30,7 +31,7 @@ export const codeBlockToolItem: ToolItem = {
 
     return false/*enabled*/;
   },
-  onClick: (editor) => editor.chain().focus().toggleCodeBlock().run(),
+  onClick: (editor) => shortcutCommandWrapper(editor, createBlockNodeBelow(editor.schema, NodeName.CODEBLOCK, { [AttributeType.Id]: generateNodeId() })),
 };
 
 const codeBlockTypeToolItem: ToolItem = {
