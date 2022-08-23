@@ -1,12 +1,12 @@
 import { AiOutlineClockCircle } from 'react-icons/ai';
 
-import { generateNodeId, getSelectedNode, isAsyncNode, isDemoAsyncNode, NodeName } from '@ureeka-notebook/web-service';
+import { generateNodeId, getSelectedNode, isAsyncNode, isDemoAsyncNode, AttributeType, NodeName } from '@ureeka-notebook/web-service';
 
+import { SliderToolItem } from 'notebookEditor/extension/shared/component/SliderToolItem';
 import { focusChipToolInput } from 'notebookEditor/util';
 import { Toolbar, ToolItem } from 'notebookEditor/toolbar/type';
 
 import { DemoAsyncNodeChipSelector } from './DemoAsyncNodeChipSelector';
-import { DemoAsyncNodeDelaySlider } from './DemoAsyncNodeDelaySlider';
 import { ExecuteButtons } from './ExecuteButtons';
 
 //*********************************************************************************
@@ -41,13 +41,17 @@ const demoAsyncNodeDelayTool: ToolItem = {
   toolType: 'component',
   name: 'demoAsyncNodeDelayTool',
 
-  component: DemoAsyncNodeDelaySlider,
-  shouldShow: (editor) => {
-    const node = getSelectedNode(editor.state);
-    if(node && isDemoAsyncNode(node)) return true/*(SEE: comment above)*/;
-
-    return false/*enabled*/;
-  },
+  component: (props) =>
+    <SliderToolItem
+      {...props}
+      name='Delay (ms)'
+      attributeType={AttributeType.Delay}
+      nodeName={NodeName.DEMO_ASYNC_NODE}
+      minValue={0}
+      maxValue={4000}
+      step={50}
+      fixedDecimals={1}
+    />,
 };
 
 const demoAsyncNodeChipTool: ToolItem = {
@@ -55,12 +59,6 @@ const demoAsyncNodeChipTool: ToolItem = {
   name: 'demoAsyncNodeChipTool',
 
   component: DemoAsyncNodeChipSelector,
-  shouldShow: (editor) => {
-    const node = getSelectedNode(editor.state);
-    if(node && isDemoAsyncNode(node)) return true/*(SEE: comment above)*/;
-
-    return false/*enabled*/;
-  },
 };
 
 // == Toolbar =====================================================================

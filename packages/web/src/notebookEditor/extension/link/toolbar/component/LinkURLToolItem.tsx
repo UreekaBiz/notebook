@@ -1,4 +1,4 @@
-import { Box, Flex, FormControl, FormErrorMessage, FormLabel, Input } from '@chakra-ui/react';
+import { Box, FormControl, FormErrorMessage, Input } from '@chakra-ui/react';
 import { getMarkAttributes } from '@tiptap/core';
 import { useFormik, Field, FormikProvider } from 'formik';
 import { KeyboardEventHandler } from 'react';
@@ -6,6 +6,7 @@ import * as Validate from 'yup';
 
 import { isLinkMarkAttributes, urlSchema, AttributeType, MarkName  } from '@ureeka-notebook/web-service';
 
+import { InputToolItemContainer } from 'notebookEditor/extension/shared/component/InputToolItemContainer';
 import { EditorToolComponentProps, TOOL_ITEM_DATA_TYPE } from 'notebookEditor/toolbar/type';
 
 // ********************************************************************************
@@ -73,12 +74,11 @@ export const LinkURLToolItem: React.FC<Props> = ({ editor }) => {
 
   // == UI ========================================================================
   return (
-    <Box>
-      <FormikProvider value={formik}>
-        <form onSubmit={formik.handleSubmit}>
-          <Flex marginTop='5px'>
-            <FormControl isInvalid={!!formik.errors.href}>
-              <FormLabel htmlFor='href'>URL</FormLabel>
+    <FormikProvider value={formik}>
+      <form onSubmit={formik.handleSubmit}>
+        <FormControl isInvalid={!!formik.errors.href}>
+          <InputToolItemContainer name='URL'>
+            <Box width='full'>
               <Field
                 as={Input}
                 id='href'
@@ -90,15 +90,14 @@ export const LinkURLToolItem: React.FC<Props> = ({ editor }) => {
                 variant='outline'
                 size='sm'
                 width='full'
-                marginBottom='5px'
                 onKeyDown={handleKeyDown}
                 onBlur={handleBlur}
               />
               <FormErrorMessage>{formik.errors.href}</FormErrorMessage>
-            </FormControl>
-          </Flex>
-        </form>
-      </FormikProvider>
-    </Box>
+            </Box>
+          </InputToolItemContainer>
+        </FormControl>
+      </form>
+    </FormikProvider>
   );
 };

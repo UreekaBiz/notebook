@@ -1,4 +1,4 @@
-import { getSelectedNode, AttributeType, Margin, Padding } from '@ureeka-notebook/web-service';
+import { getSelectedNode, AttributeType, Margin, Padding, isNodeSelection } from '@ureeka-notebook/web-service';
 
 import { getTextDOMRenderedValue } from 'notebookEditor/extension/util/attribute';
 import { Unit } from 'notebookEditor/theme/type';
@@ -13,6 +13,7 @@ const DEFAULT_VALUE = `0${Unit.Pixel}`;
 interface Props extends EditorToolComponentProps {/*no additional*/}
 export const SpacingToolItem: React.FC<Props> = ({ depth, editor }) => {
   const { state } = editor;
+  const { selection } = state;
   const node = getSelectedNode(state, depth);
   if(!node) return null/*nothing to render*/;
 
@@ -33,6 +34,14 @@ export const SpacingToolItem: React.FC<Props> = ({ depth, editor }) => {
   // == Handler ===================================================================
   const handleChange = (attribute: AttributeType, value: string) => {
     editor.commands.setStyle(attribute, value, depth);
+
+    const position = state.selection.$anchor.pos;
+    // set the selection in the same position in case that the node was replaced
+    if(isNodeSelection(selection)) editor.commands.setNodeSelection(position);
+    else editor.commands.setTextSelection(position);
+
+    // Focus the editor again
+    editor.commands.focus();
   };
 
   // == UI ========================================================================

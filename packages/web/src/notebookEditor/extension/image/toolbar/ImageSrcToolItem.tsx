@@ -1,10 +1,11 @@
-import { Box, Flex, FormControl, FormErrorMessage, FormLabel, Input } from '@chakra-ui/react';
+import { Box, FormControl, FormErrorMessage, Input } from '@chakra-ui/react';
 import { useFormik, Field, FormikProvider } from 'formik';
 import { KeyboardEventHandler } from 'react';
 import * as Validate from 'yup';
 
 import { isImageNode, isNodeSelection, urlSchema, AttributeType, NodeName } from '@ureeka-notebook/web-service';
 
+import { InputToolItemContainer } from 'notebookEditor/extension/shared/component/InputToolItemContainer';
 import { EditorToolComponentProps, TOOL_ITEM_DATA_TYPE } from 'notebookEditor/toolbar/type';
 
 // ********************************************************************************
@@ -69,13 +70,11 @@ export const ImageSrcToolItem: React.FC<Props> = ({ editor }) => {
 
   // == UI ========================================================================
   return (
-    <Box>
-      URL
-      <FormikProvider value={formik}>
-        <form onSubmit={formik.handleSubmit}>
-          <Flex marginTop='5px'>
-            <FormControl isInvalid={!!formik.errors.src}>
-              <FormLabel htmlFor='src'>Image url</FormLabel>
+    <FormikProvider value={formik}>
+      <form onSubmit={formik.handleSubmit}>
+        <FormControl isInvalid={!!formik.errors.src}>
+          <InputToolItemContainer name='URL'>
+            <Box width='full'>
               <Field
                 as={Input}
                 id='src'
@@ -87,15 +86,14 @@ export const ImageSrcToolItem: React.FC<Props> = ({ editor }) => {
                 variant='outline'
                 size='sm'
                 width='full'
-                marginBottom='5px'
                 onKeyDown={handleKeyDown}
                 onBlur={handleBlur}
               />
               <FormErrorMessage>{formik.errors.src}</FormErrorMessage>
-            </FormControl>
-          </Flex>
-        </form>
-      </FormikProvider>
-    </Box>
+            </Box>
+          </InputToolItemContainer>
+        </FormControl>
+      </form>
+    </FormikProvider>
   );
 };
