@@ -24,7 +24,7 @@ export const demo2AsyncNodeToolItem: ToolItem = {
 
   shouldBeDisabled: () => false,
   shouldShow: (editor, depth) => depth === undefined || editor.state.selection.$anchor.depth === depth/*direct parent*/,
-  onClick: (editor, depth) => toolItemCommandWrapper(editor, depth, createBlockNode(NodeName.CODEBLOCK, { [AttributeType.Id]: generateNodeId() })),
+  onClick: (editor, depth) => toolItemCommandWrapper(editor, depth, createBlockNode(NodeName.DEMO_2_ASYNC_NODE, { [AttributeType.Id]: generateNodeId() })),
 };
 
 const demo2AsyncNodeReplaceTextToolItem: ToolItem = {

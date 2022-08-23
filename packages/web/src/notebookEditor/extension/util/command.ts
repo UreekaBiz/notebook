@@ -9,7 +9,9 @@ import { Command, SelectionDepth } from '@ureeka-notebook/web-service';
  */
 export const shortcutCommandWrapper = (editor: Editor, command: Command) => {
   const { state, view, dispatch } = getCommandPropsFromEditor(editor);
-  return command(state, dispatch, view);
+  const commandResult = command(state, dispatch, view);
+  view.focus();
+  return commandResult;
 };
 
 /**
@@ -18,7 +20,9 @@ export const shortcutCommandWrapper = (editor: Editor, command: Command) => {
  */
  export const toolItemCommandWrapper = (editor: Editor, depth: SelectionDepth, command: Command) => {
   const { state, view, dispatch } = getCommandPropsFromEditor(editor);
-  return command(state, dispatch, view);
+  const commandResult = command(state, dispatch, view);
+  view.focus();
+  return commandResult;
 };
 
 /** Returns the required props to execute a {@link Command} from a given {@link Editor} */
