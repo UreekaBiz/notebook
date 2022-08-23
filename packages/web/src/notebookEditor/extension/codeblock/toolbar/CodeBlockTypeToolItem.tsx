@@ -1,6 +1,7 @@
 import { isCodeBlockNode, AttributeType, CodeBlockType, NodeName } from '@ureeka-notebook/web-service';
 
 import { DropdownTool, DropdownToolItemType } from 'notebookEditor/extension/shared/component/DropdownToolItem/DropdownTool';
+import { InputToolItemContainer } from 'notebookEditor/extension/shared/component/InputToolItemContainer';
 import { EditorToolComponentProps } from 'notebookEditor/toolbar/type';
 
 // ********************************************************************************
@@ -29,5 +30,9 @@ export const CodeBlockTypeToolItem: React.FC<Props> = ({ editor }) => {
   };
 
   // == UI ========================================================================
-  return <DropdownTool name='Type' value={type} options={options} onChange={handleChange}/>;
+  return (
+    <InputToolItemContainer name='Type'>
+      <DropdownTool value={type} options={options} placeholder='Type' onChange={handleChange}/>
+    </InputToolItemContainer>
+  );
 };
