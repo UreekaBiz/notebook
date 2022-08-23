@@ -73,7 +73,7 @@ export const ImageSrcToolItem: React.FC<Props> = ({ editor }) => {
     <FormikProvider value={formik}>
       <form onSubmit={formik.handleSubmit}>
         <FormControl isInvalid={!!formik.errors.src}>
-          <InputToolItemContainer name='SRC'>
+          <InputToolItemContainer name='URL'>
             <Box width='full'>
               <Field
                 as={Input}
