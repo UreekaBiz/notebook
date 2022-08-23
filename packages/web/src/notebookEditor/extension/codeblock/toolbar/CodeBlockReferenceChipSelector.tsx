@@ -1,4 +1,6 @@
-import { getLogger, getSelectedNode, isNodeType, isNodeSelection, AttributeType, Logger, NodeName, REMOVED_CODEBLOCK_VISUALID } from '@ureeka-notebook/web-service';
+import { useCallback, useEffect } from 'react';
+
+import { getLogger, getSelectedNode, isNodeType, isNodeSelection, AttributeType, Logger, NodeName, DATA_VISUAL_ID, REMOVED_CODEBLOCK_VISUALID } from '@ureeka-notebook/web-service';
 
 import { focusCodeBlock, visualIdFromCodeBlockReference } from 'notebookEditor/extension/codeblock/util';
 import { ChipValue } from 'notebookEditor/extension/shared/component/chipTool/Chip';
@@ -20,12 +22,57 @@ export const CodeBlockReferenceChipSelector: React.FC<Props> = ({ editor, depth,
   const { state } = editor;
   const { selection } = state;
   const node = getSelectedNode(state, depth);
+
+  const updateAttribute = useCallback((value: string | undefined, focus?: boolean) => {
+    editor.commands.updateAttributes(nodeName, { [AttributeType.CodeBlockReference]: value });
+
+    const position = state.selection.$anchor.pos;
+    // set the selection in the same position in case that the node was replaced
+    if(isNodeSelection(selection)) editor.commands.setNodeSelection(position);
+    else editor.commands.setTextSelection(position);
+
+    // Focus the editor again
+    if(focus) editor.commands.focus();
+  }, [editor.commands, nodeName, selection, state.selection.$anchor.pos]);
+
+  // == Effect ====================================================================
+  /** doing CMD + Click on a VisualId toggles it from the CodeBlockReference */
+  useEffect(() => {
+    if(!node) return/*nothing to do*/;
+    const reference = node.attrs[AttributeType.CodeBlockReference];
+
+    const handler = async (event: MouseEvent) => {
+      if(!event.metaKey) return/*not a meta key is pressed -- nothing to do*/;
+
+      const { target } = event;
+      if(!target) return/*no target -- nothing to do*/;
+      if(!(target instanceof HTMLElement)) return/*not an element -- nothing to do*/;
+      const visualId = target.getAttribute(DATA_VISUAL_ID);
+      if(!visualId) return/*no visualId -- nothing to do*/;
+      const codeBlockReference = isValidCodeBlockReference(editor, visualId);
+      if(!codeBlockReference.isValid) return/*not a valid codeBlockReference -- nothing to do*/;
+      const codeblockId = codeBlockReference.codeBlockView.node.attrs[AttributeType.Id] ?? ''/*no id by default*/;
+      event.preventDefault();
+      event.stopPropagation();
+
+      // toggles the value
+      const newValue = codeblockId === reference ? '' : codeblockId;
+      updateAttribute(newValue, false/*don't focus*/);
+    };
+
+    window.addEventListener('mousedown', handler);
+
+    // removes the listener on unmount
+    return () => { window.removeEventListener('mousedown', handler); };
+  }, [editor, nodeName, node, updateAttribute]);
+
   if(!node || !isNodeType(node, nodeName)) return null/*nothing to render - invalid node render*/;
 
   // gets the value in an array to be used by ChipTool
   const reference = node.attrs[AttributeType.CodeBlockReference],
         value = reference ? [reference] : [],
         id = node.attrs[AttributeType.Id] ?? ''/*no id by default*/;
+
 
   // == Handler ===================================================================
   const handleAddValue = (label: string, focus?: boolean) => {
@@ -39,15 +86,7 @@ export const CodeBlockReferenceChipSelector: React.FC<Props> = ({ editor, depth,
     // gets the value from the array since only one is allowed and is stored as a
     // single string
     const newValue = chips.length > 0 ? chips[0].value : undefined;
-    editor.commands.updateAttributes(nodeName, { [AttributeType.CodeBlockReference]: newValue });
-
-    const position = state.selection.$anchor.pos;
-    // set the selection in the same position in case that the node was replaced
-    if(isNodeSelection(selection)) editor.commands.setNodeSelection(position);
-    else editor.commands.setTextSelection(position);
-
-    // Focus the editor again
-    if(focus) editor.commands.focus();
+    updateAttribute(newValue, focus);
   };
 
   // SEE: CodeBlockReferencesChipSelector.tsx
