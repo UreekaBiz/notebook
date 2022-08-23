@@ -8,9 +8,9 @@ import { fontSizeToolItem, spacingToolItem, textColorToolItem } from 'notebookEd
 import { shortcutCommandWrapper } from 'notebookEditor/extension/util/command';
 import { Toolbar, ToolItem } from 'notebookEditor/toolbar/type';
 
-import { Demo2AsyncNodeDelaySlider } from './Demo2AsyncNodeDelaySlider';
-import { Demo2AsyncNodeReplaceTextToolItem } from './Demo2AsyncNodeReplaceTextToolItem';
 import { ExecuteButtons } from './ExecuteButtons';
+import { SliderToolItem } from 'notebookEditor/extension/shared/component/SliderToolItem';
+import { InputToolItem } from 'notebookEditor/extension/shared/component/InputToolItem';
 
 //*********************************************************************************
 // == Tool Items ==================================================================
@@ -31,14 +31,30 @@ const demo2AsyncNodeReplaceTextToolItem: ToolItem = {
   toolType: 'component',
   name: 'demo2AsyncNodeReplaceTextToolItem',
 
-  component: Demo2AsyncNodeReplaceTextToolItem,
+  component: (props) =>
+    <InputToolItem
+      {...props}
+      name='Replace Text'
+      attributeType={AttributeType.TextToReplace}
+      nodeName={NodeName.DEMO_2_ASYNC_NODE}
+    />,
 };
 
 const demo2AsyncNodeDelaySlider: ToolItem = {
   toolType: 'component',
   name: 'demo2AsyncNodeDelaySlider',
 
-  component: Demo2AsyncNodeDelaySlider,
+  component: (props) =>
+    <SliderToolItem
+      {...props}
+      name='Delay (ms)'
+      attributeType={AttributeType.Delay}
+      nodeName={NodeName.DEMO_2_ASYNC_NODE}
+      minValue={0}
+      maxValue={4000}
+      step={50}
+      fixedDecimals={1}
+    />,
 };
 
 // == Toolbar =====================================================================
@@ -49,14 +65,12 @@ export const Demo2AsyncNodeToolbar: Toolbar = {
 
   toolsCollections: [
     [
+      demo2AsyncNodeReplaceTextToolItem,
+      demo2AsyncNodeDelaySlider,
+    ],
+    [
       markBold,
       markStrikethrough,
-    ],
-    [
-      demo2AsyncNodeReplaceTextToolItem,
-    ],
-    [
-      demo2AsyncNodeDelaySlider,
     ],
     [
       fontSizeToolItem,

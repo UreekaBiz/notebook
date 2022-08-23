@@ -6,10 +6,10 @@ import { markBold } from 'notebookEditor/extension/bold/toolbar';
 import { markStrikethrough } from 'notebookEditor/extension/strikethrough/toolbar';
 import { spacingToolItem } from 'notebookEditor/extension/textStyle/toolbar';
 import { shortcutCommandWrapper } from 'notebookEditor/extension/util/command';
+import { CheckBoxToolItem } from 'notebookEditor/extension/shared/component/CheckBoxToolItem';
 import { Toolbar, ToolItem } from 'notebookEditor/toolbar/type';
 
 import { CodeBlockTypeToolItem } from './CodeBlockTypeToolItem';
-import { CodeBlockWrapToolItem } from './CodeBlockWrapToolItem';
 
 //*********************************************************************************
 // === Tool Items =================================================================
@@ -46,7 +46,14 @@ const codeBlockWrapToolItem: ToolItem =  {
   toolType: 'component',
   name: 'codeBlockWrapToolItem',
 
-  component: CodeBlockWrapToolItem,
+  component: (props) =>
+    <CheckBoxToolItem
+      {...props}
+      name='Wrap'
+      attributeType={AttributeType.Wrap}
+      nodeName={NodeName.CODEBLOCK}
+    />,
+
   shouldShow: (editor) => isCodeBlockNode(getParentNode(editor.state.selection)),
 };
 
