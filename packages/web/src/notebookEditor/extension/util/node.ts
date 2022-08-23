@@ -18,8 +18,8 @@ export const handleBlockBackspace = (editor: Editor, nodeName: NodeName) => {
   } /* else -- no need to delete blockNode */
 
   // FIXME: (SEE: NOTE below). Find and solve the root cause of the issue
-  // NOTE: this is a temporary fix for the fact that after creating a Block
-  //       Backspace, functionality does not work. Resetting the Selection
+  // NOTE: this is a temporary fix for the fact that after creating a Block,
+  //       Backspace functionality does not work. Resetting the Selection
   //       clears its 'stuck' state
   editor.commands.setTextSelection(editor.state.selection);
   return false/*let event be handled elsewhere*/;
