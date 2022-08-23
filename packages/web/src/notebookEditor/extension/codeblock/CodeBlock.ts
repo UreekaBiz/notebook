@@ -1,6 +1,6 @@
 import { textblockTypeInputRule, Node } from '@tiptap/core';
 
-import { createBlockNode, generateNodeId, getNodeOutputSpec, isCodeBlockNode, AttributeType, CodeBlockNodeSpec, CodeBlockType, NodeName, SetAttributeType } from '@ureeka-notebook/web-service';
+import { createBlockNode, generateNodeId, getNodeOutputSpec, isCodeBlockNode, AttributeType, CodeBlockNodeSpec, CodeBlockType, NodeName, SetAttributeType, DATA_NODE_TYPE } from '@ureeka-notebook/web-service';
 
 import { setAttributeParsingBehavior, uniqueIdParsingBehavior } from 'notebookEditor/extension/util/attribute';
 import { handleBlockArrowDown, handleBlockArrowUp, handleBlockBackspace } from 'notebookEditor/extension/util/node';
@@ -98,7 +98,7 @@ export const CodeBlock = Node.create<NoOptions, CodeBlockStorage>({
     };
   },
 
-  parseHTML() { return [{ tag: NodeName.CODEBLOCK, preserveWhitespace: 'full'/*preserve new lines when parsing the content of the codeBloc*/ }]; },
+  parseHTML() { return [{ tag: `div[${DATA_NODE_TYPE}="${NodeName.CODEBLOCK}"]`, preserveWhitespace: 'full'/*preserve new lines when parsing the content of the codeBlock*/ }]; },
 
   // NOTE: renderHTML -must- be included in Nodes regardless of whether or not
   //       they use a nodeView. (SEE: FeatureDoc, NodeView section)
