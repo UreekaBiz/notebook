@@ -15,7 +15,15 @@ export const UnitPicker: React.FC<Props> = ({ value = Unit.Pixel, onChange }) =>
   };
 
   return (
-    <Select value={value} onChange={handleChange} flexBasis='30%' placeholder='Unit' size='sm' width={75}>
+    <Select
+      // NOTE: Using class name to override the (seemingly impossible!) styles for
+      //       the input with the accessible props.
+      className='unit-picker'
+      value={value}
+      placeholder='Unit'
+      size='sm'
+      onChange={handleChange}
+    >
       {Units.map(unit => (<option key={unit} value={unit}>{unit.toString().toUpperCase()}</option>))}
     </Select>
   );
