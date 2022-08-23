@@ -1,26 +1,22 @@
-import { Input, InputGroup, InputLeftAddon } from '@chakra-ui/react';
+import { Input } from '@chakra-ui/react';
 import { ChangeEventHandler, KeyboardEventHandler } from 'react';
 
-import { Color, colorToHexColor, removeColorAddon } from 'notebookEditor/theme/type';
-import { ToolContainer } from 'notebookEditor/toolbar/ToolbarContainer';
+import { colorToHexColor, removeColorAddon, textColors, Color } from 'notebookEditor/theme/type';
 import { useLocalValue } from 'notebookEditor/shared/hook/useLocalValue';
 
 import { ColorPickerMenu } from './ColorPickerMenu';
+import { InputToolItemContainer } from '../InputToolItemContainer';
 
 // ********************************************************************************
-// == Constant ====================================================================
-const LEFT_ADDON_TEXT = '#';
-
-// ================================================================================
 interface Props {
   name: string;
 
   value: string;
   onChange: (value: string, focus?: boolean) => void;
 
-  colors: Color[][];
+  colors?: Color[][];
 }
-export const ColorPicker: React.FC<Props> = ({ colors, name, onChange, value }) => {
+export const ColorPickerTool: React.FC<Props> = ({ colors = textColors, name, onChange, value }) => {
   // == State ====================================================================
   const { commitChange, localValue, resetLocalValue, updateLocalValue } = useLocalValue(value, onChange);
 
@@ -48,19 +44,20 @@ export const ColorPicker: React.FC<Props> = ({ colors, name, onChange, value }) 
 
   // == UI ========================================================================
   return (
-    <ToolContainer name={name} width='auto'>
-     <InputGroup size='sm' marginTop='5px' marginBottom='5px' gap={1} borderRadius='15px'>
-      <ColorPickerMenu value={localValue} colors={colors} onChange={handleColorPickerChange} />
-
-      <InputLeftAddon>{LEFT_ADDON_TEXT}</InputLeftAddon>
+    <InputToolItemContainer
+      name={name}
+      rightContent={
+        <ColorPickerMenu value={localValue} colors={colors} onChange={handleColorPickerChange} />
+      }
+    >
       <Input
         type='text'
+        size='sm'
         value={removeColorAddon(localValue)}
         onBlur={() => saveChange(false/*don't focus editor*/)}
         onChange={handleInputChange}
         onKeyDown={handleKeyDown}
       />
-     </InputGroup>
-    </ToolContainer>
+    </InputToolItemContainer>
   );
 };
