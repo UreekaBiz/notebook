@@ -61,13 +61,13 @@ interface InputWithUnitMarkToolItemProps extends EditorToolComponentProps {
   maxValue?: number;
 }
 export const InputWithUnitMarkToolItem: React.FC<InputWithUnitMarkToolItemProps> = ({ editor, attributeType, markName, name, minValue, maxValue }) => {
-  const domRenderValue = getTextDOMRenderedValue(editor, AttributeType.FontSize, markName);
+  const domRenderValue = getTextDOMRenderedValue(editor, attributeType, markName);
   // get a valid render value for the input
   const inputValue = String((domRenderValue === InvalidMergedAttributeValue ? '' : domRenderValue) ?? '');
 
   // -- Handler -------------------------------------------------------------------
   const handleChange = (value: string, focus?: boolean) => {
-    editor.commands.setTextStyle(attributeType, value);
+    editor.commands.setMark(markName, { [attributeType]: value });
 
     // NOTE: No need to manually focus the position again since it's a mark update
     // Focus the editor again
