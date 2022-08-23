@@ -1,8 +1,9 @@
+import { isNodeSelection } from '@tiptap/core';
 import { getSelectedNode, isNodeType, AttributeType, NodeName } from '@ureeka-notebook/web-service';
 
 import { EditorToolComponentProps } from 'notebookEditor/toolbar/type';
 
-import { SliderMarkValue, SliderTool } from './SliderTool';
+import { SliderTool } from './SliderTool';
 
 // ********************************************************************************
 // == Component ===================================================================
@@ -19,37 +20,41 @@ interface Props extends EditorToolComponentProps {
   minValue: number;
   maxValue: number;
 
-  /** an array of SliderMarkValue */
-  markValues: SliderMarkValue[];
   /** the increments for the step in the Slider */
   step: number;
+
+  /** the decimals that the number will be round to */
+  fixedDecimals?: number;
 }
-export const SliderToolItem: React.FC<Props> = ({ editor, depth, attributeType, minValue, maxValue, markValues, name, nodeName }) => {
+export const SliderToolItem: React.FC<Props> = ({ editor, depth, attributeType, fixedDecimals = 0, minValue, maxValue, name, nodeName, step }) => {
   const { state } = editor;
+  const { selection } = state;
   const node = getSelectedNode(state, depth);
   if(!node || !isNodeType(node, nodeName)) return null /*nothing to render - invalid node render*/;
 
   // == Handler ===================================================================
-  const handleChange = (normalizedValue: number) => {
-    // gets the actual value from the normalized value
-    const parsedValue = normalizedValue * (maxValue - minValue) / 100 + minValue;
-    editor.commands.updateAttributes(nodeName, { [attributeType]: parsedValue/*turns sliderValue to ms*/ });
+  const handleChange = (value: number, focus?: boolean) => {
+    editor.commands.updateAttributes(nodeName, { [attributeType]: value });
+
+    const position = state.selection.$anchor.pos;
+    // set the selection in the same position in case that the node was replaced
+    if(isNodeSelection(selection)) editor.commands.setNodeSelection(position);
+    else editor.commands.setTextSelection(position);
 
     // Focus the editor again
-    editor.commands.focus();
+    if(focus) editor.commands.focus();
   };
 
   // == UI ========================================================================
   const value = node.attrs[attributeType] ?? minValue /*default*/;
-  // normalize the value to be between 0 and 100
-  const normalized = (value - minValue) / (maxValue - minValue) * 100;
-
   return (
     <SliderTool
       name={name}
-      value={normalized}
-      step={10}
-      sliderMarkValues={markValues}
+      value={value}
+      step={step}
+      fixedDecimals={fixedDecimals}
+      minValue={minValue}
+      maxValue={maxValue}
       onChange={handleChange}
     />
   );
