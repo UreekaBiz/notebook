@@ -64,12 +64,12 @@ export const CodeBlockToolbar: Toolbar = {
 
   toolsCollections: [
     [
-      markBold,
-      markStrikethrough,
-    ],
-    [
       codeBlockTypeToolItem,
       codeBlockWrapToolItem,
+    ],
+    [
+      markBold,
+      markStrikethrough,
     ],
     [
       spacingToolItem,
