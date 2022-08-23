@@ -71,7 +71,7 @@ const renderDemo2AsyncNodeView = (attributes: Demo2AsyncNodeAttributes, content:
 };
 
 export const Demo2AsyncNodeRendererSpec: NodeRendererSpec<Demo2AsyncNodeAttributes> = {
-  tag: NodeName.DEMO_2_ASYNC_NODE,
+  tag: 'div',
 
   isNodeViewRenderer: true/*by definition*/,
   renderNodeView: renderDemo2AsyncNodeView,

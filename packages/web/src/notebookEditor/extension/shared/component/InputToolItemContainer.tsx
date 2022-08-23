@@ -14,8 +14,8 @@ interface Props {
 export const InputToolItemContainer: React.FC<Props> = ({ children, name, rightContent }) => {
   return (
     <Flex width='full' alignItems='center' marginY={2}>
-      <Text width={100} textAlign='right' fontSize='14px' marginRight={2}>{name}</Text>
-      <Flex flex='1 1' alignItems='center' marginRight={1}>
+      <Text width={100} textAlign='right' fontSize='14px' marginRight='30px'>{name}</Text>
+      <Flex flex='1 1' alignItems='center' marginRight={3}>
         {children}
       </Flex>
       <Flex alignItems='center' width={50} >

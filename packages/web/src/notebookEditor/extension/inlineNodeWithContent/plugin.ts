@@ -71,7 +71,7 @@ export const InlineNodeWithContentPlugin = () => {
         //      ensure there are no duplicate inputs when the composition event
         //      ends, (i.e. the right input is set, and it is only set once into
         //      the editor)
-        compositionend: (view: EditorView, event: any) => {
+        compositionend: (view: EditorView, event: CompositionEvent) => {
           try {
             if(composingInput) {
               // REF: https://developer.mozilla.org/en-US/docs/Web/API/window/requestAnimationFrame
@@ -146,4 +146,4 @@ export const InlineNodeWithContentPlugin = () => {
 // == Util ========================================================================
 // NOTE: defined by contract given the way the state for the Plugin is computed
 //       (SEE: InlineNodeWithContent#apply)
-const getInlineNodeWithContentState = (state: EditorState<any>) => inlineNodeWithContentKey.getState(state) as InlineNodeWithContent/*by contract*/;
+const getInlineNodeWithContentState = (state: EditorState<NotebookSchemaType>) => inlineNodeWithContentKey.getState(state) as InlineNodeWithContent/*by contract*/;

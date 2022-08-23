@@ -65,7 +65,7 @@ const renderCodeBlockNodeView = (attributes: CodeBlockAttributes, content: strin
 };
 
 export const CodeBlockNodeRendererSpec: NodeRendererSpec<CodeBlockAttributes> = {
-  tag: NodeName.CODEBLOCK,
+  tag: 'div',
 
   isNodeViewRenderer: true/*by definition*/,
   renderNodeView: renderCodeBlockNodeView,

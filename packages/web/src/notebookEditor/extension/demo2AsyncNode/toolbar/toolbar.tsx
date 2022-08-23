@@ -5,7 +5,7 @@ import { createBlockNode, generateNodeId, AttributeType, NodeName } from '@ureek
 import { markBold } from 'notebookEditor/extension/bold/toolbar';
 import { markStrikethrough } from 'notebookEditor/extension/strikethrough/toolbar';
 import { fontSizeToolItem, spacingToolItem, textColorToolItem } from 'notebookEditor/extension/textStyle/toolbar';
-import { shortcutCommandWrapper } from 'notebookEditor/extension/util/command';
+import { toolItemCommandWrapper } from 'notebookEditor/extension/util/command';
 import { Toolbar, ToolItem } from 'notebookEditor/toolbar/type';
 
 import { ExecuteButtons } from './ExecuteButtons';
@@ -24,7 +24,7 @@ export const demo2AsyncNodeToolItem: ToolItem = {
 
   shouldBeDisabled: () => false,
   shouldShow: (editor, depth) => depth === undefined || editor.state.selection.$anchor.depth === depth/*direct parent*/,
-  onClick: (editor) => shortcutCommandWrapper(editor, createBlockNode(NodeName.DEMO_2_ASYNC_NODE, { [AttributeType.Id]: generateNodeId() })),
+  onClick: (editor, depth) => toolItemCommandWrapper(editor, depth, createBlockNode(NodeName.CODEBLOCK, { [AttributeType.Id]: generateNodeId() })),
 };
 
 const demo2AsyncNodeReplaceTextToolItem: ToolItem = {
