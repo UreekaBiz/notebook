@@ -2,11 +2,11 @@ import { AiOutlineClockCircle } from 'react-icons/ai';
 
 import { generateNodeId, getSelectedNode, isAsyncNode, isDemoAsyncNode, AttributeType, NodeName } from '@ureeka-notebook/web-service';
 
+import { CodeBlockReferencesChipSelector } from 'notebookEditor/extension/codeblock/toolbar/CodeBlockReferencesChipSelector';
 import { SliderToolItem } from 'notebookEditor/extension/shared/component/SliderToolItem';
 import { focusChipToolInput } from 'notebookEditor/util';
 import { Toolbar, ToolItem } from 'notebookEditor/toolbar/type';
 
-import { DemoAsyncNodeChipSelector } from './DemoAsyncNodeChipSelector';
 import { ExecuteButtons } from './ExecuteButtons';
 
 //*********************************************************************************
@@ -58,7 +58,11 @@ const demoAsyncNodeChipTool: ToolItem = {
   toolType: 'component',
   name: 'demoAsyncNodeChipTool',
 
-  component: DemoAsyncNodeChipSelector,
+  component: (props) =>
+    <CodeBlockReferencesChipSelector
+      {...props}
+      nodeName={NodeName.DEMO_ASYNC_NODE}
+    />,
 };
 
 // == Toolbar =====================================================================
