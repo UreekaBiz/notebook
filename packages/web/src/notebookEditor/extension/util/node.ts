@@ -12,12 +12,17 @@ export const handleBlockBackspace = (editor: Editor, nodeName: NodeName) => {
   const { empty, $anchor } = editor.state.selection,
         isAtStartOfDoc = $anchor.pos === 1/*first position inside the node, at start of Doc*/;
 
-  if(!empty || $anchor.parent.type.name !== nodeName) return false/*do not delete block node*/;
+  if(!empty || $anchor.parent.type.name !== nodeName) return false/*let event be handled elsewhere*/;
   if(isAtStartOfDoc || !$anchor.parent.textContent.length) {
     return editor.commands.clearNodes();
   } /* else -- no need to delete blockNode */
 
-  return false/*do not delete*/;
+  // FIXME: (SEE: NOTE below). Find and solve the root cause of the issue
+  // NOTE: this is a temporary fix for the fact that after creating a Block
+  //       Backspace, functionality does not work. Resetting the Selection
+  //       clears its 'stuck' state
+  editor.commands.setTextSelection(editor.state.selection);
+  return false/*let event be handled elsewhere*/;
 };
 
 // -- Cursor Behavior -------------------------------------------------------------
