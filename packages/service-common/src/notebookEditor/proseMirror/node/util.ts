@@ -105,7 +105,7 @@ export const createBlockNode = (blockNodeName: NodeName, attributes: Partial<Att
   const { $anchor, $head } = tr.selection;
   const blockNodeType = schema.nodes[blockNodeName];
 
-  if(sameParent && $anchor.parent.textContent.length < 1) {
+  if(sameParent && $anchor.parent.content.size < 1) {
     const { from, to } = getBlockNodeRange(tr.selection);
     tr.setBlockType(from, to, blockNodeType, attributes);
     dispatch(tr);
