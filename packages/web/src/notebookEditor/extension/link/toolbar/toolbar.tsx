@@ -8,7 +8,7 @@ import { Toolbar, ToolItem } from 'notebookEditor/toolbar/type';
 
 import { LinkColorToolItem } from './component/LinkColorToolItem';
 import { LinkTargetToolItem } from './component/LinkTargetToolItem';
-import { LinkURLToolItem  } from './component/LinkURLToolItem';
+import { LinkURLToolItem } from './component/LinkURLToolItem';
 
 // ********************************************************************************
 // == Tool Items ==================================================================
@@ -78,8 +78,6 @@ export const LinkToolbar: Toolbar = {
     [
       linkURLToolItem,
       linkTargetToolItem,
-    ],
-    [
       linkColorToolItem,
     ],
   ],
