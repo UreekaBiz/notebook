@@ -71,7 +71,7 @@ export const CodeBlockReference = Node.create<NoOptions, CodeBlockReferenceStora
       return new CodeBlockReferenceController(editor, node, this.storage, getPos);
     };
   },
-  parseHTML() { return [{ tag: `div[${DATA_NODE_TYPE}="${NodeName.CODEBLOCK_REFERENCE}"]` }]; },
+  parseHTML() { return [{ tag: `span[${DATA_NODE_TYPE}="${NodeName.CODEBLOCK_REFERENCE}"]` }]; },
   renderHTML({ node, HTMLAttributes }) { return getNodeOutputSpec(node, HTMLAttributes, true/*is leaf node*/); },
 });
 

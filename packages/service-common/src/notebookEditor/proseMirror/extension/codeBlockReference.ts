@@ -70,7 +70,7 @@ const renderCodeBlockReferenceNodeView = (attributes: CodeBlockReferenceAttribut
 };
 
 export const CodeBlockReferenceNodeRendererSpec: NodeRendererSpec<CodeBlockReferenceAttributes> = {
-  tag: 'div',
+  tag: 'span',
 
   isNodeViewRenderer: true/*by definition*/,
   renderNodeView: renderCodeBlockReferenceNodeView,

@@ -1,6 +1,6 @@
 import { Node } from '@tiptap/core';
 
-import { generateNodeId, getNodeOutputSpec, isDemoAsyncNode, AttributeType, DemoAsyncNodeSpec, NodeName, SetAttributeType, DEFAULT_DEMO_ASYNC_NODE_DELAY, DEFAULT_DEMO_ASYNC_NODE_STATUS, DEFAULT_DEMO_ASYNC_NODE_TEXT } from '@ureeka-notebook/web-service';
+import { generateNodeId, getNodeOutputSpec, isDemoAsyncNode, AttributeType, DemoAsyncNodeSpec, NodeName, SetAttributeType, DATA_NODE_TYPE, DEFAULT_DEMO_ASYNC_NODE_DELAY, DEFAULT_DEMO_ASYNC_NODE_STATUS, DEFAULT_DEMO_ASYNC_NODE_TEXT } from '@ureeka-notebook/web-service';
 
 import { setAttributeParsingBehavior, uniqueIdParsingBehavior } from 'notebookEditor/extension/util/attribute';
 import { NodeViewStorage } from 'notebookEditor/model/NodeViewStorage';
@@ -75,7 +75,7 @@ export const DemoAsyncNode = Node.create<NoOptions, DemoAsyncNodeStorageType>({
       return new DemoAsyncNodeController(editor, node, this.storage, getPos);
     };
   },
-  parseHTML() { return [{ tag: NodeName.DEMO_ASYNC_NODE }]; },
+  parseHTML() { return [{ tag: `span[${DATA_NODE_TYPE}="${NodeName.DEMO_ASYNC_NODE}"]` }]; },
   renderHTML({ node, HTMLAttributes }) { return getNodeOutputSpec(node, HTMLAttributes, true/*is leaf node*/); },
 });
 
