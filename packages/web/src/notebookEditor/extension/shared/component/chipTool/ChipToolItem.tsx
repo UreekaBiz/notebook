@@ -43,7 +43,7 @@ export const ChipToolItem: React.FC<Props> = ({ editor, attributeType, depth, na
 
   const handleChange = (chips: ChipValue[], focus?: boolean) => {
     const newValue = chips.map(chip => chip.value);
-    editor.commands.updateAttributes(nodeName, { [attributeType]: newValue });
+    editor.chain().focus().updateAttributes(nodeName, { [attributeType]: newValue }).run();
 
     const position = state.selection.$anchor.pos;
     // set the selection in the same position in case that the node was replaced
