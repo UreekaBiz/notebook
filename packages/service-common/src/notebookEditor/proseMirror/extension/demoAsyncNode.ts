@@ -56,7 +56,7 @@ const renderDemoAsyncNodeView = (attributes: DemoAsyncNodeAttributes) => {
 };
 
 export const DemoAsyncNodeRendererSpec: NodeRendererSpec<DemoAsyncNodeAttributes> = {
-  tag: NodeName.DEMO_ASYNC_NODE,
+  tag: 'span',
 
   isNodeViewRenderer: true/*by definition*/,
   renderNodeView: renderDemoAsyncNodeView,

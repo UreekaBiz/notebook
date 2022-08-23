@@ -1,6 +1,6 @@
 import { Node } from '@tiptap/core';
 
-import { generateNodeId, getNodeOutputSpec, isCodeBlockReferenceNode, AttributeType, CodeBlockReferenceNodeSpec, NodeName, SetAttributeType } from '@ureeka-notebook/web-service';
+import { generateNodeId, getNodeOutputSpec, isCodeBlockReferenceNode, AttributeType, CodeBlockReferenceNodeSpec, NodeName, SetAttributeType, DATA_NODE_TYPE } from '@ureeka-notebook/web-service';
 
 import { setAttributeParsingBehavior, uniqueIdParsingBehavior } from 'notebookEditor/extension/util/attribute';
 import { NodeViewStorage } from 'notebookEditor/model/NodeViewStorage';
@@ -71,7 +71,7 @@ export const CodeBlockReference = Node.create<NoOptions, CodeBlockReferenceStora
       return new CodeBlockReferenceController(editor, node, this.storage, getPos);
     };
   },
-  parseHTML() { return [{ tag: NodeName.CODEBLOCK_REFERENCE }]; },
+  parseHTML() { return [{ tag: `span[${DATA_NODE_TYPE}="${NodeName.CODEBLOCK_REFERENCE}"]` }]; },
   renderHTML({ node, HTMLAttributes }) { return getNodeOutputSpec(node, HTMLAttributes, true/*is leaf node*/); },
 });
 
