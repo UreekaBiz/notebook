@@ -11,9 +11,13 @@ import { UnitPicker } from './UnitPicker';
 interface Props {
   name: string;
   value: string;
+
+  minValue?: number;
+  maxValue?: number;
+
   onChange: (value: string, focus?: boolean) => void;
 }
-export const InputWithUnitTool: React.FC<Props> = ({ value: initialValue, name, onChange }) => {
+export const InputWithUnitTool: React.FC<Props> = ({ value: initialValue, name, minValue = 0, maxValue = Number.MAX_SAFE_INTEGER, onChange }) => {
   const { commitChange, localValue, resetLocalValue, updateLocalValue } = useLocalValue(initialValue, onChange);
   let [value, unit] = separateUnitFromString(localValue);
   unit ??= Unit.Pixel/*default value*/;
@@ -33,7 +37,14 @@ export const InputWithUnitTool: React.FC<Props> = ({ value: initialValue, name, 
   };
 
   const saveChange = (focus: boolean = true/*focus editor by default*/) => {
-    if(value && unit) commitChange(undefined/*use stored value*/, focus);
+    if(value && unit) {
+      // gets the value in range before committing
+      const valueInRange = Math.max(minValue ?? 0, Math.min(maxValue, Number(value)));
+      const newValue = `${valueInRange}${unit}`;
+      // sync with local value and commit the change.
+      updateLocalValue(newValue);
+      commitChange(newValue, focus);
+    }
     else resetLocalValue();
   };
 
@@ -49,8 +60,10 @@ export const InputWithUnitTool: React.FC<Props> = ({ value: initialValue, name, 
       rightContent={<UnitPicker value={unit} onChange={handleUnitChange} />}
     >
       <Input
-        value={value}
         type='number'
+        value={value}
+        min={minValue}
+        max={maxValue}
         size='sm'
         onBlur={() => saveChange(false/*don't focus editor*/)}
         onChange={handleValueChange}
