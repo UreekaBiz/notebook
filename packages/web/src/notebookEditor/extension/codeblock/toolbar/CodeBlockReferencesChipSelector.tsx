@@ -45,7 +45,7 @@ export const CodeBlockReferencesChipSelector: React.FC<Props> = ({ editor, depth
 
       // toggles the visualId from the CodeBlockReferences
       const newValue = references.includes(codeblockId) ? references.filter(ref => ref !== codeblockId) : [...references, codeblockId];
-      editor.commands.updateAttributes(nodeName, { [AttributeType.CodeBlockReferences]: newValue });
+      editor.chain().focus().updateAttributes(nodeName, { [AttributeType.CodeBlockReferences]: newValue }).run();
 
       // set the selection in the same position in case that the node was replaced
       const position = state.selection.$anchor.pos;

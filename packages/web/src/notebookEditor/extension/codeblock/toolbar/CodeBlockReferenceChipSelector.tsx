@@ -24,7 +24,7 @@ export const CodeBlockReferenceChipSelector: React.FC<Props> = ({ editor, depth,
   const node = getSelectedNode(state, depth);
 
   const updateAttribute = useCallback((value: string | undefined, focus?: boolean) => {
-    editor.commands.updateAttributes(nodeName, { [AttributeType.CodeBlockReference]: value });
+    editor.chain().focus().updateAttributes(nodeName, { [AttributeType.CodeBlockReference]: value }).run();
 
     const position = state.selection.$anchor.pos;
     // set the selection in the same position in case that the node was replaced
@@ -33,7 +33,7 @@ export const CodeBlockReferenceChipSelector: React.FC<Props> = ({ editor, depth,
 
     // Focus the editor again
     if(focus) editor.commands.focus();
-  }, [editor.commands, nodeName, selection, state.selection.$anchor.pos]);
+  }, [editor, nodeName, selection, state.selection.$anchor.pos]);
 
   // == Effect ====================================================================
   /** doing CMD + Click on a VisualId toggles it from the CodeBlockReference */
