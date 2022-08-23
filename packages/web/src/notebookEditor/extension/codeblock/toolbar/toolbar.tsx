@@ -5,7 +5,7 @@ import { createBlockNode, generateNodeId, getParentNode, getSelectedNode, isCode
 import { markBold } from 'notebookEditor/extension/bold/toolbar';
 import { markStrikethrough } from 'notebookEditor/extension/strikethrough/toolbar';
 import { spacingToolItem } from 'notebookEditor/extension/textStyle/toolbar';
-import { shortcutCommandWrapper } from 'notebookEditor/extension/util/command';
+import { toolItemCommandWrapper } from 'notebookEditor/extension/util/command';
 import { Toolbar, ToolItem } from 'notebookEditor/toolbar/type';
 
 import { CodeBlockTypeToolItem } from './CodeBlockTypeToolItem';
@@ -31,7 +31,7 @@ export const codeBlockToolItem: ToolItem = {
 
     return false/*enabled*/;
   },
-  onClick: (editor) => shortcutCommandWrapper(editor, createBlockNode(NodeName.CODEBLOCK, { [AttributeType.Id]: generateNodeId() })),
+  onClick: (editor, depth) => toolItemCommandWrapper(editor, depth, createBlockNode(NodeName.CODEBLOCK, { [AttributeType.Id]: generateNodeId() })),
 };
 
 const codeBlockTypeToolItem: ToolItem = {
