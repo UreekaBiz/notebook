@@ -7,32 +7,36 @@ import { CHIP_CLASS, CHIP_CLOSE_BUTTON_CLASS } from 'notebookEditor/theme/theme'
 // ********************************************************************************
 // == Constant ====================================================================
 // -- Type ------------------------------------------------------------------------
+export type ChipValue = { value: string; label: string;};
 export type ChipDraggableItem = { id: string; index: number; }
 const chipObjectType = { CHIP: 'chip' };
 
 // == Component ===================================================================
 interface Props {
   id: string;
-  text: string;
+
   index: number;
-  moveChip: (dragIndex: number, hoverIndex: number) => void;
-  clickCallback: (chipText: string) => void;
-  dropCallback: (item: ChipDraggableItem) => void;
-  closeButtonCallback: (deletedIndex: number) => void;
+  value: ChipValue;
+
+  isDraggable?: boolean;
+
+  onClick: () => void;
+  onClose: () => void;
+  onDrop: (item: ChipDraggableItem) => void;
+  onMove: (from: number, to: number) => void;
 }
-export const Chip: React.FC<Props> = ({ id, text, index, moveChip, clickCallback, dropCallback, closeButtonCallback }) => {
+export const Chip: React.FC<Props> = ({ id, index, value, isDraggable, onMove, onClick, onDrop, onClose }) => {
   const ref = useRef<HTMLDivElement>(null);
 
   // == Handler ===================================================================
-  const handleClick = () => clickCallback(text);
-
   const handleDelete = (event: React.MouseEvent<HTMLSpanElement, MouseEvent>) => {
-    event.stopPropagation()/*do not trigger handleClick*/;
-    closeButtonCallback(index);
+    event.stopPropagation();
+    onClose();
   };
 
   // == Drag ======================================================================
-  const [{ isDragging }, drag] = useDrag({
+  const [{ /*nothing!*/}, drag] = useDrag({
+    canDrag: isDraggable,
     type: chipObjectType.CHIP,
     item: (): ChipDraggableItem => { return { id, index }; },
     collect: (monitor) => ({ isDragging: monitor.isDragging() }),
@@ -70,12 +74,12 @@ export const Chip: React.FC<Props> = ({ id, text, index, moveChip, clickCallback
       if(dragIndex > hoverIndex && xMiddleOfBoundingRect < distanceToLeftSide) return;
 
       // move the chip
-      moveChip(dragIndex, hoverIndex);
+      onMove(dragIndex, hoverIndex);
       item.index = hoverIndex;
     },
 
     drop(item) {
-      dropCallback(item);
+      onDrop(item);
       return item;
     },
   });
@@ -84,11 +88,24 @@ export const Chip: React.FC<Props> = ({ id, text, index, moveChip, clickCallback
   drag(drop(ref));
 
   // == UI ========================================================================
-  const opacity = isDragging ? 0 : 1;
+  // NOTE: Using custom implementation of the Chip component to avoid the issue of
+  //       the Chip component not being able to be draggable.
   return (
-    <div ref={ref} className={CHIP_CLASS} style={{ opacity }} data-handler-id={handlerId} onClick={handleClick}>
-      {text}
-      <span className={CHIP_CLOSE_BUTTON_CLASS} tabIndex={0/*(SEE: notebookEditor/toolbar/type)*/} onClick={handleDelete}>&times;</span>
+    <div
+      data-handler-id={handlerId}
+      ref={ref}
+      className={CHIP_CLASS}
+      onClick={onClick}
+    >
+      {value.label}
+      <span
+        className={CHIP_CLOSE_BUTTON_CLASS}
+        tabIndex={0/*(SEE: notebookEditor/toolbar/type)*/}
+        onClick={handleDelete}
+      >
+        {/** X icon */}
+        &times;
+      </span>
     </div>
   );
 };

@@ -152,27 +152,34 @@ img.ProseMirror-selectednode/*target inline nodes with content (e.g. asyncNodes)
 
 /* .. Chip ..................................................................... */
 .chip {
-  display: inline-block;
-  height: 40px;
-  padding: 0 15px;
+  /* NOTE: This is needed to remove the white background while dragging the chip */
+  transform: translate(0, 0);
+  position: relative;
+  padding: 2px 28px 2px 10px;
   background-color: #4299E1;
-  border-radius: 40px;
+  border-radius: 20px;
   color: white;
-  line-height: 40px;
-  font-size: 16px;
+  font-size: 14px;
   cursor: grab;
 }
 
 .chipCloseButton {
-  margin-left: 15px;
-  color: white;
+  position: absolute;
+  top: 50%;
+  right: 6px;
+  transform: translateY(-50%);
+  display: flex;
+  align-items: center;
+  justify-content: center;
   cursor: pointer;
-  float: right;
-  font-size: 20px;
+  padding: 2px;
+  font-size: 16px;
   font-weight: bold;
+  color: rgba(255, 255, 255, 0.4);
+  transition: color .3s;
 }
-.chipCloseButton:hover { color: red; }
-.chipCloseButton:focus { color: red; }
+.chipCloseButton:hover { color: rgba(255, 255, 255, 0.7);}
+.chipCloseButton:focus { color: rgba(255, 255, 255, 0.7); }
 
 /* .. MarkHolder ............................................................... */
 [data-node-type="markHolder"] {

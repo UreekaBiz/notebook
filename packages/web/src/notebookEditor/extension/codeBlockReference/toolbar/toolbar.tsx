@@ -2,10 +2,10 @@ import { VscReferences } from 'react-icons/vsc';
 
 import { generateNodeId, getSelectedNode, isCodeBlockReferenceNode, NodeName } from '@ureeka-notebook/web-service';
 
+import { CodeBlockReferenceChipSelector } from 'notebookEditor/extension/codeblock/toolbar/CodeBlockReferenceChipSelector';
 import { Toolbar, ToolItem } from 'notebookEditor/toolbar/type';
 import { focusChipToolInput } from 'notebookEditor/util';
 
-import { CodeBlockReferenceChipSelector } from './CodeBlockReferenceChipSelector';
 import { CodeBlockReferenceDelimiterToolItem } from './CodeBlockReferenceDelimiterToolItem/CodeBlockReferenceDelimiterToolItem';
 
 //*********************************************************************************
@@ -43,7 +43,11 @@ const codeBlockReferenceChipSelector: ToolItem = {
   toolType: 'component',
   name: 'CodeBlockReferenceChipSelector',
 
-  component: CodeBlockReferenceChipSelector,
+  component: (props) =>
+    <CodeBlockReferenceChipSelector
+      {...props}
+      nodeName={NodeName.CODEBLOCK_REFERENCE}
+    />,
 };
 
 // == Toolbar =====================================================================

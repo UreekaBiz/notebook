@@ -4,7 +4,7 @@ import { useEffect } from 'react';
 
 import { getLogger, getSelectedNode, isDemoAsyncNode, AttributeType, Logger, NodeName, NotebookEditorService, NotebookIdentifier, REMOVED_CODEBLOCK_VISUALID } from '@ureeka-notebook/web-service';
 
-import { visualIdFromCodeBlockReference } from 'notebookEditor/extension/codeBlockReference/util';
+import { visualIdFromCodeBlockReference } from 'notebookEditor/extension/codeblock/util';
 import { useNotebookEditor } from 'notebookEditor/hook/useNotebookEditor';
 import { getNodeViewStorage } from 'notebookEditor/model/NodeViewStorage';
 import { EditorToolComponentProps, TOOL_ITEM_DATA_TYPE } from 'notebookEditor/toolbar/type';
