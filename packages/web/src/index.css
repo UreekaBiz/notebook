@@ -297,6 +297,17 @@ html body {
   overflow: auto !important;
 }
 
+/* == Utilities ================================================================ */
+/* NOTE: Using class name to override the (seemingly impossible!) styles for the
+         input with the accessible props. */
+.unit-picker {
+  padding: 0 4px !important;
+}
+/* hides icon */
+.unit-picker + div {
+  display: none;
+}
+
 /* == Fonts ==================================================================== */
 @font-face {
   font-family: 'SourceSerifPro';
