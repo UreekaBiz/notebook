@@ -4,7 +4,7 @@ import { NodeSelection } from 'prosemirror-state';
 import { hashString, isBlank, isCodeBlockNode, resolveNewSelection, CodeBlockAsyncNodeType, CodeBlockNodeType, CodeBlockReference, NodeName, EMPTY_CODEBLOCK_HASH, REMOVED_CODEBLOCK_VISUALID } from '@ureeka-notebook/web-service';
 
 import { getCodeBlockViewStorage } from 'notebookEditor/extension/codeblock/nodeView/storage';
-import { visualIdFromCodeBlockReference } from 'notebookEditor/extension/codeBlockReference/util';
+import { visualIdFromCodeBlockReference } from 'notebookEditor/extension/codeblock/util';
 import { HISTORY_META } from 'notebookEditor/extension/history/History';
 
 // ********************************************************************************
