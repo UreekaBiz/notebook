@@ -1,18 +1,16 @@
 import { AiOutlineVerticalAlignBottom, AiOutlineVerticalAlignMiddle, AiOutlineVerticalAlignTop } from 'react-icons/ai';
 import { FiImage } from 'react-icons/fi';
 
-import { AttributeType, NodeName, VerticalAlign } from '@ureeka-notebook/web-service';
+import { AttributeType, MAX_IMAGE_HEIGHT, MAX_IMAGE_WIDTH, MIN_IMAGE_HEIGHT, MIN_IMAGE_WIDTH, NodeName, VerticalAlign } from '@ureeka-notebook/web-service';
 
 import { getTextDOMRenderedValue } from 'notebookEditor/extension/util/attribute';
 import { getDialogStorage } from 'notebookEditor/model/DialogStorage';
+import { InputWithUnitNodeToolItem } from 'notebookEditor/extension/shared/component/InputWithUnitToolItem';
+import { InputToolItem } from 'notebookEditor/extension/shared/component/InputToolItem';
 import { Toolbar, ToolItem } from 'notebookEditor/toolbar/type';
 
 import { setVerticalAlign } from '../command';
-import { ImageAltToolItem } from './ImageAltToolItem';
 import { ImageSrcToolItem } from './ImageSrcToolItem';
-import { ImageTitleToolItem } from './ImageTitleToolItem';
-import { ImageWidthToolItem } from './ImageWidthToolItem';
-import { ImageHeightToolItem } from './ImageHeightToolItem';
 
 //*********************************************************************************
 // == Tool Items ==================================================================
@@ -47,28 +45,56 @@ const imageAltToolItem: ToolItem =  {
   toolType: 'component',
   name: 'imageAltToolItem',
 
-  component: ImageAltToolItem,
+  component: (props) =>
+    <InputToolItem
+      {...props}
+      name='Alt'
+      nodeName={NodeName.IMAGE}
+      attributeType={AttributeType.Alt}
+    />,
 };
 
 const imageTitleToolItem: ToolItem =  {
   toolType: 'component',
   name: 'imageTitleToolItem',
 
-  component: ImageTitleToolItem,
+  component: (props) =>
+    <InputToolItem
+      {...props}
+      name='Title'
+      nodeName={NodeName.IMAGE}
+      attributeType={AttributeType.Title}
+    />,
 };
 
 const imageWidthToolItem: ToolItem =  {
   toolType: 'component',
   name: 'imageWidthToolItem',
 
-  component: ImageWidthToolItem,
+  component: (props) =>
+    <InputWithUnitNodeToolItem
+      {...props}
+      name='Width'
+      nodeName={NodeName.IMAGE}
+      attributeType={AttributeType.Width}
+      minValue={MIN_IMAGE_WIDTH}
+      maxValue={MAX_IMAGE_WIDTH}
+    />,
 };
 
 const imageHeightToolItem: ToolItem =  {
   toolType: 'component',
   name: 'imageHeightToolItem',
 
-  component: ImageHeightToolItem,
+  component: (props) =>
+    <InputWithUnitNodeToolItem
+      {...props}
+      name='Height'
+      nodeName={NodeName.IMAGE}
+      attributeType={AttributeType.Height}
+      minValue={MIN_IMAGE_HEIGHT}
+      maxValue={MAX_IMAGE_HEIGHT}
+    />,
 };
 
 // -- Alignment -------------------------------------------------------------------
