@@ -15,6 +15,6 @@ export const Text = Node.create<NoOptions, NoStorage>({
   ...TextNodeSpec,
   priority: ExtensionPriority.TEXT/*(SEE: ExtensionPriority)*/,
 
-  // -- Command ------------------------------------------------------------------
+  // -- Keyboard Shortcut ---------------------------------------------------------
   addKeyboardShortcuts() { return { 'Tab': () => shortcutCommandWrapper(this.editor, insertTabCommand) }; },
 });
