@@ -77,7 +77,7 @@ export const Heading = Node.create<HeadingOptions, NoStorage>({
 
           tr.delete(range.from, range.to)
             .setBlockType(range.from, range.from, this.type, { level })
-            .insert(tr.selection.$anchor.pos, createMarkHolderNode(state.schema, { storedMarks } ));
+            .insert(tr.selection.anchor, createMarkHolderNode(state.schema, { storedMarks } ));
 
           return/*nothing left to do*/;
         },

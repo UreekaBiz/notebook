@@ -54,11 +54,11 @@ export const toggleMarkInMarkHolder = (editor: Editor, chain: () => ChainedComma
     const { dispatch, tr } = props;
     if(!selection.$anchor.parent.isBlock) return false/*command cannot be executed, Selection parent is not a Block Node*/;
 
-    const startOfParentNodePos = tr.doc.resolve(selection.$anchor.pos - selection.$anchor.parentOffset);
+    const startOfParentNodePos = tr.doc.resolve(selection.anchor - selection.$anchor.parentOffset);
     const { pos: startingPos } = tr.selection.$anchor;
     if(dispatch) {
       tr.setSelection(new TextSelection(startOfParentNodePos, tr.doc.resolve(startOfParentNodePos.pos + markHolder.nodeSize)))
-        .setNodeMarkup(tr.selection.$anchor.pos, undefined/*maintain type*/, { storedMarks: stringifyMarksArray(newMarksArray) })
+        .setNodeMarkup(tr.selection.anchor, undefined/*maintain type*/, { storedMarks: stringifyMarksArray(newMarksArray) })
         .setSelection(new TextSelection(tr.doc.resolve(startingPos)));
       dispatch(tr);
     } /* else -- called from can() (SEE: src/notebookEditor/README.md/#Commands) */

@@ -26,9 +26,9 @@ export const MarkHolderPlugin = () => new Plugin<NotebookSchemaType>({
     // NOTE: (this case is handled in the keyDown handler when Enter is pressed for
     //       expected behavior, i.e. inserting a Paragraph) above
     // SEE:  handleKeyDown below
-    const nodeAfterPos = newState.doc.nodeAt(newState.selection.$anchor.pos);
+    const nodeAfterPos = newState.doc.nodeAt(newState.selection.anchor);
     if(nodeAfterPos && isMarkHolderNode(nodeAfterPos)) {
-      tr.setSelection(new TextSelection(tr.doc.resolve(newState.selection.$anchor.pos + 1)));
+      tr.setSelection(new TextSelection(tr.doc.resolve(newState.selection.anchor + 1)));
     } /* else -- no need to modify selection */
 
    // NOTE: this Transaction has to step through all stepMaps without leaving
@@ -111,8 +111,8 @@ export const MarkHolderPlugin = () => new Plugin<NotebookSchemaType>({
         // Paragraph (-2 = -1 to account for the end of the new Paragraph,
         // another -1 since its inside of it)
         tr.setSelection(new TextSelection(tr.doc.resolve(parentEndPos), tr.doc.resolve(parentEndPos)))
-          .insert(tr.selection.$anchor.pos, createParagraphNode(view.state.schema))
-          .setSelection(new TextSelection(tr.doc.resolve(Math.max(0/*don't go outside limits*/, tr.selection.$anchor.pos - 2/*start of inserted Paragraph*/))));
+          .insert(tr.selection.anchor, createParagraphNode(view.state.schema))
+          .setSelection(new TextSelection(tr.doc.resolve(Math.max(0/*don't go outside limits*/, tr.selection.anchor - 2/*start of inserted Paragraph*/))));
         dispatch(tr);
         return true/*event handled*/;
       } /* else -- not handling Enter */
@@ -134,7 +134,7 @@ export const MarkHolderPlugin = () => new Plugin<NotebookSchemaType>({
       if(event.key === 'Backspace') {
         tr.setSelection(new TextSelection(tr.doc.resolve(parentPos), tr.doc.resolve(parentPos + view.state.selection.$anchor.parent.nodeSize)))
           .deleteSelection();
-        tr.setSelection(new TextSelection(tr.doc.resolve(tr.selection.$anchor.pos)));
+        tr.setSelection(new TextSelection(tr.doc.resolve(tr.selection.anchor)));
 
         dispatch(tr);
         return true/*event handled*/;
@@ -216,7 +216,7 @@ export const MarkHolderPlugin = () => new Plugin<NotebookSchemaType>({
 const getUtilsFromView = (view: EditorView) => {
   const { dispatch } = view;
   const { tr } = view.state;
-  const posBeforeAnchorPos = Math.max(0/*don't go outside limits*/, view.state.selection.$anchor.pos - 1)/*selection will be past the MarkHolder*/;
+  const posBeforeAnchorPos = Math.max(0/*don't go outside limits*/, view.state.selection.anchor - 1)/*selection will be past the MarkHolder*/;
 
   return { dispatch, tr, posBeforeAnchorPos };
 };

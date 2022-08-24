@@ -13,7 +13,7 @@ import { isNodeSelection, AttributeType, VerticalAlign } from '@ureeka-notebook/
  */
 export const setVerticalAlign = (editor: Editor, desiredAlignment: VerticalAlign): boolean => {
   const { selection } = editor.state;
-  const nodePos = selection.$anchor.pos;
+  const nodePos = selection.anchor;
   if(!isNodeSelection(selection)) return false/*do not handle*/;
 
   const { name: nodeName } = selection.node.type,

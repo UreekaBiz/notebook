@@ -24,8 +24,8 @@ export const HeadingPlugin = () => new Plugin<NotebookSchemaType>({
       if(event.key === 'Enter') {
         // check whether the selection is at the end of the content, if so a
         // paragraph node must be created and the marks must be deleted.
-        const parentPos = selection.$anchor.pos - selection.$anchor.parentOffset;
-        const isAtEnd = selection.$anchor.pos === parentPos + node.nodeSize - 2/*end of parent + end of node*/;
+        const parentPos = selection.anchor - selection.$anchor.parentOffset;
+        const isAtEnd = selection.anchor === parentPos + node.nodeSize - 2/*end of parent + end of node*/;
 
         // Split the node from the current selection and append the attributes.
         tr.deleteRange(selection.from, selection.to)/*delete the content if is a range selection*/;

@@ -40,7 +40,7 @@ export const CodeBlockReferenceDelimiterToolItem: React.FC<Props> = ({ editor, d
 
     editor.chain()
       .updateAttributes(NodeName.CODEBLOCK_REFERENCE, newDelimiterAttributeObj)
-      .setNodeSelection(selection.$anchor.pos)
+      .setNodeSelection(selection.anchor)
       .run();
 
     // focus the editor again

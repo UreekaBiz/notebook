@@ -66,14 +66,14 @@ export const isNodeSelection = (selection: Selection<NotebookSchemaType>): selec
 }
 export const resolveNewSelection = (selection: Selection<NotebookSchemaType>, tr: Transaction<NotebookSchemaType>, bias?: SelectionBias) => {
   if(isNodeSelection(selection)) {
-    return new NodeSelection(tr.doc.resolve(selection.$anchor.pos));
+    return new NodeSelection(tr.doc.resolve(selection.anchor));
   } /* else -- a Node is not selected */
 
   if(!selection.empty) {
-    return new TextSelection(tr.doc.resolve(selection.$anchor.pos), tr.doc.resolve(selection.$head.pos));
+    return new TextSelection(tr.doc.resolve(selection.anchor), tr.doc.resolve(selection.head));
   } /* else -- selection is empty */
 
-  return Selection.near(tr.doc.resolve(selection.$anchor.pos), bias ? bias : SelectionBias.LEFT/*default*/);
+  return Selection.near(tr.doc.resolve(selection.anchor), bias ? bias : SelectionBias.LEFT/*default*/);
 };
 
 // ................................................................................
