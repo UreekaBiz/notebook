@@ -40,18 +40,18 @@ export const CodeBlock = Node.create<NoOptions, CodeBlockStorage>({
   // -- Keyboard Shortcut ---------------------------------------------------------
   addKeyboardShortcuts() {
     return {
-      // toggle a code block
+      // create a CodeBlock
       'Shift-Mod-c': () => shortcutCommandWrapper(this.editor, createBlockNode(NodeName.CODEBLOCK, { [AttributeType.Id]: generateNodeId() })),
       'Shift-Mod-C': () => shortcutCommandWrapper(this.editor, createBlockNode(NodeName.CODEBLOCK, { [AttributeType.Id]: generateNodeId() })),
 
-      // remove code block when at start of document or code block is empty
+      // remove CodeBlock when at start of document or code block is empty
       'Backspace': ({ editor }) => handleBlockBackspace(editor, NodeName.CODEBLOCK),
 
-      // set gap cursor if necessary
+      // set GapCursor if necessary
       'ArrowUp': ({ editor }) => handleBlockArrowUp(editor, NodeName.CODEBLOCK),
       'ArrowDown': ({ editor }) => handleBlockArrowDown(editor, NodeName.CODEBLOCK),
 
-      // exit node on shift enter, inserting a paragraph below
+      // exit Node on shift enter, inserting a Paragraph below
       'Shift-Enter': ({ editor }) => editor.commands.exitCode(),
     };
   },

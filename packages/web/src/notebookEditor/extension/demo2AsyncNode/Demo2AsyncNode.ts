@@ -44,20 +44,19 @@ export const Demo2AsyncNode = Node.create<NoOptions, Demo2AsyncNodeStorageType>(
   // -- Keyboard Shortcut ---------------------------------------------------------
   addKeyboardShortcuts() {
     return {
-      // toggle a demo2 async node
-      // FIXME: this isn't toggle any more -- so what needs to change? Just the comment?
+      // create a Demo2AsyncNode
       'Shift-Alt-Mod-d': () => shortcutCommandWrapper(this.editor, createBlockNode(NodeName.DEMO_2_ASYNC_NODE, { [AttributeType.Id]: generateNodeId() })),
       'Shift-Alt-Mod-D': () => shortcutCommandWrapper(this.editor, createBlockNode(NodeName.DEMO_2_ASYNC_NODE, { [AttributeType.Id]: generateNodeId() })),
 
-      // remove code block when at start of document or code block is empty
+      // remove Demo2AsyncNode when at start of document or Demo2AsyncNode is empty
       'Backspace': ({ editor }) => handleBlockBackspace(editor, NodeName.DEMO_2_ASYNC_NODE),
 
-      // set gap cursor if necessary
+      // set GapCursor if necessary
       'ArrowUp': ({ editor }) => handleBlockArrowUp(editor, NodeName.DEMO_2_ASYNC_NODE),
       'ArrowDown': ({ editor }) => handleBlockArrowDown(editor, NodeName.DEMO_2_ASYNC_NODE),
 
       // (SEE: NOTE in Demo2AsyncNodeSpec for code property)
-      // exit node on shift enter, inserting a paragraph below
+      // exit Node on shift enter, inserting a Paragraph below
       'Shift-Enter': ({ editor }) => editor.commands.exitCode(),
     };
   },
