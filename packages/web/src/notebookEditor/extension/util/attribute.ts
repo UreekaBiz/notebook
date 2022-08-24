@@ -62,7 +62,7 @@ export const uniqueIdParsingBehavior = (storage: NodeViewStorage<any>) => {
       const nodeView = id ? storage.getNodeView(id) : undefined/*none*/;
 
       // use existing id if it doesn't exist in storage and it's valid.
-      if(nodeView && id) return id;
+      if(!nodeView && id) return id;
       return generateNodeId();
     },
   };
