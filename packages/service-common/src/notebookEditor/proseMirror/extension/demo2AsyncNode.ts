@@ -97,4 +97,3 @@ export const createDemo2AsyncNodeNode = (schema: NotebookSchemaType, attributes?
 // -- JSON Node Type --------------------------------------------------------------
 export type Demo2AsyncNodeJSONNodeType = JSONNode<Demo2AsyncNodeAttributes> & { type: NodeName.DEMO_2_ASYNC_NODE; };
 export const isDemo2AsyncNodeJSONNode = (node: JSONNode): node is Demo2AsyncNodeJSONNodeType => node.type === NodeName.DEMO_2_ASYNC_NODE;
-
