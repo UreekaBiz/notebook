@@ -206,11 +206,6 @@ img.ProseMirror-selectednode/*target inline nodes with content (e.g. asyncNodes)
   display: inline-block;
 }
 
-/* .. VisualID ................................................................. */
-[data-visualid]::after {
-  content: attr(data-visualid);
-}
-
 /* .. Gap Cursor ............................................................... */
 .ProseMirror-gapcursor {
   display: none;
