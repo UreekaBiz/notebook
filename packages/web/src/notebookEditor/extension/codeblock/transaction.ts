@@ -67,6 +67,12 @@ const codeBlocksOrHeadingsChanged = (transaction: Transaction) => {
           return/*something changed*/;
         } /* else - same type, keep checking */
 
+        // -- check for ids ---------------------------------------------------------
+        if(oldNodePositions[i].node.type.name !== newNodePositions[i].node.type.name) {
+          shouldUpdate = true/*Heading or CodeBlock Id changed*/;
+          return/*something changed*/;
+        } /* else -- same ids, check for Heading levels */
+
         // -- check for same Heading levels ---------------------------------------
         if(isHeadingNode(oldNodePositions[i].node) && isHeadingNode(newNodePositions[i].node)) {
           if(newNodePositions[i].node.attrs[AttributeType.Level] !== oldNodePositions[i].node.attrs[AttributeType.Level]) {
