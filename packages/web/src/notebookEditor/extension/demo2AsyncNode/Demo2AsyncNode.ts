@@ -45,6 +45,7 @@ export const Demo2AsyncNode = Node.create<NoOptions, Demo2AsyncNodeStorageType>(
   addKeyboardShortcuts() {
     return {
       // toggle a demo2 async node
+      // FIXME: this isn't toggle any more -- so what needs to change? Just the comment?
       'Shift-Alt-Mod-d': () => shortcutCommandWrapper(this.editor, createBlockNode(NodeName.DEMO_2_ASYNC_NODE, { [AttributeType.Id]: generateNodeId() })),
       'Shift-Alt-Mod-D': () => shortcutCommandWrapper(this.editor, createBlockNode(NodeName.DEMO_2_ASYNC_NODE, { [AttributeType.Id]: generateNodeId() })),
 
