@@ -4,8 +4,8 @@ import { generateNodeId, getSelectedNode, isAsyncNode, isDemoAsyncNode, Attribut
 
 import { CodeBlockReferencesChipSelector } from 'notebookEditor/extension/codeblock/toolbar/CodeBlockReferencesChipSelector';
 import { SliderToolItem } from 'notebookEditor/extension/shared/component/SliderToolItem';
-import { focusChipToolInput } from 'notebookEditor/util';
 import { Toolbar, ToolItem } from 'notebookEditor/toolbar/type';
+import { focusChipToolInput } from 'notebookEditor/util';
 
 import { ExecuteButtons } from './ExecuteButtons';
 
