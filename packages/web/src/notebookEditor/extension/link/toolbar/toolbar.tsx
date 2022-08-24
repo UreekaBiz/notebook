@@ -28,8 +28,8 @@ export const linkToolItem: ToolItem = {
     if(markHolder) return toggleMarkInMarkHolder(editor, editor.chain, markHolder, getLinkMarkType(editor.schema))/*nothing else to do*/;
 
     // (SEE: EditorUserInteractions.tsx)
-    const { $from } = editor.state.selection,
-      linkMarkActive = editor.isActive(MarkName.LINK) || editor.state.doc.rangeHasMark($from.pos, $from.pos + 1, editor.state.schema.marks[MarkName.LINK]);
+    const { from } = editor.state.selection,
+      linkMarkActive = editor.isActive(MarkName.LINK) || editor.state.doc.rangeHasMark(from, from + 1, editor.state.schema.marks[MarkName.LINK]);
     if(linkMarkActive) {
       return editor.chain().focus().unsetLink().run();
     } /* else -- Link Mark not active, add a new one */

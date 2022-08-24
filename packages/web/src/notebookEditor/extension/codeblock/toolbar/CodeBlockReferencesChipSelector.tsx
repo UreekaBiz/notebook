@@ -48,7 +48,7 @@ export const CodeBlockReferencesChipSelector: React.FC<Props> = ({ editor, depth
       editor.chain().focus().updateAttributes(nodeName, { [AttributeType.CodeBlockReferences]: newValue }).run();
 
       // set the selection in the same position in case that the node was replaced
-      const position = state.selection.$anchor.pos;
+      const position = state.selection.anchor;
       if(isNodeSelection(selection)) editor.commands.setNodeSelection(position);
       else editor.commands.setTextSelection(position);
 
@@ -59,7 +59,7 @@ export const CodeBlockReferencesChipSelector: React.FC<Props> = ({ editor, depth
 
     // removes the listener on unmount
     return () => { window.removeEventListener('mousedown', handler); };
-  }, [editor, nodeName, node, selection, state.selection.$anchor.pos]);
+  }, [editor, nodeName, node, selection, state.selection.anchor]);
 
   // == Handler ===================================================================
   // SEE: CodeBlockReferenceChipSelector.tsx

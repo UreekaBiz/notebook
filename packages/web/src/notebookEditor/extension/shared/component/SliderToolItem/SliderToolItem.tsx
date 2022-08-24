@@ -36,7 +36,7 @@ export const SliderToolItem: React.FC<Props> = ({ editor, depth, attributeType, 
   const handleChange = (value: number, focus?: boolean) => {
     editor.commands.updateAttributes(nodeName, { [attributeType]: value });
 
-    const position = state.selection.$anchor.pos;
+    const position = state.selection.anchor;
     // set the selection in the same position in case that the node was replaced
     if(isNodeSelection(selection)) editor.commands.setNodeSelection(position);
     else editor.commands.setTextSelection(position);

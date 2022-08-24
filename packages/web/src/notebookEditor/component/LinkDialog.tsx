@@ -41,8 +41,7 @@ export const LinkDialog: React.FC<Props> = ({ editor, isOpen, onClose }) => {
       const { empty } = editor.state.selection,
             linkAttrs = { ...DEFAULT_LINK_ATTRIBUTES, href: href.trim() };
 
-      const { $anchor, $head } = editor.state.selection,
-            finalSelection = $anchor.pos > $head.pos ? $anchor.pos : $head.pos;
+      const { to } = editor.state.selection;
 
       if(empty){
         editor.chain()
@@ -53,7 +52,7 @@ export const LinkDialog: React.FC<Props> = ({ editor, isOpen, onClose }) => {
       } else {
         editor.chain()
               .setLink(linkAttrs)
-              .setTextSelection(finalSelection)
+              .setTextSelection(to)
               .run();
       }
 

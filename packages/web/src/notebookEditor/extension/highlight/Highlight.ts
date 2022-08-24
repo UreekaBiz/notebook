@@ -20,8 +20,8 @@ export const Highlight = Extension.create({
         props: {
           decorations(state: EditorState) {
             const selection = state.selection;
-            const from = selection.$from.pos,
-                  to = selection.$to.pos;
+            const from = selection.from,
+                  to = selection.to;
 
             const decoration = Decoration.inline(from, to, { class: SELECTED_TEXT_CLASS });
             return DecorationSet.create(state.doc, [decoration]);

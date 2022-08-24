@@ -35,7 +35,7 @@ export const SpacingToolItem: React.FC<Props> = ({ depth, editor }) => {
   const handleChange = (attribute: AttributeType, value: string) => {
     editor.commands.setStyle(attribute, value, depth);
 
-    const position = state.selection.$anchor.pos;
+    const position = state.selection.anchor;
     // set the selection in the same position in case that the node was replaced
     if(isNodeSelection(selection)) editor.commands.setNodeSelection(position);
     else editor.commands.setTextSelection(position);

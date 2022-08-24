@@ -25,7 +25,7 @@ export const CodeBlockTypeToolItem: React.FC<Props> = ({ editor }) => {
     editor.chain()
           .focus()
           .updateAttributes(NodeName.CODEBLOCK, { type, wrap })
-          .setTextSelection(editor.state.selection.$anchor.pos)
+          .setTextSelection(editor.state.selection.anchor)
           .run();
   };
 

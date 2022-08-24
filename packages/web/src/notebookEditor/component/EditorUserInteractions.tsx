@@ -75,8 +75,8 @@ export const EditorUserInteractions = () => {
         //       markSpec, but since its set to false (cause one would not)
         //       want the mark to be active after having inserted a link,
         //       (SEE: common/link.ts), this check has to be done
-        const { $from } = editor.state.selection,
-              linkMarkActive = editor.isActive(MarkName.LINK) || editor.state.doc.rangeHasMark($from.pos, $from.pos+1, editor.state.schema.marks[MarkName.LINK]);
+        const { from } = editor.state.selection,
+              linkMarkActive = editor.isActive(MarkName.LINK) || editor.state.doc.rangeHasMark(from, from+1, editor.state.schema.marks[MarkName.LINK]);
         if(linkMarkActive) {
           editor.chain().focus().unsetLink().run();
           return;
@@ -102,7 +102,7 @@ export const EditorUserInteractions = () => {
         event.preventDefault();
 
         // focus the last focused item. If none select the Editor
-        if(isNodeSelection(editor.state.selection)) editor.chain().focus().setNodeSelection(editor.state.selection.$anchor.pos);
+        if(isNodeSelection(editor.state.selection)) editor.chain().focus().setNodeSelection(editor.state.selection.anchor);
         else editor.commands.focus();
       } /* else -- not selecting Editor */
     };

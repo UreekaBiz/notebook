@@ -82,8 +82,8 @@ export const uniqueIdParsingBehavior = (storage: NodeViewStorage<any>) => {
 export const getTextDOMRenderedValue = (editor: Editor, attributeType: AttributeType, markType?: MarkName): MergedAttributeValue => {
   const { state } = editor;
   const { selection } = state;
-  const start = selection.$from.pos,
-        end = selection.$to.pos;
+  const start = selection.from,
+        end = selection.to;
 
   // Get the initial value based on the active mark.
   // NOTE: This is needed in the case that a Node don't have a TextNode yet but the
