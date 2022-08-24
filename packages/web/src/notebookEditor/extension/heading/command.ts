@@ -1,6 +1,6 @@
 import { CommandProps } from '@tiptap/core';
 
-import { createBoldMark, getBlockNodeRange, generateNodeId, isHeadingLevel, isHeadingNode, AttributeType, CommandFunctionType, HeadingLevel, NodeName, MarkName, NodeIdentifier } from '@ureeka-notebook/web-service';
+import { createBoldMark, getBlockNodeRange, generateNodeId, getSelectedNode, isHeadingLevel, isHeadingNode, AttributeType, CommandFunctionType, HeadingLevel, NodeName, MarkName, NodeIdentifier } from '@ureeka-notebook/web-service';
 
 import { createMarkHolderJSONNode } from 'notebookEditor/extension/markHolder/util';
 
@@ -16,13 +16,23 @@ declare module '@tiptap/core' {
 }
 
 // --------------------------------------------------------------------------------
-export const setHeadingCommand = (attributes: { level: HeadingLevel; }) => ({ editor, chain }: CommandProps) => {
+export const setHeadingCommand = (attributes: { level: HeadingLevel; }) => ({ editor, state, chain }: CommandProps) => {
   if(!isHeadingLevel(attributes[AttributeType.Level])) return false/*invalid command, level for heading not supported*/;
+  const parent = getSelectedNode(state, state.selection.$anchor.depth);
+  if(!parent) return false/*nothing to do*/;
 
-  const { parent } = editor.state.selection.$anchor;
-  if(editor.state.selection.empty && parent.content.size < 1) {
+  // NOTE: empty implies that parent($anchor) === parent($head)
+  const { empty } = state.selection;
+
+  // check if MarkHolder must be added
+  if(empty && parent.content.size < 1) {
     return chain().setNode(NodeName.HEADING, attributes).insertContent(createMarkHolderJSONNode(editor, [MarkName.BOLD])).run();
   } /* else -- no need to add MarkHolder */
+
+  // check for level change
+  if(empty && isHeadingNode(parent)) {
+    return chain().updateAttributes(NodeName.HEADING, { ...parent.attrs, [AttributeType.Level]: attributes.level }).run();
+  } /* else -- not a level change, setHeading */
 
   return chain()
         .setNode(NodeName.HEADING, attributes)
