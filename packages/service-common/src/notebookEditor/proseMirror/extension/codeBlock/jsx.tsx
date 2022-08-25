@@ -3,7 +3,7 @@ import { Box } from '@chakra-ui/react';
 import { AttributeType, filterStyleAttributes, HTMLAttributes } from '../../attribute';
 import { NodeName } from '../../node';
 import { CodeBlockAttributes } from './attribute';
-import { CodeBlockType } from './type';
+import { CodeBlockType, DATA_VISUAL_ID } from './type';
 
 export type CodeBlockComponentRenderProps = {
   visualId: string;
@@ -44,6 +44,7 @@ export const CodeBlockComponentJSX: React.FC<CodeBlockComponentRenderProps> = ({
       </Box>
 
       <Box
+        {...{ [DATA_VISUAL_ID]:visualId }}
         contentEditable={false}
         position='absolute'
         top='50%'
