@@ -96,7 +96,7 @@ export const ChipTool: React.FC<Props> = ({ nodeId, value, maxValues, isDraggabl
   // == UI ========================================================================
   return (
     <DndProvider backend={HTML5Backend}>
-      <Flex flexDir='row' flexWrap='wrap' gap='1' height='1em'>
+      <Flex flexDir='row' flexWrap='wrap' gap='1' minHeight='1.75em'>
         {value.map((chip, index) => {
           const key = `${chip.value}-${index}`;
           return (
