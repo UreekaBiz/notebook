@@ -24,7 +24,7 @@ export const DemoAsyncNodeComponentJSX: React.FC<DemoAsyncNodeComponentRenderPro
     <Text
       as='span'
       style={filterStyleAttributes(attrs)}
-      data-node-type={NodeName.DEMO_2_ASYNC_NODE}
+      data-node-type={NodeName.DEMO_ASYNC_NODE}
       position='relative'
       display='inline'
       marginLeft='4px'
