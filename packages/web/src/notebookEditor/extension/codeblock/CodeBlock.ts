@@ -41,6 +41,8 @@ export const CodeBlock = Node.create<NoOptions, CodeBlockStorage>({
   addKeyboardShortcuts() {
     return {
       // create a CodeBlock
+      // NOTE: current implementation adds a CodeBlock below the
+      //       current Block instead of splitting it on purpose
       'Shift-Mod-c': () => shortcutCommandWrapper(this.editor, createBlockNode(NodeName.CODEBLOCK, { [AttributeType.Id]: generateNodeId() })),
       'Shift-Mod-C': () => shortcutCommandWrapper(this.editor, createBlockNode(NodeName.CODEBLOCK, { [AttributeType.Id]: generateNodeId() })),
 
