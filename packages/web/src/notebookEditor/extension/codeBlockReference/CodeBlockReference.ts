@@ -1,13 +1,13 @@
 import { Node } from '@tiptap/core';
 
-import { generateNodeId, getNodeOutputSpec, isCodeBlockReferenceNode, AttributeType, CodeBlockReferenceNodeSpec, NodeName, SetAttributeType, DATA_NODE_TYPE } from '@ureeka-notebook/web-service';
+import { getNodeOutputSpec, isCodeBlockReferenceNode, AttributeType, CodeBlockReferenceNodeSpec, NodeName, SetAttributeType, DATA_NODE_TYPE } from '@ureeka-notebook/web-service';
 
 import { setAttributeParsingBehavior, uniqueIdParsingBehavior } from 'notebookEditor/extension/util/attribute';
 import { NodeViewStorage } from 'notebookEditor/model/NodeViewStorage';
 import { NoOptions } from 'notebookEditor/model/type';
-import { focusChipToolInput } from 'notebookEditor/util';
 
-import { insertAndSelectCodeBlockReference } from './command';
+import { shortcutCommandWrapper } from '../util/command';
+import { insertAndSelectCodeBlockReferenceCommand } from './command';
 import { CodeBlockReferenceController, CodeBlockReferenceStorageType } from './nodeView/controller';
 
 // ********************************************************************************
@@ -27,23 +27,12 @@ export const CodeBlockReference = Node.create<NoOptions, CodeBlockReferenceStora
     };
   },
 
-  // -- Command -------------------------------------------------------------------
-  addCommands() { return { insertCodeBlockReference: insertAndSelectCodeBlockReference }; },
+  // -- Keyboard Shortcut ---------------------------------------------------------
   addKeyboardShortcuts() {
     return {
       // insert a CodeBlockReference
-      'Shift-Alt-Mod-c': () => {
-        const id = generateNodeId();
-        this.editor.commands.insertCodeBlockReference({ id });
-        focusChipToolInput(id);
-        return true/*command executed*/;
-      },
-      'Shift-Alt-Mod-C': () => {
-        const id = generateNodeId();
-        this.editor.commands.insertCodeBlockReference({ id });
-        focusChipToolInput(id);
-        return true/*command executed*/;
-      },
+      'Shift-Alt-Mod-c': () => shortcutCommandWrapper(this.editor, insertAndSelectCodeBlockReferenceCommand),
+      'Shift-Alt-Mod-C': () => shortcutCommandWrapper(this.editor, insertAndSelectCodeBlockReferenceCommand),
     };
   },
 
