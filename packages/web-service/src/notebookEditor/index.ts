@@ -260,6 +260,7 @@ export {
 
   // == JSX =======================================================================
   CodeBlockComponentJSX,
+  CodeBlockReferenceComponentJSX,
   Demo2AsyncNodeComponentJSX,
   DemoAsyncNodeComponentJSX,
 

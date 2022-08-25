@@ -62,16 +62,6 @@ img.ProseMirror-selectednode/*target inline nodes with content (e.g. asyncNodes)
 }
 
 /* -- Node styles -------------------------------------------------------------- */
-/* .. CodeBlockReference ....................................................... */
-[data-node-type="codeBlockReference"] {
-  position: relative;
-  font-weight: bold;
-
-  /* ensure renderer CodeBlockReferences get displayed properly */
-  color: inherit;
-  text-decoration: inherit;
-}
-
 /* .. Chip ..................................................................... */
 .chip {
   /* NOTE: This is needed to remove the white background while dragging the chip */

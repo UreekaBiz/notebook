@@ -10,6 +10,7 @@ export * from './extension/bold';
 export * from './extension/codeBlock';
 export * from './extension/codeBlock/jsx';
 export * from './extension/codeBlockReference';
+export * from './extension/codeBlockReference/jsx';
 export * from './extension/codeBlockAsyncNode';
 export * from './extension/demo2AsyncNode';
 export * from './extension/demo2AsyncNode/jsx';
