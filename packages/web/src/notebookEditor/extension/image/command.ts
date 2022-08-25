@@ -5,7 +5,7 @@ import { createImageNode, isNodeSelection, replaceAndSelectNodeCommand, Attribut
 // ================================================================================
 // creates and selects an Image Node by replacing whatever is at the current
 // selection with the newly created Image Node
-export const insertAndSelectImage = (attrs: Partial<ImageAttributes>): Command => (state, dispatch) => {
+export const insertAndSelectImageCommand = (attrs: Partial<ImageAttributes>): Command => (state, dispatch) => {
   const image = createImageNode(state.schema, attrs);
   return replaceAndSelectNodeCommand(image)(state, dispatch);
 };
