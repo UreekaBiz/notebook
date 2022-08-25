@@ -1,5 +1,5 @@
 import { Attributes } from '../attribute';
-import { getMarkAttributes, getMarkRange, MarkName } from '../mark';
+import { getMarkAttributes, getMarkRange, isMarkActive, MarkName } from '../mark';
 import { NotebookSchemaType } from '../schema';
 import { Command } from './type';
 
@@ -69,4 +69,13 @@ export const unsetMarkCommand = (markName: MarkName, extendEmptyMarkRange: boole
   tr.removeStoredMark(markType);
   dispatch(tr);
   return true/*command executed*/;
+};
+
+// --------------------------------------------------------------------------------
+export const toggleMarkCommand = (schema: NotebookSchemaType, markName: MarkName, attributes: Partial<Attributes>): Command => (state, dispatch) => {
+  if(isMarkActive(state, markName, attributes)) {
+    return unsetMarkCommand(markName, false/*default not extend Mark Range*/)(state, dispatch);
+  } /* else -- Mark is not active, set it */
+
+  return setMarkCommand(schema, markName,  attributes)(state, dispatch);
 };
