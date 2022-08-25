@@ -16,15 +16,15 @@ export class CodeBlockReferenceView extends AbstractNodeView<CodeBlockReferenceN
   // == Attribute =================================================================
   // NOTE: must be public so that it can be accessed by the Controller
   //       (SEE: ./controller.ts)
-  public viewElement: HTMLElement;
+  public contentDOM: HTMLElement;
 
   // ==============================================================================
   public constructor(model: CodeBlockReferenceModel, editor: Editor, node: CodeBlockReferenceNodeType, storage: CodeBlockReferenceStorageType, getPos: getPosType) {
     super(model, editor, node, storage, getPos);
 
     // append View Element to DOM Element
-    this.viewElement = this.createViewElement(this.node);
-    this.dom.appendChild(this.viewElement);
+    this.contentDOM = this.createViewElement(this.node);
+    this.dom.appendChild(this.contentDOM);
 
     // Sync view with current state
     this.updateView();
@@ -51,26 +51,26 @@ export class CodeBlockReferenceView extends AbstractNodeView<CodeBlockReferenceN
   public updateView() {
     // update the CodeBlockReference content depending on the ReferencedVisualID
     const referencedVisualId = this.getReferencedVisualId();
-    this.viewElement.innerHTML = computeCodeBlockReferenceText(this.node.attrs, referencedVisualId);
+    this.contentDOM.innerHTML = computeCodeBlockReferenceText(this.node.attrs, referencedVisualId);
 
     // add special styles on CMD/CTRL pressed, only if reference is not
     // the default reference
     // (SEE: src/common/notebookEditor/attribute.ts) (SEE: Editor.tsx)
     if(!isBlank(this.node.attrs.codeBlockReference)) {
-      this.viewElement.setAttribute(ACTIONABLE_NODE, ''/*just add the attribute*/);
+      this.contentDOM.setAttribute(ACTIONABLE_NODE, ''/*just add the attribute*/);
     } else {
-      this.viewElement.removeAttribute(ACTIONABLE_NODE);
+      this.contentDOM.removeAttribute(ACTIONABLE_NODE);
     }
   }
 
   // -- Destroy -------------------------------------------------------------------
   public destroy() {
-    this.viewElement.removeEventListener('mousedown', this.handleViewElementMouseDown);
+    this.contentDOM.removeEventListener('mousedown', this.handleViewElementMouseDown);
   }
 
   // -- Event ---------------------------------------------------------------------
   private addEventListener() {
-    this.viewElement.addEventListener('mousedown', this.handleViewElementMouseDown.bind(this/*maintain reference to same scope*/));
+    this.contentDOM.addEventListener('mousedown', this.handleViewElementMouseDown.bind(this/*maintain reference to same scope*/));
   }
 
   private handleViewElementMouseDown(event: MouseEvent) {

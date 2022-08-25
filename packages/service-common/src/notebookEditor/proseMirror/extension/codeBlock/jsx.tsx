@@ -1,6 +1,6 @@
 import { Box } from '@chakra-ui/react';
 
-import { AttributeType, HTMLAttributes } from '../../attribute';
+import { AttributeType, filterStyleAttributes, HTMLAttributes } from '../../attribute';
 import { NodeName } from '../../node';
 import { CodeBlockAttributes } from './attribute';
 import { CodeBlockType } from './type';
@@ -18,7 +18,7 @@ export const CodeBlockComponentJSX: React.FC<CodeBlockComponentRenderProps> = ({
 
   return (
     <Box
-      {...renderAttributes}
+      style={filterStyleAttributes(attrs)}
       data-node-type={NodeName.CODEBLOCK}
       data-visualid={visualId}
 
