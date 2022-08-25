@@ -92,7 +92,7 @@ const getNodeBefore = (selection: Selection) => {
  * Replaces the node at the {@link Selection} of the given {@link Transaction} and
  * selects the new, replaced Node
  */
- export const replaceAndSelectNode = (node: ProseMirrorNode<NotebookSchemaType>): Command => (state, dispatch) => {
+ export const replaceAndSelectNodeCommand = (node: ProseMirrorNode<NotebookSchemaType>): Command => (state, dispatch) => {
   const { tr } = state;
     tr.replaceSelectionWith(node);
 

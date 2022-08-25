@@ -318,7 +318,7 @@ export {
   isGapCursorSelection,
   isGetPos,
   isNodeSelection,
-  replaceAndSelectNode,
+  replaceAndSelectNodeCommand,
   resolveNewSelection,
   SelectionDepth,
 

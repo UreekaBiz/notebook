@@ -1,4 +1,4 @@
-import { createCodeBlockReferenceNode, generateNodeId, getSelectedNode, isCodeBlockReferenceNode, replaceAndSelectNode, AttributeType, Command } from '@ureeka-notebook/web-service';
+import { createCodeBlockReferenceNode, generateNodeId, getSelectedNode, isCodeBlockReferenceNode, replaceAndSelectNodeCommand, AttributeType, Command } from '@ureeka-notebook/web-service';
 
 import { focusChipToolInput } from 'notebookEditor/util';
 
@@ -9,7 +9,7 @@ export const insertAndSelectCodeBlockReferenceCommand: Command = (state, dispatc
 
   const id = generateNodeId();
   const codeBlockReference = createCodeBlockReferenceNode(state.schema, { [AttributeType.Id]: id } );
-  replaceAndSelectNode(codeBlockReference)(state, dispatch);
+  replaceAndSelectNodeCommand(codeBlockReference)(state, dispatch);
   focusChipToolInput(id);
 
   return true/*Command executed*/;
