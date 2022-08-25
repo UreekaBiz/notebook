@@ -12,7 +12,7 @@ export const toggleStrikethroughCommand: Command = (state, dispatch) => {
 
   if(isMarkActive(state, MarkName.STRIKETHROUGH, {/*no attributes*/})) {
     return unsetMarkCommand(MarkName.STRIKETHROUGH, false/*do not extend empty Mark Range*/)(state, dispatch);
-  } /* else -- not toggling Bold, set it */
+  } /* else -- not toggling Strikethrough, set it */
 
   return setMarkCommand(state.schema, MarkName.STRIKETHROUGH, {/*no attributes*/})(state, dispatch);
 };
