@@ -192,9 +192,12 @@ export {
   MarkName,
   getMarkName,
   getMarkValue,
+  isMarkActive,
   markFromJSONMark,
-  stringifyMarksArray,
   parseStringifiedMarksArray,
+  setMarkCommand,
+  stringifyMarksArray,
+  unsetMarkCommand,
 
   // -- Mark Specs ----------------------------------------------------------------
   BoldMarkSpec,

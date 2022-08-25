@@ -111,7 +111,7 @@ export const createBlockNode = (blockNodeName: NodeName, attributes: Partial<Att
     const { from, to } = getBlockNodeRange(tr.selection);
     tr.setBlockType(from, to, blockNodeType, attributes);
     dispatch(tr);
-    return true/*command executed*/;
+    return true/*Command executed*/;
   } /* else -- not the same parent (multiple Selection) or content not empty, insert Block below */
 
   const above = $head.node(-1/*document level*/),
@@ -127,7 +127,7 @@ export const createBlockNode = (blockNodeName: NodeName, attributes: Partial<Att
     .setSelection(Selection.near(tr.doc.resolve(creationPos), 1/*look forwards first*/));
 
   dispatch(tr.scrollIntoView());
-  return true/*command executed*/;
+  return true/*Command executed*/;
 };
 
 // -- Transaction -----------------------------------------------------------------

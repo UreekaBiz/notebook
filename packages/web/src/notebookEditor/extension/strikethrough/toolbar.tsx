@@ -1,9 +1,12 @@
 import { BiStrikethrough } from 'react-icons/bi';
 
-import { getStrikethroughMarkType, isNodeSelection, MarkName } from '@ureeka-notebook/web-service';
+import { isNodeSelection, MarkName } from '@ureeka-notebook/web-service';
 
-import { getMarkHolder, inMarkHolder, toggleMarkInMarkHolder } from 'notebookEditor/extension/markHolder/util';
+import { inMarkHolder } from 'notebookEditor/extension/markHolder/util';
 import { ToolItem } from 'notebookEditor/toolbar/type';
+
+import { toolItemCommandWrapper } from '../util/command';
+import { toggleStrikethroughCommand } from './command';
 
 // ********************************************************************************
 // == Tool Items ==================================================================
@@ -22,14 +25,7 @@ export const markStrikethrough: ToolItem = {
     return true;
   },
   shouldShow: (editor, depth) => depth === undefined || editor.state.selection.$anchor.depth === depth/*direct parent*/,
-  onClick: (editor) => {
-    // if MarkHolder is defined toggle the Mark inside it
-    const markHolder = getMarkHolder(editor);
-    if(markHolder) return toggleMarkInMarkHolder(editor, () => editor.chain()/*(SEE: toggleInMarkHolder)*/, markHolder, getStrikethroughMarkType(editor.schema))/*nothing else to do*/;
-    /* else -- MarkHolder is not present */
-
-    return editor.chain().focus().toggleStrikethrough().run();
-  },
+  onClick: (editor, depth) => toolItemCommandWrapper(editor, depth, toggleStrikethroughCommand),
 
   isActive: (editor) => {
     if(inMarkHolder(editor,  MarkName.STRIKETHROUGH)) return true/*is active in MarkHolder*/;

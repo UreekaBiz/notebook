@@ -1,8 +1,8 @@
-import { ChainedCommands, Editor } from '@tiptap/core';
+import { Editor } from '@tiptap/core';
 import { Mark, MarkType } from 'prosemirror-model';
-import { TextSelection } from 'prosemirror-state';
+import { EditorState, TextSelection } from 'prosemirror-state';
 
-import { createMarkHolderNode, getMarkName, isMarkHolderNode, markFromJSONMark, parseStringifiedMarksArray, stringifyMarksArray, AttributeType, JSONNode, MarkHolderNodeType, MarkName, NotebookSchemaType } from '@ureeka-notebook/web-service';
+import { createMarkHolderNode, getMarkName, isMarkHolderNode, markFromJSONMark, parseStringifiedMarksArray, stringifyMarksArray, AttributeType, Command, JSONNode, MarkHolderNodeType, MarkName, NotebookSchemaType } from '@ureeka-notebook/web-service';
 
 // ********************************************************************************
 // creates a MarkHolder Node holding the Marks corresponding to the given MarkNames
@@ -18,8 +18,8 @@ export const createMarkHolderJSONNode = (editor: Editor, markNames: MarkName[]):
  * {@link Selection} is a MarkHolderNode. It returns it if it is, and otherwise it
  * returns false
  */
-export const getMarkHolder = (editor: Editor) => {
-  const { firstChild } = editor.state.selection.$anchor.parent;
+export const getMarkHolder = (state: EditorState) => {
+  const { firstChild } = state.selection.$anchor.parent;
   if(firstChild && isMarkHolderNode(firstChild)) return firstChild;
   /* else -- firstChild does not exist or is not a MarkHolder */
 
@@ -35,41 +35,36 @@ export const getMarkHolder = (editor: Editor) => {
  *       error gets thrown. This is the reason why the used chain is not taken from
  *       the editor parameter
  */
-export const toggleMarkInMarkHolder = (editor: Editor, chain: () => ChainedCommands/*(SEE: NOTE above)*/, markHolder: MarkHolderNodeType, appliedMarkType: MarkType) => {
+export const toggleMarkInMarkHolderCommand = (markHolder: MarkHolderNodeType, appliedMarkType: MarkType): Command => (state, dispatch) => {
   let newMarksArray: Mark[] = [];
   const storedMarks  = markHolder.attrs[AttributeType.StoredMarks];
   if(!storedMarks) return false/*nothing to do*/;
 
-  if(parseStoredMarks(editor.state.schema, storedMarks).some(mark => getMarkName(mark) === appliedMarkType.name)) {
+  if(parseStoredMarks(state.schema, storedMarks).some(mark => getMarkName(mark) === appliedMarkType.name)) {
     // already included, remove it
-    newMarksArray = [...parseStoredMarks(editor.state.schema, storedMarks).filter(mark => getMarkName(mark) !== appliedMarkType.name)];
+    newMarksArray = [...parseStoredMarks(state.schema, storedMarks).filter(mark => getMarkName(mark) !== appliedMarkType.name)];
   } else {
     // not included yet, add it
-    newMarksArray = [...parseStoredMarks(editor.state.schema, storedMarks), appliedMarkType.create()];
+    newMarksArray = [...parseStoredMarks(state.schema, storedMarks), appliedMarkType.create()];
   }
 
   // (SEE: NOTE above)
-  return chain().focus().command((props) => {
-    const { selection } = editor.state;
-    const { dispatch, tr } = props;
-    if(!selection.$anchor.parent.isBlock) return false/*command cannot be executed, Selection parent is not a Block Node*/;
+  const { selection, tr } = state;
+  if(!selection.$anchor.parent.isBlock) return false/*command cannot be executed, Selection parent is not a Block Node*/;
 
-    const startOfParentNodePos = tr.doc.resolve(selection.anchor - selection.$anchor.parentOffset);
-    const { pos: startingPos } = tr.selection.$anchor;
-    if(dispatch) {
-      tr.setSelection(new TextSelection(startOfParentNodePos, tr.doc.resolve(startOfParentNodePos.pos + markHolder.nodeSize)))
-        .setNodeMarkup(tr.selection.anchor, undefined/*maintain type*/, { storedMarks: stringifyMarksArray(newMarksArray) })
-        .setSelection(new TextSelection(tr.doc.resolve(startingPos)));
-      dispatch(tr);
-    } /* else -- called from can() (SEE: src/notebookEditor/README.md/#Commands) */
+  const startOfParentNodePos = tr.doc.resolve(selection.anchor - selection.$anchor.parentOffset);
+  const { pos: startingPos } = tr.selection.$anchor;
+    tr.setSelection(new TextSelection(startOfParentNodePos, tr.doc.resolve(startOfParentNodePos.pos + markHolder.nodeSize)))
+      .setNodeMarkup(tr.selection.anchor, undefined/*maintain type*/, { storedMarks: stringifyMarksArray(newMarksArray) })
+      .setSelection(new TextSelection(tr.doc.resolve(startingPos)));
 
-    return true/*command can be executed*/;
-  }).run();
+  dispatch(tr);
+  return true/*Command executed*/;
 };
 
 /** Checks if a MarkHolder contains a given Mark in its storedMarks attribute */
 export const inMarkHolder = (editor: Editor, markName: MarkName) => {
-  const markHolder = getMarkHolder(editor);
+  const markHolder = getMarkHolder(editor.state);
   if(!markHolder) return false/*MarkHolder is not present*/;
 
   const storedMarks = markHolder.attrs[AttributeType.StoredMarks];

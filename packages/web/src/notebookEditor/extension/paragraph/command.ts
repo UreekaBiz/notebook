@@ -6,7 +6,7 @@ import { getBlockNodeRange, getParagraphNodeType, isMarkHolderNode, Command } fr
 //       1. Paragraphs set through this Command should not inherit any marks
 //       2. Paragraphs set through this Command should not have MarkHolders,
 //          because of 1, but they should (as expected) keep the remaining content
-export const setParagraphCommand: Command = (state, dispatch, view) => {
+export const setParagraphCommand: Command = (state, dispatch) => {
   const { tr } = state;
   const { from, to } = getBlockNodeRange(tr.selection);
 
@@ -18,9 +18,9 @@ export const setParagraphCommand: Command = (state, dispatch, view) => {
     } /* else -- ignore */
   });
 
-  tr.setBlockType(from, to, getParagraphNodeType(view.state.schema))
+  tr.setBlockType(from, to, getParagraphNodeType(state.schema))
     .removeMark(from, to, null/*remove all marks*/);
 
-  if(dispatch) dispatch(tr);
-  return true/*can be executed*/;
+  dispatch(tr);
+  return true/*Command executed*/;
 };

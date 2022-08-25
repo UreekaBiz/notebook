@@ -6,7 +6,8 @@ import { markInputRule, markPasteRule } from 'notebookEditor/extension/util/mark
 import { safeParseTag, wrapGetStyleAttrs, wrapGetTagAttrs } from 'notebookEditor/extension/util/parse';
 import { NoOptions, NoStorage } from 'notebookEditor/model/type';
 
-import { setBoldCommand, toggleBoldCommand, unsetBoldCommand } from './command';
+import { shortcutCommandWrapper } from '../util/command';
+import { toggleBoldCommand } from './command';
 
 // ********************************************************************************
 // REF: https://github.com/ueberdosis/tiptap/blob/main/packages/extension-bold/src/bold.ts
@@ -23,18 +24,11 @@ const underscoreRegex = /(?:^|\s)((?:__)((?:[^_]+))(?:__))/ /*FIXME: incorrect /
 export const Bold = Mark.create<NoOptions, NoStorage>({
   ...BoldMarkSpec,
 
-  // -- Command -------------------------------------------------------------------
-  addCommands() {
-    return {
-      setBold: setBoldCommand,
-      unsetBold: unsetBoldCommand,
-      toggleBold: toggleBoldCommand,
-    };
-  },
+  // -- Keyboard Shortcut ---------------------------------------------------------
   addKeyboardShortcuts() {
     return {
-      'Mod-b': () => this.editor.commands.toggleBold(),
-      'Mod-B': () => this.editor.commands.toggleBold(),
+      'Mod-b': () => shortcutCommandWrapper(this.editor, toggleBoldCommand),
+      'Mod-B': () => shortcutCommandWrapper(this.editor, toggleBoldCommand),
     };
   },
 

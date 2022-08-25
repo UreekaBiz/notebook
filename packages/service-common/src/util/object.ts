@@ -143,6 +143,18 @@ export const mapValues = <Vi, Vf>(object: Record<string, Vi>, fn: (value: Vi, ke
 };
 
 // ================================================================================
+/** Check object2 is included in object1 */
+export const objectIncludes = (object1: Record<string, any>, object2: Record<string, any>) => {
+  const comparedKeys = Object.keys(object2);
+
+  if(!comparedKeys.length) {
+    return true/*by definition*/;
+  } /* else -- look through keys */
+
+  return comparedKeys.every(key => object2[key] === object1[key]);
+};
+
+// ================================================================================
 // clones the specified objects and sets the value at all of the paths to '<redacted>'
 export const redact = <T extends object>(o: T, paths: string[]) => {
   const clone = cloneDeep(o);

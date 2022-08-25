@@ -1,29 +1,19 @@
-import { CommandProps } from '@tiptap/core';
+import { getBoldMarkType, isMarkActive, setMarkCommand, unsetMarkCommand, Command, MarkName } from '@ureeka-notebook/web-service';
 
-import { getBoldMarkType, CommandFunctionType, MarkName } from '@ureeka-notebook/web-service';
-
-import { toggleMarkInMarkHolder, getMarkHolder } from 'notebookEditor/extension/markHolder/util';
-
-// ********************************************************************************
-// NOTE: ambient module to ensure command is TypeScript-registered for TipTap
-declare module '@tiptap/core' {
-  interface Commands<ReturnType> {
-    [MarkName.BOLD/*Expected and guaranteed to be unique. (SEE: /notebookEditor/model/node)*/]: {
-      setBold: CommandFunctionType<typeof setBoldCommand, ReturnType>;
-      unsetBold: CommandFunctionType<typeof unsetBoldCommand, ReturnType>;
-      toggleBold: CommandFunctionType<typeof toggleBoldCommand, ReturnType>;
-    };
-  }
-}
+import { toggleMarkInMarkHolderCommand, getMarkHolder } from 'notebookEditor/extension/markHolder/util';
 
 // --------------------------------------------------------------------------------
-export const setBoldCommand = () => ({ commands }: CommandProps) => commands.setMark(MarkName.BOLD);
-export const unsetBoldCommand = () => ({ commands }: CommandProps) => commands.unsetMark(MarkName.BOLD);
-export const toggleBoldCommand = () => ({ editor, chain, commands }: CommandProps) => {
+export const toggleBoldCommand: Command = (state, dispatch) => {
   // if MarkHolder is defined toggle the mark inside it
-  const markHolder = getMarkHolder(editor);
+  const markHolder = getMarkHolder(state);
+  if(markHolder) {
+    return toggleMarkInMarkHolderCommand(markHolder, getBoldMarkType(state.schema))(state, dispatch);
+  } /* else -- MarkHolder is not present */
 
-  if(markHolder) return toggleMarkInMarkHolder(editor, chain/*(SEE: toggleInMarkHolder)*/, markHolder, getBoldMarkType(editor.schema))/*nothing else to do*/;
-  return commands.toggleMark(MarkName.BOLD);
+  if(isMarkActive(state, MarkName.BOLD, {/*no attributes*/})) {
+    return unsetMarkCommand(MarkName.BOLD, false/*do not extend empty Mark Range*/)(state, dispatch);
+  } /* else -- not toggling Bold, set it */
+
+  return setMarkCommand(state.schema, MarkName.BOLD, {/*no attributes*/})(state, dispatch);
 };
 
