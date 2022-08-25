@@ -260,6 +260,9 @@ export {
 
   CodeBlockRendererState,
 
+  // == JSX =======================================================================
+  CodeBlockComponentJSX,
+
   // == Command ===================================================================
   Command,
   CommandFunctionType,

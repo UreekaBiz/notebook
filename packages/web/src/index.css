@@ -62,40 +62,6 @@ img.ProseMirror-selectednode/*target inline nodes with content (e.g. asyncNodes)
 }
 
 /* -- Node styles -------------------------------------------------------------- */
-/* .. Codeblock ................................................................ */
-[data-node-type="codeBlock"]{
-  position: relative;
-  display: flex;
-  align-items: center;
-  gap: 10px;
-  background:#EDF2F7;
-  border: 1px solid;
-  border-color: #CBD5E0;
-  border-radius: 4px;
-}
-[data-node-type="codeBlock"] > div {
-  width: 100%;
-  overflow: auto;
-  min-height: 1.5em;
-  font-size: 16px;
-}
-[data-node-type="codeBlock"][data-attribute-type="Code"] {
-  font-family: monospace;
-}
-
-/* .. Visual id ................................................................ */
-[data-node-type="codeBlock"]::after{
-  content: attr(data-visualid);
-  position: absolute;
-  top: 50%;
-  left: calc(100% + 8px);
-  transform: translateY(-50%);
-  color: rgba(0,0,0,.3);
-  font-weight: 600;
-  /** use default font instead of inherit from parent*/
-  font-family: var(--chakra-fonts-body);
-}
-
 /* .. CodeBlockReference ....................................................... */
 [data-node-type="codeBlockReference"] {
   position: relative;

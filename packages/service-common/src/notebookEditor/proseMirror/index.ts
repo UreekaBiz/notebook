@@ -8,6 +8,7 @@ export * from './htmlRenderer/type';
 export * from './extension/asyncNode';
 export * from './extension/bold';
 export * from './extension/codeBlock';
+export * from './extension/codeBlock/jsx';
 export * from './extension/codeBlockReference';
 export * from './extension/codeBlockAsyncNode';
 export * from './extension/demo2AsyncNode';
