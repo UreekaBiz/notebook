@@ -195,6 +195,7 @@ export {
   parseStringifiedMarksArray,
   setMarkCommand,
   stringifyMarksArray,
+  toggleMarkCommand,
   unsetMarkCommand,
 
   // -- Mark Specs ----------------------------------------------------------------
