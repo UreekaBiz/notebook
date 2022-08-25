@@ -14,6 +14,7 @@ export * from './extension/codeBlockAsyncNode';
 export * from './extension/demo2AsyncNode';
 export * from './extension/demo2AsyncNode/jsx';
 export * from './extension/demoAsyncNode';
+export * from './extension/demoAsyncNode/jsx';
 export * from './extension/document';
 export * from './extension/heading';
 export * from './extension/image';

@@ -263,6 +263,7 @@ export {
   // == JSX =======================================================================
   CodeBlockComponentJSX,
   Demo2AsyncNodeComponentJSX,
+  DemoAsyncNodeComponentJSX,
 
   // == Command ===================================================================
   Command,

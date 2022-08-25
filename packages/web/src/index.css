@@ -72,41 +72,6 @@ img.ProseMirror-selectednode/*target inline nodes with content (e.g. asyncNodes)
   text-decoration: inherit;
 }
 
-/* .. Demo2AsyncNode ........................................................... */
-/* NOTE: ProseMirror adds white-space: normal to non editable nodes, this causes the
-         node to lose its white-space while its being executed. The solution is to
-         overwrite that property on this specific case. */
-.Editor [data-node-type="demo2AsyncNode"] > div > div {
-  white-space: pre-wrap;
-}
-
-/* .. DemoAsyncNode ............................................................ */
-[data-node-type="demoAsyncNode"] > span:first-child {
-  position: relative;
-  display: inline;
-  margin-left: 4px;
-  margin-right: 4px;
-  padding: 4px;
-  word-break: break-word;
-  border: 1px solid;
-  border-color: #CBD5E0;
-  border-radius: 4px;
-  background: #EDF2F7;
-}
-[data-node-type="demoAsyncNode"] > [data-async-node-dirty] {
-  border-color: red !important;
-}
-
-[data-demoasyncnodestate]::after {
-  content: '';
-  display: inline-block;
-  width: 0.75em;
-  height: 0.75em;
-  margin-left: 0.35em;
-  border-radius: 7.5px;
-  background-color: var(--status-color);
-}
-
 /* .. Chip ..................................................................... */
 .chip {
   /* NOTE: This is needed to remove the white background while dragging the chip */

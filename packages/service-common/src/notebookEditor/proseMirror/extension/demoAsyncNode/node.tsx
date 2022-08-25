@@ -1,25 +1,17 @@
 import { Mark, Node as ProseMirrorNode, NodeSpec } from 'prosemirror-model';
+import * as ReactDOMServer from 'react-dom/server';
 
-import { AttributesTypeFromNodeSpecAttributes, AttributeType, noNodeOrMarkSpecAttributeDefaultValue } from '../attribute';
-import { getRenderAttributes } from '../htmlRenderer/attribute';
-import { createNodeDataTypeAttribute, NodeRendererSpec } from '../htmlRenderer/type';
-import { getAllowedMarks } from '../mark';
-import { JSONNode, NodeGroup, NodeName, ProseMirrorNodeContent } from '../node';
-import { NotebookSchemaType } from '../schema';
-import { AsyncNodeStatus, asyncNodeStatusToColor } from './asyncNode';
-import { CodeBlockAsyncNodeAttributeSpec, createDefaultCodeBlockAsyncNodeAttributes, DEFAULT_CODEBLOCK_ASYNC_NODE_STATUS } from './codeBlockAsyncNode';
+import { AttributeType } from '../../attribute';
+import { getRenderAttributes } from '../../htmlRenderer/attribute';
+import { NodeRendererSpec } from '../../htmlRenderer/type';
+import { getAllowedMarks } from '../../mark';
+import { JSONNode, NodeGroup, NodeName, ProseMirrorNodeContent } from '../../node';
+import { NotebookSchemaType } from '../../schema';
+import { DEFAULT_CODEBLOCK_ASYNC_NODE_STATUS } from '../codeBlockAsyncNode';
+import { DemoAsyncNodeAttributes, DemoAsyncNodeAttributeSpec } from './attribute';
+import { DemoAsyncNodeComponentJSX } from './jsx';
 
 // ********************************************************************************
-// == Attribute ===================================================================
-// NOTE: must be present on the NodeSpec below
-// NOTE: This values must have matching types the ones defined in the Extension
-const DemoAsyncNodeAttributeSpec = {
-  ...CodeBlockAsyncNodeAttributeSpec,
-
-  [AttributeType.Delay]: noNodeOrMarkSpecAttributeDefaultValue<number>(),
-};
-export type DemoAsyncNodeAttributes = AttributesTypeFromNodeSpecAttributes<typeof DemoAsyncNodeAttributeSpec>;
-
 // == Spec ========================================================================
 // -- Node Spec -------------------------------------------------------------------
 export const DemoAsyncNodeSpec: NodeSpec = {
@@ -40,19 +32,16 @@ export const DemoAsyncNodeSpec: NodeSpec = {
 
 // -- Render Spec -----------------------------------------------------------------
 const renderDemoAsyncNodeView = (attributes: DemoAsyncNodeAttributes) => {
-  const status = attributes[AttributeType.Status] ?? AsyncNodeStatus.NEVER_EXECUTED/*default value*/;
-  const text = attributes[AttributeType.Text] ?? ''/*default value*/;
 
   const renderAttributes = getRenderAttributes(NodeName.DEMO_ASYNC_NODE,
                                               { ...attributes, [AttributeType.Delay]: String(attributes[AttributeType.Delay])/*converting to string since required*/, [AttributeType.CodeBlockHashes]: ''/*not needed*/, [AttributeType.CodeBlockReferences]: ''/*not needed*/ },
                                               DemoAsyncNodeRendererSpec,
                                               DemoAsyncNodeSpec);
-  // CHECK: is there any reason this can't use JSX to define the structure?
-  // NOTE: must not contain white space, else the renderer has issues
-  //       (hence it is a single line below)
-  // NOTE: createNodeDataTypeAttribute must be used for all nodeRenderSpecs
-  //       that define their own renderNodeView
-  return `<span ${createNodeDataTypeAttribute(NodeName.DEMO_ASYNC_NODE)} ${renderAttributes.style ?? ''}"><span style="${DEMO_ASYNC_NODE_STATUS_COLOR}: ${asyncNodeStatusToColor(status)};" ${DEMO_ASYNC_NODE_DATA_STATE}="">${text}</span></span>`;
+
+  // parses the JSX into a static string that can be rendered.
+  return ReactDOMServer.renderToStaticMarkup(
+    <DemoAsyncNodeComponentJSX attrs={attributes} renderAttributes={renderAttributes}/>
+  );
 };
 
 export const DemoAsyncNodeRendererSpec: NodeRendererSpec<DemoAsyncNodeAttributes> = {
@@ -82,11 +71,3 @@ export const createDemoAsyncNodeNode = (schema: NotebookSchemaType, attributes?:
 // -- JSON Node Type --------------------------------------------------------------
 export type DemoAsyncNodeJSONNodeType = JSONNode<DemoAsyncNodeAttributes> & { type: NodeName.DEMO_ASYNC_NODE; };
 export const isDemoAsyncNodeJSONNode = (node: JSONNode): node is DemoAsyncNodeJSONNodeType => node.type === NodeName.DEMO_ASYNC_NODE;
-
-// == Util ========================================================================
-export const createDefaultDemoAsyncNodeAttributes = (): Partial<DemoAsyncNodeAttributes> =>
-  ({ ...createDefaultCodeBlockAsyncNodeAttributes(), [AttributeType.Delay]: DEFAULT_DEMO_ASYNC_NODE_DELAY });
-
-// == CSS =========================================================================
-export const DEMO_ASYNC_NODE_STATUS_COLOR = '--status-color';
-export const DEMO_ASYNC_NODE_DATA_STATE = 'data-demoasyncnodestate';
