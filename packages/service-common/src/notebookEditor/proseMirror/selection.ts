@@ -24,7 +24,8 @@ export const isGetPos = (object: any): object is (() => number) => typeof object
 export const isNodeSelection = (selection: Selection<NotebookSchemaType>): selection is NodeSelection<NotebookSchemaType> => 'node' in selection;
 
 /** Checks whether the given {@link Selection} is of GapCursor type */
-export const isGapCursorSelection = (selection: Selection<NotebookSchemaType>) => selection.toJSON().type === 'gapcursor';
+const GAP_CURSOR = 'gapcursor';
+export const isGapCursorSelection = (selection: Selection<NotebookSchemaType>) => selection.toJSON().type === GAP_CURSOR;
 
 // == Node ========================================================================
 /** @returns currently selected Node. The Node selection is based on the depth of
