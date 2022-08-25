@@ -56,7 +56,7 @@ export const ChipToolItem: React.FC<Props> = ({ editor, attributeType, depth, na
 
   // == UI ========================================================================
   return (
-    <InputToolItemContainer name={name}>
+    <InputToolItemContainer name={name} showRightContent={false}>
       <ChipTool
         nodeId={id}
         value={chips}
