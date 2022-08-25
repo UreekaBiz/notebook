@@ -16,11 +16,19 @@
 
   "devDependencies": {
     "@types/crypto-js": "4.1.1",
+    "@types/react": "18.0.15",
+    "@types/react-dom": "18.0.6",
     "@types/twitter-text": "3.1.2"
   },
   "dependencies": {
+    "@chakra-ui/react": "2.2.4",
+    "@emotion/react": "11.9.3",
+    "@emotion/styled": "11.9.3",
     "crypto-js": "4.1.1",
+    "framer-motion": "6.5.1",
     "nanoid": "3.3.4",
+    "react": "18.2.0",
+		"react-dom": "18.2.0",
     "twitter-text": "3.1.0",
     "uri-js": "4.4.1"
   }
