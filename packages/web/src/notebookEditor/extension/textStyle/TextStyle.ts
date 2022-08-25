@@ -3,14 +3,10 @@ import { Mark } from '@tiptap/core';
 import { getMarkOutputSpec, AttributeType, TextStyleMarkSpec } from '@ureeka-notebook/web-service';
 
 import { isValidHTMLElement, safeParseTag } from 'notebookEditor/extension/util/parse';
-import { NoStorage } from 'notebookEditor/model/type';
-
-import { removeEmptyTextStyleCommand, setTextStyleCommand, unsetTextStyleCommand } from './command';
+import { NoOptions, NoStorage } from 'notebookEditor/model/type';
 
 // ********************************************************************************
-interface TextStyleOptions { HTMLAttributes: Record<string, any>; }
-
-export const TextStyle = Mark.create<TextStyleOptions, NoStorage>({
+export const TextStyle = Mark.create<NoOptions, NoStorage>({
   ...TextStyleMarkSpec,
 
   // -- Attribute -----------------------------------------------------------------
@@ -25,16 +21,6 @@ export const TextStyle = Mark.create<TextStyleOptions, NoStorage>({
         default: undefined,
         parseHTML: element => element.style.color.replace(/['"]+/g, ''),
       },
-    };
-  },
-  addOptions() { return { HTMLAttributes: {} }; },
-
-  // -- Command -------------------------------------------------------------------
-  addCommands() {
-    return {
-      setTextStyle: setTextStyleCommand,
-      unsetTextStyle: unsetTextStyleCommand,
-      removeEmptyTextStyle: removeEmptyTextStyleCommand,
     };
   },
 
