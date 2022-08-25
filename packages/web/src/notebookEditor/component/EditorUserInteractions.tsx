@@ -50,6 +50,15 @@ export const EditorUserInteractions = () => {
   useEffect(() => {
     const handler = (event: KeyboardEvent) => {
       if(!editor) return/*nothing to do*/;
+
+      // prevent default 'Save Page' browser behavior
+      if(event.code === 'KeyS' && (event.ctrlKey || event.metaKey)) {
+        event.preventDefault();
+        event.stopPropagation();
+        return/*nothing left to do*/;
+      } /* else -- not trying to save the page */
+
+      // add Image shortcut
       if(event.code === 'KeyI' && event.ctrlKey && event.altKey) {
         event.preventDefault();
         // NOTE: this is needed to remove the focus of the Editor so that
@@ -59,9 +68,10 @@ export const EditorUserInteractions = () => {
         /* else -- is not active element */
 
         setIsCreatingImage(true);
-        return/*nothing to do*/;
+        return/*nothing left to do*/;
       } /* else -- not creating image */
 
+      // add Link shortcut
       if(event.code === 'KeyK' && event.metaKey) {
         event.preventDefault();
         // NOTE: this is needed to remove the focus of the Editor so that
@@ -79,13 +89,13 @@ export const EditorUserInteractions = () => {
               linkMarkActive = editor.isActive(MarkName.LINK) || editor.state.doc.rangeHasMark(from, from+1, editor.state.schema.marks[MarkName.LINK]);
         if(linkMarkActive) {
           editor.chain().focus().unsetLink().run();
-          return;
+          return/*nothing left to do*/;
         } /* else -- Link Mark not active, add a new one */
         setIsCreatingLink(true);
       } /* else -- not creating Link */
 
+      // select the first ToolItem in the toolbar
       if(event.code === 'Period' && event.altKey && event.metaKey) {
-        // Selects the first item in the toolbar
         event.preventDefault();
 
         const toolItems = [...document.querySelectorAll(`[datatype=${TOOL_ITEM_DATA_TYPE}]`)];
