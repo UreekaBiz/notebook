@@ -2,9 +2,9 @@ import { Node } from '@tiptap/core';
 
 import { TextNodeSpec } from '@ureeka-notebook/web-service';
 
+import { shortcutCommandWrapper } from 'notebookEditor/command/util';
 import { ExtensionPriority, NoOptions, NoStorage } from 'notebookEditor/model/type';
 
-import { shortcutCommandWrapper } from '../util/command';
 import { insertTabCommand } from './command';
 
 // ********************************************************************************

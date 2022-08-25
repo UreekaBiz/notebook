@@ -6,9 +6,6 @@ import { setAttributeParsingBehavior } from 'notebookEditor/extension/util/attri
 import { NoOptions } from 'notebookEditor/model/type';
 import { DialogStorage } from 'notebookEditor/model/DialogStorage';
 
-import { insertAndSelectImageCommand } from './command';
-import { imagePaste } from './plugin';
-
 // ********************************************************************************
 // REF: https://github.com/ueberdosis/tiptap/blob/main/packages/extension-image/src/image.ts
 
@@ -32,12 +29,6 @@ export const Image = Node.create<NoOptions, DialogStorage>({
       [AttributeType.VerticalAlign]: setAttributeParsingBehavior(AttributeType.VerticalAlign, SetAttributeType.STRING),
     };
   },
-
-  // -- Command -------------------------------------------------------------------
-  addCommands() { return { insertImage: insertAndSelectImageCommand }; },
-
-  // -- Plugin --------------------------------------------------------------------
-  addProseMirrorPlugins() { return [imagePaste(this.editor)]; },
 
   // -- Storage -------------------------------------------------------------------
   addStorage() { return new DialogStorage(); },

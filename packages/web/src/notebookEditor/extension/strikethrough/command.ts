@@ -1,29 +1,18 @@
-import { CommandProps } from '@tiptap/core';
+import { getStrikethroughMarkType, isMarkActive, setMarkCommand, unsetMarkCommand, Command, MarkName } from '@ureeka-notebook/web-service';
 
-import { getStrikethroughMarkType, CommandFunctionType, MarkName } from '@ureeka-notebook/web-service';
-
-import { toggleMarkInMarkHolder, getMarkHolder } from 'notebookEditor/extension/markHolder/util';
-
-// ********************************************************************************
-// NOTE: ambient module to ensure command is TypeScript-registered for TipTap
-declare module '@tiptap/core' {
-  interface Commands<ReturnType> {
-    [MarkName.STRIKETHROUGH]: {
-      setStrikethrough: CommandFunctionType<typeof setStrikethroughCommand, ReturnType>;
-      unsetStrikethrough: CommandFunctionType<typeof unsetStrikethroughCommand, ReturnType>;
-      toggleStrikethrough: CommandFunctionType<typeof toggleStrikethroughCommand, ReturnType>;
-    };
-  }
-}
+import { getMarkHolder, toggleMarkInMarkHolderCommand } from 'notebookEditor/extension/markHolder/util';
 
 // --------------------------------------------------------------------------------
-export const setStrikethroughCommand = () => ({ commands }: CommandProps) => commands.setMark(MarkName.STRIKETHROUGH);
-export const unsetStrikethroughCommand = () => ({ commands }: CommandProps) => commands.unsetMark(MarkName.STRIKETHROUGH);
-export const toggleStrikethroughCommand = () => ({ editor, chain, commands }: CommandProps) => {
+export const toggleStrikethroughCommand: Command = (state, dispatch) => {
   // if MarkHolder is defined toggle the mark inside it
-  const markHolder = getMarkHolder(editor);
-  if(markHolder) return toggleMarkInMarkHolder(editor, chain/*(SEE: toggleInMarkHolder)*/, markHolder, getStrikethroughMarkType(editor.schema))/*nothing else to do*/;
-  /* else -- MarkHolder is not present */
+  const markHolder = getMarkHolder(state);
+  if(markHolder) {
+    return toggleMarkInMarkHolderCommand(markHolder, getStrikethroughMarkType(state.schema))(state, dispatch);
+  } /* else -- MarkHolder is not present */
 
-  return commands.toggleMark(MarkName.STRIKETHROUGH);
+  if(isMarkActive(state, MarkName.STRIKETHROUGH, {/*no attributes*/})) {
+    return unsetMarkCommand(MarkName.STRIKETHROUGH, false/*do not extend empty Mark Range*/)(state, dispatch);
+  } /* else -- not toggling Strikethrough, set it */
+
+  return setMarkCommand(state.schema, MarkName.STRIKETHROUGH, {/*no attributes*/})(state, dispatch);
 };

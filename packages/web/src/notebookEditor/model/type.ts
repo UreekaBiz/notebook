@@ -25,7 +25,6 @@ export enum ExtensionName {
   INLINE_NODE_WITH_CONTENT = 'inlineNodeWithContent',
   NODEVIEW_REMOVAL = 'nodeViewRemoval',
   SET_DEFAULT_MARKS = 'setDefaultMarks',
-  STYLE = 'style',
 }
 
 // == Priority ====================================================================

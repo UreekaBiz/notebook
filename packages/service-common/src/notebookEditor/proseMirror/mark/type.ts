@@ -11,6 +11,13 @@ export type JSONMark<A extends Attributes = {}> = {
   attrs?: Partial<A>;
 };
 
+/** the Range covered by a Mark */
+export type MarkRange = {
+  mark: ProseMirrorMark;
+  from: number;
+  to: number;
+}
+
 // ================================================================================
 export enum MarkName {
   BOLD = 'bold',

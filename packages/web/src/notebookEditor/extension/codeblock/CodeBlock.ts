@@ -2,11 +2,11 @@ import { textblockTypeInputRule, Node } from '@tiptap/core';
 
 import { createBlockNode, generateNodeId, getNodeOutputSpec, isCodeBlockNode, AttributeType, CodeBlockNodeSpec, CodeBlockType, NodeName, SetAttributeType, DATA_NODE_TYPE } from '@ureeka-notebook/web-service';
 
+import { shortcutCommandWrapper } from 'notebookEditor/command/util';
 import { setAttributeParsingBehavior, uniqueIdParsingBehavior } from 'notebookEditor/extension/util/attribute';
 import { handleBlockArrowDown, handleBlockArrowUp, handleBlockBackspace } from 'notebookEditor/extension/util/node';
 import { NoOptions } from 'notebookEditor/model/type';
 
-import { shortcutCommandWrapper } from '../util/command';
 import { CodeBlockController } from './nodeView/controller';
 import { CodeBlockStorage } from './nodeView/storage';
 import { codeBlockOnTransaction } from './transaction';
@@ -41,6 +41,8 @@ export const CodeBlock = Node.create<NoOptions, CodeBlockStorage>({
   addKeyboardShortcuts() {
     return {
       // create a CodeBlock
+      // NOTE: current implementation adds a CodeBlock below the
+      //       current Block instead of splitting it on purpose
       'Shift-Mod-c': () => shortcutCommandWrapper(this.editor, createBlockNode(NodeName.CODEBLOCK, { [AttributeType.Id]: generateNodeId() })),
       'Shift-Mod-C': () => shortcutCommandWrapper(this.editor, createBlockNode(NodeName.CODEBLOCK, { [AttributeType.Id]: generateNodeId() })),
 

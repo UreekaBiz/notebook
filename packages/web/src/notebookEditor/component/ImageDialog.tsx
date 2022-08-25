@@ -8,6 +8,7 @@ import { urlSchema, DefaultImageAttributes } from '@ureeka-notebook/web-service'
 
 import { useIsMounted } from 'shared/hook/useIsMounted';
 import { fitImageDimension, getImageMeta } from 'notebookEditor/extension/image/util';
+import { insertAndSelectImageCommand } from 'notebookEditor/extension/image/command';
 
 // ********************************************************************************
 // == Schema ======================================================================
@@ -41,10 +42,7 @@ export const ImageDialog: React.FC<Props> = ({ editor, isOpen, onClose }) => {
       const img = await getImageMeta(value);
       const { src, fittedWidth: width, fittedHeight: height } = fitImageDimension(img);
 
-      editor.chain()
-            .focus()
-            .insertImage({ ...DefaultImageAttributes, src, width, height })
-            .run();
+      insertAndSelectImageCommand({ ...DefaultImageAttributes, src, width, height })(editor.state, editor.view.dispatch);
     } catch(error) {
       console.error(`Error loading image for src (${value}). Reason: `, error);
       // REF: https://chromestatus.com/feature/5629709824032768

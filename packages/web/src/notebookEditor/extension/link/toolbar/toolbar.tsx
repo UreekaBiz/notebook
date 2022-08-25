@@ -2,7 +2,8 @@ import { AiOutlineLink } from 'react-icons/ai';
 
 import { getLinkMarkType, MarkName } from '@ureeka-notebook/web-service';
 
-import { getMarkHolder, inMarkHolder, toggleMarkInMarkHolder } from 'notebookEditor/extension/markHolder/util';
+import { toolItemCommandWrapper } from 'notebookEditor/command/util';
+import { getMarkHolder, inMarkHolder, toggleMarkInMarkHolderCommand } from 'notebookEditor/extension/markHolder/util';
 import { getDialogStorage } from 'notebookEditor/model/DialogStorage';
 import { Toolbar, ToolItem } from 'notebookEditor/toolbar/type';
 
@@ -21,11 +22,13 @@ export const linkToolItem: ToolItem = {
   icon: <AiOutlineLink size={16} />,
   tooltip: 'Link (⌘ + K)',
 
-  onClick: (editor) => {
+  onClick: (editor, depth) => {
     // if MarkHolder is defined toggle the Mark inside it
-    const markHolder = getMarkHolder(editor);
+    const markHolder = getMarkHolder(editor.state);
 
-    if(markHolder) return toggleMarkInMarkHolder(editor, editor.chain, markHolder, getLinkMarkType(editor.schema))/*nothing else to do*/;
+    if(markHolder) {
+      return toolItemCommandWrapper(editor, depth, toggleMarkInMarkHolderCommand(markHolder, getLinkMarkType(editor.schema)));
+    } /* else -- MarkHolder not present */
 
     // (SEE: EditorUserInteractions.tsx)
     const { from } = editor.state.selection,

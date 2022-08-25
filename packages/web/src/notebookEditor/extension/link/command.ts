@@ -19,6 +19,10 @@ declare module '@tiptap/core' {
 }
 
 // == Implementation ==============================================================
+// NOTE: the desired behavior for these Commands is that creating a Link in a
+//       Range that includes Nodes that should not have Links (e.g. a Selection
+//       that spans Text and CodeBlock Nodes) should create two separate Links,
+//       one before the CodeBlock and another one past it
 export const setLinkCommand = (attributes: Partial<LinkAttributes>) => ({ chain }: CommandProps) =>
     chain()
     .setMark(MarkName.LINK, attributes)

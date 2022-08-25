@@ -1,6 +1,7 @@
 import { EditorState, NodeSelection, Selection, TextSelection, Transaction } from 'prosemirror-state';
 import { Node as ProseMirrorNode } from 'prosemirror-model';
 
+import { Command } from './command';
 import { NotebookSchemaType } from './schema';
 
 // ********************************************************************************
@@ -24,7 +25,8 @@ export const isGetPos = (object: any): object is (() => number) => typeof object
 export const isNodeSelection = (selection: Selection<NotebookSchemaType>): selection is NodeSelection<NotebookSchemaType> => 'node' in selection;
 
 /** Checks whether the given {@link Selection} is of GapCursor type */
-export const isGapCursorSelection = (selection: Selection<NotebookSchemaType>) => selection.toJSON().type === 'gapcursor';
+const GAP_CURSOR = 'gapcursor';
+export const isGapCursorSelection = (selection: Selection<NotebookSchemaType>) => selection.toJSON().type === GAP_CURSOR;
 
 // == Node ========================================================================
 /** @returns currently selected Node. The Node selection is based on the depth of
@@ -90,18 +92,17 @@ const getNodeBefore = (selection: Selection) => {
  * Replaces the node at the {@link Selection} of the given {@link Transaction} and
  * selects the new, replaced Node
  */
- export const replaceAndSelectNode = (node: ProseMirrorNode<NotebookSchemaType>, tr: Transaction<NotebookSchemaType>, dispatch: ((args?: any) => any) | undefined) => {
-  if(dispatch) {
+ export const replaceAndSelectNodeCommand = (node: ProseMirrorNode<NotebookSchemaType>): Command => (state, dispatch) => {
+  const { tr } = state;
     tr.replaceSelectionWith(node);
 
-    const nodeBefore = getNodeBefore(tr.selection),
-          nodeBeforeSize = nodeBefore?.nodeSize ?? 0/*no node before -- no size*/;
-    const resolvedPos = tr.doc.resolve(tr.selection.anchor - nodeBeforeSize);
-    tr.setSelection(new NodeSelection(resolvedPos));
-    dispatch(tr);
-  } /* else -- called from can() (SEE: src/notebookEditor/README.md/#Commands) */
+  const nodeBefore = getNodeBefore(tr.selection),
+        nodeBeforeSize = nodeBefore?.nodeSize ?? 0/*no node before -- no size*/;
+  const resolvedPos = tr.doc.resolve(tr.selection.anchor - nodeBeforeSize);
+  tr.setSelection(new NodeSelection(resolvedPos));
 
-  return true/*command can be executed, selection can always be replaced*/;
+  dispatch(tr);
+  return true/*Command executed*/;
 };
 
 // == Range =======================================================================

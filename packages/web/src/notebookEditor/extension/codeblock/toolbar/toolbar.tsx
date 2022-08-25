@@ -2,11 +2,11 @@ import { BiCodeAlt } from 'react-icons/bi';
 
 import { createBlockNode, generateNodeId, getParentNode, getSelectedNode, isCodeBlockNode, AttributeType, NodeName } from '@ureeka-notebook/web-service';
 
+import { toolItemCommandWrapper } from 'notebookEditor/command/util';
 import { markBold } from 'notebookEditor/extension/bold/toolbar';
 import { CheckBoxToolItem } from 'notebookEditor/extension/shared/component/CheckBoxToolItem';
 import { markStrikethrough } from 'notebookEditor/extension/strikethrough/toolbar';
 import { spacingToolItem } from 'notebookEditor/extension/textStyle/toolbar';
-import { toolItemCommandWrapper } from 'notebookEditor/extension/util/command';
 import { Toolbar, ToolItem } from 'notebookEditor/toolbar/type';
 
 import { CodeBlockTypeToolItem } from './CodeBlockTypeToolItem';
