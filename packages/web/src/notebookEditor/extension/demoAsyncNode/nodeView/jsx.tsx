@@ -13,7 +13,7 @@ export const DemoAsyncNodeComponent: React.FC<DemoAsyncNodeComponentProps> = ({ 
   if(!id) return null/*nothing to render*/;
 
   const renderAttributes = getRenderAttributes(
-    NodeName.CODEBLOCK,
+    NodeName.DEMO_ASYNC_NODE,
     { ...attrs, codeBlockReferences: undefined, codeBlockHashes: undefined/*FIXME: Types!*/ },
     DemoAsyncNodeRendererSpec, DemoAsyncNodeSpec
   );
@@ -22,10 +22,11 @@ export const DemoAsyncNodeComponent: React.FC<DemoAsyncNodeComponentProps> = ({ 
 
   return (
     <DemoAsyncNodeComponentJSX
-      performingAsyncOperation={performingAsyncOperation}
-      isDirty={isDirty}
+      isEditor
       attrs={attrs}
       renderAttributes={renderAttributes}
+      performingAsyncOperation={performingAsyncOperation}
+      isDirty={isDirty}
     />
   );
 };

@@ -31,7 +31,6 @@ export const DemoAsyncNodeSpec: NodeSpec = {
 
 // -- Render Spec -----------------------------------------------------------------
 const renderDemoAsyncNodeView = (attributes: DemoAsyncNodeAttributes) => {
-
   const renderAttributes = getRenderAttributes(NodeName.DEMO_ASYNC_NODE,
                                               { ...attributes, [AttributeType.Delay]: String(attributes[AttributeType.Delay])/*converting to string since required*/, [AttributeType.CodeBlockHashes]: ''/*not needed*/, [AttributeType.CodeBlockReferences]: ''/*not needed*/ },
                                               DemoAsyncNodeRendererSpec,

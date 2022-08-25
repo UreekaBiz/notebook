@@ -12,7 +12,7 @@ export const Demo2AsyncNodeComponent: React.FC<Demo2AsyncNodeComponentProps> = (
   const id = attrs[AttributeType.Id];
   if(!id) return null/*nothing to render*/;
 
-  const renderAttributes = getRenderAttributes(NodeName.CODEBLOCK, { ...attrs, wrap: undefined/*FIXME: Types!*/ }, Demo2AsyncNodeRendererSpec, Demo2AsyncNodeSpec);
+  const renderAttributes = getRenderAttributes(NodeName.DEMO_2_ASYNC_NODE, { ...attrs, wrap: undefined/*FIXME: Types!*/ }, Demo2AsyncNodeRendererSpec, Demo2AsyncNodeSpec);
   const performingAsyncOperation = nodeModel.getPerformingAsyncOperation();
 
   return (
