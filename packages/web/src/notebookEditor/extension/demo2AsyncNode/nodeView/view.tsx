@@ -18,7 +18,7 @@ export class Demo2AsyncNodeView extends AbstractAsyncNodeView<string, Demo2Async
   public constructor(model: Demo2AsyncNodeModel, editor: Editor, node: Demo2AsyncNodeType, codeBlockStorage: Demo2AsyncNodeStorageType, getPos: getPosType) {
     super(model, editor, node, codeBlockStorage, getPos);
 
-      // .. UI ......................................................................
+    // .. UI ......................................................................
     // Create DOM elements and append it to the outer container (dom).
     const contentDOM = document.createElement('div');
     this.contentDOM = contentDOM;
