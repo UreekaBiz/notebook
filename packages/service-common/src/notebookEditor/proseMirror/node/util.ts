@@ -4,7 +4,7 @@ import { Selection, Transaction } from 'prosemirror-state';
 import { Attributes, AttributeType } from '../attribute';
 import { Command } from '../command';
 import { DocumentNodeType } from '../extension/document';
-import { getBlockNodeRange } from '../selection';
+import { getBlockNodeRange, isGapCursorSelection } from '../selection';
 import { mapOldStartAndOldEndThroughHistory } from '../step';
 import { getNodeName, NodeIdentifier, NodeName } from './type';
 
@@ -102,6 +102,8 @@ export const createBlockNode = (blockNodeName: NodeName, attributes: Partial<Att
   } /* else -- try to create Block below */
 
   const { schema, tr } = state;
+  if(isGapCursorSelection(tr.selection)) return false/*do not allow insertion of Block when GapCursor is set*/;
+
   const { $anchor, $head } = tr.selection;
   const blockNodeType = schema.nodes[blockNodeName];
 

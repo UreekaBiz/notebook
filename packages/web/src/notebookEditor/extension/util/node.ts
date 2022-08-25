@@ -1,9 +1,7 @@
 import { Editor } from '@tiptap/core';
 import { GapCursor } from 'prosemirror-gapcursor';
 
-import { NodeName } from '@ureeka-notebook/web-service';
-
-import { ExtensionName } from 'notebookEditor/model/type';
+import { isGapCursorSelection, NodeName } from '@ureeka-notebook/web-service';
 
 // ********************************************************************************
 // -- Backspace --------------------------------------------------------------------
@@ -55,7 +53,7 @@ export const handleBlockArrowDown = (editor: Editor, nodeName: NodeName) => {
         { doc, selection, tr } = state,
         { dispatch } = view;
   if(selection.$anchor.parent.type.name !== nodeName) return false/*node does not allow GapCursor*/;
-  if(selection.toJSON().type === ExtensionName.GAP_CURSOR && (selection.anchor !== 0)) return false/*selection already a GapCursor*/;
+  if(isGapCursorSelection(selection) && (selection.anchor !== 0)) return false/*selection already a GapCursor*/;
 
   const isAtEnd = selection.anchor === doc.nodeSize - 3/*past the Node, including the doc tag*/;
   if(!isAtEnd) return false/*no need to set GapCursor*/;

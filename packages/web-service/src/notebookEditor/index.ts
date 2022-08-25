@@ -312,6 +312,7 @@ export {
   getBlockNodeRange,
   getPosType,
   getSelectedNode,
+  isGapCursorSelection,
   isGetPos,
   isNodeSelection,
   replaceAndSelectNode,
