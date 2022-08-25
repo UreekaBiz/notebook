@@ -2,8 +2,8 @@ import { VscReferences } from 'react-icons/vsc';
 
 import { getSelectedNode, isCodeBlockReferenceNode, NodeName } from '@ureeka-notebook/web-service';
 
+import { toolItemCommandWrapper } from 'notebookEditor/command/util';
 import { CodeBlockReferenceChipSelector } from 'notebookEditor/extension/codeblock/toolbar/CodeBlockReferenceChipSelector';
-import { toolItemCommandWrapper } from 'notebookEditor/extension/util/command';
 import { Toolbar, ToolItem } from 'notebookEditor/toolbar/type';
 
 import { insertAndSelectCodeBlockReferenceCommand } from '../command';

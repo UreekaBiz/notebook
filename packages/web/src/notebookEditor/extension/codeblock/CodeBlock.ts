@@ -2,11 +2,11 @@ import { textblockTypeInputRule, Node } from '@tiptap/core';
 
 import { createBlockNode, generateNodeId, getNodeOutputSpec, isCodeBlockNode, AttributeType, CodeBlockNodeSpec, CodeBlockType, NodeName, SetAttributeType, DATA_NODE_TYPE } from '@ureeka-notebook/web-service';
 
+import { shortcutCommandWrapper } from 'notebookEditor/command/util';
 import { setAttributeParsingBehavior, uniqueIdParsingBehavior } from 'notebookEditor/extension/util/attribute';
 import { handleBlockArrowDown, handleBlockArrowUp, handleBlockBackspace } from 'notebookEditor/extension/util/node';
 import { NoOptions } from 'notebookEditor/model/type';
 
-import { shortcutCommandWrapper } from '../util/command';
 import { CodeBlockController } from './nodeView/controller';
 import { CodeBlockStorage } from './nodeView/storage';
 import { codeBlockOnTransaction } from './transaction';

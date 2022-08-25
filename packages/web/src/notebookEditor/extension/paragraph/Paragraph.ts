@@ -2,10 +2,10 @@ import { Node } from '@tiptap/core';
 
 import { getNodeOutputSpec, Attributes, AttributeType, NodeName, ParagraphNodeSpec, SetAttributeType, DATA_NODE_TYPE } from '@ureeka-notebook/web-service';
 
+import { shortcutCommandWrapper } from 'notebookEditor/command/util';
 import { setAttributeParsingBehavior } from 'notebookEditor/extension/util/attribute';
 import { ExtensionPriority, NoStorage } from 'notebookEditor/model/type';
 
-import { shortcutCommandWrapper } from '../util/command';
 import { setParagraphCommand } from './command';
 
 // ********************************************************************************

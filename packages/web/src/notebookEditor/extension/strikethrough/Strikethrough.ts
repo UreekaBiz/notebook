@@ -2,11 +2,11 @@ import { Mark } from '@tiptap/core';
 
 import { getMarkOutputSpec, StrikethroughMarkSpec } from '@ureeka-notebook/web-service';
 
+import { shortcutCommandWrapper } from 'notebookEditor/command/util';
 import { markInputRule, markPasteRule } from 'notebookEditor/extension/util/mark';
 import { safeParseTag } from 'notebookEditor/extension/util/parse';
 import { NoOptions, NoStorage } from 'notebookEditor/model/type';
 
-import { shortcutCommandWrapper } from '../util/command';
 import { toggleStrikethroughCommand } from './command';
 
 // ********************************************************************************

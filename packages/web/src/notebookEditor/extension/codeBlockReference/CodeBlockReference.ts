@@ -2,11 +2,11 @@ import { Node } from '@tiptap/core';
 
 import { getNodeOutputSpec, isCodeBlockReferenceNode, AttributeType, CodeBlockReferenceNodeSpec, NodeName, SetAttributeType, DATA_NODE_TYPE } from '@ureeka-notebook/web-service';
 
+import { shortcutCommandWrapper } from 'notebookEditor/command/util';
 import { setAttributeParsingBehavior, uniqueIdParsingBehavior } from 'notebookEditor/extension/util/attribute';
 import { NodeViewStorage } from 'notebookEditor/model/NodeViewStorage';
 import { NoOptions } from 'notebookEditor/model/type';
 
-import { shortcutCommandWrapper } from '../util/command';
 import { insertAndSelectCodeBlockReferenceCommand } from './command';
 import { CodeBlockReferenceController, CodeBlockReferenceStorageType } from './nodeView/controller';
 

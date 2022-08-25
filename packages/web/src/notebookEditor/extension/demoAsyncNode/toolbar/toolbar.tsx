@@ -2,9 +2,9 @@ import { AiOutlineClockCircle } from 'react-icons/ai';
 
 import { getSelectedNode, isAsyncNode, isDemoAsyncNode, AttributeType, NodeName } from '@ureeka-notebook/web-service';
 
+import { toolItemCommandWrapper } from 'notebookEditor/command/util';
 import { CodeBlockReferencesChipSelector } from 'notebookEditor/extension/codeblock/toolbar/CodeBlockReferencesChipSelector';
 import { SliderToolItem } from 'notebookEditor/extension/shared/component/SliderToolItem';
-import { toolItemCommandWrapper } from 'notebookEditor/extension/util/command';
 import { Toolbar, ToolItem } from 'notebookEditor/toolbar/type';
 
 import { insertAndSelectDemoAsyncNodeCommand } from '../command';
