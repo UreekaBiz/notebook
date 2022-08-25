@@ -11,7 +11,7 @@ import { NoStorage } from './type';
 // the model is left to the subclasses.
 // SEE: AbstractNodeController
 // ********************************************************************************
-export abstract class AbstractNodeModel<NodeType extends ProseMirrorNode, Storage extends NodeViewStorage<AbstractNodeController<NodeType, any, any, any>> | NoStorage>  {
+export abstract class AbstractNodeModel<NodeType extends ProseMirrorNode, Storage extends NodeViewStorage<AbstractNodeController<NodeType, any, any, any>> | NoStorage> {
   public readonly editor: Editor;
   public readonly storage: Storage;
   public node: NodeType;
