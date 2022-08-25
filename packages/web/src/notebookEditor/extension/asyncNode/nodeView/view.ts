@@ -36,5 +36,7 @@ export abstract class AbstractAsyncNodeView<T, NodeType extends AsyncNodeType, S
 
     if(isDirty) this.content.setAttribute(ASYNC_NODE_DIRTY_DATATYPE, ''/*does not need a value*/);
     else this.content.removeAttribute(ASYNC_NODE_DIRTY_DATATYPE);
+
+    super.updateView();
   }
 }

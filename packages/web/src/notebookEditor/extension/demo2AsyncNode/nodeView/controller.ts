@@ -51,7 +51,7 @@ export class Demo2AsyncNodeController extends AbstractAsyncNodeController<string
    * @see NodeView#ignoreMutation()
    */
    public ignoreMutation(mutation: MutationRecord | { type: 'selection'; target: Element; }) {
-    // Ignore if the attributes changed
-    return  mutation.type === 'attributes';
+    // ignore if modifying the ChildList of the Nodes within this View
+    return (mutation.type === 'childList') || (mutation.type === 'attributes');
   }
 }

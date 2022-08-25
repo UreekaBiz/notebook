@@ -111,6 +111,17 @@ const styleAttributeSet = new Set([
   AttributeType.PaddingRight,
 ]);
 export const isStyleAttribute = (property: any) => styleAttributeSet.has(property);
+/** gets a record of styles attributes that are present on the styleAttributesSet */
+export const filterStyleAttributes = (attributes: Attributes) => {
+  const filteredAttributes: Record<string, string> = {};
+  for(const [key, value] of Object.entries(attributes)) {
+    if(isStyleAttribute(key)) {
+      filteredAttributes[key] = value;
+    }
+  }
+  return filteredAttributes;
+};
+
 export const getWrapStyles = (isWrap: boolean) => `white-space: ${isWrap ? 'break-spaces' : 'pre'};`;
 
 // -- Spacing ---------------------------------------------------------------------

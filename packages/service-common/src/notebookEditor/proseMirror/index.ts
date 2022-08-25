@@ -12,6 +12,7 @@ export * from './extension/codeBlock/jsx';
 export * from './extension/codeBlockReference';
 export * from './extension/codeBlockAsyncNode';
 export * from './extension/demo2AsyncNode';
+export * from './extension/demo2AsyncNode/jsx';
 export * from './extension/demoAsyncNode';
 export * from './extension/document';
 export * from './extension/heading';

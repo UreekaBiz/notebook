@@ -1,39 +1,17 @@
 import { Mark, Node as ProseMirrorNode, NodeSpec } from 'prosemirror-model';
+import * as ReactDOMServer from 'react-dom/server';
 
-import { noNodeOrMarkSpecAttributeDefaultValue, AttributesTypeFromNodeSpecAttributes, AttributeType } from '../attribute';
-import { getRenderAttributes } from '../htmlRenderer/attribute';
-import { createNodeDataTypeAttribute, NodeRendererSpec } from '../htmlRenderer/type';
-import { getAllowedMarks, MarkName } from '../mark';
-import { JSONNode, NodeGroup, NodeName, ProseMirrorNodeContent } from '../node';
-import { NotebookSchemaType } from '../schema';
-import { AsyncNodeAttributeSpec, DEFAULT_ASYNC_NODE_STATUS } from './asyncNode';
+import { getRenderAttributes } from '../../htmlRenderer/attribute';
+import { getReactNodeFromJSX } from '../../htmlRenderer/jsx';
+import { NodeRendererSpec } from '../../htmlRenderer/type';
+import { getAllowedMarks, MarkName } from '../../mark';
+import { JSONNode, NodeGroup, NodeName, ProseMirrorNodeContent } from '../../node';
+import { NotebookSchemaType } from '../../schema';
+import { DEFAULT_ASYNC_NODE_STATUS } from '../asyncNode';
+import { Demo2AsyncNodeAttributes, Demo2AsyncNodeAttributeSpec } from './attribute';
+import { Demo2AsyncNodeComponentJSX } from './jsx';
 
 // ********************************************************************************
-// == Attribute ===================================================================
-// NOTE: must be present on the NodeSpec below
-// NOTE: This values must have matching types the ones defined in the Extension
-const Demo2AsyncNodeAttributeSpec = {
-  ...AsyncNodeAttributeSpec,
-
-  [AttributeType.Delay]: noNodeOrMarkSpecAttributeDefaultValue<number>(),
-
-  [AttributeType.TextToReplace]: noNodeOrMarkSpecAttributeDefaultValue<string>(),
-
-  [AttributeType.FontSize]: noNodeOrMarkSpecAttributeDefaultValue<string>(),
-  [AttributeType.TextColor]: noNodeOrMarkSpecAttributeDefaultValue<string>(),
-
-  [AttributeType.PaddingTop]: noNodeOrMarkSpecAttributeDefaultValue<string>(),
-  [AttributeType.PaddingBottom]: noNodeOrMarkSpecAttributeDefaultValue<string>(),
-  [AttributeType.PaddingLeft]: noNodeOrMarkSpecAttributeDefaultValue<string>(),
-  [AttributeType.PaddingRight]: noNodeOrMarkSpecAttributeDefaultValue<string>(),
-
-  [AttributeType.MarginTop]: noNodeOrMarkSpecAttributeDefaultValue<string>(),
-  [AttributeType.MarginBottom]: noNodeOrMarkSpecAttributeDefaultValue<string>(),
-  [AttributeType.MarginLeft]: noNodeOrMarkSpecAttributeDefaultValue<string>(),
-  [AttributeType.MarginRight]: noNodeOrMarkSpecAttributeDefaultValue<string>(),
-};
-export type Demo2AsyncNodeAttributes = AttributesTypeFromNodeSpecAttributes<typeof Demo2AsyncNodeAttributeSpec>;
-
 // == Spec ========================================================================
 // -- Node Spec -------------------------------------------------------------------
 export const Demo2AsyncNodeSpec: NodeSpec = {
@@ -57,18 +35,13 @@ export const Demo2AsyncNodeSpec: NodeSpec = {
 
 // -- Render Spec -----------------------------------------------------------------
 const renderDemo2AsyncNodeView = (attributes: Demo2AsyncNodeAttributes, content: string) => {
-  const renderAttributes = getRenderAttributes(NodeName.DEMO_2_ASYNC_NODE,
-                                              { ...attributes, [AttributeType.Delay]: String(attributes[AttributeType.Delay])/*converting to string since required*/ },
-                                              Demo2AsyncNodeRendererSpec,
-                                              Demo2AsyncNodeSpec);
-  // CHECK: is there any reason this can't use JSX to define the structure?
-  // NOTE: must not contain white space, else the renderer has issues
-  //       (hence it is a single line below)
-  // NOTE: createNodeDataTypeAttribute must be used for all nodeRenderSpecs
-  //       that define their own renderNodeView
-  // NOTE: Must match the dom created by Demo2AsyncNodeView Model.
-  return `<div ${createNodeDataTypeAttribute(NodeName.DEMO_2_ASYNC_NODE)} style="${renderAttributes.style ?? ''}"><div><div>${content}</div></div></div>`;
-};
+  const children = getReactNodeFromJSX(content);
+  const renderAttributes = getRenderAttributes(NodeName.CODEBLOCK, { ...attributes, wrap: undefined/*FIXME: Types!*/ }, Demo2AsyncNodeRendererSpec, Demo2AsyncNodeSpec);
+
+  // parses the JSX into a static string that can be rendered.
+  return ReactDOMServer.renderToStaticMarkup(
+    <Demo2AsyncNodeComponentJSX attrs={attributes} renderAttributes={renderAttributes}>{children}</Demo2AsyncNodeComponentJSX>);
+ };
 
 export const Demo2AsyncNodeRendererSpec: NodeRendererSpec<Demo2AsyncNodeAttributes> = {
   tag: 'div',

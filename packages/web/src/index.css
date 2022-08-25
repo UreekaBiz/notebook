@@ -73,15 +73,6 @@ img.ProseMirror-selectednode/*target inline nodes with content (e.g. asyncNodes)
 }
 
 /* .. Demo2AsyncNode ........................................................... */
-[data-node-type="demo2AsyncNode"] {
-  background: rgba(0,0,0,0.1);
-  border-radius: 4px;
-}
-
-[data-node-type="demo2AsyncNode"].performing-async-operation{
-  background: rgba(0,0,0,0.3);
-}
-
 /* NOTE: ProseMirror adds white-space: normal to non editable nodes, this causes the
          node to lose its white-space while its being executed. The solution is to
          overwrite that property on this specific case. */
