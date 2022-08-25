@@ -1,12 +1,13 @@
 import { AiOutlineClockCircle } from 'react-icons/ai';
 
-import { generateNodeId, getSelectedNode, isAsyncNode, isDemoAsyncNode, AttributeType, NodeName } from '@ureeka-notebook/web-service';
+import { getSelectedNode, isAsyncNode, isDemoAsyncNode, AttributeType, NodeName } from '@ureeka-notebook/web-service';
 
 import { CodeBlockReferencesChipSelector } from 'notebookEditor/extension/codeblock/toolbar/CodeBlockReferencesChipSelector';
 import { SliderToolItem } from 'notebookEditor/extension/shared/component/SliderToolItem';
+import { toolItemCommandWrapper } from 'notebookEditor/extension/util/command';
 import { Toolbar, ToolItem } from 'notebookEditor/toolbar/type';
-import { focusChipToolInput } from 'notebookEditor/util';
 
+import { insertAndSelectDemoAsyncNodeCommand } from '../command';
 import { ExecuteButtons } from './ExecuteButtons';
 
 //*********************************************************************************
@@ -30,11 +31,7 @@ export const demoAsyncNodeToolItem: ToolItem = {
 
     return false/*enabled*/;
   },
-  onClick: (editor) => {
-    const id = generateNodeId();
-    editor.chain().focus().insertDemoAsyncNode({ id }).run();
-    focusChipToolInput(id);
-  },
+  onClick: (editor, depth) => toolItemCommandWrapper(editor, depth, insertAndSelectDemoAsyncNodeCommand),
 };
 
 const demoAsyncNodeDelayTool: ToolItem = {

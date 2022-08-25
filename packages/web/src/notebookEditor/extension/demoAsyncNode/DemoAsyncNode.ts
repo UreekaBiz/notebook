@@ -1,13 +1,13 @@
 import { Node } from '@tiptap/core';
 
-import { generateNodeId, getNodeOutputSpec, isDemoAsyncNode, AttributeType, DemoAsyncNodeSpec, NodeName, SetAttributeType, DATA_NODE_TYPE, DEFAULT_DEMO_ASYNC_NODE_DELAY, DEFAULT_DEMO_ASYNC_NODE_STATUS, DEFAULT_DEMO_ASYNC_NODE_TEXT } from '@ureeka-notebook/web-service';
+import { getNodeOutputSpec, isDemoAsyncNode, AttributeType, DemoAsyncNodeSpec, NodeName, SetAttributeType, DATA_NODE_TYPE, DEFAULT_DEMO_ASYNC_NODE_DELAY, DEFAULT_DEMO_ASYNC_NODE_STATUS, DEFAULT_DEMO_ASYNC_NODE_TEXT } from '@ureeka-notebook/web-service';
 
 import { setAttributeParsingBehavior, uniqueIdParsingBehavior } from 'notebookEditor/extension/util/attribute';
 import { NodeViewStorage } from 'notebookEditor/model/NodeViewStorage';
 import { NoOptions } from 'notebookEditor/model/type';
-import { focusChipToolInput } from 'notebookEditor/util';
 
-import { insertAndSelectDemoAsyncNode } from './command';
+import { shortcutCommandWrapper } from '../util/command';
+import { insertAndSelectDemoAsyncNodeCommand } from './command';
 import { DemoAsyncNodeController, DemoAsyncNodeStorageType } from './nodeView/controller';
 
 // ********************************************************************************
@@ -31,23 +31,12 @@ export const DemoAsyncNode = Node.create<NoOptions, DemoAsyncNodeStorageType>({
     };
   },
 
-  // -- Command -------------------------------------------------------------------
-  addCommands() { return { insertDemoAsyncNode: insertAndSelectDemoAsyncNode }; },
+  // -- Keyboard Shortcut ---------------------------------------------------------
   addKeyboardShortcuts() {
     return {
       // create a demo async node
-      'Shift-Mod-d': () => {
-        const id = generateNodeId();
-        this.editor.commands.insertDemoAsyncNode({ id });
-        focusChipToolInput(id);
-        return true/*command executed*/;
-      },
-      'Shift-Mod-D': () => {
-        const id = generateNodeId();
-        this.editor.commands.insertDemoAsyncNode({ id });
-        focusChipToolInput(id);
-        return true/*command executed*/;
-      },
+      'Shift-Mod-d': () => shortcutCommandWrapper(this.editor, insertAndSelectDemoAsyncNodeCommand),
+      'Shift-Mod-D': () => shortcutCommandWrapper(this.editor, insertAndSelectDemoAsyncNodeCommand),
     };
   },
 
