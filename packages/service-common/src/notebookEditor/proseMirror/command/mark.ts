@@ -1,53 +1,9 @@
-import { MarkType, ResolvedPos } from 'prosemirror-model';
-
-import { objectIncludes } from '../../../util';
-import { Attributes, AttributeType } from '../attribute';
-import { getMarkAttributes, MarkName } from '../mark';
-import { isSameMarkInArray } from '../mark/util';
+import { Attributes } from '../attribute';
+import { getMarkAttributes, getMarkRange, MarkName } from '../mark';
 import { NotebookSchemaType } from '../schema';
 import { Command } from './type';
 
 // ********************************************************************************
-/** Get the Range covered by a Mark */
-const getMarkRange =($pos: ResolvedPos, markType: MarkType, attributes: Record<AttributeType | string, any> = {/*default no attributes*/}) => {
-  let start = $pos.parent.childAfter($pos.parentOffset);
-
-  if($pos.parentOffset === start.offset && start.offset !== 0/*not at the direct start of the Node*/) {
-    start = $pos.parent.childBefore($pos.parentOffset);
-  }/* else -- parentOffset different than start offset, or start offset right at the start of the Node*/
-
-  if(!start.node) {
-    return/*nothing to do*/;
-  } /* else -- there is a direct child after the parentOffset */
-
-
-  const mark = start.node.marks.find(mark => mark.type === markType && objectIncludes(mark.attrs, attributes));
-  if(!mark) {
-    return/*no Mark to compute a Range*/;
-  } /* else -- compute Range */
-
-  let startIndex = start.index;
-  let startPos = $pos.start() + start.offset;
-  let endIndex = startIndex + 1/*past it*/;
-  let endPos = startPos + start.node.nodeSize;
-
-  // calculate the positions backwards and forwards from the children at startIndex
-  // and endIndex respectively
-  while(startIndex > 0/*haven't reached parent, going backwards*/ && mark.isInSet($pos.parent.child(startIndex - 1/*child at previous index*/).marks)) {
-    startIndex -= 1/*go backwards to parent*/;
-    startPos -= $pos.parent.child(startIndex).nodeSize;
-  }
-  while(endIndex < $pos.parent.childCount/*haven't reached parent end going forwards*/ && isSameMarkInArray($pos.parent.child(endIndex).marks, markType, attributes)) {
-    endPos += $pos.parent.child(endIndex).nodeSize;
-    endIndex += 1/*move forwards, away from parent*/;
-  }
-
-  return {
-    from: startPos,
-    to: endPos,
-  };
-};
-
 // == Setter ======================================================================
 export const setMarkCommand = (schema: NotebookSchemaType, markName: MarkName, attributes: Partial<Attributes>): Command => (state, dispatch) => {
   const { tr } = state;
