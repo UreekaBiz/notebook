@@ -7,7 +7,6 @@ import { NodeRendererSpec } from '../../htmlRenderer/type';
 import { getAllowedMarks } from '../../mark';
 import { JSONNode, NodeGroup, NodeName, ProseMirrorNodeContent } from '../../node';
 import { NotebookSchemaType } from '../../schema';
-import { DEFAULT_CODEBLOCK_ASYNC_NODE_STATUS } from '../codeBlockAsyncNode';
 import { DemoAsyncNodeAttributes, DemoAsyncNodeAttributeSpec } from './attribute';
 import { DemoAsyncNodeComponentJSX } from './jsx';
 
@@ -52,10 +51,6 @@ export const DemoAsyncNodeRendererSpec: NodeRendererSpec<DemoAsyncNodeAttributes
 
   attributes: {/*no need to render attributes*/},
 };
-
-export const DEFAULT_DEMO_ASYNC_NODE_STATUS = DEFAULT_CODEBLOCK_ASYNC_NODE_STATUS/*alias*/;
-export const DEFAULT_DEMO_ASYNC_NODE_TEXT = 'Not Executed'/*creation default*/;
-export const DEFAULT_DEMO_ASYNC_NODE_DELAY = 4000/*ms*/;
 
 // == Type ========================================================================
 // -- Node Type -------------------------------------------------------------------

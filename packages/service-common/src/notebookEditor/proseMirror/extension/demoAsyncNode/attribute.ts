@@ -1,6 +1,5 @@
 import { AttributesTypeFromNodeSpecAttributes, AttributeType, noNodeOrMarkSpecAttributeDefaultValue } from '../../attribute';
-import { CodeBlockAsyncNodeAttributeSpec, createDefaultCodeBlockAsyncNodeAttributes } from '../codeBlockAsyncNode';
-import { DEFAULT_DEMO_ASYNC_NODE_DELAY } from './node';
+import { createDefaultCodeBlockAsyncNodeAttributes, CodeBlockAsyncNodeAttributeSpec, DEFAULT_CODEBLOCK_ASYNC_NODE_STATUS } from '../codeBlockAsyncNode';
 
 // ********************************************************************************
 // == Attribute ===================================================================
@@ -16,3 +15,7 @@ export type DemoAsyncNodeAttributes = AttributesTypeFromNodeSpecAttributes<typeo
 // == Util ========================================================================
 export const createDefaultDemoAsyncNodeAttributes = (): Partial<DemoAsyncNodeAttributes> =>
   ({ ...createDefaultCodeBlockAsyncNodeAttributes(), [AttributeType.Delay]: DEFAULT_DEMO_ASYNC_NODE_DELAY });
+
+ export const DEFAULT_DEMO_ASYNC_NODE_STATUS = DEFAULT_CODEBLOCK_ASYNC_NODE_STATUS/*alias*/;
+export const DEFAULT_DEMO_ASYNC_NODE_TEXT = 'Not Executed'/*creation default*/;
+export const DEFAULT_DEMO_ASYNC_NODE_DELAY = 4000/*ms*/;
