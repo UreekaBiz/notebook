@@ -1,5 +1,6 @@
-import { getSelectedNode, AttributeType, Margin, Padding, isNodeSelection } from '@ureeka-notebook/web-service';
+import { getSelectedNode, isNodeSelection, AttributeType, Margin, Padding } from '@ureeka-notebook/web-service';
 
+import { updateAttributesInRangeCommand } from 'notebookEditor/command/selection';
 import { getTextDOMRenderedValue } from 'notebookEditor/extension/util/attribute';
 import { Unit } from 'notebookEditor/theme/type';
 import { EditorToolComponentProps } from 'notebookEditor/toolbar/type';
@@ -33,7 +34,7 @@ export const SpacingToolItem: React.FC<Props> = ({ depth, editor }) => {
 
   // == Handler ===================================================================
   const handleChange = (attribute: AttributeType, value: string) => {
-    editor.commands.setStyle(attribute, value, depth);
+    updateAttributesInRangeCommand(attribute, value, depth)(editor.state, editor.view.dispatch);
 
     const position = state.selection.anchor;
     // set the selection in the same position in case that the node was replaced
