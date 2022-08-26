@@ -6,6 +6,6 @@ export const insertTabCommand: Command = (state, dispatch) => {
   const { tr } = state;
   tr.insertText('\t');
 
-  if(dispatch) dispatch(tr);
-  return true/*command can be executed*/;
+  dispatch(tr);
+  return true/*Command executed*/;
 };
