@@ -188,6 +188,7 @@ export {
   // == Marks =====================================================================
   JSONMark,
   MarkName,
+  extendMarkRangeCommand,
   getMarkName,
   getMarkValue,
   isMarkActive,
@@ -195,6 +196,7 @@ export {
   parseStringifiedMarksArray,
   setMarkCommand,
   stringifyMarksArray,
+  toggleMarkCommand,
   unsetMarkCommand,
 
   // -- Mark Specs ----------------------------------------------------------------
@@ -324,7 +326,11 @@ export {
   isNodeSelection,
   replaceAndSelectNodeCommand,
   resolveNewSelection,
+  SelectionRange,
   SelectionDepth,
+  setNodeSelectionCommand,
+  setTextSelectionCommand,
+  updateAttributesInRangeCommand,
 
   // ..............................................................................
 } from '@ureeka-notebook/service-common';

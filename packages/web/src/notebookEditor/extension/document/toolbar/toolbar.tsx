@@ -1,8 +1,6 @@
 import { NodeName } from '@ureeka-notebook/web-service';
 
 import { Toolbar, ToolItem } from 'notebookEditor/toolbar/type';
-import { InsertNumbersToolItem } from './InsertNumbersToolItem';
-import { InsertTextToolItem } from './InsertTextToolItem';
 
 import { PreviewPublishedNotebookToolItem } from './PreviewPublishedNotebookToolItem';
 import { PublishNotebookButton } from './PublishNotebookButton';
@@ -39,20 +37,6 @@ export const setThemeToolItem: ToolItem = {
   component: SetThemeToolItem,
 };
 
-export const insertNumbersToolItem: ToolItem = {
-  toolType: 'component',
-  name: 'insertNumbersToolItem',
-
-  component: InsertNumbersToolItem,
-};
-
-export const insertTextToolItem: ToolItem = {
-  toolType: 'component',
-  name: 'insertTextToolItem',
-
-  component: InsertTextToolItem,
-};
-
 // == Toolbar =====================================================================
 export const DocumentToolbar: Toolbar = {
   title: 'Document',
@@ -68,10 +52,6 @@ export const DocumentToolbar: Toolbar = {
     ],
     [
       setThemeToolItem,
-    ],
-    [
-      insertTextToolItem,
-      insertNumbersToolItem,
     ],
   ],
 };
