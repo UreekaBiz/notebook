@@ -13,7 +13,7 @@ type InsertContentAtOptions = {
   updateSelection?: boolean;
 }
 // NOTE: this Command is limited to Web since the content that gets inserted must
-//       might be a string that gets parsed and converted into an HTMLElement,
+//       might be a string that gets parsed and converted into an HTMLElement
 export const insertContentAtCommand = (selectionRange: SelectionRange, value: string | JSONNode | JSONNode[], options?: InsertContentAtOptions): Command => (state, dispatch) => {
   options = { parseOptions: {/*default none*/}, updateSelection: true, ...options };
   const content = createNodeFromContent(state.schema, value, { parseOptions: { preserveWhitespace: 'full', ...options.parseOptions } });
