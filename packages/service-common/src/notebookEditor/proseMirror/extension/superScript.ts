@@ -20,7 +20,7 @@ export const SuperScriptMarkSpec: MarkSpec = {
   // NOTE: toDOM must be defined so that the Schema knows how to create it
   //       (SEE: schema.ts)
   // NOTE: toDOM tag must match renderer tag
-  toDOM: (mark, inline) => ['sub', SuperScriptMarkSpec],
+  toDOM: (mark, inline) => ['sup', SuperScriptMarkSpec],
 
   attributes: SuperScriptAttributesSpec,
 };
@@ -31,7 +31,7 @@ export const SuperScriptMarkRendererSpec: MarkRendererSpec<SuperScriptAttributes
   //       the TextNode instead
   // SEE: ./renderer.ts
   // NOTE: renderer tag must match toDOM tag
-  tag: 'sub',
+  tag: 'sup',
   render: { style: 'vertical-align: super;' },
 
   attributes: {/*no Attributes*/},
