@@ -1,3 +1,5 @@
+import { TextSelection } from 'prosemirror-state';
+
 import { Attributes } from '../attribute';
 import { getMarkAttributes, getMarkRange, isMarkActive, MarkName } from '../mark';
 import { NotebookSchemaType } from '../schema';
@@ -5,6 +7,7 @@ import { Command } from './type';
 
 // ********************************************************************************
 // == Setter ======================================================================
+/** set a Mark across the current Selection */
 export const setMarkCommand = (schema: NotebookSchemaType, markName: MarkName, attributes: Partial<Attributes>): Command => (state, dispatch) => {
   const { tr } = state;
   const { empty, ranges } = state.selection;
@@ -72,10 +75,35 @@ export const unsetMarkCommand = (markName: MarkName, extendEmptyMarkRange: boole
 };
 
 // --------------------------------------------------------------------------------
+/** Unset or set a Mark depending on whether or not it is currently active */
 export const toggleMarkCommand = (schema: NotebookSchemaType, markName: MarkName, attributes: Partial<Attributes>): Command => (state, dispatch) => {
   if(isMarkActive(state, markName, attributes)) {
     return unsetMarkCommand(markName, false/*default not extend Mark Range*/)(state, dispatch);
   } /* else -- Mark is not active, set it */
 
   return setMarkCommand(schema, markName,  attributes)(state, dispatch);
+};
+
+// --------------------------------------------------------------------------------
+/**
+ * Checks to see whether the Selection currently contains a Range with a Mark
+ * of the given name in it, and if it does, modifies it so that the Range covers
+ * it completely
+ */
+export const extendMarkRangeCommand = (schema: NotebookSchemaType, markName: MarkName, attributes: Partial<Attributes>): Command => (state, dispatch) => {
+  const markType = schema.marks[markName];
+  const { tr } = state;
+
+  const { doc, selection } = tr;
+  const { $from, from, to } = selection;
+
+  // expand the current Selection if need be
+  const range = getMarkRange($from, markType, attributes);
+  if(range && range.from <= from && range.to >= to) {
+    const newSelection = TextSelection.create(doc, range.from, range.to);
+    tr.setSelection(newSelection);
+  } /* else -- no need to expand the Selection */
+
+  dispatch(tr);
+  return true/*Command executed*/;
 };

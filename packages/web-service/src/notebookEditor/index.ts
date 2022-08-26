@@ -188,6 +188,7 @@ export {
   // == Marks =====================================================================
   JSONMark,
   MarkName,
+  extendMarkRangeCommand,
   getMarkName,
   getMarkValue,
   isMarkActive,
