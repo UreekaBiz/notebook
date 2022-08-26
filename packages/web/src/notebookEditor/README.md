@@ -29,6 +29,8 @@ This is the list of keyboard shortcuts that is built into the Notebook Editor.
 | Keyboard Shortcut                                           | Description                                                    |
 | ----------------------------------------------------------- | -------------------------------------------------------------- |
 | <kbd>cmd</kbd><kbd>B</kbd>                                  | Toggle the **bold** Mark                                       |
+| <kbd>cmd</kbd><kbd>I</kbd>                                  | Toggle the <em>italic<em> Mark                                 |
+| <kbd>cmd</kbd><kbd>U</kbd>                                  | Toggle the <u>underline<u> Mark                                |
 | <kbd>cmd</kbd><kbd>Shift</kbd><kbd>X</kbd>                  | Toggle the ~~strikethrough~~ Mark                              |
 | <kbd>cmd</kbd><kbd>.</kbd>                                  | Toggle the <sup>superscript<sup> Mark                          |
 | <kbd>cmd</kbd><kbd>,</kbd>                                  | Toggle the <sub>subscript<sub> Mark                            |

@@ -25,6 +25,7 @@ import { SubScript } from 'notebookEditor/extension/subScript/SubScript';
 import { SuperScript } from 'notebookEditor/extension/superScript/SuperScript';
 import { Text } from 'notebookEditor/extension/text/Text';
 import { TextStyle } from 'notebookEditor/extension/textStyle/TextStyle';
+import { Underline } from 'notebookEditor/extension/underline/Underline';
 
 // ********************************************************************************
 // defines the structure of the Editor
@@ -61,6 +62,7 @@ export const editorDefinition = {
     SuperScript,
     Text,
     TextStyle,
+    Underline,
   ],
   editorProps: { attributes: { class: `${EDITOR_CLASS_NAME} ${EDITOR_EDITABLE_CLASS_NAME}`/*SEE: /index.css*/ } },
 

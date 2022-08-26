@@ -121,6 +121,7 @@ export const DefaultTheme: Theme = {
     [MarkName.SUB_SCRIPT]:  {/*no defined value*/},
     [MarkName.SUPER_SCRIPT]:  {/*no defined value*/},
     [MarkName.TEXT_STYLE]:  {/*no defined value*/},
+    [MarkName.UNDERLINE]:  {/*no defined value*/},
   },
 
   customSelectors: {
@@ -209,6 +210,7 @@ export const GoogleDocsTheme: Theme = {
     [MarkName.SUB_SCRIPT]:  {/*no defined value*/},
     [MarkName.SUPER_SCRIPT]:  {/*no defined value*/},
     [MarkName.TEXT_STYLE]: {/*no defined value*/},
+    [MarkName.UNDERLINE]:  {/*no defined value*/},
   },
 
   customSelectors: {

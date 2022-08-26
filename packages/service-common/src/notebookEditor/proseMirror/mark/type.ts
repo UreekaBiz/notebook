@@ -28,6 +28,7 @@ export enum MarkName {
   SUB_SCRIPT = 'subScript',
   SUPER_SCRIPT = 'superScript',
   TEXT_STYLE = 'textStyle',
+  UNDERLINE = 'underline',
 }
 export const getMarkName = (mark: ProseMirrorMark) => mark.type.name as MarkName;
 

@@ -11,8 +11,9 @@ import { imageToolItem } from 'notebookEditor/extension/image/toolbar';
 import { linkToolItem } from 'notebookEditor/extension/link/toolbar';
 import { markStrikethrough } from 'notebookEditor/extension/strikethrough/toolbar';
 import { markSuperScript } from 'notebookEditor/extension/superScript/toolbar';
-import { markSubScript } from 'notebookEditor/extension//subScript/toolbar';
+import { markSubScript } from 'notebookEditor/extension/subScript/toolbar';
 import { fontSizeToolItem, spacingToolItem, textColorToolItem } from 'notebookEditor/extension/textStyle/toolbar';
+import { markUnderline } from 'notebookEditor/extension/underline/toolbar';
 import { Toolbar } from 'notebookEditor/toolbar/type';
 
 //*********************************************************************************
@@ -25,6 +26,7 @@ export const ParagraphToolbar: Toolbar = {
     [
       markBold,
       markItalic,
+      markUnderline,
       markStrikethrough,
       markSuperScript,
       markSubScript,

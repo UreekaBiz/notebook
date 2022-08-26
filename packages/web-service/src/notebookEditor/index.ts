@@ -209,6 +209,7 @@ export {
   SubScriptMarkSpec,
   SuperScriptMarkSpec,
   TextStyleMarkSpec,
+  UnderlineMarkSpec,
 
   getMarkOutputSpec,
 
@@ -252,6 +253,11 @@ export {
   createTextStyleMark,
   getTextStyleMarkType,
   isTextStyleMark,
+
+  UnderlineMarkType,
+  createUnderlineMark,
+  getUnderlineMarkType,
+  isUnderlineMark,
 
   // == HTML Renderer =============================================================
   ACTIONABLE_NODE,

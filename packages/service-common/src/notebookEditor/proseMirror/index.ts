@@ -30,6 +30,7 @@ export * from './extension/superScript';
 export * from './extension/strikethrough';
 export * from './extension/text';
 export * from './extension/textStyle';
+export * from './extension/underline';
 export * from './mark';
 export * from './node';
 export * from './schema';

@@ -5,7 +5,7 @@ import { getMarkOutputSpec, SuperScriptMarkSpec } from '@ureeka-notebook/web-ser
 import { shortcutCommandWrapper } from 'notebookEditor/command/util';
 import { NoOptions, NoStorage } from 'notebookEditor/model/type';
 
-import { safeParseTag } from '../util/parse';
+import { safeParseTag, wrapGetStyleAttrs } from '../util/parse';
 import { toggleSuperScriptCommand } from './command';
 
 // ********************************************************************************
@@ -24,14 +24,14 @@ export const SuperScript = Mark.create<NoOptions, NoStorage>({
       safeParseTag('sup'),
       {
         style: 'vertical-align',
-        getAttrs(value) {
+        getAttrs: wrapGetStyleAttrs(value => {
           // check for vertical alignment
           if(value !== 'super') {
             return false;
           } /* else -- match */
 
           return null/*match and add empty/default set of attrs */;
-        },
+        }),
       },
     ];
   },

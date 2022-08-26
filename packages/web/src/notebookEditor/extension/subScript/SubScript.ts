@@ -5,7 +5,7 @@ import { getMarkOutputSpec, SubScriptMarkSpec } from '@ureeka-notebook/web-servi
 import { shortcutCommandWrapper } from 'notebookEditor/command/util';
 import { NoOptions, NoStorage } from 'notebookEditor/model/type';
 
-import { safeParseTag } from '../util/parse';
+import { safeParseTag, wrapGetStyleAttrs } from '../util/parse';
 import { toggleSubScriptCommand } from './command';
 
 // ********************************************************************************
@@ -24,14 +24,14 @@ export const SubScript = Mark.create<NoOptions, NoStorage>({
       safeParseTag('sub'),
       {
         style: 'vertical-align',
-        getAttrs(value) {
+        getAttrs: wrapGetStyleAttrs(value => {
           // check for vertical alignment
           if(value !== 'sub') {
             return false;
           } /* else -- match */
 
           return null/*match and add empty/default set of attrs */;
-        },
+        }),
       },
     ];
   },

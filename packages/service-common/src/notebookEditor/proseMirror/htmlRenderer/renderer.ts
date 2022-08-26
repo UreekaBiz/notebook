@@ -20,6 +20,7 @@ import { SubScriptMarkRendererSpec } from '../extension/subScript';
 import { SuperScriptMarkRendererSpec } from '../extension/superScript';
 import { isTextJSONNode, TextNodeRendererSpec } from '../extension/text';
 import { TextStyleMarkRendererSpec } from '../extension/textStyle';
+import { UnderlineMarkRendererSpec } from '../extension/underline';
 import { getMarkName, JSONMark, MarkName } from '../mark';
 import { contentToJSONNode, getNodeName, JSONNode, NodeName } from '../node';
 import { MarkSpecs, NodeSpecs } from '../schema';
@@ -51,6 +52,7 @@ export const MarkRendererSpecs: Record<MarkName, MarkRendererSpec> = {
   [MarkName.SUB_SCRIPT]: SubScriptMarkRendererSpec as any/*FIXME!!!*/,
   [MarkName.SUPER_SCRIPT]: SuperScriptMarkRendererSpec as any/*FIXME!!!*/,
   [MarkName.TEXT_STYLE]: TextStyleMarkRendererSpec as any/*FIXME!!!*/,
+  [MarkName.UNDERLINE]: UnderlineMarkRendererSpec as any/*FIXME!!!*/,
 };
 
 // ================================================================================

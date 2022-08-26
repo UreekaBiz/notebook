@@ -35,6 +35,7 @@ const TOOLBAR_MAP: Record<NodeName | MarkName, Toolbar | null> = {
   [MarkName.SUB_SCRIPT]: null/*none*/,
   [MarkName.SUPER_SCRIPT]: null/*none*/,
   [MarkName.TEXT_STYLE]: null/*none*/,
+  [MarkName.UNDERLINE]: null/*none*/,
 };
 
 // --------------------------------------------------------------------------------

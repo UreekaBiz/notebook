@@ -10,6 +10,7 @@ import { markStrikethrough } from 'notebookEditor/extension/strikethrough/toolba
 import { markSubScript } from 'notebookEditor/extension/subScript/toolbar';
 import { markSuperScript } from 'notebookEditor/extension/superScript/toolbar';
 import { spacingToolItem } from 'notebookEditor/extension/textStyle/toolbar';
+import { markUnderline } from 'notebookEditor/extension/underline/toolbar';
 import { Toolbar, ToolItem } from 'notebookEditor/toolbar/type';
 
 import { CodeBlockTypeToolItem } from './CodeBlockTypeToolItem';
@@ -73,6 +74,7 @@ export const CodeBlockToolbar: Toolbar = {
     [
       markBold,
       markItalic,
+      markUnderline,
       markStrikethrough,
       markSuperScript,
       markSubScript,

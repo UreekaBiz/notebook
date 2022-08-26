@@ -19,6 +19,7 @@ import { SubScriptMarkRendererSpec } from './extension/subScript';
 import { SuperScriptMarkRendererSpec } from './extension/superScript';
 import { TextNodeSpec } from './extension/text';
 import { TextStyleMarkSpec } from './extension/textStyle';
+import { UnderlineMarkSpec } from './extension/underline';
 import { MarkName } from './mark';
 import { NodeName } from './node';
 
@@ -52,6 +53,7 @@ export const MarkSpecs: Record<MarkName, MarkSpec> = {
   [MarkName.SUB_SCRIPT]: SubScriptMarkRendererSpec,
   [MarkName.SUPER_SCRIPT]: SuperScriptMarkRendererSpec,
   [MarkName.TEXT_STYLE]: TextStyleMarkSpec,
+  [MarkName.UNDERLINE]: UnderlineMarkSpec,
 };
 
 // == Schema ======================================================================
