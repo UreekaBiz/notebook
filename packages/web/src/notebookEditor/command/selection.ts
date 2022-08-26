@@ -1,9 +1,29 @@
+import { TextSelection } from 'prosemirror-state';
+
 import { getSelectedNode, isTextNode, AttributeType, SelectionDepth, Command } from '@ureeka-notebook/web-service';
 
 // ********************************************************************************
+// == Type ========================================================================
+type SelectionRange = { from: number; to: number; }
+
 // == Selection ===================================================================
-// TODO: implement TextSelection
-// TODO: implement NodeSelection
+/** set a TextSelection given the Range */
+export const setTextSelectionCommand = (selectionRange: SelectionRange): Command => (state, dispatch) => {
+  const { doc, tr } = state;
+  const { from, to } = selectionRange;
+
+  const minPos = TextSelection.atStart(doc).from;
+  const maxPos = TextSelection.atEnd(doc).to;
+
+  const resolvedFrom = Math.min(Math.max(from, minPos), maxPos);
+  const resolvedEnd = Math.min(Math.max(to, minPos), maxPos);
+
+  const selection = TextSelection.create(doc, resolvedFrom, resolvedEnd);
+
+  tr.setSelection(selection);
+  dispatch(tr);
+  return true/*Command executed*/;
+};
 
 // == Range =======================================================================
 export const updateAttributesInRangeCommand = (attribute: AttributeType, value: string, depth: SelectionDepth): Command => (state, dispatch) => {
