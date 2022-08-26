@@ -2,9 +2,8 @@ import { limit, query, startAfter, startAt, DocumentSnapshot, Query, QuerySnapsh
 import { map, switchMap, Observable, ReplaySubject } from 'rxjs';
 import { tap } from 'rxjs/operators';
 
-import { ApplicationError } from '@ureeka-notebook/service-common';
-
 import { getLogger, ServiceLogger } from '../logging';
+import { ApplicationError } from './error';
 import { QuerySnapshotObservable } from './observableCollection';
 import { fromQuery } from './observableFirestore';
 import { Pagination } from './pagination';
