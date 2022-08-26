@@ -13,6 +13,7 @@ import { Heading } from 'notebookEditor/extension/heading/Heading';
 import { Highlight } from 'notebookEditor/extension/highlight/Highlight';
 import { History } from 'notebookEditor/extension/history/History';
 import { Image } from 'notebookEditor/extension/image/Image';
+import { Italic } from 'notebookEditor/extension/italic/Italic';
 import { InlineNodeWithContent } from 'notebookEditor/extension/inlineNodeWithContent/InlineNodeWithContent';
 import { Link } from 'notebookEditor/extension/link/Link';
 import { MarkHolder } from 'notebookEditor/extension/markHolder/MarkHolder';
@@ -47,6 +48,7 @@ export const editorDefinition = {
     Heading,
     Highlight,
     History,
+    Italic,
     Image,
     InlineNodeWithContent,
     Link,

@@ -21,6 +21,7 @@ export type MarkRange = {
 // ================================================================================
 export enum MarkName {
   BOLD = 'bold',
+  ITALIC = 'italic',
   LINK = 'link',
   REPLACED_TEXT_MARK = 'replacedTextMark',
   STRIKETHROUGH = 'strikethrough',

@@ -9,6 +9,7 @@ import { DemoAsyncNodeSpec } from './extension/demoAsyncNode';
 import { DocumentNodeSpec } from './extension/document';
 import { HeadingNodeSpec } from './extension/heading';
 import { ImageNodeSpec } from './extension/image';
+import { ItalicMarkSpec } from './extension/italic';
 import { LinkMarkSpec } from './extension/link';
 import { MarkHolderNodeSpec } from './extension/markHolder';
 import { ParagraphNodeSpec } from './extension/paragraph';
@@ -44,6 +45,7 @@ export const NodeSpecs: Record<NodeName, NodeSpec> = {
 
 export const MarkSpecs: Record<MarkName, MarkSpec> = {
   [MarkName.BOLD]: BoldMarkSpec,
+  [MarkName.ITALIC]: ItalicMarkSpec,
   [MarkName.LINK]: LinkMarkSpec,
   [MarkName.REPLACED_TEXT_MARK]: ReplacedTextMarkMarkSpec,
   [MarkName.STRIKETHROUGH]: StrikethroughMarkSpec,

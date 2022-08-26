@@ -4,6 +4,7 @@ import { createBlockNode, generateNodeId, getParentNode, getSelectedNode, isCode
 
 import { toolItemCommandWrapper } from 'notebookEditor/command/util';
 import { markBold } from 'notebookEditor/extension/bold/toolbar';
+import { markItalic } from 'notebookEditor/extension/italic/toolbar';
 import { CheckBoxToolItem } from 'notebookEditor/extension/shared/component/CheckBoxToolItem';
 import { markStrikethrough } from 'notebookEditor/extension/strikethrough/toolbar';
 import { markSubScript } from 'notebookEditor/extension/subScript/toolbar';
@@ -71,6 +72,7 @@ export const CodeBlockToolbar: Toolbar = {
     ],
     [
       markBold,
+      markItalic,
       markStrikethrough,
       markSuperScript,
       markSubScript,

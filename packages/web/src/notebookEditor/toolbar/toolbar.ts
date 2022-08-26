@@ -28,6 +28,7 @@ const TOOLBAR_MAP: Record<NodeName | MarkName, Toolbar | null> = {
   [NodeName.PARAGRAPH]: ParagraphToolbar/*none*/,
 
   [MarkName.BOLD]: null/*none*/,
+  [MarkName.ITALIC]: null/*none*/,
   [MarkName.LINK]: LinkToolbar/*none*/,
   [MarkName.REPLACED_TEXT_MARK]: null/*none*/,
   [MarkName.STRIKETHROUGH]: null/*none*/,

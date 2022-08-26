@@ -19,6 +19,7 @@ export * from './extension/demoAsyncNode/jsx';
 export * from './extension/document';
 export * from './extension/heading';
 export * from './extension/image';
+export * from './extension/italic';
 export * from './extension/inlineNodeWithContent';
 export * from './extension/link';
 export * from './extension/markHolder';

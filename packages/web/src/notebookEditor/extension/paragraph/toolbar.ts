@@ -1,6 +1,7 @@
 import { NodeName } from '@ureeka-notebook/web-service';
 
 import { markBold } from 'notebookEditor/extension/bold/toolbar';
+import { markItalic } from 'notebookEditor/extension/italic/toolbar';
 import { codeBlockToolItem } from 'notebookEditor/extension/codeblock/toolbar';
 import { codeBlockReferenceToolItem } from 'notebookEditor/extension/codeBlockReference/toolbar';
 import { demo2AsyncNodeToolItem } from 'notebookEditor/extension/demo2AsyncNode/toolbar';
@@ -23,6 +24,7 @@ export const ParagraphToolbar: Toolbar = {
   toolsCollections: [
     [
       markBold,
+      markItalic,
       markStrikethrough,
       markSuperScript,
       markSubScript,

@@ -112,6 +112,7 @@ export const DefaultTheme: Theme = {
 
   marks: {
     [MarkName.BOLD]:  {/*no defined value*/},
+    [MarkName.ITALIC]:  {/*no defined value*/},
     [MarkName.LINK]:  {
       [AttributeType.TextColor]: '#1a73e8',
     },
@@ -199,6 +200,7 @@ export const GoogleDocsTheme: Theme = {
 
   marks: {
     [MarkName.BOLD]: {/*no defined value*/},
+    [MarkName.ITALIC]:  {/*no defined value*/},
     [MarkName.LINK]:  {
       [AttributeType.TextColor]: '#1a73e8',
     },

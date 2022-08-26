@@ -201,6 +201,7 @@ export {
 
   // -- Mark Specs ----------------------------------------------------------------
   BoldMarkSpec,
+  ItalicMarkSpec,
   LinkMarkSpec,
   MarkSpecs,
   ReplacedTextMarkMarkSpec,
@@ -216,6 +217,11 @@ export {
   createBoldMark,
   getBoldMarkType,
   isBoldMark,
+
+  ItalicMarkType,
+  createItalicMark,
+  getItalicMarkType,
+  isItalicMark,
 
   LinkMarkType,
   createLinkMark,

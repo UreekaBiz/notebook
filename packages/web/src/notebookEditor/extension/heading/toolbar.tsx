@@ -7,6 +7,7 @@ import { RiHeading } from 'react-icons/ri';
 import { AttributeType, HeadingLevel, NodeName } from '@ureeka-notebook/web-service';
 
 import { markBold } from 'notebookEditor/extension/bold/toolbar';
+import { markItalic } from 'notebookEditor/extension/italic/toolbar';
 import { markStrikethrough } from 'notebookEditor/extension/strikethrough/toolbar';
 import { markSubScript } from 'notebookEditor/extension/subScript/toolbar';
 import { markSuperScript } from 'notebookEditor/extension/superScript/toolbar';
@@ -42,6 +43,7 @@ export const HeadingToolbar: Toolbar = {
   toolsCollections: [
     [
       markBold,
+      markItalic,
       markStrikethrough,
       markSuperScript,
       markSubScript,
