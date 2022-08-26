@@ -7,7 +7,7 @@ import { setAttributeParsingBehavior } from 'notebookEditor/extension/util/attri
 import { ExtensionPriority, NoOptions } from 'notebookEditor/model/type';
 import { DialogStorage } from 'notebookEditor/model/DialogStorage';
 
-import { setLinkCommand, toggleLinkCommand, unsetLinkCommand } from './command';
+import { toggleLinkCommand, unsetLinkCommand } from './command';
 import { linkClick } from './plugin/linkClick';
 import { linkCreate } from './plugin/linkCreate';
 import { linkPaste } from './plugin/linkPaste';
@@ -33,7 +33,6 @@ export const Link = Mark.create<NoOptions, DialogStorage>({
   // -- Command -------------------------------------------------------------------
   addCommands() {
     return {
-      setLink: setLinkCommand,
       toggleLink: toggleLinkCommand,
       unsetLink: unsetLinkCommand,
     };

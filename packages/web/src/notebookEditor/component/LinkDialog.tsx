@@ -4,8 +4,9 @@ import { useFormik, Field, FormikProvider } from 'formik';
 import { useState } from 'react';
 import * as Validate from 'yup';
 
-import { urlSchema, DEFAULT_LINK_ATTRIBUTES } from '@ureeka-notebook/web-service';
+import { setTextSelectionCommand, urlSchema, DEFAULT_LINK_ATTRIBUTES } from '@ureeka-notebook/web-service';
 
+import { setLinkCommand } from 'notebookEditor/extension/link/command';
 import { useIsMounted } from 'shared/hook/useIsMounted';
 
 // ********************************************************************************
@@ -37,7 +38,7 @@ export const LinkDialog: React.FC<Props> = ({ editor, isOpen, onClose }) => {
   const handleSubmit = async ({ href }: LinkDialog_Create) => {
     try {
       setIsLoading(true);
-
+      const { dispatch } = editor.view;
       const { empty } = editor.state.selection,
             linkAttrs = { ...DEFAULT_LINK_ATTRIBUTES, href: href.trim() };
 
@@ -50,10 +51,8 @@ export const LinkDialog: React.FC<Props> = ({ editor, isOpen, onClose }) => {
                 .unsetLink()
                 .run();
       } else {
-        editor.chain()
-              .setLink(linkAttrs)
-              .setTextSelection(to)
-              .run();
+        setLinkCommand(linkAttrs)(editor.state/*current state*/, dispatch);
+        setTextSelectionCommand({ from: to, to })(editor.state/*current state*/, dispatch);
       }
 
     } catch(error) {

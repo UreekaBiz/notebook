@@ -1,6 +1,6 @@
 import { CommandProps } from '@tiptap/core';
 
-import { CommandFunctionType, LinkAttributes, MarkName, PREVENT_LINK_META } from '@ureeka-notebook/web-service';
+import { setMarkCommand, Command, CommandFunctionType, LinkAttributes, MarkName, PREVENT_LINK_META } from '@ureeka-notebook/web-service';
 
 // ********************************************************************************
 // == Type ========================================================================
@@ -8,8 +8,6 @@ import { CommandFunctionType, LinkAttributes, MarkName, PREVENT_LINK_META } from
 declare module '@tiptap/core' {
   interface Commands<ReturnType> {
     [MarkName.LINK/*Expected and guaranteed to be unique. (SEE: /notebookEditor/model/node)*/]: {
-      /** Set a link mark */
-      setLink: CommandFunctionType<typeof setLinkCommand, ReturnType>;
       /** Toggle a link mark */
       toggleLink: CommandFunctionType<typeof toggleLinkCommand, ReturnType>;
       /** Unset a link mark */
@@ -23,11 +21,10 @@ declare module '@tiptap/core' {
 //       Range that includes Nodes that should not have Links (e.g. a Selection
 //       that spans Text and CodeBlock Nodes) should create two separate Links,
 //       one before the CodeBlock and another one past it
-export const setLinkCommand = (attributes: Partial<LinkAttributes>) => ({ chain }: CommandProps) =>
-    chain()
-    .setMark(MarkName.LINK, attributes)
-    .setMeta(PREVENT_LINK_META, true)
-    .run();
+export const setLinkCommand = (attributes: Partial<LinkAttributes>): Command => (state, dispatch) => {
+  state.tr.setMeta(PREVENT_LINK_META, true/*(SEE: ../plugin.ts)*/);
+  return setMarkCommand(state.schema, MarkName.LINK, attributes)(state, dispatch);
+};
 
 export const toggleLinkCommand = (attributes: Partial<LinkAttributes>) => ({ chain }: CommandProps) =>
       chain()
