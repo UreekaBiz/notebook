@@ -17,6 +17,8 @@ export abstract class AbstractNodeModel<NodeType extends ProseMirrorNode, Storag
   public node: NodeType;
   getPos: (() => number);
 
+  private selected: boolean;
+
   // == Life-Cycle ================================================================
   public constructor(editor: Editor, node: NodeType, storage: Storage, getPos: getPosType) {
     if(!isGetPos(getPos)) throw new Error('getPos is not a function when creating an AbstractNodeController');
@@ -25,6 +27,9 @@ export abstract class AbstractNodeModel<NodeType extends ProseMirrorNode, Storag
     this.storage = storage;
     this.node = node;
     this.getPos = getPos;
+
+    // FIXME: Is this true?
+    this.selected = false/*by contract*/;
   }
 
   // Sync getPos and node when prosemirror updates it.
@@ -37,4 +42,8 @@ export abstract class AbstractNodeModel<NodeType extends ProseMirrorNode, Storag
   // functionality on Node removal. The remaining removal behavior is
   // handled by default by ProseMirror
   public destroy() {/*currently nothing*/}
+
+  // ==============================================================================
+  public setSelected(selected: boolean ) { this.selected = selected; }
+  public getSelected() { return this.selected; }
 }

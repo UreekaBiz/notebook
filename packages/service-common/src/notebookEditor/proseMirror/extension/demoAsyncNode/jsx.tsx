@@ -6,14 +6,16 @@ import { AsyncNodeStatus, asyncNodeStatusToColor } from '../asyncNode';
 import { DemoAsyncNodeAttributes } from './attribute';
 
 export type DemoAsyncNodeComponentRenderProps = {
+  // FIXME: How to share this attributes with DemoAsyncNodeComponentProps?
   attrs: Partial<DemoAsyncNodeAttributes>;
   renderAttributes: HTMLAttributes;
+  isSelected: boolean;
 
   performingAsyncOperation?: boolean;
   isDirty?: boolean;
 
   /** indicates if the component is being rendered on the editor */
-  isEditor?: boolean;
+  isEditor: boolean;
 }
 
 export const DemoAsyncNodeComponentJSX: React.FC<DemoAsyncNodeComponentRenderProps> = ({ attrs, performingAsyncOperation, isDirty, isEditor }) => {
@@ -37,7 +39,7 @@ export const DemoAsyncNodeComponentJSX: React.FC<DemoAsyncNodeComponentRenderPro
       border='1px solid'
       borderColor={isDirty ? 'red' : '#CBD5E0'}
       borderRadius='4px'
-      background='#EDF2F7'
+      background={'#EDF2F7'}
     >
       {isEditor ? (
         /** NOTE: Tooltip from prosemirror uses useLayoutEffect that causes problem
