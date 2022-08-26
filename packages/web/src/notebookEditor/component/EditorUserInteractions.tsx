@@ -4,6 +4,7 @@ import { isNodeSelection, MarkName, NodeName } from '@ureeka-notebook/web-servic
 
 import { getDialogStorage } from 'notebookEditor/model/DialogStorage';
 import { useValidatedEditor } from 'notebookEditor/hook/useValidatedEditor';
+import { unsetLinkCommand } from 'notebookEditor/extension/link/command';
 import { isValidHTMLElement } from 'notebookEditor/extension/util/parse';
 import { TOOL_ITEM_DATA_TYPE } from 'notebookEditor/toolbar/type';
 
@@ -88,7 +89,7 @@ export const EditorUserInteractions = () => {
         const { from } = editor.state.selection,
               linkMarkActive = editor.isActive(MarkName.LINK) || editor.state.doc.rangeHasMark(from, from+1, editor.state.schema.marks[MarkName.LINK]);
         if(linkMarkActive) {
-          editor.chain().focus().unsetLink().run();
+          unsetLinkCommand()(editor.state/*current state*/, editor.view.dispatch);
           return/*nothing left to do*/;
         } /* else -- Link Mark not active, add a new one */
         setIsCreatingLink(true);

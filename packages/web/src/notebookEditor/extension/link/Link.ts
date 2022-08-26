@@ -7,7 +7,6 @@ import { setAttributeParsingBehavior } from 'notebookEditor/extension/util/attri
 import { ExtensionPriority, NoOptions } from 'notebookEditor/model/type';
 import { DialogStorage } from 'notebookEditor/model/DialogStorage';
 
-import { toggleLinkCommand, unsetLinkCommand } from './command';
 import { linkClick } from './plugin/linkClick';
 import { linkCreate } from './plugin/linkCreate';
 import { linkPaste } from './plugin/linkPaste';
@@ -27,14 +26,6 @@ export const Link = Mark.create<NoOptions, DialogStorage>({
       [AttributeType.Target]: setAttributeParsingBehavior(AttributeType.Target, SetAttributeType.STRING, DEFAULT_LINK_TARGET),
 
       [AttributeType.TextColor]: setAttributeParsingBehavior(AttributeType.TextColor, SetAttributeType.STRING),
-    };
-  },
-
-  // -- Command -------------------------------------------------------------------
-  addCommands() {
-    return {
-      toggleLink: toggleLinkCommand,
-      unsetLink: unsetLinkCommand,
     };
   },
 
