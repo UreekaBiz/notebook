@@ -326,6 +326,9 @@ export {
   replaceAndSelectNodeCommand,
   resolveNewSelection,
   SelectionDepth,
+  setNodeSelectionCommand,
+  setTextSelectionCommand,
+  updateAttributesInRangeCommand,
 
   // ..............................................................................
 } from '@ureeka-notebook/service-common';

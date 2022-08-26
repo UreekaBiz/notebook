@@ -1,6 +1,10 @@
-import { TextSelection } from 'prosemirror-state';
+import { NodeSelection, TextSelection } from 'prosemirror-state';
 
-import { getSelectedNode, isTextNode, AttributeType, SelectionDepth, Command } from '@ureeka-notebook/web-service';
+import { minFromMax } from '../../../util/number';
+import { AttributeType } from '../attribute';
+import { isTextNode } from '../extension/text';
+import { getSelectedNode, SelectionDepth } from '../selection';
+import { Command } from './type';
 
 // ********************************************************************************
 // == Type ========================================================================
@@ -15,14 +19,24 @@ export const setTextSelectionCommand = (selectionRange: SelectionRange): Command
   const minPos = TextSelection.atStart(doc).from;
   const maxPos = TextSelection.atEnd(doc).to;
 
-  const resolvedFrom = Math.min(Math.max(from, minPos), maxPos);
-  const resolvedEnd = Math.min(Math.max(to, minPos), maxPos);
+  const resolvedFrom = minFromMax(from, minPos, maxPos);
+  const resolvedEnd = minFromMax(to, minPos, maxPos);
 
   const selection = TextSelection.create(doc, resolvedFrom, resolvedEnd);
 
   tr.setSelection(selection);
   dispatch(tr);
   return true/*Command executed*/;
+};
+
+/** set a NodeSelection at the given Node position */
+export const setNodeSelectionCommand = (nodePos: number): Command => (state, dispatch) => {
+  const { tr } = state;
+  const { doc } = tr;
+
+  tr.setSelection(NodeSelection.create(doc, minFromMax(nodePos, 0/*Doc start*/, doc.content.size)));
+  dispatch(tr);
+  return true;
 };
 
 // == Range =======================================================================
@@ -60,3 +74,4 @@ export const updateAttributesInRangeCommand = (attribute: AttributeType, value: 
   dispatch(tr);
   return true/*Command executed*/;
 };
+
