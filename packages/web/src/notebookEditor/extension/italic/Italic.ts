@@ -31,7 +31,7 @@ export const Italic = Mark.create<NoOptions, NoStorage>({
   },
 
   // -- Input ---------------------------------------------------------------------
-  // apply the bold Mark to typed or pasted text that is surrounded by '**' or '__'
+  // apply the Italic Mark to typed or pasted text that is surrounded by '*' or '_'
   addInputRules() { return [ markInputRule(starInputRegex, this.type), markInputRule(underscoreInputRegex, this.type) ]; },
   addPasteRules() { return [ markPasteRule(starPasteRegex, this.type), markPasteRule(underscorePasteRegex, this.type) ]; },
 

@@ -3,6 +3,7 @@ import { DOMOutputSpec, Mark as ProseMirrorMark, MarkSpec, Node as ProseMirrorNo
 import {  Attributes, HTMLAttributes } from '../attribute';
 import { NotebookDocumentContent } from '../document';
 import { BoldMarkRendererSpec } from '../extension/bold';
+import { CodeMarkRendererSpec } from '../extension/code';
 import { CodeBlockNodeRendererSpec } from '../extension/codeBlock';
 import { CodeBlockReferenceNodeRendererSpec } from '../extension/codeBlockReference';
 import { Demo2AsyncNodeRendererSpec } from '../extension/demo2AsyncNode';
@@ -45,6 +46,7 @@ export const NodeRendererSpecs: Record<NodeName, NodeRendererSpec> = {
 
 export const MarkRendererSpecs: Record<MarkName, MarkRendererSpec> = {
   [MarkName.BOLD]: BoldMarkRendererSpec,
+  [MarkName.CODE]: CodeMarkRendererSpec as any/*FIXME!!!*/,
   [MarkName.ITALIC]: ItalicMarkRendererSpec as any/*FIXME!!!*/,
   [MarkName.LINK]: LinkMarkRendererSpec as any/*FIXME!!!*/,
   [MarkName.REPLACED_TEXT_MARK]: ReplacedTextMarkMarkRendererSpec,

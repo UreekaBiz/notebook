@@ -2,6 +2,7 @@ import { MarkSpec, NodeSpec, Schema } from 'prosemirror-model';
 
 import { createApplicationError } from '../../util/error';
 import { BoldMarkSpec } from './extension/bold';
+import { CodeMarkSpec } from './extension/code';
 import { CodeBlockNodeSpec } from './extension/codeBlock';
 import { CodeBlockReferenceNodeSpec } from './extension/codeBlockReference';
 import { Demo2AsyncNodeSpec } from './extension/demo2AsyncNode';
@@ -46,6 +47,7 @@ export const NodeSpecs: Record<NodeName, NodeSpec> = {
 
 export const MarkSpecs: Record<MarkName, MarkSpec> = {
   [MarkName.BOLD]: BoldMarkSpec,
+  [MarkName.CODE]: CodeMarkSpec,
   [MarkName.ITALIC]: ItalicMarkSpec,
   [MarkName.LINK]: LinkMarkSpec,
   [MarkName.REPLACED_TEXT_MARK]: ReplacedTextMarkMarkSpec,

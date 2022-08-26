@@ -1,6 +1,6 @@
 import { getItalicMarkType, isMarkActive, setMarkCommand, unsetMarkCommand, Command, MarkName } from '@ureeka-notebook/web-service';
 
-import { toggleMarkInMarkHolderCommand, getMarkHolder } from 'notebookEditor/extension/markHolder/util';
+import { getMarkHolder, toggleMarkInMarkHolderCommand } from 'notebookEditor/extension/markHolder/util';
 
 // --------------------------------------------------------------------------------
 export const toggleItalicCommand: Command = (state, dispatch) => {

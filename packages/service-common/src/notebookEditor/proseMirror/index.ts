@@ -7,6 +7,7 @@ export * from './htmlRenderer/state';
 export * from './htmlRenderer/type';
 export * from './extension/asyncNode';
 export * from './extension/bold';
+export * from './extension/code';
 export * from './extension/codeBlock';
 export * from './extension/codeBlock/jsx';
 export * from './extension/codeBlockReference';

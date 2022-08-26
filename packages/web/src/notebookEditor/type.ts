@@ -1,6 +1,7 @@
 import { EDITOR_CLASS_NAME, EDITOR_EDITABLE_CLASS_NAME } from 'core/theme';
 import { AsyncNode } from 'notebookEditor/extension/asyncNode/AsyncNode';
 import { Bold } from 'notebookEditor/extension/bold/Bold';
+import { Code } from 'notebookEditor/extension/code/Code';
 import { CodeBlock } from 'notebookEditor/extension/codeblock/CodeBlock';
 import { CodeBlockReference } from 'notebookEditor/extension/codeBlockReference/CodeBlockReference';
 import { CodeBlockAsyncNode } from 'notebookEditor/extension/codeBlockAsyncNode/CodeBlockAsyncNode';
@@ -38,6 +39,7 @@ export const editorDefinition = {
   extensions: [
     AsyncNode,
     Bold,
+    Code,
     CodeBlock,
     CodeBlockAsyncNode,
     CodeBlockReference,

@@ -33,7 +33,7 @@ export const Bold = Mark.create<NoOptions, NoStorage>({
   },
 
   // -- Input ---------------------------------------------------------------------
-  // apply the bold Mark to typed or pasted text that is surrounded by '**' or '__'
+  // apply the Bold Mark to typed or pasted text that is surrounded by '**' or '__'
   addInputRules() { return [ markInputRule(starRegex, this.type), markInputRule(underscoreRegex, this.type) ]; },
   addPasteRules() { return [ markPasteRule(starRegex, this.type), markPasteRule(underscoreRegex, this.type) ]; },
 
