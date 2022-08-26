@@ -35,7 +35,7 @@ export const HeadingNodeSpec: NodeSpec = {
   name: NodeName.HEADING/*expected and guaranteed to be unique*/,
 
   content: `${NodeGroup.INLINE}*`,
-  marks: getAllowedMarks([MarkName.BOLD, MarkName.LINK, MarkName.STRIKETHROUGH, MarkName.TEXT_STYLE]),
+  marks: getAllowedMarks([MarkName.BOLD, MarkName.LINK, MarkName.STRIKETHROUGH, MarkName.SUPER_SCRIPT, MarkName.TEXT_STYLE]),
 
   group: NodeGroup.BLOCK,
   defining: true,

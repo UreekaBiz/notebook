@@ -5,6 +5,7 @@ import { createBlockNode, generateNodeId, AttributeType, NodeName } from '@ureek
 import { toolItemCommandWrapper } from 'notebookEditor/command/util';
 import { markBold } from 'notebookEditor/extension/bold/toolbar';
 import { markStrikethrough } from 'notebookEditor/extension/strikethrough/toolbar';
+import { markSuperScript } from 'notebookEditor/extension/superScript/toolbar';
 import { fontSizeToolItem, spacingToolItem, textColorToolItem } from 'notebookEditor/extension/textStyle/toolbar';
 import { Toolbar, ToolItem } from 'notebookEditor/toolbar/type';
 
@@ -71,6 +72,7 @@ export const Demo2AsyncNodeToolbar: Toolbar = {
     [
       markBold,
       markStrikethrough,
+      markSuperScript,
     ],
     [
       fontSizeToolItem,

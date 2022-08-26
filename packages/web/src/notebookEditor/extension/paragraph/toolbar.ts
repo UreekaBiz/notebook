@@ -9,6 +9,7 @@ import { heading1, heading2, heading3 } from 'notebookEditor/extension/heading/t
 import { imageToolItem } from 'notebookEditor/extension/image/toolbar';
 import { linkToolItem } from 'notebookEditor/extension/link/toolbar';
 import { markStrikethrough } from 'notebookEditor/extension/strikethrough/toolbar';
+import { markSuperScript } from 'notebookEditor/extension/superScript/toolbar';
 import { fontSizeToolItem, spacingToolItem, textColorToolItem } from 'notebookEditor/extension/textStyle/toolbar';
 import { Toolbar } from 'notebookEditor/toolbar/type';
 
@@ -22,6 +23,7 @@ export const ParagraphToolbar: Toolbar = {
     [
       markBold,
       markStrikethrough,
+      markSuperScript,
       linkToolItem,
     ],
     [

@@ -19,7 +19,7 @@ export const CodeBlockNodeSpec: NodeSpec = {
   name: NodeName.CODEBLOCK,
 
   content: `${NodeName.TEXT}*`,
-  marks: getAllowedMarks([MarkName.BOLD, MarkName.STRIKETHROUGH]),
+  marks: getAllowedMarks([MarkName.BOLD, MarkName.STRIKETHROUGH, MarkName.SUPER_SCRIPT]),
 
   group: NodeGroup.BLOCK,
   defining: true/*important parent node during replace operations, parent of content preserved on replace operations*/,

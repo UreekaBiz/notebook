@@ -20,6 +20,7 @@ import { NodeViewRemoval } from 'notebookEditor/extension/nodeViewRemoval/NodeVi
 import { Paragraph } from 'notebookEditor/extension/paragraph/Paragraph';
 import { ReplacedTextMark } from 'notebookEditor/extension/replacedTextMark/ReplacedTextMark';
 import { Strikethrough } from 'notebookEditor/extension/strikethrough/Strikethrough';
+import { Superscript } from 'notebookEditor/extension/superScript/SuperScript';
 import { Text } from 'notebookEditor/extension/text/Text';
 import { TextStyle } from 'notebookEditor/extension/textStyle/TextStyle';
 
@@ -53,6 +54,7 @@ export const editorDefinition = {
     Paragraph,
     ReplacedTextMark,
     Strikethrough,
+    Superscript,
     Text,
     TextStyle,
   ],

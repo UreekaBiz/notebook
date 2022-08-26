@@ -6,6 +6,7 @@ import { toolItemCommandWrapper } from 'notebookEditor/command/util';
 import { markBold } from 'notebookEditor/extension/bold/toolbar';
 import { CheckBoxToolItem } from 'notebookEditor/extension/shared/component/CheckBoxToolItem';
 import { markStrikethrough } from 'notebookEditor/extension/strikethrough/toolbar';
+import { markSuperScript } from 'notebookEditor/extension/superScript/toolbar';
 import { spacingToolItem } from 'notebookEditor/extension/textStyle/toolbar';
 import { Toolbar, ToolItem } from 'notebookEditor/toolbar/type';
 
@@ -70,6 +71,7 @@ export const CodeBlockToolbar: Toolbar = {
     [
       markBold,
       markStrikethrough,
+      markSuperScript,
     ],
     [
       spacingToolItem,

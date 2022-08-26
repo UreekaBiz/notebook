@@ -24,6 +24,7 @@ export enum MarkName {
   LINK = 'link',
   REPLACED_TEXT_MARK = 'replacedTextMark',
   STRIKETHROUGH = 'strikethrough',
+  SUPER_SCRIPT = 'superScript',
   TEXT_STYLE = 'textStyle',
 }
 export const getMarkName = (mark: ProseMirrorMark) => mark.type.name as MarkName;

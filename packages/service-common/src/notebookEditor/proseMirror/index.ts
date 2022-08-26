@@ -24,6 +24,7 @@ export * from './extension/link';
 export * from './extension/markHolder';
 export * from './extension/paragraph';
 export * from './extension/replacedTextMark';
+export * from './extension/superScript';
 export * from './extension/strikethrough';
 export * from './extension/text';
 export * from './extension/textStyle';
