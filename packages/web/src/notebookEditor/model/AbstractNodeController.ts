@@ -75,4 +75,14 @@ export abstract class AbstractNodeController<NodeType extends ProseMirrorNode, S
     this.nodeView.destroy();
     this.nodeModel.destroy();
   }
+
+  /** updates the selected state and update the view to reflect the changes */
+  public selectNode() {
+    this.nodeModel.setSelected(true);
+    this.nodeView.updateView();
+  }
+  public deselectNode() {
+    this.nodeModel.setSelected(false);
+    this.nodeView.updateView();
+  }
 }

@@ -8,7 +8,7 @@ import { DemoAsyncNodeView } from './view';
 // @ts-ignore FIXME: DemoAsyncNodeModel doesn't seem to be compatible?
 export type DemoAsyncNodeComponentProps = ReactNodeViewComponentProps<DemoAsyncNodeAttributes, DemoAsyncNodeType, DemoAsyncNodeModel, DemoAsyncNodeView>
 
-export const DemoAsyncNodeComponent: React.FC<DemoAsyncNodeComponentProps> = ({ attrs, nodeModel, ContentDOMWrapper }) => {
+export const DemoAsyncNodeComponent: React.FC<DemoAsyncNodeComponentProps> = ({ attrs, nodeModel, ContentDOMWrapper, isSelected }) => {
   const id = attrs[AttributeType.Id];
   if(!id) return null/*nothing to render*/;
 
@@ -27,6 +27,7 @@ export const DemoAsyncNodeComponent: React.FC<DemoAsyncNodeComponentProps> = ({ 
       renderAttributes={renderAttributes}
       performingAsyncOperation={performingAsyncOperation}
       isDirty={isDirty}
+      isSelected={isSelected}
     />
   );
 };

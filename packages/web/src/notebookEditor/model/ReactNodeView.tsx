@@ -27,6 +27,9 @@ export type ReactNodeViewProps<
   nodeModel: NodeModel;
   /** the node view */
   nodeView: NodeView;
+
+  /** wether the node is selected or not */
+  isSelected: boolean;
 };
 
 export type ReactNodeViewComponentProps<

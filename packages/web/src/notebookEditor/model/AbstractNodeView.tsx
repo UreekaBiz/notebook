@@ -88,8 +88,8 @@ export abstract class AbstractNodeView<NodeType extends ProseMirrorNode, Storage
         node: this.node,
         nodeModel: this.model,
         nodeView: this,
+        isSelected: this.model.getSelected(),
       };
-
       // Update React View
       // NOTE: A react component is meant to be rendered using JSX instead of
       //       calling the function directly since this mess ups the order of the
