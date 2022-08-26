@@ -14,6 +14,7 @@ import { MarkHolderNodeSpec } from './extension/markHolder';
 import { ParagraphNodeSpec } from './extension/paragraph';
 import { ReplacedTextMarkMarkSpec } from './extension/replacedTextMark';
 import { StrikethroughMarkSpec } from './extension/strikethrough';
+import { SubScriptMarkRendererSpec } from './extension/subScript';
 import { SuperScriptMarkRendererSpec } from './extension/superScript';
 import { TextNodeSpec } from './extension/text';
 import { TextStyleMarkSpec } from './extension/textStyle';
@@ -46,6 +47,7 @@ export const MarkSpecs: Record<MarkName, MarkSpec> = {
   [MarkName.LINK]: LinkMarkSpec,
   [MarkName.REPLACED_TEXT_MARK]: ReplacedTextMarkMarkSpec,
   [MarkName.STRIKETHROUGH]: StrikethroughMarkSpec,
+  [MarkName.SUB_SCRIPT]: SubScriptMarkRendererSpec,
   [MarkName.SUPER_SCRIPT]: SuperScriptMarkRendererSpec,
   [MarkName.TEXT_STYLE]: TextStyleMarkSpec,
 };

@@ -1,32 +1,32 @@
 import { Mark } from '@tiptap/core';
 
-import { getMarkOutputSpec, SuperScriptMarkSpec } from '@ureeka-notebook/web-service';
+import { getMarkOutputSpec, SubScriptMarkSpec } from '@ureeka-notebook/web-service';
 
 import { shortcutCommandWrapper } from 'notebookEditor/command/util';
 import { NoOptions, NoStorage } from 'notebookEditor/model/type';
 
 import { safeParseTag } from '../util/parse';
-import { toggleSuperScriptCommand } from './command';
+import { toggleSubScriptCommand } from './command';
 
 // ********************************************************************************
-// REF: https://github.com/ueberdosis/tiptap/blob/main/packages/extension-superscript/src/superscript.ts
+// REF: https://github.com/ueberdosis/tiptap/blob/main/packages/extension-subscript/src/subscript.ts
 
 // == Mark ========================================================================
-export const SuperScript = Mark.create<NoOptions, NoStorage>({
-  ...SuperScriptMarkSpec,
+export const SubScript = Mark.create<NoOptions, NoStorage>({
+  ...SubScriptMarkSpec,
 
   // -- Keyboard Shortcut ---------------------------------------------------------
-  addKeyboardShortcuts() { return { 'Mod-.': () => shortcutCommandWrapper(this.editor, toggleSuperScriptCommand) }; },
+  addKeyboardShortcuts() { return { 'Mod-,': () => shortcutCommandWrapper(this.editor, toggleSubScriptCommand) }; },
 
   // -- View ----------------------------------------------------------------------
   parseHTML() {
     return [
-      safeParseTag('sup'),
+      safeParseTag('sub'),
       {
         style: 'vertical-align',
         getAttrs(value) {
           // check for vertical alignment
-          if(value !== 'super') {
+          if(value !== 'sub') {
             return false;
           } /* else -- match */
 

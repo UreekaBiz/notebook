@@ -15,6 +15,7 @@ import { MarkHolderNodeRendererSpec } from '../extension/markHolder';
 import { isParagraphJSONNode, ParagraphNodeRendererSpec } from '../extension/paragraph';
 import { ReplacedTextMarkMarkRendererSpec } from '../extension/replacedTextMark';
 import { StrikethroughMarkRendererSpec } from '../extension/strikethrough';
+import { SubScriptMarkRendererSpec } from '../extension/subScript';
 import { SuperScriptMarkRendererSpec } from '../extension/superScript';
 import { isTextJSONNode, TextNodeRendererSpec } from '../extension/text';
 import { TextStyleMarkRendererSpec } from '../extension/textStyle';
@@ -45,6 +46,7 @@ export const MarkRendererSpecs: Record<MarkName, MarkRendererSpec> = {
   [MarkName.LINK]: LinkMarkRendererSpec as any/*FIXME!!!*/,
   [MarkName.REPLACED_TEXT_MARK]: ReplacedTextMarkMarkRendererSpec,
   [MarkName.STRIKETHROUGH]: StrikethroughMarkRendererSpec as any/*FIXME!!!*/,
+  [MarkName.SUB_SCRIPT]: SubScriptMarkRendererSpec as any/*FIXME!!!*/,
   [MarkName.SUPER_SCRIPT]: SuperScriptMarkRendererSpec as any/*FIXME!!!*/,
   [MarkName.TEXT_STYLE]: TextStyleMarkRendererSpec as any/*FIXME!!!*/,
 };

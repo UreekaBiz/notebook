@@ -31,6 +31,7 @@ const TOOLBAR_MAP: Record<NodeName | MarkName, Toolbar | null> = {
   [MarkName.LINK]: LinkToolbar/*none*/,
   [MarkName.REPLACED_TEXT_MARK]: null/*none*/,
   [MarkName.STRIKETHROUGH]: null/*none*/,
+  [MarkName.SUB_SCRIPT]: null/*none*/,
   [MarkName.SUPER_SCRIPT]: null/*none*/,
   [MarkName.TEXT_STYLE]: null/*none*/,
 };

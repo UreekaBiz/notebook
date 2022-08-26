@@ -18,7 +18,7 @@ export const Demo2AsyncNodeSpec: NodeSpec = {
   name: NodeName.DEMO_2_ASYNC_NODE,
 
   content: `${NodeName.TEXT}*`,
-  marks: getAllowedMarks([MarkName.BOLD, MarkName.STRIKETHROUGH, MarkName.SUPER_SCRIPT, MarkName.TEXT_STYLE, MarkName.REPLACED_TEXT_MARK]),
+  marks: getAllowedMarks([MarkName.BOLD, MarkName.STRIKETHROUGH, MarkName.SUB_SCRIPT, MarkName.SUPER_SCRIPT, MarkName.TEXT_STYLE, MarkName.REPLACED_TEXT_MARK]),
 
   group: NodeGroup.BLOCK,
   defining: true/*important parent node during replace operations, parent of content preserved on replace operations*/,

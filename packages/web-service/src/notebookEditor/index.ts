@@ -205,6 +205,7 @@ export {
   MarkSpecs,
   ReplacedTextMarkMarkSpec,
   StrikethroughMarkSpec,
+  SubScriptMarkSpec,
   SuperScriptMarkSpec,
   TextStyleMarkSpec,
 
@@ -225,6 +226,11 @@ export {
   createReplacedTextMarkMark,
   getReplacedTextMarkMarkType,
   isReplacedTextMarkMark,
+
+  SubScriptMarkType,
+  createSubScriptMark,
+  getSubScriptMarkType,
+  isSubScriptMark,
 
   SuperScriptMarkType,
   createSuperScriptMark,

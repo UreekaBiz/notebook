@@ -8,6 +8,7 @@ import { AttributeType, HeadingLevel, NodeName } from '@ureeka-notebook/web-serv
 
 import { markBold } from 'notebookEditor/extension/bold/toolbar';
 import { markStrikethrough } from 'notebookEditor/extension/strikethrough/toolbar';
+import { markSubScript } from 'notebookEditor/extension/subScript/toolbar';
 import { markSuperScript } from 'notebookEditor/extension/superScript/toolbar';
 import { fontSizeToolItem, spacingToolItem, textColorToolItem } from 'notebookEditor/extension/textStyle/toolbar';
 import { Toolbar, ToolItem } from 'notebookEditor/toolbar/type';
@@ -43,6 +44,7 @@ export const HeadingToolbar: Toolbar = {
       markBold,
       markStrikethrough,
       markSuperScript,
+      markSubScript,
       heading1,
       heading2,
       heading3,
