@@ -326,6 +326,7 @@ export {
   isNodeSelection,
   replaceAndSelectNodeCommand,
   resolveNewSelection,
+  SelectionRange,
   SelectionDepth,
   setNodeSelectionCommand,
   setTextSelectionCommand,

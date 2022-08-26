@@ -47,6 +47,11 @@ export const wrapGetTagAttrs = (getAttrsCallback: (node: HTMLElement) => boolean
   return validatedGetAttrsFunction;
 };
 
+// == Element ========================================================================
+/** parse a string and return a {@link HTMLElement} */
+export const elementFromString = (value: string): HTMLElement =>
+  new window.DOMParser().parseFromString(`<body>${value}</body>`/*wrap to preserve whitespace*/, 'text/html').body;
+
 // == Style =======================================================================
 /**
  * A wrapper function that allows parseHTML style getAttr calls to safely use node

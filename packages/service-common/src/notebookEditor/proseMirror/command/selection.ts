@@ -8,7 +8,7 @@ import { Command } from './type';
 
 // ********************************************************************************
 // == Type ========================================================================
-type SelectionRange = { from: number; to: number; }
+export type SelectionRange = { from: number; to: number; }
 
 // == Selection ===================================================================
 /** set a TextSelection given the Range */
