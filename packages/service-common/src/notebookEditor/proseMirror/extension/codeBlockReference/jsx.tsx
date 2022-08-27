@@ -5,15 +5,14 @@ import { NodeName } from '../../node';
 import { CodeBlockReferenceAttributes, computeCodeBlockReferenceText } from './attribute';
 
 // ********************************************************************************
-export type CodeBlockReferenceComponentRenderProps = {
+export type CodeBlockReferenceComponentRenderProps = Readonly<{
   attrs: Partial<CodeBlockReferenceAttributes>;
   renderAttributes: HTMLAttributes;
 
   visualId: string;
 
   onClick: (event: MouseEvent) => void;
-}
-
+}>;
 export const CodeBlockReferenceComponentJSX: React.FC<CodeBlockReferenceComponentRenderProps> = ({ attrs, visualId, onClick }) => {
   const text = computeCodeBlockReferenceText(attrs, visualId);
 

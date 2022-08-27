@@ -4,14 +4,14 @@ import { filterStyleAttributes, HTMLAttributes } from '../../attribute';
 import { NodeName } from '../../node';
 import { Demo2AsyncNodeAttributes } from './attribute';
 
-export type Demo2AsyncNodeComponentRenderProps = {
+// ********************************************************************************
+export type Demo2AsyncNodeComponentRenderProps = Readonly<{
   attrs: Partial<Demo2AsyncNodeAttributes>;
   renderAttributes: HTMLAttributes;
   children: React.ReactNode;
 
   performingAsyncOperation?: boolean;
-}
-
+}>;
 export const Demo2AsyncNodeComponentJSX: React.FC<Demo2AsyncNodeComponentRenderProps> = ({ attrs, performingAsyncOperation, renderAttributes, children }) => {
   return (
     <Box
