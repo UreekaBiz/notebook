@@ -5,12 +5,11 @@ import { ReactNodeViewComponentProps } from 'notebookEditor/model/ReactNodeView'
 import { CodeBlockModel } from './model';
 import { CodeBlockView } from './view';
 
-export type CodeBlockComponentProps = ReactNodeViewComponentProps<CodeBlockAttributes, CodeBlockNodeType, CodeBlockModel, CodeBlockView>
+// ********************************************************************************
+export type CodeBlockComponentProps = ReactNodeViewComponentProps<CodeBlockAttributes, CodeBlockNodeType, CodeBlockModel, CodeBlockView>;
 
 export const CodeBlockComponent: React.FC<CodeBlockComponentProps> = ({ attrs, nodeView, ContentDOMWrapper }) => {
   const id = attrs[AttributeType.Id];
-
-
   if(!id) return null/*nothing to render*/;
 
   const visualId = nodeView.storage.getVisualId(id);
