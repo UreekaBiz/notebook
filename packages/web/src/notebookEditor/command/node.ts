@@ -31,11 +31,11 @@ export const insertContentAtCommand = (selectionRange: SelectionRange, value: st
 
     if(node.isText && node.marks.length === 0) {
       isOnlyTextContent = true;
-    } /* else -- do not modify */
+    } /* else -- do not change default */
 
     if(node.isBlock) {
       isOnlyBlockContent = true;
-    } /* else -- do not modify */
+    } /* else -- do not change default */
   });
 
   // check if wrapping Node can be replaced entirely
