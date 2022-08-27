@@ -15,5 +15,14 @@ export const CodeBlockComponent: React.FC<CodeBlockComponentProps> = ({ attrs, n
   const visualId = nodeView.storage.getVisualId(id);
   const renderAttributes = getRenderAttributes(NodeName.CODEBLOCK, { ...attrs, wrap: undefined/*FIXME: Types!*/ }, CodeBlockNodeRendererSpec, CodeBlockNodeSpec);
 
-  return <CodeBlockComponentJSX visualId={visualId} attrs={attrs} renderAttributes={renderAttributes}>{ContentDOMWrapper}</CodeBlockComponentJSX>;
+  // == UI ========================================================================
+  return (
+    <CodeBlockComponentJSX
+      visualId={visualId}
+      attrs={attrs}
+      renderAttributes={renderAttributes}
+    >
+      {ContentDOMWrapper}
+    </CodeBlockComponentJSX>
+  );
 };
