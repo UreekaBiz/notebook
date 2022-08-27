@@ -22,6 +22,7 @@ export const CodeBlockReferenceComponent: React.FC<CodeBlockReferenceComponentPr
 
   const visualId = nodeView.getReferencedVisualId();
 
+  // == Handler ===================================================================
   const handleClick = (event: MouseEvent) => {
     if(!(event.metaKey || event.ctrlKey)) return/*do not focus referenced CodeBlock if Cmd/Ctrl not pressed*/;
 
@@ -29,6 +30,7 @@ export const CodeBlockReferenceComponent: React.FC<CodeBlockReferenceComponentPr
     focusCodeBlock(editor, visualId);
   };
 
+  // == UI ========================================================================
   return (
     <CodeBlockReferenceComponentJSX
       attrs={attrs}

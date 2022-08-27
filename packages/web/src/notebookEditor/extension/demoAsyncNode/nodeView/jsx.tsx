@@ -21,6 +21,7 @@ export const DemoAsyncNodeComponent: React.FC<DemoAsyncNodeComponentProps> = ({ 
   const performingAsyncOperation = nodeModel.getPerformingAsyncOperation();
   const isDirty = nodeModel.getIsDirty();
 
+  // == UI ========================================================================
   return (
     <DemoAsyncNodeComponentJSX
       isEditor
