@@ -5,7 +5,8 @@ import { NodeName } from '../../node';
 import { AsyncNodeStatus, asyncNodeStatusToColor } from '../asyncNode';
 import { DemoAsyncNodeAttributes } from './attribute';
 
-export type DemoAsyncNodeComponentRenderProps = {
+// ********************************************************************************
+export type DemoAsyncNodeComponentRenderProps = Readonly<{
   // FIXME: How to share this attributes with DemoAsyncNodeComponentProps?
   attrs: Partial<DemoAsyncNodeAttributes>;
   renderAttributes: HTMLAttributes;
@@ -16,8 +17,7 @@ export type DemoAsyncNodeComponentRenderProps = {
 
   /** indicates if the component is being rendered on the editor */
   isEditor: boolean;
-}
-
+}>;
 export const DemoAsyncNodeComponentJSX: React.FC<DemoAsyncNodeComponentRenderProps> = ({ attrs, performingAsyncOperation, isDirty, isEditor }) => {
   const status = performingAsyncOperation ? AsyncNodeStatus.PROCESSING
                : attrs[AttributeType.Status] ?? AsyncNodeStatus.NEVER_EXECUTED/*default value*/,

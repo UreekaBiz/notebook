@@ -5,6 +5,7 @@ import { ReactNodeViewComponentProps } from 'notebookEditor/model/ReactNodeView'
 import { Demo2AsyncNodeModel } from './model';
 import { Demo2AsyncNodeView } from './view';
 
+// ********************************************************************************
 // @ts-ignore FIXME: Demo2AsyncNodeModel doesn't seem to be compatible?
 export type Demo2AsyncNodeComponentProps = ReactNodeViewComponentProps<Demo2AsyncNodeAttributes, Demo2AsyncNodeType, Demo2AsyncNodeModel, Demo2AsyncNodeView>
 
