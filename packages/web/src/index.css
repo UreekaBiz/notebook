@@ -61,7 +61,7 @@ img.ProseMirror-selectednode/*target inline nodes with content (e.g. asyncNodes)
   outline: 1px solid #666;
 }
 
-/* -- Node styles -------------------------------------------------------------- */
+/* -- Node Styles -------------------------------------------------------------- */
 /* .. Chip ..................................................................... */
 .chip {
   /* NOTE: This is needed to remove the white background while dragging the chip */
@@ -116,6 +116,16 @@ img.ProseMirror-selectednode/*target inline nodes with content (e.g. asyncNodes)
 [data-node-type="image"] {
   position: relative;
   display: inline-block;
+}
+
+/* -- Mark Styles -------------------------------------------------------------- */
+[data-mark-type="code"] {
+  font-family: monospace;
+  font-size: 0.8rem;
+  border: 1px solid #EEEEEE;
+  border-radius: 0.25em;
+  padding: 2px;
+  box-decoration-break: clone;
 }
 
 /* .. Gap Cursor ............................................................... */

@@ -1,12 +1,13 @@
 import { Mark } from '@tiptap/core';
 
-import { getMarkOutputSpec, CodeMarkSpec } from '@ureeka-notebook/web-service';
+import { getMarkOutputSpec, AttributeType, CodeMarkSpec, SetAttributeType } from '@ureeka-notebook/web-service';
 
 import { shortcutCommandWrapper } from 'notebookEditor/command/util';
 import { markInputRule, markPasteRule } from 'notebookEditor/extension/util/mark';
 import { safeParseTag } from 'notebookEditor/extension/util/parse';
 import { NoOptions, NoStorage } from 'notebookEditor/model/type';
 
+import { setAttributeParsingBehavior } from '../util/attribute';
 import { toggleCodeCommand } from './command';
 
 // ********************************************************************************
@@ -19,6 +20,9 @@ export const backtickPasteRegex = /(?:^|\s)((?:`)((?:[^`]+))(?:`))/g;
 // == Mark ========================================================================
 export const Code = Mark.create<NoOptions, NoStorage>({
   ...CodeMarkSpec,
+
+  // -- Attribute -----------------------------------------------------------------
+  addAttributes() { return { [AttributeType.BackgroundColor]: setAttributeParsingBehavior(AttributeType.Href, SetAttributeType.STRING) };},
 
   // -- Keyboard Shortcut ---------------------------------------------------------
   addKeyboardShortcuts() {
