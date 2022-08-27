@@ -23,23 +23,19 @@ export const insertContentAtCommand = (selectionRange: SelectionRange, value: st
     return false/*Command not executed*/;
   } /* else -- valid Fragment */
 
-  let isOnlyTextContent = true/*default*/;
-  let isOnlyBlockContent = true/*default*/;
+  let isOnlyTextContent = false/*default*/;
+  let isOnlyBlockContent = false/*default*/;
   const nodes = isFragment(content) ? content : [content];
   nodes.forEach(node => {
     node.check()/*check content is valid*/;
 
     if(node.isText && node.marks.length === 0) {
-      isOnlyTextContent = isOnlyTextContent;
-    } else {
-      isOnlyTextContent = false;
-    }
+      isOnlyTextContent = true;
+    } /* else -- do not modify */
 
     if(node.isBlock) {
       isOnlyBlockContent = true;
-    } else {
-      isOnlyBlockContent = false;
-    }
+    } /* else -- do not modify */
   });
 
   // check if wrapping Node can be replaced entirely
@@ -57,15 +53,13 @@ export const insertContentAtCommand = (selectionRange: SelectionRange, value: st
     }
   }
 
-  // if there is only plain text we have to use `insertText`
-  // because this will keep the current marks
   if(isOnlyTextContent && typeof value === 'string'/*for sanity*/) {
+    // NOTE: insertText ensures marks are kept
     tr.insertText(value, from, to);
   } else {
     tr.replaceWith(from, to, content);
   }
 
-  // set cursor at end of inserted content
   if(options.updateSelection) {
     setTransactionSelectionToInsertionEnd(tr, tr.steps.length - 1, -1);
   } /* else -- do not update Selection */
