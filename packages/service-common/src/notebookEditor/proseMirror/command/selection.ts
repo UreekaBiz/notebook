@@ -1,10 +1,10 @@
-import { NodeSelection, TextSelection } from 'prosemirror-state';
+import { EditorState, NodeSelection, TextSelection, Transaction } from 'prosemirror-state';
 
 import { minFromMax } from '../../../util/number';
 import { AttributeType } from '../attribute';
 import { isTextNode } from '../extension/text';
 import { getSelectedNode, SelectionDepth } from '../selection';
-import { Command } from './type';
+import { AbstractDocumentUpdate, Command } from './type';
 
 // ********************************************************************************
 // == Type ========================================================================
@@ -13,21 +13,32 @@ export type SelectionRange = { from: number; to: number; }
 // == Selection ===================================================================
 /** set a TextSelection given the Range */
 export const setTextSelectionCommand = (selectionRange: SelectionRange): Command => (state, dispatch) => {
-  const { doc, tr } = state;
-  const { from, to } = selectionRange;
-
-  const minPos = TextSelection.atStart(doc).from;
-  const maxPos = TextSelection.atEnd(doc).to;
-
-  const resolvedFrom = minFromMax(from, minPos, maxPos);
-  const resolvedEnd = minFromMax(to, minPos, maxPos);
-
-  const selection = TextSelection.create(doc, resolvedFrom, resolvedEnd);
-
-  tr.setSelection(selection);
-  dispatch(tr);
+  const transaction =  new SetTextSelectionDocumentUpdate(selectionRange).update(state, state.tr);
+  dispatch(transaction);
   return true/*Command executed*/;
 };
+export class SetTextSelectionDocumentUpdate implements AbstractDocumentUpdate {
+  public constructor(private selectionRange: SelectionRange) {/*nothing additional*/}
+  /*
+   * modify the given Transaction such that a TextSelection
+   * is set across the given Range
+   */
+  public update(editorState: EditorState, tr: Transaction) {
+    const { doc } = editorState;
+    const { from, to } = this.selectionRange;
+
+    const minPos = TextSelection.atStart(doc).from;
+    const maxPos = TextSelection.atEnd(doc).to;
+
+    const resolvedFrom = minFromMax(from, minPos, maxPos);
+    const resolvedEnd = minFromMax(to, minPos, maxPos);
+
+    const selection = TextSelection.create(doc, resolvedFrom, resolvedEnd);
+
+    tr.setSelection(selection);
+    return tr;
+  }
+}
 
 /** set a NodeSelection at the given Node position */
 export const setNodeSelectionCommand = (nodePos: number): Command => (state, dispatch) => {

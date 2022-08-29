@@ -1,12 +1,13 @@
 import { getMarkAttributes } from '@tiptap/core';
 
-import { extendMarkRangeCommand, isLinkMarkAttributes, setTextSelectionCommand, AttributeType, LinkTarget, MarkName } from '@ureeka-notebook/web-service';
+import { isLinkMarkAttributes, AttributeType, ExtendMarkRangeDocumentUpdate, LinkTarget, MarkName, SetTextSelectionDocumentUpdate } from '@ureeka-notebook/web-service';
 
+import { applyDocumentUpdates } from 'notebookEditor/command/update';
 import { DropdownTool, DropdownToolItemType } from 'notebookEditor/extension/shared/component/DropdownToolItem/DropdownTool';
 import { InputToolItemContainer } from 'notebookEditor/extension/shared/component/InputToolItemContainer';
 import { EditorToolComponentProps } from 'notebookEditor/toolbar/type';
 
-import { setLinkCommand } from '../../command';
+import { SetLinkDocumentUpdate } from '../../command';
 import { getReadableLinkTarget } from '../../util';
 
 // ********************************************************************************
@@ -23,13 +24,13 @@ export const LinkTargetToolItem: React.FC<Props> = ({ editor }) => {
 
   // == Handler ===================================================================
   const handleChange = (target: string) => {
-    const { schema } = editor.state;
-    const { dispatch } = editor.view;
     const { anchor: prevPos } = editor.state.selection;
 
-    extendMarkRangeCommand(schema, MarkName.LINK, {/*no attributes*/})(editor.state/*current state*/, dispatch);
-    setLinkCommand({ ...attrs, target: target as LinkTarget/*as defined above*/ })(editor.state/*current state*/, dispatch);
-    setTextSelectionCommand({ from: prevPos, to: prevPos })(editor.state/*current state*/, dispatch);
+    applyDocumentUpdates(editor.view, [
+      new ExtendMarkRangeDocumentUpdate(MarkName.LINK, {/*no attributes*/}),
+      new SetLinkDocumentUpdate({ ...attrs, [AttributeType.Target]: target as LinkTarget/*as defined above*/ }),
+      new SetTextSelectionDocumentUpdate({ from: prevPos, to: prevPos }),
+    ], editor.state/*starting state*/);
 
     // focus the editor again
     editor.view.focus();

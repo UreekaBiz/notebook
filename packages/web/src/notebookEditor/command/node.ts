@@ -1,8 +1,8 @@
 import { ParseOptions } from 'prosemirror-model';
-import { Selection, Transaction } from 'prosemirror-state';
+import { EditorState, Selection, Transaction } from 'prosemirror-state';
 import { ReplaceStep, ReplaceAroundStep } from 'prosemirror-transform';
 
-import { Command, JSONNode, SelectionRange } from '@ureeka-notebook/web-service';
+import { AbstractDocumentUpdate, Command, JSONNode, NotebookSchemaType, SelectionRange } from '@ureeka-notebook/web-service';
 
 import { createNodeFromContent, isFragment } from 'notebookEditor/extension/util/node';
 
@@ -14,59 +14,70 @@ type InsertContentAtOptions = {
 }
 // NOTE: this Command is limited to Web since the content that gets inserted must
 //       might be a string that gets parsed and converted into an HTMLElement
+/** Insert the given content at the specified SelectionRange */
 export const insertContentAtCommand = (selectionRange: SelectionRange, value: string | JSONNode | JSONNode[], options?: InsertContentAtOptions): Command => (state, dispatch) => {
-  options = { parseOptions: {/*default none*/}, updateSelection: true, ...options };
-  const content = createNodeFromContent(state.schema, value, { parseOptions: { preserveWhitespace: 'full', ...options.parseOptions } });
-
-  // don’t dispatch an empty fragment, prevent errors
-  if(content.toString() === '<>') {
-    return false/*Command not executed*/;
-  } /* else -- valid Fragment */
-
-  let isOnlyTextContent = false/*default*/;
-  let isOnlyBlockContent = false/*default*/;
-  const nodes = isFragment(content) ? content : [content];
-  nodes.forEach(node => {
-    node.check()/*check content is valid*/;
-
-    if(node.isText && node.marks.length === 0) {
-      isOnlyTextContent = true;
-    } /* else -- do not change default */
-
-    if(node.isBlock) {
-      isOnlyBlockContent = true;
-    } /* else -- do not change default */
-  });
-
-  // check if wrapping Node can be replaced entirely
-  const { tr } = state;
-  let { from, to } = selectionRange;
-  if(from === to && isOnlyBlockContent) {
-    const { parent } = tr.doc.resolve(from);
-    const isEmptyTextBlock = parent.isTextblock
-      && !parent.type.spec.code
-      && !parent.childCount;
-
-    if(isEmptyTextBlock) {
-      from -= 1;
-      to += 1;
-    }
-  }
-
-  if(isOnlyTextContent && typeof value === 'string'/*for sanity*/) {
-    // NOTE: insertText ensures marks are kept
-    tr.insertText(value, from, to);
-  } else {
-    tr.replaceWith(from, to, content);
-  }
-
-  if(options.updateSelection) {
-    setTransactionSelectionToInsertionEnd(tr, tr.steps.length - 1, -1);
-  } /* else -- do not update Selection */
-
-  dispatch(tr);
+  const updatedTr = new InsertContentAtDocumentUpdate(selectionRange, value, options).update(state, state.tr);
+  dispatch(updatedTr);
   return true/*Command executed*/;
 };
+export class InsertContentAtDocumentUpdate implements AbstractDocumentUpdate  {
+  public constructor(private selectionRange: SelectionRange, private value: string | JSONNode | JSONNode[], private options?: InsertContentAtOptions) {/*nothing additional*/}
+
+  /**
+   * modify the given Transaction such that the given content is inserted at
+   * the specified SelectionRange and return it
+   */
+  public update(editorState: EditorState<NotebookSchemaType>, tr: Transaction<NotebookSchemaType>) {
+    const options = { parseOptions: {/*default none*/}, updateSelection: true, ...this.options };
+    const content = createNodeFromContent(editorState.schema, this.value, { parseOptions: { preserveWhitespace: 'full', ...options.parseOptions } });
+
+    // don’t dispatch an empty fragment, prevent errors
+    if(content.toString() === '<>') {
+      return tr/*no modifications done*/;
+    } /* else -- valid Fragment */
+
+    let isOnlyTextContent = false/*default*/;
+    let isOnlyBlockContent = false/*default*/;
+    const nodes = isFragment(content) ? content : [content];
+    nodes.forEach(node => {
+      node.check()/*check content is valid*/;
+
+      if(node.isText && node.marks.length === 0) {
+        isOnlyTextContent = true;
+      } /* else -- do not change default */
+
+      if(node.isBlock) {
+        isOnlyBlockContent = true;
+      } /* else -- do not change default */
+    });
+
+    // check if wrapping Node can be replaced entirely
+    let { from, to } = this.selectionRange;
+    if(from === to && isOnlyBlockContent) {
+      const { parent } = tr.doc.resolve(from);
+      const isEmptyTextBlock = parent.isTextblock
+        && !parent.type.spec.code
+        && !parent.childCount;
+
+      if(isEmptyTextBlock) {
+        from -= 1;
+        to += 1;
+      }
+    }
+
+    if(isOnlyTextContent && typeof this.value === 'string'/*for sanity*/) {
+      // NOTE: insertText ensures marks are kept
+      tr.insertText(this.value, from, to);
+    } else {
+      tr.replaceWith(from, to, content);
+    }
+
+    if(options.updateSelection) {
+      setTransactionSelectionToInsertionEnd(tr, tr.steps.length - 1, -1);
+    } /* else -- do not update Selection */
+    return tr;
+  }
+}
 
 // --------------------------------------------------------------------------------
 // REF: https://github.com/ProseMirror/prosemirror-state/blob/4faf6a1dcf45747e6d7cefd7e934759f3fa5b0d0/src/selection.ts

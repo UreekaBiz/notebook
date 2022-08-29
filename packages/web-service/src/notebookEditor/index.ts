@@ -189,15 +189,19 @@ export {
   JSONMark,
   MarkName,
   extendMarkRangeCommand,
+  ExtendMarkRangeDocumentUpdate,
   getMarkName,
   getMarkValue,
   isMarkActive,
   markFromJSONMark,
   parseStringifiedMarksArray,
   setMarkCommand,
+  SetMarkDocumentUpdate,
   stringifyMarksArray,
   toggleMarkCommand,
+  ToggleMarkDocumentUpdate,
   unsetMarkCommand,
+  UnsetMarkDocumentUpdate,
 
   // -- Mark Specs ----------------------------------------------------------------
   BoldMarkSpec,
@@ -303,6 +307,9 @@ export {
   Command,
   CommandFunctionType,
 
+  // == Update ====================================================================
+  AbstractDocumentUpdate,
+
   // == Content ===================================================================
   NotebookDocumentContent,
   contentToNode,
@@ -360,6 +367,7 @@ export {
   SelectionDepth,
   setNodeSelectionCommand,
   setTextSelectionCommand,
+  SetTextSelectionDocumentUpdate,
   updateAttributesInRangeCommand,
 
   // ..............................................................................
