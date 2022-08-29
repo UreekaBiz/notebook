@@ -46,11 +46,11 @@ export const LinkURLToolItem: React.FC<Props> = ({ editor }) => {
   const handleSubmit = ({ href }: LinkDialog_Create, focusEditor: boolean) => {
     const { anchor: prevPos } = editor.state.selection;
 
-    applyDocumentUpdates(editor.view, [
+    applyDocumentUpdates(editor.state/*starting state*/, [
       new ExtendMarkRangeDocumentUpdate(MarkName.LINK, {/*no attributes*/}),
       new SetLinkDocumentUpdate({ ...attrs, href }),
       new SetTextSelectionDocumentUpdate({ from: prevPos, to: prevPos }),
-    ], editor.state/*starting state*/);
+    ], editor.view);
 
     // focus the editor again
     if(focusEditor) editor.view.focus();

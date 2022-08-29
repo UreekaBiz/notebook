@@ -1,13 +1,14 @@
 import { EditorState, Transaction } from 'prosemirror-state';
 
-// TODO: use AbstractDocumentUpdate in cloud-functions
+// TODO: create applyDocumentUpdates for cloud-functions and use
+//       AbstractDocumentUpdates as needed
 
 // ********************************************************************************
 // == Command =====================================================================
 // Commands are meant to be atomic (i.e. they "encapsulate functionality"). The
 // Transaction dispatched by a Command goes through one DocumentUpdate. Multiple
 // DocumentUpdates can be executed in a single operation through the
-// applyDocumentUpdates method (SEE: ./update.ts)
+// applyDocumentUpdates method (SEE: web/src/command/update.ts)
 export type Command = (state: EditorState, dispatch: (tr: Transaction) => void)
 => boolean/*indicates whether the command can be performed*/;
 
@@ -15,7 +16,7 @@ export type Command = (state: EditorState, dispatch: (tr: Transaction) => void)
 // A DocumentUpdate encapsulates the individual modifications that a Transaction
 // goes through. DocumentUpdates can be performed once in a single operation
 // through a Command, or their functionality can be chained into a single operation
-// through the applyDocumentUpdates method (SEE: ./update.ts)
+// through the applyDocumentUpdates method (SEE: web/src/command/update.ts)
 export type DocumentUpdate = Readonly<{
   /** modifies the specified ProseMirror Document */
   update: (editorState: EditorState, tr: Transaction) => void;

@@ -26,11 +26,11 @@ export const LinkTargetToolItem: React.FC<Props> = ({ editor }) => {
   const handleChange = (target: string) => {
     const { anchor: prevPos } = editor.state.selection;
 
-    applyDocumentUpdates(editor.view, [
+    applyDocumentUpdates(editor.state/*starting state*/, [
       new ExtendMarkRangeDocumentUpdate(MarkName.LINK, {/*no attributes*/}),
       new SetLinkDocumentUpdate({ ...attrs, [AttributeType.Target]: target as LinkTarget/*as defined above*/ }),
       new SetTextSelectionDocumentUpdate({ from: prevPos, to: prevPos }),
-    ], editor.state/*starting state*/);
+    ], editor.view);
 
     // focus the editor again
     editor.view.focus();
