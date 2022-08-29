@@ -371,6 +371,7 @@ export {
   setTextSelectionCommand,
   SetTextSelectionDocumentUpdate,
   updateAttributesInRangeCommand,
+  UpdateAttributesInRangeDocumentUpdate,
 
   // ..............................................................................
 } from '@ureeka-notebook/service-common';
