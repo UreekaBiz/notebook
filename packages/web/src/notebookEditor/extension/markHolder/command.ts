@@ -20,5 +20,5 @@ export const toggleOrSetMarkCommand = (markName: MarkName, markType: MarkType): 
     return unsetMarkCommand(markName, false/*do not extend empty Mark Range*/)(state, dispatch);
   } /* else -- not toggling Bold, set it */
 
-  return setMarkCommand(state.schema, markName, {/*no attributes*/})(state, dispatch);
+  return setMarkCommand(markName, {/*no attributes*/})(state, dispatch);
 };

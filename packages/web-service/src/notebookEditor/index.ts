@@ -195,6 +195,7 @@ export {
   markFromJSONMark,
   parseStringifiedMarksArray,
   setMarkCommand,
+  SetMarkDocumentUpdate,
   stringifyMarksArray,
   toggleMarkCommand,
   unsetMarkCommand,
@@ -303,6 +304,9 @@ export {
   Command,
   CommandFunctionType,
 
+  // == Update ====================================================================
+  AbstractDocumentUpdate,
+
   // == Content ===================================================================
   NotebookDocumentContent,
   contentToNode,
@@ -360,6 +364,7 @@ export {
   SelectionDepth,
   setNodeSelectionCommand,
   setTextSelectionCommand,
+  SetTextSelectionDocumentUpdate,
   updateAttributesInRangeCommand,
 
   // ..............................................................................

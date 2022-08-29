@@ -1,49 +1,58 @@
-import { TextSelection } from 'prosemirror-state';
+import { EditorState, TextSelection, Transaction } from 'prosemirror-state';
 
 import { Attributes } from '../attribute';
 import { getMarkAttributes, getMarkRange, isMarkActive, MarkName } from '../mark';
 import { NotebookSchemaType } from '../schema';
-import { Command } from './type';
+import { AbstractDocumentUpdate, Command } from './type';
 
 // ********************************************************************************
 // == Setter ======================================================================
 /** set a Mark across the current Selection */
-export const setMarkCommand = (schema: NotebookSchemaType, markName: MarkName, attributes: Partial<Attributes>): Command => (state, dispatch) => {
-  const { tr } = state;
-  const { empty, ranges } = state.selection;
-  const markType = schema.marks[markName];
-
-  if(empty) {
-    const oldAttributes = getMarkAttributes(state, markName);
-    tr.addStoredMark(markType.create({ ...oldAttributes, ...attributes }));
-  } else {
-    ranges.forEach(range => {
-      const from = range.$from.pos;
-      const to = range.$to.pos;
-
-      state.doc.nodesBetween(from, to, (node, pos) => {
-        const trimmedFrom = Math.max(pos, from);
-        const trimmedTo = Math.min(pos + node.nodeSize, to);
-        const markTypeIsPresent = node.marks.find(mark => mark.type === markType);
-
-        // if a Mark of the given type is already present, merge its
-        // attributes. Otherwise add a new one
-        if(markTypeIsPresent) {
-          node.marks.forEach(mark => {
-            if(markType === mark.type) {
-              tr.addMark(trimmedFrom, trimmedTo, markType.create({ ...mark.attrs, ...attributes }));
-            }
-          });
-        } else {
-          tr.addMark(trimmedFrom, trimmedTo, markType.create(attributes));
-        }
-      });
-    });
-  }
-
-  dispatch(tr);
+export const setMarkCommand = (markName: MarkName, attributes: Partial<Attributes>): Command => (state, dispatch) => {
+  const transaction = new SetMarkDocumentUpdate(markName, attributes).update(state, state.tr);
+  dispatch(transaction);
   return true/*Command executed*/;
 };
+export class SetMarkDocumentUpdate implements AbstractDocumentUpdate  {
+  public constructor(private markName: MarkName, private attributes: Partial<Attributes>) {/*nothing additional*/}
+
+  /*
+   * modify the given Transaction such that a Mark
+   * is set across the current Selection, and return it
+   */
+  public update(editorState: EditorState<any>, tr: Transaction<any>) {
+    const { empty, ranges } = tr.selection;
+    const markType = editorState.schema.marks[this.markName];
+    if(empty) {
+      const oldAttributes = getMarkAttributes(editorState, this.markName);
+      tr.addStoredMark(markType.create({ ...oldAttributes, ...this.attributes }));
+    } else {
+      ranges.forEach(range => {
+        const from = range.$from.pos;
+        const to = range.$to.pos;
+
+        editorState.doc.nodesBetween(from, to, (node, pos) => {
+          const trimmedFrom = Math.max(pos, from);
+          const trimmedTo = Math.min(pos + node.nodeSize, to);
+          const markTypeIsPresent = node.marks.find(mark => mark.type === markType);
+
+          // if a Mark of the given type is already present, merge its
+          // attributes. Otherwise add a new one
+          if(markTypeIsPresent) {
+            node.marks.forEach(mark => {
+              if(markType === mark.type) {
+                tr.addMark(trimmedFrom, trimmedTo, markType.create({ ...mark.attrs, ...this.attributes }));
+              }
+            });
+          } else {
+            tr.addMark(trimmedFrom, trimmedTo, markType.create(this.attributes));
+          }
+        });
+      });
+    }
+    return tr;
+  }
+}
 
 /**
  * Remove all Marks across the current Selection. If extendEmptyMarkRange,
@@ -76,12 +85,12 @@ export const unsetMarkCommand = (markName: MarkName, extendEmptyMarkRange: boole
 
 // --------------------------------------------------------------------------------
 /** Unset or set a Mark depending on whether or not it is currently active */
-export const toggleMarkCommand = (schema: NotebookSchemaType, markName: MarkName, attributes: Partial<Attributes>): Command => (state, dispatch) => {
+export const toggleMarkCommand = (markName: MarkName, attributes: Partial<Attributes>): Command => (state, dispatch) => {
   if(isMarkActive(state, markName, attributes)) {
     return unsetMarkCommand(markName, false/*default not extend Mark Range*/)(state, dispatch);
   } /* else -- Mark is not active, set it */
 
-  return setMarkCommand(schema, markName,  attributes)(state, dispatch);
+  return setMarkCommand(markName,  attributes)(state, dispatch);
 };
 
 // --------------------------------------------------------------------------------
