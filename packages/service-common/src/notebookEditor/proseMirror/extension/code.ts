@@ -19,7 +19,8 @@ export type CodeAttributes = AttributesTypeFromNodeSpecAttributes<typeof CodeAtt
 export const CodeMarkSpec: MarkSpec = {
   name: MarkName.CODE/*expected and guaranteed to be unique*/,
 
-  excludes: '_'/*exclude all other Marks*/,
+  // only allow Code Mark to coexist with Superscript and Subscript Marks
+  excludes: `${MarkName.BOLD} ${MarkName.ITALIC} ${MarkName.LINK} ${MarkName.REPLACED_TEXT_MARK} ${MarkName.STRIKETHROUGH} ${MarkName.TEXT_STYLE} ${MarkName.UNDERLINE}`,
   code: true/*contains Code*/,
 
   // NOTE: toDOM must be defined so that the Schema knows how to create it
