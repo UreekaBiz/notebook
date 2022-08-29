@@ -5,7 +5,8 @@ import { NodeName } from '../../node';
 import { AsyncNodeStatus, asyncNodeStatusToColor } from '../asyncNode';
 import { DemoAsyncNodeAttributes } from './attribute';
 
-export type DemoAsyncNodeComponentRenderProps = {
+// ********************************************************************************
+export type DemoAsyncNodeComponentRenderProps = Readonly<{
   // FIXME: How to share this attributes with DemoAsyncNodeComponentProps?
   attrs: Partial<DemoAsyncNodeAttributes>;
   renderAttributes: HTMLAttributes;

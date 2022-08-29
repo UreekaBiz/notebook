@@ -201,11 +201,16 @@ export {
 
   // -- Mark Specs ----------------------------------------------------------------
   BoldMarkSpec,
+  CodeMarkSpec,
+  ItalicMarkSpec,
   LinkMarkSpec,
   MarkSpecs,
   ReplacedTextMarkMarkSpec,
   StrikethroughMarkSpec,
+  SubScriptMarkSpec,
+  SuperScriptMarkSpec,
   TextStyleMarkSpec,
+  UnderlineMarkSpec,
 
   getMarkOutputSpec,
 
@@ -214,6 +219,16 @@ export {
   createBoldMark,
   getBoldMarkType,
   isBoldMark,
+
+  CodeMarkType,
+  createCodeMark,
+  getCodeMarkType,
+  isCodeMark,
+
+  ItalicMarkType,
+  createItalicMark,
+  getItalicMarkType,
+  isItalicMark,
 
   LinkMarkType,
   createLinkMark,
@@ -225,6 +240,16 @@ export {
   getReplacedTextMarkMarkType,
   isReplacedTextMarkMark,
 
+  SubScriptMarkType,
+  createSubScriptMark,
+  getSubScriptMarkType,
+  isSubScriptMark,
+
+  SuperScriptMarkType,
+  createSuperScriptMark,
+  getSuperScriptMarkType,
+  isSuperScriptMark,
+
   StrikethroughMarkType,
   createStrikethroughMark,
   getStrikethroughMarkType,
@@ -234,6 +259,11 @@ export {
   createTextStyleMark,
   getTextStyleMarkType,
   isTextStyleMark,
+
+  UnderlineMarkType,
+  createUnderlineMark,
+  getUnderlineMarkType,
+  isUnderlineMark,
 
   // == HTML Renderer =============================================================
   ACTIONABLE_NODE,

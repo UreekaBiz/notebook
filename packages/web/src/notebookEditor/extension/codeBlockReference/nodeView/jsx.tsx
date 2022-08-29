@@ -6,8 +6,9 @@ import { ReactNodeViewComponentProps } from 'notebookEditor/model/ReactNodeView'
 import { CodeBlockReferenceModel } from './model';
 import { CodeBlockReferenceView } from './view';
 
+// ********************************************************************************
 // @ts-ignore FIXME: CodeBlockReferenceModel doesn't seem to be compatible?
-export type CodeBlockReferenceComponentProps = ReactNodeViewComponentProps<CodeBlockReferenceAttributes, CodeBlockReferenceNodeType, CodeBlockReferenceModel, CodeBlockReferenceView>
+export type CodeBlockReferenceComponentProps = ReactNodeViewComponentProps<CodeBlockReferenceAttributes, CodeBlockReferenceNodeType, CodeBlockReferenceModel, CodeBlockReferenceView>;
 
 export const CodeBlockReferenceComponent: React.FC<CodeBlockReferenceComponentProps> = ({ attrs, nodeModel, nodeView, ContentDOMWrapper, editor }) => {
   const id = attrs[AttributeType.Id];
@@ -21,6 +22,7 @@ export const CodeBlockReferenceComponent: React.FC<CodeBlockReferenceComponentPr
 
   const visualId = nodeView.getReferencedVisualId();
 
+  // == Handler ===================================================================
   const handleClick = (event: MouseEvent) => {
     if(!(event.metaKey || event.ctrlKey)) return/*do not focus referenced CodeBlock if Cmd/Ctrl not pressed*/;
 
@@ -28,6 +30,7 @@ export const CodeBlockReferenceComponent: React.FC<CodeBlockReferenceComponentPr
     focusCodeBlock(editor, visualId);
   };
 
+  // == UI ========================================================================
   return (
     <CodeBlockReferenceComponentJSX
       attrs={attrs}

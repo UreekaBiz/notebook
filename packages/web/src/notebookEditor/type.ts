@@ -1,6 +1,7 @@
 import { EDITOR_CLASS_NAME, EDITOR_EDITABLE_CLASS_NAME } from 'core/theme';
 import { AsyncNode } from 'notebookEditor/extension/asyncNode/AsyncNode';
 import { Bold } from 'notebookEditor/extension/bold/Bold';
+import { Code } from 'notebookEditor/extension/code/Code';
 import { CodeBlock } from 'notebookEditor/extension/codeblock/CodeBlock';
 import { CodeBlockReference } from 'notebookEditor/extension/codeBlockReference/CodeBlockReference';
 import { CodeBlockAsyncNode } from 'notebookEditor/extension/codeBlockAsyncNode/CodeBlockAsyncNode';
@@ -13,6 +14,7 @@ import { Heading } from 'notebookEditor/extension/heading/Heading';
 import { Highlight } from 'notebookEditor/extension/highlight/Highlight';
 import { History } from 'notebookEditor/extension/history/History';
 import { Image } from 'notebookEditor/extension/image/Image';
+import { Italic } from 'notebookEditor/extension/italic/Italic';
 import { InlineNodeWithContent } from 'notebookEditor/extension/inlineNodeWithContent/InlineNodeWithContent';
 import { Link } from 'notebookEditor/extension/link/Link';
 import { MarkHolder } from 'notebookEditor/extension/markHolder/MarkHolder';
@@ -20,8 +22,11 @@ import { NodeViewRemoval } from 'notebookEditor/extension/nodeViewRemoval/NodeVi
 import { Paragraph } from 'notebookEditor/extension/paragraph/Paragraph';
 import { ReplacedTextMark } from 'notebookEditor/extension/replacedTextMark/ReplacedTextMark';
 import { Strikethrough } from 'notebookEditor/extension/strikethrough/Strikethrough';
+import { SubScript } from 'notebookEditor/extension/subScript/SubScript';
+import { SuperScript } from 'notebookEditor/extension/superScript/SuperScript';
 import { Text } from 'notebookEditor/extension/text/Text';
 import { TextStyle } from 'notebookEditor/extension/textStyle/TextStyle';
+import { Underline } from 'notebookEditor/extension/underline/Underline';
 
 // ********************************************************************************
 // defines the structure of the Editor
@@ -34,6 +39,7 @@ export const editorDefinition = {
   extensions: [
     AsyncNode,
     Bold,
+    Code,
     CodeBlock,
     CodeBlockAsyncNode,
     CodeBlockReference,
@@ -45,6 +51,7 @@ export const editorDefinition = {
     Heading,
     Highlight,
     History,
+    Italic,
     Image,
     InlineNodeWithContent,
     Link,
@@ -53,8 +60,11 @@ export const editorDefinition = {
     Paragraph,
     ReplacedTextMark,
     Strikethrough,
+    SubScript,
+    SuperScript,
     Text,
     TextStyle,
+    Underline,
   ],
   editorProps: { attributes: { class: `${EDITOR_CLASS_NAME} ${EDITOR_EDITABLE_CLASS_NAME}`/*SEE: /index.css*/ } },
 

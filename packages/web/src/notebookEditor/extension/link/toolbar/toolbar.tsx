@@ -10,6 +10,7 @@ import { Toolbar, ToolItem } from 'notebookEditor/toolbar/type';
 import { LinkColorToolItem } from './component/LinkColorToolItem';
 import { LinkTargetToolItem } from './component/LinkTargetToolItem';
 import { LinkURLToolItem } from './component/LinkURLToolItem';
+import { unsetLinkCommand } from '../command';
 
 // ********************************************************************************
 // == Tool Items ==================================================================
@@ -34,7 +35,7 @@ export const linkToolItem: ToolItem = {
     const { from } = editor.state.selection,
       linkMarkActive = editor.isActive(MarkName.LINK) || editor.state.doc.rangeHasMark(from, from + 1, editor.state.schema.marks[MarkName.LINK]);
     if(linkMarkActive) {
-      return editor.chain().focus().unsetLink().run();
+      return unsetLinkCommand()(editor.state/*current state*/, editor.view.dispatch);
     } /* else -- Link Mark not active, add a new one */
 
     const linkStorage = getDialogStorage(editor, MarkName.LINK);

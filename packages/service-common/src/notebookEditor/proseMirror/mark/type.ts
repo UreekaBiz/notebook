@@ -21,10 +21,15 @@ export type MarkRange = {
 // ================================================================================
 export enum MarkName {
   BOLD = 'bold',
+  CODE = 'code',
+  ITALIC = 'italic',
   LINK = 'link',
   REPLACED_TEXT_MARK = 'replacedTextMark',
   STRIKETHROUGH = 'strikethrough',
+  SUB_SCRIPT = 'subScript',
+  SUPER_SCRIPT = 'superScript',
   TEXT_STYLE = 'textStyle',
+  UNDERLINE = 'underline',
 }
 export const getMarkName = (mark: ProseMirrorMark) => mark.type.name as MarkName;
 

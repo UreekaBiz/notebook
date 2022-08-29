@@ -5,13 +5,13 @@ import { NodeName } from '../../node';
 import { CodeBlockAttributes } from './attribute';
 import { CodeBlockType, DATA_VISUAL_ID } from './type';
 
-export type CodeBlockComponentRenderProps = {
+// ********************************************************************************
+export type CodeBlockComponentRenderProps = Readonly<{
   visualId: string;
   attrs: Partial<CodeBlockAttributes>;
   renderAttributes: HTMLAttributes;
   children: React.ReactNode;
-}
-
+}>;
 export const CodeBlockComponentJSX: React.FC<CodeBlockComponentRenderProps> = ({ attrs, renderAttributes, children, visualId }) => {
   const type = attrs[AttributeType.Type] ?? CodeBlockType.Code/*default*/,
         wrap = attrs[AttributeType.Wrap] ?? false/*default*/;

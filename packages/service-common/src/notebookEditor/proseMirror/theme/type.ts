@@ -112,12 +112,19 @@ export const DefaultTheme: Theme = {
 
   marks: {
     [MarkName.BOLD]:  {/*no defined value*/},
+    [MarkName.CODE]:  {
+      [AttributeType.BackgroundColor]: '#FAFAFA',
+    },
+    [MarkName.ITALIC]:  {/*no defined value*/},
     [MarkName.LINK]:  {
       [AttributeType.TextColor]: '#1a73e8',
     },
     [MarkName.REPLACED_TEXT_MARK]:  {/*no defined value*/},
     [MarkName.STRIKETHROUGH]:  {/*no defined value*/},
+    [MarkName.SUB_SCRIPT]:  {/*no defined value*/},
+    [MarkName.SUPER_SCRIPT]:  {/*no defined value*/},
     [MarkName.TEXT_STYLE]:  {/*no defined value*/},
+    [MarkName.UNDERLINE]:  {/*no defined value*/},
   },
 
   customSelectors: {
@@ -197,12 +204,17 @@ export const GoogleDocsTheme: Theme = {
 
   marks: {
     [MarkName.BOLD]: {/*no defined value*/},
+    [MarkName.CODE]:  {/*no defined value*/},
+    [MarkName.ITALIC]:  {/*no defined value*/},
     [MarkName.LINK]:  {
       [AttributeType.TextColor]: '#1a73e8',
     },
     [MarkName.REPLACED_TEXT_MARK]:  {/*no defined value*/},
     [MarkName.STRIKETHROUGH]: {/*no defined value*/},
+    [MarkName.SUB_SCRIPT]:  {/*no defined value*/},
+    [MarkName.SUPER_SCRIPT]:  {/*no defined value*/},
     [MarkName.TEXT_STYLE]: {/*no defined value*/},
+    [MarkName.UNDERLINE]:  {/*no defined value*/},
   },
 
   customSelectors: {

@@ -4,10 +4,12 @@ import { useFormik, Field, FormikProvider } from 'formik';
 import { KeyboardEventHandler } from 'react';
 import * as Validate from 'yup';
 
-import { isLinkMarkAttributes, urlSchema, AttributeType, MarkName  } from '@ureeka-notebook/web-service';
+import { extendMarkRangeCommand, isLinkMarkAttributes, setTextSelectionCommand, urlSchema, AttributeType, MarkName  } from '@ureeka-notebook/web-service';
 
 import { InputToolItemContainer } from 'notebookEditor/extension/shared/component/InputToolItemContainer';
 import { EditorToolComponentProps, TOOL_ITEM_DATA_TYPE } from 'notebookEditor/toolbar/type';
+
+import { setLinkCommand } from '../../command';
 
 // ********************************************************************************
 // == Schema ======================================================================
@@ -41,15 +43,16 @@ export const LinkURLToolItem: React.FC<Props> = ({ editor }) => {
   // -- Form ----------------------------------------------------------------------
   // update the Attributes and select the previous position
   const handleSubmit = ({ href }: LinkDialog_Create, focusEditor: boolean) => {
-    const { pos: prevPos } = editor.state.selection.$anchor;
-    editor.chain()
-          .extendMarkRange(MarkName.LINK)
-          .setLink({ ...attrs, href })
-          .setTextSelection(prevPos)
-          .run();
+    const { schema } = editor.state;
+    const { dispatch } = editor.view;
+    const { anchor: prevPos } = editor.state.selection;
+
+    extendMarkRangeCommand(schema, MarkName.LINK, {/*no attributes*/})(editor.state, dispatch);
+    setLinkCommand({ ...attrs, href })(editor.state, dispatch);
+    setTextSelectionCommand({ from: prevPos, to: prevPos })(editor.state, dispatch);
 
     // focus the editor again
-    if(focusEditor) editor.commands.focus();
+    editor.view.focus();
   };
 
   const handleKeyDown: KeyboardEventHandler<HTMLInputElement> = (event) => {

@@ -25,6 +25,8 @@ export enum AttributeType {
   PaddingLeft = 'paddingLeft',
   PaddingRight = 'paddingRight',
 
+  BackgroundColor = 'backgroundColor',
+
   // -- Text Style ----------------------------------------------------------------
   FontSize = 'fontSize',
   TextColor = 'color',

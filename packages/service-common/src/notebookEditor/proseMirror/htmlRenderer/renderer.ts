@@ -3,6 +3,7 @@ import { DOMOutputSpec, Mark as ProseMirrorMark, MarkSpec, Node as ProseMirrorNo
 import {  Attributes, HTMLAttributes } from '../attribute';
 import { NotebookDocumentContent } from '../document';
 import { BoldMarkRendererSpec } from '../extension/bold';
+import { CodeMarkRendererSpec } from '../extension/code';
 import { CodeBlockNodeRendererSpec } from '../extension/codeBlock';
 import { CodeBlockReferenceNodeRendererSpec } from '../extension/codeBlockReference';
 import { Demo2AsyncNodeRendererSpec } from '../extension/demo2AsyncNode';
@@ -10,13 +11,17 @@ import { DemoAsyncNodeRendererSpec } from '../extension/demoAsyncNode';
 import { DocumentNodeRendererSpec } from '../extension/document';
 import { HeadingNodeRendererSpec } from '../extension/heading';
 import { ImageNodeRendererSpec } from '../extension/image';
+import { ItalicMarkRendererSpec } from '../extension/italic';
 import { LinkMarkRendererSpec } from '../extension/link';
 import { MarkHolderNodeRendererSpec } from '../extension/markHolder';
 import { isParagraphJSONNode, ParagraphNodeRendererSpec } from '../extension/paragraph';
 import { ReplacedTextMarkMarkRendererSpec } from '../extension/replacedTextMark';
 import { StrikethroughMarkRendererSpec } from '../extension/strikethrough';
+import { SubScriptMarkRendererSpec } from '../extension/subScript';
+import { SuperScriptMarkRendererSpec } from '../extension/superScript';
 import { isTextJSONNode, TextNodeRendererSpec } from '../extension/text';
 import { TextStyleMarkRendererSpec } from '../extension/textStyle';
+import { UnderlineMarkRendererSpec } from '../extension/underline';
 import { getMarkName, JSONMark, MarkName } from '../mark';
 import { contentToJSONNode, getNodeName, JSONNode, NodeName } from '../node';
 import { MarkSpecs, NodeSpecs } from '../schema';
@@ -41,10 +46,15 @@ export const NodeRendererSpecs: Record<NodeName, NodeRendererSpec> = {
 
 export const MarkRendererSpecs: Record<MarkName, MarkRendererSpec> = {
   [MarkName.BOLD]: BoldMarkRendererSpec,
+  [MarkName.CODE]: CodeMarkRendererSpec as any/*FIXME!!!*/,
+  [MarkName.ITALIC]: ItalicMarkRendererSpec as any/*FIXME!!!*/,
   [MarkName.LINK]: LinkMarkRendererSpec as any/*FIXME!!!*/,
   [MarkName.REPLACED_TEXT_MARK]: ReplacedTextMarkMarkRendererSpec,
   [MarkName.STRIKETHROUGH]: StrikethroughMarkRendererSpec as any/*FIXME!!!*/,
+  [MarkName.SUB_SCRIPT]: SubScriptMarkRendererSpec as any/*FIXME!!!*/,
+  [MarkName.SUPER_SCRIPT]: SuperScriptMarkRendererSpec as any/*FIXME!!!*/,
   [MarkName.TEXT_STYLE]: TextStyleMarkRendererSpec as any/*FIXME!!!*/,
+  [MarkName.UNDERLINE]: UnderlineMarkRendererSpec as any/*FIXME!!!*/,
 };
 
 // ================================================================================

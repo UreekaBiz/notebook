@@ -5,8 +5,9 @@ import { ReactNodeViewComponentProps } from 'notebookEditor/model/ReactNodeView'
 import { DemoAsyncNodeModel } from './model';
 import { DemoAsyncNodeView } from './view';
 
+// ********************************************************************************
 // @ts-ignore FIXME: DemoAsyncNodeModel doesn't seem to be compatible?
-export type DemoAsyncNodeComponentProps = ReactNodeViewComponentProps<DemoAsyncNodeAttributes, DemoAsyncNodeType, DemoAsyncNodeModel, DemoAsyncNodeView>
+export type DemoAsyncNodeComponentProps = ReactNodeViewComponentProps<DemoAsyncNodeAttributes, DemoAsyncNodeType, DemoAsyncNodeModel, DemoAsyncNodeView>;
 
 export const DemoAsyncNodeComponent: React.FC<DemoAsyncNodeComponentProps> = ({ attrs, nodeModel, ContentDOMWrapper, isSelected }) => {
   const id = attrs[AttributeType.Id];
@@ -20,6 +21,7 @@ export const DemoAsyncNodeComponent: React.FC<DemoAsyncNodeComponentProps> = ({ 
   const performingAsyncOperation = nodeModel.getPerformingAsyncOperation();
   const isDirty = nodeModel.getIsDirty();
 
+  // == UI ========================================================================
   return (
     <DemoAsyncNodeComponentJSX
       isEditor
