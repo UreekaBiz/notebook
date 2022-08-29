@@ -21,7 +21,7 @@ export const insertContentAtCommand = (selectionRange: SelectionRange, value: st
   return true/*Command executed*/;
 };
 export class InsertContentAtDocumentUpdate implements AbstractDocumentUpdate  {
-  public constructor(private selectionRange: SelectionRange, private value: string | JSONNode | JSONNode[], private options?: InsertContentAtOptions) {/*nothing additional*/}
+  public constructor(private readonly selectionRange: SelectionRange, private readonly value: string | JSONNode | JSONNode[], private readonly options?: InsertContentAtOptions) {/*nothing additional*/}
 
   /**
    * modify the given Transaction such that the given content is inserted at

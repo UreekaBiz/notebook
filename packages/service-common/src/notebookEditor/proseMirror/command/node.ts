@@ -14,7 +14,7 @@ export const createBlockNodeCommand = (blockNodeName: NodeName, attributes: Part
   return true/*Command executed*/;
 };
 export class CreateCodeBlockNodeDocumentUpdate implements AbstractDocumentUpdate {
-  public constructor(private blockNodeName: NodeName, private attributes: Partial<Attributes>) {/*nothing additional*/}
+  public constructor(private readonly blockNodeName: NodeName, private readonly attributes: Partial<Attributes>) {/*nothing additional*/}
 
   /*
    * modify the given Transaction such that a Bloc Node is created
