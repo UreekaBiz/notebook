@@ -9,8 +9,8 @@ import { AbstractDocumentUpdate, Command } from './type';
 // == Setter ======================================================================
 /** set a Mark across the current Selection */
 export const setMarkCommand = (markName: MarkName, attributes: Partial<Attributes>): Command => (state, dispatch) => {
-  const transaction = new SetMarkDocumentUpdate(markName, attributes).update(state, state.tr);
-  dispatch(transaction);
+  const updatedTr = new SetMarkDocumentUpdate(markName, attributes).update(state, state.tr);
+  dispatch(updatedTr);
   return true/*Command executed*/;
 };
 export class SetMarkDocumentUpdate implements AbstractDocumentUpdate  {
@@ -20,7 +20,7 @@ export class SetMarkDocumentUpdate implements AbstractDocumentUpdate  {
    * modify the given Transaction such that a Mark
    * is set across the current Selection, and return it
    */
-  public update(editorState: EditorState<any>, tr: Transaction<any>) {
+  public update(editorState: EditorState<NotebookSchemaType>, tr: Transaction<NotebookSchemaType>) {
     const { empty, ranges } = tr.selection;
     const markType = editorState.schema.marks[this.markName];
     if(empty) {
@@ -54,34 +54,48 @@ export class SetMarkDocumentUpdate implements AbstractDocumentUpdate  {
   }
 }
 
+// --------------------------------------------------------------------------------
 /**
  * Remove all Marks across the current Selection. If extendEmptyMarkRange,
- * is true, they will be removed even across it
+ * is true, they will be removed even across (i.e. past) it
  */
 export const unsetMarkCommand = (markName: MarkName, extendEmptyMarkRange: boolean): Command => (state, dispatch) => {
-  const { selection, tr } = state;
-  const markType = state.schema.marks[markName];
-  const { $from, empty, ranges } = selection;
-
-  if(empty && extendEmptyMarkRange) {
-    let { from, to } = selection;
-    const attrs = $from.marks().find(mark => mark.type === markType)?.attrs;
-    const range = getMarkRange($from, markType, attrs);
-
-    if(range) {
-      from = range.from;
-      to = range.to;
-    } /* else -- use Selection from and to */
-
-    tr.removeMark(from, to, markType);
-  } else {
-    ranges.forEach(range => tr.removeMark(range.$from.pos, range.$to.pos, markType));
-  }
-
-  tr.removeStoredMark(markType);
-  dispatch(tr);
+  const updatedTr = new UnsetMarkDocumentUpdate(markName, extendEmptyMarkRange).update(state, state.tr);
+  dispatch(updatedTr);
   return true/*command executed*/;
 };
+export class UnsetMarkDocumentUpdate implements AbstractDocumentUpdate  {
+  public constructor(private markName: MarkName, private extendEmptyMarkRange: boolean) {/*nothing additional*/}
+
+  /**
+   * modify the given Transaction such that all Marks are removed
+   * across the current Selection. If extendEmptyMarkRange,
+   * is true, they will be removed even across (i.e. past) it
+   */
+  public update(editorState: EditorState<NotebookSchemaType>, tr: Transaction<NotebookSchemaType>) {
+    const { selection } = editorState;
+    const markType = editorState.schema.marks[this.markName];
+    const { $from, empty, ranges } = selection;
+
+    if(empty && this.extendEmptyMarkRange) {
+      let { from, to } = selection;
+      const attrs = $from.marks().find(mark => mark.type === markType)?.attrs;
+      const range = getMarkRange($from, markType, attrs);
+
+      if(range) {
+        from = range.from;
+        to = range.to;
+      } /* else -- use Selection from and to */
+
+      tr.removeMark(from, to, markType);
+    } else {
+      ranges.forEach(range => tr.removeMark(range.$from.pos, range.$to.pos, markType));
+    }
+
+    tr.removeStoredMark(markType);
+    return tr;
+  }
+}
 
 // --------------------------------------------------------------------------------
 /** Unset or set a Mark depending on whether or not it is currently active */

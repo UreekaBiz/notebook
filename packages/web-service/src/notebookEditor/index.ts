@@ -199,6 +199,7 @@ export {
   stringifyMarksArray,
   toggleMarkCommand,
   unsetMarkCommand,
+  UnsetMarkDocumentUpdate,
 
   // -- Mark Specs ----------------------------------------------------------------
   BoldMarkSpec,
