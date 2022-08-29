@@ -35,7 +35,7 @@ export const unsetLinkCommand = (): Command => (state, dispatch) => {
   return unsetMarkCommand(MarkName.LINK, true/*extend empty Mark Range*/)(state, dispatch);
 };
 export class UnsetLinkDocumentUpdate implements AbstractDocumentUpdate {
-  public constructor(private readonly extendEmptyMarkRange: boolean) {/*nothing additional*/}
+  public constructor() {/*nothing additional*/}
 
   /*
    * modify the given Transaction such that a the Link Mark
@@ -43,7 +43,7 @@ export class UnsetLinkDocumentUpdate implements AbstractDocumentUpdate {
    */
   public update(editorState: EditorState, tr: Transaction) {
     tr.setMeta(PREVENT_LINK_META, true/*(SEE: ../plugin.ts)*/);
-    const updatedTr = new UnsetMarkDocumentUpdate(MarkName.LINK, this.extendEmptyMarkRange).update(editorState, tr);
+    const updatedTr = new UnsetMarkDocumentUpdate(MarkName.LINK, true/*extend empty Mark Range*/).update(editorState, tr);
     return updatedTr;
   }
 }
