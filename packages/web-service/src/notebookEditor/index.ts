@@ -344,6 +344,7 @@ export {
 
   // .. Node .....................................................................
   createBlockNodeCommand,
+  CreateCodeBlockNodeDocumentUpdate,
   computeRemovedNodePositions,
   findContentDifferencePositions,
   findNodeById,
