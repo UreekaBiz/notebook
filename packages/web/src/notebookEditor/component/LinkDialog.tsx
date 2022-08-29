@@ -6,8 +6,8 @@ import * as Validate from 'yup';
 
 import { urlSchema, SetTextSelectionDocumentUpdate, DEFAULT_LINK_ATTRIBUTES } from '@ureeka-notebook/web-service';
 
-import { SetLinkDocumentUpdate, toggleLinkCommand, unsetLinkCommand } from 'notebookEditor/extension/link/command';
-import { insertContentAtCommand } from 'notebookEditor/command/node';
+import { SetLinkDocumentUpdate, ToggleLinkDocumentUpdate } from 'notebookEditor/extension/link/command';
+import { InsertContentAtDocumentUpdate } from 'notebookEditor/command/node';
 import { applyDocumentUpdates } from 'notebookEditor/command/update';
 import { useIsMounted } from 'shared/hook/useIsMounted';
 
@@ -40,21 +40,21 @@ export const LinkDialog: React.FC<Props> = ({ editor, isOpen, onClose }) => {
   const handleSubmit = async ({ href }: LinkDialog_Create) => {
     try {
       setIsLoading(true);
-      const { dispatch } = editor.view;
       const { empty } = editor.state.selection,
             linkAttrs = { ...DEFAULT_LINK_ATTRIBUTES, href: href.trim() };
 
       const { to } = editor.state.selection;
 
       if(empty) {
-        toggleLinkCommand(linkAttrs)(editor.state/*current state*/, dispatch);
-        insertContentAtCommand({ from: to, to }, href.trim())(editor.state/*current state*/, dispatch);
-        unsetLinkCommand()(editor.state/*current state*/, dispatch);
+        applyDocumentUpdates(editor.view, [
+          new ToggleLinkDocumentUpdate(linkAttrs),
+          new InsertContentAtDocumentUpdate({ from: to, to }, href.trim()),
+        ], editor.state/*starting state*/);
       } else {
         applyDocumentUpdates(editor.view, [
           new SetLinkDocumentUpdate(linkAttrs),
           new SetTextSelectionDocumentUpdate({ from: to, to }),
-        ], editor.state);
+        ], editor.state/*starting state*/);
       }
 
     } catch(error) {
