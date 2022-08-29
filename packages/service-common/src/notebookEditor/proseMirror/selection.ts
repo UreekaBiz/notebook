@@ -97,7 +97,6 @@ export const replaceAndSelectNodeCommand = (node: ProseMirrorNode<NotebookSchema
   dispatch(updatedTr);
   return true/*Command executed*/;
 };
-
 export class ReplaceAndSelectNodeDocumentUpdate implements AbstractDocumentUpdate {
   public constructor(private node: ProseMirrorNode<NotebookSchemaType>) {/*nothing additional*/ }
 
