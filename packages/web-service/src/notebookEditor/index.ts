@@ -189,6 +189,7 @@ export {
   JSONMark,
   MarkName,
   extendMarkRangeCommand,
+  ExtendMarkRangeDocumentUpdate,
   getMarkName,
   getMarkValue,
   isMarkActive,

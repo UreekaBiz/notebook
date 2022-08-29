@@ -13,7 +13,7 @@ export const setMarkCommand = (markName: MarkName, attributes: Partial<Attribute
   dispatch(updatedTr);
   return true/*Command executed*/;
 };
-export class SetMarkDocumentUpdate implements AbstractDocumentUpdate  {
+export class SetMarkDocumentUpdate implements AbstractDocumentUpdate {
   public constructor(private markName: MarkName, private attributes: Partial<Attributes>) {/*nothing additional*/}
 
   /*
@@ -64,7 +64,7 @@ export const unsetMarkCommand = (markName: MarkName, extendEmptyMarkRange: boole
   dispatch(updatedTr);
   return true/*command executed*/;
 };
-export class UnsetMarkDocumentUpdate implements AbstractDocumentUpdate  {
+export class UnsetMarkDocumentUpdate implements AbstractDocumentUpdate {
   public constructor(private markName: MarkName, private extendEmptyMarkRange: boolean) {/*nothing additional*/}
 
   /**
@@ -104,7 +104,7 @@ export const toggleMarkCommand = (markName: MarkName, attributes: Partial<Attrib
   dispatch(updatedTr);
   return true/*Command executed*/;
 };
-export class ToggleMarkDocumentUpdate implements AbstractDocumentUpdate  {
+export class ToggleMarkDocumentUpdate implements AbstractDocumentUpdate {
   public constructor(private markName: MarkName, private attributes: Partial<Attributes>) {/*nothing additional*/}
 
   /**
@@ -126,20 +126,32 @@ export class ToggleMarkDocumentUpdate implements AbstractDocumentUpdate  {
  * of the given name in it, and if it does, modifies it so that the Range covers
  * it completely
  */
-export const extendMarkRangeCommand = (schema: NotebookSchemaType, markName: MarkName, attributes: Partial<Attributes>): Command => (state, dispatch) => {
-  const markType = schema.marks[markName];
-  const { tr } = state;
-
-  const { doc, selection } = tr;
-  const { $from, from, to } = selection;
-
-  // expand the current Selection if need be
-  const range = getMarkRange($from, markType, attributes);
-  if(range && range.from <= from && range.to >= to) {
-    const newSelection = TextSelection.create(doc, range.from, range.to);
-    tr.setSelection(newSelection);
-  } /* else -- no need to expand the Selection */
-
-  dispatch(tr);
+export const extendMarkRangeCommand = (markName: MarkName, attributes: Partial<Attributes>): Command => (state, dispatch) => {
+  const updatedTr = new ExtendMarkRangeDocumentUpdate(markName, attributes).update(state, state.tr);
+  dispatch(updatedTr);
   return true/*Command executed*/;
 };
+export class ExtendMarkRangeDocumentUpdate implements AbstractDocumentUpdate {
+  public constructor(private markName: MarkName, private attributes: Partial<Attributes>) {/*nothing additional*/}
+
+  /**
+   * Checks to see whether the Selection currently contains a Range with a Mark
+   * of the given name in it, and if it does, modifies the Transaction so that
+   * the Range covers it completely, and returns it
+   */
+  public update(editorState: EditorState<NotebookSchemaType>, tr: Transaction<NotebookSchemaType>) {
+    const markType = editorState.schema.marks[this.markName];
+
+    const { doc, selection } = tr;
+    const { $from, from, to } = selection;
+
+    // expand the current Selection if need be
+    const range = getMarkRange($from, markType, this.attributes);
+    if(range && range.from <= from && range.to >= to) {
+      const newSelection = TextSelection.create(doc, range.from, range.to);
+      tr.setSelection(newSelection);
+    } /* else -- no need to expand the Selection */
+
+    return tr;
+  }
+}
