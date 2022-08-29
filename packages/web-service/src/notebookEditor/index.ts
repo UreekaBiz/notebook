@@ -367,6 +367,7 @@ export {
   SelectionRange,
   SelectionDepth,
   setNodeSelectionCommand,
+  SetNodeSelectionDocumentUpdate,
   setTextSelectionCommand,
   SetTextSelectionDocumentUpdate,
   updateAttributesInRangeCommand,

@@ -13,8 +13,8 @@ export type SelectionRange = { from: number; to: number; }
 // == Selection ===================================================================
 /** set a TextSelection given the Range */
 export const setTextSelectionCommand = (selectionRange: SelectionRange): Command => (state, dispatch) => {
-  const transaction =  new SetTextSelectionDocumentUpdate(selectionRange).update(state, state.tr);
-  dispatch(transaction);
+  const updatedTr =  new SetTextSelectionDocumentUpdate(selectionRange).update(state, state.tr);
+  dispatch(updatedTr);
   return true/*Command executed*/;
 };
 export class SetTextSelectionDocumentUpdate implements AbstractDocumentUpdate {
@@ -40,15 +40,24 @@ export class SetTextSelectionDocumentUpdate implements AbstractDocumentUpdate {
   }
 }
 
-/** set a NodeSelection at the given Node position */
+/** set a NodeSelection at the given position */
 export const setNodeSelectionCommand = (nodePos: number): Command => (state, dispatch) => {
-  const { tr } = state;
-  const { doc } = tr;
-
-  tr.setSelection(NodeSelection.create(doc, minFromMax(nodePos, 0/*Doc start*/, doc.content.size)));
-  dispatch(tr);
-  return true;
+  const updatedTr =  new SetNodeSelectionDocumentUpdate(nodePos).update(state, state.tr);
+  dispatch(updatedTr);
+  return true/*Command executed*/;
 };
+export class SetNodeSelectionDocumentUpdate implements AbstractDocumentUpdate {
+  public constructor(private nodePos: number) {/*nothing additional*/}
+  /*
+   * modify the given Transaction such that a NodeSelection
+   * is set at the given position
+   */
+  public update(editorState: EditorState, tr: Transaction) {
+    const { doc } = tr;
+    tr.setSelection(NodeSelection.create(doc, minFromMax(this.nodePos, 0/*Doc start*/, doc.content.size)));
+    return tr/*updated*/;
+  }
+}
 
 // == Range =======================================================================
 export const updateAttributesInRangeCommand = (attribute: AttributeType, value: string, depth: SelectionDepth): Command => (state, dispatch) => {
