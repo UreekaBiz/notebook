@@ -5,6 +5,7 @@ import { createCodeBlockReferenceNode, generateNodeId, getSelectedNode, isCodeBl
 import { focusChipToolInput } from 'notebookEditor/util';
 
 // ================================================================================
+/** insert and select a CodeBlockReference */
 export const insertAndSelectCodeBlockReferenceCommand: Command = (state, dispatch) => {
   const id = generateNodeId();
   const updatedTr = new InsertAndSelectCodeBlockReferenceDocumentUpdate({ id }).update(state, state.tr);
