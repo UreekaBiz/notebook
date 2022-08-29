@@ -10,13 +10,13 @@ export type DemoAsyncNodeComponentRenderProps = Readonly<{
   // FIXME: How to share this attributes with DemoAsyncNodeComponentProps?
   attrs: Partial<DemoAsyncNodeAttributes>;
   renderAttributes: HTMLAttributes;
-  isSelected: boolean;
+  isSelected?: boolean;
 
   performingAsyncOperation?: boolean;
   isDirty?: boolean;
 
   /** indicates if the component is being rendered on the editor */
-  isEditor: boolean;
+  isEditor?: boolean;
 }>;
 export const DemoAsyncNodeComponentJSX: React.FC<DemoAsyncNodeComponentRenderProps> = ({ attrs, performingAsyncOperation, isDirty, isEditor }) => {
   const status = performingAsyncOperation ? AsyncNodeStatus.PROCESSING
