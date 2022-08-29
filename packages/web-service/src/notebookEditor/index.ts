@@ -363,6 +363,7 @@ export {
   isGetPos,
   isNodeSelection,
   replaceAndSelectNodeCommand,
+  ReplaceAndSelectNodeDocumentUpdate,
   resolveNewSelection,
   SelectionRange,
   SelectionDepth,
