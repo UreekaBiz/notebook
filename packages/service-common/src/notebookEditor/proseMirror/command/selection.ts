@@ -36,7 +36,7 @@ export class SetTextSelectionDocumentUpdate implements AbstractDocumentUpdate {
     const selection = TextSelection.create(doc, resolvedFrom, resolvedEnd);
 
     tr.setSelection(selection);
-    return tr;
+    return tr/*updated*/;
   }
 }
 

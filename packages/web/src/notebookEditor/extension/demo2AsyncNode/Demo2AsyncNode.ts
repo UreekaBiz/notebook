@@ -1,6 +1,6 @@
 import { Node } from '@tiptap/core';
 
-import { createBlockNode, generateNodeId, getNodeOutputSpec, isDemo2AsyncNode, AttributeType, Demo2AsyncNodeSpec, NodeName, SetAttributeType, DATA_NODE_TYPE, DEFAULT_DEMO_2_ASYNC_NODE_DELAY, DEFAULT_DEMO_2_ASYNC_NODE_STATUS } from '@ureeka-notebook/web-service';
+import { createBlockNodeCommand, generateNodeId, getNodeOutputSpec, isDemo2AsyncNode, AttributeType, Demo2AsyncNodeSpec, NodeName, SetAttributeType, DATA_NODE_TYPE, DEFAULT_DEMO_2_ASYNC_NODE_DELAY, DEFAULT_DEMO_2_ASYNC_NODE_STATUS } from '@ureeka-notebook/web-service';
 
 import { shortcutCommandWrapper } from 'notebookEditor/command/util';
 import { setAttributeParsingBehavior, uniqueIdParsingBehavior } from 'notebookEditor/extension/util/attribute';
@@ -45,8 +45,8 @@ export const Demo2AsyncNode = Node.create<NoOptions, Demo2AsyncNodeStorageType>(
   addKeyboardShortcuts() {
     return {
       // create a Demo2AsyncNode
-      'Shift-Alt-Mod-d': () => shortcutCommandWrapper(this.editor, createBlockNode(NodeName.DEMO_2_ASYNC_NODE, { [AttributeType.Id]: generateNodeId() })),
-      'Shift-Alt-Mod-D': () => shortcutCommandWrapper(this.editor, createBlockNode(NodeName.DEMO_2_ASYNC_NODE, { [AttributeType.Id]: generateNodeId() })),
+      'Shift-Alt-Mod-d': () => shortcutCommandWrapper(this.editor, createBlockNodeCommand(NodeName.DEMO_2_ASYNC_NODE, { [AttributeType.Id]: generateNodeId() })),
+      'Shift-Alt-Mod-D': () => shortcutCommandWrapper(this.editor, createBlockNodeCommand(NodeName.DEMO_2_ASYNC_NODE, { [AttributeType.Id]: generateNodeId() })),
 
       // remove Demo2AsyncNode when at start of document or Demo2AsyncNode is empty
       'Backspace': ({ editor }) => handleBlockBackspace(editor, NodeName.DEMO_2_ASYNC_NODE),

@@ -343,7 +343,7 @@ export {
   extractDocumentName,
 
   // .. Node .....................................................................
-  createBlockNode,
+  createBlockNodeCommand,
   computeRemovedNodePositions,
   findContentDifferencePositions,
   findNodeById,
