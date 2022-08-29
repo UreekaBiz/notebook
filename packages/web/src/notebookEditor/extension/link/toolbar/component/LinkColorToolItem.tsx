@@ -1,11 +1,12 @@
 import { getMarkAttributes } from '@tiptap/core';
 
-import { extendMarkRangeCommand, getThemeValue, isLinkMarkAttributes, setTextSelectionCommand, AttributeType, MarkName } from '@ureeka-notebook/web-service';
+import { getThemeValue, isLinkMarkAttributes, AttributeType, MarkName, ExtendMarkRangeDocumentUpdate, SetTextSelectionDocumentUpdate } from '@ureeka-notebook/web-service';
 
+import { applyDocumentUpdates } from 'notebookEditor/command/update';
 import { ColorPickerTool } from 'notebookEditor/extension/shared/component/ColorPickerToolItem/ColorPickerTool';
 import { EditorToolComponentProps } from 'notebookEditor/toolbar/type';
 
-import { setLinkCommand } from '../../command';
+import { SetLinkDocumentUpdate } from '../../command';
 
 // ********************************************************************************
 interface Props extends EditorToolComponentProps {/*no additional*/}
@@ -22,13 +23,13 @@ export const LinkColorToolItem: React.FC<Props> = ({ editor, depth }) => {
 
   // == Handler ===================================================================
   const handleChange = (value: string) => {
-    const { schema } = editor.state;
-    const { dispatch } = editor.view;
     const { anchor: prevPos } = editor.state.selection;
 
-    extendMarkRangeCommand(schema, MarkName.LINK, {/*no attributes*/})(editor.state/*current state*/, dispatch);
-    setLinkCommand({ ...attrs, [AttributeType.TextColor]: value })(editor.state/*current state*/, dispatch);
-    setTextSelectionCommand({ from: prevPos, to: prevPos })(editor.state/*current state*/, dispatch);
+    applyDocumentUpdates(editor.view, [
+      new ExtendMarkRangeDocumentUpdate(MarkName.LINK, {/*no attributes*/}),
+      new SetLinkDocumentUpdate({ ...attrs, [AttributeType.TextColor]: value }),
+      new SetTextSelectionDocumentUpdate({ from: prevPos, to: prevPos }),
+    ], editor.state/*starting state*/);
 
     editor.view.focus();
   };
