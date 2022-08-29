@@ -90,6 +90,10 @@ export abstract class AbstractNodeView<NodeType extends ProseMirrorNode, Storage
         nodeView: this,
         isSelected: this.model.getSelected(),
       };
+      // set data-node-view attribute
+      // SEE: index.css
+      this.dom.setAttribute('data-node-view', 'true');
+
       // Update React View
       // NOTE: A react component is meant to be rendered using JSX instead of
       //       calling the function directly since this mess ups the order of the
