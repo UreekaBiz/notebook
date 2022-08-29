@@ -17,8 +17,7 @@ export type DemoAsyncNodeComponentRenderProps = Readonly<{
 
   /** indicates if the component is being rendered on the editor */
   isEditor?: boolean;
-}
-
+}>;
 export const DemoAsyncNodeComponentJSX: React.FC<DemoAsyncNodeComponentRenderProps> = ({ attrs, performingAsyncOperation, isDirty, isEditor }) => {
   const status = performingAsyncOperation ? AsyncNodeStatus.PROCESSING
                : attrs[AttributeType.Status] ?? AsyncNodeStatus.NEVER_EXECUTED/*default value*/,
