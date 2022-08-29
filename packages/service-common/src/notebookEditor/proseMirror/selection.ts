@@ -1,7 +1,7 @@
 import { Node as ProseMirrorNode } from 'prosemirror-model';
 import { EditorState, NodeSelection, Selection, TextSelection, Transaction } from 'prosemirror-state';
 
-import { Command } from './command';
+import { AbstractDocumentUpdate, Command } from './command';
 import { NotebookSchemaType } from './schema';
 
 // ********************************************************************************
@@ -31,7 +31,7 @@ export const isGapCursorSelection = (selection: Selection<NotebookSchemaType>) =
 // == Node ========================================================================
 /** @returns currently selected Node. The Node selection is based on the depth of
  *           the selection */
- export const getSelectedNode = (state: EditorState, depth?: SelectionDepth) => {
+export const getSelectedNode = (state: EditorState, depth?: SelectionDepth) => {
   // if depth is provided then an ancestor is returned
   const { selection } = state;
   if(depth !== undefined) return selection.$anchor.node(depth);
@@ -42,7 +42,7 @@ export const isGapCursorSelection = (selection: Selection<NotebookSchemaType>) =
 };
 
 /** Gets all the ascendants of the current selected Node */
- export const getAllAscendantsFromSelection = (state: EditorState): (ProseMirrorNode | null | undefined)[] => {
+export const getAllAscendantsFromSelection = (state: EditorState): (ProseMirrorNode | null | undefined)[] => {
   const { selection } = state;
   const { $anchor } = selection;
 
@@ -50,7 +50,7 @@ export const isGapCursorSelection = (selection: Selection<NotebookSchemaType>) =
   const ascendants = [selectedNode];
 
   // decreasing order of depth
-  for(let i=$anchor.depth; i>= 0;i--) {
+  for(let i = $anchor.depth; i >= 0; i--) {
     const ascendant = $anchor.node(i);
     ascendants.push(ascendant);
   }
@@ -65,7 +65,7 @@ export const isGapCursorSelection = (selection: Selection<NotebookSchemaType>) =
  * @returns The new {@link Selection} that is used after the Transaction
  *          performs its modifications
  */
- export enum SelectionBias {
+export enum SelectionBias {
   LEFT = -1,
   RIGHT = 1
 }
@@ -92,25 +92,38 @@ const getNodeBefore = (selection: Selection) => {
  * Replaces the node at the {@link Selection} of the given {@link Transaction} and
  * selects the new, replaced Node
  */
- export const replaceAndSelectNodeCommand = (node: ProseMirrorNode<NotebookSchemaType>): Command => (state, dispatch) => {
-  const { tr } = state;
-    tr.replaceSelectionWith(node);
-
-  const nodeBefore = getNodeBefore(tr.selection),
-        nodeBeforeSize = nodeBefore?.nodeSize ?? 0/*no node before -- no size*/;
-  const resolvedPos = tr.doc.resolve(tr.selection.anchor - nodeBeforeSize);
-  tr.setSelection(new NodeSelection(resolvedPos));
-
-  dispatch(tr);
+export const replaceAndSelectNodeCommand = (node: ProseMirrorNode<NotebookSchemaType>): Command => (state, dispatch) => {
+  const updatedTr =  new ReplaceAndSelectNodeDocumentUpdate(node).update(state, state.tr);
+  dispatch(updatedTr);
   return true/*Command executed*/;
 };
+
+export class ReplaceAndSelectNodeDocumentUpdate implements AbstractDocumentUpdate {
+  public constructor(private node: ProseMirrorNode<NotebookSchemaType>) {/*nothing additional*/ }
+
+  /*
+   * modify the given Transaction such that a Bloc Node is created
+   * below the current Selection
+   */
+  public update(editorState: EditorState, tr: Transaction) {
+    tr.replaceSelectionWith(this.node);
+
+    const nodeBefore = getNodeBefore(tr.selection),
+          nodeBeforeSize = nodeBefore?.nodeSize ?? 0/*no node before -- no size*/;
+
+    const resolvedPos = tr.doc.resolve(tr.selection.anchor - nodeBeforeSize);
+    tr.setSelection(new NodeSelection(resolvedPos));
+
+    return tr/*updated*/;
+  }
+}
 
 // == Range =======================================================================
 /**
  * computes the Range that holds all Nodes in between the start and end of the
  * Blocks located at the anchor and head of the given {@link Selection}
  */
- export const getBlockNodeRange = (selection: Selection) => ({
+export const getBlockNodeRange = (selection: Selection) => ({
   from: selection.from - selection.$from.parentOffset,
   to: (selection.to - selection.$to.parentOffset) + selection.$to.parent.nodeSize - 2/*account for the start and end of the parent Node*/,
 });
