@@ -1,41 +1,53 @@
 import { Mark, MarkType } from 'prosemirror-model';
 import { EditorState, TextSelection, Transaction } from 'prosemirror-state';
 
-import { getMarkName, isMarkActive, setMarkCommand, stringifyMarksArray, unsetMarkCommand, AbstractDocumentUpdate, AttributeType, Command, MarkName, MarkHolderNodeType } from '@ureeka-notebook/web-service';
+import { getMarkName, isMarkActive, stringifyMarksArray, AbstractDocumentUpdate, AttributeType, Command, MarkName, MarkHolderNodeType, SetMarkDocumentUpdate, UnsetMarkDocumentUpdate } from '@ureeka-notebook/web-service';
 
 import { getMarkHolder, parseStoredMarks } from './util';
 
 // ********************************************************************************
 /**
- * Checks whether the given Mark is active in a MarkHolder.
- * If it is not, toggles or sets it
+ * Checks whether the given Mark is active in a MarkHolder, and toggling or set it
  */
 export const toggleOrSetMarkCommand = (markName: MarkName, markType: MarkType): Command => (state, dispatch) => {
-  // if MarkHolder is defined toggle the Mark inside it
-  const markHolder = getMarkHolder(state);
-  if(markHolder) {
-    return toggleMarkInMarkHolderCommand(markHolder, markType)(state, dispatch);
-  } /* else -- MarkHolder is not present */
-
-  if(isMarkActive(state, markName, {/*no attributes*/})) {
-    return unsetMarkCommand(markName, false/*do not extend empty Mark Range*/)(state, dispatch);
-  } /* else -- not toggling Bold, set it */
-
-  return setMarkCommand(markName, {/*no attributes*/})(state, dispatch);
+  const updatedTr = new ToggleOrSetMarkDocumentUpdate(markName, markType).update(state, state.tr);
+  dispatch(updatedTr);
+  return true/*command executed*/;
 };
+export class ToggleOrSetMarkDocumentUpdate implements AbstractDocumentUpdate {
+  public constructor(private readonly markName: MarkName, private readonly markType: MarkType) {/*nothing additional*/ }
+
+  /*
+   * modify the given Transaction such that it is toggled or set depending on
+   * whether or not the given MarkType is active in a MarkHolder
+   */
+  public update(editorState: EditorState, tr: Transaction) {
+    // if MarkHolder is defined toggle the Mark inside it
+    const markHolder = getMarkHolder(editorState);
+    if(markHolder) {
+      return new ToggleMarkInMarkHolderDocumentUpdate(markHolder, this.markType).update(editorState, editorState.tr);
+    } /* else -- MarkHolder is not present */
+
+    if(isMarkActive(editorState, this.markName, {/*no attributes*/ })) {
+      return new UnsetMarkDocumentUpdate(this.markName, false/*do not extend empty Mark Range*/).update(editorState, editorState.tr);
+    } /* else -- not toggling Bold, set it */
+
+    return new SetMarkDocumentUpdate(this.markName, {/*no attributes*/}).update(editorState, editorState.tr);
+  }
+}
 
 // --------------------------------------------------------------------------------
 /**
  * Toggles a Mark in the MarkHolder. This should be used when a Mark is added to
  *  an empty Node.
  */
- export const toggleMarkInMarkHolderCommand = (markHolder: MarkHolderNodeType, appliedMarkType: MarkType): Command => (state, dispatch) => {
+export const toggleMarkInMarkHolderCommand = (markHolder: MarkHolderNodeType, appliedMarkType: MarkType): Command => (state, dispatch) => {
   const updatedTr = new ToggleMarkInMarkHolderDocumentUpdate(markHolder, appliedMarkType).update(state, state.tr);
   dispatch(updatedTr);
   return true/*Command executed*/;
 };
 export class ToggleMarkInMarkHolderDocumentUpdate implements AbstractDocumentUpdate {
-  public constructor(private readonly markHolder: MarkHolderNodeType, private readonly appliedMarkType: MarkType) {/*nothing additional*/}
+  public constructor(private readonly markHolder: MarkHolderNodeType, private readonly appliedMarkType: MarkType) {/*nothing additional*/ }
 
   /*
    * modify the given Transaction such that a Mark is toggled in the
@@ -43,7 +55,7 @@ export class ToggleMarkInMarkHolderDocumentUpdate implements AbstractDocumentUpd
    */
   public update(editorState: EditorState, tr: Transaction) {
     let newMarksArray: Mark[] = [];
-    const storedMarks  = this.markHolder.attrs[AttributeType.StoredMarks];
+    const storedMarks = this.markHolder.attrs[AttributeType.StoredMarks];
     if(!storedMarks) return tr/*no updates*/;
 
     if(parseStoredMarks(editorState.schema, storedMarks).some(Mark => getMarkName(Mark) === this.appliedMarkType.name)) {
@@ -60,9 +72,9 @@ export class ToggleMarkInMarkHolderDocumentUpdate implements AbstractDocumentUpd
 
     const startOfParentNodePos = tr.doc.resolve(selection.anchor - selection.$anchor.parentOffset);
     const { pos: startingPos } = tr.selection.$anchor;
-      tr.setSelection(new TextSelection(startOfParentNodePos, tr.doc.resolve(startOfParentNodePos.pos + this.markHolder.nodeSize)))
-        .setNodeMarkup(tr.selection.anchor, undefined/*maintain type*/, { storedMarks: stringifyMarksArray(newMarksArray) })
-        .setSelection(new TextSelection(tr.doc.resolve(startingPos)));
+    tr.setSelection(new TextSelection(startOfParentNodePos, tr.doc.resolve(startOfParentNodePos.pos + this.markHolder.nodeSize)))
+      .setNodeMarkup(tr.selection.anchor, undefined/*maintain type*/, { storedMarks: stringifyMarksArray(newMarksArray) })
+      .setSelection(new TextSelection(tr.doc.resolve(startingPos)));
 
     return tr/*updated*/;
   }
