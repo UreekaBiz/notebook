@@ -32,6 +32,14 @@ export class Demo2AsyncNodeController extends AbstractAsyncNodeController<string
 
     this.nodeModel.setPerformingAsyncOperation(true);
     this.nodeView.updateView();
+
+    // NOTE: This is needed to update the React components and reflect the status
+    //       of the async operation. Changing the selection to the current
+    //       selection doesn't do any change besides updating the React components.
+    const { state, view } = this.editor;
+    const { tr, selection } = state;
+    tr.setSelection(selection);
+    view.dispatch(tr);
     try {
       await editorService.executeDemo2AsyncNode({ nodeId: id, notebookId, content, replace });
     } catch(error){
