@@ -1,6 +1,6 @@
 import { textblockTypeInputRule, Node } from '@tiptap/core';
 
-import { createBlockNode, generateNodeId, getNodeOutputSpec, isCodeBlockNode, AttributeType, CodeBlockNodeSpec, CodeBlockType, NodeName, SetAttributeType, DATA_NODE_TYPE } from '@ureeka-notebook/web-service';
+import { createBlockNodeCommand, generateNodeId, getNodeOutputSpec, isCodeBlockNode, AttributeType, CodeBlockNodeSpec, CodeBlockType, NodeName, SetAttributeType, DATA_NODE_TYPE } from '@ureeka-notebook/web-service';
 
 import { shortcutCommandWrapper } from 'notebookEditor/command/util';
 import { setAttributeParsingBehavior, uniqueIdParsingBehavior } from 'notebookEditor/extension/util/attribute';
@@ -43,8 +43,8 @@ export const CodeBlock = Node.create<NoOptions, CodeBlockStorage>({
       // create a CodeBlock
       // NOTE: current implementation adds a CodeBlock below the
       //       current Block instead of splitting it on purpose
-      'Shift-Mod-c': () => shortcutCommandWrapper(this.editor, createBlockNode(NodeName.CODEBLOCK, { [AttributeType.Id]: generateNodeId() })),
-      'Shift-Mod-C': () => shortcutCommandWrapper(this.editor, createBlockNode(NodeName.CODEBLOCK, { [AttributeType.Id]: generateNodeId() })),
+      'Shift-Mod-c': () => shortcutCommandWrapper(this.editor, createBlockNodeCommand(NodeName.CODEBLOCK, { [AttributeType.Id]: generateNodeId() })),
+      'Shift-Mod-C': () => shortcutCommandWrapper(this.editor, createBlockNodeCommand(NodeName.CODEBLOCK, { [AttributeType.Id]: generateNodeId() })),
 
       // remove CodeBlock when at start of document or code block is empty
       'Backspace': ({ editor }) => handleBlockBackspace(editor, NodeName.CODEBLOCK),

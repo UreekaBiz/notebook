@@ -3,7 +3,8 @@ import { AiOutlineLink } from 'react-icons/ai';
 import { getLinkMarkType, MarkName } from '@ureeka-notebook/web-service';
 
 import { toolItemCommandWrapper } from 'notebookEditor/command/util';
-import { getMarkHolder, inMarkHolder, toggleMarkInMarkHolderCommand } from 'notebookEditor/extension/markHolder/util';
+import { toggleMarkInMarkHolderCommand } from 'notebookEditor/extension/markHolder/command';
+import { getMarkHolder, inMarkHolder } from 'notebookEditor/extension/markHolder/util';
 import { getDialogStorage } from 'notebookEditor/model/DialogStorage';
 import { Toolbar, ToolItem } from 'notebookEditor/toolbar/type';
 

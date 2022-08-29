@@ -50,7 +50,7 @@ export class SetMarkDocumentUpdate implements AbstractDocumentUpdate {
         });
       });
     }
-    return tr;
+    return tr/*updated*/;
   }
 }
 
@@ -93,7 +93,7 @@ export class UnsetMarkDocumentUpdate implements AbstractDocumentUpdate {
     }
 
     tr.removeStoredMark(markType);
-    return tr;
+    return tr/*updated*/;
   }
 }
 
@@ -152,6 +152,6 @@ export class ExtendMarkRangeDocumentUpdate implements AbstractDocumentUpdate {
       tr.setSelection(newSelection);
     } /* else -- no need to expand the Selection */
 
-    return tr;
+    return tr/*updated*/;
   }
 }

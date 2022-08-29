@@ -343,7 +343,8 @@ export {
   extractDocumentName,
 
   // .. Node .....................................................................
-  createBlockNode,
+  createBlockNodeCommand,
+  CreateCodeBlockNodeDocumentUpdate,
   computeRemovedNodePositions,
   findContentDifferencePositions,
   findNodeById,
@@ -366,9 +367,11 @@ export {
   SelectionRange,
   SelectionDepth,
   setNodeSelectionCommand,
+  SetNodeSelectionDocumentUpdate,
   setTextSelectionCommand,
   SetTextSelectionDocumentUpdate,
   updateAttributesInRangeCommand,
+  UpdateAttributesInRangeDocumentUpdate,
 
   // ..............................................................................
 } from '@ureeka-notebook/service-common';

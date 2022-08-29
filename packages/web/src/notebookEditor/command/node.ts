@@ -33,7 +33,7 @@ export class InsertContentAtDocumentUpdate implements AbstractDocumentUpdate  {
 
     // don’t dispatch an empty fragment, prevent errors
     if(content.toString() === '<>') {
-      return tr/*no modifications done*/;
+      return tr/*no updates*/;
     } /* else -- valid Fragment */
 
     let isOnlyTextContent = false/*default*/;
@@ -75,7 +75,7 @@ export class InsertContentAtDocumentUpdate implements AbstractDocumentUpdate  {
     if(options.updateSelection) {
       setTransactionSelectionToInsertionEnd(tr, tr.steps.length - 1, -1);
     } /* else -- do not update Selection */
-    return tr;
+    return tr/*updated*/;
   }
 }
 

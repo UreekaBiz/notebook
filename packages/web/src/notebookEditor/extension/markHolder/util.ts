@@ -1,8 +1,7 @@
 import { Editor } from '@tiptap/core';
-import { Mark, MarkType } from 'prosemirror-model';
-import { EditorState, TextSelection } from 'prosemirror-state';
+import { EditorState } from 'prosemirror-state';
 
-import { createMarkHolderNode, getMarkName, isMarkHolderNode, markFromJSONMark, parseStringifiedMarksArray, stringifyMarksArray, AttributeType, Command, JSONNode, MarkHolderNodeType, MarkName, NotebookSchemaType } from '@ureeka-notebook/web-service';
+import { createMarkHolderNode, getMarkName, isMarkHolderNode, markFromJSONMark, parseStringifiedMarksArray, stringifyMarksArray, AttributeType, JSONNode, MarkName, NotebookSchemaType } from '@ureeka-notebook/web-service';
 
 // ********************************************************************************
 // creates a MarkHolder Node holding the Marks corresponding to the given MarkNames
@@ -24,42 +23,6 @@ export const getMarkHolder = (state: EditorState) => {
   /* else -- firstChild does not exist or is not a MarkHolder */
 
   return undefined/*not found*/;
-};
-
-/**
- * Toggles a mark in the mark holder. This should be used when a mark is added to
- *  an empty node.
- *
- * NOTE: the chain parameter, when coming from a Command, must be the chain
- *       passed by CommandProps. Otherwise an 'applyingMismatchedTransaction'
- *       error gets thrown. This is the reason why the used chain is not taken from
- *       the editor parameter
- */
-export const toggleMarkInMarkHolderCommand = (markHolder: MarkHolderNodeType, appliedMarkType: MarkType): Command => (state, dispatch) => {
-  let newMarksArray: Mark[] = [];
-  const storedMarks  = markHolder.attrs[AttributeType.StoredMarks];
-  if(!storedMarks) return false/*nothing to do*/;
-
-  if(parseStoredMarks(state.schema, storedMarks).some(mark => getMarkName(mark) === appliedMarkType.name)) {
-    // already included, remove it
-    newMarksArray = [...parseStoredMarks(state.schema, storedMarks).filter(mark => getMarkName(mark) !== appliedMarkType.name)];
-  } else {
-    // not included yet, add it
-    newMarksArray = [...parseStoredMarks(state.schema, storedMarks), appliedMarkType.create()];
-  }
-
-  // (SEE: NOTE above)
-  const { selection, tr } = state;
-  if(!selection.$anchor.parent.isBlock) return false/*command cannot be executed, Selection parent is not a Block Node*/;
-
-  const startOfParentNodePos = tr.doc.resolve(selection.anchor - selection.$anchor.parentOffset);
-  const { pos: startingPos } = tr.selection.$anchor;
-    tr.setSelection(new TextSelection(startOfParentNodePos, tr.doc.resolve(startOfParentNodePos.pos + markHolder.nodeSize)))
-      .setNodeMarkup(tr.selection.anchor, undefined/*maintain type*/, { storedMarks: stringifyMarksArray(newMarksArray) })
-      .setSelection(new TextSelection(tr.doc.resolve(startingPos)));
-
-  dispatch(tr);
-  return true/*Command executed*/;
 };
 
 /** Checks if a MarkHolder contains a given Mark in its storedMarks attribute */
