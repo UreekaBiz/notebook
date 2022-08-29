@@ -1,11 +1,11 @@
 import { Editor } from '@tiptap/core';
 import * as collab from 'prosemirror-collab';
-import { TextSelection } from 'prosemirror-state';
+import { NodeSelection, TextSelection } from 'prosemirror-state';
 import { Step as ProseMirrorStep } from 'prosemirror-transform';
 
 import { distinctUntilChanged, BehaviorSubject } from 'rxjs';
 
-import { contentToJSONStep, generateClientIdentifier, sleep, AuthedUser, NotebookIdentifier, NotebookVersion, NotebookSchemaVersion, Unsubscribe, UserIdentifier, NO_NOTEBOOK_VERSION } from '@ureeka-notebook/service-common';
+import { contentToJSONStep, generateClientIdentifier, getNodeName, isNodeSelection, sleep, AuthedUser, NotebookIdentifier, NotebookVersion, NotebookSchemaVersion, Unsubscribe, UserIdentifier, NO_NOTEBOOK_VERSION } from '@ureeka-notebook/service-common';
 
 import { getLogger, ServiceLogger } from '../logging/type';
 import { getEnvNumber } from '../util/environment';
@@ -309,6 +309,28 @@ export class VersionListener {
     const clientIds = versions.map(({ clientId }) => clientId);
 
     const transaction = collab.receiveTransaction(this.editor.view.state, proseMirrorSteps, clientIds, { mapSelectionBackward: true });
+
+    // NOTE: updating the attributes of a node causes it to be replaced and
+    //       prosemirror changes the selection from being NodeSelection to
+    //       TextSelection, this causes the selection to be lost. To fix that a new
+    //       NodeSelection is created from the previous position mapped through the
+    //       transaction from `collab`.
+    // update the NodeSelection only if the Node still exits.
+    const currentSelection = this.editor.state.selection;
+    if(isNodeSelection(currentSelection)) {
+      // NOTE: creating a NodeSelection can throw an error if there is no node to
+      //       select. This can happen if the node was removed.
+      try {
+        const nodeSelection = new NodeSelection(transaction.selection.$anchor);
+        if(getNodeName(nodeSelection.node) !== getNodeName(currentSelection.node)) return;/*node changed -- nothing to do*/
+
+        // update the selection.
+        transaction.setSelection(nodeSelection);
+      } catch(error){
+        log.debug('New selection is not a node selection anymore, node was deleted. Ignoring.');
+      }
+    } // else -- was not a NodeSelection.
+
     this.editor.view.dispatch(transaction);
   }
 
