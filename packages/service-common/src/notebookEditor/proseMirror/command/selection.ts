@@ -20,7 +20,7 @@ export const setTextSelectionCommand = (selectionRange: SelectionRange): Command
   return true/*Command executed*/;
 };
 export class SetTextSelectionDocumentUpdate implements AbstractDocumentUpdate {
-  public constructor(private selectionRange: SelectionRange) {/*nothing additional*/}
+  public constructor(private readonly selectionRange: SelectionRange) {/*nothing additional*/}
   /*
    * modify the given Transaction such that a TextSelection
    * is set across the given Range
@@ -49,7 +49,7 @@ export const setNodeSelectionCommand = (nodePos: number): Command => (state, dis
   return true/*Command executed*/;
 };
 export class SetNodeSelectionDocumentUpdate implements AbstractDocumentUpdate {
-  public constructor(private nodePos: number) {/*nothing additional*/}
+  public constructor(private readonly nodePos: number) {/*nothing additional*/}
   /*
    * modify the given Transaction such that a NodeSelection
    * is set at the given position
@@ -78,7 +78,7 @@ export const replaceAndSelectNodeCommand = (node: ProseMirrorNode<NotebookSchema
   return true/*Command executed*/;
 };
 export class ReplaceAndSelectNodeDocumentUpdate implements AbstractDocumentUpdate {
-  public constructor(private node: ProseMirrorNode<NotebookSchemaType>) {/*nothing additional*/ }
+  public constructor(private readonly node: ProseMirrorNode<NotebookSchemaType>) {/*nothing additional*/ }
 
   /*
    * modify the given Transaction such that a Bloc Node is created
@@ -108,7 +108,7 @@ export const updateAttributesInRangeCommand = (attribute: AttributeType, value: 
   return true/*Command executed*/;
 };
 export class UpdateAttributesInRangeDocumentUpdate implements AbstractDocumentUpdate {
-  public constructor(private attribute: AttributeType, private value: string, private depth: SelectionDepth) {/*nothing additional*/}
+  public constructor(private readonly attribute: AttributeType, private readonly value: string, private readonly depth: SelectionDepth) {/*nothing additional*/}
   /*
    * modify the given Transaction such that the Nodes in the current Selection
    * get the specified attribute updated to the specified value

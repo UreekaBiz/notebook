@@ -14,7 +14,7 @@ export const setMarkCommand = (markName: MarkName, attributes: Partial<Attribute
   return true/*Command executed*/;
 };
 export class SetMarkDocumentUpdate implements AbstractDocumentUpdate {
-  public constructor(private markName: MarkName, private attributes: Partial<Attributes>) {/*nothing additional*/}
+  public constructor(private readonly markName: MarkName, private readonly attributes: Partial<Attributes>) {/*nothing additional*/}
 
   /*
    * modify the given Transaction such that a Mark
@@ -65,7 +65,7 @@ export const unsetMarkCommand = (markName: MarkName, extendEmptyMarkRange: boole
   return true/*command executed*/;
 };
 export class UnsetMarkDocumentUpdate implements AbstractDocumentUpdate {
-  public constructor(private markName: MarkName, private extendEmptyMarkRange: boolean) {/*nothing additional*/}
+  public constructor(private readonly markName: MarkName, private readonly extendEmptyMarkRange: boolean) {/*nothing additional*/}
 
   /**
    * modify the given Transaction such that all Marks are removed
@@ -105,7 +105,7 @@ export const toggleMarkCommand = (markName: MarkName, attributes: Partial<Attrib
   return true/*Command executed*/;
 };
 export class ToggleMarkDocumentUpdate implements AbstractDocumentUpdate {
-  public constructor(private markName: MarkName, private attributes: Partial<Attributes>) {/*nothing additional*/}
+  public constructor(private readonly markName: MarkName, private readonly attributes: Partial<Attributes>) {/*nothing additional*/}
 
   /**
    * modify the given Transaction such that the given Mark is set or unset
@@ -132,7 +132,7 @@ export const extendMarkRangeCommand = (markName: MarkName, attributes: Partial<A
   return true/*Command executed*/;
 };
 export class ExtendMarkRangeDocumentUpdate implements AbstractDocumentUpdate {
-  public constructor(private markName: MarkName, private attributes: Partial<Attributes>) {/*nothing additional*/}
+  public constructor(private readonly markName: MarkName, private readonly attributes: Partial<Attributes>) {/*nothing additional*/}
 
   /**
    * Checks to see whether the Selection currently contains a Range with a Mark
