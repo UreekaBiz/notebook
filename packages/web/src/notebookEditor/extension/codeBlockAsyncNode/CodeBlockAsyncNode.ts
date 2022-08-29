@@ -1,6 +1,6 @@
 import { Extension } from '@tiptap/core';
 
-import { ExtensionName, ExtensionPriority, NoOptions, NoStorage } from 'notebookEditor/model/type';
+import { ExtensionName, NoOptions, NoStorage } from 'notebookEditor/model/type';
 
 // ********************************************************************************
 // NOTE: CodeBlockAsyncNodes are meant to be an abstraction for all async nodes
@@ -13,7 +13,5 @@ import { ExtensionName, ExtensionPriority, NoOptions, NoStorage } from 'notebook
 // == Extension ===================================================================
 export const CodeBlockAsyncNode = Extension.create<NoOptions, NoStorage>({
   name: ExtensionName.CODEBLOCK_ASYNC_NODE,
-  priority: ExtensionPriority.CODEBLOCK_ASYNC_NODE,
-
   // currently no common functionality to all codeBlockAsyncNodes
 });

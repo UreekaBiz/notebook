@@ -41,33 +41,21 @@ export enum ExtensionPriority {
   // NOTE: Paragraph must have a higher priority than other block Nodes since it
   //       is the 'default' block Node (by convention). If its priority is left
   //       unspecified, the default block Node on document creation will be the
-  //       first block Node encountered in the editor extension array
-  //       (SEE: notebookEditor/type.ts)
+  //       first block Node encountered in the editor Extension array
+  // SEE: notebookEditor/type.ts
   PARAGRAPH = 118,
 
-  // NOTE: Link must have a higher priority than other marks so that it gets
-  //       preference over them when creating, pasting or applying parse rules
-  LINK = 117/*T&E*/,
-
-  // NOTE: Since codeBlockAsyncNodes are a subset of async nodes that can be
-  //       dirty depending on whether or not specific criteria is met, the
-  //       asyncNodes must check if they are dirty after the codeBlocks have
+  // NOTE: asyncNodes must check if they are dirty after the codeBlocks have
   //       been modified accordingly (e.g. codeBlockReferences and hashes) have
-  //       been recomputed. Hence this must run before asyncNodes
-  CODEBLOCK_ASYNC_NODE = 116,
-
-  // NOTE: AsyncNodes effectively 'disable' the undo command while they are
-  //       performing async operations. In order for the undo event (CMD-Z) to
-  //       be handled before the history extension does its job
-  //       (SEE: History.ts) they're given a higher priority than 100
-  ASYNC_NODE = 115,
+  //       been recomputed. Hence this must run before other Extensions
+  ASYNC_NODE = 117,
 
   // NOTE: Since the text extension adds a \t whenever Tab is pressed, but this
   //       behavior is not always guaranteed to be the desired one (e.g. when
-  //       going through a list Node), the text extension runs last (SEE: note
-  //       above for default extension priority). This ensures that the shortcuts
-  //       defined in the text extension run only if their trigger was not handled
-  //       by another extension previously
+  //       going through a list Node), the Text Extension runs last. This ensures
+  //       that the shortcuts defined in the Text Extension run only if their
+  //       trigger was not handled by another Extension previously
+  // SEE: NOTE above for default Extension priority
   TEXT = 99,
 
   // -- Mark ----------------------------------------------------------------------
