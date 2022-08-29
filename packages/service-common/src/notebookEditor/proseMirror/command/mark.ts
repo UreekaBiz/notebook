@@ -98,14 +98,27 @@ export class UnsetMarkDocumentUpdate implements AbstractDocumentUpdate  {
 }
 
 // --------------------------------------------------------------------------------
-/** Unset or set a Mark depending on whether or not it is currently active */
+/** Unset or set the given Mark depending on whether or not it is currently active */
 export const toggleMarkCommand = (markName: MarkName, attributes: Partial<Attributes>): Command => (state, dispatch) => {
-  if(isMarkActive(state, markName, attributes)) {
-    return unsetMarkCommand(markName, false/*default not extend Mark Range*/)(state, dispatch);
-  } /* else -- Mark is not active, set it */
-
-  return setMarkCommand(markName,  attributes)(state, dispatch);
+  const updatedTr = new ToggleMarkDocumentUpdate(markName, attributes).update(state, state.tr);
+  dispatch(updatedTr);
+  return true/*Command executed*/;
 };
+export class ToggleMarkDocumentUpdate implements AbstractDocumentUpdate  {
+  public constructor(private markName: MarkName, private attributes: Partial<Attributes>) {/*nothing additional*/}
+
+  /**
+   * modify the given Transaction such that the given Mark is set or unset
+   * depending on whether or not it is currently active
+   */
+  public update(editorState: EditorState<NotebookSchemaType>, tr: Transaction<NotebookSchemaType>) {
+    if(isMarkActive(editorState, this.markName, this.attributes)) {
+      return new UnsetMarkDocumentUpdate(this.markName, false/*default not extend Mark Range*/).update(editorState, tr);
+    } /* else -- Mark is not active, set it */
+
+    return new SetMarkDocumentUpdate(this.markName, this.attributes).update(editorState, tr);
+  }
+}
 
 // --------------------------------------------------------------------------------
 /**

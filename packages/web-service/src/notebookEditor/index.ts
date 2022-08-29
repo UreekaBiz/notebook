@@ -198,6 +198,7 @@ export {
   SetMarkDocumentUpdate,
   stringifyMarksArray,
   toggleMarkCommand,
+  ToggleMarkDocumentUpdate,
   unsetMarkCommand,
   UnsetMarkDocumentUpdate,
 

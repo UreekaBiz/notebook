@@ -1,6 +1,6 @@
 import { EditorState, Transaction } from 'prosemirror-state';
 
-import { setMarkCommand, toggleMarkCommand, unsetMarkCommand, AbstractDocumentUpdate, Command, LinkAttributes, MarkName, SetMarkDocumentUpdate, UnsetMarkDocumentUpdate, PREVENT_LINK_META } from '@ureeka-notebook/web-service';
+import { setMarkCommand, toggleMarkCommand, unsetMarkCommand, AbstractDocumentUpdate, Command, LinkAttributes, MarkName, SetMarkDocumentUpdate, ToggleMarkDocumentUpdate, UnsetMarkDocumentUpdate, PREVENT_LINK_META } from '@ureeka-notebook/web-service';
 
 // ********************************************************************************
 // NOTE: the desired behavior for these Commands is that creating a Link in a
@@ -49,7 +49,25 @@ export class UnsetLinkDocumentUpdate implements AbstractDocumentUpdate {
 }
 
 // --------------------------------------------------------------------------------
+/**
+ * set or unset the Link Mark across the current Selection depending on
+ * whether or not it is currently active
+ */
 export const toggleLinkCommand = (attributes: Partial<LinkAttributes>): Command => (state, dispatch) => {
   state.tr.setMeta(PREVENT_LINK_META, true/*(SEE: ../plugin.ts)*/);
   return toggleMarkCommand(MarkName.LINK, attributes)(state, dispatch);
 };
+export class ToggleLinkDocumentUpdate implements AbstractDocumentUpdate {
+  public constructor(private readonly attributes: Partial<LinkAttributes>) {/*nothing additional*/}
+
+  /*
+   * modify the given Transaction such that a the Link Mark
+   * is set or unset across the current Selection, depending
+   * on whether or not it is currently active, and return it
+   */
+  public update(editorState: EditorState, tr: Transaction) {
+    tr.setMeta(PREVENT_LINK_META, true/*(SEE: ../plugin.ts)*/);
+    const updatedTr = new ToggleMarkDocumentUpdate(MarkName.LINK, this.attributes).update(editorState, tr);
+    return updatedTr;
+  }
+}
