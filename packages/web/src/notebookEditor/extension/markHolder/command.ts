@@ -19,7 +19,7 @@ export const toggleOrSetMarkCommand = (markName: MarkName, markType: MarkType): 
   return false/*not executed*/;
 };
 export class ToggleOrSetMarkDocumentUpdate implements AbstractDocumentUpdate {
-  public constructor(private readonly markName: MarkName, private readonly markType: MarkType) {/*nothing additional*/ }
+  public constructor(private readonly markName: MarkName, private readonly markType: MarkType) {/*nothing additional*/}
 
   /*
    * modify the given Transaction such that it is toggled or set depending on
@@ -55,7 +55,7 @@ export const toggleMarkInMarkHolderCommand = (markHolder: MarkHolderNodeType, ap
   return false/*not executed*/;
 };
 export class ToggleMarkInMarkHolderDocumentUpdate implements AbstractDocumentUpdate {
-  public constructor(private readonly markHolder: MarkHolderNodeType, private readonly appliedMarkType: MarkType) {/*nothing additional*/ }
+  public constructor(private readonly markHolder: MarkHolderNodeType, private readonly appliedMarkType: MarkType) {/*nothing additional*/}
 
   /*
    * modify the given Transaction such that a Mark is toggled in the

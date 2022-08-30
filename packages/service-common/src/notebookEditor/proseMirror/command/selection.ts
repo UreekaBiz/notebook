@@ -89,7 +89,7 @@ export const replaceAndSelectNodeCommand = (node: ProseMirrorNode<NotebookSchema
   return false/*not executed*/;
 };
 export class ReplaceAndSelectNodeDocumentUpdate implements AbstractDocumentUpdate {
-  public constructor(private readonly node: ProseMirrorNode<NotebookSchemaType>) {/*nothing additional*/ }
+  public constructor(private readonly node: ProseMirrorNode<NotebookSchemaType>) {/*nothing additional*/}
 
   /*
    * modify the given Transaction such that a Bloc Node is created
