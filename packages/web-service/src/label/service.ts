@@ -8,9 +8,10 @@ import { ApplicationError } from '../util/error';
 import { Pagination } from '../util/pagination';
 import { paginatedArray } from '../util/observablePaginatedArray';
 import { Scrollable, scrollableQuery } from '../util/observableScrolledCollection';
+import { getUserId } from '../util/user';
 import { labelPublishedQuery, labelQuery } from './datastore';
 import { labelCreate, labelDelete, labelNotebookAdd, labelNotebookRemove, labelNotebookReorder, labelShare, labelUpdate } from './function';
-import { labelById$, labelNotebookPublishedIds$, labelNotebookIds$, labelOnceById$, labelPublishedById$, labelPublishedOnceById$, labelPublishedsQuery$, labelsQuery$ } from './observable';
+import { labelById$, labelNotebookPublishedIds$, labelNotebookIds$, labelOnceById$, labelPublishedById$, labelPublishedOnceById$, labelPublishedsQuery$, labelsQuery$, notebookLabels$ } from './observable';
 import { Label_Create, Label_Update, LabelFilter, LabelPublishedFilter } from './type';
 
 const log = getLogger(ServiceLogger.LABEL);
@@ -65,6 +66,21 @@ export class LabelService {
   public onNotebooks(labelId: LabelIdentifier, pageSize: number = LabelService.DEFAULT_PAGE_SIZE): Pagination<NotebookTuple> {
     return paginatedArray(labelNotebookIds$(labelId), notebookIdsToNotebooks$, pageSize,
                           `Label (${labelId}}) Notebooks`);
+  }
+
+  /**
+   * @param notebookId the identifier of the {@link Notebook} for the desired {@link Label}s.
+   *        Only {@link Label}s that are shared with the caller are returned.
+   * @returns {@link Observable} over the collection of {@link Label}s. The
+   *          Observable will have an error thrown if the Notebook does not exist.
+   *          There are at most {@link MAX_LABEL_NOTEBOOKS} Notebooks returned.
+   */
+  public onNotebookLabels(notebookId: NotebookIdentifier): Observable<LabelTuple[]> {
+    // NOTE: Assets are currently specific to the User that is logged in
+    const userId = getUserId();
+    if(!userId) throw new ApplicationError('functions/permission-denied', 'Cannot access Labels for a Notebook while logged out.');
+
+    return notebookLabels$(userId, notebookId);
   }
 
   // -- Label Published -----------------------------------------------------------

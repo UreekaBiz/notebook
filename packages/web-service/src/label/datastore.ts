@@ -1,6 +1,6 @@
 import { collection, doc, limit, orderBy, query, where, CollectionReference, Query } from 'firebase/firestore';
 
-import { computeLabelPrefixQueryString, isBlank, nameof, LabelIdentifier, LabelPublished_Storage, Label_Storage, LABELS, LABEL_PUBLISHEDS, MAX_LABEL_SEARCH_RESULTS } from '@ureeka-notebook/service-common';
+import { computeLabelPrefixQueryString, isBlank, nameof, LabelIdentifier, LabelPublished_Storage, Label_Storage, NotebookIdentifier, UserIdentifier, LABELS, LABEL_PUBLISHEDS, MAX_LABEL_SEARCH_RESULTS } from '@ureeka-notebook/service-common';
 
 import { firestore } from '../util/firebase';
 import { buildSortQuery } from '../util/firestore';
@@ -51,6 +51,15 @@ export const sortedLabelQuery =
 export const labelPrefixQuery = (queryString: string) =>
   query(sortedLabelQuery, where(nameof<Label_Storage>('searchNamePrefixes'), 'array-contains', computeLabelPrefixQueryString(queryString)),
                           limit(MAX_LABEL_SEARCH_RESULTS/*bound for sanity*/));
+
+// .. Notebook ....................................................................
+// get all Labels that are visible to the User for the specified Notebook
+// NOTE: this doesn't check if the User is a viewer of the Notebook since this
+//       exposes no information about the Notebook itself. The most the User can
+//       know is what they're allowed to see based on the Labels they have access to
+export const notebookLabelQuery = (userId: UserIdentifier, notebookId: NotebookIdentifier) =>
+  query(labelCollection, where(nameof<Label_Storage>('notebookIds'), 'array-contains', notebookId),
+                         where(nameof<Label_Storage>('viewers'), 'array-contains', userId));
 
 // -- Label Published -------------------------------------------------------------
 export const labelPublishedQuery = (filter: LabelPublishedFilter) => {

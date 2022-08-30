@@ -1,6 +1,6 @@
 import { iif, of, switchMap, throwError } from 'rxjs';
 
-import { LabelIdentifier, Label_Storage, LabelPublished_Storage, LabelPublishedTuple, LabelTuple } from '@ureeka-notebook/service-common';
+import { LabelIdentifier, Label_Storage, LabelPublished_Storage, LabelPublishedTuple, LabelTuple, NotebookIdentifier, UserIdentifier } from '@ureeka-notebook/service-common';
 
 import { ApplicationError } from '../util/error';
 import { defaultDocumentConverter, defaultDocumentTupleConverter, defaultTupleConverter } from '../util/firestore';
@@ -8,7 +8,7 @@ import { QueryObservable } from '../util/observableCollection';
 import { documentOnce } from '../util/observableDocument';
 import { queryTuples } from '../util/observableTupleCollection';
 import { documentTuple } from '../util/observableTupleDocument';
-import { labelDocument, labelQuery, labelPublishedDocument, labelPublishedQuery } from './datastore';
+import { labelDocument, labelQuery, labelPublishedDocument, labelPublishedQuery, notebookLabelQuery } from './datastore';
 import { LabelFilter, LabelPublishedFilter } from './type';
 
 // ********************************************************************************
@@ -20,6 +20,7 @@ export const labelById$ = (labelId: LabelIdentifier) =>
   documentTuple(labelDocument(labelId), defaultDocumentTupleConverter);
 
 // -- Notebook --------------------------------------------------------------------
+// .. Label => Notebook Identifier ................................................
 export const labelNotebookIds$ = (labelId: LabelIdentifier) =>
   labelOnceById$(labelId)
     .pipe(
@@ -29,6 +30,10 @@ export const labelNotebookIds$ = (labelId: LabelIdentifier) =>
           of(label!.notebookIds)
         )
       ));
+
+// .. Notebook => Labels ..........................................................
+export const notebookLabels$ = (userId: UserIdentifier, notebookId: NotebookIdentifier) =>
+  queryTuples(notebookLabelQuery(userId, notebookId), defaultTupleConverter);
 
 // -- Search ----------------------------------------------------------------------
 export const labelsQuery$: QueryObservable<Label_Storage, LabelTuple> =
