@@ -7,8 +7,8 @@ import { Pagination } from './pagination';
 const log = getLogger(ServiceLogger.UTIL);
 
 // ********************************************************************************
-export const paginatedArray = <T, R>(array: Observable<T[]>, arrayObservable: ArrayObservable<T, R>, pageSize: number, context: string) =>
-  new PaginatedArrayObservable(array, arrayObservable, pageSize, context);
+export const paginatedArray = <T, R>(array$: Observable<T[]>, transformArray$: ArrayObservable<T, R>, pageSize: number, context: string) =>
+  new PaginatedArrayObservable(array$, transformArray$, pageSize, context);
 
 // ********************************************************************************
 class PaginatedArrayObservable<T, R> implements Pagination<R> {

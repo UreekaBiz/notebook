@@ -13,8 +13,8 @@ const log = getLogger(ServiceLogger.UTIL);
 // ********************************************************************************
 // NOTE: the query can *ONLY* contain `where` and `orderBy` clauses. The addition
 //       of any other clauses will produce undefined results
-export const paginatedQuery = <F, R>(query: Query<F>, querySnapshotObservable: QuerySnapshotObservable<F, R>, pageSize: number, context: string) =>
-  new PaginatedQueryObservable(query, querySnapshotObservable, pageSize, context);
+export const paginatedQuery = <F, R>(query: Query<F>, querySnapshot$: QuerySnapshotObservable<F, R>, pageSize: number, context: string) =>
+  new PaginatedQueryObservable(query, querySnapshot$, pageSize, context);
 
 // ********************************************************************************
 // each Page consists of 'previous' and 'next' snapshots
