@@ -1,4 +1,4 @@
-import { useToast, Flex, Heading, Text } from '@chakra-ui/react';
+import { useToast, Box, Heading, Text } from '@chakra-ui/react';
 
 import { getLogger, AuthUserService, Logger, UserProfilePrivate_Update } from '@ureeka-notebook/web-service';
 
@@ -7,9 +7,9 @@ import { SettingsForm } from 'authUser/settings/SettingsForm';
 import { SettingsLayoutWrapper } from 'authUser/settings/SettingsLayoutWrapper';
 import { RequiredAuthUserWrapper } from 'authUser/RequiredAuthUserWrapper';
 import { WrappedPage } from 'core/wrapper';
-import { NotebookTopBar } from 'notebook/component/NotebookTopBar';
 import { NotebookServiceWrapper } from 'notebook/NotebookServiceWrapper';
 import { useAsyncStatus, useIsMounted } from 'shared/hook';
+import { ProfileNavigationLayout } from 'shared/layout/ProfileNavigationLayout';
 import { LoadingPage } from 'shared/pages/LoadingPage';
 
 const log = getLogger(Logger.AUTH_USER);
@@ -65,21 +65,17 @@ function SettingsPage() {
 
   // == UI ========================================================================
   return (
-    <Flex flexDirection='column' alignItems='center' justifyContent='center'>
-      <NotebookTopBar />
-      {/* FIXME: Use layout wrapper in WrapperPage wrappers. */}
-      <SettingsLayoutWrapper>
-        <Text>Settings</Text>
-        <Heading marginBottom={4}>General</Heading>
-        <SettingsForm initialValues={initialValues} status={status} onSubmit={handleSubmit} />
-      </SettingsLayoutWrapper>
-    </Flex>
+    <Box>
+      <Text>Settings</Text>
+      <Heading marginBottom={4}>General</Heading>
+      <SettingsForm initialValues={initialValues} status={status} onSubmit={handleSubmit} />
+    </Box>
   );
 }
 
 // --------------------------------------------------------------------------------
 // SEE: core/wrapper.tsx for more information
 const Page: WrappedPage = SettingsPage;
-      Page.wrappers = [RequiredAuthUserWrapper, NotebookServiceWrapper]/*outer to inner order*/;
+      Page.wrappers = [RequiredAuthUserWrapper, NotebookServiceWrapper, ProfileNavigationLayout, SettingsLayoutWrapper]/*outer to inner order*/;
 
 export default Page;
