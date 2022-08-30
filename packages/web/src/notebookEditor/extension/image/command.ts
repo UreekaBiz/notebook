@@ -1,7 +1,9 @@
 import { Editor } from '@tiptap/core';
 import { EditorState, Transaction } from 'prosemirror-state';
 
-import { createImageNode, isNodeSelection, AbstractDocumentUpdate, AttributeType, Command, ImageAttributes, NotebookSchemaType, ReplaceAndSelectNodeDocumentUpdate, VerticalAlign } from '@ureeka-notebook/web-service';
+import { createImageNode, isNodeSelection, AbstractDocumentUpdate, AttributeType, Command, ImageAttributes, NotebookSchemaType, ReplaceAndSelectNodeDocumentUpdate, VerticalAlign, UpdateAttributesDocumentUpdate, NodeName, SetNodeSelectionDocumentUpdate } from '@ureeka-notebook/web-service';
+
+import { applyDocumentUpdates } from 'notebookEditor/command/update';
 
 // ================================================================================
 // creates and selects an Image Node by replacing whatever is at the current
@@ -32,7 +34,7 @@ export class InsertAndSelectImageDocumentUpdate implements AbstractDocumentUpdat
 // == Util ========================================================================
 // sets the vertical alignment Attribute for a Node if it is not currently bottom,
 // or sets it to 'bottom' if the desiredAlignment is the same it already has
-// NOTE: currently only this branch uses this Command
+// NOTE: currently only the Image Node uses this utility
 export const setVerticalAlign = (editor: Editor, desiredAlignment: VerticalAlign): boolean => {
   const { selection } = editor.state;
   const nodePos = selection.anchor;
@@ -41,8 +43,8 @@ export const setVerticalAlign = (editor: Editor, desiredAlignment: VerticalAlign
   const { name: nodeName } = selection.node.type,
         shouldSetBottom = selection.node.attrs[AttributeType.VerticalAlign] === desiredAlignment;
 
-  return editor.chain()
-                .updateAttributes(nodeName, { verticalAlign: shouldSetBottom ? VerticalAlign.bottom : desiredAlignment })
-                .setNodeSelection(nodePos)
-                .run();
+  return applyDocumentUpdates(editor.state, [
+    new UpdateAttributesDocumentUpdate(nodeName as NodeName/*guaranteed by above check*/, { [AttributeType.VerticalAlign]: shouldSetBottom ? VerticalAlign.bottom : desiredAlignment }),
+    new SetNodeSelectionDocumentUpdate(nodePos),
+  ], editor.view);
 };
