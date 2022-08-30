@@ -20,7 +20,7 @@ export const applyDocumentUpdates = (startingState: EditorState, documentUpdates
 
     // either all DocumentUpdates are valid and applied, or none of them are applied
     if(!newTr) {
-      return false/*at least one update failed*/;
+      return false/*at least one update was not valid*/;
     } /* else -- valid update */
 
     // apply the Transaction to the current EditorState to produce a new one
