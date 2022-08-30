@@ -13,9 +13,9 @@ export const getReadableNotebookAccessField = (field: NotebookAccessField) => Re
 
 // == Sort ========================================================================
 export const ReadableNotebookSortField: Record<NotebookSortField, string> = {
-  name: 'Name',
-  createTimestamp: 'Create',
-  createdBy: 'Author',
+  name: 'Title',
+  createTimestamp: 'Create Time',
+  createdBy: 'Created By',
 };
 
 export const getReadableNotebookSortField = (field: NotebookSortField) => ReadableNotebookSortField[field];
