@@ -1,4 +1,4 @@
-import { EditorState, Selection, Transaction } from 'prosemirror-state';
+import { EditorState, Selection, TextSelection, Transaction } from 'prosemirror-state';
 
 import { Attributes } from '../attribute';
 import { NodeName } from '../node';
@@ -39,7 +39,9 @@ export class CreateCodeBlockNodeDocumentUpdate implements AbstractDocumentUpdate
 
     if(sameParent && $anchor.parent.content.size < 1) {
       const { from, to } = getBlockNodeRange(tr.selection);
-      tr.setBlockType(from, to, blockNodeType, this.attributes);
+      tr.setBlockType(from, to, blockNodeType, this.attributes)
+        .setSelection(new TextSelection(tr.doc.resolve($anchor.pos/*inside the new Block*/)));
+
       return tr/*nothing left to do*/;
     } /* else -- not the same parent (multiple Selection) or content not empty, insert Block below */
 
@@ -53,7 +55,7 @@ export class CreateCodeBlockNodeDocumentUpdate implements AbstractDocumentUpdate
     if(!newBlockNode) return false/*no valid wrapping was found*/;
 
     tr.replaceWith(creationPos, creationPos, newBlockNode)
-      .setSelection(Selection.near(tr.doc.resolve(creationPos), 1/*look forwards first*/));
+      .setSelection(Selection.near(tr.doc.resolve(creationPos + 1/*inside the new Block*/), 1/*look forwards first*/));
 
     return tr/*updated*/;
   }
