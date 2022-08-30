@@ -43,6 +43,8 @@ export const LinkMarkSpec: MarkSpec = {
   // REF: https://prosemirror.net/docs/ref/#model.MarkSpec.inclusive
   inclusive: false/*do not continue typing with link mark after having added one*/,
 
+  excludes: `${MarkName.UNDERLINE}`,
+
   // NOTE: toDOM must be defined so that the Schema knows how to create it
   //       (SEE: schema.ts)
   // NOTE: toDOM tag must match renderer tag

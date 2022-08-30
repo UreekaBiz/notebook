@@ -1,8 +1,29 @@
-import { Command, MarkName } from '@ureeka-notebook/web-service';
+import { EditorState, Transaction } from 'prosemirror-state';
 
-import { toggleOrSetMarkCommand } from '../markHolder/command';
+import { AbstractDocumentUpdate, Command, MarkName, NotebookSchemaType } from '@ureeka-notebook/web-service';
+
+import { ToggleOrSetMarkDocumentUpdate } from '../markHolder/command';
 
 // ********************************************************************************
-export const toggleBoldCommand: Command = (state, dispatch) =>
-  toggleOrSetMarkCommand(MarkName.BOLD, state.schema.marks[MarkName.BOLD])(state, dispatch);
+/** toggle the Bold Mark */
+export const toggleBoldCommand: Command = (state, dispatch) => {
+  const updateResult = new ToggleBoldDocumentUpdate().update(state, state.tr);
+  if(updateResult) {
+    dispatch(updateResult);
+    return true/*Command executed*/;
+  } /* else -- Command cannot be executed */
 
+  return false/*not executed*/;
+};
+export class ToggleBoldDocumentUpdate implements AbstractDocumentUpdate {
+  public constructor() {/*nothing additional*/}
+
+  /**
+   * modify the given Transaction such that the Bold Mark
+   * is toggled and return it
+   */
+  public update(editorState: EditorState<NotebookSchemaType>, tr: Transaction<NotebookSchemaType>) {
+    const updatedTr = new ToggleOrSetMarkDocumentUpdate(MarkName.BOLD, editorState.schema.marks[MarkName.BOLD]).update(editorState, tr);
+    return updatedTr/*updated*/;
+  }
+}

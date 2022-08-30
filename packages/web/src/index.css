@@ -126,7 +126,7 @@ img.ProseMirror-selectednode/*target inline nodes with content (e.g. asyncNodes)
   font-size: 0.8rem;
   border: 1px solid #EEEEEE;
   border-radius: 0.25em;
-  padding: 2px;
+  padding: 5px;
   box-decoration-break: clone;
 }
 

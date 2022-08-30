@@ -1,7 +1,7 @@
 import { AiOutlineVerticalAlignBottom, AiOutlineVerticalAlignMiddle, AiOutlineVerticalAlignTop } from 'react-icons/ai';
 import { FiImage } from 'react-icons/fi';
 
-import { AttributeType, MAX_IMAGE_HEIGHT, MAX_IMAGE_WIDTH, MIN_IMAGE_HEIGHT, MIN_IMAGE_WIDTH, NodeName, VerticalAlign } from '@ureeka-notebook/web-service';
+import { AttributeType, NodeName, VerticalAlign, MAX_IMAGE_HEIGHT, MAX_IMAGE_WIDTH, MIN_IMAGE_HEIGHT, MIN_IMAGE_WIDTH } from '@ureeka-notebook/web-service';
 
 import { getTextDOMRenderedValue } from 'notebookEditor/extension/util/attribute';
 import { getDialogStorage } from 'notebookEditor/model/DialogStorage';

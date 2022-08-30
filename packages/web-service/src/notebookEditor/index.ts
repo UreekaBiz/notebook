@@ -363,6 +363,7 @@ export {
   isGetPos,
   isNodeSelection,
   replaceAndSelectNodeCommand,
+  ReplaceAndSelectNodeDocumentUpdate,
   resolveNewSelection,
   SelectionRange,
   SelectionDepth,
@@ -370,6 +371,8 @@ export {
   SetNodeSelectionDocumentUpdate,
   setTextSelectionCommand,
   SetTextSelectionDocumentUpdate,
+  updateAttributesCommand,
+  UpdateAttributesDocumentUpdate,
   updateAttributesInRangeCommand,
   UpdateAttributesInRangeDocumentUpdate,
 

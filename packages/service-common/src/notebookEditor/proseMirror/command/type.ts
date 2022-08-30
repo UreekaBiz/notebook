@@ -1,16 +1,18 @@
 import { EditorState, Transaction } from 'prosemirror-state';
 
+import { NotebookSchemaType } from '../schema';
+
+// ********************************************************************************
 // TODO: create applyDocumentUpdates for cloud-functions and use
 //       AbstractDocumentUpdates as needed
 
-// ********************************************************************************
 // == Command =====================================================================
 // Commands are meant to be atomic (i.e. they "encapsulate functionality"). The
 // Transaction dispatched by a Command goes through one DocumentUpdate. Multiple
 // DocumentUpdates can be executed in a single operation through the
 // applyDocumentUpdates method (SEE: web/src/command/update.ts)
 export type Command = (state: EditorState, dispatch: (tr: Transaction) => void)
-=> boolean/*indicates whether the command can be performed*/;
+  => boolean/*indicates whether the command can be performed*/;
 
 // == Update ======================================================================
 // A DocumentUpdate encapsulates the individual modifications that a Transaction
@@ -19,7 +21,7 @@ export type Command = (state: EditorState, dispatch: (tr: Transaction) => void)
 // through the applyDocumentUpdates method (SEE: web/src/command/update.ts)
 export type DocumentUpdate = Readonly<{
   /** modifies the specified ProseMirror Document */
-  update: (editorState: EditorState, tr: Transaction) => void;
+  update: (editorState: EditorState<NotebookSchemaType>, tr: Transaction<NotebookSchemaType>) => UpdateResult;
 }>;
 
 // AbstractDocumentUpdates provide an unified interface that can be used by the
@@ -27,5 +29,10 @@ export type DocumentUpdate = Readonly<{
 // their 'single operation' semantics
 export abstract class AbstractDocumentUpdate implements DocumentUpdate {
   // NOTE: return the modified Transaction so that it can be dispatched by Commands
-  public abstract update(editorState: EditorState<any>, tr: Transaction<any>): Transaction;
+  public abstract update(editorState: EditorState<NotebookSchemaType>, tr: Transaction<NotebookSchemaType>): UpdateResult;
 }
+
+// allow maintaining ProseMirror Command 'return' semantics. Whenever a Command or
+// DocumentUpdate is allowed to proceed, the updated Transaction is returned.
+// Otherwise, false is returned, like regular PM Commands
+type UpdateResult = Transaction<NotebookSchemaType> | false;

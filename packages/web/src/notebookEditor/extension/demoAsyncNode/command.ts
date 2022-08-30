@@ -1,16 +1,36 @@
-import { createDefaultDemoAsyncNodeAttributes, createDemoAsyncNodeNode, generateNodeId, getSelectedNode, isDemoAsyncNode, replaceAndSelectNodeCommand, AttributeType, Command } from '@ureeka-notebook/web-service';
+import { EditorState, Transaction } from 'prosemirror-state';
+
+import { createDemoAsyncNodeNode, generateNodeId, getSelectedNode, isDemoAsyncNode, AbstractDocumentUpdate, Command, DemoAsyncNodeAttributes, ReplaceAndSelectNodeDocumentUpdate, NotebookSchemaType } from '@ureeka-notebook/web-service';
 
 import { focusChipToolInput } from 'notebookEditor/util';
 
 // ================================================================================
+/** insert and select a DemoAsyncNode */
 export const insertAndSelectDemoAsyncNodeCommand: Command = (state, dispatch) => {
-  const node = getSelectedNode(state);
-  if(node && isDemoAsyncNode(node)) return false/*ignore if selected node already is a demo async node*/;
-
   const id = generateNodeId();
-  const demoAsyncNode = createDemoAsyncNodeNode(state.schema, { ...createDefaultDemoAsyncNodeAttributes(), [AttributeType.Id]: id } );
-  replaceAndSelectNodeCommand(demoAsyncNode)(state, dispatch);
-  focusChipToolInput(id);
+  const updatedTr = new InsertAndSelectDemoAsyncNodeDocumentUpdate({ id }).update(state, state.tr);
+  if(updatedTr) {
+    dispatch(updatedTr);
+    focusChipToolInput(id);
+    return true/*Command executed*/;
+  } /* else -- Command cannot be executed */
 
-  return true/*Command executed*/;
+  return false/*not executed*/;
 };
+export class InsertAndSelectDemoAsyncNodeDocumentUpdate implements AbstractDocumentUpdate {
+  public constructor(private readonly attributes: Partial<DemoAsyncNodeAttributes>) {/*nothing additional*/}
+
+  /*
+   * modify the given Transaction such that a DemoAsyncNode is inserted
+   * and selected, then return it
+   */
+  public update(editorState: EditorState<NotebookSchemaType>, tr: Transaction<NotebookSchemaType>) {
+    const node = getSelectedNode(editorState);
+    if(node && isDemoAsyncNode(node)) return tr/*no updates, ignore if selected Node already is a DemoAsyncNode*/;
+
+    const demoAsyncNode = createDemoAsyncNodeNode(editorState.schema, { ...this.attributes } );
+
+    const updatedTr = new ReplaceAndSelectNodeDocumentUpdate(demoAsyncNode).update(editorState, editorState.tr);
+    return updatedTr/*updated*/;
+  }
+}

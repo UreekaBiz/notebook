@@ -7,8 +7,8 @@ import { Pagination } from './pagination';
 const log = getLogger(ServiceLogger.UTIL);
 
 // ********************************************************************************
-export const paginatedArray = <T, R>(array: Observable<T[]>, arrayObservable: ArrayObservable<T, R>, pageSize: number, context: string) =>
-  new PaginatedArrayObservable(array, arrayObservable, pageSize, context);
+export const paginatedArray = <T, R>(array$: Observable<T[]>, transformArray$: ArrayObservable<T, R>, pageSize: number, context: string) =>
+  new PaginatedArrayObservable(array$, transformArray$, pageSize, context);
 
 // ********************************************************************************
 class PaginatedArrayObservable<T, R> implements Pagination<R> {
@@ -26,10 +26,9 @@ class PaginatedArrayObservable<T, R> implements Pagination<R> {
 
   // ==============================================================================
   // the label is used solely for context in logging
-  public constructor(private readonly array$: Observable<T[]>, arrayObservable: ArrayObservable<T, R>, private readonly pageSize: number, private readonly label: string) {
-    // for every value added to direction$: switch to a new Observable over the
-    // query for the new Page, record that Page in the stack and finally pass that
-    // Page's snapshot through the snapshot$ observable
+  public constructor(private readonly array$: Observable<T[]>, transformArray$: ArrayObservable<T, R>, private readonly pageSize: number, private readonly label: string) {
+    // each time either the page number changes or the array changes: switch to the
+    // transform Observable over that page (transformArray$)
     this._documents$ = combineLatest([this.pageNumber$, this.array$])
       .pipe(
         tap(([pageNumber]) => {
@@ -37,7 +36,7 @@ class PaginatedArrayObservable<T, R> implements Pagination<R> {
           this.isLoading = true/*set to loading*/;
         }),
         map(([pageNumber, array]) => array.slice((this.pageSize * (pageNumber - 1)), this.pageSize)),
-        switchMap(pageArray => arrayObservable(pageArray)),
+        switchMap(pageArray => transformArray$(pageArray)),
         tap(pageArray => {
           this.isLoading = false/*finished loading*/;
           this._isExhausted = (pageArray.length < this.pageSize)/*update if exhausted*/;
