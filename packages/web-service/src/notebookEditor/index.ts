@@ -371,6 +371,8 @@ export {
   SetNodeSelectionDocumentUpdate,
   setTextSelectionCommand,
   SetTextSelectionDocumentUpdate,
+  updateAttributesCommand,
+  UpdateAttributesDocumentUpdate,
   updateAttributesInRangeCommand,
   UpdateAttributesInRangeDocumentUpdate,
 
