@@ -67,6 +67,10 @@ export type NotebookFilter = SortableFilter<NotebookSortField> & Readonly<{
   // NOTE: this *cannot* be used with the 'viewableBy' or 'editableBy' filters
   hashtags?: string[];
 
+  /** only show Notebooks that have / have not been published. If not specified then
+   *  all Notebooks are shown */
+  published?: boolean;
+
   // .. Deleted ...................................................................
   /** also include (soft) deleted Notebooks (`false` by default) */
   deleted?: boolean;
