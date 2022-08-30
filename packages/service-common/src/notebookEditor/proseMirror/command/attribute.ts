@@ -2,8 +2,8 @@ import { MarkType, NodeType } from 'prosemirror-model';
 import { EditorState, Transaction } from 'prosemirror-state';
 
 import { Attributes, AttributeType } from '../attribute';
-import { MarkName } from '../mark';
-import { NodeName } from '../node';
+import { isMarkName, MarkName } from '../mark';
+import { isNodeName, NodeName } from '../node';
 import { NotebookSchemaType } from '../schema';
 import { getSelectedNode, SelectionDepth } from '../selection';
 import { AbstractDocumentUpdate, Command } from './type';
@@ -35,9 +35,9 @@ export class UpdateAttributesDocumentUpdate implements AbstractDocumentUpdate {
         markType: MarkType | undefined = undefined/*default*/;
     const { schema } = editorState;
 
-    if(this.nodeOrMarkName in NodeName) {
+    if(isNodeName(this.nodeOrMarkName)) {
       nodeType = schema.nodes[this.nodeOrMarkName];
-    } else if(this.nodeOrMarkName in MarkName) {
+    } else if(isMarkName(this.nodeOrMarkName)) {
       markType = schema.marks[this.nodeOrMarkName];
     } else {
       return false/*not a valid Node or Mark name, nothing to do*/;

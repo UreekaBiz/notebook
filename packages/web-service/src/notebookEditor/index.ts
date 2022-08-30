@@ -109,6 +109,7 @@ export {
   NodeIdentifier,
   generateNodeId,
   getNodeName,
+  isNodeName,
   isNodeType,
 
   asyncNodes,
@@ -193,6 +194,7 @@ export {
   getMarkName,
   getMarkValue,
   isMarkActive,
+  isMarkName,
   markFromJSONMark,
   parseStringifiedMarksArray,
   setMarkCommand,

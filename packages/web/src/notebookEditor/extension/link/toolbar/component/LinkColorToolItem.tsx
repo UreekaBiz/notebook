@@ -25,11 +25,11 @@ export const LinkColorToolItem: React.FC<Props> = ({ editor, depth }) => {
   const handleChange = (value: string) => {
     const { anchor: prevPos } = editor.state.selection;
 
-    applyDocumentUpdates(editor.state/*starting state*/, [
+    applyDocumentUpdates(editor, [
       new ExtendMarkRangeDocumentUpdate(MarkName.LINK, {/*no attributes*/}),
       new SetLinkDocumentUpdate({ ...attrs, [AttributeType.TextColor]: value }),
       new SetTextSelectionDocumentUpdate({ from: prevPos, to: prevPos }),
-    ], editor.view);
+    ]);
 
     editor.view.focus();
   };
