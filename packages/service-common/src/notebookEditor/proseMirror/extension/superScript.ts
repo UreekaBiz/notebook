@@ -17,7 +17,10 @@ export type SuperScriptAttributes = AttributesTypeFromNodeSpecAttributes<typeof 
 export const SuperScriptMarkSpec: MarkSpec = {
   name: MarkName.SUPER_SCRIPT/*expected and guaranteed to be unique*/,
 
-  excludes: `${MarkName.SUB_SCRIPT}`/*do not allow coexistence with Subscript*/,
+  // REF: https://prosemirror.net/docs/ref/#model.MarkSpec.excludes
+  // NOTE: Marks that specify this prop must exclude themselves (which is the
+  //       default behavior when not specified)
+  excludes: `${MarkName.SUPER_SCRIPT/*exclude itself*/} ${MarkName.SUB_SCRIPT/*do not allow coexistence with Subscript*/}`,
 
   // NOTE: toDOM must be defined so that the Schema knows how to create it
   //       (SEE: schema.ts)
