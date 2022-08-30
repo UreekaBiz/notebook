@@ -1,12 +1,13 @@
-import { Flex, Table, Tbody, Td, Text, Th, Thead, Tr } from '@chakra-ui/react';
+import { Box, Button, Divider, Flex, StackDivider, Text, VStack } from '@chakra-ui/react';
 import { useState, useEffect } from 'react';
 
-import { getLogger, Logger, NotebookTuple, NotebookService, NotebookIdentifier } from '@ureeka-notebook/web-service';
+import { getLogger, Logger, NotebookService, NotebookSortField, NotebookTuple, Scrollable } from '@ureeka-notebook/web-service';
 
 import { useUserId } from 'authUser/hook/useUserId';
 import { Loading } from 'shared/component/Loading';
 import { useAsyncStatus, useIsMounted } from 'shared/hook';
-import { notebookRoute } from 'shared/routes';
+
+import { NotebookListItem } from './NotebookListItem';
 
 const log = getLogger(Logger.DEFAULT);
 
@@ -15,6 +16,12 @@ export const NotebookList = () => {
   // == State =====================================================================
   const [notebookTuples, setNotebookTuples] = useState<NotebookTuple[]>([/*initially empty*/]);
 
+  const [scrollable, setScrollable] = useState<Scrollable<NotebookTuple>>();
+
+  const [sortBy, setSortBy] = useState<NotebookSortField>('name'/*initially name*/);
+  const [sortDirection, setSortDirection] = useState<'asc' | 'desc'>('asc'/*initially asc*/);
+
+
   const isMounted = useIsMounted();
   const [status, setStatus] = useAsyncStatus();
   const userId = useUserId();
@@ -22,12 +29,14 @@ export const NotebookList = () => {
   // == Effect ====================================================================
   useEffect(() => {
     if(!userId) return/*nothing to do*/;
+    setNotebookTuples([]/*clear values*/);
 
     const notebookService = NotebookService.getInstance();
 
     setStatus('loading');
-    // TODO: use the Scrollable to implement scroll-for-more behavior
-    const scrollableNotebooks = notebookService.onNotebooks({ editableBy: userId, sort: [{ field: 'name', direction: 'asc' }] }, 100/*FIXME: see TODO!*/);
+    const scrollableNotebooks = notebookService.onNotebooks({ editableBy: userId, sort: [{ field: sortBy, direction: sortDirection }] }, 5);
+    setScrollable(scrollableNotebooks);
+
     const subscription = scrollableNotebooks.documents$().subscribe({
       next: value => {
         if(!isMounted()) return/*component is unmounted, prevent unwanted state updates*/;
@@ -43,14 +52,13 @@ export const NotebookList = () => {
     });
 
     return () => subscription.unsubscribe();
-  }, [setStatus, isMounted, userId]);
+  }, [setStatus, sortBy, sortDirection, isMounted, userId]);
 
   // == Handler ===================================================================
-  const handleNotebookClick = (notebookId: NotebookIdentifier) => {
-    const notebookPath = notebookRoute(notebookId);
-    const route = `${window.location.origin}${notebookPath}`;
+  const handleMoreClick = () => {
+    if(!scrollable || scrollable.isExhausted()) return/*nothing to do*/;
 
-    window.open(route, '_blank'/*new tab*/);
+    scrollable.moreDocuments();
   };
 
   // == UI ========================================================================
@@ -74,23 +82,30 @@ export const NotebookList = () => {
   } /* else -- Notebooks were found */
 
   return (
-    <Table variant='simple'>
-      <Thead>
-        <Tr>
-          <Th width='80%'>Name</Th>
-          <Th>Type</Th>
-          <Th isNumeric>Creation Date</Th>
-        </Tr>
-      </Thead>
-      <Tbody>
-        {notebookTuples.map((notebookTuple) => (
-          <Tr key={notebookTuple.id} _hover={{ cursor:'pointer', bg: 'gray.50' }} onClick={() => handleNotebookClick(notebookTuple.id)}>
-            <Td>{notebookTuple.obj.name}</Td>
-            <Td>{notebookTuple.obj.type}</Td>
-            <Td isNumeric>{notebookTuple.obj.createTimestamp.toDate().toLocaleDateString()}</Td>
-          </Tr>
-        ))}
-      </Tbody>
-    </Table>
+    <Box>
+      <Flex alignItems='center' justifyContent='space-between'>
+        <Box paddingY={1}>
+          <Box>
+            Published:
+          </Box>
+        </Box>
+        <Box>
+          <Box>
+            Published:
+          </Box>
+        </Box>
+        <Button onClick={handleMoreClick}>{scrollable?.isExhausted() ? 'Exhausted' : 'More!'} </Button>
+      </Flex>
+      <Divider borderColor='gray.200' marginBottom={2}/>
+      <VStack
+        divider={<StackDivider borderColor='gray.200' />}
+        spacing={2}
+        align='stretch'
+      >
+        {notebookTuples.map((notebookTuple) =>
+          <NotebookListItem key={notebookTuple.id} notebookTuple={notebookTuple} />
+        )}
+      </VStack>
+    </Box>
   );
 };
