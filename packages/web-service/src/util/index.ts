@@ -2,7 +2,7 @@
 // NOTE: './firebase' is exported from the root to ensure that it's processed first
 export * from './environment';
 export * from './error';
-export * from './observableScrolledCollection';
+export { Scrollable } from './observableScrolledCollection';
 export * from './pagination';
 export * from './version';
 
