@@ -50,7 +50,7 @@ export class CreateCodeBlockNodeDocumentUpdate implements AbstractDocumentUpdate
 
     const creationPos = $head.after();
     const newBlockNode = blockNodeType.createAndFill(this.attributes);
-    if(!newBlockNode) return tr/*no updates*/;
+    if(!newBlockNode) return false/*no valid wrapping was found*/;
 
     tr.replaceWith(creationPos, creationPos, newBlockNode)
       .setSelection(Selection.near(tr.doc.resolve(creationPos), 1/*look forwards first*/));
