@@ -1,4 +1,4 @@
-import { NotebookFilter, NotebookSortField } from '@ureeka-notebook/web-service';
+import { Notebook, NotebookFilter } from '@ureeka-notebook/web-service';
 
 // ********************************************************************************
 // == Access ======================================================================
@@ -12,10 +12,11 @@ export const ReadableNotebookAccessField: Record<NotebookAccessField, string> = 
 export const getReadableNotebookAccessField = (field: NotebookAccessField) => ReadableNotebookAccessField[field];
 
 // == Sort ========================================================================
-export const ReadableNotebookSortField: Record<NotebookSortField, string> = {
+type LimitedNotebookSortField = keyof Pick<Notebook, 'name' | 'createdBy'>/*SEE: TODO below*/;
+export const ReadableNotebookSortField: Record<LimitedNotebookSortField, string> = {
   name: 'Title',
-  createTimestamp: 'Create Time',
+  // NOTE: holding on adding this one: createTimestamp: 'Create Time',
   createdBy: 'Created By',
 };
 
-export const getReadableNotebookSortField = (field: NotebookSortField) => ReadableNotebookSortField[field];
+export const getReadableNotebookSortField = (field: LimitedNotebookSortField) => ReadableNotebookSortField[field];
