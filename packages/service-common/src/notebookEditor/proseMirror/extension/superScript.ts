@@ -17,6 +17,8 @@ export type SuperScriptAttributes = AttributesTypeFromNodeSpecAttributes<typeof 
 export const SuperScriptMarkSpec: MarkSpec = {
   name: MarkName.SUPER_SCRIPT/*expected and guaranteed to be unique*/,
 
+  excludes: `${MarkName.SUB_SCRIPT}`/*do not allow coexistence with Subscript*/,
+
   // NOTE: toDOM must be defined so that the Schema knows how to create it
   //       (SEE: schema.ts)
   // NOTE: toDOM tag must match renderer tag
