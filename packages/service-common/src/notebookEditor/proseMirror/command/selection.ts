@@ -3,7 +3,6 @@ import { EditorState, NodeSelection, Selection, TextSelection, Transaction } fro
 
 import { minFromMax } from '../../../util/number';
 import { AttributeType } from '../attribute';
-import { isTextNode } from '../extension/text';
 import { NotebookSchemaType } from '../schema';
 import { getSelectedNode, SelectionDepth } from '../selection';
 import { AbstractDocumentUpdate, Command } from './type';
@@ -16,8 +15,12 @@ export type SelectionRange = { from: number; to: number; }
 /** set a TextSelection given the Range */
 export const setTextSelectionCommand = (selectionRange: SelectionRange): Command => (state, dispatch) => {
   const updatedTr =  new SetTextSelectionDocumentUpdate(selectionRange).update(state, state.tr);
-  dispatch(updatedTr);
-  return true/*Command executed*/;
+  if(updatedTr) {
+    dispatch(updatedTr);
+    return true/*Command executed*/;
+  } /* else -- Command cannot be executed */
+
+  return false/*not executed*/;
 };
 export class SetTextSelectionDocumentUpdate implements AbstractDocumentUpdate {
   public constructor(private readonly selectionRange: SelectionRange) {/*nothing additional*/}
@@ -25,7 +28,7 @@ export class SetTextSelectionDocumentUpdate implements AbstractDocumentUpdate {
    * modify the given Transaction such that a TextSelection
    * is set across the given Range
    */
-  public update(editorState: EditorState, tr: Transaction) {
+  public update(editorState: EditorState<NotebookSchemaType>, tr: Transaction<NotebookSchemaType>) {
     const { doc } = editorState;
     const { from, to } = this.selectionRange;
 
@@ -45,8 +48,12 @@ export class SetTextSelectionDocumentUpdate implements AbstractDocumentUpdate {
 /** set a NodeSelection at the given position */
 export const setNodeSelectionCommand = (nodePos: number): Command => (state, dispatch) => {
   const updatedTr =  new SetNodeSelectionDocumentUpdate(nodePos).update(state, state.tr);
-  dispatch(updatedTr);
-  return true/*Command executed*/;
+  if(updatedTr) {
+    dispatch(updatedTr);
+    return true/*Command executed*/;
+  } /* else -- Command cannot be executed */
+
+  return false/*not executed*/;
 };
 export class SetNodeSelectionDocumentUpdate implements AbstractDocumentUpdate {
   public constructor(private readonly nodePos: number) {/*nothing additional*/}
@@ -54,7 +61,7 @@ export class SetNodeSelectionDocumentUpdate implements AbstractDocumentUpdate {
    * modify the given Transaction such that a NodeSelection
    * is set at the given position
    */
-  public update(editorState: EditorState, tr: Transaction) {
+  public update(editorState: EditorState<NotebookSchemaType>, tr: Transaction<NotebookSchemaType>) {
     const { doc } = tr;
     tr.setSelection(NodeSelection.create(doc, minFromMax(this.nodePos, 0/*Doc start*/, doc.content.size)));
     return tr/*updated*/;
@@ -74,8 +81,12 @@ const getNodeBefore = (selection: Selection) => {
  */
 export const replaceAndSelectNodeCommand = (node: ProseMirrorNode<NotebookSchemaType>): Command => (state, dispatch) => {
   const updatedTr =  new ReplaceAndSelectNodeDocumentUpdate(node).update(state, state.tr);
-  dispatch(updatedTr);
-  return true/*Command executed*/;
+  if(updatedTr) {
+    dispatch(updatedTr);
+    return true/*Command executed*/;
+  } /* else -- Command cannot be executed */
+
+  return false/*not executed*/;
 };
 export class ReplaceAndSelectNodeDocumentUpdate implements AbstractDocumentUpdate {
   public constructor(private readonly node: ProseMirrorNode<NotebookSchemaType>) {/*nothing additional*/ }
@@ -84,7 +95,7 @@ export class ReplaceAndSelectNodeDocumentUpdate implements AbstractDocumentUpdat
    * modify the given Transaction such that a Bloc Node is created
    * below the current Selection
    */
-  public update(editorState: EditorState, tr: Transaction) {
+  public update(editorState: EditorState<NotebookSchemaType>, tr: Transaction<NotebookSchemaType>) {
     tr.replaceSelectionWith(this.node);
 
     const nodeBefore = getNodeBefore(tr.selection),
@@ -104,8 +115,12 @@ export class ReplaceAndSelectNodeDocumentUpdate implements AbstractDocumentUpdat
  */
 export const updateAttributesInRangeCommand = (attribute: AttributeType, value: string, depth: SelectionDepth): Command => (state, dispatch) => {
   const updatedTr =  new UpdateAttributesInRangeDocumentUpdate(attribute, value, depth).update(state, state.tr);
-  dispatch(updatedTr);
-  return true/*Command executed*/;
+  if(updatedTr) {
+    dispatch(updatedTr);
+    return true/*Command executed*/;
+  } /* else -- Command cannot be executed */
+
+  return false/*not executed*/;
 };
 export class UpdateAttributesInRangeDocumentUpdate implements AbstractDocumentUpdate {
   public constructor(private readonly attribute: AttributeType, private readonly value: string, private readonly depth: SelectionDepth) {/*nothing additional*/}
@@ -113,7 +128,7 @@ export class UpdateAttributesInRangeDocumentUpdate implements AbstractDocumentUp
    * modify the given Transaction such that the Nodes in the current Selection
    * get the specified attribute updated to the specified value
    */
-  public update(editorState: EditorState, tr: Transaction) {
+  public update(editorState: EditorState<NotebookSchemaType>, tr: Transaction<NotebookSchemaType>) {
     tr.setSelection(editorState.selection);
     const { from, to } = tr.selection;
 
@@ -121,8 +136,7 @@ export class UpdateAttributesInRangeDocumentUpdate implements AbstractDocumentUp
     if(from !== to) {
       const { doc } = tr;
       doc.nodesBetween(from, to, (node, pos) => {
-        if(!tr.doc || !node) return false/*nothing to do*/;
-        if(isTextNode(node)) return false/*skip text Nodes since they cannot have attributes*/;
+        if(!tr.doc || !node || node.isText) return false/*nothing to do, do not include Text Nodes since they cannot have attributes*/;
 
         const nodeAttrs = { ...node.attrs, [this.attribute]: this.value };
         tr.setNodeMarkup(pos, undefined/*preserve type*/, nodeAttrs);
@@ -130,7 +144,7 @@ export class UpdateAttributesInRangeDocumentUpdate implements AbstractDocumentUp
       });
     } else {
       const node = getSelectedNode(editorState, this.depth);
-      if(!node) return tr/*no more updates to be performed*/;
+      if(!node) return tr/*nothing left to do*/;
 
       const nodeAttrs = { ...node.attrs, [this.attribute]: this.value };
       let pos = editorState.selection.$anchor.before(this.depth);
