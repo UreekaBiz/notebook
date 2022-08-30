@@ -46,7 +46,7 @@ export type Label = Creatable & Updatable & Readonly<{ /*Firestore*/
   ordered: boolean/*write-many server-written*/;
   /** the (ordered) list of non-deleted {@link NotebookIdentifier}'s associated
    *  with this Label. Bounded by {@link #MAX_LABEL_NOTEBOOKS}. */
-  notebooks: NotebookIdentifier[]/*write-many server-written*/;
+  notebookIds: NotebookIdentifier[]/*write-many server-written*/;
 
   // NOTE: because Firestore does not have 'OR' queries, 'viewers' contains *all*
   //       Users that can view associated Notebooks (including Editors) so that it
@@ -85,7 +85,7 @@ export type LabelPublished = Creatable & Readonly<{ /*Firestore*/
   ordered: boolean/*write-many server-written*/;
   /** the (ordered) list of non-deleted and published {@link NotebookIdentifier}'s
    *  associated with this Label. Bounded by {@link #MAX_LABEL_NOTEBOOKS}. */
-  notebooks: NotebookIdentifier[]/*write-many server-written*/;
+  notebookIds: NotebookIdentifier[]/*write-many server-written*/;
 
   /** in order to support fast prefix (typeahead find) searches, at most
    *  #MAX_PREFIX_COUNT normalized prefixes of the Label's name */
@@ -95,14 +95,3 @@ export type LabelPublished = Creatable & Readonly<{ /*Firestore*/
   sortName: string/*write-many server-written*/;
 }>;
 export type LabelPublishedTuple = ObjectTuple<LabelIdentifier, LabelPublished>;
-
-// == Label Summary (RTDB) ========================================================
-// SEE: ./datastore.ts: LABEL_SUMMARY
-export type LabelSummary = Readonly<{ /*RTDB only*/
-  /** the number of Notebooks associated with this Label */
-  // NOTE: this is visible to end-Users. If this ever becomes a problem then a
-  //       specific Summary for public Labels can be created
-  notebook: number/*atomic-increment*/;
-  /** the number of Published Notebooks associated with this Label */
-  publishedNotebook: number/*atomic-increment*/;
-}>;

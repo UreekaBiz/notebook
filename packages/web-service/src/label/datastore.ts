@@ -1,9 +1,8 @@
-import { ref } from 'firebase/database';
 import { collection, doc, limit, orderBy, query, where, CollectionReference, Query } from 'firebase/firestore';
 
-import { computeLabelPrefixQueryString, isBlank, nameof, LabelIdentifier, LabelPublished_Storage, Label_Storage, LABELS, LABEL_PUBLISHEDS, LABEL_SUMMARIES, MAX_LABEL_SEARCH_RESULTS } from '@ureeka-notebook/service-common';
+import { computeLabelPrefixQueryString, isBlank, nameof, LabelIdentifier, LabelPublished_Storage, Label_Storage, LABELS, LABEL_PUBLISHEDS, MAX_LABEL_SEARCH_RESULTS } from '@ureeka-notebook/service-common';
 
-import { database, firestore } from '../util/firebase';
+import { firestore } from '../util/firebase';
 import { buildSortQuery } from '../util/firestore';
 import { LabelFilter, LabelPublishedFilter } from './type';
 
@@ -71,8 +70,3 @@ export const labelPublishedQuery = (filter: LabelPublishedFilter) => {
 
   return buildQuery;
 };
-
-// ** RTDB ************************************************************************
-// == Collection ==================================================================
-// -- Label Summary -------------------------------------------------------------
-export const labelSummary = (labelId: LabelIdentifier) => ref(database, `/${LABEL_SUMMARIES}/${labelId}`);

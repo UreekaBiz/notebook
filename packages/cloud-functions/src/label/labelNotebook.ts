@@ -30,7 +30,7 @@ export const addNotebook = async (
       if(notebook.deleted) throw new ApplicationError('functions/not-found', `Cannot add a non-existing Notebook (${notebookId}) to a Label (${labelId}) for User (${userId}).`);
 
       const labelNotebook: LabelNotebook_Update = {
-        notebooks: arrayUnion(notebookId)/*append to end*/,
+        notebookIds: arrayUnion(notebookId)/*append to end*/,
 
         lastUpdatedBy: userId,
         updateTimestamp: ServerTimestamp/*by contract*/,
@@ -64,7 +64,7 @@ export const removeNotebook = async (
       // NOTE: the associated Notebook *may no longer exist* (therefore no check is made)
 
       const labelNotebook: LabelNotebook_Update = {
-        notebooks: arrayRemove(notebookId)/*append to end*/,
+        notebookIds: arrayRemove(notebookId)/*append to end*/,
 
         lastUpdatedBy: userId,
         updateTimestamp: ServerTimestamp/*by contract*/,
@@ -107,7 +107,7 @@ export const reorderNotebooks = async (
       //        isn't deleted (by contract)
 
       const labelNotebook: LabelNotebook_Update = {
-        notebooks: notebookOrder,
+        notebookIds: notebookOrder,
 
         lastUpdatedBy: userId,
         updateTimestamp: ServerTimestamp/*by contract*/,
