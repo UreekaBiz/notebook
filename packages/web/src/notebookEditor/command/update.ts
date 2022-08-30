@@ -1,18 +1,20 @@
-import { EditorState } from 'prosemirror-state';
-import { EditorView } from 'prosemirror-view';
+import { Editor } from '@tiptap/core';
+import { NodeSelection, Selection, TextSelection } from 'prosemirror-state';
+import { Step } from 'prosemirror-transform';
 
-import { AbstractDocumentUpdate, NotebookSchemaType } from '@ureeka-notebook/web-service';
+import { isNodeSelection, AbstractDocumentUpdate, NotebookSchemaType } from '@ureeka-notebook/web-service';
 
 // ********************************************************************************
 /**
- * Performs the functionality of the given {@link AbstractDocumentUpdate}s
- * by merging the EditorState produced after applying each of their Transaction
- * modifications, resulting in their effect being combined as a single operation
- * through the History
+ * apply the combined effects of the given {@link AbstractDocumentUpdate}s
+ * in a single Transaction, effectively combining the effects of the Commands that
+ * use them
  */
-export const applyDocumentUpdates = (startingState: EditorState<NotebookSchemaType>, documentUpdates: AbstractDocumentUpdate[], view: EditorView<NotebookSchemaType>): boolean => {
-  let currentState = startingState/*default*/;
+export const applyDocumentUpdates = (editor: Editor, documentUpdates: AbstractDocumentUpdate[]): boolean => {
+  const steps: Step<NotebookSchemaType>[] = [];
+  let finalSelection: Selection<NotebookSchemaType> = editor.state.selection/*default*/;
 
+  let currentState = editor.state/*default starting state*/;
   for(let i=0; i<documentUpdates.length; i++) {
     // get the Transaction resulting from applying the DocumentUpdate
     // to the current EditorState
@@ -20,16 +22,32 @@ export const applyDocumentUpdates = (startingState: EditorState<NotebookSchemaTy
 
     // either all DocumentUpdates are valid and applied, or none of them are applied
     if(!newTr) {
-      return false/*at least one update was not valid*/;
+      return false/*at least one update was not valid (SEE: AbstractDocumentUpdate)*/;
     } /* else -- valid update */
 
-    // apply the Transaction to the current EditorState to produce a new one
+    // save the Transaction's steps and update the current State
+    for(let i = 0; i<newTr.steps.length; i++) {
+      steps.push(newTr.steps[i]);
+    }
     currentState = currentState.apply(newTr);
+
+    // ensure the final Transaction receives the final Selection
+    if(i === documentUpdates.length-1/*last Transaction*/) {
+      finalSelection = newTr.selection;
+    } /* else -- do not change default */
   }
 
-  // update the View with the final EditorState, after all DocumentUpdates have
-  // been applied, resulting in a single change for the History
-  view.focus();
-  view.updateState(currentState);
+  // create final, applied Transaction
+  const finalTransaction = editor.state.tr/*new Transaction*/;
+  for(let i=0; i<steps.length; i++) {
+    finalTransaction.step(steps[i]);
+  }
+  if(isNodeSelection(finalSelection)) {
+    finalTransaction.setSelection(NodeSelection.create(finalTransaction.doc, finalSelection.from));
+  } else {
+    finalTransaction.setSelection(TextSelection.create(finalTransaction.doc, finalSelection.anchor, finalSelection.head));
+  }
+
+  editor.view.dispatch(finalTransaction);
   return true/*updates applied*/;
 };

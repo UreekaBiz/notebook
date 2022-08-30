@@ -46,15 +46,15 @@ export const LinkDialog: React.FC<Props> = ({ editor, isOpen, onClose }) => {
       const { to } = editor.state.selection;
 
       if(empty) {
-        applyDocumentUpdates(editor.state/*starting state*/, [
+        applyDocumentUpdates(editor, [
           new ToggleLinkDocumentUpdate(linkAttrs),
           new InsertContentAtDocumentUpdate({ from: to, to }, href.trim()),
-        ], editor.view);
+        ]);
       } else {
-        applyDocumentUpdates(editor.state/*starting state*/, [
+        applyDocumentUpdates(editor/*starting state*/, [
           new SetLinkDocumentUpdate(linkAttrs),
           new SetTextSelectionDocumentUpdate({ from: to, to }),
-        ], editor.view);
+        ]);
       }
 
     } catch(error) {

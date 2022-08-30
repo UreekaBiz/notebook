@@ -43,8 +43,8 @@ export const setVerticalAlign = (editor: Editor, desiredAlignment: VerticalAlign
   const { name: nodeName } = selection.node.type,
         shouldSetBottom = selection.node.attrs[AttributeType.VerticalAlign] === desiredAlignment;
 
-  return applyDocumentUpdates(editor.state, [
+  return applyDocumentUpdates(editor, [
     new UpdateAttributesDocumentUpdate(nodeName as NodeName/*guaranteed by above check*/, { [AttributeType.VerticalAlign]: shouldSetBottom ? VerticalAlign.bottom : desiredAlignment }),
     new SetNodeSelectionDocumentUpdate(nodePos),
-  ], editor.view);
+  ]);
 };
