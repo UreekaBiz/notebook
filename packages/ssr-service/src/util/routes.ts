@@ -6,9 +6,10 @@ import { NotebookIdentifier } from '@ureeka-notebook/service-common';
 // ********************************************************************************
 // == Root Routes =================================================================
 const root = '/' as const;
-export const notebookRootRoute = `${root}notebook/` as const;
-export const publishedNotebookRootRoute = `${root}published/` as const;
-export const settingsRootRoute = `${root}settings/` as const;
+export const notebookRootRoute = `${root}notebook` as const;
+export const profileRootRoute = `${root}profile` as const;
+export const publishedNotebookRootRoute = `${root}published` as const;
+export const settingsRootRoute = `${root}settings` as const;
 
 // == Routes ======================================================================
 // -- Core ------------------------------------------------------------------------
@@ -18,6 +19,8 @@ export const coreRoutes = {
   logout:'/logout',
 
   notebook: notebookRootRoute,
+
+  profile: profileRootRoute,
 
   publishedNotebook: publishedNotebookRootRoute,
 
@@ -29,15 +32,24 @@ export const coreRoutes = {
 export const notebookRoutes = {
   root: notebookRootRoute,
 
-  notebook: `${notebookRootRoute}:notebookId`,
+  notebook: `${notebookRootRoute}/:notebookId`,
 } as const;
 export const notebookRoute = (notebookId: NotebookIdentifier) => `${notebookRoutes.root}${notebookId}`;
+
+// -- Profile ---------------------------------------------------------------------
+export const profileRoutes = {
+  root: profileRootRoute,
+
+  notebooks: `${profileRootRoute}/notebooks`,
+  collections: `${profileRootRoute}/collections`,
+  hashtags: `${profileRootRoute}/hashtags`,
+};
 
 // -- Settings --------------------------------------------------------------------
 export const settingsRoutes = {
   root: settingsRootRoute,
 
-  apiKey: `${settingsRootRoute}api-key`,
+  apiKey: `${settingsRootRoute}/api-key`,
 };
 
 // == Public Routes ===============================================================
@@ -46,6 +58,6 @@ export const settingsRoutes = {
 export const publishedNotebookRoutes = {
   root: publishedNotebookRootRoute,
 
-  publishedNotebook: `${publishedNotebookRootRoute}:publishedNotebookId`,
+  publishedNotebook: `${publishedNotebookRootRoute}/:publishedNotebookId`,
 } as const;
-export const publishedNotebookRoute = (notebookId: NotebookIdentifier) => `${publishedNotebookRoutes.root}${notebookId}`;
+export const publishedNotebookRoute = (notebookId: NotebookIdentifier) => `${publishedNotebookRoutes.root}/${notebookId}`;

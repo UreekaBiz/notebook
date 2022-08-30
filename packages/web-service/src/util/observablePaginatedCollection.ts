@@ -13,8 +13,8 @@ const log = getLogger(ServiceLogger.UTIL);
 // ********************************************************************************
 // NOTE: the query can *ONLY* contain `where` and `orderBy` clauses. The addition
 //       of any other clauses will produce undefined results
-export const paginatedQuery = <F, R>(query: Query<F>, querySnapshotObservable: QuerySnapshotObservable<F, R>, pageSize: number, context: string) =>
-  new PaginatedQueryObservable(query, querySnapshotObservable, pageSize, context);
+export const paginatedQuery = <F, R>(query: Query<F>, querySnapshot$: QuerySnapshotObservable<F, R>, pageSize: number, context: string) =>
+  new PaginatedQueryObservable(query, querySnapshot$, pageSize, context);
 
 // ********************************************************************************
 // each Page consists of 'previous' and 'next' snapshots
@@ -66,7 +66,7 @@ class PaginatedQueryObservable<T, R> implements Pagination<R> {
 
   // ==============================================================================
   // the label is used solely for context in logging
-  public constructor(private readonly firestoreQuery: Query<T>, querySnapshotObservable: QuerySnapshotObservable<T, R>, private readonly pageSize: number, private readonly label: string) {
+  public constructor(private readonly firestoreQuery: Query<T>, querySnapshot$: QuerySnapshotObservable<T, R>, private readonly pageSize: number, private readonly label: string) {
     // for every value added to direction$: switch to a new Observable over the
     // query for the new Page, record that Page in the stack and finally pass that
     // Page's snapshot through the snapshot$ observable
@@ -84,7 +84,7 @@ class PaginatedQueryObservable<T, R> implements Pagination<R> {
         switchMap(({ direction, previousPage, snapshot }) => {
           this.recordPage(direction, previousPage, snapshot);
 
-          return querySnapshotObservable(snapshot);
+          return querySnapshot$(snapshot);
         }),
         tap(tuples => {
           this.isLoading = false/*finished loading*/;

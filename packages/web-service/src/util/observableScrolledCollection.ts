@@ -41,8 +41,8 @@ export interface Scrollable<T> {
 }
 
 // ********************************************************************************
-export const scrollableQuery = <F, R>(query: Query<F>, queryObservable: QueryObservable<F, R>, scrollSize: number, context: string) =>
-  new ScrollableQueryObservable(query, queryObservable, scrollSize, context);
+export const scrollableQuery = <F, R>(query: Query<F>, query$: QueryObservable<F, R>, scrollSize: number, context: string) =>
+  new ScrollableQueryObservable(query, query$, scrollSize, context);
 
 // ********************************************************************************
 class ScrollableQueryObservable<T, R> implements Scrollable<R> {
@@ -65,7 +65,7 @@ class ScrollableQueryObservable<T, R> implements Scrollable<R> {
 
   // ==============================================================================
   // the label is used solely for context in logging
-  public constructor(firestoreQuery: Query<T>, queryObservable: QueryObservable<T, R>, private readonly batchSize: number, private readonly label: string) {
+  public constructor(firestoreQuery: Query<T>, query$: QueryObservable<T, R>, private readonly batchSize: number, private readonly label: string) {
     this.desiredDocumentCount = batchSize;
     this.desiredDocumentCount$ = new BehaviorSubject(batchSize);
 
@@ -82,7 +82,7 @@ log.debug(`${this.label}:documents$: desiredDocumentCount changed; isExhausted: 
         //        overlapping listeners as per notes above
         switchMap(desiredDocumentCount => {
           const buildQuery = query(firestoreQuery, limit(desiredDocumentCount));
-          return queryObservable(buildQuery);
+          return query$(buildQuery);
         }),
         tap(tuples => {
           this.isLoading = false/*no longer loading*/;

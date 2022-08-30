@@ -10,7 +10,7 @@ interface Props {
   children: ReactNode;
 }
 export const SettingsLayoutWrapper: React.FC<Props> = ({ children }: Props) =>
-  <Flex alignItems='stretch' justifyContent='space-between' width='100%' maxWidth='1200' paddingTop={10}>
+  <Flex>
     <Box flex='1 1'/*take all remaining space*/ marginRight={24}>{children}</Box>
     <Box width={200}>
       <SettingsNavigation />

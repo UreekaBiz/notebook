@@ -9,7 +9,6 @@ export {
   LabelIdentifier,
   LabelPublished,
   LabelPublishedTuple,
-  LabelSummary,
   LabelTuple,
   LabelVisibility,
   MAX_LABEL_SHARE_USERS,

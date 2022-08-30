@@ -1,6 +1,9 @@
-import { NotebookIdentifier, NotebookTuple, Notebook_Storage, NotebookPublishedTuple, NotebookPublished_Storage } from '@ureeka-notebook/service-common';
+import { map, of } from 'rxjs';
+
+import { isDefined, isTupleNotNull, NotebookIdentifier, NotebookTuple, Notebook_Storage, NotebookPublishedTuple, NotebookPublished_Storage } from '@ureeka-notebook/service-common';
 
 import { defaultDocumentConverter, defaultDocumentTupleConverter, defaultTupleConverter } from '../util/firestore';
+import { joinDetail$, ArrayObservable } from '../util/observable';
 import { QueryObservable } from '../util/observableCollection';
 import { documentOnce } from '../util/observableDocument';
 import { queryTuples } from '../util/observableTupleCollection';
@@ -18,6 +21,17 @@ export const notebookTupleOnceById$ = (notebookId: NotebookIdentifier) =>
 export const notebookTupleById$ = (notebookId: NotebookIdentifier) =>
   documentTuple(notebookDocument(notebookId), defaultDocumentTupleConverter);
 
+// .. Id's => Notebooks ...........................................................
+// detail-joins Notebook (filtering out any missing Notebooks)
+export const notebookIdsToNotebooks$: ArrayObservable<NotebookIdentifier, NotebookTuple> =
+  notebookIds =>
+      joinDetail$(
+        of(notebookIds),
+        notebookId => notebookTupleOnceById$(notebookId),
+        (_, detail) => isTupleNotNull(detail) ? detail : undefined/*not-found -- filtered below*/
+      )
+      .pipe(map(results => results.filter(isDefined))/*filter out any not-found Notebooks*/);
+
 // -- Notebook Published ----------------------------------------------------------
 // NOTE: these are used in cases (e.g. Label => Notebook) where there is only a
 //       NotebookIdentifier and must join to NotebookPublished
@@ -29,6 +43,17 @@ export const notebookPublishedContentOnceById$ = (notebookId: NotebookIdentifier
   documentOnce(notebookPublishedContentDocument(notebookId), defaultDocumentConverter);
 export const notebookPublishedContentTupleById$ = (notebookId: NotebookIdentifier) =>
   documentTuple(notebookPublishedContentDocument(notebookId), defaultDocumentTupleConverter);
+
+// .. Id's => Notebooks ...........................................................
+// detail-joins Notebook Published (filtering out any missing Notebooks)
+export const notebookPublishedIdsToNotebookPublisheds$: ArrayObservable<NotebookIdentifier, NotebookPublishedTuple> =
+  notebookIds =>
+      joinDetail$(
+        of(notebookIds),
+        notebookId => notebookPublishedTupleOnceById$(notebookId),
+        (_, detail) => isTupleNotNull(detail) ? detail : undefined/*not-found -- filtered below*/
+      )
+      .pipe(map(results => results.filter(isDefined))/*filter out any not-found Published Notebooks*/);
 
 // == Search ======================================================================
 // -- Notebook --------------------------------------------------------------------

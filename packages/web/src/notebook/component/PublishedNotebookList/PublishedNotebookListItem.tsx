@@ -4,7 +4,7 @@ import { MouseEventHandler } from 'react';
 
 import { NotebookPublishedTuple } from '@ureeka-notebook/web-service';
 
-import { coreRoutes } from 'shared/routes';
+import { publishedNotebookRoute } from 'shared/routes';
 import { getMinifiedReadableDate } from 'ui/util';
 import { UserProfileInline } from 'user/component/UserProfileInline';
 import { useUserProfile } from 'user/hook/useUserProfile';
@@ -35,7 +35,7 @@ export const PublishedNotebookListItem: React.FC<Props> = ({ notebookPublishedTu
   return (
     <Box>
       <UserProfileInline userId={createdBy} userProfile={userProfile} onClick={handleUserClick} />
-      <NextLink href={`${coreRoutes.publishedNotebook}${id}`} passHref/*pass ref to 'a' child -- needed to open in new tab*/ >
+      <NextLink href={publishedNotebookRoute(id)} passHref/*pass ref to 'a' child -- needed to open in new tab*/ >
         <Link color='#444' textDecoration='none' _hover={{ cursor: 'pointer' }}>
           <Heading
             fontSize={26}

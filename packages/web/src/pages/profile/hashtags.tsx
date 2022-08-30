@@ -1,8 +1,5 @@
-import { Box, Button, Flex, Heading, Text } from '@chakra-ui/react';
+import { Box, Flex, Heading } from '@chakra-ui/react';
 
-import { APIKeyTable } from 'authUser/settings/APIKeyTable';
-import { APIKeyDialog } from 'authUser/settings/APIKeyDialog';
-import { SettingsLayoutWrapper } from 'authUser/settings/SettingsLayoutWrapper';
 import { RequiredAuthUserWrapper } from 'authUser/RequiredAuthUserWrapper';
 import { WrappedPage } from 'core/wrapper';
 import { NotebookServiceWrapper } from 'notebook/NotebookServiceWrapper';
@@ -14,14 +11,9 @@ import { ProfileNavigationLayout } from 'shared/layout/ProfileNavigationLayout';
 function APIKeyPage() {
   return (
     <Box>
-      <Text>Settings</Text>
       <Flex alignItems='center' justifyContent='space-between' width='full' marginBottom={4}>
-        <Heading flex='1 1'>API Keys</Heading>
-        <APIKeyDialog
-          button={({ onClick }) => <Button colorScheme='blue' onClick={onClick}>New API Key</Button>}
-        />
+        <Heading flex='1 1'>Hashtags</Heading>
       </Flex>
-      <APIKeyTable />
     </Box>
   );
 }
@@ -29,6 +21,6 @@ function APIKeyPage() {
 // --------------------------------------------------------------------------------
 // SEE: core/wrapper.tsx for more information
 const Page: WrappedPage = APIKeyPage;
-      Page.wrappers = [RequiredAuthUserWrapper, NotebookServiceWrapper, ProfileNavigationLayout, SettingsLayoutWrapper]/*outer to inner order*/;
+      Page.wrappers = [RequiredAuthUserWrapper, NotebookServiceWrapper, ProfileNavigationLayout]/*outer to inner order*/;
 
 export default Page;
