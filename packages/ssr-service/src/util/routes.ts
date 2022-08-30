@@ -34,7 +34,7 @@ export const notebookRoutes = {
 
   notebook: `${notebookRootRoute}/:notebookId`,
 } as const;
-export const notebookRoute = (notebookId: NotebookIdentifier) => `${notebookRoutes.root}${notebookId}`;
+export const notebookRoute = (notebookId: NotebookIdentifier) => `${notebookRoutes.root}/${notebookId}`;
 
 // -- Profile ---------------------------------------------------------------------
 export const profileRoutes = {

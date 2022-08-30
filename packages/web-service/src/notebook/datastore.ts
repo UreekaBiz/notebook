@@ -46,6 +46,10 @@ export const notebookQuery = (filter: NotebookFilter) => {
     buildQuery = query(buildQuery, where(nameof<Notebook_Storage>('hashtags'), 'array-contains-any', Array.from(hashtags).slice(0, MAX_ARRAY_CONTAINS_ANY)/*bounded by contract*/));
   } /* else -- 'hashtags' was not specified in the filter (with valid hashtags) */
 
+  if(filter.published !== undefined) {
+    buildQuery = query(buildQuery, where(nameof<Notebook_Storage>('isPublished'), '==', filter.published));
+  } /* else -- 'published' was not specified in the filter */
+
   // if no filter is applied then both deleted and non-deleted entries are included.
   // * If only-deleted then include only deleted = true
   // * If nothing is specified then only include non-deleted (i.e. deleted = false)

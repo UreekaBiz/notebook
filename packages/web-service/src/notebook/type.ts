@@ -42,6 +42,9 @@ export type NotebookSortField = keyof Pick<Notebook,
   | 'name'
   | 'createTimestamp'
   | 'createdBy'
+  // TODO: need to think through how to best do 'updateTimestamp' since the updates
+  //       are really in the Versions, not the Notebook itself. And don't want to
+  //       constantly update the Notebook just for the sake of updating the timestamp.
 >;
 
 /** the resulting query is the 'AND' of each member but the 'OR' of any multi-valued
@@ -66,6 +69,10 @@ export type NotebookFilter = SortableFilter<NotebookSortField> & Readonly<{
    *  ignored.) */
   // NOTE: this *cannot* be used with the 'viewableBy' or 'editableBy' filters
   hashtags?: string[];
+
+  /** only show Notebooks that have / have not been published. If not specified then
+   *  all Notebooks are shown */
+  published?: boolean;
 
   // .. Deleted ...................................................................
   /** also include (soft) deleted Notebooks (`false` by default) */
