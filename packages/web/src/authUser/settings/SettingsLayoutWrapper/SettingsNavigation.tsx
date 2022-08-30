@@ -1,18 +1,15 @@
-import { Box, Text, VStack } from '@chakra-ui/react';
+import { Box, Link, Text, VStack } from '@chakra-ui/react';
+import NextLink from 'next/link';
 import { useRouter } from 'next/router';
 
 import { settingsRoutes } from 'shared/routes';
 
 // ********************************************************************************
-// == Items =======================================================================
+// == Type ========================================================================
 type NavigationItem = Readonly<{
   title: string;
   description: string;
 
-  /**
-   * path to redirect the user when the item is clicked
-   * SEE: settingsRoutes.ts
-   */
   path: string;
 }>;
 
@@ -34,19 +31,26 @@ const navigationItems: ReadonlyArray<NavigationItem> = [
 // == Component ===================================================================
 export const SettingsNavigation: React.FC = () => {
   const router = useRouter();
-  const handleItemClick = (item: NavigationItem) => {
-    router.push(item.path);
-  };
 
   return (
     <Box>
       <VStack spacing={8} alignItems='flex-start' paddingLeft={4} borderLeft='1px solid #EAEAEA'>
-        {navigationItems.map((item, i) => (
-          <Box key={i} _hover={{ cursor: 'pointer' }} onClick={() => handleItemClick(item)}>
-            <Text fontSize='lg' fontWeight='bold'>{item.title}</Text>
-            <Text>{item.description}</Text>
-          </Box>
-        ))};
+        {navigationItems.map(({ description, path, title }, i) => {
+          const isActive = router.pathname === path;
+
+          return (
+            <NextLink key={path} href={path} passHref >
+              <Link
+                color={isActive ? '#3B5FC0' : '#555'}
+                textDecoration='none'
+                _hover={{ cursor: 'pointer' }}
+              >
+                <Text fontSize='lg' fontWeight='bold'>{title}</Text>
+                <Text>{description}</Text>
+              </Link>
+            </NextLink>
+          );
+        })}
       </VStack>
     </Box>
   );

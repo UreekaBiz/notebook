@@ -70,7 +70,7 @@ export const ProfileNavigation: React.FC = () => {
       </Box>
       <Flex flexDirection='column'>
         {tabs.map(({ label, path, icon }) => {
-          const isActive = router.pathname.startsWith(path);
+          const isActive = router.pathname === path;
           return (
             <NextLink key={path} href={path} passHref >
               <Link
