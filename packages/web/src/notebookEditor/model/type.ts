@@ -45,10 +45,14 @@ export enum ExtensionPriority {
   // SEE: notebookEditor/type.ts
   PARAGRAPH = 118,
 
+  // NOTE: Link must have a higher priority than other marks so that it gets
+  //       preference over them when creating, pasting or applying parse rules
+  LINK = 117/*T&E*/,
+
   // NOTE: asyncNodes must check if they are dirty after the codeBlocks have
   //       been modified accordingly (e.g. codeBlockReferences and hashes) have
   //       been recomputed. Hence this must run before other Extensions
-  ASYNC_NODE = 117,
+  ASYNC_NODE = 116,
 
   // NOTE: Since the text extension adds a \t whenever Tab is pressed, but this
   //       behavior is not always guaranteed to be the desired one (e.g. when
