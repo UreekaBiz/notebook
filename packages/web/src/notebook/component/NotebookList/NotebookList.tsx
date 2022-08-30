@@ -42,7 +42,7 @@ export const NotebookList = () => {
     const notebookService = NotebookService.getInstance();
 
     setStatus('loading');
-    const scrollableNotebooks = notebookService.onNotebooks({ [accessField]: userId, sort: [{ field: sortByField, direction: sortDirection }] }, 5);
+    const scrollableNotebooks = notebookService.onNotebooks({ [accessField]: userId, sort: [{ field: sortByField, direction: sortDirection }] }, 5/*FIXME: temporary for testing*/);
     setScrollable(scrollableNotebooks);
 
     const subscription = scrollableNotebooks.documents$().subscribe({
