@@ -1,12 +1,16 @@
 import { EditorState, Transaction } from 'prosemirror-state';
 
-import { getBlockNodeRange, getParagraphNodeType, isMarkHolderNode, AbstractDocumentUpdate, Command } from '@ureeka-notebook/web-service';
+import { getBlockNodeRange, getParagraphNodeType, isMarkHolderNode, AbstractDocumentUpdate, Command, NotebookSchemaType } from '@ureeka-notebook/web-service';
 
 // ********************************************************************************
 export const setParagraphCommand: Command = (state, dispatch) => {
   const updatedTr = new SetParagraphDocumentUpdate().update(state, state.tr);
-  dispatch(updatedTr);
-  return true/*command executed*/;
+  if(updatedTr) {
+    dispatch(updatedTr);
+    return true/*Command executed*/;
+  } /* else -- Command cannot be executed */
+
+  return false/*not executed*/;
 };
 // NOTE: this DocumentUpdate has to take into account the following constraints:
 //       1. Paragraphs set through this DocumentUpdate should not inherit any marks
@@ -19,7 +23,7 @@ export class SetParagraphDocumentUpdate implements AbstractDocumentUpdate {
    * modify the given Transaction such that a Paragraph Node is set following
    * the given constraints (SEE: NOTE above) and return it
    */
-  public update(editorState: EditorState, tr: Transaction) {
+  public update(editorState: EditorState<NotebookSchemaType>, tr: Transaction<NotebookSchemaType>) {
     const { from, to } = getBlockNodeRange(tr.selection);
 
     // NOTE: removing MarkHolders before changing NodeType to ensure final

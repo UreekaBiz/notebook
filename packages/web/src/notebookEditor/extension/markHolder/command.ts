@@ -1,7 +1,7 @@
 import { Mark, MarkType } from 'prosemirror-model';
 import { EditorState, TextSelection, Transaction } from 'prosemirror-state';
 
-import { getMarkName, isMarkActive, stringifyMarksArray, AbstractDocumentUpdate, AttributeType, Command, MarkName, MarkHolderNodeType, SetMarkDocumentUpdate, UnsetMarkDocumentUpdate } from '@ureeka-notebook/web-service';
+import { getMarkName, isMarkActive, stringifyMarksArray, AbstractDocumentUpdate, AttributeType, Command, MarkName, MarkHolderNodeType, NotebookSchemaType, SetMarkDocumentUpdate, UnsetMarkDocumentUpdate } from '@ureeka-notebook/web-service';
 
 import { getMarkHolder, parseStoredMarks } from './util';
 
@@ -11,17 +11,21 @@ import { getMarkHolder, parseStoredMarks } from './util';
  */
 export const toggleOrSetMarkCommand = (markName: MarkName, markType: MarkType): Command => (state, dispatch) => {
   const updatedTr = new ToggleOrSetMarkDocumentUpdate(markName, markType).update(state, state.tr);
-  dispatch(updatedTr);
-  return true/*command executed*/;
+  if(updatedTr) {
+    dispatch(updatedTr);
+    return true/*Command executed*/;
+  } /* else -- Command cannot be executed */
+
+  return false/*not executed*/;
 };
 export class ToggleOrSetMarkDocumentUpdate implements AbstractDocumentUpdate {
-  public constructor(private readonly markName: MarkName, private readonly markType: MarkType) {/*nothing additional*/ }
+  public constructor(private readonly markName: MarkName, private readonly markType: MarkType) {/*nothing additional*/}
 
   /*
    * modify the given Transaction such that it is toggled or set depending on
    * whether or not the given MarkType is active in a MarkHolder
    */
-  public update(editorState: EditorState, tr: Transaction) {
+  public update(editorState: EditorState<NotebookSchemaType>, tr: Transaction<NotebookSchemaType>) {
     // if MarkHolder is defined toggle the Mark inside it
     const markHolder = getMarkHolder(editorState);
     if(markHolder) {
@@ -43,20 +47,24 @@ export class ToggleOrSetMarkDocumentUpdate implements AbstractDocumentUpdate {
  */
 export const toggleMarkInMarkHolderCommand = (markHolder: MarkHolderNodeType, appliedMarkType: MarkType): Command => (state, dispatch) => {
   const updatedTr = new ToggleMarkInMarkHolderDocumentUpdate(markHolder, appliedMarkType).update(state, state.tr);
-  dispatch(updatedTr);
-  return true/*Command executed*/;
+  if(updatedTr) {
+    dispatch(updatedTr);
+    return true/*Command executed*/;
+  } /* else -- Command cannot be executed */
+
+  return false/*not executed*/;
 };
 export class ToggleMarkInMarkHolderDocumentUpdate implements AbstractDocumentUpdate {
-  public constructor(private readonly markHolder: MarkHolderNodeType, private readonly appliedMarkType: MarkType) {/*nothing additional*/ }
+  public constructor(private readonly markHolder: MarkHolderNodeType, private readonly appliedMarkType: MarkType) {/*nothing additional*/}
 
   /*
    * modify the given Transaction such that a Mark is toggled in the
    * MarkHolder and return it
    */
-  public update(editorState: EditorState, tr: Transaction) {
+  public update(editorState: EditorState<NotebookSchemaType>, tr: Transaction<NotebookSchemaType>) {
     let newMarksArray: Mark[] = [];
     const storedMarks = this.markHolder.attrs[AttributeType.StoredMarks];
-    if(!storedMarks) return tr/*no updates*/;
+    if(!storedMarks) return false/*no Marks to store*/;
 
     if(parseStoredMarks(editorState.schema, storedMarks).some(Mark => getMarkName(Mark) === this.appliedMarkType.name)) {
       // already included, remove it
@@ -66,9 +74,8 @@ export class ToggleMarkInMarkHolderDocumentUpdate implements AbstractDocumentUpd
       newMarksArray = [...parseStoredMarks(editorState.schema, storedMarks), this.appliedMarkType.create()];
     }
 
-    // (SEE: NOTE above)
     const { selection } = editorState;
-    if(!selection.$anchor.parent.isBlock) return tr/*no updates, Command cannot be executed, Selection parent is not a Block Node*/;
+    if(!selection.$anchor.parent.isBlock) return false/*cannot be updated, Selection parent is not a Block Node*/;
 
     const startOfParentNodePos = tr.doc.resolve(selection.anchor - selection.$anchor.parentOffset);
     const { pos: startingPos } = tr.selection.$anchor;

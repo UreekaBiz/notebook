@@ -17,8 +17,12 @@ type InsertContentAtOptions = {
 /** Insert the given content at the specified SelectionRange */
 export const insertContentAtCommand = (selectionRange: SelectionRange, value: string | JSONNode | JSONNode[], options?: InsertContentAtOptions): Command => (state, dispatch) => {
   const updatedTr = new InsertContentAtDocumentUpdate(selectionRange, value, options).update(state, state.tr);
-  dispatch(updatedTr);
-  return true/*Command executed*/;
+  if(updatedTr) {
+    dispatch(updatedTr);
+    return true/*Command executed*/;
+  } /* else -- Command cannot be executed */
+
+  return false/*not executed*/;
 };
 export class InsertContentAtDocumentUpdate implements AbstractDocumentUpdate  {
   public constructor(private readonly selectionRange: SelectionRange, private readonly value: string | JSONNode | JSONNode[], private readonly options?: InsertContentAtOptions) {/*nothing additional*/}
@@ -31,9 +35,9 @@ export class InsertContentAtDocumentUpdate implements AbstractDocumentUpdate  {
     const options = { parseOptions: {/*default none*/}, updateSelection: true, ...this.options };
     const content = createNodeFromContent(editorState.schema, this.value, { parseOptions: { preserveWhitespace: 'full', ...options.parseOptions } });
 
-    // don’t dispatch an empty fragment, prevent errors
+    // don’t dispatch an empty Fragment, prevent errors
     if(content.toString() === '<>') {
-      return tr/*no updates*/;
+      return false/*invalid Fragment*/;
     } /* else -- valid Fragment */
 
     let isOnlyTextContent = false/*default*/;

@@ -10,8 +10,12 @@ import { AbstractDocumentUpdate, Command } from './type';
 /** set a Mark across the current Selection */
 export const setMarkCommand = (markName: MarkName, attributes: Partial<Attributes>): Command => (state, dispatch) => {
   const updatedTr = new SetMarkDocumentUpdate(markName, attributes).update(state, state.tr);
-  dispatch(updatedTr);
-  return true/*Command executed*/;
+  if(updatedTr) {
+    dispatch(updatedTr);
+    return true/*Command executed*/;
+  } /* else -- Command cannot be executed */
+
+  return false/*not executed*/;
 };
 export class SetMarkDocumentUpdate implements AbstractDocumentUpdate {
   public constructor(private readonly markName: MarkName, private readonly attributes: Partial<Attributes>) {/*nothing additional*/}
@@ -61,8 +65,12 @@ export class SetMarkDocumentUpdate implements AbstractDocumentUpdate {
  */
 export const unsetMarkCommand = (markName: MarkName, extendEmptyMarkRange: boolean): Command => (state, dispatch) => {
   const updatedTr = new UnsetMarkDocumentUpdate(markName, extendEmptyMarkRange).update(state, state.tr);
-  dispatch(updatedTr);
-  return true/*command executed*/;
+  if(updatedTr) {
+    dispatch(updatedTr);
+    return true/*Command executed*/;
+  } /* else -- Command cannot be executed */
+
+  return false/*not executed*/;
 };
 export class UnsetMarkDocumentUpdate implements AbstractDocumentUpdate {
   public constructor(private readonly markName: MarkName, private readonly extendEmptyMarkRange: boolean) {/*nothing additional*/}
@@ -101,8 +109,12 @@ export class UnsetMarkDocumentUpdate implements AbstractDocumentUpdate {
 /** Unset or set the given Mark depending on whether or not it is currently active */
 export const toggleMarkCommand = (markName: MarkName, attributes: Partial<Attributes>): Command => (state, dispatch) => {
   const updatedTr = new ToggleMarkDocumentUpdate(markName, attributes).update(state, state.tr);
-  dispatch(updatedTr);
-  return true/*Command executed*/;
+  if(updatedTr) {
+    dispatch(updatedTr);
+    return true/*Command executed*/;
+  } /* else -- Command cannot be executed */
+
+  return false/*not executed*/;
 };
 export class ToggleMarkDocumentUpdate implements AbstractDocumentUpdate {
   public constructor(private readonly markName: MarkName, private readonly attributes: Partial<Attributes>) {/*nothing additional*/}
@@ -128,8 +140,12 @@ export class ToggleMarkDocumentUpdate implements AbstractDocumentUpdate {
  */
 export const extendMarkRangeCommand = (markName: MarkName, attributes: Partial<Attributes>): Command => (state, dispatch) => {
   const updatedTr = new ExtendMarkRangeDocumentUpdate(markName, attributes).update(state, state.tr);
-  dispatch(updatedTr);
-  return true/*Command executed*/;
+  if(updatedTr) {
+    dispatch(updatedTr);
+    return true/*Command executed*/;
+  } /* else -- Command cannot be executed */
+
+  return false/*not executed*/;
 };
 export class ExtendMarkRangeDocumentUpdate implements AbstractDocumentUpdate {
   public constructor(private readonly markName: MarkName, private readonly attributes: Partial<Attributes>) {/*nothing additional*/}
