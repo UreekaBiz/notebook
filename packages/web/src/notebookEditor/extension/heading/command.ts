@@ -1,74 +1,59 @@
-import { CommandProps } from '@tiptap/core';
+import { EditorState, Transaction } from 'prosemirror-state';
 
-import { createBoldMark, getBlockNodeRange, generateNodeId, getSelectedNode, isHeadingLevel, isHeadingNode, AttributeType, CommandFunctionType, HeadingLevel, NodeName, MarkName, NodeIdentifier } from '@ureeka-notebook/web-service';
+import { createBoldMark, createMarkHolderNode, getBlockNodeRange, getHeadingNodeType, generateNodeId, getSelectedNode, isHeadingLevel, isHeadingNode, stringifyMarksArray, AbstractDocumentUpdate, AttributeType, Command, HeadingAttributes, NodeName, MarkName, NodeIdentifier, NotebookSchemaType, UpdateAttributesDocumentUpdate } from '@ureeka-notebook/web-service';
 
-import { createMarkHolderJSONNode } from 'notebookEditor/extension/markHolder/util';
+import { SetParagraphDocumentUpdate } from '../paragraph/command';
 
 // ********************************************************************************
-// NOTE: ambient module to ensure command is TypeScript-registered for TipTap
-declare module '@tiptap/core' {
-  interface Commands<ReturnType> {
-    [NodeName.HEADING/*Expected and guaranteed to be unique. (SEE: /notebookEditor/model/node)*/]: {
-      /** create a Heading and set the cursor inside of it */
-      setHeading: CommandFunctionType<typeof setHeadingCommand, ReturnType>;
-    };
-  }
-}
+export const setHeadingCommand = (attributes: Partial<HeadingAttributes>): Command => (state, dispatch) => {
+  const updatedTr = new SetHeadingDocumentUpdate(attributes).update(state, state.tr);
+  if(updatedTr) {
+    dispatch(updatedTr);
+    return true/*Command executed*/;
+  } /* else -- Command cannot be executed */
 
-// --------------------------------------------------------------------------------
-export const setHeadingCommand = (attributes: { level: HeadingLevel; }) => ({ editor, state, chain }: CommandProps) => {
-  if(!isHeadingLevel(attributes[AttributeType.Level])) return false/*invalid command, level for heading not supported*/;
-  const parent = getSelectedNode(state, state.selection.$anchor.depth);
-  if(!parent) return false/*nothing to do*/;
-
-  // NOTE: empty implies that parent($anchor) === parent($head)
-  const { empty } = state.selection;
-
-  // check if MarkHolder must be added
-  if(empty && parent.content.size < 1) {
-    return chain().setNode(NodeName.HEADING, attributes).insertContent(createMarkHolderJSONNode(editor, [MarkName.BOLD])).run();
-  } /* else -- no need to add MarkHolder */
-
-  // check for level change
-  if(empty && isHeadingNode(parent)) {
-    return chain().updateAttributes(NodeName.HEADING, { ...parent.attrs, [AttributeType.Level]: attributes.level }).run();
-  } /* else -- not a level change, setHeading */
-
-  return chain()
-        .setNode(NodeName.HEADING, attributes)
-        .command(applyBoldToHeadingContent)
-        .command(setIdsToNewHeadings/*TODO: find a better way to address this issue once commands are standardized*/)
-        .run();
+  return false/*not executed*/;
 };
+export class SetHeadingDocumentUpdate implements AbstractDocumentUpdate {
+  public constructor(private readonly attributes: Partial<HeadingAttributes>) {/*nothing additional*/ }
 
-// == Util ========================================================================
-// applies the Bold Mark to the whole content of the parents of the selection
-const applyBoldToHeadingContent = (props: CommandProps) => {
-  const { editor, dispatch, tr } = props;
-  if(tr.selection.$anchor.parent.content.size < 0) return false/*command cannot be executed, the Heading has no content to apply the Bold Mark*/;
+  public update(editorState: EditorState<NotebookSchemaType>, tr: Transaction<NotebookSchemaType>) {
+    const { level } = this.attributes;
+    if(!level || !isHeadingLevel(level)) return false/*invalid command, level for Heading not supported*/;
 
-  if(dispatch) {
-    const { from, to } = getBlockNodeRange(editor.state.selection);
-    tr.addMark(from, to, createBoldMark(editor.schema));
-    dispatch(tr);
-  } /* else -- called from can() (SEE: src/notebookEditor/README.md/#Commands) */
+    const parent = getSelectedNode(editorState, editorState.selection.$anchor.depth);
+    if(!parent) return false/*nothing to do, no parent Node*/;
 
-  return true/*command can be executed*/;
-};
+    const { schema } = editorState;
+    const { empty } = editorState.selection/*NOTE: empty implies that parent($anchor) === parent($head)*/;
+    const { from, to } = getBlockNodeRange(editorState.selection);
 
-// if new Headings are created while setting the block type, ensure they do
-// not get repeated Ids
-const setIdsToNewHeadings = (props: CommandProps) => {
-  const seenIds = new Set<NodeIdentifier>();
-  const { editor, dispatch, tr } = props;
+    // check if MarkHolder must be added
+    if(empty && parent.content.size < 1) {
+      tr.setBlockType(from, to, getHeadingNodeType(schema), { [AttributeType.Id]: generateNodeId() })
+        .insert(editorState.selection.$anchor.pos, createMarkHolderNode(schema, { storedMarks: stringifyMarksArray([schema.marks[MarkName.BOLD].create()]) }));
+      return tr/*updated, nothing left to do*/;
+    } /* else -- no need to add MarkHolder */
 
-  if(dispatch) {
-    const { from, to } = getBlockNodeRange(editor.state.selection);
+    // check for toggle or level change
+    if(empty && isHeadingNode(parent)) {
+      // check for toggle
+      if(parent.attrs[AttributeType.Level] === level) {
+        const updatedTr = new SetParagraphDocumentUpdate().update(editorState, tr);
+        return updatedTr/*updated, nothing left to do*/;
+      } /* else -- level change */
+
+      const updatedTr = new UpdateAttributesDocumentUpdate(NodeName.HEADING, { ...parent.attrs, [AttributeType.Level]: this.attributes.level }).update(editorState, tr);
+      return updatedTr/*updated, nothing left to do*/;
+    } /* else -- not a toggle or level change, setHeading */
+
+    tr.setBlockType(from, to, getHeadingNodeType(schema), { [AttributeType.Level]: level })
+      .addMark(from, to, createBoldMark(schema));
+
+    const seenIds = new Set<NodeIdentifier>();
     tr.doc.nodesBetween(from, to, (node, nodePos) => {
       const id = node.attrs[AttributeType.Id];
-      if(!id) return/*nothing left to do*/;
-
-      if(id && isHeadingNode(node) && seenIds.has(id)) {
+      if(id === null/*new Heading, no Id set*/ || id && isHeadingNode(node) && seenIds.has(id)) {
         tr.setNodeMarkup(nodePos, node.type, { ...node.attrs, [AttributeType.Id]: generateNodeId() });
         return/*nothing left to do*/;
       } /* else -- add to seen ids */
@@ -76,9 +61,6 @@ const setIdsToNewHeadings = (props: CommandProps) => {
       seenIds.add(id);
     });
 
-    dispatch(tr);
-  } /* else -- called from can() (SEE: src/notebookEditor/README.md/#Commands) */
-
-  return true/*command can be executed*/;
-};
-
+    return tr/*updated*/;
+  }
+}
