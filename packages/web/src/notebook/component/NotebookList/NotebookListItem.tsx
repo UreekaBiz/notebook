@@ -1,4 +1,4 @@
-import { Box, Flex, IconButton, Link, Menu, MenuButton, MenuItem, MenuList } from '@chakra-ui/react';
+import { Box, Flex, IconButton, Link, Menu, MenuButton, MenuItem, MenuList, Text } from '@chakra-ui/react';
 import NextLink from 'next/link';
 import { BsThreeDots } from 'react-icons/bs';
 import { HiTrash } from 'react-icons/hi';
@@ -22,9 +22,10 @@ export const NotebookListItem: React.FC<Props> = ({ notebookTuple }) => {
             {obj.name}
           </Link>
         </NextLink>
-        <Box color='#AAA' fontSize='13px' fontWeight={500}>
-          {getMinifiedReadableDate(obj.createTimestamp.toDate())}
-        </Box>
+        <Flex color='#AAA' fontSize='13px' fontWeight={500}>
+          Edited
+          <Text marginLeft={1} color='#999' fontWeight={600}>{getMinifiedReadableDate(obj.updateTimestamp.toDate())}</Text>
+        </Flex>
       </Box>
       <Menu>
         <MenuButton
