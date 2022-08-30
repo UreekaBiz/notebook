@@ -8,7 +8,7 @@ import { getEnvBoolean, isLoggedOut } from '@ureeka-notebook/web-service';
 
 import { useAuthedUser } from 'authUser/hook/useAuthedUser';
 import { useRouter } from 'next/router';
-import { coreRoutes } from 'shared/routes';
+import { coreRoutes, profileRoutes } from 'shared/routes';
 import { UserProfileAvatar } from 'user/component/UserProfileAvatar';
 import { getPrivateDisplayName } from 'user/util';
 
@@ -36,7 +36,7 @@ export const AuthAvatar: React.FC<Props> = ({ buttonSize, showLogIn = true }) =>
 
   // == Handler ===================================================================
   const handleHomeClick = () => router.push(coreRoutes.root);
-  const handleNotebooksClick = () => router.push(coreRoutes.notebook);
+  const handleNotebooksClick = () => router.push(profileRoutes.notebooks);
 
   const handleSettingsClick = () => router.push(coreRoutes.settings);
   const handleSignOutClick = () => router.push(coreRoutes.logout);
