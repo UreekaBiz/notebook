@@ -46,6 +46,9 @@ export type Notebook = Creatable & Updatable & Readonly<{ /*Firestore*/
   /** set of normalized hashtags associated with the Notebook. Hashtags become part
    *  of a Published Notebook (i.e. they become public when published) */
   hashtags: string[]/*write-many server-written*/;
+  // NOTE: Labels are *not* stored in the Notebook document. Instead, Notebooks are
+  //       stored in the Label document. This is necessary since Notebooks within a
+  //       Label may be ordered. (It also keeps the Notebook document small.)
 
   /** has this Notebook been published? If published then a separate (public)
    *  Published document exists. Notebooks are not published by default. */
