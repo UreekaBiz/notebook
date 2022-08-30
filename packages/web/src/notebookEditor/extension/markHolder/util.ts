@@ -1,17 +1,9 @@
 import { Editor } from '@tiptap/core';
 import { EditorState } from 'prosemirror-state';
 
-import { createMarkHolderNode, getMarkName, isMarkHolderNode, markFromJSONMark, parseStringifiedMarksArray, stringifyMarksArray, AttributeType, JSONNode, MarkName, NotebookSchemaType } from '@ureeka-notebook/web-service';
+import { getMarkName, isMarkHolderNode, markFromJSONMark, parseStringifiedMarksArray, AttributeType, MarkName, NotebookSchemaType } from '@ureeka-notebook/web-service';
 
 // ********************************************************************************
-// creates a MarkHolder Node holding the Marks corresponding to the given MarkNames
-export const createMarkHolderJSONNode = (editor: Editor, markNames: MarkName[]): JSONNode => {
-  const storedMarks = markNames.map(markName => editor.schema.marks[markName].create());
-  const markHolder = createMarkHolderNode(editor.schema, { storedMarks: stringifyMarksArray(storedMarks) });
-
-  return markHolder.toJSON() as JSONNode;
-};
-
 /**
  * Checks to see whether or not the first child of the parent of the current Editor
  * {@link Selection} is a MarkHolderNode. It returns it if it is, and otherwise it
