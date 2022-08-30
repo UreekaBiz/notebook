@@ -20,9 +20,9 @@ const sortFields = Object.entries(ReadableNotebookSortField).map(([key, value]) 
 
 // == Component ===================================================================
 export const NotebookList = () => {
+  const userId = useUserId();
   const isMounted = useIsMounted();
   const [status, setStatus] = useAsyncStatus();
-  const userId = useUserId();
 
   // == State =====================================================================
   const [notebookTuples, setNotebookTuples] = useState<NotebookTuple[]>([/*initially empty*/]);
