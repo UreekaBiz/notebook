@@ -197,10 +197,11 @@ export const reorderNotebooks = async (
     return await firestore.runTransaction(async transaction => {
       const snapshot = await transaction.get(labelRef);
       if(!snapshot.exists) throw new ApplicationError('functions/not-found', `Cannot reorder Notebooks on a non-existing Label (${labelId}) for User (${userId}).`);
-      const parentLabel = snapshot.data()!;
+      const label = snapshot.data()!;
+      if(label.createdBy !== userId) throw new ApplicationError('functions/permission-denied', `Cannot reorder Notebooks on Label (${labelId}) not created by User (${userId}).`);
 
       // FIXME: ensure that each Notebook in the notebookOrder array exists and
-      //        isn't deleted (by contract)
+      //        isn't deleted and the User has permissions for it (by contract)
 
       const labelNotebook: LabelNotebook_Update = {
         notebookIds: notebookOrder,
@@ -210,7 +211,7 @@ export const reorderNotebooks = async (
       };
       await labelRef.update(labelNotebook);
 
-      if(parentLabel.visibility === LabelVisibility.Public) {
+      if(label.visibility === LabelVisibility.Public) {
         // FIXME: check if the Notebook is published and if so then also remove from the published collection
       } /* else -- the parent Label is private and nothing else needs to be done */
 
