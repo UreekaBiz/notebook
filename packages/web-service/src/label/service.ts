@@ -115,6 +115,20 @@ export class LabelService {
                           `Published Label (${labelId}}) Published Notebooks`);
   }
 
+  // == Search ====================================================================
+  // -- Typeahead-find Search -----------------------------------------------------
+  /**
+   * @param query a non-blank trimmed Label query prefix for typeahead find-style
+   *        searches
+   * @returns an Observable over zero or more Labels that match the specified prefix
+   *          in lexicographical order. This result is bound to return at most
+   *          {@link MAX_LABEL_SEARCH_RESULTS} results. If the max number are returned
+   *          then it is safe to assume that there are more than the max.
+   */
+  public typeaheadSearchLabels$(query: string): Observable<LabelTuple[]> {
+    return typeaheadFindLabels$(query);
+  }
+
   // == Read ======================================================================
   // -- Label ---------------------------------------------------------------------
   /**
@@ -153,20 +167,6 @@ export class LabelService {
     if(labelPublished == null/*not-found*/) throw new ApplicationError('functions/not-found', `Could not find Label for Label Id (${labelId}).`);
     // TODO: test 'permission-denied' case!
     return labelPublished;
-  }
-
-  // == Search ====================================================================
-  // -- Typeahead-find Search -----------------------------------------------------
-  /**
-   * @param query a non-blank trimmed Label query prefix for typeahead find-style
-   *        searches
-   * @returns an Observable over zero or more Labels that match the specified prefix
-   *          in lexicographical order. This result is bound to return at most
-   *          {@link MAX_LABEL_SEARCH_RESULTS} results. If the max number are returned
-   *          then it is safe to assume that there are more than the max.
-   */
-  public typeaheadSearchLabels$(query: string): Observable<LabelTuple[]> {
-    return typeaheadFindLabels$(query);
   }
 
   // == CUD =======================================================================
