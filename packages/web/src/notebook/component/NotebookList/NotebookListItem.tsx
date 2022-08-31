@@ -16,9 +16,9 @@ export const NotebookListItem: React.FC<Props> = ({ notebookTuple }) => {
 
   return (
     <Flex alignItems='center'>
-      <Box flex='1 1' >
+      <Box flex='1 1' whiteSpace='nowrap' overflow='hidden' paddingRight={4}>
         <NextLink href={notebookRoute(id)} passHref>
-          <Link color='#222' fontSize='15px' fontWeight={600}>
+          <Link display='block' color='#222' fontSize='15px' fontWeight={600} textOverflow='ellipsis' overflow='hidden'>
             {obj.name}
           </Link>
         </NextLink>

@@ -16,7 +16,7 @@ export const ProfileNavigationLayout: React.FC<Props> = ({ children }) => {
         <Box width={150} marginRight={24}>
           <ProfileNavigation/>
         </Box>
-        <Box flex='1 1'/*use remaining space*/>{children}</Box>
+        <Box flex='1 1'/*use remaining space*/ minWidth={0}>{children}</Box>
       </Flex>
     </Flex>
   );
