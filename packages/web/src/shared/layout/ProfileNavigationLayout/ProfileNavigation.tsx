@@ -4,8 +4,8 @@ import { ReactElement } from 'react';
 import { BiHome } from 'react-icons/bi';
 import { CgFileDocument } from 'react-icons/cg';
 import { FaHashtag } from 'react-icons/fa';
+import { HiOutlineViewGrid } from 'react-icons/hi';
 import { TbSettings } from 'react-icons/tb';
-import { IoMdGrid } from 'react-icons/io';
 
 import { useValidatedAuthedUser } from 'authUser/hook/useValidatedAuthedUser';
 import { useRouter } from 'next/router';
@@ -36,7 +36,7 @@ const tabs: Tab[] = [
   {
     label: 'Collections',
     path:  profileRoutes.collections,
-    icon: <IoMdGrid />,
+    icon: <HiOutlineViewGrid />,
   },
   {
     label: 'Hashtags',
