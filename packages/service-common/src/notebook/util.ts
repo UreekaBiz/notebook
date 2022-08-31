@@ -22,15 +22,38 @@ export const isNotebookRole = (userId: UserIdentifier, notebook: Notebook, role:
   }
 };
 
+// ................................................................................
+// same as above but with no waterfall
+export const isNotebookCreatorStrict = (userId: UserIdentifier, notebook: Notebook): boolean =>
+  (notebook.createdBy === userId);
+export const isNotebookEditorStrict = (userId: UserIdentifier, notebook: Notebook): boolean =>
+  notebook.editors.includes(userId) && !isNotebookCreator(userId, notebook);
+export const isNotebookViewerStrict = (userId: UserIdentifier, notebook: Notebook): boolean =>
+  notebook.viewers.includes(userId) && !isNotebookEditorStrict(userId, notebook)/*also confirms not Creator*/;
+
 // == Share =======================================================================
 // returns the Map of shared UserIdentifiers to ShareRole for the specified Notebook
 export const getNotebookShareRoles = (notebook: Notebook): Map<UserIdentifier, ShareRole> => {
   const userRoles = new Map<UserIdentifier, ShareRole>();
 
-  // add the Users in ascending role order
+  // add the Users in ascending role order so it results in the User having the
+  // 'highest' role
   notebook.viewers.forEach(userId => userRoles.set(userId, ShareRole.Viewer));
   notebook.editors.forEach(userId => userRoles.set(userId, ShareRole.Editor));
   userRoles.set(notebook.createdBy, ShareRole.Creator);
 
   return userRoles;
+};
+
+// ................................................................................
+// returns the count of Viewers and Editors for the specified Notebook
+// NOTE: there is always one and only one Creator so not explicitly counted / returned
+export const getNotebookShareCounts = (notebook: Notebook): Readonly<{ viewers: number, editors: number }> => {
+  const creators = new Set([notebook.createdBy]),
+        editors  = new Set(notebook.editors.filter(userId => !creators.has(userId))),
+        viewers  = new Set(notebook.viewers.filter(userId => !editors.has(userId) && !creators.has(userId)));
+  return {
+    viewers: viewers.size,
+    editors: editors.size,
+  };
 };

@@ -8,9 +8,9 @@ export type NotebookAccessField = keyof Pick<NotebookFilter, 'createdBy' | 'edit
 export const isNotebookAccessField = (value: any): value is NotebookAccessField => value === 'createdBy' || value === 'editableBy' || value === 'viewableBy';
 
 export const ReadableNotebookAccessField: Record<NotebookAccessField, string> = {
-  createdBy: 'Created By',
-  editableBy: 'Editable',
-  viewableBy: 'Viewable',
+  createdBy: 'Creator',
+  editableBy: 'Editor',
+  viewableBy: 'Viewer',
 };
 
 export const getReadableNotebookAccessField = (field: NotebookAccessField) => ReadableNotebookAccessField[field];
