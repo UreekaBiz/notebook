@@ -5,6 +5,10 @@ import { SortableFilter } from '../util/firestore';
 // ** Service-Common **************************************************************
 export {
   // SEE: @ureeka-notebook/service-common: notebook/util.ts
+  isNotebookCreator,
+  isNotebookEditor,
+  isNotebookViewer,
+  isNotebookRole,
   getNotebookShareRoles,
   getNotebookShareCounts,
 

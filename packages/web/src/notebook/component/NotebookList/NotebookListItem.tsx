@@ -6,21 +6,25 @@ import { FiUsers } from 'react-icons/fi';
 import { HiTrash } from 'react-icons/hi';
 import { MdOutlineRemoveRedEye } from 'react-icons/md';
 
-import { getNotebookShareCounts, NotebookTuple } from '@ureeka-notebook/web-service';
+import { getNotebookShareCounts, isNotebookCreator, NotebookTuple } from '@ureeka-notebook/web-service';
 
 import { AddToCollectionDialog } from 'notebookEditor/component/AddToCollectionDialog';
 import { ShareNotebookDialog } from 'notebookEditor/component/ShareNotebookDialog';
 import { notebookRoute } from 'shared/routes';
 import { getMinifiedReadableDate } from 'ui/util';
+import { useAuthedUser } from 'authUser/hook/useAuthedUser';
 
 // ********************************************************************************
 interface Props {
   notebookTuple: NotebookTuple;
 }
 export const NotebookListItem: React.FC<Props> = ({ notebookTuple }) => {
+  const authedUser = useAuthedUser();
   const { id, obj } = notebookTuple;
 
   const { editors, viewers } = getNotebookShareCounts(obj);
+
+  const isCreator = authedUser && isNotebookCreator(authedUser.authedUser.userId, obj);
 
   return (
     <Flex alignItems='center'>
@@ -85,12 +89,14 @@ export const NotebookListItem: React.FC<Props> = ({ notebookTuple }) => {
             </MenuItem>
             )}
           />
-          <AddToCollectionDialog notebook={obj} notebookId={id} component={onClick => (
-            <MenuItem disabled icon={<BsGrid />} onClick={onClick}>
-              Add to collection
-            </MenuItem>
-            )}
-          />
+          {isCreator && (
+            <AddToCollectionDialog notebook={obj} notebookId={id} component={onClick => (
+              <MenuItem disabled icon={<BsGrid />} onClick={onClick}>
+                Add to collection
+              </MenuItem>
+              )}
+            />
+          )}
           <MenuItem disabled icon={<HiTrash />}>
             Delete (Disabled!)
           </MenuItem>
