@@ -6,8 +6,7 @@ import * as Validate from 'yup';
 
 import { urlSchema, SetTextSelectionDocumentUpdate, DEFAULT_LINK_ATTRIBUTES } from '@ureeka-notebook/web-service';
 
-import { SetLinkDocumentUpdate, ToggleLinkDocumentUpdate } from 'notebookEditor/extension/link/command';
-import { InsertContentAtDocumentUpdate } from 'notebookEditor/command/node';
+import { insertLinkCommand, SetLinkDocumentUpdate } from 'notebookEditor/extension/link/command';
 import { applyDocumentUpdates } from 'notebookEditor/command/update';
 import { useIsMounted } from 'shared/hook/useIsMounted';
 
@@ -40,16 +39,12 @@ export const LinkDialog: React.FC<Props> = ({ editor, isOpen, onClose }) => {
   const handleSubmit = async ({ href }: LinkDialog_Create) => {
     try {
       setIsLoading(true);
-      const { empty } = editor.state.selection,
+      const { selection } = editor.state;
+      const { empty, to } = selection,
             linkAttrs = { ...DEFAULT_LINK_ATTRIBUTES, href: href.trim() };
 
-      const { to } = editor.state.selection;
-
       if(empty) {
-        applyDocumentUpdates(editor, [
-          new ToggleLinkDocumentUpdate(linkAttrs),
-          new InsertContentAtDocumentUpdate({ from: to, to }, href.trim()),
-        ]);
+        insertLinkCommand(href.trim(), linkAttrs)(editor.state, editor.view.dispatch);
       } else {
         applyDocumentUpdates(editor/*starting state*/, [
           new SetLinkDocumentUpdate(linkAttrs),

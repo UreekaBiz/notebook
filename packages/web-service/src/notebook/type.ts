@@ -43,6 +43,9 @@ export type NotebookSortField = keyof Pick<Notebook,
   | 'name'
   | 'createTimestamp'
   | 'createdBy'
+  // TODO: need to think through how to best do 'updateTimestamp' since the updates
+  //       are really in the Versions, not the Notebook itself. And don't want to
+  //       constantly update the Notebook just for the sake of updating the timestamp.
 >;
 // CHECK: Is there a better way to do this?
 export const isNotebookSortField = (value: any): value is NotebookSortField =>

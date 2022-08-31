@@ -2,12 +2,13 @@ import { Node, InputRule } from '@tiptap/core';
 
 import { createBoldMark, createMarkHolderNode, generateNodeId, getHeadingLevelFromTag, getNodeOutputSpec, stringifyMarksArray, AttributeType, HeadingLevel, HeadingNodeSpec, SetAttributeType } from '@ureeka-notebook/web-service';
 
+import { shortcutCommandWrapper } from 'notebookEditor/command/util';
 import { setAttributeParsingBehavior } from 'notebookEditor/extension/util/attribute';
 import { NoStorage } from 'notebookEditor/model/type';
 
 import { setHeadingCommand } from './command';
 import { HeadingPlugin } from './plugin';
-import { createDefaultHeadingAttributes, HeadingOptions } from './type';
+import { HeadingOptions } from './type';
 
 // ********************************************************************************
 // == Node ========================================================================
@@ -46,10 +47,9 @@ export const Heading = Node.create<HeadingOptions, NoStorage>({
   },
 
   // -- Command -------------------------------------------------------------------
-  addCommands() { return { setHeading: setHeadingCommand }; },
   addKeyboardShortcuts() {
     return this.options.levels.reduce((items, level) => ({
-      ...items, ...{ [`Mod-Alt-${level}`]: () => this.editor.commands.setHeading(createDefaultHeadingAttributes(level)) },
+      ...items, ...{ [`Mod-Alt-${level}`]: () => shortcutCommandWrapper(this.editor, setHeadingCommand({ [AttributeType.Level]: level })) },
     }), {});
   },
 

@@ -6,6 +6,7 @@ import { RiHeading } from 'react-icons/ri';
 
 import { AttributeType, HeadingLevel, NodeName } from '@ureeka-notebook/web-service';
 
+import { toolItemCommandWrapper } from 'notebookEditor/command/util';
 import { markBold } from 'notebookEditor/extension/bold/toolbar';
 import { markCode } from 'notebookEditor/extension/code/toolbar';
 import { markItalic } from 'notebookEditor/extension/italic/toolbar';
@@ -16,7 +17,7 @@ import { fontSizeToolItem, spacingToolItem, textColorToolItem } from 'notebookEd
 import { markUnderline } from 'notebookEditor/extension/underline/toolbar';
 import { Toolbar, ToolItem } from 'notebookEditor/toolbar/type';
 
-import { createDefaultHeadingAttributes } from './type';
+import { setHeadingCommand } from './command';
 
 //*********************************************************************************
 // == Tool Items ==================================================================
@@ -31,7 +32,7 @@ const createHeadingTool = (level: HeadingLevel, icon: ReactElement): ToolItem =>
   tooltip: `Heading ${level} (⌘ + ⌥ + ${level})`,
 
   shouldShow: (editor, depth) => depth === 1/*only show on the direct parent node of a TextNode*/,
-  onClick: (editor) => editor.chain().focus().setHeading(createDefaultHeadingAttributes(level)).run(),
+  onClick: (editor, depth) => toolItemCommandWrapper(editor, depth, setHeadingCommand({ [AttributeType.Level]: level })),
 });
 export const heading1: ToolItem = createHeadingTool(HeadingLevel.One, <FaHeading size={16} />);
 export const heading2: ToolItem = createHeadingTool(HeadingLevel.Two, <RiHeading size={16} />);
