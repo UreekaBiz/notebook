@@ -76,7 +76,6 @@ export class LabelService {
    *          There are at most {@link MAX_LABEL_NOTEBOOKS} Notebooks returned.
    */
   public onNotebookLabels(notebookId: NotebookIdentifier): Observable<LabelTuple[]> {
-    // NOTE: Assets are currently specific to the User that is logged in
     const userId = getUserId();
     if(!userId) throw new ApplicationError('functions/permission-denied', 'Cannot access Labels for a Notebook while logged out.');
 
