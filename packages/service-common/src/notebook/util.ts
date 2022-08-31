@@ -22,6 +22,15 @@ export const isNotebookRole = (userId: UserIdentifier, notebook: Notebook, role:
   }
 };
 
+// ................................................................................
+// same as above but with no waterfall
+export const isNotebookCreatorStrict = (userId: UserIdentifier, notebook: Notebook): boolean =>
+  (notebook.createdBy === userId);
+export const isNotebookEditorStrict = (userId: UserIdentifier, notebook: Notebook): boolean =>
+  notebook.editors.includes(userId) && !isNotebookCreator(userId, notebook);
+export const isNotebookViewerStrict = (userId: UserIdentifier, notebook: Notebook): boolean =>
+  notebook.viewers.includes(userId) && !isNotebookEditorStrict(userId, notebook)/*also confirms not Creator*/;
+
 // == Share =======================================================================
 // returns the Map of shared UserIdentifiers to ShareRole for the specified Notebook
 export const getNotebookShareRoles = (notebook: Notebook): Map<UserIdentifier, ShareRole> => {
