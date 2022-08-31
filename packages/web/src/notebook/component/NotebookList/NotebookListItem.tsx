@@ -1,16 +1,17 @@
 import { Box, Flex, IconButton, Link, Menu, MenuButton, MenuItem, MenuList, Text } from '@chakra-ui/react';
 import NextLink from 'next/link';
 import { BiPencil } from 'react-icons/bi';
-import { BsThreeDots } from 'react-icons/bs';
+import { BsGrid, BsThreeDots } from 'react-icons/bs';
 import { FiUsers } from 'react-icons/fi';
 import { HiTrash } from 'react-icons/hi';
 import { MdOutlineRemoveRedEye } from 'react-icons/md';
 
 import { getNotebookShareCounts, NotebookTuple } from '@ureeka-notebook/web-service';
 
+import { AddToCollectionDialog } from 'notebookEditor/component/AddToCollectionDialog';
+import { ShareNotebookDialog } from 'notebookEditor/component/ShareNotebookDialog';
 import { notebookRoute } from 'shared/routes';
 import { getMinifiedReadableDate } from 'ui/util';
-import { ShareNotebookDialog } from 'notebookEditor/component/ShareNotebookDialog';
 
 // ********************************************************************************
 interface Props {
@@ -81,6 +82,12 @@ export const NotebookListItem: React.FC<Props> = ({ notebookTuple }) => {
           <ShareNotebookDialog notebook={obj} notebookId={id} component={onClick => (
             <MenuItem disabled icon={<FiUsers />} onClick={onClick}>
               Share
+            </MenuItem>
+            )}
+          />
+          <AddToCollectionDialog notebook={obj} notebookId={id} component={onClick => (
+            <MenuItem disabled icon={<BsGrid />} onClick={onClick}>
+              Add to collection
             </MenuItem>
             )}
           />

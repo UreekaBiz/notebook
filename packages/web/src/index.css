@@ -223,6 +223,13 @@ html body {
   overflow: auto !important;
 }
 
+/* == Chakra =================================================================== */
+/* Needed to allow text overflow to be ellipsis on ChakraUI CheckBox components */
+.chakra-checkbox__label {
+  width: 100%;
+  overflow: hidden;
+}
+
 /* == Utilities ================================================================ */
 /* NOTE: Using class name to override the (seemingly impossible!) styles for the
          input with the accessible props. */
