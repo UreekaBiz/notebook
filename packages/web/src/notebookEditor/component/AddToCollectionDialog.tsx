@@ -1,5 +1,5 @@
 import { useToast, Box, Button, Checkbox, Flex, Grid, GridItem, Input, Modal, ModalBody, ModalCloseButton, ModalContent, ModalFooter, ModalHeader, ModalOverlay, Spinner, Text } from '@chakra-ui/react';
-import { useEffect, useState, ChangeEventHandler, ReactElement } from 'react';
+import { useEffect, useState, ChangeEventHandler, KeyboardEventHandler, ReactElement } from 'react';
 import { BsGrid } from 'react-icons/bs';
 
 import { getLogger, mapEquals, LabelIdentifier, LabelVisibility, LabelService, LabelTuple, Logger, Notebook, NotebookIdentifier, Scrollable } from '@ureeka-notebook/web-service';
@@ -150,8 +150,14 @@ export const AddToCollectionDialog: React.FC<Props> = ({ notebook, notebookId, c
     setCreateLabelName(event.target.value);
   };
 
+  /** creates a label when the user press enter */
+  const handleCreateLabeKeyDown: KeyboardEventHandler<HTMLInputElement> = (event) => {
+    if(event.key === 'Enter') handleCreateLabel();
+  };
+
   const handleCreateLabel = async () => {
     if(createLabelName === '') return/*nothing to do*/;
+    if(createLabelStatus === 'loading') return/*nothing to do*/;
 
     setCreateLabelStatus('loading');
     // TODO: Use different label visibility!
@@ -340,11 +346,12 @@ export const AddToCollectionDialog: React.FC<Props> = ({ notebook, notebookId, c
                       disabled={isLoading || createLabelStatus === 'loading'}
                       placeholder='New collection'
                       onChange={handleCreateLabelInputChange}
+                      onKeyDown={handleCreateLabeKeyDown}
                     />
                   </Box>
                   {/** TODO: Change label in different status */}
                   <Button
-                    disabled={createLabelName.length < 1 || createLabelStatus === 'loading'}
+                    disabled={createLabelName.length < 1 || isLoading || createLabelStatus === 'loading'}
                     size='sm'
                     colorScheme='blue'
                     width='70px'
