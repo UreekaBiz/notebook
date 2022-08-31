@@ -123,7 +123,7 @@ export const NotebookList = () => {
   let content: React.ReactElement;
   if(status === 'error') {
     content = (
-      <Flex align='center' justify='center' width='full' height='full'>
+      <Flex align='center' justify='center' width='full' height='full' paddingTop='60px'>
         <Text>An error ocurred getting Notebooks.</Text>
       </Flex>
     );
