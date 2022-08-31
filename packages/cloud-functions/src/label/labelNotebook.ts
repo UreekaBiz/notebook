@@ -152,8 +152,8 @@ export const updateNotebook = async (
       // CHECK: move to Promise.all()?
       const addLabelIds: LabelIdentifier[] = [],
             removeLabelIds: LabelIdentifier[] = [];
-      for await (const labelId of changes.added) { if(await isValidLabel(transaction, labelId, userId, notebookId)) addLabelIds.push(labelId); }
-      for await (const labelId of changes.removed) { if(await isValidLabel(transaction, labelId, userId, notebookId)) removeLabelIds.push(labelId); }
+      for await (const labelId of changes.added) { if(await isValidLabel(transaction, 'add', labelId, userId, notebookId)) addLabelIds.push(labelId); }
+      for await (const labelId of changes.removed) { if(await isValidLabel(transaction, 'remove', labelId, userId, notebookId)) removeLabelIds.push(labelId); }
 
       addLabelIds.forEach(labelId => addLabelNotebook(transaction, labelDocument(labelId), userId, notebookId));
       removeLabelIds.forEach(labelId => removeLabelNotebook(transaction, labelDocument(labelId), userId, notebookId));
@@ -169,7 +169,7 @@ export const updateNotebook = async (
 // ................................................................................
 // determines if the specified Label exists and is created by the specified User
 const isValidLabel = async (
-  transaction: Transaction,
+  transaction: Transaction, action: 'add' | 'remove',
   labelId: LabelIdentifier,
   userId: UserIdentifier, notebookId: NotebookIdentifier
 ): Promise<boolean> => {
@@ -178,6 +178,11 @@ const isValidLabel = async (
   if(!snapshot.exists) { logger.info(`Label (${labelId}) does not exist for Notebook (${notebookId}) update for User (${userId}).`); return false; }
   const label = snapshot.data()!;
   if(label.createdBy !== userId) { logger.info(`Label (${labelId}) not visible for Notebook (${notebookId}) update since not created by User (${userId}).`); return false; }
+
+  // NOTE: no need to check if the Notebook is already in the set since that would
+  //       have been determined before this
+  if((action === 'add') && (label.notebookIds.length >= MAX_LABEL_NOTEBOOKS)) { logger.info(`Label (${labelId}) already has the maximum number of Notebooks (${MAX_LABEL_NOTEBOOKS}) for Notebook (${notebookId}) update for User (${userId}).`); return false; }
+  // NOTE: nothing additional for 'remove' actions
 
   return true/*valid*/;
 };

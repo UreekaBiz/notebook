@@ -279,7 +279,8 @@ export class LabelService {
    *        then it is added to the end of the order. Any Labels that are already
    *        associated with the Notebook but are not in the specified set are removed.
    *        If a Label is not accessible by the caller or no longer exists then it
-   *        is ignored. Duplicate Label identifiers are ignored.
+   *        is ignored. Duplicate Label identifiers are ignored. If a Label has the
+   *        maximum number of Notebooks associated with it then it is ignored.
    * @returns the resulting list of Labels that exist on the Notebook as of this call.
    *          This is useful to know if any Label identifiers where were invalid,
    *          not found or duplicated.
