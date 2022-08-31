@@ -205,6 +205,7 @@ export const ShareNotebookDialog: React.FC<Props> = ({ notebook, notebookId, com
                   <Flex alignItems='center' justifyContent='space-between' width='100%' marginBottom={4} paddingX={6}>
                     <Box flex='1 1' minWidth={0} marginRight={2}>
                       <TypeaheadUserProfile
+                        autoFocus
                         disabled={!isCreator || shareRoles.size >= MAX_NOTEBOOK_SHARE_USERS || status === 'loading'}
                         ignoreUserIds={existingSharedUserIds}
                         onSelect={userProfileTuple => handleUserProfileSelect(userProfileTuple.id, currentRole, userProfileTuple.obj)}
