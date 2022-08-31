@@ -161,14 +161,14 @@ export const NotebookList = () => {
       >
         <Flex alignItems='center'>
           <Text marginRight={2}>Access</Text>
-          <Select value={accessField} size='xs' marginRight={2} onChange={handleAccessChange}>
+          <Select value={accessField} size='xs' width={100} marginRight={2} onChange={handleAccessChange}>
             {accessFields.map(({ label, value }) => (
               <option key={value} value={value}>{label}</option>
             ))}
           </Select>
 
           <Text marginRight={2}>Published</Text>
-          <Select value={query.published} size='xs' marginRight={2} onChange={handlePublishedChange}>
+          <Select value={query.published} size='xs' width={120} marginRight={2} onChange={handlePublishedChange}>
             <option value=''/*empty value*/>All</option>
             <option value='true'>Published</option>
             <option value='false'>Not Published</option>
