@@ -137,11 +137,12 @@ export const updateNotebook = async (
       // NOTE: all reads must occur before any writes (by Firestore contract)
       const changes = setChange(currentLabelIds, new Set(labelIds));
 
+      // TODO: ensure that there are not more than MAX_LABEL_NOTEBOOKS per Label!
       // CHECK: move to Promise.all()?
       const addLabelIds: LabelIdentifier[] = [],
             removeLabelIds: LabelIdentifier[] = [];
-      for await (const labelId of changes.added) { if(await isValidLabel(transaction, userId, labelId, notebookId)) addLabelIds.push(labelId); }
-      for await (const labelId of changes.removed) { if(await isValidLabel(transaction, userId, labelId, notebookId)) removeLabelIds.push(labelId); }
+      for await (const labelId of changes.added) { if(await isValidLabel(transaction, labelId, userId, notebookId)) addLabelIds.push(labelId); }
+      for await (const labelId of changes.removed) { if(await isValidLabel(transaction, labelId, userId, notebookId)) removeLabelIds.push(labelId); }
 
       addLabelIds.forEach(labelId => addLabelNotebook(transaction, labelDocument(labelId), userId, notebookId));
       removeLabelIds.forEach(labelId => removeLabelNotebook(transaction, labelDocument(labelId), userId, notebookId));
@@ -158,7 +159,8 @@ export const updateNotebook = async (
 // determines if the specified Label exists and is created by the specified User
 const isValidLabel = async (
   transaction: Transaction,
-  userId: UserIdentifier, labelId: LabelIdentifier, notebookId: NotebookIdentifier
+  labelId: LabelIdentifier,
+  userId: UserIdentifier, notebookId: NotebookIdentifier
 ): Promise<boolean> => {
   const labelRef = labelDocument(labelId);
   const snapshot = await transaction.get(labelRef);
