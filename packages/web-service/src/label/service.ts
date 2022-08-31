@@ -11,7 +11,7 @@ import { Scrollable, scrollableQuery } from '../util/observableScrolledCollectio
 import { getUserId } from '../util/user';
 import { labelPublishedQuery, labelQuery } from './datastore';
 import { labelCreate, labelDelete, labelNotebookAdd, labelNotebookRemove, labelNotebookReorder, labelShare, labelUpdate } from './function';
-import { labelById$, labelNotebookPublishedIds$, labelNotebookIds$, labelOnceById$, labelPublishedById$, labelPublishedOnceById$, labelPublishedsQuery$, labelsQuery$, notebookLabels$ } from './observable';
+import { labelById$, labelNotebookPublishedIds$, labelNotebookIds$, labelOnceById$, labelPublishedById$, labelPublishedOnceById$, labelPublishedsQuery$, labelsQuery$, notebookLabels$, typeaheadFindLabels$ } from './observable';
 import { Label_Create, Label_Update, LabelFilter, LabelPublishedFilter } from './type';
 
 const log = getLogger(ServiceLogger.LABEL);
@@ -75,8 +75,7 @@ export class LabelService {
    *          Observable will have an error thrown if the Notebook does not exist.
    *          There are at most {@link MAX_LABEL_NOTEBOOKS} Notebooks returned.
    */
-  public onNotebookLabels(notebookId: NotebookIdentifier): Observable<LabelTuple[]> {
-    // NOTE: Assets are currently specific to the User that is logged in
+  public onNotebookLabels$(notebookId: NotebookIdentifier): Observable<LabelTuple[]> {
     const userId = getUserId();
     if(!userId) throw new ApplicationError('functions/permission-denied', 'Cannot access Labels for a Notebook while logged out.');
 
@@ -114,6 +113,20 @@ export class LabelService {
   public onNotebookPublisheds(labelId: LabelIdentifier, pageSize: number = LabelService.DEFAULT_PAGE_SIZE): Pagination<NotebookPublishedTuple> {
     return paginatedArray(labelNotebookPublishedIds$(labelId), notebookPublishedIdsToNotebookPublisheds$, pageSize,
                           `Published Label (${labelId}}) Published Notebooks`);
+  }
+
+  // == Search ====================================================================
+  // -- Typeahead-find Search -----------------------------------------------------
+  /**
+   * @param query a non-blank trimmed Label query prefix for typeahead find-style
+   *        searches
+   * @returns an Observable over zero or more Labels that match the specified prefix
+   *          in lexicographical order. This result is bound to return at most
+   *          {@link MAX_LABEL_SEARCH_RESULTS} results. If the max number are returned
+   *          then it is safe to assume that there are more than the max.
+   */
+  public typeaheadSearchLabels$(query: string): Observable<LabelTuple[]> {
+    return typeaheadFindLabels$(query);
   }
 
   // == Read ======================================================================

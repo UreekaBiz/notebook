@@ -45,7 +45,7 @@ export const labelQuery = (filter: LabelFilter) => {
 
 // .. Search (Published) ..........................................................
 export const sortedLabelQuery =
-  query(labelPublishedCollection, orderBy(nameof<Label_Storage>('name'), 'asc'));
+  query(labelCollection, orderBy(nameof<Label_Storage>('name'), 'asc'));
 
 // .. Typeahead-find Search (Published) ...........................................
 export const labelPrefixQuery = (queryString: string) =>
