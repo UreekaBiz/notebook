@@ -25,15 +25,6 @@ export const NotebookList = () => {
   const isMounted = useIsMounted();
   const [status, setStatus] = useAsyncStatus();
 
-  // == State =====================================================================
-  const [notebookTuples, setNotebookTuples] = useState<NotebookTuple[]>([/*initially empty*/]);
-
-  const [scrollable, setScrollable] = useState<Scrollable<NotebookTuple>>();
-
-  const isMounted = useIsMounted();
-  const [status, setStatus] = useAsyncStatus();
-  const userId = useUserId();
-
   const router = useRouter();
 
   // get the values for the filter
@@ -42,6 +33,11 @@ export const NotebookList = () => {
   const accessField = (isNotebookAccessField(router.query.accessField) ? router.query.accessField : 'viewableBy'/*default*/) as NotebookAccessField/*by definition*/;
   const sortByField = (isNotebookSortField(router.query.sortByField) ? router.query.sortByField : 'name'/*default*/) as NotebookSortField/*by definition*/;
   const sortDirection = (isOrderByDirection(router.query.sortDirection) ? router.query.sortDirection : 'asc'/*default*/) as OrderByDirection/*by definition*/;
+
+  // == State =====================================================================
+  const [notebookTuples, setNotebookTuples] = useState<NotebookTuple[]>([/*initially empty*/]);
+
+  const [scrollable, setScrollable] = useState<Scrollable<NotebookTuple>>();
 
   // == Effect ====================================================================
   useEffect(() => {
