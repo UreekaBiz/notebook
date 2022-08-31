@@ -3,7 +3,7 @@ import { useRouter } from 'next/router';
 import { useState, useEffect, ChangeEventHandler } from 'react';
 import { HiSortAscending, HiSortDescending } from 'react-icons/hi';
 
-import { getLogger, isNotebookSortField, isOrderByDirection, Logger, NotebookService, NotebookSortField, NotebookTuple, OrderByDirection, Scrollable } from '@ureeka-notebook/web-service';
+import { getLogger, isBlank, isNotebookSortField, isOrderByDirection, Logger, NotebookService, NotebookSortField, NotebookTuple, OrderByDirection, Scrollable } from '@ureeka-notebook/web-service';
 
 import { useUserId } from 'authUser/hook/useUserId';
 import { isNotebookAccessField, NotebookAccessField, ReadableNotebookAccessField, ReadableNotebookSortField } from 'notebook/type';
@@ -25,14 +25,18 @@ export const NotebookList = () => {
   const isMounted = useIsMounted();
   const [status, setStatus] = useAsyncStatus();
 
-  const router = useRouter();
+  const router = useRouter(),
+        { query } = router;
 
   // get the values for the filter
   // NOTE: Default values are given when the value is not valid, this could be the
   //       case when a User modifies the values directly from the url.
-  const accessField = (isNotebookAccessField(router.query.accessField) ? router.query.accessField : 'viewableBy'/*default*/) as NotebookAccessField/*by definition*/;
-  const sortByField = (isNotebookSortField(router.query.sortByField) ? router.query.sortByField : 'name'/*default*/) as NotebookSortField/*by definition*/;
-  const sortDirection = (isOrderByDirection(router.query.sortDirection) ? router.query.sortDirection : 'asc'/*default*/) as OrderByDirection/*by definition*/;
+  const accessField = (isNotebookAccessField(query.accessField) ? query.accessField : 'viewableBy'/*default*/) as NotebookAccessField/*by definition*/;
+  const publishedFilter = query.published === 'true' ? true
+                        : query.published === 'false' ? false
+                        : undefined/*default*/;
+  const sortByField = (isNotebookSortField(query.sortByField) ? query.sortByField : 'name'/*default*/) as NotebookSortField/*by definition*/;
+  const sortDirection = (isOrderByDirection(query.sortDirection) ? query.sortDirection : 'asc'/*default*/) as OrderByDirection/*by definition*/;
 
   // == State =====================================================================
   const [notebookTuples, setNotebookTuples] = useState<NotebookTuple[]>([/*initially empty*/]);
@@ -47,7 +51,7 @@ export const NotebookList = () => {
     const notebookService = NotebookService.getInstance();
 
     setStatus('loading');
-    const scrollableNotebooks = notebookService.onNotebooks({ [accessField]: userId, sort: [{ field: sortByField, direction: sortDirection }] }, 5/*FIXME: temporary for testing*/);
+    const scrollableNotebooks = notebookService.onNotebooks({ published: publishedFilter, [accessField]: userId, sort: [{ field: sortByField, direction: sortDirection }] }, 5/*FIXME: temporary for testing*/);
     setScrollable(scrollableNotebooks);
 
     const subscription = scrollableNotebooks.documents$().subscribe({
@@ -65,7 +69,7 @@ export const NotebookList = () => {
     });
 
     return () => subscription.unsubscribe();
-  }, [accessField, setStatus, sortByField, sortDirection, isMounted, userId]);
+  }, [accessField, publishedFilter, setStatus, sortByField, sortDirection, isMounted, userId]);
 
   // == Handler ===================================================================
   // -- Access --------------------------------------------------------------------
@@ -79,6 +83,18 @@ export const NotebookList = () => {
         accessField: value,
         sortByField: value === 'createdBy' && sortByField === 'createdBy' ? 'name'/*use default instead*/ : sortByField/*use current value*/,
       },
+    });
+  };
+
+  // -- Published ----------------------------------------------------------------
+  const handlePublishedChange: ChangeEventHandler<HTMLSelectElement> = (event) => {
+    const { value } = event.target;
+    const query: Record<string, string> = { ...router.query, published: value };
+
+    if(isBlank(value)/*no value*/) delete query.published;/*remove query parameter*/
+
+    router.replace({
+      query,
     });
   };
 
@@ -149,6 +165,13 @@ export const NotebookList = () => {
             {accessFields.map(({ label, value }) => (
               <option key={value} value={value}>{label}</option>
             ))}
+          </Select>
+
+          <Text marginRight={2}>Published</Text>
+          <Select value={query.published} size='xs' marginRight={2} onChange={handlePublishedChange}>
+            <option value=''/*empty value*/>All</option>
+            <option value='true'>Published</option>
+            <option value='false'>Not Published</option>
           </Select>
 
           <Button
