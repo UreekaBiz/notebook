@@ -50,6 +50,7 @@ const endpointNames = [
   'labelNotebookAdd',
   'labelNotebookRemove',
   'labelNotebookReorder',
+  'labelNotebookUpdate',
   'labelShare',
   'labelUpdate',
 

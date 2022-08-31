@@ -10,7 +10,7 @@ import { paginatedArray } from '../util/observablePaginatedArray';
 import { Scrollable, scrollableQuery } from '../util/observableScrolledCollection';
 import { getUserId } from '../util/user';
 import { labelPublishedQuery, labelQuery } from './datastore';
-import { labelCreate, labelDelete, labelNotebookAdd, labelNotebookRemove, labelNotebookReorder, labelShare, labelUpdate } from './function';
+import { labelCreate, labelDelete, labelNotebookAdd, labelNotebookRemove, labelNotebookReorder, labelShare, labelNotebookUpdate, labelUpdate } from './function';
 import { labelById$, labelNotebookPublishedIds$, labelNotebookIds$, labelOnceById$, labelPublishedById$, labelPublishedOnceById$, labelPublishedsQuery$, labelsQuery$, notebookLabels$, typeaheadFindLabels$ } from './observable';
 import { Label_Create, Label_Update, LabelFilter, LabelPublishedFilter } from './type';
 
@@ -238,6 +238,7 @@ export class LabelService {
    *   associated with the Label
    * - `datastore/write` if there was an error associating the Notebook with the Label
    * @see #removeNotebook()
+   * @see #updateLabelsOnNotebook()
    * @see #reorderNotebooks()
    */
   public async addNotebook(labelId: LabelIdentifier, notebookId: NotebookIdentifier) {
@@ -257,10 +258,40 @@ export class LabelService {
    *   known {@link Label}
    * - `datastore/write` if there was an error associating the Notebook with the Label
    * @see #addNotebook()
+   * @see #updateLabelsOnNotebook()
    * @see #reorderNotebooks()
    */
   public async removeNotebook(labelId: LabelIdentifier, notebookId: NotebookIdentifier) {
     await labelNotebookRemove({ labelId, notebookId });
+  }
+
+  // ..............................................................................
+  /**
+   * @param notebookId the identifier of the {@link Notebook} whose Labels are to
+   *        be updated to the specified set. If the Notebook doesn't exist or is
+   *        deleted then this has no effect. Any Labels that are not accessible
+   *        by the caller or no longer exist are ignored.
+   * @param labelIds the identifiers of the {@link Label}s that are to be associated
+   *        with the Notebook. If a Label is already associated with the Notebook then
+   *        this has no effect. If a Label is not already associated with the Notebook
+   *        then it is added to the end of the order. Any Labels that are already
+   *        associated with the Notebook but are not in the specified set are removed.
+   *        If a Label is not accessible by the caller or no longer exists then it
+   *        is ignored. Duplicate Label identifiers are ignored.
+   * @returns the resulting list of Labels that exist on the Notebook as of this call.
+   *          This is useful to know if any Label identifiers where were invalid,
+   *          not found or duplicated.
+   * @throws a {@link ApplicationError}:
+   * - `permission-denied` if the caller is not the creator of the Label or at least
+   *   an editor of the Notebook
+   * - `not-found` if the specified {@link NotebookIdentifier} does not represent a
+   *   known {@link Notebook}
+   * - `datastore/write` if there was an error associating the Notebook with the Label
+   * @see #addNotebook()
+   * @see #removeNotebook()
+   */
+  public async updateLabelsOnNotebook(notebookId: NotebookIdentifier, labelIds: LabelIdentifier[]) {
+    await labelNotebookUpdate({ notebookId, labelIds });
   }
 
   // ..............................................................................
