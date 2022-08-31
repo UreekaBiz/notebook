@@ -1,7 +1,7 @@
 import { DocumentReference, Transaction } from 'firebase-admin/firestore';
 import { logger } from 'firebase-functions';
 
-import { setChange, LabelIdentifier, LabelVisibility, LabelNotebook_Update, Label_Storage, NotebookIdentifier, Notebook_Storage, UserIdentifier } from '@ureeka-notebook/service-common';
+import { setChange, LabelIdentifier, LabelVisibility, LabelNotebook_Update, Label_Storage, NotebookIdentifier, Notebook_Storage, UserIdentifier, MAX_LABEL_NOTEBOOKS } from '@ureeka-notebook/service-common';
 
 import { firestore } from '../firebase';
 import { notebookDocument } from '../notebook/datastore';
@@ -19,10 +19,16 @@ export const addNotebook = async (
     const labelRef = labelDocument(labelId) as DocumentReference<LabelNotebook_Update>;
     const notebookRef = notebookDocument(notebookId) as DocumentReference<Notebook_Storage>;
     await firestore.runTransaction(async transaction => {
-      // ensure that the parent Label exists (by contract)
+      // ensure that the parent Label exists and is created by the User
       const labelSnapshot = await transaction.get(labelRef);
       if(!labelSnapshot.exists) throw new ApplicationError('functions/not-found', `Cannot add a Notebook (${notebookId}) to a non-existing Label (${labelId}) for User (${userId}).`);
-      const parentLabel = labelSnapshot.data()! as Label_Storage;
+      const label = labelSnapshot.data()! as Label_Storage;
+      if(label.createdBy !== userId) throw new ApplicationError('functions/permission-denied', `Cannot add Notebook (${notebookId}) to Label (${labelId}) not created by User (${userId}).`);
+
+      // if the Notebook is already associated with the Label, then done, otherwise
+      // ensure not over the maximum number of Notebooks per Label
+      if(label.notebookIds.includes(notebookId)) return/*already associated*/;
+      if(label.notebookIds.length >= MAX_LABEL_NOTEBOOKS) throw new ApplicationError('functions/invalid-argument', `Cannot add Notebook (${notebookId}) to Label (${labelId}) since it already has the maximum number of Notebooks (${MAX_LABEL_NOTEBOOKS}).`);
 
       // ensure that the associated Notebook exists and is not deleted (by contract)
       const notebookSnapshot = await transaction.get(notebookRef);
@@ -34,7 +40,7 @@ export const addNotebook = async (
 
       // FIXME: update Notebook's permissions based on the Label's permissions
 
-      if(parentLabel.visibility === LabelVisibility.Public) {
+      if(label.visibility === LabelVisibility.Public) {
         // FIXME: check if the Notebook is published and if so then also write to the published collection
       } /* else -- the parent Label is private and nothing else needs to be done */
     });
@@ -67,9 +73,14 @@ export const removeNotebook = async (
   try {
     const labelRef = labelDocument(labelId) as DocumentReference<Label_Storage>;
     await firestore.runTransaction(async transaction => {
+      // ensure that the parent Label exists and is created by the User (by contract)
       const labelSnapshot = await transaction.get(labelRef);
       if(!labelSnapshot.exists) throw new ApplicationError('functions/not-found', `Cannot remove Notebook (${notebookId}) from a non-existing Label (${labelId}) for User (${userId}).`);
-      const parentLabel = labelSnapshot.data()! as Label_Storage;
+      const label = labelSnapshot.data()! as Label_Storage;
+      if(label.createdBy !== userId) throw new ApplicationError('functions/permission-denied', `Cannot remove Notebook (${notebookId}) from Label (${labelId}) not created by User (${userId}).`);
+
+      // if the Notebook isn't already associated with the Label, then done
+      if(!label.notebookIds.includes(notebookId)) return/*not associated*/;
 
       // NOTE: the associated Notebook *may no longer exist* (therefore no check is made)
 
@@ -77,7 +88,7 @@ export const removeNotebook = async (
 
       // FIXME: update Notebook's permissions based on the Label's permissions
 
-      if(parentLabel.visibility === LabelVisibility.Public) {
+      if(label.visibility === LabelVisibility.Public) {
         // FIXME: check if the Notebook is published and if so then also remove from the published collection
       } /* else -- the parent Label is private and nothing else needs to be done */
     });

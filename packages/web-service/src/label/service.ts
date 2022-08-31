@@ -230,7 +230,8 @@ export class LabelService {
    *        already associated with the Label then this has no effect (including
    *        that the order is not changed).
    * @throws a {@link ApplicationError}:
-   * - `permission-denied` if the caller is not the creator of the Label
+   * - `permission-denied` if the caller is not the creator of the Label or is not
+   *   at least an editor of the Notebook
    * - `not-found` if the specified {@link LabelIdentifier} does not represent a
    *   known {@link Label} or if the specified {@link NotebookIdentifier} does not
    *   represent a known and non-deleted {@link Notebook}
@@ -253,7 +254,8 @@ export class LabelService {
    *        the Label or if the Notebook itself doesn't exist or is deleted then
    *        this has no effect or
    * @throws a {@link ApplicationError}:
-   * - `permission-denied` if the caller is not the creator of the Label
+   * - `permission-denied` if the caller is not the creator of the Label or is not
+   *   at least an editor of the Notebook
    * - `not-found` if the specified {@link LabelIdentifier} does not represent a
    *   known {@link Label}
    * - `datastore/write` if there was an error associating the Notebook with the Label
