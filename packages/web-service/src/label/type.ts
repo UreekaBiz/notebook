@@ -55,12 +55,13 @@ export type LabelSortField = keyof Pick<Label,
 /** the resulting query is the 'AND' of each member but the 'OR' of any multi-valued
  *  filter */
 export type LabelFilter = SortableFilter<LabelSortField> & Readonly<{
-  // NOTE: this supports only *exact* *match*
-  name?: string;
-  // NOTE: either this or `name` may be specified but not both. If both are specified
-  //       then this has precedence.
-  // NOTE: if this is specified then `viewableBy` and `editableBy` are ignored
+  // NOTE: either 'name' or 'namePrefix' may be specified but not both. If both are
+  //       specified then 'namePrefix' has precedence
+  /** type-ahead find style prefix match. Please note that if this field is specified
+   *  then `viewableBy` and `editableBy` are ignored */
   namePrefix?: string;
+  /** exact match for the name */
+  name?: string;
 
   // NOTE: only one of these should be specified since they cascade. If more than
   //       one is specified then they're applied in waterfall order

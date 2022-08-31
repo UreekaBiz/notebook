@@ -24,25 +24,23 @@ export const labelPublishedDocument = (labelId: LabelIdentifier) => doc(labelPub
 export const labelQuery = (filter: LabelFilter) => {
   let buildQuery = labelCollection as Query<Label_Storage>;
 
-  // name
+  // filter name
   if(!isBlank(filter.namePrefix)) { /*1st priority*/
     buildQuery = query(buildQuery, where(nameof<Label_Storage>('searchNamePrefixes'), 'array-contains', computeLabelPrefixQueryString(filter.namePrefix!)));
   } else if(!isBlank(filter.name)) { /*2nd priority*/
     buildQuery = query(buildQuery, where(nameof<Label_Storage>('name'), '==', filter.name!));
   } /* else -- neither 'namePrefix' nor 'name' was specified in the filter */
 
-  // NOTE: these are waterfall'd by design
+  // filter visibility
   if(!isBlank(filter.viewableBy)) {
     if(isBlank(filter.namePrefix)) buildQuery = query(buildQuery, where(nameof<Label_Storage>('viewers'), 'array-contains', filter.viewableBy!));
     else log.warn(`Cannot filter by both 'namePrefix' and 'viewableBy' at the same time. Ignoring 'viewableBy' filter.`);
-  } /* else -- 'createdBy' was not specified in the filter */
-  if(!isBlank(filter.editableBy)) {
+  } else if(!isBlank(filter.editableBy)) {
     if(isBlank(filter.namePrefix)) buildQuery = query(buildQuery, where(nameof<Label_Storage>('editors'), 'array-contains', filter.editableBy!));
     else log.warn(`Cannot filter by both 'namePrefix' and 'editableBy' at the same time. Ignoring 'editableBy' filter.`);
-  } /* else -- 'createdBy' was not specified in the filter */
-  if(!isBlank(filter.createdBy)) {
+  } else if(!isBlank(filter.createdBy)) {
     buildQuery = query(buildQuery, where(nameof<Label_Storage>('createdBy'), '==', filter.createdBy!));
-  } /* else -- 'createdBy' was not specified in the filter */
+  } /* else -- 'viewableBy', 'editableBy' or 'createdBy' were not specified in the filter */
 
   // sort
   buildQuery = buildSortQuery(buildQuery, filter, nameof<Label_Storage>('sortName')/*default sort field*/);
