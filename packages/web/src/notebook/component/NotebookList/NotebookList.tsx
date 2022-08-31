@@ -132,7 +132,7 @@ export const NotebookList = () => {
   } else if(notebookTuples.length < 1) {
     // TODO: add a CTA to create a Notebook
     content = (
-      <Flex align='center' justify='center' width='full' height='full'>
+      <Flex align='center' justify='center' width='full' height='full' paddingTop='60px'>
         <Text>No Notebooks were found.</Text>
       </Flex>
     );
