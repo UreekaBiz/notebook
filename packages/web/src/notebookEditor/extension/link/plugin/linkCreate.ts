@@ -2,7 +2,7 @@ import { combineTransactionSteps, findChildrenInRange, getChangedRanges, getMark
 import { find, test } from 'linkifyjs';
 import { Plugin, PluginKey } from 'prosemirror-state';
 
-import { isLinkMark, NotebookSchemaType, PREVENT_LINK_META } from '@ureeka-notebook/web-service';
+import { getLinkMarkType, isLinkMark, NotebookSchemaType, PREVENT_LINK_META } from '@ureeka-notebook/web-service';
 
 import { NoPluginState } from 'notebookEditor/model/type';
 
@@ -19,22 +19,21 @@ export const linkCreate = (validate?: (url: string) => boolean): Plugin => {
     key: linkCreateKey,
 
     // -- Transaction -------------------------------------------------------------
-    // Ensures that links get created when the user types something that is a valid
-    // link in the editor
+    // Ensures that Link get created when the user types something that is a valid
+    // Link in the editor
     appendTransaction: (transactions, oldState, newState) => {
       const docChanged = transactions.some(transaction => transaction.docChanged) && !oldState.doc.eq(newState.doc);
       const preventAutolink = transactions.some(transaction => transaction.getMeta(PREVENT_LINK_META));
       if(!docChanged || preventAutolink) return/*nothing to do*/;
 
-      const linkMarkType = newState.schema.marks.link;
-
+      const linkMarkType = getLinkMarkType(newState.schema);
       const { tr } = newState,
             transform = combineTransactionSteps(oldState.doc, [...transactions]),
             { mapping } = transform,
             changes = getChangedRanges(transform);
 
       changes.forEach(({ oldRange, newRange }) => {
-        // Check if links need to be removed
+        // Check if Links need to be removed
         getMarksBetween(oldRange.from, oldRange.to, oldState.doc)
           .filter(item => isLinkMark(item.mark))
           .forEach(oldMark => {
@@ -44,31 +43,31 @@ export const linkCreate = (validate?: (url: string) => boolean): Plugin => {
             if(!newMarks.length) return/*nothing to do*/;
 
             const newMark = newMarks[0]/*guaranteed to be link type by filter*/;
-            const oldLinkText = oldState.doc.textBetween(oldMark.from, oldMark.to, undefined/*no block separator*/, ' '/*add a space for each non-text leaf-node found*/),
-                  newLinkText = newState.doc.textBetween(newMark.from, newMark.to, undefined/*no block separator*/, ' '/*add a space for each non-text leaf-node found*/);
+            const oldLinkText = oldState.doc.textBetween(oldMark.from, oldMark.to, undefined/*no Block separator*/, ' '/*add a space for each non-text leaf-node found*/),
+                  newLinkText = newState.doc.textBetween(newMark.from, newMark.to, undefined/*no Block separator*/, ' '/*add a space for each non-text leaf-node found*/);
             const wasLink = test(oldLinkText),
                   isLink = test(newLinkText);
 
-            // remove the link only if there was a link before and now it is not,
-            // since manually added links should not be removed
+            // remove the Link only if there was a Link before and now it is not,
+            // since manually added Links should not be removed
             if(wasLink && !isLink) tr.removeMark(newMark.from, newMark.to, linkMarkType);
           });
 
-        // check if new links can be added
+        // check if new Links can be added
         findChildrenInRange(newState.doc, newRange, node => node.isTextblock)
           .forEach(textBlock => {
-            // a placeholder for leaf nodes must be defined
-            // so that the link position can be correctly calculated
+            // a placeholder for Leaf Nodes must be defined
+            // so that the Link position can be correctly calculated
             const text = newState.doc.textBetween(
               textBlock.pos,
               textBlock.pos + textBlock.node.nodeSize,
-              undefined/*no block separator*/,
+              undefined/*no Block separator*/,
               ' '/*add a space for each non-text leaf-node found*/
             );
 
             // do not turn textBlock into link when user just inserted a link and
             // adds a space (since this would incorrectly turn the previous
-            // text in the block into a link too)
+            // Text in the Block into a Link too)
             if(text.endsWith(' ')) return;
 
             find(text)
