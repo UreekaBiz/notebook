@@ -6,6 +6,7 @@ import { SortableFilter } from '../util/firestore';
 export {
   // SEE: @ureeka-notebook/service-common: notebook/util.ts
   getNotebookShareRoles,
+  getNotebookShareCounts,
 
   // SEE: @ureeka-notebook/service-common: notebook/type.ts
   Notebook,
