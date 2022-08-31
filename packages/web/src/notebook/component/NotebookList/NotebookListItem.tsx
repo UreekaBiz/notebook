@@ -2,6 +2,7 @@ import { Box, Flex, IconButton, Link, Menu, MenuButton, MenuItem, MenuList, Text
 import NextLink from 'next/link';
 import { BiPencil } from 'react-icons/bi';
 import { BsThreeDots } from 'react-icons/bs';
+import { FiUsers } from 'react-icons/fi';
 import { HiTrash } from 'react-icons/hi';
 import { MdOutlineRemoveRedEye } from 'react-icons/md';
 
@@ -9,6 +10,7 @@ import { getNotebookShareCounts, NotebookTuple } from '@ureeka-notebook/web-serv
 
 import { notebookRoute } from 'shared/routes';
 import { getMinifiedReadableDate } from 'ui/util';
+import { ShareNotebookDialog } from 'notebookEditor/component/ShareNotebookDialog';
 
 // ********************************************************************************
 interface Props {
@@ -23,7 +25,15 @@ export const NotebookListItem: React.FC<Props> = ({ notebookTuple }) => {
     <Flex alignItems='center'>
       <Box flex='1 1' whiteSpace='nowrap' overflow='hidden' paddingRight={2}>
         <NextLink href={notebookRoute(id)} passHref>
-          <Link display='block' flex='1 1' color='#444' fontSize='15px' fontWeight={600} textOverflow='ellipsis' overflow='hidden'>
+          <Link
+            display='block'
+            flex='1 1'
+            color='#444'
+            fontSize='15px'
+            fontWeight={600}
+            textOverflow='ellipsis'
+            overflow='hidden'
+          >
             {obj.name}
           </Link>
         </NextLink>
@@ -33,16 +43,30 @@ export const NotebookListItem: React.FC<Props> = ({ notebookTuple }) => {
         </Flex>
       </Box>
 
-      <Box width='34px' color='#BBB' fontSize={12} fontWeight={600}>
-        <Flex alignItems='center' >
-          <BiPencil/>
-          <Text marginLeft={1}>{editors}</Text>
-        </Flex>
-        <Flex alignItems='center'>
-          <MdOutlineRemoveRedEye />
-          <Text marginLeft={1}>{viewers}</Text>
-        </Flex>
-      </Box>
+      <ShareNotebookDialog notebook={obj} notebookId={id} component={onClick => (
+        <Box
+          width='34px'
+          color='#BBB'
+          fontSize={12}
+          fontWeight={600}
+          transition='all .2s'
+          _hover={{
+            color: '#999',
+            cursor: 'pointer',
+          }}
+          onClick={onClick}
+        >
+          <Flex alignItems='center' >
+            <BiPencil/>
+            <Text marginLeft={1}>{editors}</Text>
+          </Flex>
+          <Flex alignItems='center'>
+            <MdOutlineRemoveRedEye />
+            <Text marginLeft={1}>{viewers}</Text>
+          </Flex>
+        </Box>
+        )}
+      />
 
       <Menu>
         <MenuButton
@@ -54,6 +78,12 @@ export const NotebookListItem: React.FC<Props> = ({ notebookTuple }) => {
           borderRadius='100px'
         />
         <MenuList>
+          <ShareNotebookDialog notebook={obj} notebookId={id} component={onClick => (
+            <MenuItem disabled icon={<FiUsers />} onClick={onClick}>
+              Share
+            </MenuItem>
+            )}
+          />
           <MenuItem disabled icon={<HiTrash />}>
             Delete (Disabled!)
           </MenuItem>

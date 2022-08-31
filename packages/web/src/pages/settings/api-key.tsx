@@ -7,6 +7,7 @@ import { RequiredAuthUserWrapper } from 'authUser/RequiredAuthUserWrapper';
 import { WrappedPage } from 'core/wrapper';
 import { NotebookServiceWrapper } from 'notebook/NotebookServiceWrapper';
 import { ProfileNavigationLayout } from 'shared/layout/ProfileNavigationLayout';
+import { UserProfileServiceWrapper } from 'user/UserProfileServiceWrapper';
 
 // ********************************************************************************
 // NOTE: this page is using Static Site Generation. See pages/README.md
@@ -29,6 +30,6 @@ function APIKeyPage() {
 // --------------------------------------------------------------------------------
 // SEE: core/wrapper.tsx for more information
 const Page: WrappedPage = APIKeyPage;
-      Page.wrappers = [RequiredAuthUserWrapper, NotebookServiceWrapper, ProfileNavigationLayout, SettingsLayoutWrapper]/*outer to inner order*/;
+      Page.wrappers = [RequiredAuthUserWrapper, UserProfileServiceWrapper, NotebookServiceWrapper, ProfileNavigationLayout, SettingsLayoutWrapper]/*outer to inner order*/;
 
 export default Page;
