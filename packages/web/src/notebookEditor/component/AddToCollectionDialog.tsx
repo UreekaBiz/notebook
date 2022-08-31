@@ -254,37 +254,41 @@ export const AddToCollectionDialog: React.FC<Props> = ({ notebook, notebookId, c
           Collections({currentLabels.size})
         </Text>
 
-        <Grid
-          templateColumns='repeat(2, 1fr)'
-          rowGap={2}
-          columnGap={6}
-          maxHeight={300}
-          overflowY='auto'
-          paddingX={6}
-        >
-          {Array.from(allLabels).map((tuple) => {
-            const isChecked = currentLabels.has(tuple.id);
-            return (
-              <GridItem width='100%' minWidth={0} key={tuple.id}>
-                <Checkbox
-                  width='100%'
-                  overflow='hidden'
-                  whiteSpace='nowrap'
-                  isChecked={isChecked}
-                  disabled={isLoading}
-                  onChange={() => handleCheckLabelClick(tuple)}
-                >
-                  <Text
-                    textOverflow='ellipsis'
+        <Box height={200}>
+          <Grid
+            templateColumns='repeat(2, 1fr)'
+            rowGap={2}
+            columnGap={4}
+            maxHeight='100%'
+            overflowY='auto'
+            paddingLeft={4}
+            paddingRight={6}
+          >
+            {Array.from(allLabels).map((tuple) => {
+              const isChecked = currentLabels.has(tuple.id);
+              return (
+                <GridItem width='100%' minWidth={0}  key={tuple.id}>
+                  <Checkbox
+                    width='100%'
+                    paddingLeft={2}
                     overflow='hidden'
+                    whiteSpace='nowrap'
+                    isChecked={isChecked}
+                    disabled={isLoading}
+                    onChange={() => handleCheckLabelClick(tuple)}
                   >
-                      {tuple.obj.name}
-                  </Text>
-                </Checkbox>
-              </GridItem>
-            );
-          })}
-        </Grid>
+                    <Text
+                      textOverflow='ellipsis'
+                      overflow='hidden'
+                    >
+                        {tuple.obj.name}
+                    </Text>
+                  </Checkbox>
+                </GridItem>
+              );
+            })}
+          </Grid>
+        </Box>
 
         <Button size='sm' onClick={() => scrollable.moreDocuments()}>{scrollable.isExhausted() ? 'Exhausted' : 'Load More!'}</Button>
       </Box>
