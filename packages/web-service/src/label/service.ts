@@ -75,7 +75,7 @@ export class LabelService {
    *          Observable will have an error thrown if the Notebook does not exist.
    *          There are at most {@link MAX_LABEL_NOTEBOOKS} Notebooks returned.
    */
-  public onNotebookLabels(notebookId: NotebookIdentifier): Observable<LabelTuple[]> {
+  public onNotebookLabels$(notebookId: NotebookIdentifier): Observable<LabelTuple[]> {
     const userId = getUserId();
     if(!userId) throw new ApplicationError('functions/permission-denied', 'Cannot access Labels for a Notebook while logged out.');
 
