@@ -1,11 +1,12 @@
 import { DocumentReference, Transaction } from 'firebase-admin/firestore';
+import { logger } from 'firebase-functions';
 
 import { setChange, LabelIdentifier, LabelVisibility, LabelNotebook_Update, Label_Storage, NotebookIdentifier, Notebook_Storage, UserIdentifier } from '@ureeka-notebook/service-common';
 
 import { firestore } from '../firebase';
 import { notebookDocument } from '../notebook/datastore';
 import { ApplicationError } from '../util/error';
-import { ServerTimestamp, arrayUnion, arrayRemove } from '../util/firestore';
+import { arrayUnion, arrayRemove, ServerTimestamp } from '../util/firestore';
 import { labelDocument, notebookLabelsQuery } from './datastore';
 
 // ********************************************************************************
@@ -42,6 +43,8 @@ export const addNotebook = async (
     throw new ApplicationError('datastore/write', `Error adding Notebook (${notebookId}) to Label (${labelId}) for User (${userId}). Reason: `, error);
   }
 };
+
+// ................................................................................
 const addLabelNotebook = (
   transaction: Transaction,
   labelRef: DocumentReference<LabelNotebook_Update>,
@@ -53,7 +56,7 @@ const addLabelNotebook = (
     lastUpdatedBy: userId,
     updateTimestamp: ServerTimestamp/*by contract*/,
   };
-  transaction.set(labelRef, labelNotebook, { merge: true });
+  transaction.update(labelRef, labelNotebook)/*update so doesn't resurrect deleted*/;
 };
 
 // == Remove ======================================================================
@@ -83,6 +86,8 @@ export const removeNotebook = async (
     throw new ApplicationError('datastore/write', `Error removing Notebook (${notebookId}) from Label (${labelId}) for User (${userId}). Reason: `, error);
   }
 };
+
+// ................................................................................
 const removeLabelNotebook = (
   transaction: Transaction,
   labelRef: DocumentReference<LabelNotebook_Update>,
@@ -94,7 +99,7 @@ const removeLabelNotebook = (
     lastUpdatedBy: userId,
     updateTimestamp: ServerTimestamp/*by contract*/,
   };
-  transaction.set(labelRef, labelNotebook, { merge: true });
+  transaction.update(labelRef, labelNotebook)/*update so doesn't resurrect deleted*/;
 };
 
 // --------------------------------------------------------------------------------
@@ -114,29 +119,54 @@ export const updateNotebook = async (
     const notebookRef = notebookDocument(notebookId);
     return await firestore.runTransaction(async transaction => {
       const notebookSnapshot = await transaction.get(notebookRef);
-      if(!notebookSnapshot.exists) throw new ApplicationError('functions/not-found', `Cannot update Labels on a non-existing Notebook (${notebookId}) for User (${userId}).`);
+      if(!notebookSnapshot.exists) throw new ApplicationError('functions/not-found', `Cannot update Labels for a non-existing Notebook (${notebookId}) for User (${userId}).`);
       const notebook = notebookSnapshot.data()!;
       // FIXME: push down the ability to check the roles of the user specifically to
       //        be able to check if the User is also an admin
       if(notebook.createdBy !== userId) throw new ApplicationError('functions/permission-denied', `Cannot update Labels for Notebook (${notebookId}) since not created by User (${userId}).`);
-      if(notebook.deleted) throw new ApplicationError('data/deleted', `Cannot update Labels for deleted Notebook (${notebookId}).`);
+      if(notebook.deleted) throw new ApplicationError('data/deleted', `Cannot update Labels for deleted Notebook (${notebookId}) for User (${userId}).`);
 
-      // get all Notebooks that are currently associated with the Label
-      const snapshot = await notebookLabelsQuery(notebookId).get();
-      const currentLabelIds = new Set<LabelIdentifier>(snapshot.docs.map(doc => doc.id));
+      // get all Labels that are currently associated with the Notebook
+      const labelsSnapshot = await notebookLabelsQuery(notebookId).get();
+      const currentLabelIds = new Set<LabelIdentifier>(labelsSnapshot.docs.map(doc => doc.id));
 
-      // based on the difference in the two sets, perform the appropriate actions
-      // FIXME: add all of the checks that the user has permissions for the Label
+      // based on the difference in the two sets:
+      // 1. get any added / removed Labels, check that the Label exists and that
+      //    the User is the Creator
+      // 2. add / remove the Notebook from the Label
+      // NOTE: all reads must occur before any writes (by Firestore contract)
       const changes = setChange(currentLabelIds, new Set(labelIds));
-      changes.added.forEach(labelId => addLabelNotebook(transaction, labelDocument(labelId), userId, notebookId));
-      changes.removed.forEach(labelId => removeLabelNotebook(transaction, labelDocument(labelId), userId, notebookId));
 
-      return labelIds;
+      // CHECK: move to Promise.all()?
+      const addLabelIds: LabelIdentifier[] = [],
+            removeLabelIds: LabelIdentifier[] = [];
+      for await (const labelId of changes.added) { if(await isValidLabel(transaction, userId, labelId, notebookId)) addLabelIds.push(labelId); }
+      for await (const labelId of changes.removed) { if(await isValidLabel(transaction, userId, labelId, notebookId)) removeLabelIds.push(labelId); }
+
+      addLabelIds.forEach(labelId => addLabelNotebook(transaction, labelDocument(labelId), userId, notebookId));
+      removeLabelIds.forEach(labelId => removeLabelNotebook(transaction, labelDocument(labelId), userId, notebookId));
+
+      return [...changes.unchanged, ...addLabelIds];
     });
   } catch(error) {
     if(error instanceof ApplicationError) throw error;
     throw new ApplicationError('datastore/write', `Error updating Labels on Notebook (${notebookId}) for User (${userId}). Reason: `, error);
   }
+};
+
+// ................................................................................
+// determines if the specified Label exists and is created by the specified User
+const isValidLabel = async (
+  transaction: Transaction,
+  userId: UserIdentifier, labelId: LabelIdentifier, notebookId: NotebookIdentifier
+): Promise<boolean> => {
+  const labelRef = labelDocument(labelId);
+  const snapshot = await transaction.get(labelRef);
+  if(!snapshot.exists) { logger.info(`Label (${labelId}) does not exist for Notebook (${notebookId}) update for User (${userId}).`); return false; }
+  const label = snapshot.data()!;
+  if(label.createdBy !== userId) { logger.info(`Label (${labelId}) not visible for Notebook (${notebookId}) update since not created by User (${userId}).`); return false; }
+
+  return true/*valid*/;
 };
 
 // == Reorder =====================================================================
