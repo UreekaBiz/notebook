@@ -8,7 +8,7 @@ import { QueryObservable } from '../util/observableCollection';
 import { documentOnce } from '../util/observableDocument';
 import { queryTuples } from '../util/observableTupleCollection';
 import { documentTuple } from '../util/observableTupleDocument';
-import { labelDocument, labelQuery, labelPublishedDocument, labelPublishedQuery, notebookLabelQuery } from './datastore';
+import { labelDocument, labelQuery, labelPrefixQuery, labelPublishedDocument, labelPublishedQuery, notebookLabelQuery } from './datastore';
 import { LabelFilter, LabelPublishedFilter } from './type';
 
 // ********************************************************************************
@@ -40,6 +40,10 @@ export const labelsQuery$: QueryObservable<Label_Storage, LabelTuple> =
   query => queryTuples(query, defaultTupleConverter);
 export const labels$ = (filter: LabelFilter) =>
   queryTuples(labelQuery(filter), defaultTupleConverter);
+
+// -- Typeahead-find Search -------------------------------------------------------
+export const typeaheadFindLabels$ = (query: string) =>
+  queryTuples(labelPrefixQuery(query), defaultTupleConverter);
 
 // == Label Published =============================================================
 // -- Get -------------------------------------------------------------------------
