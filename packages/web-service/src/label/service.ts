@@ -282,8 +282,7 @@ export class LabelService {
    *          This is useful to know if any Label identifiers where were invalid,
    *          not found or duplicated.
    * @throws a {@link ApplicationError}:
-   * - `permission-denied` if the caller is not the creator of the Label or at least
-   *   an editor of the Notebook
+   * - `permission-denied` if the caller is not at least an editor of the Notebook
    * - `not-found` if the specified {@link NotebookIdentifier} does not represent a
    *   known {@link Notebook}
    * - `datastore/write` if there was an error associating the Notebook with the Label
