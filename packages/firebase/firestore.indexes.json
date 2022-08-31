@@ -19,6 +19,15 @@
         { "fieldPath": "name", "order": "ASCENDING" }
       ]
     },
+    {
+      "collectionGroup": "labels",
+      "queryScope": "COLLECTION",
+      "fields": [
+        { "fieldPath": "searchNamePrefixes", "arrayConfig": "CONTAINS" },
+        { "fieldPath": "createdBy", "order": "ASCENDING" },
+        { "fieldPath": "name", "order": "ASCENDING" }
+      ]
+    },
 
 
     {
