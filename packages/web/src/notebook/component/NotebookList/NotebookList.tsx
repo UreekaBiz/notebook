@@ -88,24 +88,35 @@ export const NotebookList = () => {
   };
 
   // == UI ========================================================================
+  let content: React.ReactElement;
   if(status === 'error') {
-    return (
+    content = (
       <Flex align='center' justify='center' width='full' height='full'>
         <Text>An error ocurred getting Notebooks.</Text>
       </Flex>
     );
-  } /* else -- request haven't failed*/
-
-  if(status !== 'complete' || !scrollable) return <Loading />;
-
-  // TODO: add a CTA to create a Notebook
-  if(notebookTuples.length < 1) {
-    return (
+  } else if(status !== 'complete' || !scrollable){
+    content = <Loading />;
+  } else if(notebookTuples.length < 1) {
+    // TODO: add a CTA to create a Notebook
+    content = (
       <Flex align='center' justify='center' width='full' height='full'>
         <Text>No Notebooks were found.</Text>
       </Flex>
     );
-  } /* else -- Notebooks were found */
+  } else {
+    content = (
+      <VStack
+        divider={<StackDivider borderColor='gray.200' />}
+        spacing={2}
+        align='stretch'
+      >
+        {notebookTuples.map((notebookTuple) =>
+          <NotebookListItem key={notebookTuple.id} notebookTuple={notebookTuple} />
+        )}
+      </VStack>
+    );
+  }
 
   return (
     <Box>
@@ -129,7 +140,7 @@ export const NotebookList = () => {
             variant='ghost'
             onClick={handleMoreClick}
           >
-            {scrollable.isExhausted() ? 'Exhausted' : 'More!'}
+            {scrollable?.isExhausted() ? 'Exhausted' : 'More!'}
           </Button>
         </Flex>
 
@@ -155,15 +166,7 @@ export const NotebookList = () => {
 
       <Divider borderColor='gray.200' marginBottom={2}/>
 
-      <VStack
-        divider={<StackDivider borderColor='gray.200' />}
-        spacing={2}
-        align='stretch'
-      >
-        {notebookTuples.map((notebookTuple) =>
-          <NotebookListItem key={notebookTuple.id} notebookTuple={notebookTuple} />
-        )}
-      </VStack>
+      {content}
     </Box>
   );
 };
