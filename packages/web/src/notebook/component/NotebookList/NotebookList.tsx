@@ -71,8 +71,14 @@ export const NotebookList = () => {
   // -- Access --------------------------------------------------------------------
   const handleAccessChange: ChangeEventHandler<HTMLSelectElement> = (event) => {
     const { value } = event.target;
+    // NOTE: The access field 'createdBy' cannot be set if the 'Created By' sort is
+    //       being used, in this case a different value for the sortByField is used.
     router.replace({
-      query: { ...router.query, accessField: value },
+      query: {
+        ...router.query,
+        accessField: value,
+        sortByField: value === 'createdBy' && sortByField === 'createdBy' ? 'name'/*use default instead*/ : sortByField/*use current value*/,
+      },
     });
   };
 
@@ -157,9 +163,15 @@ export const NotebookList = () => {
         <Flex alignItems='center'>
           <Text marginRight={2}>Sort</Text>
           <Select value={sortByField} size='xs' marginRight={2} onChange={handleSortByChange}>
-            {sortFields.map(({ label, value }) => (
-              <option key={value} value={value}>{label}</option>
-            ))}
+            {sortFields.map(({ label, value }) => {
+              // NOTE: The access field 'createdBy' cannot be set if the
+              //       'Created By' sort is being used, in this case a different
+              //       value for the sortByField is used.
+              // CHECK: Is this the right solution? Having the option but disabled
+              //        could be better.
+              if(accessField === 'createdBy' && value === 'createdBy') return null/*skip*/;
+              return <option key={value} value={value}>{label}</option>;
+            })}
           </Select>
 
           <IconButton
