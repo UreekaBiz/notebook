@@ -1,11 +1,12 @@
 import { Box, Button, Divider, Flex, IconButton, Select, StackDivider, Text, VStack } from '@chakra-ui/react';
+import { useRouter } from 'next/router';
 import { useState, useEffect, ChangeEventHandler } from 'react';
 import { HiSortAscending, HiSortDescending } from 'react-icons/hi';
 
-import { getLogger, Logger, NotebookService, NotebookSortField, NotebookTuple, Scrollable } from '@ureeka-notebook/web-service';
+import { getLogger, isNotebookSortField, isOrderByDirection, Logger, NotebookService, NotebookSortField, NotebookTuple, OrderByDirection, Scrollable } from '@ureeka-notebook/web-service';
 
 import { useUserId } from 'authUser/hook/useUserId';
-import { NotebookAccessField, ReadableNotebookAccessField, ReadableNotebookSortField } from 'notebook/type';
+import { isNotebookAccessField, NotebookAccessField, ReadableNotebookAccessField, ReadableNotebookSortField } from 'notebook/type';
 import { Loading } from 'shared/component/Loading';
 import { useAsyncStatus, useIsMounted } from 'shared/hook';
 
@@ -25,14 +26,18 @@ export const NotebookList = () => {
 
   const [scrollable, setScrollable] = useState<Scrollable<NotebookTuple>>();
 
-  const [accessField, setAccessField] = useState<NotebookAccessField>('viewableBy'/*initially*/);
-
-  const [sortByField, setSortBy] = useState<NotebookSortField>('name'/*initially name*/);
-  const [sortDirection, setSortDirection] = useState<'asc' | 'desc'>('asc'/*initially asc*/);
-
   const isMounted = useIsMounted();
   const [status, setStatus] = useAsyncStatus();
   const userId = useUserId();
+
+  const router = useRouter();
+
+  // get the values for the filter
+  // NOTE: Default values are given when the value is not valid, this could be the
+  //       case when a User modifies the values directly from the url.
+  const accessField = (isNotebookAccessField(router.query.accessField) ? router.query.accessField : 'viewableBy'/*default*/) as NotebookAccessField/*by definition*/;
+  const sortByField = (isNotebookSortField(router.query.sortByField) ? router.query.sortByField : 'name'/*default*/) as NotebookSortField/*by definition*/;
+  const sortDirection = (isOrderByDirection(router.query.sortDirection) ? router.query.sortDirection : 'asc'/*default*/) as OrderByDirection/*by definition*/;
 
   // == Effect ====================================================================
   useEffect(() => {
@@ -66,19 +71,24 @@ export const NotebookList = () => {
   // -- Access --------------------------------------------------------------------
   const handleAccessChange: ChangeEventHandler<HTMLSelectElement> = (event) => {
     const { value } = event.target;
-
-    setAccessField(value as NotebookAccessField/*by definition*/);
+    router.replace({
+      query: { ...router.query, accessField: value },
+    });
   };
 
   // -- Sort ----------------------------------------------------------------------
   const handleSortDirectionClick = () => {
     // toggles direction
-    setSortDirection(sortDirection === 'asc' ? 'desc' : 'asc');
+    router.replace({
+      query: { ...router.query, sortDirection: sortDirection === 'asc' ? 'desc' : 'asc' },
+   });
   };
 
   const handleSortByChange: ChangeEventHandler<HTMLSelectElement> = (event) => {
     const { value } = event.target;
-    setSortBy(value as NotebookSortField/*by definition*/);
+    router.replace({
+      query: { ...router.query, sortByField: value },
+    });
   };
 
   const handleMoreClick = () => {

@@ -38,11 +38,17 @@ export type Notebook_Publish = NotebookPublish_Rest;
 
 // == Search ======================================================================
 // -- Notebook --------------------------------------------------------------------
+// NOTE: when adding new sort fields don't forget to also update isNotebookSortField.
 export type NotebookSortField = keyof Pick<Notebook,
   | 'name'
   | 'createTimestamp'
   | 'createdBy'
 >;
+// CHECK: Is there a better way to do this?
+export const isNotebookSortField = (value: any): value is NotebookSortField =>
+     value === 'name'
+  || value === 'createTimestamp'
+  || value === 'createdBy';
 
 /** the resulting query is the 'AND' of each member but the 'OR' of any multi-valued
  *  filter */
