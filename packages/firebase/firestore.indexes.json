@@ -12,6 +12,16 @@
 
 
     {
+      "collectionGroup": "labels",
+      "queryScope": "COLLECTION",
+      "fields": [
+        { "fieldPath": "createdBy", "order": "ASCENDING" },
+        { "fieldPath": "name", "order": "ASCENDING" }
+      ]
+    },
+
+
+    {
       "collectionGroup": "notebooks",
       "queryScope": "COLLECTION",
       "fields": [
