@@ -124,6 +124,7 @@ export class LabelService {
    *          in lexicographical order. This result is bound to return at most
    *          {@link MAX_LABEL_SEARCH_RESULTS} results. If the max number are returned
    *          then it is safe to assume that there are more than the max.
+   * @see #onLabels() using `namePrefix` in the filter
    */
   public typeaheadSearchLabels$(query: string): Observable<LabelTuple[]> {
     return typeaheadFindLabels$(query);
