@@ -48,11 +48,11 @@ export const labelQuery = (filter: LabelFilter) => {
   return buildQuery;
 };
 
-// .. Search (Published) ..........................................................
+// .. Search ......................................................................
 export const sortedLabelQuery =
   query(labelCollection, orderBy(nameof<Label_Storage>('name'), 'asc'));
 
-// .. Typeahead-find Search (Published) ...........................................
+// .. Typeahead-find Search .......................................................
 export const labelPrefixQuery = (queryString: string) =>
   query(sortedLabelQuery, where(nameof<Label_Storage>('searchNamePrefixes'), 'array-contains', computeLabelPrefixQueryString(queryString)),
                           limit(MAX_LABEL_SEARCH_RESULTS/*bound for sanity*/));
