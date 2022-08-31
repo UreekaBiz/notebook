@@ -70,7 +70,7 @@ export class LabelService {
 
   /**
    * @param notebookId the identifier of the {@link Notebook} for the desired {@link Label}s.
-   *        Only {@link Label}s that are shared with the caller are returned.
+   *        Only {@link Label}s that are *created by* the caller are returned.
    * @returns {@link Observable} over the collection of {@link Label}s. The
    *          Observable will have an error thrown if the Notebook does not exist.
    *          There are at most {@link MAX_LABEL_NOTEBOOKS} Notebooks returned.

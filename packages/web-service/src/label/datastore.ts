@@ -64,7 +64,9 @@ export const labelPrefixQuery = (queryString: string) =>
 //       know is what they're allowed to see based on the Labels they have access to
 export const notebookLabelQuery = (userId: UserIdentifier, notebookId: NotebookIdentifier) =>
   query(labelCollection, where(nameof<Label_Storage>('notebookIds'), 'array-contains', notebookId),
-                         where(nameof<Label_Storage>('viewers'), 'array-contains', userId));
+                         where(nameof<Label_Storage>('createdBy'), '==', userId));
+                         // FIXME: really really want this!!!
+                         //where(nameof<Label_Storage>('viewers'), 'array-contains', userId));
 
 // -- Label Published -------------------------------------------------------------
 export const labelPublishedQuery = (filter: LabelPublishedFilter) => {
