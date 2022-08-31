@@ -280,7 +280,7 @@ export const ShareNotebookDialog: React.FC<Props> = ({ notebook, notebookId, com
 
             <ModalFooter>
               <Button variant='ghost' marginRight={2} onClick={handleAYSClose}>Cancel</Button>
-              <Button colorScheme='blue' onClick={handleAYSConfirmation}>Confirm</Button>
+              <Button colorScheme='blue' autoFocus onClick={handleAYSConfirmation}>Confirm</Button>
             </ModalFooter>
           </ModalContent>
         </>
