@@ -91,7 +91,7 @@ export const AddToCollectionDialog: React.FC<Props> = ({ notebook, notebookId, c
   useEffect(() => {
     if(!isModalOpen) return/*nothing to do*/;
 
-    const scrollable = LabelService.getInstance().onLabels({ namePrefix: searchValue, createdBy: userId, sort:[{ field:'name', direction: 'asc' }] }, 5/*FIXME: temporary for testing*/);
+    const scrollable = LabelService.getInstance().onLabels({ namePrefix: searchValue, createdBy: userId, sort:[{ field:'name', direction: 'asc' }] }, 10/*FIXME: temporary for testing*/);
     setScrollable(scrollable);
 
     const subscription = scrollable.documents$().subscribe({
