@@ -2,6 +2,7 @@ import { Box, Flex, Heading } from '@chakra-ui/react';
 
 import { RequiredAuthUserWrapper } from 'authUser/RequiredAuthUserWrapper';
 import { WrappedPage } from 'core/wrapper';
+import { LabelServiceWrapper } from 'label/LabelServiceWrapper';
 import { NotebookServiceWrapper } from 'notebook/NotebookServiceWrapper';
 import { ProfileNavigationLayout } from 'shared/layout/ProfileNavigationLayout';
 import { UserProfileServiceWrapper } from 'user/UserProfileServiceWrapper';
@@ -22,6 +23,6 @@ function APIKeyPage() {
 // --------------------------------------------------------------------------------
 // SEE: core/wrapper.tsx for more information
 const Page: WrappedPage = APIKeyPage;
-      Page.wrappers = [RequiredAuthUserWrapper, UserProfileServiceWrapper, NotebookServiceWrapper, ProfileNavigationLayout]/*outer to inner order*/;
+      Page.wrappers = [RequiredAuthUserWrapper, UserProfileServiceWrapper, NotebookServiceWrapper, LabelServiceWrapper, ProfileNavigationLayout]/*outer to inner order*/;
 
 export default Page;
