@@ -73,6 +73,7 @@ export {
   // SEE: @ureeka-notebook/service-common: util/set.ts
   differenceSet,
   intersectionSet,
+  setEquals,
 
   // SEE: @ureeka-notebook/service-common: util/share.ts
   ShareRole,
