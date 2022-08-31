@@ -48,7 +48,7 @@ export const getNotebookShareRoles = (notebook: Notebook): Map<UserIdentifier, S
 // ................................................................................
 // returns the count of Viewers and Editors for the specified Notebook
 // NOTE: there is always one and only one Creator so not explicitly counted / returned
-export const getNotebookShareCounts = (notebook: Notebook): Readonly<{ viewers: number, editors: number }> => {
+export const getNotebookShareCounts = (notebook: Notebook): Readonly<{ viewers: number; editors: number; }> => {
   const creators = new Set([notebook.createdBy]),
         editors  = new Set(notebook.editors.filter(userId => !creators.has(userId))),
         viewers  = new Set(notebook.viewers.filter(userId => !editors.has(userId) && !creators.has(userId)));
