@@ -47,8 +47,9 @@ class PaginatedArrayObservable<T, R> implements Pagination<R> {
 
   // == Pagination ================================================================
   public isExhausted(): boolean { return this._isExhausted; }
-  public getPageNumber(): number { return this.pageNumber$.value; }
   public getPageSize(): number { return this.pageSize; }
+
+  public getPageNumber(): number { return this.pageNumber$.value; }
 
   // ------------------------------------------------------------------------------
   public previous(): boolean {
