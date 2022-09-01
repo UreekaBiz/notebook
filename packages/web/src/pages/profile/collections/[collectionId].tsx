@@ -87,7 +87,20 @@ function CollectionIdPage() {
   return (
     <Box>
       <Flex alignItems='center' justifyContent='space-between' width='full' marginBottom={4}>
-        <Heading flex='1 1'>{label?.obj?.name}</Heading>
+        <Heading
+          flex='1 1'
+
+          // Clamp to 2 lines
+          overflow='hidden'
+          display='-webkit-box'
+          style={{
+            lineClamp: 2,
+            WebkitLineClamp: 2,
+            WebkitBoxOrient: 'vertical',
+          }}
+        >
+          {label.obj.name}
+        </Heading>
       </Flex>
       <CollectionNotebookList labelId={collectionId} />
     </Box>
