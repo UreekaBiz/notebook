@@ -1,5 +1,6 @@
 import { Box, Flex, IconButton, Link, Menu, MenuButton, MenuItem, MenuList, Text } from '@chakra-ui/react';
 import NextLink from 'next/link';
+import { BiPencil } from 'react-icons/bi';
 import { BsThreeDots } from 'react-icons/bs';
 import { HiLockClosed, HiTrash } from 'react-icons/hi';
 import { TbWorld } from 'react-icons/tb';
@@ -7,6 +8,8 @@ import { TbWorld } from 'react-icons/tb';
 import { LabelTuple, LabelVisibility } from '@ureeka-notebook/web-service';
 
 import { collectionRoute } from 'shared/routes';
+
+import { EditCollectionDialog } from '../EditCollectionDialog';
 
 // ********************************************************************************
 interface Props {
@@ -71,6 +74,13 @@ export const CollectionListItem: React.FC<Props> = ({ labelTuple }) => {
           borderRadius='100px'
         />
         <MenuList>
+          <EditCollectionDialog labelId={id} label={obj} component={(onClick) => (
+            <MenuItem onClick={onClick} icon={<BiPencil />}>
+              Edit
+            </MenuItem>
+            )}
+          />
+
           <MenuItem disabled icon={<HiTrash />}>
             Delete (Disabled!)
           </MenuItem>
