@@ -180,7 +180,7 @@ export const AddToCollectionDialog: React.FC<Props> = ({ notebook, notebookId, c
       setCreateLabelStatus('error');
 
       const message =  error instanceof Error ? error.message : `Unknown error.`;
-      toast({ title: 'Error while creating Label', description: message, status: 'error' });
+      toast({ title: 'Error while creating Collection', description: message, status: 'error' });
     }
   };
 
