@@ -365,6 +365,7 @@ export const AddToCollectionDialog: React.FC<Props> = ({ notebook, notebookId, c
                   {isDirty ? (
                     <>
                       <Button
+                        key='cancel'
                         disabled={currentLabelsStatus === 'loading'}
                         variant='ghost'
                         size='sm'
@@ -374,13 +375,13 @@ export const AddToCollectionDialog: React.FC<Props> = ({ notebook, notebookId, c
                         Cancel
                       </Button>
                       {currentLabelsStatus === 'loading' ? (
-                        <Button disabled colorScheme='blue' size='sm'><Loading /></Button>
+                        <Button key='save' disabled colorScheme='blue' size='sm'><Spinner size='sm'/></Button>
                       ):(
-                        <Button colorScheme='blue' size='sm' onClick={handleSaveChanges}>Save</Button>
+                        <Button key='save' colorScheme='blue' size='sm' onClick={handleSaveChanges}>Save</Button>
                       )}
                     </>
                   ):(
-                    <Button colorScheme='blue' size='sm' onClick={handleClose}>Done</Button>
+                    <Button key='done' colorScheme='blue' size='sm' onClick={handleClose}>Done</Button>
                   )}
                 </Flex>
               </Box>
