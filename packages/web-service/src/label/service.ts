@@ -60,8 +60,9 @@ export class LabelService {
    *        Creator of the {@link Label} or listed as one of the {@link Label#viewers}
    *        or {@link Label#editors}.
    * @param pageSize the number of Notebooks returned per batch
-   * @returns {@link Pagination} over the collection of {@link Notebook}s. The
-   *          Observable will have an error thrown if the Label does not exist.
+   * @returns {@link Pagination} over the collection of {@link Notebook}s in the
+   *          order in which they were specified. The Observable will have an error
+   *          thrown if the Label does not exist.
    */
   public onNotebooks(labelId: LabelIdentifier, pageSize: number = LabelService.DEFAULT_PAGE_SIZE): Pagination<NotebookTuple> {
     return paginatedArray(labelNotebookIds$(labelId), notebookIdsToNotebooks$, pageSize,

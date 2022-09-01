@@ -23,6 +23,32 @@
       "collectionGroup": "labels",
       "queryScope": "COLLECTION",
       "fields": [
+        { "fieldPath": "createdBy", "order": "ASCENDING" },
+        { "fieldPath": "name", "order": "DESCENDING" }
+      ]
+    },
+    {
+      "collectionGroup": "labels",
+      "queryScope": "COLLECTION",
+      "fields": [
+        { "fieldPath": "createdBy", "order": "ASCENDING" },
+        { "fieldPath": "visibility", "order": "ASCENDING" },
+        { "fieldPath": "name", "order": "ASCENDING" }
+      ]
+    },
+    {
+      "collectionGroup": "labels",
+      "queryScope": "COLLECTION",
+      "fields": [
+        { "fieldPath": "createdBy", "order": "ASCENDING" },
+        { "fieldPath": "visibility", "order": "ASCENDING" },
+        { "fieldPath": "name", "order": "DESCENDING" }
+      ]
+    },
+    {
+      "collectionGroup": "labels",
+      "queryScope": "COLLECTION",
+      "fields": [
         { "fieldPath": "searchNamePrefixes", "arrayConfig": "CONTAINS" },
         { "fieldPath": "createdBy", "order": "ASCENDING" },
         { "fieldPath": "name", "order": "ASCENDING" }

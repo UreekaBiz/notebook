@@ -1,5 +1,5 @@
 import { limit, query, Query } from 'firebase/firestore';
-import { switchMap, BehaviorSubject, Observable } from 'rxjs';
+import { debounceTime, switchMap, BehaviorSubject, Observable } from 'rxjs';
 import { tap } from 'rxjs/operators';
 
 import { getLogger, ServiceLogger } from '../logging';
@@ -84,6 +84,13 @@ log.debug(`${this.label}:documents$: desiredDocumentCount changed; isExhausted: 
           const buildQuery = query(firestoreQuery, limit(desiredDocumentCount));
           return query$(buildQuery);
         }),
+        // because Firestore tries to be optimistic and use the cache, it's possible
+        // to get a partial result from the cache while the server is still processing
+        // the query and then quickly get the full result. This results in a flash
+        // in the UI. This is an attempt to alleviate this without artificially
+        // adding a significant delay
+        // CHECK: should this just be made the responsibility of the caller?
+        debounceTime(100/*T&E*/),
         tap(tuples => {
           this.isLoading = false/*no longer loading*/;
           this.currentDocumentCount = tuples.length;
