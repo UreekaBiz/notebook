@@ -46,7 +46,7 @@ export const ExecuteButtons: React.FC<Props> = ({ editor, depth }) => {
 
     try {
       await demo2AsyncNodeView.executeRemote(notebookId, editorService);
-    } catch(error){
+    } catch(error) {
       log.error(`Error ocurred while executing Demo 2 Async Node (${id}) in Notebook (${notebookId})`, error);
       if(!isMounted()) return/*nothing to do*/;
       toast({

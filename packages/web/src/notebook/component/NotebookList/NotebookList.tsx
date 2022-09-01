@@ -127,7 +127,7 @@ export const NotebookList = () => {
         <Text>An error ocurred getting Notebooks.</Text>
       </Flex>
     );
-  } else if(status !== 'complete' || !scrollable){
+  } else if(status !== 'complete' || !scrollable) {
     content = <Loading />;
   } else if(notebookTuples.length < 1) {
     // TODO: add a CTA to create a Notebook

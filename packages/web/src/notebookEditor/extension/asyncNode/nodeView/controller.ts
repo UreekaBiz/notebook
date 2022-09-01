@@ -36,7 +36,7 @@ export abstract class AbstractAsyncNodeController<T/*value returned by the async
 
   // == Util ======================================================================
   // updates the isDirty state and the viewElement to reflect the current state
-  public setDirty(isDirty: boolean){
+  public setDirty(isDirty: boolean) {
     this.nodeModel.setIsDirty(isDirty);
     this.nodeView.updateView();
   }

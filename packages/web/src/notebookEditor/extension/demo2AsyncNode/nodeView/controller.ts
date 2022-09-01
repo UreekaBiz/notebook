@@ -42,7 +42,7 @@ export class Demo2AsyncNodeController extends AbstractAsyncNodeController<string
     view.dispatch(tr);
     try {
       await editorService.executeDemo2AsyncNode({ nodeId: id, notebookId, content, replace });
-    } catch(error){
+    } catch(error) {
       throw error/*rethrow*/;
     } finally {
       this.nodeModel.setPerformingAsyncOperation(false);

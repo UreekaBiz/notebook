@@ -22,7 +22,7 @@ export const UserProfileAvatar: React.FC<Props> = ({ userId, ...props }) => {
   //       but avoid passing the userPublicProfile and userPrivateProfile props
   //       since they are invalid and cannot be rendered into the DOM.
   let rest: Partial<Props>;
-  if('userPublicProfile' in props){
+  if('userPublicProfile' in props) {
     const { userPublicProfile, ...otherProps } = props;
     rest = otherProps;
     name = getPublicDisplayName(userPublicProfile);

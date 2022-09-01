@@ -230,7 +230,7 @@ export const AddToCollectionDialog: React.FC<Props> = ({ notebook, notebookId, c
         <Text>An error ocurred.</Text>
       </Flex>
     );
-  else if(scrollable === null || allLabels === null || notebookLabels === null || currentLabels === null){
+  else if(scrollable === null || allLabels === null || notebookLabels === null || currentLabels === null) {
     content = (
       <Flex align='center' justify='center' width='full' height='full' paddingTop='60px'>
         <Loading />

@@ -83,7 +83,7 @@ export const CollectionNotebookList: React.FC<Props> = ({ labelId }) => {
         <Text>An error ocurred getting Notebooks.</Text>
       </Flex>
     );
-  } else if(status !== 'complete' || !pagination){
+  } else if(status !== 'complete' || !pagination) {
     content = <Loading />;
   } else if(pagination.getPageNumber() <= 1 /*at first page*/ &&  notebookTuples.length < 1/*don't have data*/) {
     // TODO: add a CTA to create a Notebook
