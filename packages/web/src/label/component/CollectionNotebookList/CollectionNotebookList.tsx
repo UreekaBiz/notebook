@@ -12,7 +12,6 @@ import { PaginationControls } from 'shared/component/PaginationControls';
 
 const log = getLogger(Logger.DEFAULT);
 
-
 // ********************************************************************************
 // == Type ========================================================================
 const PAGE_SIZE = 5/*FIXME: temporary for testing*/;
@@ -87,7 +86,7 @@ export const CollectionNotebookList: React.FC<Props> = ({ labelId }) => {
     );
   } else if(status !== 'complete' || !pagination){
     content = <Loading />;
-  } else if(pagination.getPageNumber() <= 1 /*at first page*/ &&  notebookTuples.length < 1) {
+  } else if(pagination.getPageNumber() <= 1 /*at first page*/ &&  notebookTuples.length < 1/*don't have data*/) {
     // TODO: add a CTA to create a Notebook
     content = (
       <Flex align='center' justify='center' width='full' height='full' paddingTop='60px'>
@@ -95,21 +94,30 @@ export const CollectionNotebookList: React.FC<Props> = ({ labelId }) => {
       </Flex>
     );
   } else {
-    const startIndex = (Math.min(1, pagination.getPageNumber()) - 1/*1-indexed*/) * pagination.getPageNumber() + 1;
-    const endIndex = startIndex + notebookTuples.length - 1;
+    const startIndex = (Math.min(1, pagination.getPageNumber())/*it can be 0 or 1 at the first page*/ - 1/*1-indexed*/) * pagination.getPageNumber() + 1/*1-indexed*/,
+          endIndex = startIndex + notebookTuples.length - 1;
+
+    const showingComponent = (
+      <Box color='#AAA' fontSize={12} fontWeight='600'>
+        Showing <Text as='span' color='#999'>{startIndex}-{endIndex}</Text>
+      </Box>
+    );
+    const paginationControls = (
+      <PaginationControls
+        hasPrev={pagination.getPageNumber() > 1/*is first page*/}
+        hasNext={!pagination.isExhausted()/*is last page*/}
+        onPrevious={handlePrevious}
+        onNext={handleNext}
+      />
+    );
+
     content = (
       <Box>
         <Flex justifyContent='space-between' marginBottom={2}>
-          <Box color='#AAA' fontSize={12} fontWeight='600'>
-            Showing <Text as='span' color='#999'>{startIndex}-{endIndex}</Text>
-          </Box>
-          <PaginationControls
-            hasPrev={pagination.getPageNumber() > 1/*is first page*/}
-            hasNext={!pagination.isExhausted()/*is last page*/}
-            onPrevious={handlePrevious}
-            onNext={handleNext}
-          />
+          {showingComponent}
+          {paginationControls}
         </Flex>
+
         <VStack
           divider={<StackDivider borderColor='gray.200' />}
           spacing={2}
@@ -125,14 +133,10 @@ export const CollectionNotebookList: React.FC<Props> = ({ labelId }) => {
             )
           )}
         </VStack>
-        <Flex justifyContent='center' marginTop={2}>
-          <PaginationControls
-            hasPrev={pagination.getPageNumber() > 1}
-            hasNext={!pagination.isExhausted()}
 
-            onPrevious={handlePrevious}
-            onNext={handleNext}
-          />
+        <Flex alignItems='center' justifyContent='center' flexDirection='column' marginTop={2}>
+          {showingComponent}
+          {paginationControls}
         </Flex>
       </Box>
     );
