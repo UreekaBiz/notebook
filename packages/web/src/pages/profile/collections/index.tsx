@@ -1,7 +1,8 @@
-import { Box, Flex, Heading } from '@chakra-ui/react';
+import { Box, Button, Flex, Heading } from '@chakra-ui/react';
 
 import { RequiredAuthUserWrapper } from 'authUser/RequiredAuthUserWrapper';
 import { WrappedPage } from 'core/wrapper';
+import { CollectionDialog } from 'label/component/CollectionDialog';
 import { CollectionList } from 'label/component/CollectionList';
 import { LabelServiceWrapper } from 'label/LabelServiceWrapper';
 import { NotebookServiceWrapper } from 'notebook/NotebookServiceWrapper';
@@ -16,6 +17,10 @@ function CollectionsPage() {
     <Box>
       <Flex alignItems='center' justifyContent='space-between' width='full' marginBottom={4}>
         <Heading flex='1 1'>Collections</Heading>
+        <CollectionDialog component={(onClick) => (
+          <Button colorScheme='blue' onClick={onClick}>Create Collection</Button>
+        )}
+        />
       </Flex>
       <CollectionList />
     </Box>
