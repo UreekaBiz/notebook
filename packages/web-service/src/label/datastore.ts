@@ -32,6 +32,11 @@ export const labelQuery = (filter: LabelFilter) => {
   } /* else -- neither 'namePrefix' nor 'name' was specified in the filter */
 
   // filter visibility
+  if(filter.visibility) {
+    buildQuery = query(buildQuery, where(nameof<Label_Storage>('visibility'), '==', filter.visibility));
+  } /* else -- 'visibility' was not specified in the filter */
+
+  // filter viewableBy, editableBy and createdBy
   if(!isBlank(filter.viewableBy)) {
     if(isBlank(filter.namePrefix)) buildQuery = query(buildQuery, where(nameof<Label_Storage>('viewers'), 'array-contains', filter.viewableBy!));
     else log.warn(`Cannot filter by both 'namePrefix' and 'viewableBy' at the same time. Ignoring 'viewableBy' filter.`);

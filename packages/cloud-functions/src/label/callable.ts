@@ -10,16 +10,16 @@ import { shareLabel } from './share';
 // ********************************************************************************
 // == Label ====================================================================
 export const labelCreate = functions.https.onCall(wrapCall<LabelCreate_Rest, LabelIdentifier>(
-{ name: 'labelCreate', schema: LabelCreate_Rest_Schema, convertNullToUndefined: true, requiresAuth: true },
+{ name: 'labelCreate', schema: LabelCreate_Rest_Schema, convertNullToUndefined: true/*collapse for create*/, requiresAuth: true },
 async (data, context, userId) => {
-  return await createLabel(userId!/*auth'd*/, data.name, data.visibility, data.ordered);
+  return await createLabel(userId!/*auth'd*/, data.name, data.description, data.visibility, data.ordered);
 }));
 
 // ................................................................................
 export const labelUpdate = functions.https.onCall(wrapCall<LabelUpdate_Rest>(
-{ name: 'labelUpdate', schema: LabelUpdate_Rest_Schema, convertNullToUndefined: true, requiresAuth: true },
+{ name: 'labelUpdate', schema: LabelUpdate_Rest_Schema, convertNullToUndefined: false/*explicitly not*/, requiresAuth: true },
 async (data, context, userId) => {
-  await updateLabel(userId!/*auth'd*/, data.labelId, data.name, data.visibility, data.ordered);
+  await updateLabel(userId!/*auth'd*/, data.labelId, data.name, data.description, data.visibility, data.ordered);
 }));
 
 // ................................................................................

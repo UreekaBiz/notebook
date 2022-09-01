@@ -16,6 +16,9 @@ export const LabelCreate_Rest_Schema = Validate.object({
   name: stringMedSchema
       .min(1/*cannot be blank*/)
       .required(),
+  description: stringMedSchema
+      .nullable()/*how `undefined` (no value) comes across REST*/
+      .notRequired()/*if unspecified then left unchanged*/,
 
   visibility: Validate.string()
       .oneOf(Object.values(LabelVisibility))
@@ -24,9 +27,10 @@ export const LabelCreate_Rest_Schema = Validate.object({
   ordered: Validate.bool()
       .required(),
 }).noUnknown();
-export type LabelCreate_Rest = Modify<Validate.InferType<typeof LabelCreate_Rest_Schema>, Readonly<{
+export type _LabelCreate_Rest = Modify<Validate.InferType<typeof LabelCreate_Rest_Schema>, Readonly<{
   visibility: LabelVisibility/*explicit*/;
 }>>;
+export type LabelCreate_Rest = Modify<_LabelCreate_Rest, Partial<Pick<_LabelCreate_Rest, 'description'>>>/*FIXME Yup problem with notRequired()*/;
 
 // .. Update ......................................................................
 export const LabelUpdate_Rest_Schema = Validate.object({

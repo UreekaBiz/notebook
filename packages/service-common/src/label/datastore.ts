@@ -1,6 +1,6 @@
 import { NotebookIdentifier } from '../notebook/type';
 import { FieldValue, FirestoreArray } from '../util/firestore';
-import { Modify } from '../util/type';
+import { Modify, UnionType } from '../util/type';
 import { Label, LabelPublished } from './type';
 
 // ** Constants *******************************************************************
@@ -29,7 +29,8 @@ export type Label_Create = Modify<Label_Storage, Readonly<{
   createTimestamp: FieldValue/*always-write server-set*/;
   updateTimestamp: FieldValue/*always-write server-set*/;
 }>>;
-export type Label_Update = Partial<Omit<Label_Storage, 'notebookIds' | 'createTimestamp'| 'createdBy' | 'updateTimestamp'>>
+export type Label_Update = Partial<Omit<Label_Storage, 'notebookIds' | 'description' | 'createTimestamp'| 'createdBy' | 'updateTimestamp'>>
+  & UnionType<Pick<Label_Storage, 'description'>, FieldValue/*deletable*/>
   & Modify<Pick<Label_Storage, 'updateTimestamp' | 'lastUpdatedBy'>, Readonly<{
       updateTimestamp: FieldValue/*always-write server-set*/;
     }>>;

@@ -56,7 +56,7 @@ export const onWriteUserProfilePrivate = functions.runWith(MediumMemory)
                                                     .firestore.document(USER_PROFILE_PRIVATE)
                                                       .onWrite(wrapOnWrite<DocumentSnapshot<UserProfilePrivate_Storage>, UserProfilePrivateParams>(async (change, context) => {
   const userId = context.params.userId/*from path*/;
-  const { isLatest, latestDocument } = await getChangeState(change, `User Private Profile V2 (${userId})`);
+  const { isLatest, latestDocument } = await getChangeState(change, `User Profile Private (${userId})`);
   if(!latestDocument) {
     await deleteUserProfilePublic(userId)/*data consistency -- logs on error*/;
 
