@@ -94,12 +94,18 @@ export const CollectionNotebookList: React.FC<Props> = ({ labelId }) => {
       </Flex>
     );
   } else {
-    const startIndex = (Math.min(1, pagination.getPageNumber())/*it can be 0 or 1 at the first page*/ - 1/*1-indexed*/) * pagination.getPageNumber() + 1/*1-indexed*/,
+    const startIndex = (pagination.getPageNumber() - 1/*1-based*/) * pagination.getPageSize() + 1,
           endIndex = startIndex + notebookTuples.length - 1;
 
     const showingComponent = (
       <Box color='#AAA' fontSize={12} fontWeight='600'>
+        { (pagination.getPageNumber() === 0) ? (<>
+        <Text as='span' color='#666'>0</Text> Notebooks
+        </>) : (startIndex === endIndex) ? (<>
+        Showing <Text as='span' color='#666'>{startIndex}</Text> Notebook
+        </>) : (<>
         Showing <Text as='span' color='#666'>{startIndex}-{endIndex}</Text> Notebooks
+        </>) }
       </Box>
     );
     const paginationControls = (
