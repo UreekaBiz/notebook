@@ -53,13 +53,12 @@ class PaginatedArrayObservable<T, R> implements Pagination<R> {
   // ------------------------------------------------------------------------------
   public previous(): boolean {
 log.debug(`${this.label}:previous: isLoading: ${this.isLoading}; isExhausted: ${this.isExhausted()}; pageNumber: ${this.pageNumber$.value}`);
-    // prevent loading more data if loading or exhausted
+    // prevent loading more data if loading
+    // NOTE: *may* be exhausted but still allow going back
     if(this.isLoading) return true/*assume there is more until loaded and know otherwise*/;
-    if(this.isExhausted()) return false/*there aren't any more (by definition)*/;
     if(this.pageNumber$.value <= 1) return false/*there aren't any more (by definition)*/;
 
     this.pageNumber$.next(this.pageNumber$.value - 1);
-this._isExhausted = false;
 
     return (this.pageNumber$.value > 1);
   }
