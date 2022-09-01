@@ -58,7 +58,7 @@ export const CollectionNotebookList: React.FC<Props> = ({ labelId }) => {
   }, [labelId, setStatus, isMounted, userId]);
 
   // == Handler ===================================================================
-  // -- Pagination ---------------------------------------------------------------
+  // -- Pagination ----------------------------------------------------------------
   const handlePrevious = () => {
     if(!pagination) return/*nothing to do*/;
     if(pagination.getPageNumber() <= 1) return/*no previous data*/;
@@ -74,7 +74,6 @@ export const CollectionNotebookList: React.FC<Props> = ({ labelId }) => {
     setStatus('loading');
     pagination.next();
   };
-
 
   // == UI ========================================================================
   let content: React.ReactElement;
