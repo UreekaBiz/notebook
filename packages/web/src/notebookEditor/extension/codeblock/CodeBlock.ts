@@ -93,7 +93,7 @@ export const CodeBlock = Node.create<NoOptions, CodeBlockStorage>({
       if(controller) {
         controller.updateProps(getPos);
         return controller;
-      } // else -- controller don't exists
+      } /* else -- controller don't exists */
 
       // Create a new controller and NodeView instead.
       return new CodeBlockController(editor, node, this.storage, getPos);

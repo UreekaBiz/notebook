@@ -65,7 +65,7 @@ function CollectionIdPage() {
   if(status === 'idle' || status === 'loading') return <Loading />;
   // else -- has loaded
 
-  if(status === 'error'){
+  if(status === 'error') {
     return (
       <Flex alignItems='center' justifyContent='space-between' width='full' marginBottom={4}>
         <Heading flex='1 1'>Collection</Heading>
@@ -74,15 +74,15 @@ function CollectionIdPage() {
         </Flex>
       </Flex>
     );
-  } // else -- is not an error
+  } /* else -- is not an error */
 
-  if(!label || !label.obj){
+  if(!label || !label.obj) {
     return (
       <Flex alignItems='center' justifyContent='space-between' width='full' marginBottom={4}>
         <Heading flex='1 1'>Collection not found</Heading>
       </Flex>
     );
-  } // else -- collection was found
+  } /* else -- collection was found */
 
   return (
     <Box>

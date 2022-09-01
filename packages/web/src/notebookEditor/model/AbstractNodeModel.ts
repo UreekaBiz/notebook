@@ -32,8 +32,8 @@ export abstract class AbstractNodeModel<NodeType extends ProseMirrorNode, Storag
     this.selected = false/*by contract*/;
   }
 
-  // Sync getPos and node when prosemirror updates it.
-  public updateProps(getPos: (() => number)){
+  // Sync getPos and node when prosemirror updates it
+  public updateProps(getPos: (() => number)) {
     this.getPos = getPos;
   }
 

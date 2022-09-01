@@ -61,7 +61,7 @@ export const ChipTool: React.FC<Props> = ({ nodeId, value, maxValues, isDraggabl
   // -- Chips ---------------------------------------------------------------------
   const handleChipChange = (newValue: ChipValue[], focus: boolean) => {
     // gets the amount of values in range
-    if(maxValues !== undefined){
+    if(maxValues !== undefined) {
       if(newValue.length > maxValues) log.error('ChipTool: max values reached. Ignoring overflowing items.');
       newValue = newValue.slice(0, maxValues);
     }

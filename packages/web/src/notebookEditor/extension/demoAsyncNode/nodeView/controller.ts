@@ -44,7 +44,7 @@ export class DemoAsyncNodeController extends AbstractCodeBlockAsyncNodeControlle
       const content = getCodeBlocksContent(this.editor, codeBlockReferences),
             hashes = hashesFromCodeBlockReferences(this.editor, codeBlockReferences);
       await editorService.executeDemoAsyncNode({ content, hashes, nodeId: id, notebookId });
-    } catch(error){
+    } catch(error) {
       throw error/*rethrow*/;
     } finally {
       this.nodeModel.setPerformingAsyncOperation(false);

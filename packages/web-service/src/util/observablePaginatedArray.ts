@@ -35,11 +35,16 @@ class PaginatedArrayObservable<T, R> implements Pagination<R> {
           log.debug(`${this.label}:array$: isLoading: ${this.isLoading}; isExhausted: ${this.isExhausted()}; pageSize: ${this.pageSize}; pageNumber: ${pageNumber}; array: ${array.length}`);
           this.isLoading = true/*set to loading*/;
         }),
-        map(([pageNumber, array]) => array.slice((this.pageSize * (pageNumber - 1)), this.pageSize * pageNumber)),
+        map(([pageNumber, array]) => {
+          // NOTE: this is the only place where both the array and page number are
+          //       available to determine if is exhausted
+          this._isExhausted = (array.length <= (this.pageSize * pageNumber))/*update if exhausted*/;
+
+          return array.slice((this.pageSize * (pageNumber - 1)), this.pageSize * pageNumber);
+        }),
         switchMap(pageArray => transformArray$(pageArray)),
         tap(pageArray => {
           this.isLoading = false/*finished loading*/;
-          this._isExhausted = (pageArray.length < this.pageSize)/*update if exhausted*/;
           log.debug(`${this.label}:array$: loaded; isExhausted: ${this.isExhausted()}; pageSize: ${this.pageSize}; pageArray: ${pageArray.length}`);
         })
       );
@@ -47,8 +52,9 @@ class PaginatedArrayObservable<T, R> implements Pagination<R> {
 
   // == Pagination ================================================================
   public isExhausted(): boolean { return this._isExhausted; }
-  public getPageNumber(): number { return this.pageNumber$.value; }
   public getPageSize(): number { return this.pageSize; }
+
+  public getPageNumber(): number { return this.pageNumber$.value; }
 
   // ------------------------------------------------------------------------------
   public previous(): boolean {

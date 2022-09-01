@@ -110,7 +110,7 @@ img.ProseMirror-selectednode/*target inline nodes with content (e.g. asyncNodes)
 }
 /* set background color on selected text while the editor is not focused. This
    background is not set to data-node-view attributes since it mess up the styles */
-.selected_text:not([data-node-view]){
+.selected_text:not([data-node-view]) {
   background-color: rgba(0,0,0,0.1);
 }
 /* .. Image .................................................................... */

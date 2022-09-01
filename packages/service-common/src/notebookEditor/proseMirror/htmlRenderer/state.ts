@@ -43,7 +43,7 @@ export const computeState = (doc: JSONNode): RendererState => {
       if(!visualId) return false/*nothing to do*/;
 
       codeBlockState.visualIds[visualId] = codeBlockState.stack.map(({ value }) => value).join('.');
-    } else if(isHeadingJSONNode(node)){
+    } else if(isHeadingJSONNode(node)) {
       const attrs = node.attrs ?? {}/*default*/;
       const level = attrs[AttributeType.Level] ?? HeadingLevel.One /*default*/;
       if(!level) return false/*nothing to do*/;

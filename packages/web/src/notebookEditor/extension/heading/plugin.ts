@@ -30,7 +30,7 @@ export const HeadingPlugin = () => new Plugin<NotebookSchemaType>({
         // Split the node from the current selection and append the attributes.
         tr.deleteRange(selection.from, selection.to)/*delete the content if is a range selection*/;
 
-        if(isAtEnd){
+        if(isAtEnd) {
           tr.removeMark(selection.from, selection.to, null/*all marks*/)/*remove marks*/
             .split(selection.from, 1, [{ type: getParagraphNodeType(state.schema) }])/*split and insert paragraph node*/;
         } else {

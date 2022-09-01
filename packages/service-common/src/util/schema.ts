@@ -140,7 +140,7 @@ export const urlSchema = string()
         // parsed value must have a defined host and scheme
         if(parsed.host === undefined || parsed.scheme === undefined) return false;
         return true/*by contract*/;
-      } catch(error){
+      } catch(error) {
         // Unexpected error happened while parsing the URL. URI.parse() should only
         // return an invalid object that is handled above.
         console.error(`Error parsing URL for value (${value}):`, error);

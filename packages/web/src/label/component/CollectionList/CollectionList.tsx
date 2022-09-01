@@ -96,7 +96,7 @@ export const CollectionList = () => {
         <Text>An error ocurred getting Collections.</Text>
       </Flex>
     );
-  } else if(status !== 'complete' || !scrollable){
+  } else if(status !== 'complete' || !scrollable) {
     content = <Loading />;
   } else if(labelTuples.length < 1) {
     // TODO: add a CTA to create a Collection
