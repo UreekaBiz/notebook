@@ -27,7 +27,7 @@ export const labelNotebookIds$ = (labelId: LabelIdentifier) =>
       switchMap(label =>
         iif(() => label === null/*not found*/,
           throwError(() => new ApplicationError('functions/not-found', `Could not find Label for Label Id (${labelId}).`)),
-          of(label!.notebookIds)
+          of(label!.notebookIds/*explicitly ordered (by design)*/)
         )
       ));
 
