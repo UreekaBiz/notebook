@@ -24,6 +24,8 @@ export interface Pagination<T> {
    *  the first time that a result has been returned from {@link #documents$()}
    *  then zero is returned. */
   getPageNumber(): number;
+  /** The page size for convenience */
+  getPageSize(): number;
 
   /** Starts to retrieve the previous page of data (made available through
    *  {@link #documents$()} if there is one. {@link #getPageNumber()} (or receiving
