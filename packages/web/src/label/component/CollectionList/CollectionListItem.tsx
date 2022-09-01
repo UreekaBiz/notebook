@@ -34,7 +34,7 @@ export const CollectionListItem: React.FC<Props> = ({ labelTuple }) => {
         </NextLink>
 
         <Flex alignItems='center' color='#CCC' fontSize='13px' fontWeight={500}>
-          {obj.visibility === LabelVisibility.Private ? (
+          {obj.visibility === LabelVisibility.Public ? (
             <>
               <TbWorld />
               <Text marginLeft={1} color='#999' fontWeight={600}>
