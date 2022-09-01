@@ -161,6 +161,7 @@ export const CollectionDialog: React.FC<Props> = ({ component }) => {
                       size='sm'
                       background='#FFF'
                       placeholder='Title'
+                      autoFocus
                       onChange={handleTitleChange}
                     />
                   </Box>
@@ -199,7 +200,11 @@ export const CollectionDialog: React.FC<Props> = ({ component }) => {
                 </Box>
 
                 <Box flex='1 1'>
-                  <Checkbox isChecked={isOrdered} onChange={handleOrderedChange}>Ordered</Checkbox>
+                  <Checkbox isChecked={isOrdered} onChange={handleOrderedChange}>
+                    <Text fontSize={14} fontWeight={600} color='#333'>
+                      Ordered
+                    </Text>
+                  </Checkbox>
                 </Box>
 
                 <Text color='#AAA' lineHeight='13px' fontSize={13} fontWeight={500}>
