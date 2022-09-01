@@ -1,13 +1,18 @@
 import { NotebookIdentifier } from '../notebook/type';
 import { FieldValue, FirestoreArray } from '../util/firestore';
 import { Modify, UnionType } from '../util/type';
-import { Label, LabelPublished } from './type';
+import { Label, LabelIdentifier, LabelPublished } from './type';
 
 // ** Constants *******************************************************************
 // == Firestore ===================================================================
 // -- Label -----------------------------------------------------------------------
 export const LABELS = 'labels'/*top-level collection*/;
 export const LABEL = `${LABELS}/{labelId}` as const/*document (used by CF triggers)*/;
+
+// .. Trigger Context .............................................................
+export type LabelParams = Readonly<{
+  labelId/*NOTE: must match #LABEL*/: LabelIdentifier;
+}>;
 
 // -- Label Published -------------------------------------------------------------
 // NOTE: terrible English but consistent!
@@ -49,6 +54,5 @@ export type LabelNotebook_Update = Modify<Pick<Label_Storage, 'notebookIds'>, Re
 // always written as if new (i.e. always completely overwritten)
 export type LabelPublished_Write = Modify<LabelPublished_Storage, Readonly<{
   createTimestamp: FieldValue/*always-write server-set*/;
-  updateTimestamp: FieldValue/*always-write server-set*/;
 }>>;
 // NOTE: hard-delete so no delete Action Type

@@ -1,7 +1,7 @@
 import { DocumentReference, Transaction } from 'firebase-admin/firestore';
 import { logger } from 'firebase-functions';
 
-import { setChange, LabelIdentifier, LabelVisibility, LabelNotebook_Update, Label_Storage, NotebookIdentifier, Notebook_Storage, UserIdentifier, MAX_LABEL_NOTEBOOKS } from '@ureeka-notebook/service-common';
+import { setChange, LabelIdentifier, LabelNotebook_Update, Label_Storage, NotebookIdentifier, Notebook_Storage, UserIdentifier, MAX_LABEL_NOTEBOOKS } from '@ureeka-notebook/service-common';
 
 import { firestore } from '../firebase';
 import { notebookDocument } from '../notebook/datastore';
@@ -39,15 +39,13 @@ export const addNotebook = async (
       addLabelNotebook(transaction, labelRef, userId, notebookId);
 
       // FIXME: update Notebook's permissions based on the Label's permissions
-
-      if(label.visibility === LabelVisibility.Public) {
-        // FIXME: check if the Notebook is published and if so then also write to the published collection
-      } /* else -- the parent Label is private and nothing else needs to be done */
     });
   } catch(error) {
     if(error instanceof ApplicationError) throw error;
     throw new ApplicationError('datastore/write', `Error adding Notebook (${notebookId}) to Label (${labelId}) for User (${userId}). Reason: `, error);
   }
+
+  // NOTE: on-write trigger clones the Published Label
 };
 
 // ................................................................................
@@ -87,15 +85,13 @@ export const removeNotebook = async (
       removeLabelNotebook(transaction, labelRef, userId, notebookId);
 
       // FIXME: update Notebook's permissions based on the Label's permissions
-
-      if(label.visibility === LabelVisibility.Public) {
-        // FIXME: check if the Notebook is published and if so then also remove from the published collection
-      } /* else -- the parent Label is private and nothing else needs to be done */
     });
   } catch(error) {
     if(error instanceof ApplicationError) throw error;
     throw new ApplicationError('datastore/write', `Error removing Notebook (${notebookId}) from Label (${labelId}) for User (${userId}). Reason: `, error);
   }
+
+  // NOTE: on-write trigger clones the Published Label
 };
 
 // ................................................................................
@@ -164,6 +160,8 @@ export const updateNotebook = async (
     if(error instanceof ApplicationError) throw error;
     throw new ApplicationError('datastore/write', `Error updating Labels on Notebook (${notebookId}) for User (${userId}). Reason: `, error);
   }
+
+  // NOTE: on-write trigger clones the Published Label
 };
 
 // ................................................................................
@@ -211,14 +209,12 @@ export const reorderNotebooks = async (
       };
       await labelRef.update(labelNotebook);
 
-      if(label.visibility === LabelVisibility.Public) {
-        // FIXME: check if the Notebook is published and if so then also remove from the published collection
-      } /* else -- the parent Label is private and nothing else needs to be done */
-
       return notebookOrder;
     });
   } catch(error) {
     if(error instanceof ApplicationError) throw error;
     throw new ApplicationError('datastore/write', `Error reordering Notebooks on Label (${labelId}) for User (${userId}). Reason: `, error);
   }
+
+  // NOTE: on-write trigger clones the Published Label
 };
