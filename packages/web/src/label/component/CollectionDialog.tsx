@@ -27,7 +27,7 @@ export const CollectionDialog: React.FC<Props> = ({ component }) => {
   const [name, setName] = useState(''/*initial value*/);
   const [visibility, setVisibility] = useState<LabelVisibility>(LabelVisibility.Private/*default by contract*/);
   const [description, setDescription] = useState(''/*initial value*/);
-  const [isOrdered, setIsOrdered] = useState(true/*initial value*/);
+  const [isOrdered, setIsOrdered] = useState(false/*default by contract*/);
 
   const [status, setStatus] = useAsyncStatus();
 
@@ -37,7 +37,7 @@ export const CollectionDialog: React.FC<Props> = ({ component }) => {
   const [isAYSOpen, setIsAYSOpen] = useState(false/*by contract*/);
 
   // ..............................................................................
-  const isDirty = !isBlank(name),
+  const isDirty = !isBlank(name) || !isBlank(description),
         isLoading = status === 'loading';
 
   // == Handler ===================================================================
@@ -46,7 +46,7 @@ export const CollectionDialog: React.FC<Props> = ({ component }) => {
     setName(''/*initial value*/);
     setVisibility(LabelVisibility.Private/*default by contract*/);
     setDescription(''/*initial value*/);
-    setIsOrdered(true/*initial value*/);
+    setIsOrdered(false/*default by contract*/);
   };
 
   // -- Modal handlers ------------------------------------------------------------
@@ -207,7 +207,7 @@ export const CollectionDialog: React.FC<Props> = ({ component }) => {
                   </Checkbox>
                 </Box>
 
-                <Text color='#AAA' lineHeight='13px' fontSize={13} fontWeight={500}>
+                <Text color='#AAA' lineHeight='16px' fontSize={13} fontWeight={500}>
                   Ordered collections allow you to configure the order in which notebooks are displayed to the readers.
                 </Text>
               </Flex>
