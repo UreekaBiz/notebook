@@ -1,6 +1,6 @@
 import { DocumentReference } from 'firebase-admin/firestore';
 
-import { computeLabelPrefixes, computeLabelSortName, isBlank, LabelIdentifier, LabelVisibility, Label_Create, Label_Storage, Label_Update, removeUndefined, SystemUserId, UserIdentifier } from '@ureeka-notebook/service-common';
+import { computeLabelPrefixes, computeLabelSortName, isBlank, removeUndefined, LabelIdentifier, LabelVisibility, Label_Create, Label_Storage, Label_Update, SystemUserId, UserIdentifier } from '@ureeka-notebook/service-common';
 
 import { firestore } from '../firebase';
 import { ApplicationError } from '../util/error';
@@ -45,7 +45,7 @@ export const createLabel = async (
     throw new ApplicationError('datastore/write', `Error creating new Label for User (${userId}). Reason: `, error);
   }
 
-  // FIXME: publish if visibility === LabelVisibility.Public
+  // NOTE: on-write trigger creates the Published Label
 
   return labelId;
 };
@@ -82,14 +82,13 @@ export const updateLabel = async (
         updateTimestamp: ServerTimestamp/*server-written*/,
       };
       transaction.update(labelRef, removeUndefined(label));
-
-      // FIXME: compare visibility to existing and either publish or unpublish or nothing
-
     });
   } catch(error) {
     if(error instanceof ApplicationError) throw error;
     throw new ApplicationError('datastore/write', `Error deleting Label (${labelId}) for User (${userId}). Reason: `, error);
   }
+
+  // NOTE: on-write trigger clones the Published Label
 };
 
 // -- Notebook --------------------------------------------------------------------
@@ -115,6 +114,5 @@ export const deleteLabel = async (userId: UserIdentifier, labelId: LabelIdentifi
   }
 
   await removeAllNotebooks(userId, labelId)/*logs on error*/;
-
-  // FIXME: remove any published labels!!! (do it in all cases for sanity)
+  // NOTE: on-write trigger deletes the Published Label
 };

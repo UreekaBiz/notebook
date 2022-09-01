@@ -18,6 +18,7 @@ const excludedEndpointNames = [
   'onCreateHashtagSummary',
   'onCreateNotebookVersion',
   'onStorageAssetCreate',
+  'onWriteLabel',
   'onWriteUserProfilePrivate',
   'onWriteUserSessionUser',
 

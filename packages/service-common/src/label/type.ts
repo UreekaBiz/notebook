@@ -81,6 +81,8 @@ export type LabelTuple = ObjectTuple<LabelIdentifier, Label>;
 export type LabelPublished = Creatable & Readonly<{ /*Firestore*/
   /** the name of the Label (non-normalized, etc) */
   name: string/*write-many server-written*/;
+  /** the optional Label description */
+  description?: string/*write-many server-written*/;
 
   /** `true` if this Label represents an ordered collection. By default, Notebooks
    *   are ordered by when they were added to this Label. */
