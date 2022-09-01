@@ -200,7 +200,7 @@ export const CollectionDialog: React.FC<Props> = ({ component }) => {
                 </Box>
 
                 <Box flex='1 1'>
-                  <Checkbox isChecked={isOrdered} onChange={handleOrderedChange}>
+                  <Checkbox isChecked={isOrdered} disabled={isLoading} onChange={handleOrderedChange}>
                     <Text fontSize={14} fontWeight={600} color='#333'>
                       Ordered
                     </Text>
