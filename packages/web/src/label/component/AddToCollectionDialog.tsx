@@ -161,7 +161,11 @@ export const AddToCollectionDialog: React.FC<Props> = ({ notebook, notebookId, c
 
     setCreateLabelStatus('loading');
     try {
-      const labelId = await LabelService.getInstance().createLabel({ name: createLabelName, visibility: LabelVisibility.Private/*default by contract*/, ordered: true });
+      const labelId = await LabelService.getInstance().createLabel({
+        name: createLabelName,
+        visibility: LabelVisibility.Private/*default by contract*/,
+        ordered: false/*default by contract*/,
+      });
       if(!isMounted()) return/*component is not mounted*/;
 
       // reset status
