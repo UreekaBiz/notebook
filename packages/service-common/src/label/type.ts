@@ -35,6 +35,8 @@ export const MAX_LABEL_NOTEBOOKS = 100;
 export type Label = Creatable & Updatable & Readonly<{ /*Firestore*/
   /** the name of the Label (non-normalized, etc) */
   name: string/*write-many server-written*/;
+  /** the optional Label description */
+  description?: string/*write-many server-written*/;
 
   /** the Visibility of this Label. If a Label is Public then it will have a
    *  corresponding LabelPublished structure and document. */

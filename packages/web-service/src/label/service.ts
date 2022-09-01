@@ -185,13 +185,17 @@ export class LabelService {
   }
 
   /**
-   * @param update the Label that is to be updated. Setting a Label's visibility
-   *        to {@link LabelVisibility#Public} makes it visible to all Users (i.e.
-   *        publish it). Setting a Label's visibility to {@link LabelVisibility#Private}
-   *        makes it visible to only the User who created it. Changing the visibility
-   *        of a Label has *no* effect on the Notebooks that are associated with it
-   *        (e.g. setting a Label to 'public' does *not* publish the associated
-   *        Notebooks).
+   * @param update the Label that is to be updated. The specified update is *merged*
+   *        with the current data. Fields that are specified in the update are
+   *        overwritten with the specified value. If that value is `null` or `undefined`
+   *        then that field is removed. Any fields that are not specified (as
+   *        allowed by the Schema) in the update remain unchanged.
+   *        Setting a Label's visibility to {@link LabelVisibility#Public} makes
+   *        it visible to all Users (i.e. publish it). Setting a Label's visibility
+   *        to {@link LabelVisibility#Private} makes it visible to only the User
+   *        who created it. Changing the visibility of a Label has *no* effect on
+   *        the Notebooks that are associated with it (e.g. setting a Label to
+   *        'public' does *not* publish the associated Notebooks).
    * @throws a {@link ApplicationError}:
    * - `permission-denied` if the caller is not logged in or is not the creator of
    *   the {@link Label}
