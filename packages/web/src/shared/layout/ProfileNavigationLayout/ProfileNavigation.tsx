@@ -19,6 +19,7 @@ import { getPrivateDisplayName } from 'user/util';
 type Tab = {
   label: string;
   path: string;
+  isActive: (path: string) => boolean;
   icon: ReactElement;
 };
 
@@ -26,26 +27,31 @@ const tabs: Tab[] = [
   {
     label: 'Home',
     path: profileRoutes.root,
+    isActive: path => path === profileRoutes.root/*exact match*/,
     icon: <BiHome />,
   },
   {
     label: 'Notebooks',
     path:  profileRoutes.notebooks,
+    isActive: path => path.startsWith(profileRoutes.notebooks),
     icon: <CgFileDocument />,
   },
   {
     label: 'Collections',
     path:  profileRoutes.collections,
+    isActive: path => path.startsWith(profileRoutes.collections),
     icon: <HiOutlineViewGrid />,
   },
   {
     label: 'Hashtags',
     path:  profileRoutes.hashtags,
+    isActive: path => path.startsWith(profileRoutes.hashtags),
     icon: <FaHashtag />,
   },
   {
     label: 'Settings',
     path: settingsRoutes.root,
+    isActive: path => path.startsWith(settingsRoutes.root),
     icon: <TbSettings />,
   },
 ];
@@ -69,15 +75,14 @@ export const ProfileNavigation: React.FC = () => {
         <Text color='#444' fontWeight='600'>{getPrivateDisplayName(profilePrivate)}</Text>
       </Box>
       <Flex flexDirection='column'>
-        {tabs.map(({ label, path, icon }) => {
-          const isActive = router.pathname === path;
+        {tabs.map(({ label, path, icon, isActive }) => {
           return (
             <NextLink key={path} href={path} passHref >
               <Link
                 display='flex'
                 alignItems='center'
                 marginBottom={4}
-                color={isActive ? '#3B5FC0' : '#555'}
+                color={isActive(router.pathname) ? '#3B5FC0' : '#555'}
                 textDecoration='none'
                 _hover={{ cursor: 'pointer' }}
               >
