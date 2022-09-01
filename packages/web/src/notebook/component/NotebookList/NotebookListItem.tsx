@@ -8,11 +8,11 @@ import { MdOutlineRemoveRedEye } from 'react-icons/md';
 
 import { getNotebookShareCounts, isNotebookCreator, NotebookTuple } from '@ureeka-notebook/web-service';
 
-import { AddToCollectionDialog } from 'notebookEditor/component/AddToCollectionDialog';
+import { useAuthedUser } from 'authUser/hook/useAuthedUser';
+import { AddToCollectionDialog } from 'label/component/AddToCollectionDialog';
 import { ShareNotebookDialog } from 'notebookEditor/component/ShareNotebookDialog';
 import { notebookRoute } from 'shared/routes';
 import { getMinifiedReadableDate } from 'ui/util';
-import { useAuthedUser } from 'authUser/hook/useAuthedUser';
 
 // ********************************************************************************
 interface Props {
