@@ -99,7 +99,7 @@ export const CollectionNotebookList: React.FC<Props> = ({ labelId }) => {
 
     const showingComponent = (
       <Box color='#AAA' fontSize={12} fontWeight='600'>
-        Showing <Text as='span' color='#999'>{startIndex}-{endIndex}</Text>
+        Showing <Text as='span' color='#666'>{startIndex}-{endIndex}</Text> Notebooks
       </Box>
     );
     const paginationControls = (
@@ -113,7 +113,7 @@ export const CollectionNotebookList: React.FC<Props> = ({ labelId }) => {
 
     content = (
       <Box>
-        <Flex justifyContent='space-between' marginBottom={2}>
+        <Flex justifyContent='space-between' marginBottom={3}>
           {showingComponent}
           {paginationControls}
         </Flex>
@@ -135,8 +135,12 @@ export const CollectionNotebookList: React.FC<Props> = ({ labelId }) => {
         </VStack>
 
         <Flex alignItems='center' justifyContent='center' flexDirection='column' marginTop={2}>
-          {showingComponent}
-          {paginationControls}
+          <Box marginBottom={2}>
+            {showingComponent}
+          </Box>
+          <Box paddingY={1}>
+            {paginationControls}
+          </Box>
         </Flex>
       </Box>
     );
