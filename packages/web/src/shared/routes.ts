@@ -1,4 +1,4 @@
-import { NotebookIdentifier } from '@ureeka-notebook/web-service';
+import { LabelIdentifier, NotebookIdentifier } from '@ureeka-notebook/web-service';
 
 // FIXME: Find a better way to share routes!
 // NOTE: This routes are used also on the client-side, when modifying any of the
@@ -42,8 +42,12 @@ export const profileRoutes = {
 
   notebooks: `${profileRootRoute}/notebooks`,
   collections: `${profileRootRoute}/collections`,
+  collection: `${profileRootRoute}/collections/:collectionId`,
+
   hashtags: `${profileRootRoute}/hashtags`,
 };
+// CHECK: Should Collections (Label) be part of the Profile?
+export const collectionRoute = (labelId: LabelIdentifier) => `${profileRoutes.root}/collections/${labelId}`;
 
 // -- Settings --------------------------------------------------------------------
 export const settingsRoutes = {
