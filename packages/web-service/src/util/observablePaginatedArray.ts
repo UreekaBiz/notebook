@@ -31,15 +31,16 @@ class PaginatedArrayObservable<T, R> implements Pagination<R> {
     // transform Observable over that page (transformArray$)
     this._documents$ = combineLatest([this.pageNumber$, this.array$])
       .pipe(
-        tap(([pageNumber]) => {
-          log.debug(`${this.label}: isLoading: ${this.isLoading}; isExhausted: ${this.isExhausted()}; pageSize: ${this.pageSize}; pageNumber: ${pageNumber}`);
+        tap(([pageNumber, array]) => {
+          log.debug(`${this.label}:array$: isLoading: ${this.isLoading}; isExhausted: ${this.isExhausted()}; pageSize: ${this.pageSize}; pageNumber: ${pageNumber}; array: ${array.length}`);
           this.isLoading = true/*set to loading*/;
         }),
-        map(([pageNumber, array]) => array.slice((this.pageSize * (pageNumber - 1)), this.pageSize)),
+        map(([pageNumber, array]) => array.slice((this.pageSize * (pageNumber - 1)), this.pageSize * pageNumber)),
         switchMap(pageArray => transformArray$(pageArray)),
         tap(pageArray => {
           this.isLoading = false/*finished loading*/;
           this._isExhausted = (pageArray.length < this.pageSize)/*update if exhausted*/;
+          log.debug(`${this.label}:array$: loaded; isExhausted: ${this.isExhausted()}; pageSize: ${this.pageSize}; pageArray: ${pageArray.length}`);
         })
       );
   }
@@ -47,20 +48,24 @@ class PaginatedArrayObservable<T, R> implements Pagination<R> {
   // == Pagination ================================================================
   public isExhausted(): boolean { return this._isExhausted; }
   public getPageNumber(): number { return this.pageNumber$.value; }
+  public getPageSize(): number { return this.pageSize; }
 
   // ------------------------------------------------------------------------------
   public previous(): boolean {
+log.debug(`${this.label}:previous: isLoading: ${this.isLoading}; isExhausted: ${this.isExhausted()}; pageNumber: ${this.pageNumber$.value}`);
     // prevent loading more data if loading or exhausted
     if(this.isLoading) return true/*assume there is more until loaded and know otherwise*/;
     if(this.isExhausted()) return false/*there aren't any more (by definition)*/;
     if(this.pageNumber$.value <= 1) return false/*there aren't any more (by definition)*/;
 
     this.pageNumber$.next(this.pageNumber$.value - 1);
+this._isExhausted = false;
 
     return (this.pageNumber$.value > 1);
   }
 
   public next(): boolean {
+log.debug(`${this.label}:next: isLoading: ${this.isLoading}; isExhausted: ${this.isExhausted()}; pageNumber: ${this.pageNumber$.value}`);
     // prevent loading more data if loading or exhausted
     if(this.isLoading) return true/*assume there is more until loaded and know otherwise*/;
     if(this.isExhausted()) return false/*there aren't any more (by definition)*/;
