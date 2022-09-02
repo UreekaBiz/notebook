@@ -1,4 +1,5 @@
 import { Box, Button, Flex, Heading } from '@chakra-ui/react';
+import { HiOutlineViewGridAdd } from 'react-icons/hi';
 
 import { RequiredAuthUserWrapper } from 'authUser/RequiredAuthUserWrapper';
 import { WrappedPage } from 'core/wrapper';
@@ -18,7 +19,15 @@ function CollectionsPage() {
       <Flex alignItems='center' justifyContent='space-between' width='full' marginBottom={4}>
         <Heading flex='1 1'>Collections</Heading>
         <CollectionDialog type='create' component={(onClick) => (
-          <Button colorScheme='blue' onClick={onClick}>Create Collection</Button>
+          <Button
+            size='md'
+            variant='ghost'
+            colorScheme='gray'
+            onClick={onClick}
+            leftIcon={<HiOutlineViewGridAdd size={18} />}
+          >
+            New
+          </Button>
         )}
         />
       </Flex>
