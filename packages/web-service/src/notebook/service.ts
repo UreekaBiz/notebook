@@ -30,7 +30,7 @@ export class NotebookService {
     log.info(`Shutting down Notebook service ...`);
   }
 
-  // == Observables ===============================================================
+  // == Observable ================================================================
   // -- Notebook ------------------------------------------------------------------
   /**
    * @param filter the fields that are optionally filtered and sorted on

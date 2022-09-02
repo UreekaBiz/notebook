@@ -1,4 +1,4 @@
-import { getSelectedNode, isNodeType, AttributeType, NodeName, isNodeSelection } from '@ureeka-notebook/web-service';
+import { getSelectedNode, isNodeType, isNodeSelection, AttributeType, NodeName } from '@ureeka-notebook/web-service';
 
 import { EditorToolComponentProps } from 'notebookEditor/toolbar/type';
 
