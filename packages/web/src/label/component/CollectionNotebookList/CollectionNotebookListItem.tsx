@@ -1,30 +1,23 @@
-import { Box, Flex, IconButton, Link, Menu, MenuButton, MenuItem, MenuList, Text } from '@chakra-ui/react';
+import { Box, Flex, Link, Text } from '@chakra-ui/react';
 import NextLink from 'next/link';
 import { BiPencil } from 'react-icons/bi';
-import { BsGrid, BsThreeDots } from 'react-icons/bs';
-import { FiUsers } from 'react-icons/fi';
-import { HiTrash } from 'react-icons/hi';
 import { MdOutlineRemoveRedEye } from 'react-icons/md';
 
-import { getNotebookShareCounts, isNotebookCreator, NotebookTuple } from '@ureeka-notebook/web-service';
+import { getNotebookShareCounts, NotebookTuple } from '@ureeka-notebook/web-service';
 
-import { useAuthedUser } from 'authUser/hook/useAuthedUser';
-import { AddToCollectionDialog } from 'label/component/AddToCollectionDialog';
 import { ShareNotebookDialog } from 'notebookEditor/component/ShareNotebookDialog';
 import { notebookRoute } from 'shared/routes';
 import { getMinifiedReadableDate } from 'ui/util';
+import { NotebookListItemMenu } from 'notebook/component/NotebookList/NotebookListItemMenu';
 
 // ********************************************************************************
 interface Props {
   notebookTuple: NotebookTuple;
 }
 export const CollectionNotebookListItem: React.FC<Props> = ({ notebookTuple }) => {
-  const authedUser = useAuthedUser();
   const { id, obj } = notebookTuple;
 
   const { editors, viewers } = getNotebookShareCounts(obj);
-
-  const isCreator = authedUser && isNotebookCreator(authedUser.authedUser.userId, obj);
 
   return (
     <Flex alignItems='center'>
@@ -73,35 +66,7 @@ export const CollectionNotebookListItem: React.FC<Props> = ({ notebookTuple }) =
         )}
       />
 
-      <Menu>
-        <MenuButton
-          as={IconButton}
-          aria-label='Options'
-          icon={<BsThreeDots />}
-          variant='ghost'
-          size='sm'
-          borderRadius='100px'
-        />
-        <MenuList>
-          <ShareNotebookDialog notebook={obj} notebookId={id} component={onClick => (
-            <MenuItem disabled icon={<FiUsers />} onClick={onClick}>
-              Share
-            </MenuItem>
-            )}
-          />
-          {isCreator && (
-            <AddToCollectionDialog notebook={obj} notebookId={id} component={onClick => (
-              <MenuItem disabled icon={<BsGrid />} onClick={onClick}>
-                Add to collection
-              </MenuItem>
-              )}
-            />
-          )}
-          <MenuItem disabled icon={<HiTrash />}>
-            Delete (Disabled!)
-          </MenuItem>
-        </MenuList>
-      </Menu>
+      <NotebookListItemMenu notebookTuple={notebookTuple} />
     </Flex>
   );
 };
