@@ -173,14 +173,6 @@ export const NotebookList = () => {
             <option value='true'>Published</option>
             <option value='false'>Not Published</option>
           </Select>
-
-          <Button
-            size='xs'
-            variant='ghost'
-            onClick={handleMoreClick}
-          >
-            {scrollable?.isExhausted() ? 'Exhausted' : 'More!'}
-          </Button>
         </Flex>
 
         <Flex alignItems='center'>
@@ -212,6 +204,16 @@ export const NotebookList = () => {
       <Divider borderColor='gray.200' marginBottom={2}/>
 
       {content}
+
+      <Flex justifyContent='center' marginTop={5} >
+        <Button
+          size='xs'
+          variant='ghost'
+          onClick={handleMoreClick}
+        >
+          {scrollable?.isExhausted() ? 'Exhausted' : 'More!'}
+        </Button>
+      </Flex>
     </Box>
   );
 };

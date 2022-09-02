@@ -8,6 +8,7 @@ import { LabelTuple, LabelVisibility } from '@ureeka-notebook/web-service';
 import { collectionRoute } from 'shared/routes';
 
 import { CollectionListItemMenu } from './CollectionListItemMenu';
+import { getReadableLabelVisibility } from 'label/type';
 
 // ********************************************************************************
 interface Props {
@@ -34,27 +35,31 @@ export const CollectionListItem: React.FC<Props> = ({ labelTuple }) => {
           </Link>
         </NextLink>
 
-        <Flex alignItems='center' color='#CCC' fontSize='13px' fontWeight={500}>
-          {obj.visibility === LabelVisibility.Public ? (
-            <>
-              <TbWorld />
-              <Text marginLeft={1} color='#999' fontWeight={600}>
-                Public
-              </Text>
-            </>
-          ): (
-            <>
-              <HiLockClosed />
-              <Text marginLeft={1} color='#999' fontWeight={600}>
-                Private
-              </Text>
-            </>
-          )}
+        <Flex
+          overflow='hidden'
+          whiteSpace='nowrap'
+          alignItems='center'
+          color='#CCC'
+          fontSize='13px'
+          fontWeight={500}
+        >
+
+          {obj.visibility === LabelVisibility.Public ? <TbWorld /> : <HiLockClosed />}
+          <Text marginLeft={1} color='#999' fontWeight={600}>
+            {getReadableLabelVisibility(obj.visibility)}
+          </Text>
 
           {obj.description && (
             <>
               <Box width='4px' height='4px' marginX={1} marginTop='2px' background='currentColor' borderRadius='4px' />
-              <Text color='#999' fontWeight={600}>
+              <Text
+                flex='1 1'
+                minWidth='0'
+                color='#999'
+                fontWeight={600}
+                textOverflow='ellipsis'
+                overflow='hidden'
+              >
                 {obj.description}
               </Text>
             </>

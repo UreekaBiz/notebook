@@ -1,16 +1,12 @@
-import { useToast, Button, Flex, Spinner, Text } from '@chakra-ui/react';
+import { Flex, Text } from '@chakra-ui/react';
 import { useRouter } from 'next/router';
-import { useCallback, useState } from 'react';
+import { useCallback } from 'react';
 import { BsBook } from 'react-icons/bs';
-import { RiFileAddLine } from 'react-icons/ri';
-
-import { getLogger, Logger, NotebookService, NotebookType } from '@ureeka-notebook/web-service';
 
 import { AuthAvatar } from 'authUser/component/AuthAvatar';
-import { useIsMounted } from 'shared/hook';
-import { coreRoutes, notebookRoute } from 'shared/routes';
+import { coreRoutes } from 'shared/routes';
+import { NewNotebookButton } from './NewNotebookButton';
 
-const log = getLogger(Logger.NOTEBOOK);
 
 // @see: notebookEditor/toolbar/component/SidebarTopbar
 // header for Notebook-based pages that is *ONLY* used in Auth'd cases
@@ -18,44 +14,11 @@ const log = getLogger(Logger.NOTEBOOK);
 interface Props { background?: string; }
 export const NotebookTopBar: React.FC<Props> = ({ background }) => {
   const router = useRouter();
-  const isMounted = useIsMounted();
-  const toast = useToast();
 
-  // == State =====================================================================
-  const [isLoading, setIsLoading] = useState<boolean>(false/*default not loading*/);
-
-  // == Handler ===================================================================
   const handleAppNameClick = useCallback(() => {
     router.push(coreRoutes.root);
   }, [router]);
 
-  const handleCreateNotebook = useCallback(async () => {
-    setIsLoading(true);
-
-    let notebookId: string;
-    try {
-      notebookId = await NotebookService.getInstance().createNotebook({
-        name: 'Untitled'/*default*/,
-        type: NotebookType.Notebook/*default*/,
-      });
-    } catch(error) {
-      log.error('Error creating Notebook, reason: ', error);
-      if(isMounted()) toast({ title: 'Error creating Notebook', status: 'error' });
-
-      return /*nothing else to do*/;
-    }
-
-    if(!isMounted()) return/*component is unmounted, prevent unwanted state updates*/;
-
-    setIsLoading(false/*no longer loading*/);
-
-    // open a new tab with the newly created Notebook
-    const notebookPath = notebookRoute(notebookId);
-    const route = `${window.location.origin}${notebookPath}`;
-    window.open(route, '_blank'/*new tab*/);
-  }, [isMounted, toast]);
-
-  // == UI ========================================================================
   return (
     <Flex
       align='center'
@@ -73,16 +36,7 @@ export const NotebookTopBar: React.FC<Props> = ({ background }) => {
       </Flex>
 
       <Flex align='center'>
-        {isLoading ?
-          (
-            <Button disabled colorScheme='gray' variant='ghost' size='sm' leftIcon={<Spinner size='sm' />} >
-              Creating...
-            </Button>
-          ) : (
-            <Button colorScheme='gray' variant='ghost' size='sm' leftIcon={<RiFileAddLine size={16} />} onClick={handleCreateNotebook}>
-              New
-            </Button>
-          )}
+        <NewNotebookButton marginRight={2}/>
         <AuthAvatar />
       </Flex>
     </Flex>
