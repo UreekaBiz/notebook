@@ -2,7 +2,7 @@ import { useToast, Box, Button, Checkbox, Flex, Grid, GridItem, Input, Modal, Mo
 import { useEffect, useState, ChangeEventHandler, KeyboardEventHandler, ReactElement } from 'react';
 import { BsGrid } from 'react-icons/bs';
 
-import { getLogger, mapEquals, LabelIdentifier, LabelVisibility, LabelService, LabelTuple, Logger, Notebook, NotebookIdentifier, Scrollable } from '@ureeka-notebook/web-service';
+import { getLogger, mapEquals, LabelIdentifier, LabelVisibility, LabelService, LabelTuple, Logger, Notebook, NotebookIdentifier, Scrollable, LabelNameMaxLength } from '@ureeka-notebook/web-service';
 
 import { useValidatedAuthedUser } from 'authUser/hook/useValidatedAuthedUser';
 import { Loading } from 'shared/component/Loading';
@@ -147,7 +147,9 @@ export const AddToCollectionDialog: React.FC<Props> = ({ notebook, notebookId, c
 
   // .. Create Label ..............................................................
   const handleCreateLabelInputChange: ChangeEventHandler<HTMLInputElement> = (event) => {
-    setCreateLabelName(event.target.value);
+    // crops the value into the allowed length.
+    const value = event.target.value.slice(0, LabelNameMaxLength);
+    setCreateLabelName(value);
   };
 
   /** creates a label when the user press enter */
