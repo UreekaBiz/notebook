@@ -241,6 +241,18 @@ html body {
   display: none;
 }
 
+/** displays a loading indicator after 300ms */
+@keyframes lazy-shown {
+  0% { opacity: 0; }
+  99% { opacity: 0; }
+  100% { opacity: 1; }
+}
+
+.lazy-shown {
+  animation-name: lazy-shown;
+  animation-duration: 300ms;
+}
+
 /* == Fonts ==================================================================== */
 @font-face {
   font-family: 'SourceSerifPro';
