@@ -105,9 +105,11 @@ export const NotebookListItemMenu: React.FC<Props> = ({ notebookTuple }) => {
             />
           )}
 
-          <MenuItem disabled icon={<HiTrash />} onClick={handleDeleteClick}>
-            Delete
-          </MenuItem>
+          {isCreator && (
+            <MenuItem disabled icon={<HiTrash />} onClick={handleDeleteClick}>
+              Delete
+            </MenuItem>
+          )}
         </MenuList>
       </Menu>
       <ConfirmationModal
