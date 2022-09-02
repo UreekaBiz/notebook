@@ -18,7 +18,7 @@ export const CodeBlockReferenceComponentJSX: React.FC<CodeBlockReferenceComponen
 
   return (
     <Text
-      color='red'
+      color='black'
       as='span'
       style={filterStyleAttributes(attrs)}
       data-node-type={NodeName.CODEBLOCK_REFERENCE}
