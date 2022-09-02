@@ -2,7 +2,7 @@ import { useToast, Box, Button, Checkbox, Flex, Input, Modal, ModalBody, ModalCl
 import { useState, ChangeEventHandler } from 'react';
 import { BsGrid } from 'react-icons/bs';
 
-import { getLogger, isBlank, LabelDescriptionMaxLength, LabelNameMaxLength,  LabelService, LabelVisibility, Logger } from '@ureeka-notebook/web-service';
+import { getLogger, isBlank, Label, LabelDescriptionMaxLength, LabelIdentifier, LabelNameMaxLength,  LabelService, LabelVisibility, Logger } from '@ureeka-notebook/web-service';
 
 import { getReadableLabelVisibility } from 'label/type';
 import { useAsyncStatus, useIsMounted } from 'shared/hook';
@@ -11,25 +11,28 @@ import { useAsyncStatus, useIsMounted } from 'shared/hook';
 const log = getLogger(Logger.NOTEBOOK);
 
 // ********************************************************************************
-// NOTE: Don't forget to update EditCollectionDialog when making changes in
-///      CollectionDialog since they must be in sync.
 // == Type ========================================================================
 interface Props {
+  labelId?: LabelIdentifier;
+  label?: Label;
+
+  type: 'create' | 'edit';
+
   /** component to be used to open the Dialog. This component received the onClick
    *  handler that should be passed as a prop to the actual component. If no
    *  component is provided a default button is used.*/
   component?: (onClick: () => void) => React.ReactElement;
 }
 // == Component ===================================================================
-export const CollectionDialog: React.FC<Props> = ({ component }) => {
+export const CollectionDialog: React.FC<Props> = ({ component, label, labelId, type }) => {
   const toast = useToast();
   const isMounted = useIsMounted();
 
   // == State =====================================================================
-  const [name, setName] = useState(''/*initial value*/);
-  const [visibility, setVisibility] = useState<LabelVisibility>(LabelVisibility.Private/*default by contract*/);
-  const [description, setDescription] = useState(''/*initial value*/);
-  const [isOrdered, setIsOrdered] = useState(false/*default by contract*/);
+  const [name, setName] = useState(label?.name ?? ''/*initial value*/);
+  const [visibility, setVisibility] = useState<LabelVisibility>(label?.visibility ?? LabelVisibility.Private/*default by contract*/);
+  const [description, setDescription] = useState(label?.description ?? ''/*initial value*/);
+  const [isOrdered, setIsOrdered] = useState(label?.ordered ?? false/*default by contract*/);
 
   const [status, setStatus] = useAsyncStatus();
 
@@ -39,11 +42,24 @@ export const CollectionDialog: React.FC<Props> = ({ component }) => {
   const [isAYSOpen, setIsAYSOpen] = useState(false/*by contract*/);
 
   // ..............................................................................
-  const isDirty = !isBlank(name) || !isBlank(description),
-        isLoading = status === 'loading';
+  // current value is different from the initial values.
+  let isDirty: boolean;
+  if(type === 'create') {
+    isDirty = !isBlank(name) || !isBlank(description);
+  } else {
+    isDirty = name !== label?.name
+            || visibility !== label?.visibility
+            || description !== label?.description
+            || isOrdered !== label?.ordered;
+  }
+  const isLoading = status === 'loading';
 
   // == Handler ===================================================================
   const resetState = () => {
+    // update modal don't need to be reset
+    if(type === 'edit') return/*nothing to do*/;
+
+    // clear the values for the create modal to be opened again
     // Reset initial value
     setName(''/*initial value*/);
     setVisibility(LabelVisibility.Private/*default by contract*/);
@@ -90,18 +106,27 @@ export const CollectionDialog: React.FC<Props> = ({ component }) => {
 
     setStatus('loading');
     try {
-      await LabelService.getInstance().createLabel({
+      const data = {
         name,
         visibility,
         ordered: isOrdered,
         // description will be ignored if empty
         description: isBlank(description) ? undefined : description,
-      });
+      };
+
+      if(type === 'create') {
+        await LabelService.getInstance().createLabel(data);
+      } else {
+        if(labelId === undefined) throw new Error('Collection do not have a valid id');
+
+        await LabelService.getInstance().updateLabel( { labelId, ...data });
+      }
+
       if(!isMounted()) return/*component is not mounted*/;
 
       // reset status
       setStatus('complete');
-      toast({ title: 'Collection created', status: 'success' });
+      toast({ title: `Collection ${type === 'create' ? 'created' : 'updated'}`, status: 'success' });
 
       // close modal
       resetState();
@@ -113,7 +138,7 @@ export const CollectionDialog: React.FC<Props> = ({ component }) => {
       setStatus('error');
 
       const message =  error instanceof Error ? error.message : `Unknown error.`;
-      toast({ title: 'Error while creating Collection', description: message, status: 'error' });
+      toast({ title: `Error while ${type === 'create' ? 'creating' : 'updating'} Collection`, description: message, status: 'error' });
     }
   };
 
@@ -150,7 +175,7 @@ export const CollectionDialog: React.FC<Props> = ({ component }) => {
             <ModalHeader>
               <Flex alignItems='center'>
                 <BsGrid size={18} />
-                <Text marginLeft={2}>Create collection</Text>
+                <Text marginLeft={2}>{type === 'create' ? 'Create' : 'Update'} collection</Text>
               </Flex>
             </ModalHeader>
 

@@ -17,7 +17,7 @@ function CollectionsPage() {
     <Box>
       <Flex alignItems='center' justifyContent='space-between' width='full' marginBottom={4}>
         <Heading flex='1 1'>Collections</Heading>
-        <CollectionDialog component={(onClick) => (
+        <CollectionDialog type='create' component={(onClick) => (
           <Button colorScheme='blue' onClick={onClick}>Create Collection</Button>
         )}
         />

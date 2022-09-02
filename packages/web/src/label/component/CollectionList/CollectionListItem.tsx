@@ -9,7 +9,7 @@ import { LabelTuple, LabelVisibility } from '@ureeka-notebook/web-service';
 
 import { collectionRoute } from 'shared/routes';
 
-import { EditCollectionDialog } from '../EditCollectionDialog';
+import { CollectionDialog } from '../CollectionDialog';
 
 // ********************************************************************************
 interface Props {
@@ -74,7 +74,7 @@ export const CollectionListItem: React.FC<Props> = ({ labelTuple }) => {
           borderRadius='100px'
         />
         <MenuList>
-          <EditCollectionDialog labelId={id} label={obj} component={(onClick) => (
+          <CollectionDialog type='edit' labelId={id} label={obj} component={(onClick) => (
             <MenuItem onClick={onClick} icon={<BiPencil />}>
               Edit
             </MenuItem>
