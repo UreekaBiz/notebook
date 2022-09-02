@@ -20,7 +20,16 @@ function APIKeyPage() {
       <Flex alignItems='center' justifyContent='space-between' width='full' marginBottom={4}>
         <Heading flex='1 1'>API Keys</Heading>
         <APIKeyDialog
-          button={({ onClick }) => <Button colorScheme='blue' onClick={onClick}>New API Key</Button>}
+          button={({ onClick }) => (
+            <Button
+              size='md'
+              variant='ghost'
+              colorScheme='gray'
+              onClick={onClick}
+            >
+              New API Key
+            </Button>
+          )}
         />
       </Flex>
       <APIKeyTable />
