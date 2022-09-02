@@ -32,7 +32,7 @@ export class LabelService {
     log.info(`Shutting down Label service ...`);
   }
 
-  // == Observables ===============================================================
+  // == Observable ================================================================
   // -- Label ---------------------------------------------------------------------
   /**
    * @param filter the fields that are optionally filtered and sorted on

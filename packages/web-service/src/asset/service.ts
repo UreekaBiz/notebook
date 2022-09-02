@@ -31,7 +31,7 @@ export class AssetService {
     log.info(`Shutting down Asset service ...`);
   }
 
-  // == Observables ===============================================================
+  // == Observable ================================================================
   // -- Asset ---------------------------------------------------------------------
   /**
    * @param filter the fields that are optionally filtered and sorted on

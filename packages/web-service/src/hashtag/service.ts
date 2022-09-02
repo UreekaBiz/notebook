@@ -2,8 +2,11 @@ import { lastValueFrom } from 'rxjs';
 
 import { HashtagSearchResult } from '@ureeka-notebook/service-common';
 
+import { getLogger, ServiceLogger } from '../logging';
 import { adminHashtagRemoveUpdate } from './function';
 import { typeaheadFindHashtags$ } from './observable';
+
+const log = getLogger(ServiceLogger.HASHTAG);
 
 // ********************************************************************************
 export class HashtagService {
@@ -11,6 +14,12 @@ export class HashtagService {
   private static singleton: HashtagService;
   public static create() { return (HashtagService.singleton = new HashtagService()); }
   public static getInstance() { return HashtagService.singleton; }
+
+  // == Lifecycle =================================================================
+  protected constructor() {/*nothing at this time*/}
+  public shutdown() {
+    log.info(`Shutting down Hashtag service ...`);
+  }
 
   // == Search ====================================================================
   // -- Typeahead-find Search -----------------------------------------------------

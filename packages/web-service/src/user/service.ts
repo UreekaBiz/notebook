@@ -15,7 +15,7 @@ export class UserProfileService {
   public static create() { return (UserProfileService.singleton = new UserProfileService()); }
   public static getInstance() { return UserProfileService.singleton; }
 
-  // == Observables ===============================================================
+  // == Observable ================================================================
   /**
    * @param userId the {@link UserIdentifier} for which the {@link UserProfilePublic}
    *         is desired

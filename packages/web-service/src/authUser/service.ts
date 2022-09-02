@@ -66,7 +66,7 @@ export class AuthUserService {
     log.info(`Complete.`);
   }
 
-  // == Observables ===============================================================
+  // == Observable ================================================================
   // -- Connected -----------------------------------------------------------------
   // TODO: once the connected state detector is at the right level
   // /**
