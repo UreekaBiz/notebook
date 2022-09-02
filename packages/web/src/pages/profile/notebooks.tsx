@@ -3,6 +3,7 @@ import { Box, Flex, Heading } from '@chakra-ui/react';
 import { RequiredAuthUserWrapper } from 'authUser/RequiredAuthUserWrapper';
 import { WrappedPage } from 'core/wrapper';
 import { LabelServiceWrapper } from 'label/LabelServiceWrapper';
+import { NewNotebookButton } from 'notebook/component/NewNotebookButton';
 import { NotebookList } from 'notebook/component/NotebookList';
 import { NotebookServiceWrapper } from 'notebook/NotebookServiceWrapper';
 import { ProfileNavigationLayout } from 'shared/layout/ProfileNavigationLayout';
@@ -16,6 +17,7 @@ function NotebooksPage() {
     <Box paddingBottom='40px'>
       <Flex alignItems='center' justifyContent='space-between' width='full' marginBottom={4}>
         <Heading flex='1 1'>Notebooks</Heading>
+        <NewNotebookButton size='md' iconSize={20} />
       </Flex>
       <NotebookList />
     </Box>
