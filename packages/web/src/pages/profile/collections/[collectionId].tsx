@@ -2,19 +2,22 @@ import { Box, Button, Flex, Heading, Text, useToast } from '@chakra-ui/react';
 import { useRouter } from 'next/router';
 import { useEffect, useState } from 'react';
 import { BiPencil } from 'react-icons/bi';
+import { HiLockClosed } from 'react-icons/hi';
+import { TbWorld } from 'react-icons/tb';
 
-import { getLogger, Label, LabelIdentifier, LabelService, Logger, ObjectTuple } from '@ureeka-notebook/web-service';
+import { getLogger, Label, LabelIdentifier, LabelService, LabelVisibility, Logger, ObjectTuple } from '@ureeka-notebook/web-service';
 
 import { RequiredAuthUserWrapper } from 'authUser/RequiredAuthUserWrapper';
 import { WrappedPage } from 'core/wrapper';
 import { CollectionNotebookList } from 'label/component/CollectionNotebookList';
+import { CollectionDialog } from 'label/component/CollectionDialog';
+import { getReadableLabelVisibility } from 'label/type';
 import { LabelServiceWrapper } from 'label/LabelServiceWrapper';
 import { NotebookServiceWrapper } from 'notebook/NotebookServiceWrapper';
 import { Loading } from 'shared/component/Loading';
 import { useAsyncStatus, useIsMounted } from 'shared/hook';
 import { ProfileNavigationLayout } from 'shared/layout/ProfileNavigationLayout';
 import { UserProfileServiceWrapper } from 'user/UserProfileServiceWrapper';
-import { CollectionDialog } from 'label/component/CollectionDialog';
 
 // FIXME: Use label logger?
 const log = getLogger(Logger.NOTEBOOK);
@@ -88,6 +91,12 @@ function CollectionIdPage() {
 
   return (
     <Box>
+      <Flex alignItems='center' color='#CCC' fontSize='14px' fontWeight='600'>
+        {label.obj.visibility === LabelVisibility.Public ? <TbWorld /> : <HiLockClosed />}
+        <Text marginLeft={1} color='#999' fontWeight={600}>
+          {getReadableLabelVisibility(label.obj.visibility)}
+        </Text>
+      </Flex>
       <Flex alignItems='center' justifyContent='space-between' width='full' marginBottom={4}>
         <Heading
           flex='1 1'
@@ -116,6 +125,11 @@ function CollectionIdPage() {
         )}
         />
       </Flex>
+      {label.obj.description && (
+        <Box maxWidth='80%' marginTop={-2} marginBottom={2} color='#999'  fontSize='16px' fontWeight='500'>
+          {label.obj.description}
+        </Box>
+      )}
       <CollectionNotebookList labelId={collectionId} />
     </Box>
   );
