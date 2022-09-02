@@ -2,7 +2,7 @@ import * as Validate from 'yup';
 
 import { NotebookIdentifier } from '../notebook/type';
 import { mapValues } from '../util/object';
-import { stringMedSchema } from '../util/schema';
+import { stringSchema, STRING_MED } from '../util/schema';
 import { ShareRole } from '../util/share';
 import { Identifier_Schema, Modify } from '../util/type';
 import { UserIdentifier } from '../util/user';
@@ -12,11 +12,13 @@ import { LabelIdentifier, LabelVisibility, MAX_LABEL_NOTEBOOKS } from './type';
 // == Label =======================================================================
 // -- CUD -------------------------------------------------------------------------
 // .. Create ......................................................................
+export const LabelNameMaxLength = STRING_MED,
+             LabelDescriptionMaxLength = STRING_MED;
 export const LabelCreate_Rest_Schema = Validate.object({
-  name: stringMedSchema
+  name: stringSchema(LabelNameMaxLength)
       .min(1/*cannot be blank*/)
       .required(),
-  description: stringMedSchema
+  description: stringSchema(LabelDescriptionMaxLength)
       .nullable()/*how `undefined` (no value) comes across REST*/
       .notRequired()/*if unspecified then left unchanged*/,
 

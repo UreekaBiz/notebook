@@ -2,7 +2,7 @@ import { useToast, Box, Button, Checkbox, Flex, Input, Modal, ModalBody, ModalCl
 import { useState, ChangeEventHandler } from 'react';
 import { BsGrid } from 'react-icons/bs';
 
-import { getLogger, isBlank, LabelService, LabelVisibility, Logger } from '@ureeka-notebook/web-service';
+import { getLogger, isBlank, LabelDescriptionMaxLength, LabelNameMaxLength,  LabelService, LabelVisibility, Logger } from '@ureeka-notebook/web-service';
 
 import { getReadableLabelVisibility } from 'label/type';
 import { useAsyncStatus, useIsMounted } from 'shared/hook';
@@ -62,7 +62,9 @@ export const CollectionDialog: React.FC<Props> = ({ component }) => {
 
   // .. Input handlers ............................................................
   const handleTitleChange: ChangeEventHandler<HTMLInputElement> = (event) => {
-    setName(event.target.value);
+    // crops the value into the allowed length.
+    const value = event.target.value.slice(0, LabelNameMaxLength);
+    setName(value);
   };
 
   const handleVisibilityChange: ChangeEventHandler<HTMLSelectElement> = (event) => {
@@ -70,7 +72,9 @@ export const CollectionDialog: React.FC<Props> = ({ component }) => {
   };
 
   const handleDescriptionChange: ChangeEventHandler<HTMLTextAreaElement> = (event) => {
-    setDescription(event.target.value);
+    // crops the value into the allowed length.
+    const value = event.target.value.slice(0, LabelDescriptionMaxLength);
+    setDescription(value);
   };
 
   const handleOrderedChange: ChangeEventHandler<HTMLInputElement> = (event) => {
