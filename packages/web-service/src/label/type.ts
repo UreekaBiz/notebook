@@ -13,6 +13,10 @@ export {
   LabelVisibility,
   MAX_LABEL_SHARE_USERS,
 
+  // SEE: @ureeka-notebook/service-common: label/function.ts
+  LabelNameMaxLength,
+  LabelDescriptionMaxLength,
+
   // SEE: @ureeka-notebook/service-common: label/search.ts
   LabelSearchResult,
   MAX_LABEL_SEARCH_RESULTS,
