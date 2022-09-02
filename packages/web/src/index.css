@@ -247,10 +247,9 @@ html body {
   100% { opacity: 1; }
 }
 
-/** hides the element for 1s */
+/** hides the element for the given time */
 .lazy-shown {
   animation-name: lazy-shown;
-  animation-duration: 1s;
 }
 
 /* == Fonts ==================================================================== */

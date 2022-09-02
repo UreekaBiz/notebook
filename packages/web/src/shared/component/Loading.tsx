@@ -1,7 +1,7 @@
 import { Flex, Spinner } from '@chakra-ui/react';
 
 // ********************************************************************************
-/** displays a loading indicator after 1s */
+/** displays a loading indicator after 1000ms(T&E) */
 // NOTE: this is useful when loading content async that requires a loading
 //       indicator but the loading time is so short that it is not worth displaying
 //       the loading indicator instantly.
@@ -12,6 +12,7 @@ export const Loading = () =>  (
     justifyContent='center'
     width='full'
     height='full'
+    style={{ animationDuration: '1000ms'/*T&E*/ }}
   >
     <Spinner />
   </Flex>
