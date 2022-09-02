@@ -1,6 +1,7 @@
-import { Box, Flex, Heading, Text, useToast } from '@chakra-ui/react';
+import { Box, Button, Flex, Heading, Text, useToast } from '@chakra-ui/react';
 import { useRouter } from 'next/router';
 import { useEffect, useState } from 'react';
+import { BiPencil } from 'react-icons/bi';
 
 import { getLogger, Label, LabelIdentifier, LabelService, Logger, ObjectTuple } from '@ureeka-notebook/web-service';
 
@@ -13,6 +14,7 @@ import { Loading } from 'shared/component/Loading';
 import { useAsyncStatus, useIsMounted } from 'shared/hook';
 import { ProfileNavigationLayout } from 'shared/layout/ProfileNavigationLayout';
 import { UserProfileServiceWrapper } from 'user/UserProfileServiceWrapper';
+import { CollectionDialog } from 'label/component/CollectionDialog';
 
 // FIXME: Use label logger?
 const log = getLogger(Logger.NOTEBOOK);
@@ -101,6 +103,18 @@ function CollectionIdPage() {
         >
           {label.obj.name}
         </Heading>
+        <CollectionDialog labelId={label.id} label={label.obj} type='edit' component={(onClick) => (
+          <Button
+            size='md'
+            variant='ghost'
+            colorScheme='gray'
+            onClick={onClick}
+            leftIcon={<BiPencil size={18} />}
+          >
+            Edit
+          </Button>
+        )}
+        />
       </Flex>
       <CollectionNotebookList labelId={collectionId} />
     </Box>
