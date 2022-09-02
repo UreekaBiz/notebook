@@ -241,16 +241,16 @@ html body {
   display: none;
 }
 
-/** displays a loading indicator after 300ms */
 @keyframes lazy-shown {
   0% { opacity: 0; }
   99% { opacity: 0; }
   100% { opacity: 1; }
 }
 
+/** hides the element for 1s */
 .lazy-shown {
   animation-name: lazy-shown;
-  animation-duration: 300ms;
+  animation-duration: 1s;
 }
 
 /* == Fonts ==================================================================== */
