@@ -202,6 +202,25 @@ service cloud.firestore {
       allow delete: if false; // create-only
     }
 
+    // == Reaction ================================================================
+    // the 'reactionId' combines the Entity Identifier and the Reaction Type. The
+    // document is empty but the sub-collection contains the set of all User
+    // Identifiers that have had that reaction for that Entity. This is only used
+    // to ensure that a User can only react once per ReactionType-Entity.
+    match /reactions/{reactionId} {
+      allow create: if false; // server-only created
+      allow update: if false; // read-only
+      allow read: if false; // (no document)
+      allow delete: if false; // server-side hard-delete
+
+      match /reaction-users/{userId} {
+        allow create: if false; // server-only created
+        allow update: if false; // read-only
+        allow read: if isSameUser(userId);
+        allow delete: if false; // server-side hard-delete
+      }
+    }
+
     // == User ====================================================================
     // NOTE: the userId is defined by Firebase Auth
     // NOTE: all documents are created server-side by contract
