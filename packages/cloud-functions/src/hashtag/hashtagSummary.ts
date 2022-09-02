@@ -1,6 +1,6 @@
 import { logger } from 'firebase-functions';
 
-import { isType, normalizeHashtag, HashtagSummary_Storage, HashtagSummary_Update } from '@ureeka-notebook/service-common';
+import { isType, normalizeHashtag, HashtagSummary_Storage, HashtagSummary_Update, IncrementDecrement } from '@ureeka-notebook/service-common';
 
 import { hashtagSummaryRef } from './datastore';
 
@@ -24,7 +24,6 @@ export const updateHashtagOccurrences = async (added: Set<string> | undefined, r
 };
 
 // --------------------------------------------------------------------------------
-type IncrementDecrement = 1 | -1;
 const updateHashtagOccurrence = async (hashtag: string, value: IncrementDecrement) => {
   try {
     await hashtagSummaryRef(hashtag).transaction((hashtagSummary: HashtagSummary_Storage | null) => {

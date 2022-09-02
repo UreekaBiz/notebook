@@ -1,6 +1,8 @@
 // convenience functions for working with Numbers
 // ********************************************************************************
 
+export type IncrementDecrement = 1/*increment*/ | -1/*decrement*/;
+
 // == Array =======================================================================
 export type Range = [number/*min*/, number/*max*/];
 export const range = (values: number[], range?: Range): Range | undefined/*no range*/ => {
