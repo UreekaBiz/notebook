@@ -16,7 +16,7 @@ import { LabelServiceWrapper } from 'label/LabelServiceWrapper';
 function APIKeyPage() {
   return (
     <Box>
-      <Text>Settings</Text>
+      <Text color='#999' fontSize='14px' fontWeight='600'>Settings</Text>
       <Flex alignItems='center' justifyContent='space-between' width='full' marginBottom={4}>
         <Heading flex='1 1'>API Keys</Heading>
         <APIKeyDialog
