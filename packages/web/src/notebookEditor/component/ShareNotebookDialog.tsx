@@ -2,10 +2,9 @@ import { useToast, Box, Button, Flex, Modal, ModalBody, ModalCloseButton, ModalC
 import { useEffect, useState } from 'react';
 import { FiUsers } from 'react-icons/fi';
 
-import { getNotebookShareRoles, getLogger, mapEquals, userProfileComparator, Logger, NotebookService, ObjectTuple, ShareRole, UserIdentifier, UserProfilePublic, UserProfileService, MAX_NOTEBOOK_SHARE_USERS } from '@ureeka-notebook/web-service';
+import { getNotebookShareRoles, getLogger, mapEquals, userProfileComparator, Logger, Notebook, NotebookIdentifier, NotebookService, ObjectTuple, ShareRole, UserIdentifier, UserProfilePublic, UserProfileService, MAX_NOTEBOOK_SHARE_USERS } from '@ureeka-notebook/web-service';
 
 import { useAuthedUser } from 'authUser/hook/useAuthedUser';
-import { useNotebook } from 'notebook/hook/useNotebook';
 import { NotebookRoleSelector } from 'notebookEditor/component/NotebookRoleSelector';
 import { Loading } from 'shared/component/Loading';
 import { useAsyncStatus, useIsMounted } from 'shared/hook';
@@ -15,10 +14,21 @@ import { UserProfileListItem } from 'user/component/UserProfileListItem';
 const log = getLogger(Logger.NOTEBOOK);
 
 // ********************************************************************************
+// == Type ========================================================================
 type UserRole = { role: ShareRole; userProfile: UserProfilePublic; };
-export const ShareNotebookDialog: React.FC = () => {
+
+interface Props {
+  notebookId: NotebookIdentifier;
+  notebook: Notebook;
+
+  /** component to be used to open the Dialog. This component received the onClick
+   *  handler that should be passed as a prop to the actual component. If no
+   *  component is provided a default button is used.*/
+  component?: (onClick: () => void) => React.ReactElement;
+}
+// == Component ===================================================================
+export const ShareNotebookDialog: React.FC<Props> = ({ notebook, notebookId, component }) => {
   const authedUser = useAuthedUser();
-  const { notebookId, notebook } = useNotebook();
 
   // == State =====================================================================
   // NOTE: shareRoles must have the User's profile in this map since it's
@@ -160,15 +170,18 @@ export const ShareNotebookDialog: React.FC = () => {
 
   return (
     <>
-      <Button
-        colorScheme='gray'
-        variant='ghost'
-        size='sm'
-        leftIcon={<FiUsers size={16} />}
-        onClick={handleOpen}
-      >
-        Share
-      </Button>
+      {/* use component if provided */}
+      {component ? component(handleOpen) : (
+        <Button
+          colorScheme='gray'
+          variant='ghost'
+          size='sm'
+          leftIcon={<FiUsers size={16} />}
+          onClick={handleOpen}
+        >
+          Share
+        </Button>
+      )}
 
       <Modal isOpen closeOnEsc closeOnOverlayClick size='xl' onClose={handleClose} >
         {isModalOpen && (
@@ -192,6 +205,7 @@ export const ShareNotebookDialog: React.FC = () => {
                   <Flex alignItems='center' justifyContent='space-between' width='100%' marginBottom={4} paddingX={6}>
                     <Box flex='1 1' minWidth={0} marginRight={2}>
                       <TypeaheadUserProfile
+                        autoFocus
                         disabled={!isCreator || shareRoles.size >= MAX_NOTEBOOK_SHARE_USERS || status === 'loading'}
                         ignoreUserIds={existingSharedUserIds}
                         onSelect={userProfileTuple => handleUserProfileSelect(userProfileTuple.id, currentRole, userProfileTuple.obj)}
@@ -266,7 +280,7 @@ export const ShareNotebookDialog: React.FC = () => {
 
             <ModalFooter>
               <Button variant='ghost' marginRight={2} onClick={handleAYSClose}>Cancel</Button>
-              <Button colorScheme='blue' onClick={handleAYSConfirmation}>Confirm</Button>
+              <Button colorScheme='blue' autoFocus onClick={handleAYSConfirmation}>Confirm</Button>
             </ModalFooter>
           </ModalContent>
         </>

@@ -58,8 +58,8 @@ export abstract class AbstractNodeView<NodeType extends ProseMirrorNode, Storage
     this.ReactRoot = ReactDOM.createRoot(this.dom);
   }
 
-  // Sync getPos and node when prosemirror updates it.
-  public updateProps(getPos: getPosType){
+  // Sync getPos and node when prosemirror updates it
+  public updateProps(getPos: getPosType) {
     this.getPos = getPos;
   }
 
@@ -81,7 +81,7 @@ export abstract class AbstractNodeView<NodeType extends ProseMirrorNode, Storage
   //       an external state (e.g. the visualId of the CodeBlockView) and thus
   //       needs to be called from outside the class.
   public updateView() {
-    if(this.reactNodeView){
+    if(this.reactNodeView) {
       const props: ReactNodeViewProps<any/*cannot know attributes at this level*/, NodeType, NodeModel, typeof this> = {
         attrs: this.node.attrs,
         editor: this.editor,

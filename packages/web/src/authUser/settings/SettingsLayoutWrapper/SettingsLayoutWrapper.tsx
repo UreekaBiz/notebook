@@ -12,8 +12,10 @@ interface Props {
 export const SettingsLayoutWrapper: React.FC<Props> = ({ children }: Props) =>
   <Flex>
     <Box flex='1 1'/*take all remaining space*/ marginRight={24}>{children}</Box>
-    <Box width={200}>
-      <SettingsNavigation />
+    <Box width={200} position='relative'>
+      <Box position='sticky' top={16}>
+        <SettingsNavigation />
+      </Box>
     </Box>
   </Flex>;
 

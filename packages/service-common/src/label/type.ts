@@ -27,7 +27,7 @@ export const MAX_LABEL_SHARE_USERS = 10;
 
 /** the maximum number of Notebooks that any Label may be shared with. This limit
  *  is to keep the size of the Label document bounded and small. */
-// NOTE: if increased then move share Users to a separate sub-collection
+// NOTE: if increased then move Notebooks to a separate sub-collection
 export const MAX_LABEL_NOTEBOOKS = 100;
 
 // --------------------------------------------------------------------------------
@@ -35,6 +35,8 @@ export const MAX_LABEL_NOTEBOOKS = 100;
 export type Label = Creatable & Updatable & Readonly<{ /*Firestore*/
   /** the name of the Label (non-normalized, etc) */
   name: string/*write-many server-written*/;
+  /** the optional Label description */
+  description?: string/*write-many server-written*/;
 
   /** the Visibility of this Label. If a Label is Public then it will have a
    *  corresponding LabelPublished structure and document. */
@@ -79,6 +81,8 @@ export type LabelTuple = ObjectTuple<LabelIdentifier, Label>;
 export type LabelPublished = Creatable & Readonly<{ /*Firestore*/
   /** the name of the Label (non-normalized, etc) */
   name: string/*write-many server-written*/;
+  /** the optional Label description */
+  description?: string/*write-many server-written*/;
 
   /** `true` if this Label represents an ordered collection. By default, Notebooks
    *   are ordered by when they were added to this Label. */

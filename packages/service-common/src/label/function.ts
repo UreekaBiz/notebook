@@ -6,7 +6,7 @@ import { stringMedSchema } from '../util/schema';
 import { ShareRole } from '../util/share';
 import { Identifier_Schema, Modify } from '../util/type';
 import { UserIdentifier } from '../util/user';
-import { LabelVisibility, MAX_LABEL_NOTEBOOKS } from './type';
+import { LabelIdentifier, LabelVisibility, MAX_LABEL_NOTEBOOKS } from './type';
 
 // ********************************************************************************
 // == Label =======================================================================
@@ -16,6 +16,9 @@ export const LabelCreate_Rest_Schema = Validate.object({
   name: stringMedSchema
       .min(1/*cannot be blank*/)
       .required(),
+  description: stringMedSchema
+      .nullable()/*how `undefined` (no value) comes across REST*/
+      .notRequired()/*if unspecified then left unchanged*/,
 
   visibility: Validate.string()
       .oneOf(Object.values(LabelVisibility))
@@ -24,9 +27,10 @@ export const LabelCreate_Rest_Schema = Validate.object({
   ordered: Validate.bool()
       .required(),
 }).noUnknown();
-export type LabelCreate_Rest = Modify<Validate.InferType<typeof LabelCreate_Rest_Schema>, Readonly<{
+export type _LabelCreate_Rest = Modify<Validate.InferType<typeof LabelCreate_Rest_Schema>, Readonly<{
   visibility: LabelVisibility/*explicit*/;
 }>>;
+export type LabelCreate_Rest = Modify<_LabelCreate_Rest, Partial<Pick<_LabelCreate_Rest, 'description'>>>/*FIXME Yup problem with notRequired()*/;
 
 // .. Update ......................................................................
 export const LabelUpdate_Rest_Schema = Validate.object({
@@ -58,6 +62,21 @@ export type LabelNotebookAdd_Rest = Readonly<Validate.InferType<typeof LabelNote
 // .. Remove ......................................................................
 export const LabelNotebookRemove_Rest_Schema = LabelNotebookAdd_Rest_Schema/*same structure*/;
 export type LabelNotebookRemove_Rest = Readonly<Validate.InferType<typeof LabelNotebookRemove_Rest_Schema>>;
+
+// .. Labels per Notebook .........................................................
+export const LabelNotebookLabelsUpdate_Rest_Schema = Validate.object({
+  notebookId: Identifier_Schema
+      .required(),
+
+  /** the fully-specified set of Labels for the Notebook. This will both add and
+   *  remove Labels from the Notebook. */
+  labelIds: Validate.array()
+      .of(Identifier_Schema.required())/*specifically Label identifiers*/
+      .required(),
+}).noUnknown();
+export type LabelNotebookLabelsUpdate_Rest = Modify<Validate.InferType<typeof LabelNotebookLabelsUpdate_Rest_Schema>, Readonly<{
+  labelIds: LabelIdentifier[]/*explicit*/;
+}>>;
 
 // .. Re-Order ....................................................................
 // ordering a Label's Notebooks is always a separate and distinct operation therefore

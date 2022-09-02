@@ -18,6 +18,9 @@ export interface Pagination<T> {
   /** `true` if and only if at the end of the collection (i.e. {@link #next()}
    *  would result in no additional pages) */
   isExhausted(): boolean;
+  /** The page size for convenience */
+  getPageSize(): number;
+
   /** The 1-based page number of the current page. This is valid only after
    *  {@link #onUpdate()} has been called. Specifically, this number represents
    *  the page that was last returned by {@link #documents$()}. If called before

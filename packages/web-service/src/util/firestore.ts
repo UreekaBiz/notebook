@@ -1,8 +1,10 @@
 import { orderBy, query, DocumentData, DocumentReference, FieldValue, OrderByDirection, Query } from 'firebase/firestore';
+export { OrderByDirection } from 'firebase/firestore';
 
 import { isType, Identifier, ObjectTuple } from '@ureeka-notebook/service-common';
 
 // ** Query / Filter / Sort *******************************************************
+// NOTE: when adding new sort fields don't forget to also update isOrderByDirection.
 export type FilterSort<SortField> = Readonly<{
   /** the field being sorted on */
   field: SortField | FieldValue/*for FieldPath.documentId()*/;
@@ -11,6 +13,9 @@ export type FilterSort<SortField> = Readonly<{
   direction: OrderByDirection;
 }>;
 export type SortableFilter<SortField extends string> = Readonly<{ sort?: FilterSort<SortField>[]; }>;
+
+// CHECK: Is there a better way to do this?
+export const isOrderByDirection = (value: any): value is OrderByDirection => value === 'asc' || value === 'desc';
 
 // ................................................................................
 export const buildSortQuery = <T, SortField extends string>(buildQuery: Query<T>, filter: SortableFilter<SortField>, defaultSortField?: SortField) => {

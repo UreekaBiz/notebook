@@ -1,25 +1,25 @@
 import * as functions from 'firebase-functions';
 
-import { deduplicate, isBlank, LabelCreate_Rest, LabelCreate_Rest_Schema, LabelDelete_Rest, LabelDelete_Rest_Schema, LabelIdentifier, LabelNotebookAdd_Rest, LabelNotebookAdd_Rest_Schema, LabelNotebookRemove_Rest, LabelNotebookRemove_Rest_Schema, LabelNotebookReorder_Rest, LabelNotebookReorder_Rest_Schema, LabelShare_Rest, LabelShare_Rest_Schema, LabelUpdate_Rest, LabelUpdate_Rest_Schema, NotebookIdentifier } from '@ureeka-notebook/service-common';
+import { deduplicate, isBlank, LabelCreate_Rest, LabelCreate_Rest_Schema, LabelDelete_Rest, LabelDelete_Rest_Schema, LabelIdentifier, LabelNotebookAdd_Rest, LabelNotebookAdd_Rest_Schema, LabelNotebookLabelsUpdate_Rest, LabelNotebookLabelsUpdate_Rest_Schema, LabelNotebookRemove_Rest, LabelNotebookRemove_Rest_Schema, LabelNotebookReorder_Rest, LabelNotebookReorder_Rest_Schema, LabelShare_Rest, LabelShare_Rest_Schema, LabelUpdate_Rest, LabelUpdate_Rest_Schema, NotebookIdentifier } from '@ureeka-notebook/service-common';
 
 import { wrapCall } from '../util/function';
 import { createLabel, deleteLabel, updateLabel } from './label';
-import { addNotebook, removeNotebook, reorderNotebooks } from './labelNotebook';
+import { addNotebook, removeNotebook, reorderNotebooks, updateNotebook } from './labelNotebook';
 import { shareLabel } from './share';
 
 // ********************************************************************************
 // == Label ====================================================================
 export const labelCreate = functions.https.onCall(wrapCall<LabelCreate_Rest, LabelIdentifier>(
-{ name: 'labelCreate', schema: LabelCreate_Rest_Schema, convertNullToUndefined: true, requiresAuth: true },
+{ name: 'labelCreate', schema: LabelCreate_Rest_Schema, convertNullToUndefined: true/*collapse for create*/, requiresAuth: true },
 async (data, context, userId) => {
-  return await createLabel(userId!/*auth'd*/, data.name, data.visibility, data.ordered);
+  return await createLabel(userId!/*auth'd*/, data.name, data.description, data.visibility, data.ordered);
 }));
 
 // ................................................................................
 export const labelUpdate = functions.https.onCall(wrapCall<LabelUpdate_Rest>(
-{ name: 'labelUpdate', schema: LabelUpdate_Rest_Schema, convertNullToUndefined: true, requiresAuth: true },
+{ name: 'labelUpdate', schema: LabelUpdate_Rest_Schema, convertNullToUndefined: false/*explicitly not*/, requiresAuth: true },
 async (data, context, userId) => {
-  await updateLabel(userId!/*auth'd*/, data.labelId, data.name, data.visibility, data.ordered);
+  await updateLabel(userId!/*auth'd*/, data.labelId, data.name, data.description, data.visibility, data.ordered);
 }));
 
 // ................................................................................
@@ -49,6 +49,13 @@ export const labelNotebookRemove = functions.https.onCall(wrapCall<LabelNotebook
 { name: 'labelNotebookRemove', schema: LabelNotebookRemove_Rest_Schema, convertNullToUndefined: true, requiresAuth: true },
 async (data, context, userId) => {
   await removeNotebook(userId!/*auth'd*/, data.labelId, data.notebookId);
+}));
+
+// ................................................................................
+export const labelNotebookUpdate = functions.https.onCall(wrapCall<LabelNotebookLabelsUpdate_Rest, LabelIdentifier[]>(
+{ name: 'labelNotebookUpdate', schema: LabelNotebookLabelsUpdate_Rest_Schema, convertNullToUndefined: true, requiresAuth: true },
+async (data, context, userId) => {
+  return await updateNotebook(userId!/*auth'd*/, data.notebookId, deduplicate(data.labelIds)/*dedup by contract*/);
 }));
 
 // ................................................................................

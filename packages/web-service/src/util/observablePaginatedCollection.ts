@@ -161,6 +161,8 @@ log.debug(`${this.label}: Recorded Page: ${this.pages.length}`);
 
   // == Pagination ================================================================
   public isExhausted(): boolean { return this._isExhausted; }
+  public getPageSize(): number { return this.pageSize; }
+
   public getPageNumber(): number { return this.pages.length; }
 
   // ------------------------------------------------------------------------------

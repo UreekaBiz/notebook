@@ -10,6 +10,52 @@
       ]
     },
 
+
+    {
+      "collectionGroup": "labels",
+      "queryScope": "COLLECTION",
+      "fields": [
+        { "fieldPath": "createdBy", "order": "ASCENDING" },
+        { "fieldPath": "name", "order": "ASCENDING" }
+      ]
+    },
+    {
+      "collectionGroup": "labels",
+      "queryScope": "COLLECTION",
+      "fields": [
+        { "fieldPath": "createdBy", "order": "ASCENDING" },
+        { "fieldPath": "name", "order": "DESCENDING" }
+      ]
+    },
+    {
+      "collectionGroup": "labels",
+      "queryScope": "COLLECTION",
+      "fields": [
+        { "fieldPath": "createdBy", "order": "ASCENDING" },
+        { "fieldPath": "visibility", "order": "ASCENDING" },
+        { "fieldPath": "name", "order": "ASCENDING" }
+      ]
+    },
+    {
+      "collectionGroup": "labels",
+      "queryScope": "COLLECTION",
+      "fields": [
+        { "fieldPath": "createdBy", "order": "ASCENDING" },
+        { "fieldPath": "visibility", "order": "ASCENDING" },
+        { "fieldPath": "name", "order": "DESCENDING" }
+      ]
+    },
+    {
+      "collectionGroup": "labels",
+      "queryScope": "COLLECTION",
+      "fields": [
+        { "fieldPath": "searchNamePrefixes", "arrayConfig": "CONTAINS" },
+        { "fieldPath": "createdBy", "order": "ASCENDING" },
+        { "fieldPath": "name", "order": "ASCENDING" }
+      ]
+    },
+
+
     {
       "collectionGroup": "notebooks",
       "queryScope": "COLLECTION",
@@ -31,24 +77,6 @@
       "collectionGroup": "notebooks",
       "queryScope": "COLLECTION",
       "fields": [
-        { "fieldPath": "editors", "arrayConfig": "CONTAINS" },
-        { "fieldPath": "deleted", "order": "ASCENDING" },
-        { "fieldPath": "name", "order": "ASCENDING" }
-      ]
-    },
-    {
-      "collectionGroup": "notebooks",
-      "queryScope": "COLLECTION",
-      "fields": [
-        { "fieldPath": "viewers", "arrayConfig": "CONTAINS" },
-        { "fieldPath": "deleted", "order": "ASCENDING" },
-        { "fieldPath": "name", "order": "ASCENDING" }
-      ]
-    },
-    {
-      "collectionGroup": "notebooks",
-      "queryScope": "COLLECTION",
-      "fields": [
         { "fieldPath": "deleted", "order": "ASCENDING" },
         { "fieldPath": "createdBy", "order": "ASCENDING" },
         { "fieldPath": "name", "order": "DESCENDING" }
@@ -58,16 +86,37 @@
       "collectionGroup": "notebooks",
       "queryScope": "COLLECTION",
       "fields": [
-        { "fieldPath": "editors", "arrayConfig": "CONTAINS" },
+        { "fieldPath": "createdBy", "order": "ASCENDING" },
         { "fieldPath": "deleted", "order": "ASCENDING" },
-        { "fieldPath": "name", "order": "DESCENDING" }
+        { "fieldPath": "isPublished", "order": "ASCENDING" },
+        { "fieldPath": "name", "order": "ASCENDING" }
       ]
     },
     {
       "collectionGroup": "notebooks",
       "queryScope": "COLLECTION",
       "fields": [
-        { "fieldPath": "viewers", "arrayConfig": "CONTAINS" },
+        { "fieldPath": "createdBy", "order": "ASCENDING" },
+        { "fieldPath": "deleted", "order": "ASCENDING" },
+        { "fieldPath": "isPublished", "order": "ASCENDING" },
+        { "fieldPath": "name", "order": "DESCENDING" }
+      ]
+    },
+
+    {
+      "collectionGroup": "notebooks",
+      "queryScope": "COLLECTION",
+      "fields": [
+        { "fieldPath": "editors", "arrayConfig": "CONTAINS" },
+        { "fieldPath": "deleted", "order": "ASCENDING" },
+        { "fieldPath": "name", "order": "ASCENDING" }
+      ]
+    },
+    {
+      "collectionGroup": "notebooks",
+      "queryScope": "COLLECTION",
+      "fields": [
+        { "fieldPath": "editors", "arrayConfig": "CONTAINS" },
         { "fieldPath": "deleted", "order": "ASCENDING" },
         { "fieldPath": "name", "order": "DESCENDING" }
       ]
@@ -85,15 +134,6 @@
       "collectionGroup": "notebooks",
       "queryScope": "COLLECTION",
       "fields": [
-        { "fieldPath": "viewers", "arrayConfig": "CONTAINS" },
-        { "fieldPath": "deleted", "order": "ASCENDING" },
-        { "fieldPath": "createdBy", "order": "ASCENDING" }
-      ]
-    },
-    {
-      "collectionGroup": "notebooks",
-      "queryScope": "COLLECTION",
-      "fields": [
         { "fieldPath": "editors", "arrayConfig": "CONTAINS" },
         { "fieldPath": "deleted", "order": "ASCENDING" },
         { "fieldPath": "createdBy", "order": "DESCENDING" }
@@ -103,11 +143,120 @@
       "collectionGroup": "notebooks",
       "queryScope": "COLLECTION",
       "fields": [
+        { "fieldPath": "editors", "arrayConfig": "CONTAINS" },
+        { "fieldPath": "deleted", "order": "ASCENDING" },
+        { "fieldPath": "isPublished", "order": "ASCENDING" },
+        { "fieldPath": "name", "order": "ASCENDING" }
+      ]
+    },
+    {
+      "collectionGroup": "notebooks",
+      "queryScope": "COLLECTION",
+      "fields": [
+        { "fieldPath": "editors", "arrayConfig": "CONTAINS" },
+        { "fieldPath": "deleted", "order": "ASCENDING" },
+        { "fieldPath": "isPublished", "order": "ASCENDING" },
+        { "fieldPath": "name", "order": "DESCENDING" }
+      ]
+    },
+    {
+      "collectionGroup": "notebooks",
+      "queryScope": "COLLECTION",
+      "fields": [
+        { "fieldPath": "editors", "arrayConfig": "CONTAINS" },
+        { "fieldPath": "deleted", "order": "ASCENDING" },
+        { "fieldPath": "isPublished", "order": "ASCENDING" },
+        { "fieldPath": "createdBy", "order": "ASCENDING" }
+      ]
+    },
+    {
+      "collectionGroup": "notebooks",
+      "queryScope": "COLLECTION",
+      "fields": [
+        { "fieldPath": "editors", "arrayConfig": "CONTAINS" },
+        { "fieldPath": "deleted", "order": "ASCENDING" },
+        { "fieldPath": "isPublished", "order": "ASCENDING" },
+        { "fieldPath": "createdBy", "order": "DESCENDING" }
+      ]
+    },
+
+    {
+      "collectionGroup": "notebooks",
+      "queryScope": "COLLECTION",
+      "fields": [
+        { "fieldPath": "viewers", "arrayConfig": "CONTAINS" },
+        { "fieldPath": "deleted", "order": "ASCENDING" },
+        { "fieldPath": "name", "order": "ASCENDING" }
+      ]
+    },
+    {
+      "collectionGroup": "notebooks",
+      "queryScope": "COLLECTION",
+      "fields": [
+        { "fieldPath": "viewers", "arrayConfig": "CONTAINS" },
+        { "fieldPath": "deleted", "order": "ASCENDING" },
+        { "fieldPath": "name", "order": "DESCENDING" }
+      ]
+    },
+    {
+      "collectionGroup": "notebooks",
+      "queryScope": "COLLECTION",
+      "fields": [
+        { "fieldPath": "viewers", "arrayConfig": "CONTAINS" },
+        { "fieldPath": "deleted", "order": "ASCENDING" },
+        { "fieldPath": "createdBy", "order": "ASCENDING" }
+      ]
+    },
+    {
+      "collectionGroup": "notebooks",
+      "queryScope": "COLLECTION",
+      "fields": [
         { "fieldPath": "viewers", "arrayConfig": "CONTAINS" },
         { "fieldPath": "deleted", "order": "ASCENDING" },
         { "fieldPath": "createdBy", "order": "DESCENDING" }
       ]
     },
+    {
+      "collectionGroup": "notebooks",
+      "queryScope": "COLLECTION",
+      "fields": [
+        { "fieldPath": "viewers", "arrayConfig": "CONTAINS" },
+        { "fieldPath": "deleted", "order": "ASCENDING" },
+        { "fieldPath": "isPublished", "order": "ASCENDING" },
+        { "fieldPath": "name", "order": "ASCENDING" }
+      ]
+    },
+    {
+      "collectionGroup": "notebooks",
+      "queryScope": "COLLECTION",
+      "fields": [
+        { "fieldPath": "viewers", "arrayConfig": "CONTAINS" },
+        { "fieldPath": "deleted", "order": "ASCENDING" },
+        { "fieldPath": "isPublished", "order": "ASCENDING" },
+        { "fieldPath": "name", "order": "DESCENDING" }
+      ]
+    },
+    {
+      "collectionGroup": "notebooks",
+      "queryScope": "COLLECTION",
+      "fields": [
+        { "fieldPath": "viewers", "arrayConfig": "CONTAINS" },
+        { "fieldPath": "deleted", "order": "ASCENDING" },
+        { "fieldPath": "isPublished", "order": "ASCENDING" },
+        { "fieldPath": "createdBy", "order": "ASCENDING" }
+      ]
+    },
+    {
+      "collectionGroup": "notebooks",
+      "queryScope": "COLLECTION",
+      "fields": [
+        { "fieldPath": "viewers", "arrayConfig": "CONTAINS" },
+        { "fieldPath": "deleted", "order": "ASCENDING" },
+        { "fieldPath": "isPublished", "order": "ASCENDING" },
+        { "fieldPath": "createdBy", "order": "DESCENDING" }
+      ]
+    },
+
     {
       "collectionGroup": "notebooks",
       "queryScope": "COLLECTION",
@@ -118,6 +267,7 @@
         { "fieldPath": "name", "order": "ASCENDING" }
       ]
     },
+
 
     {
       "collectionGroup": "user-profile-publics",

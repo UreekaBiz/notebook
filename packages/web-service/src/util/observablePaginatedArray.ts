@@ -31,28 +31,37 @@ class PaginatedArrayObservable<T, R> implements Pagination<R> {
     // transform Observable over that page (transformArray$)
     this._documents$ = combineLatest([this.pageNumber$, this.array$])
       .pipe(
-        tap(([pageNumber]) => {
-          log.debug(`${this.label}: isLoading: ${this.isLoading}; isExhausted: ${this.isExhausted()}; pageSize: ${this.pageSize}; pageNumber: ${pageNumber}`);
+        tap(([pageNumber, array]) => {
+          log.debug(`${this.label}:array$: isLoading: ${this.isLoading}; isExhausted: ${this.isExhausted()}; pageSize: ${this.pageSize}; pageNumber: ${pageNumber}; array: ${array.length}`);
           this.isLoading = true/*set to loading*/;
         }),
-        map(([pageNumber, array]) => array.slice((this.pageSize * (pageNumber - 1)), this.pageSize)),
+        map(([pageNumber, array]) => {
+          // NOTE: this is the only place where both the array and page number are
+          //       available to determine if is exhausted
+          this._isExhausted = (array.length <= (this.pageSize * pageNumber))/*update if exhausted*/;
+
+          return array.slice((this.pageSize * (pageNumber - 1)), this.pageSize * pageNumber);
+        }),
         switchMap(pageArray => transformArray$(pageArray)),
         tap(pageArray => {
           this.isLoading = false/*finished loading*/;
-          this._isExhausted = (pageArray.length < this.pageSize)/*update if exhausted*/;
+          log.debug(`${this.label}:array$: loaded; isExhausted: ${this.isExhausted()}; pageSize: ${this.pageSize}; pageArray: ${pageArray.length}`);
         })
       );
   }
 
   // == Pagination ================================================================
   public isExhausted(): boolean { return this._isExhausted; }
+  public getPageSize(): number { return this.pageSize; }
+
   public getPageNumber(): number { return this.pageNumber$.value; }
 
   // ------------------------------------------------------------------------------
   public previous(): boolean {
-    // prevent loading more data if loading or exhausted
+log.debug(`${this.label}:previous: isLoading: ${this.isLoading}; isExhausted: ${this.isExhausted()}; pageNumber: ${this.pageNumber$.value}`);
+    // prevent loading more data if loading
+    // NOTE: *may* be exhausted but still allow going back
     if(this.isLoading) return true/*assume there is more until loaded and know otherwise*/;
-    if(this.isExhausted()) return false/*there aren't any more (by definition)*/;
     if(this.pageNumber$.value <= 1) return false/*there aren't any more (by definition)*/;
 
     this.pageNumber$.next(this.pageNumber$.value - 1);
@@ -61,6 +70,7 @@ class PaginatedArrayObservable<T, R> implements Pagination<R> {
   }
 
   public next(): boolean {
+log.debug(`${this.label}:next: isLoading: ${this.isLoading}; isExhausted: ${this.isExhausted()}; pageNumber: ${this.pageNumber$.value}`);
     // prevent loading more data if loading or exhausted
     if(this.isLoading) return true/*assume there is more until loaded and know otherwise*/;
     if(this.isExhausted()) return false/*there aren't any more (by definition)*/;

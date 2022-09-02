@@ -1,4 +1,4 @@
-import { Label, LabelCreate_Rest, LabelCreate_Rest_Schema, LabelDelete_Rest, LabelDelete_Rest_Schema, LabelNotebookAdd_Rest, LabelNotebookAdd_Rest_Schema, LabelNotebookRemove_Rest, LabelNotebookRemove_Rest_Schema, LabelNotebookReorder_Rest, LabelNotebookReorder_Rest_Schema, LabelPublished_Storage, LabelUpdate_Rest, LabelUpdate_Rest_Schema, UserIdentifier } from '@ureeka-notebook/service-common';
+import { Label, LabelCreate_Rest, LabelCreate_Rest_Schema, LabelDelete_Rest, LabelDelete_Rest_Schema, LabelNotebookAdd_Rest, LabelNotebookAdd_Rest_Schema, LabelNotebookRemove_Rest, LabelNotebookRemove_Rest_Schema, LabelNotebookReorder_Rest, LabelNotebookReorder_Rest_Schema, LabelPublished_Storage, LabelUpdate_Rest, LabelUpdate_Rest_Schema, LabelVisibility, UserIdentifier } from '@ureeka-notebook/service-common';
 
 import { SortableFilter } from '../util/firestore';
 
@@ -47,16 +47,25 @@ export type LabelNotebook_Reorder = LabelNotebookReorder_Rest;
 // == Search ======================================================================
 // -- Label -----------------------------------------------------------------------
 export type LabelSortField = keyof Pick<Label,
-  | 'name'
-  | 'createTimestamp'
+  | 'name'/*case sensitive*/
+  | 'sortName'/*case insensitive*/
   | 'createdBy'
+  | 'createTimestamp'
 >;
 
 /** the resulting query is the 'AND' of each member but the 'OR' of any multi-valued
  *  filter */
 export type LabelFilter = SortableFilter<LabelSortField> & Readonly<{
-  // NOTE: this supports only *exact* *match*
+  // NOTE: either 'name' or 'namePrefix' may be specified but not both. If both are
+  //       specified then 'namePrefix' has precedence
+  /** type-ahead find style prefix match. Please note that if this field is specified
+   *  then `viewableBy` and `editableBy` are ignored */
+  namePrefix?: string;
+  /** exact match for the name */
   name?: string;
+
+  /** show only Labels with the specified {@link LabelVisibility} */
+  visibility?: LabelVisibility;
 
   // NOTE: only one of these should be specified since they cascade. If more than
   //       one is specified then they're applied in waterfall order
@@ -72,9 +81,10 @@ export type LabelFilter = SortableFilter<LabelSortField> & Readonly<{
 
 // -- Label Published ----------------------------------------------------------
 export type LabelPublishedSortField = keyof Pick<LabelPublished_Storage,
-  | 'name'
-  | 'createTimestamp'
+  | 'name'/*case sensitive*/
+  | 'sortName'/*case insensitive*/
   | 'createdBy'
+  | 'createTimestamp'
 >;
 
 /** the resulting query is the 'AND' of each member but the 'OR' of any multi-valued

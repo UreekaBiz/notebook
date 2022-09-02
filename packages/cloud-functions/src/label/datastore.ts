@@ -1,6 +1,6 @@
 import { CollectionReference } from 'firebase-admin/firestore';
 
-import { LabelIdentifier, LabelPublished_Storage, Label_Storage, LABELS, LABEL_PUBLISHEDS } from '@ureeka-notebook/service-common';
+import { LabelIdentifier, LabelPublished_Storage, Label_Storage, LABELS, LABEL_PUBLISHEDS, nameof } from '@ureeka-notebook/service-common';
 
 import { firestore } from '../firebase';
 
@@ -17,3 +17,9 @@ export const labelDocument = (labelId: LabelIdentifier) => labelCollection.doc(l
 // -- Published Label ----------------------------------------------------------
 export const labelPublishedCollection = firestore.collection(LABEL_PUBLISHEDS) as CollectionReference<LabelPublished_Storage>;
 export const labelPublishedDocument = (labelId: LabelIdentifier) => labelPublishedCollection.doc(labelId);
+
+// === Query ======================================================================
+// -- Label -----------------------------------------------------------------------
+export const notebookLabelsQuery = (notebookId: string) =>
+  labelCollection
+    .where(nameof<Label_Storage>('notebookIds'), 'array-contains', notebookId);

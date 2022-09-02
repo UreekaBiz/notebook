@@ -326,10 +326,10 @@ export class VersionListener {
 
         // update the selection.
         transaction.setSelection(nodeSelection);
-      } catch(error){
+      } catch(error) {
         log.debug('New selection is not a node selection anymore, node was deleted. Ignoring.');
       }
-    } // else -- was not a NodeSelection.
+    } /* else -- was not a NodeSelection */
 
     this.editor.view.dispatch(transaction);
   }
@@ -344,7 +344,6 @@ export class VersionListener {
     if(!this.initialized) { log.warn(`Trying to write changes before initialization or after shutdown ${this.logContext()}.`); return/*prevent invalid actions*/; }
     if(!this.initialContentLoaded) throw new ApplicationError('functions/internal', `Trying to get write changes before initial content is loaded  ${this.logContext()}.`);
 
-    if(collaborationDelay.writeDelayMs > 0) await sleep(collaborationDelay.writeDelayMs)/*before latch-check for sanity*/;
     if(this.isWritingPendingSteps) return/*prevent multiple handlers if ProseMirror gets multiple updates*/;
     if(this.isWaitingForNewVersions) return/*do nothing -- transactions will fail until the most recent data is acquired*/;
 

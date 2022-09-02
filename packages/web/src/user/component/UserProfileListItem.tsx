@@ -44,7 +44,7 @@ export const UserProfileListItem: React.FC<Props> = ({ userId, showYouLabel = tr
 
         setUserProfilePublic(obj);
         setStatus('complete');
-        if(!obj){ log.info(`User (${userId}) returned null.`); return/*nothing left to do*/; }
+        if(!obj) { log.info(`User (${userId}) returned null.`); return/*nothing left to do*/; }
       },
       error: (error) => {
         if(!(error instanceof ApplicationError)) { log.error(`Unexpected error getting User (${userId}). Reason: `, error); }

@@ -37,7 +37,8 @@ export const convertNull = <T extends Record<string, any>>(o: T, convert: any): 
   return result;
 };
 export const convertNullDeep = <T extends Record<string, any>>(o: T, convert: any, omit?: string[]): T => {
-  const result: any = {};
+  // use the same data type as the original object.
+  const result: any = Array.isArray(o) ? [] : {};
     Object.keys(o)
       .forEach(key => {
         const value = o[key];

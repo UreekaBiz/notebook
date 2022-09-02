@@ -1,13 +1,13 @@
 import { DocumentReference } from 'firebase-admin/firestore';
 import { logger } from 'firebase-functions';
 
-import { computeAssetPrefixes, computeAssetSortName, isBlank, AssetIdentifier, Asset_Create, Asset_Storage, Asset_Update, SystemUserId, UserIdentifier, AssetType, removeUndefined } from '@ureeka-notebook/service-common';
+import { computeAssetPrefixes, computeAssetSortName, isBlank, removeUndefined, AssetIdentifier, AssetType, Asset_Create, Asset_Storage, Asset_Update, SystemUserId, UserIdentifier } from '@ureeka-notebook/service-common';
 
 import { firestore } from '../firebase';
 import { ApplicationError } from '../util/error';
 import { DeleteField, ServerTimestamp } from '../util/firestore';
-import { assetCollection, assetDocument } from './datastore';
 import { updateAssetUserSummary } from './assetUserSummary';
+import { assetCollection, assetDocument } from './datastore';
 
 // ********************************************************************************
 // == Create ======================================================================

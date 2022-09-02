@@ -1,5 +1,17 @@
 // convenience methods for working with sets
 // ********************************************************************************
+/** @returns `true` if all entries from set 'a' are present in set 'b' */
+export const setEquals = <T>(a: Set<T>, b: Set<T>): boolean => {
+  if(a.size !== b.size) return false/*cannot be equal if different sizes*/;
+
+  // NOTE: uses 'for' instead of 'forEach' for performance
+  for(const key of a) {
+    if(!b.has(key)) return false/*differs -- early exit*/;
+  }
+
+  return true/*all entries match*/;
+};
+
 /** @returns the set of values that exist in `previous` that do not exist in `final`.
  *           If there are no values that have been removed in `final` then an *empty*
  *           set is returned. Additional values in `final` that do not appear in

@@ -2,6 +2,7 @@
 // NOTE: './firebase' is exported from the root to ensure that it's processed first
 export * from './environment';
 export * from './error';
+export { isOrderByDirection, OrderByDirection } from './firestore';
 export { Scrollable } from './observableScrolledCollection';
 export * from './pagination';
 export * from './version';
@@ -72,6 +73,7 @@ export {
   // SEE: @ureeka-notebook/service-common: util/set.ts
   differenceSet,
   intersectionSet,
+  setEquals,
 
   // SEE: @ureeka-notebook/service-common: util/share.ts
   ShareRole,

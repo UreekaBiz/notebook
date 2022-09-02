@@ -7,10 +7,12 @@ import { SettingsForm } from 'authUser/settings/SettingsForm';
 import { SettingsLayoutWrapper } from 'authUser/settings/SettingsLayoutWrapper';
 import { RequiredAuthUserWrapper } from 'authUser/RequiredAuthUserWrapper';
 import { WrappedPage } from 'core/wrapper';
+import { LabelServiceWrapper } from 'label/LabelServiceWrapper';
 import { NotebookServiceWrapper } from 'notebook/NotebookServiceWrapper';
 import { useAsyncStatus, useIsMounted } from 'shared/hook';
 import { ProfileNavigationLayout } from 'shared/layout/ProfileNavigationLayout';
 import { LoadingPage } from 'shared/pages/LoadingPage';
+import { UserProfileServiceWrapper } from 'user/UserProfileServiceWrapper';
 
 const log = getLogger(Logger.AUTH_USER);
 
@@ -76,6 +78,6 @@ function SettingsPage() {
 // --------------------------------------------------------------------------------
 // SEE: core/wrapper.tsx for more information
 const Page: WrappedPage = SettingsPage;
-      Page.wrappers = [RequiredAuthUserWrapper, NotebookServiceWrapper, ProfileNavigationLayout, SettingsLayoutWrapper]/*outer to inner order*/;
+      Page.wrappers = [RequiredAuthUserWrapper, UserProfileServiceWrapper, NotebookServiceWrapper, LabelServiceWrapper, ProfileNavigationLayout, SettingsLayoutWrapper]/*outer to inner order*/;
 
 export default Page;

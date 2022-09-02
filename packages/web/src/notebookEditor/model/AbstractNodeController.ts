@@ -45,7 +45,7 @@ export abstract class AbstractNodeController<NodeType extends ProseMirrorNode, S
   }
 
   // Sync getPos and node when prosemirror updates it.
-  public updateProps(getPos: getPosType){
+  public updateProps(getPos: getPosType) {
     if(!isGetPos(getPos)) throw new Error('getPos is not a function when calling updateProps');
     this.getPos = getPos;
 

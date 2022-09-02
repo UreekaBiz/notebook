@@ -1,10 +1,10 @@
 import { DocumentReference } from 'firebase-admin/firestore';
 
-import { computeLabelPrefixes, computeLabelSortName, isBlank, LabelIdentifier, LabelVisibility, Label_Create, Label_Storage, Label_Update, SystemUserId, UserIdentifier } from '@ureeka-notebook/service-common';
+import { computeLabelPrefixes, computeLabelSortName, isBlank, removeUndefined, LabelIdentifier, LabelVisibility, Label_Create, Label_Storage, Label_Update, SystemUserId, UserIdentifier } from '@ureeka-notebook/service-common';
 
 import { firestore } from '../firebase';
 import { ApplicationError } from '../util/error';
-import { ServerTimestamp } from '../util/firestore';
+import { DeleteField, ServerTimestamp } from '../util/firestore';
 import { labelCollection, labelDocument } from './datastore';
 import { removeAllNotebooks } from './labelNotebook';
 
@@ -12,7 +12,7 @@ import { removeAllNotebooks } from './labelNotebook';
 // == Create ======================================================================
 export const createLabel = async (
   userId: UserIdentifier,
-  name: string, visibility: LabelVisibility, ordered: boolean
+  name: string, description: string | null | undefined, visibility: LabelVisibility, ordered: boolean
 ): Promise<LabelIdentifier> => {
   if(isBlank(name)) throw new ApplicationError('functions/invalid-argument', `Cannot create a Label with a blank name.`);
 
@@ -21,8 +21,11 @@ export const createLabel = async (
   try {
     const label: Label_Create = {
       name,
+      description: (description === null/*specified but no value*/) ? undefined/*collapse on create*/ : description,
+
       visibility,
       ordered,
+
       notebookIds: [/*none by default on create*/],
 
       viewers: [userId/*creator must be a viewer by contract*/],
@@ -36,13 +39,13 @@ export const createLabel = async (
       lastUpdatedBy: userId,
       updateTimestamp: ServerTimestamp/*by contract*/,
     };
-    await labelRef.create(label)/*create by definition*/;
+    await labelRef.create(removeUndefined(label) as Label_Create)/*create by definition*/;
   } catch(error) {
     if(error instanceof ApplicationError) throw error;
     throw new ApplicationError('datastore/write', `Error creating new Label for User (${userId}). Reason: `, error);
   }
 
-  // FIXME: publish if visibility === LabelVisibility.Public
+  // NOTE: on-write trigger creates the Published Label
 
   return labelId;
 };
@@ -50,7 +53,8 @@ export const createLabel = async (
 // == Update ======================================================================
 export const updateLabel = async (
   userId: UserIdentifier,
-  labelId: LabelIdentifier, name: string, visibility: LabelVisibility, ordered: boolean
+  labelId: LabelIdentifier,
+  name: string, description: string | null | undefined, visibility: LabelVisibility, ordered: boolean
 ) => {
   if(isBlank(name)) throw new ApplicationError('functions/invalid-argument', `Cannot update a Label to a blank name.`);
 
@@ -66,6 +70,7 @@ export const updateLabel = async (
 
       const label: Label_Update = {
         name,
+        description: (description === null/*specified but no value*/) ? DeleteField : description,
 
         visibility,
         ordered,
@@ -76,18 +81,14 @@ export const updateLabel = async (
         lastUpdatedBy: SystemUserId/*by contract*/,
         updateTimestamp: ServerTimestamp/*server-written*/,
       };
-      transaction.update(labelRef, label);
-
-      // NOTE: Label Summary does not change for Label updates (only Label Notebooks)
-
-      // FIXME: trickle down to sub-collections!!!
-      // FIXME: compare visibility to existing and either publish or unpublish or nothing
-
+      transaction.update(labelRef, removeUndefined(label));
     });
   } catch(error) {
     if(error instanceof ApplicationError) throw error;
     throw new ApplicationError('datastore/write', `Error deleting Label (${labelId}) for User (${userId}). Reason: `, error);
   }
+
+  // NOTE: on-write trigger clones the Published Label
 };
 
 // -- Notebook --------------------------------------------------------------------
@@ -113,6 +114,5 @@ export const deleteLabel = async (userId: UserIdentifier, labelId: LabelIdentifi
   }
 
   await removeAllNotebooks(userId, labelId)/*logs on error*/;
-
-  // FIXME: remove any published labels!!! (do it in all cases for sanity)
+  // NOTE: on-write trigger deletes the Published Label
 };

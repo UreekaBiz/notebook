@@ -1,4 +1,4 @@
-import { Box, Input, Menu, MenuButton, MenuItem, MenuList, useToast } from '@chakra-ui/react';
+import { Box, Input, InputProps, Menu, MenuButton, MenuItem, MenuList, useToast } from '@chakra-ui/react';
 import { useEffect, useRef, useState } from 'react';
 
 import { getLogger, Logger, UserProfileService, UserProfilePublicTuple, UserIdentifier } from '@ureeka-notebook/web-service';
@@ -9,13 +9,13 @@ import { UserProfileListItem } from 'user/component/UserProfileListItem';
 const log = getLogger(Logger.USER);
 
 // ********************************************************************************
-interface Props {
+interface Props extends Omit<InputProps, 'onSelect'> {
   ignoreUserIds: Set<UserIdentifier>;
   disabled?: boolean;
 
   onSelect: (userProfile: UserProfilePublicTuple) => void;
 }
-export const TypeaheadUserProfile: React.FC<Props> = ({ onSelect, disabled = false, ignoreUserIds }) => {
+export const TypeaheadUserProfile: React.FC<Props> = ({ onSelect, disabled = false, ignoreUserIds, ...props }) => {
   // == State =====================================================================
   const [isMenuOpen, setIsMenuOpen] = useState(false/*by contract*/);
   const [inputValue, setInputValue] = useState(''/*empty string as default value*/);
@@ -155,7 +155,17 @@ export const TypeaheadUserProfile: React.FC<Props> = ({ onSelect, disabled = fal
   // == UI ========================================================================
   return (
     <Box width='full'>
-      <Input ref={inputRef} value={inputValue} disabled={disabled} variant='filled' width='full' marginRight={4} onChange={handleInputChange} onKeyDown={handleInputKeydown} />
+      <Input
+        {...props}
+        ref={inputRef}
+        value={inputValue}
+        disabled={disabled}
+        variant='filled'
+        width='full'
+        marginRight={4}
+        onChange={handleInputChange}
+        onKeyDown={handleInputKeydown}
+      />
       <Menu isOpen={isMenuOpen && filteredProfiles.length > 0} onClose={closeMenu}>
         <MenuButton display='hidden'/>
         <MenuList ref={menuListRef} width='full' onKeyDown={handleMenuListKeydown}>

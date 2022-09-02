@@ -10,8 +10,8 @@ import { paginatedArray } from '../util/observablePaginatedArray';
 import { Scrollable, scrollableQuery } from '../util/observableScrolledCollection';
 import { getUserId } from '../util/user';
 import { labelPublishedQuery, labelQuery } from './datastore';
-import { labelCreate, labelDelete, labelNotebookAdd, labelNotebookRemove, labelNotebookReorder, labelShare, labelUpdate } from './function';
-import { labelById$, labelNotebookPublishedIds$, labelNotebookIds$, labelOnceById$, labelPublishedById$, labelPublishedOnceById$, labelPublishedsQuery$, labelsQuery$, notebookLabels$ } from './observable';
+import { labelCreate, labelDelete, labelNotebookAdd, labelNotebookRemove, labelNotebookReorder, labelShare, labelNotebookUpdate, labelUpdate } from './function';
+import { labelById$, labelNotebookPublishedIds$, labelNotebookIds$, labelOnceById$, labelPublishedById$, labelPublishedOnceById$, labelPublishedsQuery$, labelsQuery$, notebookLabels$, typeaheadFindLabels$ } from './observable';
 import { Label_Create, Label_Update, LabelFilter, LabelPublishedFilter } from './type';
 
 const log = getLogger(ServiceLogger.LABEL);
@@ -60,8 +60,9 @@ export class LabelService {
    *        Creator of the {@link Label} or listed as one of the {@link Label#viewers}
    *        or {@link Label#editors}.
    * @param pageSize the number of Notebooks returned per batch
-   * @returns {@link Pagination} over the collection of {@link Notebook}s. The
-   *          Observable will have an error thrown if the Label does not exist.
+   * @returns {@link Pagination} over the collection of {@link Notebook}s in the
+   *          order in which they were specified. The Observable will have an error
+   *          thrown if the Label does not exist.
    */
   public onNotebooks(labelId: LabelIdentifier, pageSize: number = LabelService.DEFAULT_PAGE_SIZE): Pagination<NotebookTuple> {
     return paginatedArray(labelNotebookIds$(labelId), notebookIdsToNotebooks$, pageSize,
@@ -70,13 +71,12 @@ export class LabelService {
 
   /**
    * @param notebookId the identifier of the {@link Notebook} for the desired {@link Label}s.
-   *        Only {@link Label}s that are shared with the caller are returned.
+   *        Only {@link Label}s that are *created by* the caller are returned.
    * @returns {@link Observable} over the collection of {@link Label}s. The
    *          Observable will have an error thrown if the Notebook does not exist.
    *          There are at most {@link MAX_LABEL_NOTEBOOKS} Notebooks returned.
    */
-  public onNotebookLabels(notebookId: NotebookIdentifier): Observable<LabelTuple[]> {
-    // NOTE: Assets are currently specific to the User that is logged in
+  public onNotebookLabels$(notebookId: NotebookIdentifier): Observable<LabelTuple[]> {
     const userId = getUserId();
     if(!userId) throw new ApplicationError('functions/permission-denied', 'Cannot access Labels for a Notebook while logged out.');
 
@@ -114,6 +114,21 @@ export class LabelService {
   public onNotebookPublisheds(labelId: LabelIdentifier, pageSize: number = LabelService.DEFAULT_PAGE_SIZE): Pagination<NotebookPublishedTuple> {
     return paginatedArray(labelNotebookPublishedIds$(labelId), notebookPublishedIdsToNotebookPublisheds$, pageSize,
                           `Published Label (${labelId}}) Published Notebooks`);
+  }
+
+  // == Search ====================================================================
+  // -- Typeahead-find Search -----------------------------------------------------
+  /**
+   * @param query a non-blank trimmed Label query prefix for typeahead find-style
+   *        searches
+   * @returns an Observable over zero or more Labels that match the specified prefix
+   *          in lexicographical order. This result is bound to return at most
+   *          {@link MAX_LABEL_SEARCH_RESULTS} results. If the max number are returned
+   *          then it is safe to assume that there are more than the max.
+   * @see #onLabels() using `namePrefix` in the filter
+   */
+  public typeaheadSearchLabels$(query: string): Observable<LabelTuple[]> {
+    return typeaheadFindLabels$(query);
   }
 
   // == Read ======================================================================
@@ -171,13 +186,17 @@ export class LabelService {
   }
 
   /**
-   * @param update the Label that is to be updated. Setting a Label's visibility
-   *        to {@link LabelVisibility#Public} makes it visible to all Users (i.e.
-   *        publish it). Setting a Label's visibility to {@link LabelVisibility#Private}
-   *        makes it visible to only the User who created it. Changing the visibility
-   *        of a Label has *no* effect on the Notebooks that are associated with it
-   *        (e.g. setting a Label to 'public' does *not* publish the associated
-   *        Notebooks).
+   * @param update the Label that is to be updated. The specified update is *merged*
+   *        with the current data. Fields that are specified in the update are
+   *        overwritten with the specified value. If that value is `null` or `undefined`
+   *        then that field is removed. Any fields that are not specified (as
+   *        allowed by the Schema) in the update remain unchanged.
+   *        Setting a Label's visibility to {@link LabelVisibility#Public} makes
+   *        it visible to all Users (i.e. publish it). Setting a Label's visibility
+   *        to {@link LabelVisibility#Private} makes it visible to only the User
+   *        who created it. Changing the visibility of a Label has *no* effect on
+   *        the Notebooks that are associated with it (e.g. setting a Label to
+   *        'public' does *not* publish the associated Notebooks).
    * @throws a {@link ApplicationError}:
    * - `permission-denied` if the caller is not logged in or is not the creator of
    *   the {@link Label}
@@ -216,7 +235,8 @@ export class LabelService {
    *        already associated with the Label then this has no effect (including
    *        that the order is not changed).
    * @throws a {@link ApplicationError}:
-   * - `permission-denied` if the caller is not the creator of the Label
+   * - `permission-denied` if the caller is not the creator of the Label or is not
+   *   at least an editor of the Notebook
    * - `not-found` if the specified {@link LabelIdentifier} does not represent a
    *   known {@link Label} or if the specified {@link NotebookIdentifier} does not
    *   represent a known and non-deleted {@link Notebook}
@@ -224,6 +244,7 @@ export class LabelService {
    *   associated with the Label
    * - `datastore/write` if there was an error associating the Notebook with the Label
    * @see #removeNotebook()
+   * @see #updateLabelsOnNotebook()
    * @see #reorderNotebooks()
    */
   public async addNotebook(labelId: LabelIdentifier, notebookId: NotebookIdentifier) {
@@ -238,15 +259,46 @@ export class LabelService {
    *        the Label or if the Notebook itself doesn't exist or is deleted then
    *        this has no effect or
    * @throws a {@link ApplicationError}:
-   * - `permission-denied` if the caller is not the creator of the Label
+   * - `permission-denied` if the caller is not the creator of the Label or is not
+   *   at least an editor of the Notebook
    * - `not-found` if the specified {@link LabelIdentifier} does not represent a
    *   known {@link Label}
    * - `datastore/write` if there was an error associating the Notebook with the Label
    * @see #addNotebook()
+   * @see #updateLabelsOnNotebook()
    * @see #reorderNotebooks()
    */
   public async removeNotebook(labelId: LabelIdentifier, notebookId: NotebookIdentifier) {
     await labelNotebookRemove({ labelId, notebookId });
+  }
+
+  // ..............................................................................
+  /**
+   * @param notebookId the identifier of the {@link Notebook} whose Labels are to
+   *        be updated to the specified set. If the Notebook doesn't exist or is
+   *        deleted then this has no effect. Any Labels that are not accessible
+   *        by the caller or no longer exist are ignored.
+   * @param labelIds the identifiers of the {@link Label}s that are to be associated
+   *        with the Notebook. If a Label is already associated with the Notebook then
+   *        this has no effect. If a Label is not already associated with the Notebook
+   *        then it is added to the end of the order. Any Labels that are already
+   *        associated with the Notebook but are not in the specified set are removed.
+   *        If a Label is not accessible by the caller or no longer exists then it
+   *        is ignored. Duplicate Label identifiers are ignored. If a Label has the
+   *        maximum number of Notebooks associated with it then it is ignored.
+   * @returns the resulting list of Labels that exist on the Notebook as of this call.
+   *          This is useful to know if any Label identifiers where were invalid,
+   *          not found or duplicated.
+   * @throws a {@link ApplicationError}:
+   * - `permission-denied` if the caller is not at least an editor of the Notebook
+   * - `not-found` if the specified {@link NotebookIdentifier} does not represent a
+   *   known {@link Notebook}
+   * - `datastore/write` if there was an error associating the Notebook with the Label
+   * @see #addNotebook()
+   * @see #removeNotebook()
+   */
+  public async updateLabelsOnNotebook(notebookId: NotebookIdentifier, labelIds: LabelIdentifier[]) {
+    await labelNotebookUpdate({ notebookId, labelIds });
   }
 
   // ..............................................................................

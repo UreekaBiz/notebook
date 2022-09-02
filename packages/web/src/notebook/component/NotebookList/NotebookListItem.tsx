@@ -1,9 +1,16 @@
 import { Box, Flex, IconButton, Link, Menu, MenuButton, MenuItem, MenuList, Text } from '@chakra-ui/react';
 import NextLink from 'next/link';
-import { BsThreeDots } from 'react-icons/bs';
+import { BiPencil } from 'react-icons/bi';
+import { BsGrid, BsThreeDots } from 'react-icons/bs';
+import { FiUsers } from 'react-icons/fi';
 import { HiTrash } from 'react-icons/hi';
+import { MdOutlineRemoveRedEye } from 'react-icons/md';
 
-import { NotebookTuple } from '@ureeka-notebook/web-service';
+import { getNotebookShareCounts, isNotebookCreator, NotebookTuple } from '@ureeka-notebook/web-service';
+
+import { useAuthedUser } from 'authUser/hook/useAuthedUser';
+import { AddToCollectionDialog } from 'label/component/AddToCollectionDialog';
+import { ShareNotebookDialog } from 'notebookEditor/component/ShareNotebookDialog';
 import { notebookRoute } from 'shared/routes';
 import { getMinifiedReadableDate } from 'ui/util';
 
@@ -12,13 +19,26 @@ interface Props {
   notebookTuple: NotebookTuple;
 }
 export const NotebookListItem: React.FC<Props> = ({ notebookTuple }) => {
+  const authedUser = useAuthedUser();
   const { id, obj } = notebookTuple;
+
+  const { editors, viewers } = getNotebookShareCounts(obj);
+
+  const isCreator = authedUser && isNotebookCreator(authedUser.authedUser.userId, obj);
 
   return (
     <Flex alignItems='center'>
-      <Box flex='1 1' >
+      <Box flex='1 1' whiteSpace='nowrap' overflow='hidden' paddingRight={2}>
         <NextLink href={notebookRoute(id)} passHref>
-          <Link color='#222' fontSize='15px' fontWeight={600}>
+          <Link
+            display='block'
+            flex='1 1'
+            color='#444'
+            fontSize='15px'
+            fontWeight={600}
+            textOverflow='ellipsis'
+            overflow='hidden'
+          >
             {obj.name}
           </Link>
         </NextLink>
@@ -27,6 +47,32 @@ export const NotebookListItem: React.FC<Props> = ({ notebookTuple }) => {
           <Text marginLeft={1} color='#999' fontWeight={600}>{getMinifiedReadableDate(obj.updateTimestamp.toDate())}</Text>
         </Flex>
       </Box>
+
+      <ShareNotebookDialog notebook={obj} notebookId={id} component={onClick => (
+        <Box
+          width='34px'
+          color='#BBB'
+          fontSize={12}
+          fontWeight={600}
+          transition='all .2s'
+          _hover={{
+            color: '#999',
+            cursor: 'pointer',
+          }}
+          onClick={onClick}
+        >
+          <Flex alignItems='center' >
+            <BiPencil/>
+            <Text marginLeft={1}>{editors}</Text>
+          </Flex>
+          <Flex alignItems='center'>
+            <MdOutlineRemoveRedEye />
+            <Text marginLeft={1}>{viewers}</Text>
+          </Flex>
+        </Box>
+        )}
+      />
+
       <Menu>
         <MenuButton
           as={IconButton}
@@ -37,6 +83,20 @@ export const NotebookListItem: React.FC<Props> = ({ notebookTuple }) => {
           borderRadius='100px'
         />
         <MenuList>
+          <ShareNotebookDialog notebook={obj} notebookId={id} component={onClick => (
+            <MenuItem disabled icon={<FiUsers />} onClick={onClick}>
+              Share
+            </MenuItem>
+            )}
+          />
+          {isCreator && (
+            <AddToCollectionDialog notebook={obj} notebookId={id} component={onClick => (
+              <MenuItem disabled icon={<BsGrid />} onClick={onClick}>
+                Add to collection
+              </MenuItem>
+              )}
+            />
+          )}
           <MenuItem disabled icon={<HiTrash />}>
             Delete (Disabled!)
           </MenuItem>

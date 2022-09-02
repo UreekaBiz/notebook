@@ -81,7 +81,7 @@ export const convertJSONContentToHTML = (node: JSONNode, state: RendererState, l
     if(text.at(text.length - 1) === '\n' && lastChild/*only add break line if it's last child*/) return `${text}<br class="ProseMirror-trailingBreak">`;
 
     return text;
-  } // else -- is not text node
+  } /* else -- is not text node */
 
   // gets the direct children Nodes using the Node content. An empty string is
   // equivalent to having no content when rendering the HTML.
@@ -90,7 +90,7 @@ export const convertJSONContentToHTML = (node: JSONNode, state: RendererState, l
   let nodeContent;
   // in the case that the Node is a Node View Renderer let the Node renderer use
   // its own render function to render the Node and its children.
-  if(nodeRendererSpec.isNodeViewRenderer){
+  if(nodeRendererSpec.isNodeViewRenderer) {
     nodeContent = nodeRendererSpec.renderNodeView(node.attrs ?? {/*empty attributes*/}, children, state);
   } else {
     // NOTE: in the Editor, a paragraph with no content is displayed as having a

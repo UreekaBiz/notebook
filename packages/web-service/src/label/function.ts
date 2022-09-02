@@ -1,6 +1,6 @@
 import { httpsCallable } from 'firebase/functions';
 
-import { LabelCreate_Rest, LabelDelete_Rest, LabelIdentifier, LabelNotebookAdd_Rest, LabelNotebookRemove_Rest, LabelNotebookReorder_Rest, LabelShare_Rest, LabelUpdate_Rest, NotebookIdentifier } from '@ureeka-notebook/service-common';
+import { LabelCreate_Rest, LabelDelete_Rest, LabelIdentifier, LabelNotebookAdd_Rest, LabelNotebookLabelsUpdate_Rest, LabelNotebookRemove_Rest, LabelNotebookReorder_Rest, LabelShare_Rest, LabelUpdate_Rest, NotebookIdentifier } from '@ureeka-notebook/service-common';
 
 import { functions } from '../util/firebase';
 import { wrapHttpsCallable } from '../util/function';
@@ -14,6 +14,8 @@ export const labelDelete = wrapHttpsCallable<LabelDelete_Rest>(httpsCallable(fun
 // -- Notebook --------------------------------------------------------------------
 export const labelNotebookAdd = wrapHttpsCallable<LabelNotebookAdd_Rest>(httpsCallable(functions, 'labelNotebookAdd'));
 export const labelNotebookRemove = wrapHttpsCallable<LabelNotebookRemove_Rest>(httpsCallable(functions, 'labelNotebookRemove'));
+
+export const labelNotebookUpdate = wrapHttpsCallable<LabelNotebookLabelsUpdate_Rest, LabelIdentifier[]>(httpsCallable(functions, 'labelNotebookUpdate'));
 
 export const labelNotebookReorder = wrapHttpsCallable<LabelNotebookReorder_Rest, NotebookIdentifier[]>(httpsCallable(functions, 'labelNotebookReorder'));
 
