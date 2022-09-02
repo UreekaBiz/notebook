@@ -18,13 +18,16 @@ interface Props {
 
   type: 'create' | 'edit';
 
+  /** whether the modal should exists in the DOM even if it's closed */
+  keepMounted?: boolean;
+
   /** component to be used to open the Dialog. This component received the onClick
    *  handler that should be passed as a prop to the actual component. If no
    *  component is provided a default button is used.*/
   component?: (onClick: () => void) => React.ReactElement;
 }
 // == Component ===================================================================
-export const CollectionDialog: React.FC<Props> = ({ component, label, labelId, type }) => {
+export const CollectionDialog: React.FC<Props> = ({ component, label, labelId, type, keepMounted }) => {
   const toast = useToast();
   const isMounted = useIsMounted();
 
@@ -166,7 +169,7 @@ export const CollectionDialog: React.FC<Props> = ({ component, label, labelId, t
         </Button>
       )}
 
-      <Modal isOpen closeOnEsc closeOnOverlayClick size='xl' onClose={handleClose} >
+      <Modal isOpen={keepMounted || isModalOpen} closeOnEsc closeOnOverlayClick size='xl' onClose={handleClose} >
         {isModalOpen && (
         <>
           <ModalOverlay />
@@ -277,7 +280,7 @@ export const CollectionDialog: React.FC<Props> = ({ component, label, labelId, t
         )}
       </Modal>
 
-      <Modal isOpen closeOnEsc closeOnOverlayClick onClose={handleAYSClose}>
+      <Modal isOpen={keepMounted || isAYSOpen } closeOnEsc closeOnOverlayClick onClose={handleAYSClose}>
         {isAYSOpen && (
         <>
           <ModalOverlay />
