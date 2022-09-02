@@ -11,6 +11,8 @@ import { useAsyncStatus, useIsMounted } from 'shared/hook';
 const log = getLogger(Logger.NOTEBOOK);
 
 // ********************************************************************************
+// NOTE: Don't forget to update EditCollectionDialog when making changes in
+///      CollectionDialog since they must be in sync.
 // == Type ========================================================================
 interface Props {
   /** component to be used to open the Dialog. This component received the onClick

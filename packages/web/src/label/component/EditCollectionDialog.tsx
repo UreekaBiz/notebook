@@ -2,7 +2,7 @@ import { useToast, Box, Button, Checkbox, Flex, Input, Modal, ModalBody, ModalCl
 import { useState, ChangeEventHandler } from 'react';
 import { BsGrid } from 'react-icons/bs';
 
-import { getLogger, isBlank, Label, LabelIdentifier, LabelService, LabelVisibility, Logger } from '@ureeka-notebook/web-service';
+import { getLogger, isBlank, Label, LabelDescriptionMaxLength, LabelIdentifier, LabelNameMaxLength, LabelService, LabelVisibility, Logger } from '@ureeka-notebook/web-service';
 
 import { getReadableLabelVisibility } from 'label/type';
 import { useAsyncStatus, useIsMounted } from 'shared/hook';
@@ -11,6 +11,8 @@ import { useAsyncStatus, useIsMounted } from 'shared/hook';
 const log = getLogger(Logger.NOTEBOOK);
 
 // ********************************************************************************
+// NOTE: Don't forget to update EditCollectionDialog when making changes in
+///      CollectionDialog since they must be in sync.
 // == Type ========================================================================
 interface Props {
   labelId: LabelIdentifier;
@@ -48,11 +50,8 @@ export const EditCollectionDialog: React.FC<Props> = ({ component, label, labelI
 
   // == Handler ===================================================================
   const resetState = () => {
-    // Reset initial value
-    setName(''/*initial value*/);
-    setVisibility(LabelVisibility.Private/*default by contract*/);
-    setDescription(''/*initial value*/);
-    setIsOrdered(false/*default by contract*/);
+    // NOTE: No need to reset state since the modal keeps the initial values for the
+    //       states. This function still exists to keep CollectionDialog in sync.
   };
 
   // -- Modal handlers ------------------------------------------------------------
@@ -68,7 +67,9 @@ export const EditCollectionDialog: React.FC<Props> = ({ component, label, labelI
 
   // .. Input handlers ............................................................
   const handleTitleChange: ChangeEventHandler<HTMLInputElement> = (event) => {
-    setName(event.target.value);
+    // crops the value into the allowed length.
+    const value = event.target.value.slice(0, LabelNameMaxLength);
+    setName(value);
   };
 
   const handleVisibilityChange: ChangeEventHandler<HTMLSelectElement> = (event) => {
@@ -76,7 +77,9 @@ export const EditCollectionDialog: React.FC<Props> = ({ component, label, labelI
   };
 
   const handleDescriptionChange: ChangeEventHandler<HTMLTextAreaElement> = (event) => {
-    setDescription(event.target.value);
+    // crops the value into the allowed length.
+    const value = event.target.value.slice(0, LabelDescriptionMaxLength);
+    setDescription(value);
   };
 
   const handleOrderedChange: ChangeEventHandler<HTMLInputElement> = (event) => {
