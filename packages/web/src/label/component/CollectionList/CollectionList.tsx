@@ -135,14 +135,6 @@ export const CollectionList = () => {
             <option value={LabelVisibility.Public}>Public</option>
             <option value={LabelVisibility.Private}>Private</option>
           </Select>
-
-          <Button
-            size='xs'
-            variant='ghost'
-            onClick={handleMoreClick}
-          >
-            {scrollable?.isExhausted() ? 'Exhausted' : 'More!'}
-          </Button>
         </Flex>
 
         <Flex alignItems='center'>
@@ -161,6 +153,16 @@ export const CollectionList = () => {
       <Divider borderColor='gray.200' marginBottom={2}/>
 
       {content}
+
+      <Flex marginTop={5} justifyContent='center'>
+        <Button
+          size='xs'
+          variant='ghost'
+          onClick={handleMoreClick}
+        >
+          {scrollable?.isExhausted() ? 'Exhausted' : 'More!'}
+        </Button>
+      </Flex>
     </Box>
   );
 };
