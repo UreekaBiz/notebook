@@ -76,7 +76,7 @@ export const NotebookListItem: React.FC<Props> = ({ notebookTuple }) => {
                 width='4px'
                 height='4px'
                 marginX={1}
-                background='currentColor'
+                background='#BBB'
                 borderRadius='4px'
               />
 
