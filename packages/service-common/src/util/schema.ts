@@ -93,21 +93,29 @@ export const validateData = (data: any, schema: AnySchema<any>, consoleLog: bool
 
 // == Convenience =================================================================
 // -- Strings ---------------------------------------------------------------------
+export const STRING_V_LONG = 1024 * 10;
 export const stringVLongSchema = string()
     .trim()
-    .max(1024 * 10);
+    .max(STRING_V_LONG);
 
+export const STRING_LONG = 1024 * 2;
 export const stringLongSchema = string()
     .trim()
-    .max(1024 * 2);
+    .max(STRING_LONG);
 
+export const STRING_MED = 1024;
 export const stringMedSchema = string()
     .trim()
-    .max(1024);
+    .max(STRING_MED);
 
+export const STRING_SHORT = 255;
 export const stringShortSchema = string()
     .trim()
-    .max(255);
+    .max(STRING_SHORT);
+
+export const stringSchema = (length: number) => string()
+     .trim()
+     .max(length);
 
 // -- Email -----------------------------------------------------------------------
 export const emailSchema = stringMedSchema/*bounded length for sanity*/
