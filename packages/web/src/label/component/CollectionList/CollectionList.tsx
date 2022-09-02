@@ -154,7 +154,7 @@ export const CollectionList = () => {
 
       {content}
 
-      <Flex marginTop={5} justifyContent='center'>
+      <Flex justifyContent='center' marginTop={5} >
         <Button
           size='xs'
           variant='ghost'
