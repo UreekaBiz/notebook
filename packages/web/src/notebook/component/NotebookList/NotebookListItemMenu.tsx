@@ -88,6 +88,7 @@ export const NotebookListItemMenu: React.FC<Props> = ({ notebookTuple }) => {
           variant='ghost'
           size='sm'
           borderRadius='100px'
+          color='#999'
         />
         <MenuList>
           <ShareNotebookDialog notebook={obj} notebookId={id} component={onClick => (

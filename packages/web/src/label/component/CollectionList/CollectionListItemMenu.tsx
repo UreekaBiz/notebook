@@ -85,6 +85,7 @@ export const CollectionListItemMenu: React.FC<Props> = ({ labelTuple }) => {
           variant='ghost'
           size='sm'
           borderRadius='100px'
+          color='#999'
         />
         <MenuList>
           <CollectionDialog type='edit' labelId={id} label={obj} component={(onClick) => (
