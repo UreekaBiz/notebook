@@ -68,7 +68,7 @@ function SettingsPage() {
   // == UI ========================================================================
   return (
     <Box>
-      <Text>Settings</Text>
+      <Text color='#999' fontSize='14px' fontWeight='600'>Settings</Text>
       <Heading marginBottom={4}>General</Heading>
       <SettingsForm initialValues={initialValues} status={status} onSubmit={handleSubmit} />
     </Box>

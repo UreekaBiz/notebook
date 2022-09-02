@@ -1,12 +1,17 @@
-import { Box, Flex, Heading, Text, useToast } from '@chakra-ui/react';
+import { Box, Button, Flex, Heading, Text, useToast } from '@chakra-ui/react';
 import { useRouter } from 'next/router';
 import { useEffect, useState } from 'react';
+import { BiPencil } from 'react-icons/bi';
+import { HiLockClosed } from 'react-icons/hi';
+import { TbWorld } from 'react-icons/tb';
 
-import { getLogger, Label, LabelIdentifier, LabelService, Logger, ObjectTuple } from '@ureeka-notebook/web-service';
+import { getLogger, Label, LabelIdentifier, LabelService, LabelVisibility, Logger, ObjectTuple } from '@ureeka-notebook/web-service';
 
 import { RequiredAuthUserWrapper } from 'authUser/RequiredAuthUserWrapper';
 import { WrappedPage } from 'core/wrapper';
 import { CollectionNotebookList } from 'label/component/CollectionNotebookList';
+import { CollectionDialog } from 'label/component/CollectionDialog';
+import { getReadableLabelVisibility } from 'label/type';
 import { LabelServiceWrapper } from 'label/LabelServiceWrapper';
 import { NotebookServiceWrapper } from 'notebook/NotebookServiceWrapper';
 import { Loading } from 'shared/component/Loading';
@@ -86,6 +91,12 @@ function CollectionIdPage() {
 
   return (
     <Box>
+      <Flex alignItems='center' color='#CCC' fontSize='14px' fontWeight='600'>
+        {label.obj.visibility === LabelVisibility.Public ? <TbWorld /> : <HiLockClosed />}
+        <Text marginLeft={1} color='#999' fontWeight={600}>
+          {getReadableLabelVisibility(label.obj.visibility)}
+        </Text>
+      </Flex>
       <Flex alignItems='center' justifyContent='space-between' width='full' marginBottom={4}>
         <Heading
           flex='1 1'
@@ -101,7 +112,24 @@ function CollectionIdPage() {
         >
           {label.obj.name}
         </Heading>
+        <CollectionDialog labelId={label.id} label={label.obj} type='edit' component={(onClick) => (
+          <Button
+            size='md'
+            variant='ghost'
+            colorScheme='gray'
+            onClick={onClick}
+            leftIcon={<BiPencil size={18} />}
+          >
+            Edit
+          </Button>
+        )}
+        />
       </Flex>
+      {label.obj.description && (
+        <Box maxWidth='80%' marginTop={-2} marginBottom={2} color='#999'  fontSize='16px' fontWeight='500'>
+          {label.obj.description}
+        </Box>
+      )}
       <CollectionNotebookList labelId={collectionId} />
     </Box>
   );
