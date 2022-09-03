@@ -174,6 +174,8 @@ export const deleteNotebook = async (userId: UserIdentifier, notebookId: Noteboo
     throw new ApplicationError('datastore/write', `Error deleting Notebook (${notebookId}) for User (${userId}). Reason: `, error);
   }
 
+  // FIXME: unpublish any published versions of the Notebook
+
   // remove associated Hashtags and Labels
   // CHECK: move to on-delete Notebook trigger for end-User performance / responsiveness?
   await updateHashtagOccurrences(undefined/*none added*/, result.hashtagsRemoved)/*logs on error*/;
