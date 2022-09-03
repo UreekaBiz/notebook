@@ -156,6 +156,9 @@ export const deleteNotebook = async (userId: UserIdentifier, notebookId: Noteboo
       if(existingNotebook.createdBy !== userId) throw new ApplicationError('functions/permission-denied', `Cannot delete Notebook (${notebookId}) not created by User (${userId}).`);
       if(existingNotebook.deleted) throw new ApplicationError('data/deleted', `Cannot delete already deleted Notebook (${notebookId}) for User (${userId}).`);
 
+      // CHECK: should this force the editors and viewers list to be culled?
+      //        Gut says 'yes' to reduce the 'attack surface' of a deleted Notebook.
+      //        (Undeleting it would leave it in a 'raw' state which is likely fine.)
       const notebook: Notebook_Delete = {
         deleted: true/*by definition*/,
 
