@@ -4,6 +4,7 @@ import { extractDocumentName, isNotebookRole, setChange, DocumentNodeType, Noteb
 
 import { firestore } from '../firebase';
 import { updateHashtagOccurrences } from '../hashtag/hashtagSummary';
+import { removeNotebookFromAllLabels } from '../label/labelNotebook';
 import { ApplicationError } from '../util/error';
 import { getSnapshot, ServerTimestamp } from '../util/firestore';
 import { notebookCollection, notebookDocument } from './datastore';
@@ -170,6 +171,8 @@ export const deleteNotebook = async (userId: UserIdentifier, notebookId: Noteboo
     throw new ApplicationError('datastore/write', `Error deleting Notebook (${notebookId}) for User (${userId}). Reason: `, error);
   }
 
-  // remove associated Hashtags
+  // remove associated Hashtags and Labels
+  // CHECK: move to on-delete Notebook trigger for end-User performance / responsiveness?
   await updateHashtagOccurrences(undefined/*none added*/, result.hashtagsRemoved)/*logs on error*/;
+  await removeNotebookFromAllLabels(userId, notebookId)/*logs on error*/;
 };

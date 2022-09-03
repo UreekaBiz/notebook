@@ -1,7 +1,7 @@
 import { DocumentReference, Transaction } from 'firebase-admin/firestore';
 import { logger } from 'firebase-functions';
 
-import { setChange, LabelIdentifier, LabelNotebook_Update, Label_Storage, NotebookIdentifier, Notebook_Storage, UserIdentifier, MAX_LABEL_NOTEBOOKS } from '@ureeka-notebook/service-common';
+import { setChange, LabelIdentifier, LabelNotebook_Update, Label_Storage, NotebookIdentifier, Notebook_Storage, SystemUserId, UserIdentifier, MAX_LABEL_NOTEBOOKS } from '@ureeka-notebook/service-common';
 
 import { firestore } from '../firebase';
 import { notebookDocument } from '../notebook/datastore';
@@ -92,6 +92,52 @@ export const removeNotebook = async (
   }
 
   // NOTE: on-write trigger clones the Published Label
+};
+
+// -- Remove All ------------------------------------------------------------------
+// NOTE: logs on error since a dependent function
+export const removeNotebookFromAllLabels = async (
+  userId: UserIdentifier, notebookId: NotebookIdentifier
+) => {
+  try {
+    const notebookRef = notebookDocument(notebookId) as DocumentReference<Notebook_Storage>;
+    await firestore.runTransaction(async transaction => {
+      // if the Notebook exists then ensure that the User created it (by contract)
+      // NOTE: the associated Notebook *may no longer exist* (therefore no check
+      //       is made). This is a potential security hole since the User could
+      //       remove a Notebook from a Label that they don't have access to. But
+      //       since the Notebook is no longer accessible assume this is for cleanup
+      const notebookSnapshot = await transaction.get(notebookRef);
+      if(notebookSnapshot.exists) {
+        const notebook = notebookSnapshot.data()!;
+        if(notebook.createdBy !== userId) throw new ApplicationError('functions/permission-denied', `Cannot remove Notebook (${notebookId}) from all Labels not created by User (${userId}).`);
+      } else { /*the Notebook no longer exists*/
+        // log for sanity / forensics
+        logger.info(`Notebook (${notebookId}) no longer exists and attempting to remove it from all Labels for User (${userId}).`);
+      }
+
+      // find all Labels that have the Notebook associated with them
+      const labelSnapshots = await transaction.get(notebookLabelsQuery(notebookId));
+      if(labelSnapshots.empty) return/*no Labels associated with the Notebook so nothing to do*/;
+
+      // remove the Notebook from each Label
+      // NOTE: this explicitly does *not* check if the User created the Label since
+      //       the Notebook is going away. In other words, the alterative is to
+      //       leave now-deleted Notebooks associated the Label which will lead to
+      //       data integrity issues.
+      // NOTE: this uses the System User in the case where the Label is not owned
+      //       by the calling User so that a non-owner is never shown as an updater
+      //       of a Label.
+      labelSnapshots.forEach(snapshot => {
+        const label = snapshot.data();
+        const removeUserId = (label.createdBy === userId) ? userId : SystemUserId/*by contract*/;
+        removeLabelNotebook(transaction, snapshot.ref, removeUserId, notebookId);
+      });
+    });
+  } catch(error) {
+    // NOTE: logs by contract
+    logger.error(`Error removing Notebook (${notebookId}) from all Labels for User (${userId}). Reason: `, error);
+  }
 };
 
 // ................................................................................
