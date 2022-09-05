@@ -62,7 +62,9 @@ export class LabelService {
    * @param pageSize the number of Notebooks returned per batch
    * @returns {@link Pagination} over the collection of {@link Notebook}s in the
    *          order in which they were specified. The Observable will have an error
-   *          thrown if the Label does not exist.
+   *          thrown if the Label does not exist. The collection *may* contain
+   *          Notebooks that are no longer visible to the caller. The collection
+   *          never contains deleted Notebooks.
    */
   public onNotebooks(labelId: LabelIdentifier, pageSize: number = LabelService.DEFAULT_PAGE_SIZE): Pagination<NotebookTuple> {
     return paginatedArray(labelNotebookIds$(labelId), notebookIdsToNotebooks$, pageSize,
@@ -233,7 +235,8 @@ export class LabelService {
    *        associated with the Label. The Notebook is added to the end of the
    *        order if it not already associated with the Label. If the Notebook is
    *        already associated with the Label then this has no effect (including
-   *        that the order is not changed).
+   *        that the order is not changed). The Notebook does not need to be visible
+   *        to the User to be added to the Label.
    * @throws a {@link ApplicationError}:
    * - `permission-denied` if the caller is not the creator of the Label or is not
    *   at least an editor of the Notebook
@@ -276,23 +279,22 @@ export class LabelService {
   /**
    * @param notebookId the identifier of the {@link Notebook} whose Labels are to
    *        be updated to the specified set. If the Notebook doesn't exist or is
-   *        deleted then this has no effect. Any Labels that are not accessible
-   *        by the caller or no longer exist are ignored.
+   *        deleted then this has no effect. The Notebook doesn't need to be visible
+   *        to the User to be updated.
    * @param labelIds the identifiers of the {@link Label}s that are to be associated
    *        with the Notebook. If a Label is already associated with the Notebook then
    *        this has no effect. If a Label is not already associated with the Notebook
    *        then it is added to the end of the order. Any Labels that are already
    *        associated with the Notebook but are not in the specified set are removed.
-   *        If a Label is not accessible by the caller or no longer exists then it
-   *        is ignored. Duplicate Label identifiers are ignored. If a Label has the
-   *        maximum number of Notebooks associated with it then it is ignored.
+   *        The Label must be created by the User otherwise it is ignored. Duplicate
+   *        Label identifiers are ignored. If a Label has the maximum number of
+   *        Notebooks associated with it then it is ignored.
    * @returns the resulting list of Labels that exist on the Notebook as of this call.
    *          This is useful to know if any Label identifiers where were invalid,
    *          not found or duplicated.
    * @throws a {@link ApplicationError}:
-   * - `permission-denied` if the caller is not at least an editor of the Notebook
    * - `not-found` if the specified {@link NotebookIdentifier} does not represent a
-   *   known {@link Notebook}
+   *   known {@link Notebook} that has not been deleted
    * - `datastore/write` if there was an error associating the Notebook with the Label
    * @see #addNotebook()
    * @see #removeNotebook()
@@ -310,7 +312,8 @@ export class LabelService {
    *        means that this operation can be used to both reorder as well as add
    *        and remove Notebooks. Any identifier that does not represent a known
    *        Notebook is silently ignored. If any identifier is duplicated then
-   *        the first occurrence (in its position) is used.
+   *        the first occurrence (in its position) is used. A Notebook does not need
+   *        to be visible to the User to be reordered.
    * @returns the resulting ordered list of Notebooks. This is useful to know if
    *          any Notebook identifiers where were invalid, not found or duplicated.
    * @throws a {@link ApplicationError}:

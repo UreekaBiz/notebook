@@ -12,13 +12,13 @@ Labels are *not* uniquely named -- meaning that two different Labels may have th
 
 ## Visibility
 
-Labels can be either Public or Private. Public Labels are visible to any User on the internet (via either the Creator's homepage or a Published Notebook associated with the Label). Private Labels are only visible to the creator (`createdBy`). Making a Label Public or Private has no impact on the Notebooks associated with that Label. (Specifically, making a Label Public does *not* Publish unpublished Notebooks associated with the Label nor does making a Label Private unpublish any Published Notebooks.)
+Labels can be either Public or Private. Public Labels are visible to any User on the internet (via either the Creator's homepage or a Published Notebook associated with the Label). Private Labels are only visible to the creator (`createdBy`) of that Label. Making a Label Public or Private has no impact on the Notebooks associated with that Label. (Specifically, making a Label Public does *not* Publish unpublished Notebooks associated with the Label nor does making a Label Private unpublish any Published Notebooks.)
 
 In keeping with Notebook's notion of 'Published', a Public Label is considered to be Published.
 
 ## Permissions
 
-Permissions associated with Labels affect the Notebooks associated with the Label and not the Label itself. Specifically, if a User is in the list of Editors then that does *not* mean that that User can edit the Label itself. (Think about if there should be two different sets of Permissions.)
+Permissions associated with Labels *WILL* (future requirement / functionality) affect the Notebooks associated with the Label and not the Label itself. Specifically, if a User is in the list of Editors then that does *not* mean that that User can edit the Label itself. (Think about if there should be two different sets of Permissions.)
 
 ## Notebooks
 
@@ -26,7 +26,13 @@ Zero or more Notebooks may be associated with a Label. Notebooks are ordered in 
 
 Labels that are Public are associated with only those Notebooks that are associated with the Label that are Published. If an associated Notebook is unpublished then that Notebook is removed from the _Published_ Label's collection of Notebooks (but it remains in the Label's ordered collection).
 
-### Notebook Permissions
+### Notebook Visibility
+
+Due to the fact that view-ability (the Share state) of a Notebook is fluid, a User that has no visibility to a Notebook *may* add that Notebook to a Label. More specifically (since there would be no way for a User that cannot view a Notebook to know about the presence of that Notebook), if a User can view a Notebook and adds that Notebook to a Label then later the User loses that visibility then the Notebook will still be in the list of Notebooks associated with the Label. This allows for the case where the User then later regains visibility to that Notebook then the Notebook will be associated with the Label.
+
+Note: the only case that needs to be addressed is that there is an upper-bound on the number of Notebooks associated with Labels. If those slots are being taken up by Notebooks that are not visible to the User then the User should be notified in some way (e.g. via a "Notebook not accessible" indicator?) so that they can remove the Notebook from the Label.
+
+### Notebook Permissions (Future)
 
 Labels have Notebook permissions are associated with them. Editor takes precedence over Viewer. Permissions are determined by looking at the permissions on the Notebook itself as well as the set of all LabelNotebooks to which the Notebook is associated.
 

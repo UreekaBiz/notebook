@@ -31,14 +31,15 @@ export const addNotebook = async (
       if(label.notebookIds.length >= MAX_LABEL_NOTEBOOKS) throw new ApplicationError('functions/invalid-argument', `Cannot add Notebook (${notebookId}) to Label (${labelId}) since it already has the maximum number of Notebooks (${MAX_LABEL_NOTEBOOKS}).`);
 
       // ensure that the associated Notebook exists and is not deleted (by contract)
+      // NOTE: intentionally *not* checking if the Notebook is at least viewable by
+      //       the User (by contract)
+      // SEE: Label#notebookIds
       const notebookSnapshot = await transaction.get(notebookRef);
       if(!notebookSnapshot.exists) throw new ApplicationError('functions/not-found', `Cannot add a non-existing Notebook (${notebookId}) to a Label (${labelId}) for User (${userId}).`);
       const notebook = notebookSnapshot.data()!;
       if(notebook.deleted) throw new ApplicationError('functions/not-found', `Cannot add a non-existing Notebook (${notebookId}) to a Label (${labelId}) for User (${userId}).`);
 
       addLabelNotebook(transaction, labelRef, userId, notebookId);
-
-      // FIXME: update Notebook's permissions based on the Label's permissions
     });
   } catch(error) {
     if(error instanceof ApplicationError) throw error;
@@ -81,10 +82,11 @@ export const removeNotebook = async (
       if(!label.notebookIds.includes(notebookId)) return/*not associated*/;
 
       // NOTE: the associated Notebook *may no longer exist* (therefore no check is made)
+      // NOTE: the same is true about the fact that the Notebook may no longer be
+      //       viewable by the caller
+      // SEE: Label#notebookIds
 
       removeLabelNotebook(transaction, labelRef, userId, notebookId);
-
-      // FIXME: update Notebook's permissions based on the Label's permissions
     });
   } catch(error) {
     if(error instanceof ApplicationError) throw error;
@@ -100,21 +102,11 @@ export const removeNotebookFromAllLabels = async (
   userId: UserIdentifier, notebookId: NotebookIdentifier
 ) => {
   try {
-    const notebookRef = notebookDocument(notebookId) as DocumentReference<Notebook_Storage>;
     await firestore.runTransaction(async transaction => {
-      // if the Notebook exists then ensure that the User created it (by contract)
-      // NOTE: the associated Notebook *may no longer exist* (therefore no check
-      //       is made). This is a potential security hole since the User could
-      //       remove a Notebook from a Label that they don't have access to. But
-      //       since the Notebook is no longer accessible assume this is for cleanup
-      const notebookSnapshot = await transaction.get(notebookRef);
-      if(notebookSnapshot.exists) {
-        const notebook = notebookSnapshot.data()!;
-        if(notebook.createdBy !== userId) throw new ApplicationError('functions/permission-denied', `Cannot remove Notebook (${notebookId}) from all Labels not created by User (${userId}).`);
-      } else { /*the Notebook no longer exists*/
-        // log for sanity / forensics
-        logger.info(`Notebook (${notebookId}) no longer exists and attempting to remove it from all Labels for User (${userId}).`);
-      }
+      // NOTE: *no* check is made to ensure that the Notebook exists, is not deleted
+      //       or is still viewable by the User. This is simply a data-integrity
+      //       step and the caller has already ensured that the Notebook is owned
+      //       by the caller.
 
       // find all Labels that have the Notebook associated with them
       const labelSnapshots = await transaction.get(notebookLabelsQuery(notebookId));
@@ -164,6 +156,7 @@ export const removeAllNotebooks = async (userId: UserIdentifier, labelId: LabelI
 };
 
 // == Update ======================================================================
+// given a Notebook, set the Label's associated with it
 export const updateNotebook = async (
   userId: UserIdentifier,
   notebookId: NotebookIdentifier, labelIds: LabelIdentifier[]
@@ -171,12 +164,13 @@ export const updateNotebook = async (
   try {
     const notebookRef = notebookDocument(notebookId);
     return await firestore.runTransaction(async transaction => {
+      // the Notebook must exists and not be deleted (by contract)
+      // NOTE: no check is made to ensure that the Notebook is viewable by the User
+      //       since it's possible that the Notebook was viewable and has since been
+      //       un-Shared (by contract)
       const notebookSnapshot = await transaction.get(notebookRef);
       if(!notebookSnapshot.exists) throw new ApplicationError('functions/not-found', `Cannot update Labels for a non-existing Notebook (${notebookId}) for User (${userId}).`);
       const notebook = notebookSnapshot.data()!;
-      // FIXME: push down the ability to check the roles of the user specifically to
-      //        be able to check if the User is also an admin
-      if(notebook.createdBy !== userId) throw new ApplicationError('functions/permission-denied', `Cannot update Labels for Notebook (${notebookId}) since not created by User (${userId}).`);
       if(notebook.deleted) throw new ApplicationError('data/deleted', `Cannot update Labels for deleted Notebook (${notebookId}) for User (${userId}).`);
 
       // get all Labels that are currently associated with the Notebook
@@ -244,8 +238,9 @@ export const reorderNotebooks = async (
       const label = snapshot.data()!;
       if(label.createdBy !== userId) throw new ApplicationError('functions/permission-denied', `Cannot reorder Notebooks on Label (${labelId}) not created by User (${userId}).`);
 
-      // FIXME: ensure that each Notebook in the notebookOrder array exists and
-      //        isn't deleted and the User has permissions for it (by contract)
+      // NOTE: explicitly *no* check for for Notebook visibility
+      // FIXME: remove any Notebooks that no longer exist or are (soft) deleted
+      //        to be consistent with #removeNotebookFromAllLabels()
 
       const labelNotebook: LabelNotebook_Update = {
         notebookIds: notebookOrder,
