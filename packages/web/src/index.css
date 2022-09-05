@@ -241,6 +241,17 @@ html body {
   display: none;
 }
 
+@keyframes lazy-shown {
+  0% { opacity: 0; }
+  99% { opacity: 0; }
+  100% { opacity: 1; }
+}
+
+/** hides the element for the given time */
+.lazy-shown {
+  animation-name: lazy-shown;
+}
+
 /* == Fonts ==================================================================== */
 @font-face {
   font-family: 'SourceSerifPro';

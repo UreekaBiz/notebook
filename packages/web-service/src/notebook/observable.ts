@@ -23,11 +23,14 @@ export const notebookTupleById$ = (notebookId: NotebookIdentifier) =>
 
 // .. Id's => Notebooks ...........................................................
 // detail-joins Notebook (filtering out any missing Notebooks)
+// FIXME: do a smarter inner detail lookup that allows for Notebooks to be no
+//        longer visible to the User (i.e. they were un-Shared). Create a union
+//        type that specifically expresses a non-visible Notebook.
 export const notebookIdsToNotebooks$: ArrayObservable<NotebookIdentifier, NotebookTuple> =
   notebookIds =>
       joinDetail$(
         of(notebookIds),
-        notebookId => notebookTupleOnceById$(notebookId),
+        notebookId => notebookTupleOnceById$(notebookId)/*FIXME: see FIXME above -- this will need to be passed the User*/,
         (_, detail) => isTupleNotNull(detail) ? detail : undefined/*not-found -- filtered below*/
       )
       .pipe(map(results => results.filter(isDefined))/*filter out any not-found Notebooks*/);

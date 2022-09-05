@@ -2,12 +2,17 @@ import { Box, Flex, Link, Text } from '@chakra-ui/react';
 import NextLink from 'next/link';
 import { BiPencil } from 'react-icons/bi';
 import { MdOutlineRemoveRedEye } from 'react-icons/md';
+import { TbUser } from 'react-icons/tb';
 
 import { getNotebookShareCounts, NotebookTuple } from '@ureeka-notebook/web-service';
 
+import { useValidatedAuthedUser } from 'authUser/hook/useValidatedAuthedUser';
 import { ShareNotebookDialog } from 'notebookEditor/component/ShareNotebookDialog';
 import { notebookRoute } from 'shared/routes';
 import { getMinifiedReadableDate } from 'ui/util';
+import { useUserProfile } from 'user/hook/useUserProfile';
+import { getPublicDisplayName } from 'user/util';
+
 import { NotebookListItemMenu } from './NotebookListItemMenu';
 
 // ********************************************************************************
@@ -15,9 +20,20 @@ interface Props {
   notebookTuple: NotebookTuple;
 }
 export const NotebookListItem: React.FC<Props> = ({ notebookTuple }) => {
+  const { authedUser: { userId } } = useValidatedAuthedUser();
   const { id, obj } = notebookTuple;
 
   const { editors, viewers } = getNotebookShareCounts(obj);
+
+  // since there can be 'n' Users in the Notebook List list and a limited number of
+  // live subscriptions that can be made, the Users are static (not live)
+  const { status, userProfile } = useUserProfile(obj.createdBy)/*not live*/;
+
+  if(status === 'loading' || status === 'idle' ) return null/*still loading*/;
+
+  const userName = userId === obj.createdBy ? 'You'
+                 : userProfile ? getPublicDisplayName(userProfile)
+                 : 'Deleted User' /** FIXME: Have a default case in which userProfile doesn't exists */;
 
   return (
     <Flex alignItems='center'>
@@ -35,7 +51,37 @@ export const NotebookListItem: React.FC<Props> = ({ notebookTuple }) => {
             {obj.name}
           </Link>
         </NextLink>
-        <Flex color='#AAA' fontSize='13px' fontWeight={500}>
+        <Flex
+          overflow='hidden'
+          alignItems='center'
+          whiteSpace='nowrap'
+          color='#AAA'
+          fontSize='13px'
+          fontWeight={500}
+        >
+          {userProfile && (
+            <>
+              <Box marginRight={1}>
+                <TbUser strokeWidth='4' size={10}/>
+              </Box>
+              <Text
+                textOverflow='ellipsis'
+                overflow='hidden'
+                color='#999'
+                fontWeight={600}
+              >
+                {userName}
+              </Text>
+              <Box
+                width='4px'
+                height='4px'
+                marginX={1}
+                background='#BBB'
+                borderRadius='4px'
+              />
+
+            </>
+          )}
           Edited
           <Text marginLeft={1} color='#999' fontWeight={600}>{getMinifiedReadableDate(obj.updateTimestamp.toDate())}</Text>
         </Flex>

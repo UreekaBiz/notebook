@@ -1,6 +1,7 @@
 import { NodeName } from '@ureeka-notebook/web-service';
 
 import { Toolbar, ToolItem } from 'notebookEditor/toolbar/type';
+import { AddToCollectionToolItem } from './AddToCollectionToolItem';
 
 import { PreviewPublishedNotebookToolItem } from './PreviewPublishedNotebookToolItem';
 import { PublishNotebookButton } from './PublishNotebookButton';
@@ -30,6 +31,15 @@ export const shareNotebookToolItem: ToolItem = {
   component: ShareNotebookToolItem,
 };
 
+// NOTE: this tool item will only be shown to the creator of the Notebook
+// SEE: AddToCollectionToolItem.tsx
+export const addToCollectionToolItem: ToolItem = {
+  name: 'addToCollectionToolItem',
+  toolType: 'component',
+
+  component: AddToCollectionToolItem,
+};
+
 export const setThemeToolItem: ToolItem = {
   toolType: 'component',
   name: 'setThemeToolItem',
@@ -49,6 +59,7 @@ export const DocumentToolbar: Toolbar = {
     ],
     [
       shareNotebookToolItem,
+      addToCollectionToolItem,
     ],
     [
       setThemeToolItem,

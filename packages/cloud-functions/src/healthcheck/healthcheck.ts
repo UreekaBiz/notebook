@@ -55,18 +55,18 @@ const endpointNames = [
   'labelShare',
   'labelUpdate',
 
+  'loggingClient',
+
   'notebookCreate',
   'notebookDelete',
   'notebookHashtag',
   'notebookPublish',
   'notebookShare',
 
-  'notebookEditorInsertNumbers',
-  'notebookEditorInsertText',
   'notebookEditorDemoAsyncNodeExecute',
   'notebookEditorDemo2AsyncNodeExecute',
 
-  'loggingClient',
+  'reactionToggle',
 ];
 
 // ================================================================================

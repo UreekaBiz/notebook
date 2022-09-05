@@ -4,10 +4,9 @@ import { useState, useEffect } from 'react';
 import { getLogger, LabelIdentifier, LabelService, Logger, NotebookTuple, Pagination } from '@ureeka-notebook/web-service';
 
 import { useUserId } from 'authUser/hook/useUserId';
+import { NotebookListItem } from 'notebook/component/NotebookList/NotebookListItem';
 import { Loading } from 'shared/component/Loading';
 import { useAsyncStatus, useIsMounted } from 'shared/hook';
-
-import { CollectionNotebookListItem } from './CollectionNotebookListItem';
 import { PaginationControls } from 'shared/component/PaginationControls';
 
 const log = getLogger(Logger.DEFAULT);
@@ -98,13 +97,19 @@ export const CollectionNotebookList: React.FC<Props> = ({ labelId }) => {
 
     const showingComponent = (
       <Box color='#AAA' fontSize={12} fontWeight='600'>
-        { (pagination.getPageNumber() === 0) ? (<>
-        <Text as='span' color='#666'>0</Text> Notebooks
-        </>) : (startIndex === endIndex) ? (<>
-        Showing <Text as='span' color='#666'>{startIndex}</Text> Notebook
-        </>) : (<>
-        Showing <Text as='span' color='#666'>{startIndex}-{endIndex}</Text> Notebooks
-        </>) }
+        { (pagination.getPageNumber() === 0) ? (
+            <>
+              <Text as='span' color='#666'>0</Text> Notebooks
+            </>
+          ) : (startIndex === endIndex) ? (
+            <>
+              Showing <Text as='span' color='#666'>{startIndex}</Text> Notebook
+            </>
+          ) : (
+            <>
+              Showing <Text as='span' color='#666'>{startIndex}-{endIndex}</Text> Notebooks
+            </>
+        )}
       </Box>
     );
     const paginationControls = (
@@ -134,7 +139,7 @@ export const CollectionNotebookList: React.FC<Props> = ({ labelId }) => {
             </Flex>
           ) : (
             notebookTuples.map((notebookTuple) =>
-              <CollectionNotebookListItem key={notebookTuple.id} notebookTuple={notebookTuple} />
+              <NotebookListItem key={notebookTuple.id} notebookTuple={notebookTuple} />
             )
           )}
         </VStack>

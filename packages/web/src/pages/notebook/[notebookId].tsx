@@ -7,6 +7,7 @@ import { getLogger, NotebookIdentifier, Logger } from '@ureeka-notebook/web-serv
 
 import { RequiredAuthUserWrapper } from 'authUser/RequiredAuthUserWrapper';
 import { WrappedPage } from 'core/wrapper';
+import { LabelServiceWrapper } from 'label/LabelServiceWrapper';
 import { NotebookProvider } from 'notebook/context/NotebookProvider';
 import { useNotebook } from 'notebook/hook/useNotebook';
 import { NotebookServiceWrapper } from 'notebook/NotebookServiceWrapper';
@@ -74,6 +75,6 @@ const InternalNotebookEditorPage: React.FC = () => {
 // --------------------------------------------------------------------------------
 // SEE: core/wrapper.tsx for more information
 const Page: WrappedPage = NotebookEditorPage;
-      Page.wrappers = [RequiredAuthUserWrapper, UserProfileServiceWrapper, NotebookServiceWrapper]/*outer to inner order*/;
+      Page.wrappers = [RequiredAuthUserWrapper, UserProfileServiceWrapper, NotebookServiceWrapper, LabelServiceWrapper]/*outer to inner order*/;
 
 export default Page;

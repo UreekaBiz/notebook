@@ -21,6 +21,7 @@ export enum ServiceLogger {
   LABEL = 'service.label',
   NOTEBOOK = 'service.notebook',
   NOTEBOOK_EDITOR = 'service.notebook_editor'/*separate since can be very noisy*/,
+  REACTION = 'service.reaction',
   USER = 'service.user',
   UTIL = 'service.util',
 }

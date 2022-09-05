@@ -13,5 +13,6 @@ export * from './label';
 export * from './notebook';
 export * from './notebookEditor';
 export * from './logging';
+export * from './reaction';
 export * from './user';
 export * from './util';
