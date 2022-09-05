@@ -31,7 +31,6 @@ export const DragControl: React.FC<Props> = ({ valueWithUnit, direction, onChang
     let newValue = startingValue;
     const handleMouseMove = (event: MouseEvent) => {
       if(!canUpdate.current) return/*not time yet to execute*/;
-// console.log(startingMousePosition);
       canUpdate.current = false;
       setTimeout(() => canUpdate.current = true, 100);
 
