@@ -30,7 +30,7 @@ export class SetHeadingDocumentUpdate implements AbstractDocumentUpdate {
 
     // check if MarkHolder must be added
     if(empty && parent.content.size < 1) {
-      tr.setBlockType(from, to, getHeadingNodeType(schema), { [AttributeType.Id]: generateNodeId() })
+      tr.setBlockType(from, to, getHeadingNodeType(schema), { [AttributeType.Id]: generateNodeId(), [AttributeType.Level]: level })
         .insert(editorState.selection.$anchor.pos, createMarkHolderNode(schema, { storedMarks: stringifyMarksArray([schema.marks[MarkName.BOLD].create()]) }));
       return tr/*updated, nothing left to do*/;
     } /* else -- no need to add MarkHolder */
@@ -47,7 +47,7 @@ export class SetHeadingDocumentUpdate implements AbstractDocumentUpdate {
       return updatedTr/*updated, nothing left to do*/;
     } /* else -- not a toggle or level change, setHeading */
 
-    tr.setBlockType(from, to, getHeadingNodeType(schema), { [AttributeType.Level]: level })
+    tr.setBlockType(from, to, getHeadingNodeType(schema), { [AttributeType.Id]: generateNodeId(), [AttributeType.Level]: level })
       .addMark(from, to, createBoldMark(schema));
 
     const seenIds = new Set<NodeIdentifier>();
