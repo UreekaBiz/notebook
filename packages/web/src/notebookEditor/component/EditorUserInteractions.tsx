@@ -90,6 +90,7 @@ export const EditorUserInteractions = () => {
               linkMarkActive = editor.isActive(MarkName.LINK) || editor.state.doc.rangeHasMark(from, from+1, editor.state.schema.marks[MarkName.LINK]);
         if(linkMarkActive) {
           unsetLinkCommand()(editor.state/*current state*/, editor.view.dispatch);
+          editor.view.focus();
           return/*nothing left to do*/;
         } /* else -- Link Mark not active, add a new one */
         setIsCreatingLink(true);
