@@ -12,7 +12,7 @@ const log = getLogger(ServiceLogger.NOTEBOOK_EDITOR);
 // ********************************************************************************
 // == Read ========================================================================
 // Subscribes to new NotebookVersions
-export const onNewVersion = (callback: (version: NotebookVersion) => void, notebookId: string) => {
+export const onNewVersion = (notebookId: NotebookIdentifier, callback: (version: NotebookVersion) => void) => {
   return onSnapshot(lastVersionQuery(notebookId), async snapshot => {
     // NOTE: for new Notebooks (which have no NotebookVersions), the snapshot is always empty
     if(snapshot.empty) { log.debug(`Empty snapshot while reading new Version for Notebook (${notebookId}).`); return/*nothing to do*/; }

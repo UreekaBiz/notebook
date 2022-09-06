@@ -183,7 +183,7 @@ export class VersionListener {
     // Remove previous subscriptions if any
     this.unsubscribeFirebase();
 
-    const unsubscribe = onNewVersion(this.handleNewVersion.bind(this), this.notebookId);
+    const unsubscribe = onNewVersion(this.notebookId, this.handleNewVersion.bind(this));
     this.firestoreUnsubscribes.push(unsubscribe);
   }
 
@@ -225,7 +225,7 @@ export class VersionListener {
 
   // == Observable ================================================================
   public onPendingWrites$() {
-    // absorb any duplicate states since the listener doesn't care if nothing changed
+    // absorbs any duplicate states since the listener doesn't care if nothing changed
     return this.pendingWrites$
                 .pipe(distinctUntilChanged());
   }
@@ -239,7 +239,7 @@ export class VersionListener {
   // callback from Firestore when a new latest Version (specified) becomes available.
   // This gets all latest Versions (including any new ones that may have appeared)
   // and 'commits' them to the Editor
-  private async handleNewVersion(version: NotebookVersion) {
+  private async handleNewVersion() {
     if(!this.initialized) throw new ApplicationError('functions/internal', `Trying to get Notebook Versions before initialization ${this.logContext()}.`);
     if(!this.initialContentLoaded) throw new ApplicationError('functions/internal', `Trying to get Notebook Versions before initial content is loaded  ${this.logContext()}.`);
 
