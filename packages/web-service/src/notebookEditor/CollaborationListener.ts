@@ -324,11 +324,11 @@ export class CollaborationListener {
       // NOTE: creating a NodeSelection can throw an error if there is no Node to
       //       select. This can happen if the Node was removed.
       try {
+        // update the Selection when the selected Node was replaced with same Node
         const nodeSelection = new NodeSelection(transaction.selection.$anchor);
-        if(getNodeName(nodeSelection.node) !== getNodeName(currentSelection.node)) return/*Node changed -- nothing to do*/;
-
-        // update the Selection
-        transaction.setSelection(nodeSelection);
+        if(getNodeName(nodeSelection.node) === getNodeName(currentSelection.node)) {
+          transaction.setSelection(nodeSelection);
+        } /* else -- not the same Node */
       } catch(error) {
         log.debug('New selection is not a Node Selection anymore. Node was deleted. Ignoring.');
       }
