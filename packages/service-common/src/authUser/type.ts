@@ -71,9 +71,9 @@ export enum PresenceState {
 //       overall presence.
 // SEE: @ureeka-notebook/cloud-functions: authUser/onWrite.ts
 
-export type UserSessions = { /*RTDB only*/
-  readonly [userId: string/*UserIdentifier*/]: UserSession;
-};
+export type UserSessions = Readonly<{ /*RTDB only*/
+  [userId: string/*UserIdentifier*/]: UserSession;
+}>;
 
 // User-Session data in the RTDB that is read and written by the User themselves
 // (via the SessionService). It is most commonly used to compute the presence state
