@@ -48,8 +48,9 @@ export const sessionKey = (sessionId: SessionIdentifier) => `/${SESSIONS}/${sess
 export const userSessionKey = (userId: UserIdentifier, sessionId: SessionIdentifier) => `${userKey(userId)}${sessionKey(sessionId)}`;
 export const sessionTimestampKey = (sessionId: SessionIdentifier) => `${sessionKey(sessionId)}/${nameof<Session>('timestamp')}`;
 
-export type UserSession_Storage = UserSession;
-export type Session_Storage = Session;
+// ................................................................................
+export type UserSession_Storage = UserSession/*nothing additional*/;
+export type Session_Storage = Session/*nothing additional*/;
 
 // ** Action Types ****************************************************************
 // == Firestore ===================================================================
