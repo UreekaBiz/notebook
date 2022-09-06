@@ -94,6 +94,9 @@ export class CollaborationListener {
   // this flag is set to true to wait for that Version to be read. (This is set
   // while trying to write NotebookVersions to Firestore.)
   private isWaitingForNewVersions: boolean = false/*by contract*/;
+
+  // Observable that emits when a change has been made to the Editor but that change
+  // has not yet been written to Firestore
   private readonly pendingWrites$ = new BehaviorSubject<boolean>(false/*initially nothing pending*/);
 
   // ..............................................................................
