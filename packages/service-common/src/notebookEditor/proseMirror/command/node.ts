@@ -37,8 +37,8 @@ export class CreateCodeBlockNodeDocumentUpdate implements AbstractDocumentUpdate
     const { $anchor, $head } = tr.selection;
     const blockNodeType = schema.nodes[this.blockNodeName];
 
-    // NOTE: empty implies parent($anchor) === parent($head)
     // if the current Block is empty, replace it with the desired Block
+    // NOTE: empty implies parent($anchor) === parent($head)
     if(empty && $anchor.parent.content.size < 1) {
       const parentBlockRange = $anchor.blockRange($anchor);
       if(!parentBlockRange) return false/*no parent Block Range*/;
