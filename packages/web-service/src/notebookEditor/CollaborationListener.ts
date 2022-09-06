@@ -313,24 +313,24 @@ export class CollaborationListener {
 
     const transaction = collab.receiveTransaction(this.editor.view.state, proseMirrorSteps, clientIds, { mapSelectionBackward: true });
 
-    // NOTE: updating the attributes of a node causes it to be replaced and
-    //       prosemirror changes the selection from being NodeSelection to
-    //       TextSelection, this causes the selection to be lost. To fix that a new
+    // update the NodeSelection only if the Node still exits
+    // NOTE: updating the attributes of a Node causes it to be replaced and
+    //       ProseMirror changes the Selection from being NodeSelection to
+    //       TextSelection which causes the Selection to be lost. To fix that a new
     //       NodeSelection is created from the previous position mapped through the
-    //       transaction from `collab`.
-    // update the NodeSelection only if the Node still exits.
+    //       Transaction from `collab`.
     const currentSelection = this.editor.state.selection;
     if(isNodeSelection(currentSelection)) {
-      // NOTE: creating a NodeSelection can throw an error if there is no node to
-      //       select. This can happen if the node was removed.
+      // NOTE: creating a NodeSelection can throw an error if there is no Node to
+      //       select. This can happen if the Node was removed.
       try {
         const nodeSelection = new NodeSelection(transaction.selection.$anchor);
-        if(getNodeName(nodeSelection.node) !== getNodeName(currentSelection.node)) return;/*node changed -- nothing to do*/
+        if(getNodeName(nodeSelection.node) !== getNodeName(currentSelection.node)) return/*Node changed -- nothing to do*/;
 
-        // update the selection.
+        // update the Selection
         transaction.setSelection(nodeSelection);
       } catch(error) {
-        log.debug('New selection is not a node selection anymore, node was deleted. Ignoring.');
+        log.debug('New selection is not a Node Selection anymore. Node was deleted. Ignoring.');
       }
     } /* else -- was not a NodeSelection */
 
