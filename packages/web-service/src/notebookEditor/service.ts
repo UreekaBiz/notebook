@@ -7,7 +7,7 @@ import { getLogger, ServiceLogger } from '../logging';
 import { ApplicationError } from '../util';
 import { notebookEditorDemo2AsyncNodeExecute, notebookEditorDemoAsyncNodeExecute } from './function';
 import { NotebookEditorDemo2AsyncNode_Execute, NotebookEditorDemoAsyncNode_Execute } from './type';
-import { VersionListener } from './VersionListener';
+import { CollaborationListener } from './CollaborationListener';
 
 const log = getLogger(ServiceLogger.NOTEBOOK_EDITOR);
 
@@ -16,7 +16,7 @@ export class NotebookEditorService {
   protected initialized: 'not-initialized' | 'initializing' | 'initialized' = 'not-initialized';
 
   //...............................................................................
-  protected readonly versionListener: VersionListener;
+  protected readonly collaborationListener: CollaborationListener;
 
   // == Lifecycle =================================================================
   /**
@@ -27,7 +27,7 @@ export class NotebookEditorService {
    * @see #shutdown()
    */
   public constructor(private readonly user: AuthedUser, private editor: Editor, schemaVersion: NotebookSchemaVersion, private readonly notebookId: NotebookIdentifier) {
-    this.versionListener = new VersionListener(user, editor, schemaVersion, notebookId);
+    this.collaborationListener = new CollaborationListener(user, editor, schemaVersion, notebookId);
   }
 
   // ------------------------------------------------------------------------------
@@ -42,7 +42,7 @@ export class NotebookEditorService {
     if(this.initialized !== 'not-initialized') throw new ApplicationError('functions/internal', `Editor service already initializing / initialized ${this.logContext()}.`);
 
     this.initialized = 'initializing';
-    await this.versionListener.initialize()/*throws on error*/;
+    await this.collaborationListener.initialize()/*throws on error*/;
     // NOTE:  will remain 'initializing' if an error occurs
     log.info(`Notebook Editor service initialized ${this.logContext()}.`);
 
@@ -60,7 +60,7 @@ export class NotebookEditorService {
     if(this.initialized === 'not-initialized') { log.warn(`Editor service never initialized ${this.logContext()}.`); return/*nothing to do*/; }
 
     log.info(`Shutting down Notebook Editor service ...`);
-    this.versionListener.shutdown();
+    this.collaborationListener.shutdown();
 
     this.initialized = 'not-initialized';
   }
@@ -71,7 +71,7 @@ export class NotebookEditorService {
    *         changes to the Notebook that have not been written yet
    */
   public onPendingWrites$(): Observable<boolean> {
-    return this.versionListener.onPendingWrites$();
+    return this.collaborationListener.onPendingWrites$();
   }
 
   // == Editor ====================================================================
@@ -93,7 +93,7 @@ export class NotebookEditorService {
     //        hasn't been 'committed' yet. This should actually do one of two things:
     //        let the caller know that the last Edit hasn't been 'committed' yet and
     //        return only the last written version
-    return this.versionListener.getEditorIndex();
+    return this.collaborationListener.getEditorIndex();
   }
 
   // == Server-side Execute =======================================================

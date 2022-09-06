@@ -61,9 +61,9 @@ const collaborationDelay: CollaborationDelay = { readDelayMs: 0, writeDelayMs: 0
 //   - Handled via 'lastWriteIndex' which is used to advance through the pending changes
 
 // handles collaboration via Firestore for the Editor. This class is designed to be
-// one-shot and not be reused.
+// one-shot per User-Editor-Notebook and not be reused.
 // ********************************************************************************
-export class VersionListener {
+export class CollaborationListener {
   private readonly user: AuthedUser;
   // NOTE: *must* be unique per User-Session pair. Specifically, if just the userId
   //       is passed then ProseMirror gets confused if the same User is editing in
