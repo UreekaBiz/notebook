@@ -56,7 +56,6 @@ export const ShareNotebookDialog: React.FC<Props> = ({ notebook, notebookId, com
   // == Effect ====================================================================
   // resolves (loads) the User Profile for the initial Roles
   useEffect(() => {
-    if(!isModalOpen) return/*nothing to do*/;
     // can be re-run if any of the dependencies changes. A flag must be used to
     // indicate if this is the current effect in order to avoid race conditions
     let isCurrentEffect = true;
@@ -89,7 +88,7 @@ export const ShareNotebookDialog: React.FC<Props> = ({ notebook, notebookId, com
 
     resolveUsersProfiles();
     return () => { isCurrentEffect = false/*by definition*/; };
-    // NOTE: only executed when component is mounted. If this is meant to be executed
+    // NOTE: only executed when modal opens/closes. If this is meant to be executed
     //       each time the Notebook gets updated update the dependency array below
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [isModalOpen]);
@@ -179,7 +178,7 @@ export const ShareNotebookDialog: React.FC<Props> = ({ notebook, notebookId, com
           leftIcon={<FiUsers size={16} />}
           onClick={handleOpen}
         >
-          Share
+          Share {shareRoles ? `(${shareRoles?.size})` : ''}
         </Button>
       )}
 
