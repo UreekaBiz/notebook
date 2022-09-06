@@ -1,9 +1,9 @@
-import { EditorState, Selection, TextSelection, Transaction } from 'prosemirror-state';
+import { EditorState, Selection, Transaction } from 'prosemirror-state';
 
 import { Attributes } from '../attribute';
 import { NodeName } from '../node';
 import { NotebookSchemaType } from '../schema';
-import { isGapCursorSelection, getBlockNodeRange } from '../selection';
+import { isGapCursorSelection } from '../selection';
 import { AbstractDocumentUpdate, Command } from './type';
 
 // ********************************************************************************
@@ -26,9 +26,9 @@ export class CreateCodeBlockNodeDocumentUpdate implements AbstractDocumentUpdate
    * below the current Selection
    */
   public update(editorState: EditorState<NotebookSchemaType>, tr: Transaction<NotebookSchemaType>) {
-    const sameParent = editorState.selection.$anchor.sameParent(editorState.selection.$head);
-    if(sameParent && editorState.selection.$anchor.parent.type.name === this.blockNodeName) {
-      return false/*not the same parent or different Block type*/;
+    const { empty } = tr.selection;
+    if(!empty) {
+      return false/*do not allow on multiple Node Selection*/;
     } /* else -- try to create Block below */
 
     const { schema } = editorState;
@@ -37,10 +37,15 @@ export class CreateCodeBlockNodeDocumentUpdate implements AbstractDocumentUpdate
     const { $anchor, $head } = tr.selection;
     const blockNodeType = schema.nodes[this.blockNodeName];
 
-    if(sameParent && $anchor.parent.content.size < 1) {
-      const { from, to } = getBlockNodeRange(tr.selection);
-      tr.setBlockType(from, to, blockNodeType, this.attributes)
-        .setSelection(new TextSelection(tr.doc.resolve($anchor.pos/*inside the new Block*/)));
+    // NOTE: empty implies parent($anchor) === parent($head)
+    // if the current Block is empty, replace it with the desired Block
+    if(empty && $anchor.parent.content.size < 1) {
+      const parentBlockRange = $anchor.blockRange($anchor);
+      if(!parentBlockRange) return false/*no parent Block Range*/;
+
+      const { $from, $to } = parentBlockRange;
+      tr.setBlockType($from.pos, $to.pos, blockNodeType, this.attributes)
+        .setSelection(Selection.near(tr.doc.resolve($to.pos)));
 
       return tr/*nothing left to do*/;
     } /* else -- not the same parent (multiple Selection) or content not empty, insert Block below */

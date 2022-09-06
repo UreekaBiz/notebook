@@ -47,7 +47,12 @@ export type Label = Creatable & Updatable & Readonly<{ /*Firestore*/
    *   are ordered by when they were added to this Label. */
   ordered: boolean/*write-many server-written*/;
   /** the (ordered) list of non-deleted {@link NotebookIdentifier}'s associated
-   *  with this Label. Bounded by {@link #MAX_LABEL_NOTEBOOKS}. */
+   *  with this Label. Bounded by {@link #MAX_LABEL_NOTEBOOKS}. This list may
+   *  contain Notebooks that the User can no longer view (e.g. they have been
+   *  un-Shared from the Notebook) as well as Notebooks that have been deleted. */
+  // NOTE: the system makes every attempt to ensure that this list does *not*
+  //       contain deleted Notebooks but due to latency, it is possible that
+  //       this list may contain deleted Notebooks
   notebookIds: NotebookIdentifier[]/*write-many server-written*/;
 
   // NOTE: because Firestore does not have 'OR' queries, 'viewers' contains *all*

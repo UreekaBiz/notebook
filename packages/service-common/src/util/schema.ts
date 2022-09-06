@@ -97,6 +97,7 @@ export const stringSchema = (length: number) => string()
      .trim()
      .max(length);
 
+// ................................................................................
 export const STRING_V_LONG = 1024 * 10;
 export const stringVLongSchema = stringSchema(STRING_V_LONG);
 

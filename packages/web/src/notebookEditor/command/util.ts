@@ -31,6 +31,6 @@ const getCommandPropsFromEditor = (editor: Editor) => ({
 
 /** Focuses the {@link EditorView} and returns the result from the executed {@link Command} */
 const focusViewAndReturn = (commandResult: boolean, view: EditorView) => {
-  view.focus();
+  setTimeout(() => view.focus()/*immediately after the view updates*/);
   return commandResult;
 };

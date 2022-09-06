@@ -22,12 +22,12 @@ export const labelById$ = (labelId: LabelIdentifier) =>
 // -- Notebook --------------------------------------------------------------------
 // .. Label => Notebook Identifier ................................................
 export const labelNotebookIds$ = (labelId: LabelIdentifier) =>
-  labelOnceById$(labelId)
+  labelById$(labelId)
     .pipe(
-      switchMap(label =>
-        iif(() => label === null/*not found*/,
+      switchMap(tuple =>
+        iif(() => tuple.obj === null/*not found*/,
           throwError(() => new ApplicationError('functions/not-found', `Could not find Label for Label Id (${labelId}).`)),
-          of(label!.notebookIds/*explicitly ordered (by design)*/)
+          of(tuple.obj!.notebookIds/*explicitly ordered (by design)*/)
         )
       ));
 

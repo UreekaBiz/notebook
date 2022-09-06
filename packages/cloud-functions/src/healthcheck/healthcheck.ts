@@ -63,8 +63,6 @@ const endpointNames = [
   'notebookPublish',
   'notebookShare',
 
-  'notebookEditorInsertNumbers',
-  'notebookEditorInsertText',
   'notebookEditorDemoAsyncNodeExecute',
   'notebookEditorDemo2AsyncNodeExecute',
 
