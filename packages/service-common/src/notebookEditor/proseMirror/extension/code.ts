@@ -22,8 +22,7 @@ export const CodeMarkSpec: MarkSpec = {
   // REF: https://prosemirror.net/docs/ref/#model.MarkSpec.excludes
   // NOTE: Marks that specify this prop must exclude themselves (which is the
   //       default behavior when not specified)
-  // only allow Code Mark to coexist with Superscript,
-  // Subscript, Strikethrough Marks
+  // only allow Code Mark to coexist with Superscript, Subscript, Strikethrough Marks
   excludes: `${MarkName.BOLD} ${MarkName.CODE/*exclude itself*/} ${MarkName.ITALIC} ${MarkName.LINK} ${MarkName.REPLACED_TEXT_MARK} ${MarkName.TEXT_STYLE} ${MarkName.UNDERLINE}`,
   code: true/*contains Code*/,
 
