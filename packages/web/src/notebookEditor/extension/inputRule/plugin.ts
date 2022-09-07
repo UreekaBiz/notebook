@@ -33,7 +33,7 @@ export class InputRule {
   // return a [transaction](#state.Transaction) that describes the
   // rule's effect, or null to indicate the input was not handled.
   constructor(public readonly match: RegExp, public readonly handler: string | InputRuleHandler) {
-    this.handler = typeof handler == 'string'
+    this.handler = typeof handler === 'string'
       ? stringHandler(handler)/*default handler for strings*/
       : handler/*use specified handler*/;
   }
