@@ -76,7 +76,7 @@ export const Heading = Node.create<HeadingOptions, NoStorage>({
           const storedMarks = stringifyMarksArray([createBoldMark(state.schema)]);
 
           tr.delete(range.from, range.to)
-            .setBlockType(range.from, range.from, this.type, { level })
+            .setBlockType(range.from, range.from, this.type, { [AttributeType.Id]: generateNodeId(), [AttributeType.Level]: level })
             .insert(tr.selection.anchor, createMarkHolderNode(state.schema, { storedMarks } ));
 
           return/*nothing left to do*/;
