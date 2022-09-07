@@ -49,5 +49,6 @@ export const applyDocumentUpdates = (editor: Editor, documentUpdates: AbstractDo
   }
 
   editor.view.dispatch(finalTransaction);
+  setTimeout(() => editor.view.focus()/*right after changes*/);
   return true/*updates applied*/;
 };

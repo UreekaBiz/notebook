@@ -14,8 +14,9 @@ import { Heading } from 'notebookEditor/extension/heading/Heading';
 import { Highlight } from 'notebookEditor/extension/highlight/Highlight';
 import { History } from 'notebookEditor/extension/history/History';
 import { Image } from 'notebookEditor/extension/image/Image';
-import { Italic } from 'notebookEditor/extension/italic/Italic';
+import { InputRule } from 'notebookEditor/extension/inputRule/InputRule';
 import { InlineNodeWithContent } from 'notebookEditor/extension/inlineNodeWithContent/InlineNodeWithContent';
+import { Italic } from 'notebookEditor/extension/italic/Italic';
 import { Link } from 'notebookEditor/extension/link/Link';
 import { MarkHolder } from 'notebookEditor/extension/markHolder/MarkHolder';
 import { NodeViewRemoval } from 'notebookEditor/extension/nodeViewRemoval/NodeViewRemoval';
@@ -54,6 +55,7 @@ export const editorDefinition = {
     Italic,
     Image,
     InlineNodeWithContent,
+    InputRule,
     Link,
     MarkHolder,
     NodeViewRemoval,

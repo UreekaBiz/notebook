@@ -43,6 +43,7 @@ export {
   mergeAttributes,
   mergeAttributeValues,
   getRenderAttributes,
+  getSerializableAttributes,
   isStyleAttribute,
   getWrapStyles,
 
@@ -345,6 +346,8 @@ export {
   extractDocumentName,
 
   // .. Node .....................................................................
+  clearNodesCommand,
+  ClearNodesDocumentUpdate,
   createBlockNodeCommand,
   CreateCodeBlockNodeDocumentUpdate,
   computeRemovedNodePositions,

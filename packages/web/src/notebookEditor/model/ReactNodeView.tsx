@@ -79,6 +79,12 @@ export const WrapReactNodeView = <
     if(!ContentDOMWrapper || !contentDOM) return/*nothing to do*/;
     ContentDOMWrapper.appendChild(contentDOM);
 
+    // NOTE: For some reason this attribute is needed in order for the Node to
+    //       maintain a reference when performing delete operations. The name of
+    //       the attribute is not being used anywhere else, and it can be any value,
+    //       it appears that any attribute is required in order to work properly.
+    contentDOM.setAttribute('data-node-view-content', 'true');
+
     return () => { ContentDOMWrapper.removeChild(contentDOM); };
   }, [contentDOM]);
 

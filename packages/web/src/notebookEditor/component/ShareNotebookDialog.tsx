@@ -88,10 +88,9 @@ export const ShareNotebookDialog: React.FC<Props> = ({ notebook, notebookId, com
 
     resolveUsersProfiles();
     return () => { isCurrentEffect = false/*by definition*/; };
-    // NOTE: only executed when modal opens/closes. If this is meant to be executed
-    //       each time the Notebook gets updated update the dependency array below
+    // NOTE: only executed when notebook changes.
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [isModalOpen]);
+  }, [notebook]);
 
   // == Handler ===================================================================
   const resetState = () => {

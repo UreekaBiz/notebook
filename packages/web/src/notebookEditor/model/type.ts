@@ -23,6 +23,7 @@ export enum ExtensionName {
   HIGHLIGHT = 'highlight',
   HISTORY = 'history',
   INLINE_NODE_WITH_CONTENT = 'inlineNodeWithContent',
+  INPUT_RULE = 'inputRule',
   NODEVIEW_REMOVAL = 'nodeViewRemoval',
   SET_DEFAULT_MARKS = 'setDefaultMarks',
 }
@@ -53,6 +54,10 @@ export enum ExtensionPriority {
   //       been modified accordingly (e.g. codeBlockReferences and hashes) have
   //       been recomputed. Hence this must run before other Extensions
   ASYNC_NODE = 116,
+
+  // NOTE: custom InputRules just need to be triggered before Text so that their
+  //       effects are applied (SEE: InputRule.ts)
+  INPUT_RULE = 100,
 
   // NOTE: Since the text extension adds a \t whenever Tab is pressed, but this
   //       behavior is not always guaranteed to be the desired one (e.g. when
