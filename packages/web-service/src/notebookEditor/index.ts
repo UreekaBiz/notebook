@@ -348,7 +348,7 @@ export {
   clearNodesCommand,
   ClearNodesDocumentUpdate,
   createBlockNodeCommand,
-  CreateCodeBlockNodeDocumentUpdate,
+  CreateBlockNodeDocumentUpdate,
   computeRemovedNodePositions,
   findContentDifferencePositions,
   findNodeById,

@@ -4,8 +4,9 @@ import { EditorView } from 'prosemirror-view';
 import { NotebookSchemaType } from '@ureeka-notebook/web-service';
 
 // ********************************************************************************
-// == Type ========================================================================
 // REF: https://github.com/ProseMirror/prosemirror-inputrules/blob/d60b7920d040e9b18ee893bad4213180fedc47f5/src/inputrules.ts
+
+// == Type ========================================================================
 type InputRulePluginState = { transform: Transaction; from: number; to: number; text: string; } | null;
 type InputRuleHandler =  (state: EditorState, match: RegExpMatchArray, start: number, end: number) => Transaction | null;
 
@@ -17,8 +18,6 @@ const MAX_MATCH = 500;
 // Input rules are regular expressions describing a piece of text
 // that, when typed, causes something to happen.
 export class InputRule {
-  handler: (state: EditorState, match: RegExpMatchArray, start: number, end: number) => Transaction | null;
-
   // Create an input rule. The rule applies when the user typed
   // something and the text directly in front of the cursor matches
   // `match`, which should end with `$`.
@@ -33,9 +32,10 @@ export class InputRule {
   // as well as the start and end of the matched range, and which can
   // return a [transaction](#state.Transaction) that describes the
   // rule's effect, or null to indicate the input was not handled.
-  constructor(readonly match: RegExp, handler: string | InputRuleHandler) {
-    this.match = match;
-    this.handler = typeof handler == 'string' ? stringHandler(handler) : handler;
+  constructor(public readonly match: RegExp, public readonly handler: string | InputRuleHandler) {
+    this.handler = typeof handler == 'string'
+      ? stringHandler(handler)/*default handler for strings*/
+      : handler/*use specified handler*/;
   }
 }
 
@@ -122,9 +122,11 @@ const executeInputRule = (view: EditorView, from: number, to: number, text: stri
   const textBefore = $from.parent.textBetween(Math.max(0, $from.parentOffset - MAX_MATCH), $from.parentOffset, undefined/*no block separator*/, '\ufffc'/*insert for every non Leaf Node*/) + text;
 
   for(let i = 0; i < rules.length; i++) {
-    let match = rules[i].match.exec(textBefore);
-    let tr = match && rules[i].handler(state, match, from - (match[0].length - text.length), to);
-    if(!tr) continue/*nothing to do for this rule*/;
+    const match = rules[i].match.exec(textBefore);
+    const { handler } = rules[i];
+
+    const tr = match &&  typeof handler === 'function' &&  handler(state, match, from - (match[0].length - text.length), to);
+    if(!tr) continue/*this Rule does not specify a handler function or it did not match*/;
 
     view.dispatch(tr.setMeta(plugin, { transform: tr, from, to, text }));
     return true/*one inputRule was scheduled*/;
