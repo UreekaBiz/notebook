@@ -63,10 +63,9 @@ export abstract class AbstractNodeView<NodeType extends ProseMirrorNode, Storage
     this.getPos = getPos;
   }
 
-  // called by the Controller when the NodeView's Node is removed.
-  // This method is meant to be used to perform view-specific
-  // functionality on Node removal (e.g. removing EventListeners).
-  // The destruction of the View elements themselves is
+  // called by the Controller when the NodeView's Node is removed. This method is
+  // meant to be used to perform view-specific functionality on Node removal (e.g.
+  // removing EventListeners). The destruction of the View elements themselves is
   // handled by default by ProseMirror
   public destroy() {/*currently nothing*/}
 
