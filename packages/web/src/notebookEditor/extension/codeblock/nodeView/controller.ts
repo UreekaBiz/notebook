@@ -27,8 +27,7 @@ export class CodeBlockController extends AbstractNodeController<CodeBlockNodeTyp
    * @see #updateVisualID()
    */
   public ignoreMutation(mutation: MutationRecord | { type: 'selection'; target: Element; }) {
-    // ignore if modifying the ChildList, Attributes or CharacterData of the Nodes
-    // within this View
-    return (mutation.type === 'childList') || (mutation.type === 'attributes') || (mutation.type === 'characterData');
+    // ignore if modifying the ChildList, Attributes of the Nodes within this View
+    return (mutation.type === 'childList') || (mutation.type === 'attributes');
   }
 }

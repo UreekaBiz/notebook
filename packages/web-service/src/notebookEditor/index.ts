@@ -345,6 +345,8 @@ export {
   extractDocumentName,
 
   // .. Node .....................................................................
+  clearNodesCommand,
+  ClearNodesDocumentUpdate,
   createBlockNodeCommand,
   CreateCodeBlockNodeDocumentUpdate,
   computeRemovedNodePositions,
