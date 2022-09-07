@@ -40,7 +40,6 @@ export class NodeViewStorage<V extends AbstractNodeController<any, any>> {
     const nodeView = this.nodeViewMap.get(id);
     if(!nodeView) { log.warn(`NodeView not found for Node (${id}). Ignoring.`); return/*nothing to do*/; }
 
-
     // unmounts the ReactNodeView if it exists
     // NOTE: this is a hack to get around the fact that the NodeView is a generic
     //       type.
