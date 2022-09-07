@@ -43,6 +43,7 @@ export {
   mergeAttributes,
   mergeAttributeValues,
   getRenderAttributes,
+  getSerializableAttributes,
   isStyleAttribute,
   getWrapStyles,
 
