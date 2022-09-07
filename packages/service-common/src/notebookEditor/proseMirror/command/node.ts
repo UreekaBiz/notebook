@@ -33,14 +33,9 @@ export class CreateBlockNodeDocumentUpdate implements AbstractDocumentUpdate {
     const { $anchor, $head } = tr.selection;
     const blockNodeType = schema.nodes[this.blockNodeName];
 
-    const { empty } = tr.selection;
-    if(!empty) {
-      return false/*do not allow on multiple Node Selection*/;
-    } /* else -- try to create Block below */
-
     // NOTE: empty implies parent($anchor) === parent($head)
     // if the current Block and the Selection are both empty, replace the Block with the desired Block
-    if($anchor.parent.content.size < 1) {
+    if(tr.selection.empty && $anchor.parent.content.size < 1) {
       const parentBlockRange = $anchor.blockRange($anchor);
       if(!parentBlockRange) return false/*no parent Block Range*/;
 
