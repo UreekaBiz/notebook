@@ -46,6 +46,10 @@ export const getNotebookShareRoles = (notebook: Notebook): Map<UserIdentifier, S
 };
 
 // ................................................................................
+// the number of Users (other than the Creator) that have access to the Notebook
+export const getNotebookShareCount = (notebook: Notebook): number =>
+  notebook.viewers.length/*contains every Share*/ - 1/*Creator*/;
+
 // returns the count of Viewers and Editors for the specified Notebook
 // NOTE: there is always one and only one Creator so not explicitly counted / returned
 export const getNotebookShareCounts = (notebook: Notebook): Readonly<{ viewers: number; editors: number; }> => {

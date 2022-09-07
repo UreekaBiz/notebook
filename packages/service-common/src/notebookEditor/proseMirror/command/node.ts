@@ -1,4 +1,5 @@
 import { EditorState, Selection, Transaction } from 'prosemirror-state';
+import { liftTarget } from 'prosemirror-transform';
 
 import { Attributes } from '../attribute';
 import { NodeName } from '../node';
@@ -37,8 +38,8 @@ export class CreateCodeBlockNodeDocumentUpdate implements AbstractDocumentUpdate
     const { $anchor, $head } = tr.selection;
     const blockNodeType = schema.nodes[this.blockNodeName];
 
-    // NOTE: empty implies parent($anchor) === parent($head)
     // if the current Block is empty, replace it with the desired Block
+    // NOTE: empty implies parent($anchor) === parent($head)
     if(empty && $anchor.parent.content.size < 1) {
       const parentBlockRange = $anchor.blockRange($anchor);
       if(!parentBlockRange) return false/*no parent Block Range*/;
@@ -61,6 +62,54 @@ export class CreateCodeBlockNodeDocumentUpdate implements AbstractDocumentUpdate
 
     tr.replaceWith(creationPos, creationPos, newBlockNode)
       .setSelection(Selection.near(tr.doc.resolve(creationPos + 1/*inside the new Block*/), 1/*look forwards first*/));
+
+    return tr/*updated*/;
+  }
+}
+
+/** clear the Nodes in the current Block */
+export const clearNodesCommand = (): Command => (state, dispatch) => {
+  const updatedTr =  new ClearNodesDocumentUpdate().update(state, state.tr);
+  if(updatedTr) {
+    dispatch(updatedTr);
+    return true/*Command executed*/;
+  } /* else -- Command cannot be executed */
+
+  return false/*not executed*/;
+};
+export class ClearNodesDocumentUpdate implements AbstractDocumentUpdate {
+  public constructor() {/*nothing additional*/}
+
+  public update(editorState: EditorState<NotebookSchemaType>, tr: Transaction<NotebookSchemaType>) {
+    const { selection } = tr;
+    const { ranges } = selection;
+
+    ranges.forEach(({ $from, $to }) => {
+      editorState.doc.nodesBetween($from.pos, $to.pos, (node, pos) => {
+        if(node.type.isText) {
+          return/*nothing to do, keep descending*/;
+        } /* else -- not a Text Node */
+
+        const { doc, mapping } = tr;
+        const $mappedFrom = doc.resolve(mapping.map(pos));
+        const $mappedTo = doc.resolve(mapping.map(pos + node.nodeSize));
+        const nodeRange = $mappedFrom.blockRange($mappedTo);
+
+        if(!nodeRange) {
+          return/*valid Block Range not found*/;
+        } /* else -- clear Nodes to default Block type by Lifting */
+
+        const targetLiftDepth = liftTarget(nodeRange);
+        if(node.type.isTextblock) {
+          const { defaultType } = $mappedFrom.parent.contentMatchAt($mappedFrom.index());
+          tr.setNodeMarkup(nodeRange.start, defaultType);
+        } /* else -- default Block is not a TextBlock, just try to lift */
+
+        if(targetLiftDepth || targetLiftDepth === 0/*top level of the Document*/) {
+          tr.lift(nodeRange, targetLiftDepth);
+        } /* else -- do not lift */
+      });
+    });
 
     return tr/*updated*/;
   }

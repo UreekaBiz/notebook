@@ -61,9 +61,9 @@ const collaborationDelay: CollaborationDelay = { readDelayMs: 0, writeDelayMs: 0
 //   - Handled via 'lastWriteIndex' which is used to advance through the pending changes
 
 // handles collaboration via Firestore for the Editor. This class is designed to be
-// one-shot and not be reused.
+// one-shot per User-Editor-Notebook and not be reused.
 // ********************************************************************************
-export class VersionListener {
+export class CollaborationListener {
   private readonly user: AuthedUser;
   // NOTE: *must* be unique per User-Session pair. Specifically, if just the userId
   //       is passed then ProseMirror gets confused if the same User is editing in
@@ -94,6 +94,9 @@ export class VersionListener {
   // this flag is set to true to wait for that Version to be read. (This is set
   // while trying to write NotebookVersions to Firestore.)
   private isWaitingForNewVersions: boolean = false/*by contract*/;
+
+  // Observable that emits when a change has been made to the Editor but that change
+  // has not yet been written to Firestore
   private readonly pendingWrites$ = new BehaviorSubject<boolean>(false/*initially nothing pending*/);
 
   // ..............................................................................
@@ -183,7 +186,7 @@ export class VersionListener {
     // Remove previous subscriptions if any
     this.unsubscribeFirebase();
 
-    const unsubscribe = onNewVersion(this.handleNewVersion.bind(this), this.notebookId);
+    const unsubscribe = onNewVersion(this.notebookId, this.handleNewVersion.bind(this));
     this.firestoreUnsubscribes.push(unsubscribe);
   }
 
@@ -225,7 +228,7 @@ export class VersionListener {
 
   // == Observable ================================================================
   public onPendingWrites$() {
-    // absorb any duplicate states since the listener doesn't care if nothing changed
+    // absorbs any duplicate states since the listener doesn't care if nothing changed
     return this.pendingWrites$
                 .pipe(distinctUntilChanged());
   }
@@ -239,7 +242,7 @@ export class VersionListener {
   // callback from Firestore when a new latest Version (specified) becomes available.
   // This gets all latest Versions (including any new ones that may have appeared)
   // and 'commits' them to the Editor
-  private async handleNewVersion(version: NotebookVersion) {
+  private async handleNewVersion() {
     if(!this.initialized) throw new ApplicationError('functions/internal', `Trying to get Notebook Versions before initialization ${this.logContext()}.`);
     if(!this.initialContentLoaded) throw new ApplicationError('functions/internal', `Trying to get Notebook Versions before initial content is loaded  ${this.logContext()}.`);
 
@@ -310,24 +313,24 @@ export class VersionListener {
 
     const transaction = collab.receiveTransaction(this.editor.view.state, proseMirrorSteps, clientIds, { mapSelectionBackward: true });
 
-    // NOTE: updating the attributes of a node causes it to be replaced and
-    //       prosemirror changes the selection from being NodeSelection to
-    //       TextSelection, this causes the selection to be lost. To fix that a new
+    // update the NodeSelection only if the Node still exits
+    // NOTE: updating the attributes of a Node causes it to be replaced and
+    //       ProseMirror changes the Selection from being NodeSelection to
+    //       TextSelection which causes the Selection to be lost. To fix that a new
     //       NodeSelection is created from the previous position mapped through the
-    //       transaction from `collab`.
-    // update the NodeSelection only if the Node still exits.
+    //       Transaction from `collab`.
     const currentSelection = this.editor.state.selection;
     if(isNodeSelection(currentSelection)) {
-      // NOTE: creating a NodeSelection can throw an error if there is no node to
-      //       select. This can happen if the node was removed.
+      // NOTE: creating a NodeSelection can throw an error if there is no Node to
+      //       select. This can happen if the Node was removed.
       try {
+        // update the Selection when the selected Node was replaced with same Node
         const nodeSelection = new NodeSelection(transaction.selection.$anchor);
-        if(getNodeName(nodeSelection.node) !== getNodeName(currentSelection.node)) return;/*node changed -- nothing to do*/
-
-        // update the selection.
-        transaction.setSelection(nodeSelection);
+        if(getNodeName(nodeSelection.node) === getNodeName(currentSelection.node)) {
+          transaction.setSelection(nodeSelection);
+        } /* else -- not the same Node */
       } catch(error) {
-        log.debug('New selection is not a node selection anymore, node was deleted. Ignoring.');
+        log.debug('New selection is not a Node Selection anymore. Node was deleted. Ignoring.');
       }
     } /* else -- was not a NodeSelection */
 
