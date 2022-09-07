@@ -54,15 +54,15 @@ export const DocumentToolbar: Toolbar = {
 
   toolsCollections: [
     [
-      publishNotebookToolItem,
-      previewPublishedNotebookToolItem,
-    ],
-    [
       shareNotebookToolItem,
       addToCollectionToolItem,
     ],
     [
       setThemeToolItem,
+    ],
+    [
+      publishNotebookToolItem,
+      previewPublishedNotebookToolItem,
     ],
   ],
 };

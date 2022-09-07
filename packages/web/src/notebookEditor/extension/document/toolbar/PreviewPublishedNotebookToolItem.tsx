@@ -40,7 +40,7 @@ export const PreviewPublishedNotebookToolItem: React.FC<Props> = ({ editor }) =>
   // == UI ========================================================================
   return (
     <>
-      <Button colorScheme='gray' variant='ghost' size='sm' onClick={handleOpen}>Preview published Notebook</Button>
+      <Button colorScheme='gray' variant='ghost' size='sm' onClick={handleOpen}>Preview published</Button>
       <Portal>
         {isOpen && (
           <Box position='absolute' top='0' left='0' w='100%' h='100vh' overflowY='auto' background='white'>

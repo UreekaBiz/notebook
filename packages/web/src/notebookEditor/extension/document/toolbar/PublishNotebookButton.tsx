@@ -46,7 +46,6 @@ export const PublishNotebookButton: React.FC<Props> = () => {
       variant='ghost'
       size='sm'
       leftIcon={<RiFileAddLine size={16} />}
-      width={160}
       onClick={handlePublishNotebook}
     >
       {isLoading ? 'Publishing...' : (notebook.isPublished ? 'Republish Notebook' : 'Publish Notebook')}
