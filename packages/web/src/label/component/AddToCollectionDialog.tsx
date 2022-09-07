@@ -59,8 +59,6 @@ export const AddToCollectionDialog: React.FC<Props> = ({ notebook, notebookId, c
   // == Effect ====================================================================
   // resolves (loads) the initial Notebook Labels
   useEffect(() => {
-    if(!isModalOpen) return/*nothing to do*/;
-
     setNotebookLabelsStatus('loading');
     // gets the Profile and store if in the map for each User
     const subscription = LabelService.getInstance().onNotebookLabels$(notebookId).subscribe({
@@ -82,10 +80,8 @@ export const AddToCollectionDialog: React.FC<Props> = ({ notebook, notebookId, c
     });
 
     return () => { subscription.unsubscribe(); };
-    // NOTE: only executed when modal is open. If this is meant to be executed
-    //       each time the Notebook gets updated update the dependency array below
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [isModalOpen]);
+  }, [isMounted, notebookId, setNotebookLabelsStatus, toast]);
+
 
   // gets the Scrollable of all the Labels based on the search value
   useEffect(() => {
@@ -318,7 +314,7 @@ export const AddToCollectionDialog: React.FC<Props> = ({ notebook, notebookId, c
           leftIcon={<BsGrid size={16} />}
           onClick={handleOpen}
         >
-          Add to collection
+          Add to collection {currentLabels ? `(${currentLabels?.size})` : ''}
         </Button>
       )}
 
