@@ -11,7 +11,10 @@ export type DatabaseTuple = Readonly<{
 
 // ================================================================================
 export type ObjectConverter<T> = (snapshot: DataSnapshot) => T;
+export const defaultObjectConverter = <T>(snapshot: DataSnapshot): T => snapshot.val() as T;
+
 export type ObjectCollectionConverter<T> = (snapshot: DataSnapshot) => T[];
+// TODO: since snapshot.val() can be anything, what's the right answer here?
 
 // ********************************************************************************
 // NOTE: currently only supports 'value' events
