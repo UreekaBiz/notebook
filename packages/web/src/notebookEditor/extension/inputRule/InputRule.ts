@@ -6,9 +6,8 @@ import { InputRule as InputRuleInstance, inputRulePlugin, stringHandler } from '
 
 // ********************************************************************************
 // == Constant ====================================================================
-// an array of objects that, when typed, get replaced by a specific character
-// that specify a RegExp and a text to replace the typed characters when the
-// RegExp matches
+// an array of objects that, when typed, get replaced by a specific sequence of
+// characters when the specified RegExp matches
 const inputRules: { find: RegExp; replaceWith: string; }[] = [
   { find: /<-$/, replaceWith: '←' },
   { find: /->$/, replaceWith: '→' },
