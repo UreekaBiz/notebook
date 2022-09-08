@@ -2,6 +2,7 @@ import { EditorState, Selection, Transaction } from 'prosemirror-state';
 import { liftTarget } from 'prosemirror-transform';
 
 import { Attributes } from '../attribute';
+import { isMarkHolderNode } from '../extension/markHolder';
 import { NodeName } from '../node';
 import { NotebookSchemaType } from '../schema';
 import { isGapCursorSelection } from '../selection';
@@ -33,9 +34,13 @@ export class CreateBlockNodeDocumentUpdate implements AbstractDocumentUpdate {
     const { $anchor, $head } = tr.selection;
     const blockNodeType = schema.nodes[this.blockNodeName];
 
-    // NOTE: empty implies parent($anchor) === parent($head)
-    // if the current Block and the Selection are both empty, replace the Block with the desired Block
-    if(tr.selection.empty && $anchor.parent.content.size < 1) {
+    // if the current Block and the Selection are both empty
+    // (or only a MarkHolder is present), replace the
+    // parent Block with the desired Block
+    const { content, firstChild } = $anchor.parent;
+    const { size: contentSize } = content;
+    if(tr.selection.empty/*empty implies parent($anchor) === parent($head)*/ &&
+      (contentSize < 1 /*parent has no content*/ || contentSize === 1 && firstChild && isMarkHolderNode(firstChild)/*parent only has a MarkHolder*/)) {
       const parentBlockRange = $anchor.blockRange($anchor);
       if(!parentBlockRange) return false/*no parent Block Range*/;
 
