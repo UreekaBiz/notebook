@@ -9,6 +9,8 @@ import { TaskListItemModel } from './model';
 import { crossTaskListItemCommand } from '../command';
 
 // ********************************************************************************
+// NOTE: this NodeView does not use React since TaskListItems do not have a
+//       complex structure, nor do they require a Storage or an Id
 export class TaskListItemView extends AbstractNodeView<TaskListItemNodeType, NoStorage, TaskListItemModel> {
   // == Attribute =================================================================
   /** DOM element used to display the checkBox */

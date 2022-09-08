@@ -81,8 +81,8 @@ export const TaskListItem = Node.create<NoOptions, NoStorage>({
   },
 
   // -- View ----------------------------------------------------------------------
-  // NOTE: not following the same pattern as other Nodes with NodeViews since
-  //       TaskListItems don't have Ids and they don't need a storage
+  // NOTE: this NodeView does not use React since TaskListItems do not have a
+  //       complex structure, nor do they require a Storage or an Id
   addNodeView() {
     return ({ editor, node, getPos }) => {
       if(!isTaskListItemNode(node)) throw new Error(`Unexpected node type (${node.type.name}) while adding TaskListItem NodeView.`);
