@@ -40,7 +40,7 @@ export const isGetPos = (object: any): object is (() => number) => typeof object
 
 /** Type guard that defines if a value is a {@link Selection} */
 export const isSelection = (value: unknown): value is Selection => {
-  return isObject(value) && value instanceof Selection;
+  return isObject(value) && '$anchor' in value && '$head' in value;
 };
 
 /** Type guard that defines if a {@link Selection} is a {@link NodeSelection} */
