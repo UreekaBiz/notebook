@@ -16,13 +16,19 @@ interface Props {
   notebookId: NotebookIdentifier;
   notebook: Notebook;
 
+  /** displays the count on the button component. */
+  // NOTE: Due to performance reasons and to avoid doing multiple requests to the
+  //       server is best to left this disabled when loading multiple
+  //       AddToCollectionDialog.
+  displayCount?: boolean;
+
   /** component to be used to open the Dialog. This component received the onClick
    *  handler that should be passed as a prop to the actual component. If no
    *  component is provided a default button is used.*/
-  component?: (onClick: () => void) => React.ReactElement;
+  component?: (onClick: () => void, count?: number) => React.ReactElement;
 }
 // == Component ===================================================================
-export const AddToCollectionDialog: React.FC<Props> = ({ notebook, notebookId, component }) => {
+export const AddToCollectionDialog: React.FC<Props> = ({ notebookId, component, displayCount = false }) => {
   const { authedUser: { userId } } = useValidatedAuthedUser();
 
   // == State =====================================================================
@@ -58,7 +64,13 @@ export const AddToCollectionDialog: React.FC<Props> = ({ notebook, notebookId, c
 
   // == Effect ====================================================================
   // resolves (loads) the initial Notebook Labels
+  // NOTE: This will loads the initial Notebook Labels when the component is mounted
+  //       when displayCount is set to true, if not this will be called when the
+  //       modal is open. This is done to avoid unnecessary requests to the server.
   useEffect(() => {
+    // NOTE: This is done to avoid unnecessary requests to the server.
+    if(!isModalOpen && !displayCount) return/*nothing to do*/;
+
     setNotebookLabelsStatus('loading');
     // gets the Profile and store if in the map for each User
     const subscription = LabelService.getInstance().onNotebookLabels$(notebookId).subscribe({
@@ -80,7 +92,7 @@ export const AddToCollectionDialog: React.FC<Props> = ({ notebook, notebookId, c
     });
 
     return () => { subscription.unsubscribe(); };
-  }, [isMounted, notebookId, setNotebookLabelsStatus, toast]);
+  }, [displayCount, isModalOpen, isMounted, notebookId, setNotebookLabelsStatus, toast]);
 
 
   // gets the Scrollable of all the Labels based on the search value
@@ -306,7 +318,7 @@ export const AddToCollectionDialog: React.FC<Props> = ({ notebook, notebookId, c
   return (
     <>
       {/* use component if provided */}
-      {component ? component(handleOpen) : (
+      {component ? component(handleOpen, currentLabels?.size) : (
         <Button
           colorScheme='gray'
           variant='ghost'

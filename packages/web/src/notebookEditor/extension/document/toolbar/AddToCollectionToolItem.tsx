@@ -14,5 +14,11 @@ export const AddToCollectionToolItem: React.FC<Props> = () => {
   // only the creator of the notebook can add the notebook to a collection
   if(!isNotebookCreator(userId, notebook)) return null;/*nothing to render*/
 
-  return <AddToCollectionDialog notebook={notebook} notebookId={notebookId} />;
+  return (
+    <AddToCollectionDialog
+      notebook={notebook}
+      notebookId={notebookId}
+      displayCount/*Loads the initial count when mounted*/
+    />
+  );
 };
