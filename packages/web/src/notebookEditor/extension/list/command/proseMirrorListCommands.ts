@@ -1,7 +1,3 @@
-// eslint-disable-next-line @typescript-eslint/ban-ts-comment
-// @ts-nocheck
-// FIXME: enable TS-checking when types are updated
-
 import { Slice, Fragment, NodeType, NodeRange } from 'prosemirror-model';
 import { EditorState, Transaction } from 'prosemirror-state';
 import { canSplit, findWrapping, liftTarget, ReplaceAroundStep } from 'prosemirror-transform';
@@ -37,6 +33,9 @@ export class WrapInListDocumentUpdate implements AbstractDocumentUpdate {
     let doJoin = false/*default*/;
     let outerRange = range/*default*/;
 
+    // @ts-ignore even though compatibleContent is not defined on the type of the
+    //            Node, the property does exist. This may be due to a mismatch in
+    //            the versions of prosemirror-model
     // check if at the top of an existing List Item
     if(range.depth >= 2 && $from.node(range.depth - 1).type.compatibleContent(this.listType) && range.startIndex == 0) {
       if($from.index(range.depth - 1) === 0) return false/*at the top of the List, do nothing*/;

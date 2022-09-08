@@ -1,7 +1,3 @@
-// eslint-disable-next-line @typescript-eslint/ban-ts-comment
-// @ts-nocheck
-// FIXME: enable TS-checking when types are updated
-
 import { Node as ProseMirrorNode, Fragment, ResolvedPos, Slice } from 'prosemirror-model';
 import { EditorState, NodeSelection, Selection, TextSelection, Transaction } from 'prosemirror-state';
 import { canJoin, canSplit, liftTarget, replaceStep, ReplaceAroundStep, ReplaceStep } from 'prosemirror-transform';
@@ -323,6 +319,10 @@ const joinMaybeClear = (state: EditorState, $pos: ResolvedPos) => {
   const nodeBefore = $pos.nodeBefore;
   const nodeAfter = $pos.nodeAfter;
   const index = $pos.index();
+
+  // @ts-ignore even though compatibleContent is not defined on the type of the
+  //            Node, the property does exist. This may be due to a mismatch in
+  //            the versions of prosemirror-model
   if(!nodeBefore || !nodeAfter || !nodeBefore.type.compatibleContent(nodeAfter.type)) return false/*no valid Content*/;
 
   if(!nodeBefore.content.size && $pos.parent.canReplace(index - 1, index)) {
