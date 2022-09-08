@@ -1,4 +1,5 @@
 import { Box } from '@chakra-ui/react';
+import { useMemo } from 'react';
 
 import { filterStyleAttributes, AttributeType, HTMLAttributes } from '../../attribute';
 import { NodeName } from '../../node';
@@ -12,13 +13,14 @@ export type CodeBlockComponentRenderProps = Readonly<{
   renderAttributes: HTMLAttributes;
   children: React.ReactNode;
 }>;
-export const CodeBlockComponentJSX: React.FC<CodeBlockComponentRenderProps> = ({ attrs, renderAttributes, children, visualId }) => {
+export const CodeBlockComponentJSX: React.FC<CodeBlockComponentRenderProps> = ({ attrs, children, visualId }) => {
+  const style = useMemo(() => filterStyleAttributes(attrs), [attrs]);
   const type = attrs[AttributeType.Type] ?? CodeBlockType.Code/*default*/,
         wrap = attrs[AttributeType.Wrap] ?? false/*default*/;
 
   return (
     <Box
-      style={filterStyleAttributes(attrs)}
+      style={style}
       data-node-type={NodeName.CODEBLOCK}
       data-visualid={visualId}
 
