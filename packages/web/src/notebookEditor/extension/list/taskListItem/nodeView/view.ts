@@ -1,12 +1,12 @@
 import { Editor } from '@tiptap/core';
-import { TextSelection } from 'prosemirror-state';
 
-import { getPosType, isGetPos, MarkName, NodeName, TaskListItemNodeType, DATA_NODE_TYPE } from '@ureeka-notebook/web-service';
+import { getPosType, isGetPos, NodeName, TaskListItemNodeType, DATA_NODE_TYPE } from '@ureeka-notebook/web-service';
 
 import { NoStorage } from 'notebookEditor/model/type';
 import { AbstractNodeView } from 'notebookEditor/model/AbstractNodeView';
 
 import { TaskListItemModel } from './model';
+import { crossTaskListItemCommand } from '../command';
 
 // ********************************************************************************
 export class TaskListItemView extends AbstractNodeView<TaskListItemNodeType, NoStorage, TaskListItemModel> {
@@ -71,45 +71,12 @@ export class TaskListItemView extends AbstractNodeView<TaskListItemNodeType, NoS
 
   private changeHandler(event: Event) {
     if(!(isHTMLInputElement(event.target) && isCheckBoxInputElement(event.target))) return/*nothing to do*/;
+    if(!isGetPos(this.getPos)) throw new Error('getPos is not a function');
 
-    // TODO: refactor
     const { checked } = event.target;
-    this.editor.chain().focus(undefined/*focus at current selection*/, { scrollIntoView: false /*do not make window scroll*/ }).command((props) => {
-      const { dispatch, tr } = props;
-      if(!dispatch) throw new Error('dispatch undefined when it should not');
-      if(!isGetPos(this.getPos)) throw new Error('getPos is not a function');
+    const thisNodePos = this.getPos();
 
-      const thisNodePos = this.getPos();
-      const currentNode = tr.doc.nodeAt(thisNodePos);
-      if(!currentNode) return false/*Node does not exist*/;
-
-      // NOTE: only on firstChild so that the content of other nested
-      //       TaskListItems do not receive the Strikethrough Mark
-      const { firstChild } = currentNode;
-      if(!firstChild) return false/*first child does not exist*/;
-
-      // update the attributes and set the corresponding marks based on the
-      // checked value
-      const { pos: startingAnchor } = tr.selection.$anchor,
-            { pos: startingHead } = tr.selection.$head;
-
-      if(checked) {
-        tr.setNodeMarkup(thisNodePos, undefined, { ...currentNode.attrs, checked })
-          .addMark(thisNodePos + 1/*inside the node*/,
-                   thisNodePos + firstChild.nodeSize,
-                   this.editor.schema.marks[MarkName.STRIKETHROUGH].create())
-          .setSelection(new TextSelection(tr.doc.resolve(startingAnchor), tr.doc.resolve(startingHead)));
-      } else {
-        tr.setNodeMarkup(thisNodePos, undefined, { ...currentNode.attrs, checked })
-          .removeMark(thisNodePos + 1/*inside the node*/,
-                      thisNodePos + firstChild.nodeSize,
-                      undefined/*remove all marks of any type*/)
-          .setSelection(new TextSelection(tr.doc.resolve(startingAnchor), tr.doc.resolve(startingHead)));
-      }
-
-      dispatch(tr);
-      return true/*node updated*/;
-    }).run();
+    crossTaskListItemCommand(thisNodePos, checked)(this.editor.state, this.editor.view.dispatch);
   }
 }
 
