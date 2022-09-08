@@ -3,7 +3,7 @@ import { Node as ProseMirrorNode, NodeType, ResolvedPos } from 'prosemirror-mode
 import { EditorState, Selection, Transaction } from 'prosemirror-state';
 import { canJoin, findWrapping } from 'prosemirror-transform';
 
-import { getAllAscendantsFromSelection, isBulletListNode, isOrderedListNode, isTaskListNode, isTaskListItemNode, isListItemNode, isListItemContentNode, AttributeType, NodeName, SelectionDepth } from '@ureeka-notebook/web-service';
+import { getAllAscendantsFromSelection, isBulletListNode, isOrderedListNode, isTaskListNode, isTaskListItemNode, isListItemNode, isListItemContentNode, AttributeType, NodeName, SelectionDepth, SetTextSelectionDocumentUpdate } from '@ureeka-notebook/web-service';
 
 import { applyDocumentUpdates } from 'notebookEditor/command/update';
 
@@ -39,13 +39,13 @@ export const isListBlockNode = (node: ProseMirrorNode) => isListNode(node) || is
   // checking for the case when there is a top level List with only one ListItem
   // that gets toggled
   const { selection  } = editor.state;
-  const { $anchor } = selection;
+  const { $anchor, anchor } = selection;
   if(isListItemContentNode($anchor.parent) && $anchor.depth === 3/*anchor inside a ListItemContent Node, inside a ListItem, inside a List*/) {
     return applyDocumentUpdates(editor, [ toggleListUpdate, new SetParagraphDocumentUpdate() ]);
   } else {
     // ensure that the List Commands work correctly by first setting the ListItemContent
     // so that it can be wrapped
-    return applyDocumentUpdates(editor, [ new SetListItemContentDocumentUpdate(), toggleListUpdate ]);
+    return applyDocumentUpdates(editor, [ new SetListItemContentDocumentUpdate(), toggleListUpdate, new SetTextSelectionDocumentUpdate({ from: anchor, to: anchor }) ]);
   }
 };
 
