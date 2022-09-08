@@ -31,6 +31,7 @@ new Plugin<NoPluginState, NotebookSchemaType>({
 
     // -- Props -------------------------------------------------------------------
     props: {
+      // ensure textBlocks that get pasted into Lists become ListItems
       handlePaste: (view: EditorView, event: ClipboardEvent, slice: Slice) => {
         const { selection, schema } = view.state;
         const { $anchor } = selection;

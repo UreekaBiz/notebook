@@ -1,6 +1,6 @@
 import { Box } from '@chakra-ui/react';
 
-import { AttributeType, filterStyleAttributes, HTMLAttributes } from '../../attribute';
+import { filterStyleAttributes, AttributeType, HTMLAttributes } from '../../attribute';
 import { NodeName } from '../../node';
 import { CodeBlockAttributes } from './attribute';
 import { CodeBlockType, DATA_VISUAL_ID } from './type';
