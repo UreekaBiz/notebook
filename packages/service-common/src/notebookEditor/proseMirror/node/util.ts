@@ -1,8 +1,10 @@
-import { Fragment, Node as ProseMirrorNode } from 'prosemirror-model';
-import { Selection, Transaction } from 'prosemirror-state';
+import { Fragment, Node as ProseMirrorNode, ResolvedPos } from 'prosemirror-model';
+import { EditorState, Selection, Transaction } from 'prosemirror-state';
 
 import { AttributeType } from '../attribute';
 import { DocumentNodeType } from '../extension/document';
+import { isSelection, LookInsideOf, NodePredicate, ParentNodePosition } from '../selection';
+import { isEditorState } from '../../state';
 import { mapOldStartAndOldEndThroughHistory } from '../step';
 import { getNodeName, NodeIdentifier, NodeName } from './type';
 
@@ -26,6 +28,38 @@ export const findNodeById = (document: DocumentNodeType, nodeId: NodeIdentifier)
   });
   return nodeFound;
 };
+
+/**
+ * Iterate over parent Nodes, returning a {@link ParentNodePosition}
+ * with the information of the Node where the predicate returns true
+ */
+ export function findParentNode(props: { predicate: NodePredicate; lookInsideOf: LookInsideOf; }): ParentNodePosition | undefined {
+  const { predicate, lookInsideOf } = props;
+  let $pos: EditorState | Selection | ResolvedPos/*default*/;
+
+  if(isEditorState(lookInsideOf)) {
+    $pos = lookInsideOf.selection.$from;
+  } else {
+    if(isSelection(lookInsideOf)) {
+      $pos = lookInsideOf.$from;
+    } else {
+      $pos = lookInsideOf;
+    }
+  }
+
+  for(let depth = $pos.depth; depth > 0; depth--) {
+    const nodeAtDepth = $pos.node(depth);
+    const posBeforeNode = depth > 0 ? $pos.before(depth) : 0/*do not go behind start of Document*/;
+    const nodeStart = $pos.start(depth);
+    const nodeEnd = posBeforeNode + nodeAtDepth.nodeSize;
+
+    if(predicate(nodeAtDepth, posBeforeNode)) {
+      return { posBeforeNode, depth, nodeStart, node: nodeAtDepth, nodeEnd };
+    } /* else -- do not return */
+  }
+
+  return/*Parent not found, return undefined*/;
+}
 
 // ................................................................................
 /**

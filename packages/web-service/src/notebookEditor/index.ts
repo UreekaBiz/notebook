@@ -103,6 +103,15 @@ export {
   LINK_PROTOCOLS,
   PREVENT_LINK_META,
 
+  ListItemAttributes,
+  LIST_ITEM_DEFAULT_SEPARATOR,
+  DATA_LIST_ITEM_LIST_STYLE,
+  DATA_LIST_ITEM_SEPARATOR,
+
+  ORDERED_LIST_DEFAULT_START,
+
+  DATA_TASK_LIST_ITEM_CHECKED,
+
   // == Nodes =====================================================================
   JSONNode,
   NodeName,
@@ -117,6 +126,7 @@ export {
 
   // -- Node Specs ----------------------------------------------------------------
   NodeSpecs,
+  BulletListNodeSpec,
   CodeBlockNodeSpec,
   CodeBlockReferenceNodeSpec,
   DemoAsyncNodeSpec,
@@ -125,7 +135,10 @@ export {
   HeadingNodeSpec,
   ImageNodeSpec,
   MarkHolderNodeSpec,
+  OrderedListNodeSpec,
   ParagraphNodeSpec,
+  TaskListNodeSpec,
+  TaskListItemNodeSpec,
   TextNodeSpec,
 
   getNodeOutputSpec,
@@ -133,6 +146,8 @@ export {
   // -- Node Types ----------------------------------------------------------------
   AsyncNodeType,
   isAsyncNode,
+
+  isBulletListNode,
 
   CodeBlockNodeType,
   createCodeBlockNode,
@@ -171,16 +186,38 @@ export {
   getImageNodeType,
   isImageNode,
 
+  ListStyle,
+
+  createListItemNode,
+  getListItemNodeType,
+  isListItemNode,
+  isListItemNodeType,
+  ListItemNodeSpec,
+  ListItemNodeType,
+
+  createListItemContentNode,
+  getListItemContentNodeType,
+  isListItemContentNode,
+  ListItemContentNodeSpec,
+
   MarkHolderNodeType,
   createMarkHolderNode,
   getMarkHolderNodeType,
   isMarkHolderNode,
   storedMarksFromDOM,
 
+  OrderedListNodeType,
+
   ParagraphNodeType,
   createParagraphNode,
   getParagraphNodeType,
   isParagraphNode,
+
+  createTaskListItemNode,
+  isTaskListNode,
+
+  TaskListItemNodeType,
+  isTaskListItemNode,
 
   TextNodeType,
   createTextNode,
@@ -241,6 +278,8 @@ export {
   createLinkMark,
   getLinkMarkType,
   isLinkMark,
+
+  isOrderedListNode,
 
   ReplacedTextMarkMarkType,
   createReplacedTextMarkMark,
@@ -353,10 +392,16 @@ export {
   computeRemovedNodePositions,
   findContentDifferencePositions,
   findNodeById,
+  findParentNode,
   getParentNode,
   getNodesAffectedByStepMap,
+  liftEmptyBlockNodeCommand,
+  LiftEmptyBlockNodeDocumentUpdate,
+  joinBackwardCommand,
+  JoinBackwardDocumentUpdate,
   nodeToTagId,
   wereNodesAffectedByTransaction,
+  ParentNodePosition,
   NodePosition,
 
   // .. Selection .................................................................

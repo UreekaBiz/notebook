@@ -1,6 +1,7 @@
 import { EDITOR_CLASS_NAME, EDITOR_EDITABLE_CLASS_NAME } from 'core/theme';
 import { AsyncNode } from 'notebookEditor/extension/asyncNode/AsyncNode';
 import { Bold } from 'notebookEditor/extension/bold/Bold';
+import { BulletList } from 'notebookEditor/extension/list/bulletList/BulletList';
 import { Code } from 'notebookEditor/extension/code/Code';
 import { CodeBlock } from 'notebookEditor/extension/codeblock/CodeBlock';
 import { CodeBlockReference } from 'notebookEditor/extension/codeBlockReference/CodeBlockReference';
@@ -17,14 +18,19 @@ import { Image } from 'notebookEditor/extension/image/Image';
 import { InputRule } from 'notebookEditor/extension/inputRule/InputRule';
 import { InlineNodeWithContent } from 'notebookEditor/extension/inlineNodeWithContent/InlineNodeWithContent';
 import { Italic } from 'notebookEditor/extension/italic/Italic';
+import { ListItem } from 'notebookEditor/extension/list/listItem/ListItem';
+import { ListItemContent } from 'notebookEditor/extension/list/listItemContent/ListItemContent';
 import { Link } from 'notebookEditor/extension/link/Link';
 import { MarkHolder } from 'notebookEditor/extension/markHolder/MarkHolder';
 import { NodeViewRemoval } from 'notebookEditor/extension/nodeViewRemoval/NodeViewRemoval';
+import { OrderedList } from 'notebookEditor/extension/list/orderedList/OrderedList';
 import { Paragraph } from 'notebookEditor/extension/paragraph/Paragraph';
 import { ReplacedTextMark } from 'notebookEditor/extension/replacedTextMark/ReplacedTextMark';
 import { Strikethrough } from 'notebookEditor/extension/strikethrough/Strikethrough';
 import { SubScript } from 'notebookEditor/extension/subScript/SubScript';
 import { SuperScript } from 'notebookEditor/extension/superScript/SuperScript';
+import { TaskList } from 'notebookEditor/extension/list/taskList/TaskList';
+import { TaskListItem } from 'notebookEditor/extension/list/taskListItem/TaskListItem';
 import { Text } from 'notebookEditor/extension/text/Text';
 import { TextStyle } from 'notebookEditor/extension/textStyle/TextStyle';
 import { Underline } from 'notebookEditor/extension/underline/Underline';
@@ -40,6 +46,7 @@ export const editorDefinition = {
   extensions: [
     AsyncNode,
     Bold,
+    BulletList,
     Code,
     CodeBlock,
     CodeBlockAsyncNode,
@@ -57,13 +64,18 @@ export const editorDefinition = {
     InlineNodeWithContent,
     InputRule,
     Link,
+    ListItem,
+    ListItemContent,
     MarkHolder,
     NodeViewRemoval,
+    OrderedList,
     Paragraph,
     ReplacedTextMark,
     Strikethrough,
     SubScript,
     SuperScript,
+    TaskList,
+    TaskListItem,
     Text,
     TextStyle,
     Underline,

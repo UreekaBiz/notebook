@@ -23,6 +23,7 @@ export * from './extension/image';
 export * from './extension/italic';
 export * from './extension/inlineNodeWithContent';
 export * from './extension/link';
+export * from './extension/list';
 export * from './extension/markHolder';
 export * from './extension/paragraph';
 export * from './extension/replacedTextMark';

@@ -30,38 +30,51 @@ export const Toolbar: React.FC<Props> = ({ depth, nodeOrMarkName, toolbar,  sele
   //       case that the caller does not check it.
   if(toolbar.shouldShow && !toolbar.shouldShow(editor, depth)) return null/*nothing to render*/;
 
+  // if at least one Tool in the ToolCollection does not have the shouldShow
+  // property defined, or if at least one of the Tools that have it should be
+  // shown, show the Toolbar
+  const shouldShow = toolbar.toolsCollections.some(toolCollection =>
+    toolCollection.some(tool => !tool.shouldShow || (tool.shouldShow(editor, depth))));
+
   return (
     <Box>
-      <Flex
-        align='center'
-        justify='space-between'
-        width='full'
-        paddingX={4}
-        paddingY={2}
-        backgroundColor={depth === selectedDepth ? '#ddd' : '#f3f3f3'}
-        boxShadow='base'
-        onClick={() => onSelection(depth)}
-      >
-        <Text
-          marginBottom='1px'
-          paddingY={0.1}
-          fontSize={15}
-          fontWeight='bold'
-          textTransform='capitalize'
-          _hover={{ cursor: 'pointer' }}
-        >
-          {toolbar.title}
-        </Text>
-        {RightContent && <RightContent depth={depth} editor={editor} />}
-      </Flex>
-      <VStack divider={<Divider />} spacing={0} display='flex' alignItems='flex-start' width='full'>
-        {toolbar.toolsCollections.map((tools, i) =>
-          <Box key={`${nodeOrMarkName}-${i}`} paddingX={4} paddingY={1} width='100%'>
-            {tools.map(tool =>
-              <ToolItemComponent key={`${nodeOrMarkName}-${tool.name}-${i}`} depth={depth} editor={editor} tool={tool} />)}
-          </Box>
-          )}
-      </VStack>
+      {
+        shouldShow
+          ?
+          <>
+            <Flex
+              align='center'
+              justify='space-between'
+              width='full'
+              paddingX={4}
+              paddingY={2}
+              backgroundColor={depth === selectedDepth ? '#ddd' : '#f3f3f3'}
+              boxShadow='base'
+              onClick={() => onSelection(depth)}
+            >
+              <Text
+                marginBottom='1px'
+                paddingY={0.1}
+                fontSize={15}
+                fontWeight='bold'
+                textTransform='capitalize'
+                _hover={{ cursor: 'pointer' }}
+              >
+                {toolbar.title}
+              </Text>
+              {RightContent && <RightContent depth={depth} editor={editor} />}
+            </Flex>
+            <VStack divider={<Divider />} spacing={0} display='flex' alignItems='flex-start' width='full'>
+              {toolbar.toolsCollections.map((tools, i) =>
+                <Box key={`${nodeOrMarkName}-${i}`} paddingX={4} paddingY={1} width='100%'>
+                  {tools.map(tool =>
+                    <ToolItemComponent key={`${nodeOrMarkName}-${tool.name}-${i}`} depth={depth} editor={editor} tool={tool} />)}
+                </Box>
+                )}
+            </VStack>
+          </>
+          : null/*do not show*/
+      }
     </Box>
   );
 };

@@ -10,6 +10,7 @@ import { demoAsyncNodeToolItem } from 'notebookEditor/extension/demoAsyncNode/to
 import { heading1, heading2, heading3 } from 'notebookEditor/extension/heading/toolbar';
 import { imageToolItem } from 'notebookEditor/extension/image/toolbar';
 import { linkToolItem } from 'notebookEditor/extension/link/toolbar';
+import { bulletListToolItem, orderedListToolItem, taskListToolItem } from 'notebookEditor/extension/list/toolbar';
 import { markStrikethrough } from 'notebookEditor/extension/strikethrough/toolbar';
 import { markSuperScript } from 'notebookEditor/extension/superScript/toolbar';
 import { markSubScript } from 'notebookEditor/extension/subScript/toolbar';
@@ -25,6 +26,9 @@ export const ParagraphToolbar: Toolbar = {
 
   toolsCollections: [
     [
+      orderedListToolItem,
+      bulletListToolItem,
+      taskListToolItem,
       markBold,
       markItalic,
       markUnderline,
