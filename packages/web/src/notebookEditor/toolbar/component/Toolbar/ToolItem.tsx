@@ -18,8 +18,8 @@ interface Props {
 }
 // NOTE: this component is not meant to be used directly, it is meant to be used
 //       inside a ErrorBoundary component. (See below)
-const InternalToolItem: React.FC<Props> = ({ editor, tool, depth }) => {
-  const isButtonActive = isToolActive(editor, tool);
+const InternalToolItem: React.FC<Props> = ({ editor, depth, tool }) => {
+  const isButtonActive = isToolActive(editor, depth, tool);
   const toast = useToast();
 
   // == Handler ===================================================================
@@ -58,8 +58,8 @@ const InternalToolItem: React.FC<Props> = ({ editor, tool, depth }) => {
         datatype={TOOL_ITEM_DATA_TYPE/*(SEE: notebookEditor/toolbar/type )*/}
         key={tool.name}
         className={ICON_BUTTON_CLASS}
-        disabled={tool.shouldBeDisabled && tool.shouldBeDisabled(editor)}
-        style={{ background: isButtonActive ? ACTIVE_BUTTON_COLOR : undefined/*default*/, color: tool.shouldBeDisabled && tool.shouldBeDisabled(editor) ? 'slategray' : 'black' }}
+        disabled={tool.shouldBeDisabled && tool.shouldBeDisabled(editor, depth)}
+        style={{ background: isButtonActive ? ACTIVE_BUTTON_COLOR : undefined/*default*/, color: tool.shouldBeDisabled && tool.shouldBeDisabled(editor, depth) ? 'slategray' : 'black' }}
         onClick={handleToolClick}
       >
         <Center>
@@ -85,14 +85,14 @@ export const ToolItemComponent: React.FC<Props> = (props) => {
 };
 
 // == Util ========================================================================
-const isToolActive = (editor: Editor, tool: ToolItem) => {
+const isToolActive = (editor: Editor, depth: SelectionDepth, tool: ToolItem) => {
   // NOTE: This is a special case since Heading node uses multiple Tool Items for
   //       the same kind of node only differentiated by the Level attribute.
   if(tool.name.includes(NodeName.HEADING)) return isHeadingToolActive(editor, tool.name);
   if(tool.toolType === 'component') return false/*no active state for components*/;
 
   // Use component implementation if defined
-  if(tool.isActive) return tool.isActive(editor);
+  if(tool.isActive) return tool.isActive(editor, depth);
 
   // Use editor implementation
   return editor.isActive(tool.name);

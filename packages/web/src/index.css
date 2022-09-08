@@ -93,6 +93,70 @@ img.ProseMirror-selectednode/*target inline nodes with content (e.g. asyncNodes)
 .chipCloseButton:hover { color: rgba(255, 255, 255, 0.7);}
 .chipCloseButton:focus { color: rgba(255, 255, 255, 0.7); }
 
+/* -- List --------------------------------------------------------------------- */
+/* NOTE: the following listItem styles ensure paragraphs inside ListItems or
+         TaskListItems do not inherit the regular paragraph styles, which modify
+         the margin. This constraint comes from the fact that
+         paragraphs must be a child of lists
+         (SEE: REF in src/common/notebookEditor/extension/listItem)
+         (SEE: REF in src/common/notebookEditor/extension/taskListItem)
+*/
+/* .. ListItem ................................................................. */
+[data-node-type="listItem"] > [data-node-type="listItemContent"] {
+  margin: 0px;
+}
+
+/* .. TaskListItem ............................................................. */
+[data-node-type="taskListItem"] > div > [data-node-type="listItemContent"] {
+  margin-left: 4px;
+  margin-right: 4px;
+  margin-top: 0.5rem;
+  margin-bottom: 0.5rem;
+}
+
+/* .. OrderedList .............................................................. */
+ol[data-node-type="orderedList"] {
+  margin-left: 1em;
+  padding-left: 1em;
+  counter-reset: list;
+}
+ol[data-node-type="orderedList"] > li[data-node-type="listItem"] {
+  counter-increment: list;
+}
+ol[data-node-type="orderedList"] > li[data-node-type="listItem"]::marker {
+  /* NOTE: the listStyle variable is added by the renderer. (SEE: listItem.ts) */
+  content: counter(list, var(--listStyleType)) attr(data-attribute-separator)
+}
+
+/* .. BulletList ............................................................... */
+ul[data-node-type="bulletList"] {
+  margin-left: 1em;
+  padding-left: 1em;
+}
+ul[data-node-type="bulletList"] > li[data-node-type="listItem"] {
+  /*
+    ensure ListItems that are children of BulletLists have the default
+    style regardless of where they are located
+  */
+  list-style-type: disc !important;
+}
+
+/* .. TaskList ................................................................. */
+ul[data-node-type="taskList"] {
+  margin-left: 1em;
+  padding-left: 1em;
+
+  list-style: none;
+  padding: 0;
+}
+ul[data-node-type="taskList"] > li { display: flex; }
+ul[data-node-type="taskList"] > li > label {
+	 flex: 0 0 auto;
+   margin-top: 0.55em;
+	 margin-right: 0.25rem;
+	 user-select: none;
+}
+
 /* .. MarkHolder ............................................................... */
 [data-node-type="markHolder"] {
   /*

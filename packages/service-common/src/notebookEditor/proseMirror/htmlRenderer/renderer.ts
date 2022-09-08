@@ -13,6 +13,7 @@ import { HeadingNodeRendererSpec } from '../extension/heading';
 import { ImageNodeRendererSpec } from '../extension/image';
 import { ItalicMarkRendererSpec } from '../extension/italic';
 import { LinkMarkRendererSpec } from '../extension/link';
+import { BulletListNodeRendererSpec, ListItemContentNodeRendererSpec, ListItemNodeRendererSpec, OrderedListNodeRendererSpec, TaskListItemNodeRendererSpec, TaskListNodeRendererSpec } from '../extension/list';
 import { MarkHolderNodeRendererSpec } from '../extension/markHolder';
 import { isParagraphJSONNode, ParagraphNodeRendererSpec } from '../extension/paragraph';
 import { ReplacedTextMarkMarkRendererSpec } from '../extension/replacedTextMark';
@@ -32,15 +33,21 @@ import { getRenderTag, HTMLString, MarkRendererSpec, NodeRendererSpec, DATA_MARK
 // ********************************************************************************
 // == Type ========================================================================
 export const NodeRendererSpecs: Record<NodeName, NodeRendererSpec> = {
+  [NodeName.BULLET_LIST]: BulletListNodeRendererSpec as any/*FIXME!!!*/,
   [NodeName.CODEBLOCK]: CodeBlockNodeRendererSpec as any/*FIXME!!!*/,
   [NodeName.CODEBLOCK_REFERENCE]: CodeBlockReferenceNodeRendererSpec as any/*FIXME!!!*/,
   [NodeName.DEMO_2_ASYNC_NODE]: Demo2AsyncNodeRendererSpec as any/*FIXME!!!*/,
   [NodeName.DEMO_ASYNC_NODE]: DemoAsyncNodeRendererSpec as any/*FIXME!!!*/,
   [NodeName.DOC]: DocumentNodeRendererSpec,
   [NodeName.HEADING]: HeadingNodeRendererSpec as any/*FIXME!!!*/,
+  [NodeName.LIST_ITEM]: ListItemNodeRendererSpec as any/*FIXME!!!*/,
+  [NodeName.LIST_ITEM_CONTENT]: ListItemContentNodeRendererSpec as any/*FIXME!!!*/,
   [NodeName.IMAGE]: ImageNodeRendererSpec as any/*FIXME!!!*/,
   [NodeName.MARK_HOLDER]: MarkHolderNodeRendererSpec as any/*FIXME!!!*/,
+  [NodeName.ORDERED_LIST]: OrderedListNodeRendererSpec as any/*FIXME!!!*/,
   [NodeName.PARAGRAPH]: ParagraphNodeRendererSpec as any/*FIXME!!!*/,
+  [NodeName.TASK_LIST]: TaskListNodeRendererSpec as any/*FIXME!!!*/,
+  [NodeName.TASK_LIST_ITEM]: TaskListItemNodeRendererSpec as any/*FIXME!!!*/,
   [NodeName.TEXT]: TextNodeRendererSpec,
 };
 

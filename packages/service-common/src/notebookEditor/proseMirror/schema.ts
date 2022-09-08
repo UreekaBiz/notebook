@@ -12,6 +12,7 @@ import { HeadingNodeSpec } from './extension/heading';
 import { ImageNodeSpec } from './extension/image';
 import { ItalicMarkSpec } from './extension/italic';
 import { LinkMarkSpec } from './extension/link';
+import { BulletListNodeSpec, ListItemContentNodeSpec, ListItemNodeSpec, OrderedListNodeSpec, TaskListItemNodeSpec, TaskListNodeSpec } from './extension/list';
 import { MarkHolderNodeSpec } from './extension/markHolder';
 import { ParagraphNodeSpec } from './extension/paragraph';
 import { ReplacedTextMarkMarkSpec } from './extension/replacedTextMark';
@@ -34,14 +35,20 @@ export const NodeSpecs: Record<NodeName, NodeSpec> = {
   //       (SEE: web/src/notebookEditor/model/type/ExtensionPriority.ts)
   [NodeName.DOC]: DocumentNodeSpec,
   [NodeName.PARAGRAPH]: ParagraphNodeSpec,
+  [NodeName.LIST_ITEM_CONTENT]: ListItemContentNodeSpec,
 
+  [NodeName.BULLET_LIST]: BulletListNodeSpec,
   [NodeName.CODEBLOCK]: CodeBlockNodeSpec,
   [NodeName.CODEBLOCK_REFERENCE]: CodeBlockReferenceNodeSpec,
   [NodeName.DEMO_2_ASYNC_NODE]: Demo2AsyncNodeSpec,
   [NodeName.DEMO_ASYNC_NODE]: DemoAsyncNodeSpec,
   [NodeName.HEADING]: HeadingNodeSpec,
   [NodeName.IMAGE]: ImageNodeSpec,
+  [NodeName.LIST_ITEM]: ListItemNodeSpec,
   [NodeName.MARK_HOLDER]: MarkHolderNodeSpec,
+  [NodeName.ORDERED_LIST]: OrderedListNodeSpec,
+  [NodeName.TASK_LIST]: TaskListNodeSpec,
+  [NodeName.TASK_LIST_ITEM]: TaskListItemNodeSpec,
   [NodeName.TEXT]: TextNodeSpec,
 };
 

@@ -70,8 +70,19 @@ export enum AttributeType {
   Href = 'href',
   Target = 'target',
 
+  // .. ListItem  .................................................................
+  Separator = 'separator',
+  ListStyleType = 'listStyleType',
+
   // .. MarkHolder ................................................................
   StoredMarks = 'storedMarks',
+
+  // .. Ordered List ..............................................................
+  // NOTE: corresponds to the 'start' HTML attribute from the 'ol' HTML tag
+  StartValue = 'start',
+
+  // .. TaskListItem ..............................................................
+  Checked = 'checked',
 }
 
 export type StyleAttributes = {

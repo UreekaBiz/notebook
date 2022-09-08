@@ -58,6 +58,7 @@ export const DefaultTheme: Theme = {
   displayName: 'Default',
 
   nodes: {
+    [NodeName.BULLET_LIST]: {/*no defined value*/},
     [NodeName.CODEBLOCK]: {
       [AttributeType.PaddingLeft]: '4px',
       [AttributeType.PaddingRight]: '4px',
@@ -98,7 +99,10 @@ export const DefaultTheme: Theme = {
       [AttributeType.TextAlign]: TextAlign.left,
       [AttributeType.VerticalAlign]: VerticalAlign.bottom,
     },
+    [NodeName.LIST_ITEM]: {/*no defined value*/},
+    [NodeName.LIST_ITEM_CONTENT]: {/*no defined value*/},
     [NodeName.MARK_HOLDER]: {/*no defined value*/},
+    [NodeName.ORDERED_LIST]: {/*no defined value*/},
     [NodeName.PARAGRAPH]: {
       [AttributeType.TextColor]: '#000',
       [AttributeType.FontSize]: '16px',
@@ -107,6 +111,11 @@ export const DefaultTheme: Theme = {
       [AttributeType.MarginTop]: '0.5rem',
       [AttributeType.MarginBottom]: '0.5rem',
     },
+    [NodeName.TASK_LIST]: {
+      [AttributeType.MarginLeft]: '1em',
+      [AttributeType.PaddingLeft]: '1em',
+    },
+    [NodeName.TASK_LIST_ITEM]: {/*no defined value*/},
     [NodeName.TEXT]: {/*no defined value*/},
   },
 
@@ -151,6 +160,7 @@ export const GoogleDocsTheme: Theme = {
   displayName: 'Default',
 
   nodes: {
+    [NodeName.BULLET_LIST]: {/*no defined value*/},
     [NodeName.CODEBLOCK]: {
       [AttributeType.PaddingLeft]: '4px',
       [AttributeType.PaddingRight]: '4px',
@@ -190,7 +200,13 @@ export const GoogleDocsTheme: Theme = {
       [AttributeType.TextAlign]: TextAlign.left,
       [AttributeType.VerticalAlign]: VerticalAlign.bottom,
     },
+    [NodeName.LIST_ITEM]: {
+      [AttributeType.PaddingTop]: '10px',
+      [AttributeType.PaddingBottom]: '10px',
+    },
+    [NodeName.LIST_ITEM_CONTENT]: {/*no defined value*/},
     [NodeName.MARK_HOLDER]: {/*no defined value*/},
+    [NodeName.ORDERED_LIST]: {/*no defined value*/},
     [NodeName.PARAGRAPH]: {
       [AttributeType.FontSize]: '11pt',
       [AttributeType.TextColor]: '#353744',
@@ -199,6 +215,11 @@ export const GoogleDocsTheme: Theme = {
       [AttributeType.MarginTop]: '0.5rem',
       [AttributeType.MarginBottom]: '0.5rem',
     },
+    [NodeName.TASK_LIST]:{
+      [AttributeType.MarginLeft]: '1em',
+      [AttributeType.PaddingLeft]: '1em',
+    },
+    [NodeName.TASK_LIST_ITEM]: {/*no defined value*/},
     [NodeName.TEXT]: {/*no defined value*/},
   },
 

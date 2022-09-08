@@ -55,6 +55,11 @@ export enum ExtensionPriority {
   //       been recomputed. Hence this must run before other Extensions
   ASYNC_NODE = 116,
 
+  // NOTE: ListItemContent Nodes have special Enter and Backspace behavior
+  //       that should be handled before other List-related Extensions are
+  //       called to check their handlers. (SEE: ListItemContent.ts)
+  LIST_ITEM_CONTENT = 115,
+
   // NOTE: custom InputRules just need to be triggered before Text so that their
   //       effects are applied (SEE: InputRule.ts)
   INPUT_RULE = 100,
@@ -78,4 +83,7 @@ export enum ParseRulePriority {
   //       priority over other nodes (such as Paragraphs or Headings)
   //       when being parsed (SEE: MarkHolder.ts)
   MARK_HOLDER = 52,
+
+  // NOTE: TaskList parsing has preference over regular Lists
+  TASK_LIST = 51,
 }

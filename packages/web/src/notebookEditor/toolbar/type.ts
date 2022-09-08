@@ -38,7 +38,8 @@ export type ToolItem = Readonly<{
   name: ToolName;
 
   /** Defaults to not be disabled if not provided */
-  shouldBeDisabled?: (editor: Editor) => boolean;
+  shouldBeDisabled?: (editor: Editor, depth: SelectionDepth) => boolean;
+
   /** Defaults to always show if not provided  */
   shouldShow?: (editor: Editor, depth: SelectionDepth) => boolean;
 
@@ -106,7 +107,7 @@ export type EditorToolButton = Readonly<{
   /** Optional function that determinate if the ToolItem is active or not. This means
    *  that the button will be displayed with an active state indicator. If not provided
    *  the Editor will use the name instead. */
-  isActive?: (editor: Editor) => boolean;
+  isActive?: (editor: Editor, depth: SelectionDepth) => boolean;
 
   /** Callback to be used when the button is clicked */
   onClick: (editor: Editor, depth: SelectionDepth) => void;
