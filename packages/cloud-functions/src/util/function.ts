@@ -14,7 +14,7 @@ import { getTaskHeaderData, TaskHeaderData } from './google/task';
 
 // convenience types and functions for working with HTTPS Cloud Functions
 // ********************************************************************************
-export const LongrunningRuntimeOpts: RuntimeOptions = {
+export const LongRunningRuntimeOpts: RuntimeOptions = {
   timeoutSeconds: 540/*s -- maximum allowed*/,
 };
 export const MaintenanceRuntimeOpts: RuntimeOptions = {
