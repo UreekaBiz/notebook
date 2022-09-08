@@ -54,7 +54,7 @@ export class WrapInListDocumentUpdate implements AbstractDocumentUpdate {
     if(!wrappers) return false/*no valid outer wrapping found*/;
 
     const updatedTr = doWrapInList(editorState.tr, range, wrappers, doJoin, this.listType).scrollIntoView();
-    return updatedTr;
+    return updatedTr/*updated*/;
   }
 }
 const doWrapInList = (tr: Transaction, range: NodeRange, wrappers: { type: NodeType; attrs?: Attributes | null; }[], joinBefore: boolean, listType: NodeType) => {
