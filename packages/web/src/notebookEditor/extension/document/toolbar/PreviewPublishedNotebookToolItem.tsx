@@ -1,5 +1,5 @@
 import { Box, Button, CloseButton, Portal } from '@chakra-ui/react';
-import { useEffect, useState } from 'react';
+import { useCallback, useEffect, useState } from 'react';
 
 import { nodeToContent } from '@ureeka-notebook/web-service';
 
@@ -34,21 +34,29 @@ export const PreviewPublishedNotebookToolItem: React.FC<Props> = ({ editor }) =>
   }, [isOpen]);
 
   // == Handler ===================================================================
-  const handleOpen = () => setIsOpen(true);
-  const handleClose = () => setIsOpen(false);
+  const handleOpen = useCallback(() => setIsOpen(true), []);
+  const handleClose = useCallback(() => setIsOpen(false), []);
 
   // == UI ========================================================================
-  return (
-    <>
-      <Button colorScheme='gray' variant='ghost' size='sm' onClick={handleOpen}>Preview published</Button>
-      <Portal>
-        {isOpen && (
-          <Box position='absolute' top='0' left='0' w='100%' h='100vh' overflowY='auto' background='white'>
-            <CloseButton position='absolute' top='0' right={0} onClick={handleClose} />
-            <NotebookViewer content={content} />
-          </Box>
-        )}
-      </Portal>
-    </>
+  if(isOpen) return (
+    <Portal>
+      <Box
+        position='absolute'
+        top='0'
+        left='0'
+        w='100%'
+        h='100vh'
+        overflowY='auto'
+        background='white'
+      >
+        <CloseButton position='absolute' top='0' right={0} onClick={handleClose} />
+        <NotebookViewer content={content} />
+      </Box>
+    </Portal>
   );
+
+  return (
+    <Button colorScheme='gray' variant='ghost' size='sm' onClick={handleOpen}>Preview published</Button>
+  );
+
 };

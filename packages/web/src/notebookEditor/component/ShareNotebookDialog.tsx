@@ -2,7 +2,7 @@ import { useToast, Box, Button, Flex, Modal, ModalBody, ModalCloseButton, ModalC
 import { useEffect, useState } from 'react';
 import { FiUsers } from 'react-icons/fi';
 
-import { getNotebookShareRoles, getLogger, mapEquals, userProfileComparator, Logger, Notebook, NotebookIdentifier, NotebookService, ObjectTuple, ShareRole, UserIdentifier, UserProfilePublic, UserProfileService, MAX_NOTEBOOK_SHARE_USERS } from '@ureeka-notebook/web-service';
+import { getNotebookShareCount, getNotebookShareRoles, getLogger, mapEquals, userProfileComparator, Logger, Notebook, NotebookIdentifier, NotebookService, ObjectTuple, ShareRole, UserIdentifier, UserProfilePublic, UserProfileService, MAX_NOTEBOOK_SHARE_USERS } from '@ureeka-notebook/web-service';
 
 import { useAuthedUser } from 'authUser/hook/useAuthedUser';
 import { NotebookRoleSelector } from 'notebookEditor/component/NotebookRoleSelector';
@@ -31,17 +31,20 @@ export const ShareNotebookDialog: React.FC<Props> = ({ notebook, notebookId, com
   const authedUser = useAuthedUser();
 
   // == State =====================================================================
+  // -- Share ---------------------------------------------------------------------
   // NOTE: shareRoles must have the User's profile in this map since it's
   //       needed to order the list of Users
   const [shareRoles, setShareRoles] = useState<Map<UserIdentifier, UserRole> | null/*not loaded yet*/>(null/*initially none*/);
   const [currentRole, setCurrentRole] = useState<ShareRole>(ShareRole.Viewer/*default role*/);
   const [status, setStatus] = useAsyncStatus();
 
+  // -- Modal ---------------------------------------------------------------------
   // Modal state
   const [isModalOpen, setIsModalOpen] = useState(false/*by contract*/);
   // AreYourSure state
   const [isAYSOpen, setIsAYSOpen] = useState(false/*by contract*/);
 
+  // ------------------------------------------------------------------------------
   const toast = useToast();
   const isMounted = useIsMounted();
 
@@ -56,6 +59,10 @@ export const ShareNotebookDialog: React.FC<Props> = ({ notebook, notebookId, com
   // == Effect ====================================================================
   // resolves (loads) the User Profile for the initial Roles
   useEffect(() => {
+    // NOTE: To avoid unnecessary requests for the User Profile for the current
+    //       initial roles, the User Profile is only loaded when the modal is opened.
+    if(!isModalOpen) return/*nothing to do*/;
+
     // can be re-run if any of the dependencies changes. A flag must be used to
     // indicate if this is the current effect in order to avoid race conditions
     let isCurrentEffect = true;
@@ -88,9 +95,9 @@ export const ShareNotebookDialog: React.FC<Props> = ({ notebook, notebookId, com
 
     resolveUsersProfiles();
     return () => { isCurrentEffect = false/*by definition*/; };
-    // NOTE: only executed when notebook changes.
+    // NOTE: only executed when modal is opened
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [notebook]);
+  }, [isModalOpen]);
 
   // == Handler ===================================================================
   const resetState = () => {
@@ -166,6 +173,7 @@ export const ShareNotebookDialog: React.FC<Props> = ({ notebook, notebookId, com
                                 .sort((a, b) => userProfileComparator(roleToProfile(a), roleToProfile(b)));
   const existingSharedUserIds = new Set<UserIdentifier>(sortedShareRoles.map(([userId]) => userId));
 
+  const shareCount = getNotebookShareCount(notebook);
   return (
     <>
       {/* use component if provided */}
@@ -177,7 +185,7 @@ export const ShareNotebookDialog: React.FC<Props> = ({ notebook, notebookId, com
           leftIcon={<FiUsers size={16} />}
           onClick={handleOpen}
         >
-          Share {shareRoles ? `(${shareRoles?.size})` : ''}
+          Share ({shareCount})
         </Button>
       )}
 

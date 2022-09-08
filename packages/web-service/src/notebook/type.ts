@@ -10,6 +10,7 @@ export {
   isNotebookViewer,
   isNotebookRole,
   getNotebookShareRoles,
+  getNotebookShareCount,
   getNotebookShareCounts,
 
   // SEE: @ureeka-notebook/service-common: notebook/type.ts
