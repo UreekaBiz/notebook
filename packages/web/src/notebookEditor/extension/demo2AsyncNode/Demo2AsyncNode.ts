@@ -46,7 +46,7 @@ export const Demo2AsyncNode = Node.create<NoOptions, Demo2AsyncNodeStorageType>(
     return {
       // create a Demo2AsyncNode
       'Shift-Mod-Alt-d': () => applyDocumentUpdates(this.editor, [ new ClearNodesDocumentUpdate(), new CreateBlockNodeDocumentUpdate(NodeName.DEMO_2_ASYNC_NODE, { [AttributeType.Id]: generateNodeId() })]),
-      'Shift-Mod--Alt-D': () => applyDocumentUpdates(this.editor, [ new ClearNodesDocumentUpdate(), new CreateBlockNodeDocumentUpdate(NodeName.DEMO_2_ASYNC_NODE, { [AttributeType.Id]: generateNodeId() })]),
+      'Shift-Mod-Alt-D': () => applyDocumentUpdates(this.editor, [ new ClearNodesDocumentUpdate(), new CreateBlockNodeDocumentUpdate(NodeName.DEMO_2_ASYNC_NODE, { [AttributeType.Id]: generateNodeId() })]),
 
       // remove Demo2AsyncNode when at start of document or Demo2AsyncNode is empty
       'Backspace': ({ editor }) => handleBlockBackspace(editor, NodeName.DEMO_2_ASYNC_NODE),
