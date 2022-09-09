@@ -1,4 +1,4 @@
-import { Fragment, Node as ProseMirrorNode, Slice } from 'prosemirror-model';
+import { Slice } from 'prosemirror-model';
 import { NodeSelection, Plugin, TextSelection } from 'prosemirror-state';
 import { EditorView } from 'prosemirror-view';
 
@@ -9,7 +9,7 @@ import { parseStoredMarks } from './util';
 // == Constant ====================================================================
 // the Inclusion Set of Nodes that must maintain marks after their Content was
 // deleted, if any marks were active when said Content was deleted
-const blockNodesThatPreserveMarks = new Set([NodeName.HEADING, NodeName.PARAGRAPH]);
+const blockNodesThatPreserveMarks = new Set([NodeName.HEADING, NodeName.PARAGRAPH, NodeName.LIST_ITEM_CONTENT]);
 
 // == Plugin ======================================================================
 export const MarkHolderPlugin = () => new Plugin<NotebookSchemaType>({
@@ -44,10 +44,27 @@ export const MarkHolderPlugin = () => new Plugin<NotebookSchemaType>({
         // (SEE: NOTE above)
         maps[stepMapIndex].forEach((unmappedOldStart, unmappedOldEnd) => {
           const { newNodePositions } = getNodesAffectedByStepMap(transactions[i], stepMapIndex, unmappedOldStart, unmappedOldEnd, blockNodesThatPreserveMarks);
-
           const { storedMarks } = transactions[i];
-          for(let j=0; j<newNodePositions.length; j++) {
 
+          // ensure no MarkHolders ever get pasted or set in places they should not be
+          for(let j=0; j<newNodePositions.length; j++) {
+            newNodePositions[j].node.content.forEach((descendant, offsetIntoParent) => {
+              if(
+                  // if the MarkHolder is not the first child
+                  (isMarkHolderNode(descendant) && !(descendant === newNodePositions[i].node.firstChild))
+                ||
+                  // if the MarkHolder is not the only child (prevent any possible
+                  // weird Block Node splitting / lifting results)
+                  isMarkHolderNode(descendant) && newNodePositions[i].node.content.size > 1
+              ) {
+                tr.setSelection(NodeSelection.create(tr.doc, (newNodePositions[j].position+1/*inside the parent*/) + offsetIntoParent))
+                  .deleteSelection();
+              }
+            });
+          }
+
+          // check if any legitimate MarkHolders must be added
+          for(let j=0; j<newNodePositions.length; j++) {
             // Headings should default to MarkHolder with Bold
             if(newNodePositions[j].node.content.size < 1/*no content*/ && isHeadingNode(newNodePositions[j].node)) {
               tr.insert(newNodePositions[j].position + 1/*inside the parent*/, createMarkHolderNode(newState.schema, { storedMarks: stringifyMarksArray([createBoldMark(newState.schema)]) }));
@@ -183,30 +200,6 @@ export const MarkHolderPlugin = () => new Plugin<NotebookSchemaType>({
       parseStoredMarks(view.state.schema, storedMarks).forEach(storedMark => tr.addMark(posBeforeAnchorPos, posBeforeAnchorPos + slice.size, storedMark));
       dispatch(tr);
       return true/*event handled*/;
-    },
-
-    // ensure no MarkHolders ever get pasted in places they should not be
-    transformPasted(slice: Slice) {
-      slice.content.descendants(descendantBlockNode => {
-        if(!descendantBlockNode.isBlock) return/*nothing to do*/;
-
-        // MarkHolders can only exist on empty BlockNodes as their only child
-        const { firstChild } = descendantBlockNode;
-        const canHaveMarkHolder = descendantBlockNode.content.size === 1/*pasted Node is empty*/
-                                  && firstChild/*exists*/
-                                  && isMarkHolderNode(firstChild)/*firstChild is a MarkHolder*/;
-        if(canHaveMarkHolder) return/*nothing to do*/;
-
-        const filteredContent: ProseMirrorNode<NotebookSchemaType>[] = [];
-        descendantBlockNode.content.descendants(descendantInlineNode => {
-          if(isMarkHolderNode(descendantInlineNode)) return/*nothing to do*/;
-
-          filteredContent.push(descendantInlineNode);
-        });
-
-        descendantBlockNode.content = Fragment.fromArray(filteredContent);
-      });
-      return slice;
     },
   },
 });
