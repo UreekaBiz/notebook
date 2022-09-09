@@ -36,7 +36,7 @@ export const codeBlockToolItem: ToolItem = {
 
     return false/*enabled*/;
   },
-  onClick: (editor, depth) => applyDocumentUpdates(editor, [ new CreateBlockNodeDocumentUpdate(NodeName.CODEBLOCK, { [AttributeType.Id]: generateNodeId() })]),
+  onClick: (editor) => applyDocumentUpdates(editor, [ new CreateBlockNodeDocumentUpdate(NodeName.CODEBLOCK, { [AttributeType.Id]: generateNodeId() })]),
 };
 
 const codeBlockTypeToolItem: ToolItem = {
