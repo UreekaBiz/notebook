@@ -2,6 +2,8 @@ import { useRef } from 'react';
 import { useDrag, useDrop } from 'react-dnd';
 import { Identifier } from 'dnd-core';
 
+import { REMOVED_CODEBLOCK_VISUALID } from '@ureeka-notebook/web-service';
+
 import { CHIP_CLASS, CHIP_CLOSE_BUTTON_CLASS } from 'notebookEditor/theme/theme';
 
 // ********************************************************************************
@@ -95,6 +97,7 @@ export const Chip: React.FC<Props> = ({ id, index, value, isDraggable, onMove, o
       data-handler-id={handlerId}
       ref={ref}
       className={CHIP_CLASS}
+      style={{ backgroundColor: value.label === REMOVED_CODEBLOCK_VISUALID ? 'red' : '#4299E1'/*default*/ }}
       onClick={onClick}
     >
       {value.label}
