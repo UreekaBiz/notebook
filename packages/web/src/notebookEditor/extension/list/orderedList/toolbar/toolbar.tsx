@@ -12,7 +12,7 @@ const orderedListSeparatorToolItem: ToolItem = {
   toolType: 'component',
   name: 'orderedListSeparatorToolItem',
 
-  shouldShow: (editor, depth) => shouldShowListToolItem(editor, depth),
+  shouldShow: shouldShowListToolItem,
   component: OrderedListSeparatorToolItem,
 };
 
@@ -20,7 +20,7 @@ const orderedListSchemeToolItem: ToolItem = {
   toolType: 'component',
   name: 'orderedListSchemeToolItem',
 
-  shouldShow: (editor, depth) => shouldShowListToolItem(editor, depth),
+  shouldShow: shouldShowListToolItem,
   component: OrderedListSchemeToolItem,
 };
 

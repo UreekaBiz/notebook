@@ -44,15 +44,15 @@ export class IndentListDocumentUpdate implements AbstractDocumentUpdate {
 
     tr.deleteRange(range.start, range.end);
 
-    const previousListItemEnd = previousListItemStart + previousListItem.nodeSize - 2/*account for start and end of Node*/;
-    const newPreviousListItem = previousListItem.copy(newPreviousListItemContent);
+    const previousListItemEnd = previousListItemStart + previousListItem.nodeSize - 2/*account for start and end of Node*/,
+          newPreviousListItem = previousListItem.copy(newPreviousListItemContent);
     newPreviousListItem.check();
 
     tr.replaceRangeWith(previousListItemStart - 1/*account for start*/, previousListItemEnd + 1/*account for end*/, newPreviousListItem)
       .setSelection(
-      previousList === selectedList
-        ? TextSelection.between(tr.doc.resolve($from.pos), tr.doc.resolve($to.pos))
-        : TextSelection.between(tr.doc.resolve($from.pos - 2/*account for start and end*/), tr.doc.resolve($to.pos - 2/*account for start and end*/))
+        previousList === selectedList
+          ? TextSelection.between(tr.doc.resolve($from.pos), tr.doc.resolve($to.pos))
+          : TextSelection.between(tr.doc.resolve($from.pos - 2/*account for start and end*/), tr.doc.resolve($to.pos - 2/*account for start and end*/))
     ).scrollIntoView();
 
     return tr/*updated*/;
@@ -81,7 +81,7 @@ const findPreviousListItem = (selectedList: ProseMirrorNode, $from: ResolvedPos,
     previousListStart = doc.resolve(range.start).start(range.depth);
     previousListItemStart = previousListStart + 1/*inside it*/;
 
-    for(let i = 0; i < range.startIndex - 1; i++) {
+    for(let i=0; i<range.startIndex - 1; i++) {
       previousListItemStart += previousList.child(i).nodeSize;
     }
   } else {

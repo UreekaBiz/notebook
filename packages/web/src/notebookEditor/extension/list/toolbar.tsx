@@ -1,9 +1,9 @@
 import { Editor } from '@tiptap/core';
+import { Node as ProseMirrorNode } from 'prosemirror-model';
 import { AiOutlinePlus } from 'react-icons/ai';
 import { BsListTask } from 'react-icons/bs';
 import { MdFormatListBulleted } from 'react-icons/md';
 import { RiListOrdered } from 'react-icons/ri';
-import { Node as ProseMirrorNode } from 'prosemirror-model';
 
 import { getParentNode, isBulletListNode, isListItemContentNode, isNodeSelection, isOrderedListNode, isParagraphNode, isTaskListNode, NodeName, SelectionDepth, SetTextSelectionDocumentUpdate } from '@ureeka-notebook/web-service';
 

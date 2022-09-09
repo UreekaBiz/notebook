@@ -53,7 +53,7 @@ export const TaskListItem = Node.create<NoOptions, NoStorage>({
   // NOTE: this plugin's purpose is to specifically prevent the cursor from going
   //       into the start of the TaskListItem Node if the User starts checking and
   //       unchecking the TaskListItem checkbox repeatedly and quickly
-  addProseMirrorPlugins(this) {
+  addProseMirrorPlugins() {
     return [
       new Plugin<NotebookSchemaType>({
         filterTransaction(transaction) {

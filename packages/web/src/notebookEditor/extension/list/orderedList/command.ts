@@ -27,9 +27,9 @@ export class UpdateListItemsInOrderedListDocumentUpdate implements AbstractDocum
       // NOTE: since nodesBetween returns all parent Nodes for Nodes
       //       in between the given Range, check that the pos is
       //       in the Range for ListItems that are to be updated
-      if(isListItemNode(node) &&
-        (pos >= from && pos <= to/*(SEE: NOTE above)*/) &&
-        parent === this.parentOrderedList/*ensure only the immediate ListNodes are updated*/
+      if( isListItemNode(node)
+       && (pos >= from && pos <= to/*(SEE: NOTE above)*/)
+       && parent === this.parentOrderedList/*ensure only the immediate ListNodes are updated*/
       ) {
         tr.setNodeMarkup(pos, getListItemNodeType(editorState.schema), { ...node.attrs, ...this.attributes });
       } /* else -- do not modify */
