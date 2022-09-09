@@ -187,7 +187,7 @@ ul[data-node-type="taskList"] > li > label {
 /* -- Mark Styles -------------------------------------------------------------- */
 [data-mark-type="code"] {
   font-family: monospace;
-  font-size: 0.8rem;
+  font-size: 0.8em;
   border: 1px solid #EEEEEE;
   border-radius: 0.25em;
   padding: 1px;
