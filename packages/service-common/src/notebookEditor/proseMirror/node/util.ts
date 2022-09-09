@@ -49,7 +49,7 @@ export const findNodeById = (document: DocumentNodeType, nodeId: NodeIdentifier)
 
   for(let depth = $pos.depth; depth > 0; depth--) {
     const nodeAtDepth = $pos.node(depth);
-    const posBeforeNode = depth > 0 ? $pos.before(depth) : 0/*do not go behind start of Document*/;
+    const posBeforeNode = $pos.before(depth);
     const nodeStart = $pos.start(depth);
     const nodeEnd = posBeforeNode + nodeAtDepth.nodeSize;
 
