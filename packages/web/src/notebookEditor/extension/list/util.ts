@@ -136,8 +136,8 @@ export const getListNodesFromDepth = (editorState: EditorState, depth: Selection
         listItemAtDepthPos = listAtDepthPos + 1/*first position inside the List, ListItem by contract*/;
 
   if( !listAtDepth || !isListNode(listAtDepth)
-   || !listItemAtDepth || !isListItemNode(listItemAtDepth)
-   || isTaskListItemNode(listItemAtDepth)
+   || !listItemAtDepth || !(isListItemNode(listItemAtDepth)
+   || isTaskListItemNode(listItemAtDepth))
   ) return/*invalid conditions*/;
 
   return { listAtDepthPos, listAtDepth, listItemAtDepth, listItemAtDepthPos };
