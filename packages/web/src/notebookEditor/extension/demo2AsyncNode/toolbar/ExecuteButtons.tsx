@@ -139,5 +139,5 @@ const ExecuteShortcut: React.FC<ExecuteShortcutProps> = ({ editorService, notebo
     return () => { window.removeEventListener('keydown', handler); };
   }, [notebookId, editorService, demo2AsyncNodeView, disabled]);
 
-  return null;
+  return null/*do not display anything, just add Effect*/;
 };
