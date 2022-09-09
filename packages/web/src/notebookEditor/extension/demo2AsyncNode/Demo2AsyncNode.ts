@@ -1,6 +1,6 @@
 import { Node } from '@tiptap/core';
 
-import { generateNodeId, getNodeOutputSpec, isDemo2AsyncNode, AttributeType, ClearNodesDocumentUpdate, CreateBlockNodeDocumentUpdate, Demo2AsyncNodeSpec, NodeName, SetAttributeType, DATA_NODE_TYPE, DEFAULT_DEMO_2_ASYNC_NODE_DELAY, DEFAULT_DEMO_2_ASYNC_NODE_STATUS } from '@ureeka-notebook/web-service';
+import { generateNodeId, getNodeOutputSpec, isDemo2AsyncNode, AttributeType, CreateBlockNodeDocumentUpdate, Demo2AsyncNodeSpec, NodeName, SetAttributeType, DATA_NODE_TYPE, DEFAULT_DEMO_2_ASYNC_NODE_DELAY, DEFAULT_DEMO_2_ASYNC_NODE_STATUS } from '@ureeka-notebook/web-service';
 
 import { applyDocumentUpdates } from 'notebookEditor/command/update';
 import { setAttributeParsingBehavior, uniqueIdParsingBehavior } from 'notebookEditor/extension/util/attribute';
@@ -45,8 +45,8 @@ export const Demo2AsyncNode = Node.create<NoOptions, Demo2AsyncNodeStorageType>(
   addKeyboardShortcuts() {
     return {
       // create a Demo2AsyncNode
-      'Shift-Mod-d': () => applyDocumentUpdates(this.editor, [ new ClearNodesDocumentUpdate(), new CreateBlockNodeDocumentUpdate(NodeName.DEMO_2_ASYNC_NODE, { [AttributeType.Id]: generateNodeId() })]),
-      'Shift-Mod-D': () => applyDocumentUpdates(this.editor, [ new ClearNodesDocumentUpdate(), new CreateBlockNodeDocumentUpdate(NodeName.DEMO_2_ASYNC_NODE, { [AttributeType.Id]: generateNodeId() })]),
+      'Shift-Mod-d': () => applyDocumentUpdates(this.editor, [ new CreateBlockNodeDocumentUpdate(NodeName.DEMO_2_ASYNC_NODE, { [AttributeType.Id]: generateNodeId() })]),
+      'Shift-Mod-D': () => applyDocumentUpdates(this.editor, [ new CreateBlockNodeDocumentUpdate(NodeName.DEMO_2_ASYNC_NODE, { [AttributeType.Id]: generateNodeId() })]),
 
       // remove Demo2AsyncNode when at start of document or Demo2AsyncNode is empty
       'Backspace': ({ editor }) => handleBlockBackspace(editor, NodeName.DEMO_2_ASYNC_NODE),
