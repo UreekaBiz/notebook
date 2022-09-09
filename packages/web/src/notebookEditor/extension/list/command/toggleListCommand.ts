@@ -100,7 +100,7 @@ export class ToggleListDocumentUpdate implements AbstractDocumentUpdate {
 // == Util ========================================================================
 /**
  * check if a BulletList / OrderedList can be changed into a TaskList or
- * viceversa and return the modified Transaction if it is the case
+ * vice versa and return the modified Transaction if it is the case
  */
  export const deepChangeListType = (tr: Transaction, foundList: ParentNodePosition, listNodeType: NodeType, listItemNodeType: NodeType) => {
   // -- Setup ---------------------------------------------------------------------

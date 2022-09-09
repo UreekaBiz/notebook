@@ -66,20 +66,21 @@ const wrapListBackward = (tr: Transaction) => {
   if(!range || !isListItemNode(range.parent) || range.startIndex !== 0) return false/*nothing special to do*/;
 
   const root = $cursor.node(range.depth - 2/*the Node containing the List*/);
+  const rootIndex = $cursor.index(range.depth - 2/*n-th List in root*/);
   const listItemIndex = $cursor.index(range.depth/*n-th Node in ListItem*/);
   const listIndex = $cursor.index(range.depth - 1/*n-th ListItem in List*/);
-  const rootIndex = $cursor.index(range.depth - 2/*n-th List in root*/);
 
   // get the previous List and its last ListItem
   const previousList = root.maybeChild(rootIndex - 1);
   const previousListItem = previousList?.lastChild;
-  if(listItemIndex !== 0/*current Node is not the first Node in its parent ListItem*/
-    || listIndex !== 0/*current ListItem is not the first ListItem in its parent List*/) return false/*do not wrap*/;
+  if( listItemIndex !== 0/*current Node is not the first Node in its parent ListItem*/
+   || listIndex !== 0/*current ListItem is not the first ListItem in its parent List*/
+  ) return false/*do not wrap*/;
 
-  if(previousList/*there is a Node before the current List*/ &&
-    isListNode(previousList)/*said Node is a List*/ &&
-    previousListItem /*said List has a Node as its lastChild*/ &&
-    isListItemNode(previousListItem)/* said lastChild is a ListItem*/
+  if( previousList/*there is a Node before the current List*/
+   && isListNode(previousList)/*said Node is a List*/
+   && previousListItem /*said List has a Node as its lastChild*/
+   && isListItemNode(previousListItem)/* said lastChild is a ListItem*/
   ) {
     return wrapSelectedItems(previousList.type, previousListItem.type, tr);
   } /* else -- one of the conditions above does not hold, check if root is ListItem */

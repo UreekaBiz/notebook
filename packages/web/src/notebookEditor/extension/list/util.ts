@@ -31,7 +31,7 @@ export const isListBlockNode = (node: ProseMirrorNode) => isListNode(node) || is
  * is passed, it will be used as the starting position for the Selection when the
  * DocumentUpdates are executed
  */
- export const handleListDocumentUpdates = (editor: Editor, listTypeName: NodeName.ORDERED_LIST | NodeName.BULLET_LIST | NodeName.TASK_LIST, startingAnchor?: number) => {
+export const handleListDocumentUpdates = (editor: Editor, listTypeName: NodeName.ORDERED_LIST | NodeName.BULLET_LIST | NodeName.TASK_LIST, startingAnchor?: number) => {
   const toggleListUpdate = new ToggleListDocumentUpdate(listTypeName, startingAnchor);
 
   // ensure that toggling Lists either through Keyboard Shortcuts or ToolItems
@@ -63,8 +63,8 @@ export const maybeJoinList = (tr: Transaction, $pos?: ResolvedPos): boolean => {
 
   let index: number;
   let parent: ProseMirrorNode;
-  let before: ProseMirrorNode | null | undefined;
-  let after: ProseMirrorNode | null | undefined;
+  let before: ProseMirrorNode | null | undefined,
+      after: ProseMirrorNode | null | undefined;
   for(let depth = $from.depth; depth >= 0; depth--) {
     parent = $from.node(depth);
 
@@ -129,14 +129,16 @@ export const getListNodesFromDepth = (editorState: EditorState, depth: Selection
   const parentListDepth = depth - 1/*since 'depth' is the ListItem depth*/;
   const anchorIndexIntoList = selection.$anchor.index(parentListDepth);
 
-  const listAtDepthPos = selection.$anchor.posAtIndex(anchorIndexIntoList, parentListDepth);
-  const listAtDepth = editorState.doc.nodeAt(listAtDepthPos);
+  const listAtDepthPos = selection.$anchor.posAtIndex(anchorIndexIntoList, parentListDepth),
+        listAtDepth = editorState.doc.nodeAt(listAtDepthPos);
 
-  const listItemAtDepth = listAtDepth?.firstChild/*by definition*/;
-  const listItemAtDepthPos = listAtDepthPos + 1/*first position inside the List, ListItem by contract*/;
+  const listItemAtDepth = listAtDepth?.firstChild/*by definition*/,
+        listItemAtDepthPos = listAtDepthPos + 1/*first position inside the List, ListItem by contract*/;
 
-  if(!listAtDepth || !isListNode(listAtDepth) ||
-      !listItemAtDepth || !(isListItemNode(listItemAtDepth) || isTaskListItemNode(listItemAtDepth))) return/*invalid conditions*/;
+  if( !listAtDepth || !isListNode(listAtDepth)
+   || !listItemAtDepth || !isListItemNode(listItemAtDepth)
+   || isTaskListItemNode(listItemAtDepth)
+  ) return/*invalid conditions*/;
 
   return { listAtDepthPos, listAtDepth, listItemAtDepth, listItemAtDepthPos };
 };

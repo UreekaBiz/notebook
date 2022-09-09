@@ -29,10 +29,11 @@ export const OrderedListSeparatorToolItem: React.FC<EditorToolComponentProps> = 
   };
 
   // == UI ========================================================================
+  const value = listItemAtDepth.attrs[AttributeType.Separator] ?? LIST_ITEM_DEFAULT_SEPARATOR/*default*/;
   return (
     <InputToolItemContainer name={'Separator'}>
       <InputTool
-        value={listItemAtDepth.attrs[AttributeType.Separator] ?? LIST_ITEM_DEFAULT_SEPARATOR/*default*/}
+        value={value}
         placeholder='Separator'
         onChange={handleChange}
       />

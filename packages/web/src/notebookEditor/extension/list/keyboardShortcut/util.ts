@@ -38,7 +38,7 @@ const wrapItems = (listType: NodeType, listItemType: NodeType, tr: Transaction, 
 
   // create a new List containing all ListItems from the Slice
   const newItems: ProseMirrorNode[] = [];
-  for(let i = 0; i < slice.content.childCount; i++) {
+  for(let i=0; i<slice.content.childCount; i++) {
     const oldItem = slice.content.child(i);
     if(!listItemType.validContent(oldItem.content)) return false/*not a valid content for the new ListItem type, do not wrap*/;
 
