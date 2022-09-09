@@ -52,7 +52,7 @@ export class CreateBlockNodeDocumentUpdate implements AbstractDocumentUpdate {
 
       const { $from, $to } = parentBlockRange;
       tr.setBlockType($from.pos, $to.pos, blockNodeType, this.attributes)
-        .setSelection(Selection.near(tr.doc.resolve($to.pos)));
+        .setSelection(Selection.near(tr.doc.resolve($to.pos-1/*inside the new Block*/)));
 
       return tr/*nothing left to do*/;
     } /* else -- not the same parent (multiple Selection) or content not empty, insert Block below */
