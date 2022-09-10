@@ -50,12 +50,11 @@ export const MarkHolderPlugin = () => new Plugin<NotebookSchemaType>({
           for(let j=0; j<newNodePositions.length; j++) {
             newNodePositions[j].node.content.forEach((descendant, offsetIntoParent) => {
               if(
-                  // if the MarkHolder is not the first child
-                  (isMarkHolderNode(descendant) && !(descendant === newNodePositions[i].node.firstChild))
-                ||
                   // if the MarkHolder is not the only child (prevent any possible
                   // weird Block Node splitting / lifting results)
-                  isMarkHolderNode(descendant) && newNodePositions[i].node.content.size > 1
+                  isMarkHolderNode(descendant)
+                  && newNodePositions[i].node.content.size > 1 /*more than one child*/
+                  && offsetIntoParent !== 0 /*MarkHolder is not the first one*/
               ) {
                 tr.setSelection(NodeSelection.create(tr.doc, (newNodePositions[j].position+1/*inside the parent*/) + offsetIntoParent))
                   .deleteSelection();
