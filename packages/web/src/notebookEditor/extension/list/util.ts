@@ -3,7 +3,7 @@ import { Node as ProseMirrorNode, NodeType, ResolvedPos } from 'prosemirror-mode
 import { EditorState, Selection, Transaction } from 'prosemirror-state';
 import { canJoin, findWrapping } from 'prosemirror-transform';
 
-import { getAllAscendantsFromSelection, isBulletListNode, isOrderedListNode, isTaskListNode, isTaskListItemNode, isListItemNode, isListItemContentNode, AttributeType, NodeName, SelectionDepth, SetTextSelectionDocumentUpdate } from '@ureeka-notebook/web-service';
+import { getAllAscendantsFromSelection, isBulletListNode, isDocumentNode, isOrderedListNode, isTaskListNode, isTaskListItemNode, isListItemNode, isListItemContentNode, AttributeType, NodeName, SelectionDepth, SetTextSelectionDocumentUpdate } from '@ureeka-notebook/web-service';
 
 import { applyDocumentUpdates } from 'notebookEditor/command/update';
 
@@ -31,7 +31,7 @@ export const isListBlockNode = (node: ProseMirrorNode) => isListNode(node) || is
  * is passed, it will be used as the starting position for the Selection when the
  * DocumentUpdates are executed
  */
-export const handleListDocumentUpdates = (editor: Editor, listTypeName: NodeName.ORDERED_LIST | NodeName.BULLET_LIST | NodeName.TASK_LIST, startingAnchor?: number) => {
+ export const handleListDocumentUpdates = (editor: Editor, listTypeName: NodeName.ORDERED_LIST | NodeName.BULLET_LIST | NodeName.TASK_LIST, startingAnchor?: number) => {
   const toggleListUpdate = new ToggleListDocumentUpdate(listTypeName, startingAnchor);
 
   // ensure that toggling Lists either through Keyboard Shortcuts or ToolItems
@@ -45,7 +45,15 @@ export const handleListDocumentUpdates = (editor: Editor, listTypeName: NodeName
   } else {
     // ensure that the List Commands work correctly by first setting the ListItemContent
     // so that it can be wrapped
-    return applyDocumentUpdates(editor, [ new SetListItemContentDocumentUpdate(), toggleListUpdate, new SetTextSelectionDocumentUpdate({ from: anchor, to: anchor }) ]);
+    return applyDocumentUpdates(editor, [
+      new SetListItemContentDocumentUpdate(),
+      toggleListUpdate,
+
+      // do not modify Selection if Toggling for the first time
+      // otherwise, this call comes from a nested ToolItem
+      ...(isDocumentNode($anchor.node(-1/*$anchors grandParent*/)) ? [] : [new SetTextSelectionDocumentUpdate({ from: anchor, to: anchor })]),
+    ]
+    );
   }
 };
 
