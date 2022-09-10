@@ -51,7 +51,7 @@ export const isListBlockNode = (node: ProseMirrorNode) => isListNode(node) || is
 
       // do not modify Selection if Toggling for the first time
       // otherwise, this call comes from a nested ToolItem
-      ...(isDocumentNode($anchor.node(-1/*$anchors grandParent*/)) ? [] : [new SetTextSelectionDocumentUpdate({ from: anchor, to: anchor })]),
+      ...(isDocumentNode($anchor.node(-1/*$anchors grandParent*/)) ? [/*initial Toggle*/] : [new SetTextSelectionDocumentUpdate({ from: anchor, to: anchor })]),
     ]
     );
   }
