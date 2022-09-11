@@ -57,6 +57,7 @@ const endpointNames = [
 
   'loggingClient',
 
+  'notebookCopy',
   'notebookCreate',
   'notebookDelete',
   'notebookHashtag',
