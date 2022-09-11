@@ -16,7 +16,7 @@
 
   "dependencies": {
     "@ureeka-notebook/service-common": "*",
-    "firebase": "9.9.3",
+    "firebase": "9.9.4",
     "formik": "2.2.9",
     "loglevel": "1.8.0",
     "rxjs": "7.5.6",
