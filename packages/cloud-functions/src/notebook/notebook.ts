@@ -85,6 +85,7 @@ export const copyNotebook = async (
   try {
     const notebookRef = notebookDocument(notebookId);
     hashtags = await firestore.runTransaction(async transaction => {
+      // get the to-be-copied Notebook
       const snapshot = await transaction.get(notebookRef);
       if(!snapshot.exists) throw new ApplicationError('functions/not-found', `Cannot copy non-existing Notebook (${notebookId}).`);
       const notebook = snapshot.data()! as Notebook_Storage/*by definition*/;
@@ -93,11 +94,15 @@ export const copyNotebook = async (
       //        be able to check if the User is also an admin
       if(!isNotebookViewer(userId, notebook)) throw new ApplicationError('functions/permission-denied', `Cannot copy non-viewable Notebook (${notebookId}) for User (${userId}).`);
 
+      // get the latest Notebook document (content)
+      const latestDocument = await getOrUpdateToLatestDocument(transaction, userId, notebook.schemaVersion, notebookId)/*throws on error*/;
+
       const create: Notebook_Create = {
         type: notebook.type,
         schemaVersion: notebook.schemaVersion,
 
-        name: notebook.name,
+        name: extractDocumentName(notebook.schemaVersion, notebookId, latestDocument.document)/*extract latest*/,
+
         hashtags: notebook.hashtags/*must update the hashtag occurrences (see below)*/,
 
         isPublished: false/*cannot be published at creation*/,
@@ -113,9 +118,7 @@ export const copyNotebook = async (
         updateTimestamp: ServerTimestamp/*by contract*/,
       };
 
-      // get the latest document from the Notebook and copy it as a starting Checkpoint
-      const latestDocument = await getOrUpdateToLatestDocument(transaction, userId, notebook.schemaVersion, notebookId)/*throws on error*/;
-
+      // write the new Notebook and content as a starting Checkpoint
       // NOTE: Firestore requires all reads before writes in a transaction
       transaction.create(newNotebookRef, create)/*create by definition*/;
       writeCheckpoint(transaction, notebook.schemaVersion, newNotebookId, latestDocument.document);
