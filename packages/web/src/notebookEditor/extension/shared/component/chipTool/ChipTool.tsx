@@ -29,6 +29,9 @@ interface Props {
   /** are chips draggable? */
   isDraggable?: boolean;
 
+  /** placeholder */
+  placeholder?: string;
+
   /** callback to be called to validate if the chip label is valid.*/
   validate: (label: string) => boolean;
   onAddValue: (label: string, focus?: boolean) => void;
@@ -36,7 +39,7 @@ interface Props {
   onChipClick?: (chip: ChipValue, index: number) => void;
 }
 
-export const ChipTool: React.FC<Props> = ({ nodeId, value, maxValues, isDraggable = true, allowDuplicates = false, validate, onAddValue, onChange, onChipClick }) => {
+export const ChipTool: React.FC<Props> = ({ nodeId, value, maxValues, isDraggable = true, allowDuplicates = false, validate, placeholder, onAddValue, onChange, onChipClick }) => {
   // == State =====================================================================
   const [inputValue, setInputValue] = useState('');
 
@@ -118,7 +121,7 @@ export const ChipTool: React.FC<Props> = ({ nodeId, value, maxValues, isDraggabl
             id={`${nodeId}-${CHIP_TOOL_INPUT}`}
             size='sm'
             autoComplete='off'
-            placeholder='CodeBlock Id'
+            placeholder={placeholder}
             value={inputValue}
             variant='unstyled'
             width='90px'
