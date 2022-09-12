@@ -318,26 +318,26 @@ html body {
 /* == Fonts ==================================================================== */
 @font-face {
   font-family: 'SourceSerifPro';
-  src: local('SourceSerifPro'), url(../public/font/Source_Serif_Pro/SourceSerifPro-Regular.ttf) format('opentype');
+  src: local('SourceSerifPro'), url(./public/font/Source_Serif_Pro/SourceSerifPro-Regular.ttf) format('opentype');
 }
 
 @font-face {
   font-family: 'SourceSerifPro';
   font-weight: 700;
-  src: local('SourceSerifPro'), url(../public/font/Source_Serif_Pro/SourceSerifPro-Bold.ttf) format('opentype');
+  src: local('SourceSerifPro'), url(./public/font/Source_Serif_Pro/SourceSerifPro-Bold.ttf) format('opentype');
 }
 
 @font-face {
   font-family: 'SourceSerifPro';
   font-style: italic;
-  src: local('SourceSerifPro'), url(../public/font/Source_Serif_Pro/SourceSerifPro-Italic.ttf) format('opentype');
+  src: local('SourceSerifPro'), url(./public/font/Source_Serif_Pro/SourceSerifPro-Italic.ttf) format('opentype');
 }
 
 @font-face {
   font-family: 'SourceSerifPro';
   font-style: italic;
   font-weight: 700;
-  src: local('SourceSerifPro'), url(../public/font/Source_Serif_Pro/SourceSerifPro-BoldItalic.ttf) format('opentype');
+  src: local('SourceSerifPro'), url(./public/font/Source_Serif_Pro/SourceSerifPro-BoldItalic.ttf) format('opentype');
 }
 
 
