@@ -1,8 +1,9 @@
 import { BiBold } from 'react-icons/bi';
 
-import { isNodeSelection, MarkName } from '@ureeka-notebook/web-service';
+import { getParentNode, isListItemContentNode, isNodeSelection, MarkName } from '@ureeka-notebook/web-service';
 
 import { toolItemCommandWrapper } from 'notebookEditor/command/util';
+import { shouldShowToolItemInsideList } from 'notebookEditor/extension/list/util';
 import { inMarkHolder } from 'notebookEditor/extension/markHolder/util';
 import { ToolItem } from 'notebookEditor/toolbar/type';
 
@@ -24,12 +25,17 @@ export const markBold: ToolItem = {
 
     return true;
   },
-  shouldShow: (editor, depth) => depth === undefined || editor.state.selection.$anchor.depth === depth/*direct parent*/,
-  onClick: (editor, depth) => toolItemCommandWrapper(editor, depth, toggleBoldCommand),
+  shouldShow: (editor, depth) => {
+    if(isListItemContentNode(getParentNode(editor.state.selection))) {
+      return shouldShowToolItemInsideList(editor.state, depth);
+    } /* else -- not inside ListItemContent */
 
+    return depth === undefined || editor.state.selection.$anchor.depth === depth;/*direct parent*/
+  },
   isActive: (editor) => {
-    if(inMarkHolder(editor, MarkName.BOLD)) return true/*is active in MarkHolder*/;
+    if(inMarkHolder(editor,  MarkName.BOLD)) return true/*is active in MarkHolder*/;
 
     return editor.isActive(MarkName.BOLD);
   },
+  onClick: (editor, depth) => toolItemCommandWrapper(editor, depth, toggleBoldCommand),
 };
