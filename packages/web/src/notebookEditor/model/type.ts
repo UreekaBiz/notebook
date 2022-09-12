@@ -63,16 +63,16 @@ export enum ExtensionPriority {
   // NOTE: ListItem Commands should be checked-for before TaskListItem Commands.
   //       This priority is not to be confused with the parseRule priority,
   //       where TaskLists should be parsed first (SEE: ParseRulePriority)
-  LIST_ITEM = 115,
+  LIST_ITEM = 114,
 
   // NOTE: handle TaskListItem Commands after having tried ListItem Commands.
   //       This priority is not to be confused with the parseRule priority,
   //       where TaskLists should be parsed first (SEE: ParseRulePriority)
-  TASK_LIST_ITEM = 114,
+  TASK_LIST_ITEM = 113,
 
   // NOTE: custom InputRules just need to be triggered before Text so that their
   //       effects are applied (SEE: InputRule.ts)
-  INPUT_RULE = 113/*T&E*/,
+  INPUT_RULE = 112/*T&E*/,
 
   // NOTE: Since the text extension adds a \t whenever Tab is pressed, but this
   //       behavior is not always guaranteed to be the desired one (e.g. when
