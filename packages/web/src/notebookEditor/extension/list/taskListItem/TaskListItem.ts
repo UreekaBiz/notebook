@@ -5,7 +5,7 @@ import { getNodeOutputSpec, isNodeSelection, isTaskListItemNode, AttributeType, 
 
 import { shortcutCommandWrapper } from 'notebookEditor/command/util';
 import { setAttributeParsingBehavior } from 'notebookEditor/extension/util/attribute';
-import { NoOptions, NoStorage, ParseRulePriority } from 'notebookEditor/model/type';
+import { ExtensionPriority, NoOptions, NoStorage, ParseRulePriority } from 'notebookEditor/model/type';
 
 import { splitListItemCommand } from '../command/splitListItemCommand';
 import { dedentListCommand } from '../keyboardShortcut/dedent';
@@ -24,6 +24,7 @@ const taskListItemRegex = /^\s*(\[([( |x])?\])\s$/;
 // == Node ========================================================================
 export const TaskListItem = Node.create<NoOptions, NoStorage>({
   ...TaskListItemNodeSpec,
+  priority: ExtensionPriority.TASK_LIST_ITEM,
 
   // -- Attribute -----------------------------------------------------------------
   addAttributes() {
