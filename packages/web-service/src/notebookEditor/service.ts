@@ -1,7 +1,7 @@
 import { Editor } from '@tiptap/core';
 import { Observable } from 'rxjs';
 
-import { AuthedUser, NotebookIdentifier, NotebookSchemaVersion } from '@ureeka-notebook/service-common';
+import { AuthedUser, NotebookIdentifier, NotebookSchemaVersion, NotebookUsers } from '@ureeka-notebook/service-common';
 
 import { getLogger, ServiceLogger } from '../logging';
 import { ApplicationError } from '../util';
@@ -72,6 +72,15 @@ export class NotebookEditorService {
    */
   public onPendingWrites$(): Observable<boolean> {
     return this.collaborationListener.onPendingWrites$();
+  }
+
+  // ------------------------------------------------------------------------------
+  /**
+   * @returns an Observable over all Users (including the current User) that are
+   *         currently viewing the Notebook
+   */
+  public onUsers$(): Observable<NotebookUsers> {
+    return this.collaborationListener.onUsers$();
   }
 
   // == Editor ====================================================================

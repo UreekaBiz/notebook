@@ -1,4 +1,4 @@
-import { Notebook, NotebookCreate_Rest, NotebookCreate_Rest_Schema, NotebookDelete_Rest, NotebookDelete_Rest_Schema, NotebookHashtag_Rest, NotebookHashtag_Rest_Schema, NotebookPublished, NotebookPublish_Rest, NotebookPublish_Rest_Schema, UserIdentifier } from '@ureeka-notebook/service-common';
+import { Notebook, NotebookCopy_Rest, NotebookCopy_Rest_Schema, NotebookCreate_Rest, NotebookCreate_Rest_Schema, NotebookDelete_Rest, NotebookDelete_Rest_Schema, NotebookHashtag_Rest, NotebookHashtag_Rest_Schema, NotebookPublished, NotebookPublish_Rest, NotebookPublish_Rest_Schema, UserIdentifier } from '@ureeka-notebook/service-common';
 
 import { SortableFilter } from '../util/firestore';
 
@@ -31,6 +31,9 @@ export {
 // -- CUD -------------------------------------------------------------------------
 export const Notebook_Create_Schema = NotebookCreate_Rest_Schema;
 export type Notebook_Create = NotebookCreate_Rest;
+
+export const Notebook_Copy_Schema = NotebookCopy_Rest_Schema;
+export type Notebook_Copy = NotebookCopy_Rest;
 
 export const Notebook_Delete_Schema = NotebookDelete_Rest_Schema;
 export type Notebook_Delete = NotebookDelete_Rest;

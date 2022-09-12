@@ -2,6 +2,7 @@ import { LabelIdentifier } from '../label/type';
 import { NotebookDocumentContent } from '../notebookEditor/proseMirror/document';
 import { NotebookSchemaVersion } from '../notebookEditor/proseMirror/schema';
 import { Creatable, ObjectTuple, Updatable } from '../util/datastore';
+import { RTDBTimestamp } from '../util/rtdb';
 import { ShareRole } from '../util/share';
 import { UserIdentifier } from '../util/user';
 import { Identifier } from '../util/type';
@@ -129,3 +130,33 @@ export type NotebookPublishedContent = NotebookPublished & Readonly<{ /*Firestor
   content: NotebookDocumentContent;
 }>;
 export type NotebookPublishedContentTuple = ObjectTuple<NotebookIdentifier, NotebookPublishedContent>;
+
+// == Notebook User (Collaboration) ===============================================
+// top-level 'collection' of all Notebooks that are currently being actively
+// collaborated on
+// NOTE: this is never used per se. It's here only for completeness for the structure
+export type NotebookCollaboration = Readonly<{ /*RTDB only*/
+  [notebookId: string/*NotebookIdentifier*/]: NotebookUsers;
+}>;
+
+// all of the Users that are currently collaborating on a Notebook. This is the
+// level at which Users view the Collaboration state of a Notebook.
+export type NotebookUsers = Readonly<{ /*RTDB only*/
+  [userId: string/*UserIdentifier*/]: NotebookUserSessions;
+}>;
+
+// all of the User-Sessions that are currently collaborating on a Notebook. When a
+// User-Session goes offline or closes the Notebook then they are removed from this set
+export type NotebookUserSessions = Readonly<{ /*RTDB only*/
+  [sessionId: string/*SessionIdentifier*/]: NotebookUserSession;
+}>;
+
+// a collaborating User-Session's state for a Notebook
+// NOTE: if changed then database.rules.json *must* be updated
+export type NotebookUserSession = Readonly<{ /*RTDB only*/
+  /** the last known position in the Notebook of the User */
+  cursorPosition: number;
+
+  /** timestamp at which this record is written */
+  timestamp: RTDBTimestamp/*server-written on each update*/;
+}>;

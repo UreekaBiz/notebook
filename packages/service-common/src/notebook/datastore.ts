@@ -1,6 +1,10 @@
+import { SessionIdentifier } from 'authUser';
 import { FieldValue } from '../util/firestore';
+import { nameof } from '../util/object';
+import { DatabaseTimestamp } from '../util/rtdb';
 import { Modify } from '../util/type';
-import { Notebook, NotebookLabelUser, NotebookPublished, NotebookPublishedContent } from './type';
+import { UserIdentifier } from '../util/user';
+import { Notebook, NotebookIdentifier, NotebookLabelUser, NotebookPublished, NotebookPublishedContent, NotebookUserSession } from './type';
 
 // ** Constants *******************************************************************
 // == Firestore ===================================================================
@@ -27,6 +31,13 @@ export const NOTEBOOK_PUBLISHED = `${NOTEBOOK_PUBLISHEDS}/{notebookId}` as const
 export const NOTEBOOK_PUBLISHED_CONTENTS = 'notebook-published-contents'/*top-level collection*/;
 export const NOTEBOOK_PUBLISHED_CONTENT = `${NOTEBOOK_PUBLISHED_CONTENTS}/{notebookId}` as const/*document (used by CF triggers)*/;
 
+// == RTDB ========================================================================
+// -- Notebook --------------------------------------------------------------------
+export const NOTEBOOKS_RTDB = 'notebooks'/*top-level collection*/;
+export const NOTEBOOK_USERS = `${NOTEBOOKS_RTDB}/{notebookId}` as const/*sub-collection'*/;
+export const NOTEBOOK_USER_SESSIONS = `${NOTEBOOK_USERS}/{userId}` as const/*sub-collection'*/;
+export const NOTEBOOK_USER_SESSION = `${NOTEBOOK_USER_SESSIONS}/{sessionId}` as const/*'document'*/;
+
 // ** Storage Types ***************************************************************
 // == Firestore ===================================================================
 // -- Notebook --------------------------------------------------------------------
@@ -44,6 +55,18 @@ export type NotebookLabelUser_Storage = NotebookLabelUser/*nothing additional*/;
 // -- Notebook Published ----------------------------------------------------------
 export type NotebookPublished_Storage = NotebookPublished/*nothing additional*/;
 export type NotebookPublishedContent_Storage = NotebookPublishedContent/*nothing additional*/;
+
+// == RTDB ========================================================================
+// -- Notebook --------------------------------------------------------------------
+// NOTE: Firebase recommended approach for updating RTDB fields (i.e. update by key)
+export const notebookKey = (notebookId: NotebookIdentifier) => `/${NOTEBOOKS_RTDB}/${notebookId}`;
+export const notebookUserKey = (notebookId: NotebookIdentifier, userId: UserIdentifier) => `${notebookKey(notebookId)}/${userId}`;
+export const notebookUserSessionKey = (notebookId: NotebookIdentifier, userId: UserIdentifier, sessionId: SessionIdentifier) => `${notebookUserKey(notebookId, userId)}/${sessionId}`;
+export const cursorPositionKey = (notebookId: NotebookIdentifier, userId: UserIdentifier, sessionId: SessionIdentifier) => `${notebookUserSessionKey(notebookId, userId, sessionId)}/${nameof<NotebookUserSession>('cursorPosition')}`;
+export const timestampKey = (notebookId: NotebookIdentifier, userId: UserIdentifier, sessionId: SessionIdentifier) => `${notebookUserSessionKey(notebookId, userId, sessionId)}/${nameof<NotebookUserSession>('timestamp')}`;
+
+// ................................................................................
+export type NotebookUserSession_Storage = NotebookUserSession/*nothing additional*/;
 
 // ** Action Types ****************************************************************
 // == Firestore ===================================================================
@@ -101,3 +124,9 @@ export type NotebookPublishedContent_Update = Modify<Omit<NotebookPublishedConte
   updateTimestamp: FieldValue/*always-write server-set*/;
 }>>;
 // NOTE: hard-delete so no delete Action Type
+
+// == RTDB ========================================================================
+// -- Notebook --------------------------------------------------------------------
+export type NotebookUserSession_Write = Modify<Partial<NotebookUserSession_Storage>, Readonly<{
+  timestamp: DatabaseTimestamp/*server-set*/;
+}>>;

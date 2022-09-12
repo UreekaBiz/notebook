@@ -32,6 +32,8 @@ export const SidebarTopbar: React.FC<Props> = ({ background }) => {
   const [isLoading, setIsLoading] = useState<boolean>(false/*default not loading*/);
 
   // == Effect ====================================================================
+  // ..............................................................................
+  // 'Saving' state
   useEffect(() => {
     // debounce setting setHasPendingWrite to true to avoid flashing the text onn
     // each save.
@@ -51,6 +53,27 @@ export const SidebarTopbar: React.FC<Props> = ({ background }) => {
       },
       error: (error) => {
         log.info(`Unexpected error listening Notebook Editor pending writes. Reason: `, error);
+      },
+    });
+
+    return () => {
+      subscription.unsubscribe();
+    };
+  }, [editorService, isMounted]);
+
+  // ..............................................................................
+  // currently Collaborating Users
+  useEffect(() => {
+    const subscription = editorService.onUsers$().subscribe({
+      next: (collaboratingUsers) => {
+        // FIXME: do something useful!!! (Some work will need to be done since the
+        //        data is at the User-Session level (in case the same User is in the
+        //        document more than once). The visual can be just a list of avatars.
+        //        When one of the avatars is clicked the *latest* session navigated to.)
+        console.log('collaboratingUsers: ', collaboratingUsers);
+      },
+      error: (error) => {
+        log.info(`Unexpected error listening Notebook Editor Collaborating Users. Reason: `, error);
       },
     });
 

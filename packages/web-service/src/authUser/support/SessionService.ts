@@ -64,7 +64,7 @@ export default class SessionService extends AbstractService {
     // NOTE: cannot use `this.userId` or `this.sessionId` below to ensure that they
     //       are independent of any changes to the object itself before shutdown
     // NOTE: the callback handler is called immediately (which isn't necessarily expected!)
-    const offlineState: UserSession_Write = { // NOTE: this is the only place where the RTDB is directly written by the client
+    const offlineState: UserSession_Write = { // SEE: CollaborationListener for another example of this
       timestamp: serverTimestamp()/*write-always server-set*/,
       [sessionKey(sessionId)]: DeleteRecord/*clear Session-level record*/,
     };

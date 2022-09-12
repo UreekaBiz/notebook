@@ -1,6 +1,6 @@
 import { httpsCallable } from 'firebase/functions';
 
-import { NotebookCreate_Rest, NotebookDelete_Rest, NotebookHashtag_Rest, NotebookIdentifier, NotebookPublish_Rest, NotebookShare_Rest } from '@ureeka-notebook/service-common';
+import { NotebookCopy_Rest, NotebookCreate_Rest, NotebookDelete_Rest, NotebookHashtag_Rest, NotebookIdentifier, NotebookPublish_Rest, NotebookShare_Rest } from '@ureeka-notebook/service-common';
 
 import { functions } from '../util/firebase';
 import { wrapHttpsCallable } from '../util/function';
@@ -8,6 +8,7 @@ import { wrapHttpsCallable } from '../util/function';
 // ** Auth'd User *****************************************************************
 // == Notebook ====================================================================
 export const notebookCreate = wrapHttpsCallable<NotebookCreate_Rest, NotebookIdentifier>(httpsCallable(functions, 'notebookCreate'));
+export const notebookCopy = wrapHttpsCallable<NotebookCopy_Rest, NotebookIdentifier>(httpsCallable(functions, 'notebookCopy'));
 export const notebookDelete = wrapHttpsCallable<NotebookDelete_Rest, NotebookIdentifier>(httpsCallable(functions, 'notebookDelete'));
 
 // .. Hashtag .......................................................................

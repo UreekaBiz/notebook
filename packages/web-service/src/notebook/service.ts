@@ -6,9 +6,9 @@ import { getLogger, ServiceLogger } from '../logging';
 import { ApplicationError } from '../util/error';
 import { scrollableQuery, Scrollable } from '../util/observableScrolledCollection';
 import { notebookPublishedQuery, notebookQuery } from './datastore';
-import { notebookCreate, notebookDelete, notebookHashtag, notebookPublish, notebookShare } from './function';
+import { notebookCopy, notebookCreate, notebookDelete, notebookHashtag, notebookPublish, notebookShare } from './function';
 import { notebookTupleById$, notebookOnceById$, notebookPublishedContentTupleById$, notebookPublishedContentOnceById$, notebookPublishedsQuery$, notebooksQuery$ } from './observable';
-import { NotebookFilter, NotebookPublishedFilter, Notebook_Create, Notebook_Hashtag, Notebook_Publish } from './type';
+import { NotebookFilter, NotebookPublishedFilter, Notebook_Copy, Notebook_Create, Notebook_Hashtag, Notebook_Publish } from './type';
 
 const log = getLogger(ServiceLogger.NOTEBOOK);
 
@@ -119,6 +119,23 @@ export class NotebookService {
    */
   public async createNotebook(create: Notebook_Create): Promise<NotebookIdentifier> {
     const result = await notebookCreate(create);
+    return result.data;
+  }
+
+  /**
+   * @param copy the Notebook that is to be copied
+   * @returns the {@link NotebookIdentifier} for the created {@link Notebook}. The
+   *          Shares, Labels and Published-state from the original Notebook are
+   *          *not* copied.
+   * @throws a {@link ApplicationError}:
+   * - `permission-denied` if the caller is not logged in or is not at least a
+   *   viewer of the Notebook that is to be copied
+   * - `not-found` if the specified {@link NotebookIdentifier} does not represent a
+   *   known {@link Notebook}
+   * - `datastore/write` if there was an error creating the {@link Notebook}
+   */
+  public async copyNotebook(copy: Notebook_Copy): Promise<NotebookIdentifier> {
+    const result = await notebookCopy(copy);
     return result.data;
   }
 

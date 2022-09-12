@@ -1,8 +1,10 @@
+import { ref } from 'firebase/database';
 import { collection, doc, limit, orderBy, query, where, CollectionReference } from 'firebase/firestore';
 
-import { nameof, Checkpoint, CheckpointIdentifier, NotebookIdentifier, NotebookVersion, NotebookVersion_Storage, NotebookVersionIdentifier, NOTEBOOK_CHECKPOINTS, NOTEBOOK_VERSIONS } from '@ureeka-notebook/service-common';
+import { nameof, notebookKey, notebookUserSessionKey, Checkpoint, CheckpointIdentifier, NotebookIdentifier, NotebookVersion, NotebookVersion_Storage, NotebookVersionIdentifier, SessionIdentifier, UserIdentifier, NOTEBOOK_CHECKPOINTS, NOTEBOOK_VERSIONS } from '@ureeka-notebook/service-common';
 
 import { notebookDocument } from '../notebook/datastore';
+import { database } from '../util/firebase';
 
 // ** Firestore *******************************************************************
 // == Collection ==================================================================
@@ -34,3 +36,8 @@ export const lastCheckpointQuery = (checkpointId: CheckpointIdentifier) =>
     orderBy(nameof<Checkpoint>('index'), 'desc'),
     limit(1/*last document*/)
   );
+
+// ** RTDB ************************************************************************
+// == Notebook User-Session =======================================================
+export const notebookUsersRef = (notebookId: NotebookIdentifier) => ref(database, notebookKey(notebookId));
+export const notebookUserSessionsRef = (notebookId: NotebookIdentifier, userId: UserIdentifier, sessionId: SessionIdentifier) => ref(database, notebookUserSessionKey(notebookId, userId, sessionId));

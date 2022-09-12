@@ -1,15 +1,15 @@
 import { Transaction } from 'firebase-admin/firestore';
 import { logger } from 'firebase-functions';
 
-import { getLastCheckpointIndex, generateCheckpointIdentifier, Checkpoint_Storage, Checkpoint_Write, NotebookIdentifier, SystemUserId, NO_NOTEBOOK_VERSION, nodeToContent } from '@ureeka-notebook/service-common';
+import { getLastCheckpointIndex, generateCheckpointIdentifier, nodeToContent, Checkpoint_Storage, Checkpoint_Write, DocumentNodeType, NotebookIdentifier, NotebookSchemaVersion, SystemUserId, NO_NOTEBOOK_VERSION } from '@ureeka-notebook/service-common';
 
 import { firestore } from '../firebase';
 import { getEnv } from '../util/environment';
 import { getSnapshot, ServerTimestamp } from '../util/firestore';
 import { notebookDocument } from '../notebook/datastore';
 import { updateNotebookRename } from '../notebook/notebook';
-import { getDocumentAtVersion } from './document';
 import { checkpointDocument, lastCheckpointQuery } from './datastore';
+import { getDocumentAtVersion } from './document';
 
 // ********************************************************************************
 const N_VERSIONS = Math.max(0, Number(getEnv('NOTEBOOK_CHECKPOINT_N_VERSIONS', '100'/*guess (balance between # of Checkpoints and # of NotebookVersions clients need to read*/)));
@@ -79,4 +79,26 @@ export const createCheckpoint = async (notebookId: NotebookIdentifier, index: nu
     // also extract the dependent Notebook meta-data and update the Notebook as needed
     updateNotebookRename(transaction, notebook.schemaVersion, notebookId, notebook.name, document);
   });
+};
+
+// == Write =======================================================================
+// writes a Checkpoint for the specified NotebookDocument as of the first Version
+// of the Notebook. This is used in the case where a Notebook is copied.
+export const writeCheckpoint = (
+  transaction: Transaction,
+  schemaVersion: NotebookSchemaVersion, notebookId: NotebookIdentifier,
+  document: DocumentNodeType
+) => {
+  const index = NO_NOTEBOOK_VERSION + 1/*first Version*/;
+  const checkpointRef = checkpointDocument(notebookId, generateCheckpointIdentifier(index));
+  const checkpoint: Checkpoint_Write = {
+    schemaVersion: schemaVersion,
+
+    index,
+    content: nodeToContent(document),
+
+    createdBy: SystemUserId,
+    createTimestamp: ServerTimestamp/*server-set timestamp*/,
+  };
+  transaction.create(checkpointRef, checkpoint)/*by contract*/;
 };
