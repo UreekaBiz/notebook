@@ -144,12 +144,14 @@ export const getListNodesFromDepth = (editorState: EditorState, depth: Selection
         listItemAtDepthPos = listAtDepthPos + 1/*first position inside the List, ListItem by contract*/;
 
   if( !listAtDepth || !isListNode(listAtDepth)
-   || !listItemAtDepth || !(isListItemNode(listItemAtDepth)
-   || isTaskListItemNode(listItemAtDepth))
+    || !listItemAtDepth || !(isListItemAtDepth(listItemAtDepth))
   ) return/*invalid conditions*/;
 
   return { listAtDepthPos, listAtDepth, listItemAtDepth, listItemAtDepthPos };
 };
+// check if the given node is a ListItem or a TaskListItem. Extracted to
+// facilitate reading and prevent errors (SEE: #getListNodesFromDepth above)
+const isListItemAtDepth = (node: ProseMirrorNode) => isListItemNode(node) || isTaskListItemNode(node);
 
 // == Range =======================================================================
 /* Returns the NodeRange covered by a ListItem or a TaskListItem  */
