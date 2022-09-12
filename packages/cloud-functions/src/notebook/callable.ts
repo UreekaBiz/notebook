@@ -1,9 +1,9 @@
 import * as functions from 'firebase-functions';
 
-import { isBlank, normalizeHashtag, NotebookCreate_Rest, NotebookCreate_Rest_Schema, NotebookDelete_Rest, NotebookDelete_Rest_Schema, NotebookHashtag_Rest, NotebookHashtag_Rest_Schema, NotebookIdentifier, NotebookPublish_Rest, NotebookPublish_Rest_Schema, NotebookShare_Rest, NotebookShare_Rest_Schema } from '@ureeka-notebook/service-common';
+import { isBlank, normalizeHashtag, NotebookCopy_Rest, NotebookCopy_Rest_Schema, NotebookCreate_Rest, NotebookCreate_Rest_Schema, NotebookDelete_Rest, NotebookDelete_Rest_Schema, NotebookHashtag_Rest, NotebookHashtag_Rest_Schema, NotebookIdentifier, NotebookPublish_Rest, NotebookPublish_Rest_Schema, NotebookShare_Rest, NotebookShare_Rest_Schema } from '@ureeka-notebook/service-common';
 
 import { wrapCall } from '../util/function';
-import { createNotebook, deleteNotebook, hashtagNotebook } from './notebook';
+import { copyNotebook, createNotebook, deleteNotebook, hashtagNotebook } from './notebook';
 import { publishNotebook } from './publish';
 import { shareNotebook } from './share';
 
@@ -13,6 +13,13 @@ export const notebookCreate = functions.https.onCall(wrapCall<NotebookCreate_Res
 { name: 'notebookCreate', schema: NotebookCreate_Rest_Schema, convertNullToUndefined: true, requiresAuth: true },
 async (data, context, userId) => {
   return await createNotebook(userId!/*auth'd*/, data.type, data.name);
+}));
+
+// ................................................................................
+export const notebookCopy = functions.https.onCall(wrapCall<NotebookCopy_Rest, NotebookIdentifier>(
+{ name: 'notebookCopy', schema: NotebookCopy_Rest_Schema, convertNullToUndefined: true, requiresAuth: true },
+async (data, context, userId) => {
+  return await copyNotebook(userId!/*auth'd*/, data.notebookId);
 }));
 
 // ................................................................................

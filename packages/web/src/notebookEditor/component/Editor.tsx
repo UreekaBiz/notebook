@@ -22,9 +22,9 @@ export const Editor = () => {
   const [isActionModifierPressed, setIsActionModifierPressed] = useState(false/*by contract*/);
 
   // == Effect ====================================================================
-  // ensure that the Node present in the Route of the Editor receives focus
-  // once the Editor has been created and rendered (and hence its content loaded)
-  // (SEE; Document.ts)
+  // ensure that the Node present in the Route of the Editor receives focus once
+  // the Editor has been created and rendered (and hence its content loaded)
+  // SEE: Document.ts
   useEffect(() => {
     const nodeId = Router.asPath.split('#')[1/*after the '#'*/];
     if(!nodeId) return/*no nodeId specified, nothing to do*/;
@@ -40,8 +40,9 @@ export const Editor = () => {
   // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [/*explicitly only on the first render*/]);
 
-  // prevent the user from navigate away from the page or reload the page if the
-  // editor has pending writes. A generic modal will be shown as a AYS to the user.
+  // ..............................................................................
+  // prevent the User from navigate away from the page or reload the page if the
+  // Editor has pending writes. A generic modal will be shown as a AYS to the User.
   useEffect(() => {
     let hasPendingWrite = false/*not writing by default*/;
     const subscription = editorService.onPendingWrites$().subscribe({
@@ -69,6 +70,7 @@ export const Editor = () => {
     };
   }, [editorService]);
 
+  // ..............................................................................
   // add the actionable class to the Editor if the CMD or the CTRL keys are
   // pressed, which will make actionable nodes have special styles (SEE: index.css)
   useEffect(() => {

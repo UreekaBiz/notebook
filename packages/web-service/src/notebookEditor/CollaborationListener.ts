@@ -1,16 +1,19 @@
 import { Editor } from '@tiptap/core';
+import { onDisconnect, serverTimestamp, set } from 'firebase/database';
 import * as collab from 'prosemirror-collab';
 import { NodeSelection, TextSelection } from 'prosemirror-state';
 import { Step as ProseMirrorStep } from 'prosemirror-transform';
 
 import { distinctUntilChanged, BehaviorSubject } from 'rxjs';
 
-import { contentToJSONStep, generateClientIdentifier, getNodeName, isNodeSelection, sleep, AuthedUser, NotebookIdentifier, NotebookVersion, NotebookSchemaVersion, Unsubscribe, UserIdentifier, NO_NOTEBOOK_VERSION } from '@ureeka-notebook/service-common';
+import { contentToJSONStep, generateClientIdentifier, getNodeName, isNodeSelection, sleep, AuthedUser, NotebookIdentifier, NotebookVersion, NotebookSchemaVersion, Unsubscribe, UserIdentifier, NO_NOTEBOOK_VERSION, NotebookUserSession_Write } from '@ureeka-notebook/service-common';
 
 import { getLogger, ServiceLogger } from '../logging/type';
 import { getEnvNumber } from '../util/environment';
 import { ApplicationError } from '../util/error';
+import { notebookUserSessionsRef } from './datastore';
 import { getLatestDocument } from './document';
+import { notebookUsers$ } from './observable';
 import { getVersionsFromIndex, onNewVersion, writeVersions } from './version';
 
 const log = getLogger(ServiceLogger.NOTEBOOK_EDITOR);
@@ -122,7 +125,7 @@ export class CollaborationListener {
    * @see #shutdown()
    */
   public async initialize() {
-    if(this.initialized) throw new ApplicationError('functions/internal', `Notebook listener already initialized.`);
+    if(this.initialized) throw new ApplicationError('functions/internal', `Notebook listener already initialized. (One-shot only.)`);
     this.initialized = true/*by contract*/;
 
     // load initial content
@@ -130,9 +133,10 @@ export class CollaborationListener {
     if(!this.initialized) { log.info(`NotebookListener was shutdown before it finished initialization ${this.logContext()}.`); return/*listener was terminated before finished initialization*/; }
 
     // listen to changes and send them to Firestore
-    this.listenEditor();
-    // listen to Versions from Firestore and apply them to the Editor
-    this.listenFirestore();
+    await this.listenEditor();
+    // listen to Versions from Firestore and apply them to the Editor and to User
+    // cursor updates from the RTDB
+    await this.listenFirebase();
 
     log.debug(`Version Listener initialized with write batch-size of ${versionBatchSize} ${this.logContext()}.`);
   }
@@ -144,11 +148,11 @@ export class CollaborationListener {
    *
    * @see #initialize()
    */
-  public shutdown() {
+  public async shutdown() {
     if(!this.initialized) throw new ApplicationError('functions/internal', `Notebook listener already shut down (or never initialized) ${this.logContext()}.`);
 
-    this.unsubscribeEditor();
-    this.unsubscribeFirebase();
+    await this.unsubscribeEditor();
+    await this.unsubscribeFirebase();
 
     this.lastReadIndex = NO_NOTEBOOK_VERSION/*reset*/;
     this.lastWriteIndex = NO_NOTEBOOK_VERSION/*reset*/;
@@ -158,15 +162,13 @@ export class CollaborationListener {
     this.initialContentLoaded = false/*by contract*/;
     this.isWaitingForNewVersions = false/*by contract*/;
 
-    this.initialized = false/*by contract*/;
+    // NOTE: explicitly *not* setting `initialized = false` because this is one-shot
   }
 
   // == Internal Listeners ========================================================
-  private listenEditor() {
+  // .. Editor ....................................................................
+  private async listenEditor() {
     if(!this.initialContentLoaded) { log.warn(`Listening to Editor before initial content is loaded ${this.logContext()}.`); return/*prevent invalid actions*/; }
-
-    // remove previous subscriptions if any
-    this.unsubscribeEditor();
 
     const callback = this.writePendingSteps.bind(this);
     const editor = this.editor/*local closure so doesn't change on remove*/;
@@ -174,25 +176,42 @@ export class CollaborationListener {
     this.editorUnsubscribes.push(() => editor.off('update', callback));
   }
 
-  private unsubscribeEditor() {
+  private async unsubscribeEditor() {
     this.editorUnsubscribes.forEach(unsubscribe => unsubscribe());
     this.editorUnsubscribes.splice(0/*clear by contract*/);
   }
 
-  // ..............................................................................
-  private listenFirestore() {
+  // .. Firebase ..................................................................
+  private async listenFirebase() {
     if(!this.initialContentLoaded) { log.warn(`Listening to Firestore before initial content is loaded ${this.logContext()}.`); return/*prevent invalid actions*/; }
 
-    // Remove previous subscriptions if any
-    this.unsubscribeFirebase();
-
+    // Firestore
     const unsubscribe = onNewVersion(this.notebookId, this.handleNewVersion.bind(this));
     this.firestoreUnsubscribes.push(unsubscribe);
+
+    // RTDB -- setup onDisconnect handler
+    // SEE: SessionService for another example
+    // REF: https://firebase.google.com/docs/database/web/offline-capabilities#how-ondisconnect-works
+    try {
+      const ref = notebookUserSessionsRef(this.notebookId, this.user.userId, this.user.sessionId);
+      await onDisconnect(ref).remove()/*remove the structure when the User disconnects*/;
+    } catch(error) {
+      log.error(`Error while establishing on-disconnect handler for Notebook (${this.notebookId}) for User-Session (${this.user.userId}-${this.user.sessionId}). Reason: `, error);
+    }
   }
 
-  private unsubscribeFirebase() {
+  private async unsubscribeFirebase() {
+    // Firestore -- unsubscribe from all listeners
     this.firestoreUnsubscribes.forEach(unsubscribe => unsubscribe());
     this.firestoreUnsubscribes.splice(0/*clear by contract*/);
+
+    // RTDB -- cancel onDisconnect handler
+    try {
+      const ref = notebookUserSessionsRef(this.notebookId, this.user.userId, this.user.sessionId);
+      await onDisconnect(ref).cancel();
+    } catch(error) {
+      log.error(`Error while canceling session on-disconnect handler for Notebook (${this.notebookId}) for User-Session (${this.user.userId}-${this.user.sessionId}). Reason: `, error);
+    }
   }
 
   // ==============================================================================
@@ -224,6 +243,9 @@ export class CollaborationListener {
     this.editor.registerPlugin(collab.collab({ clientID: this.clientId, version: latestIndex }));
 
     this.initialContentLoaded = true/*by contract -- done*/;
+
+    // write a (temporary) stub to the RTDB to indicate that the User is connected
+    await this.writeUserSession(0/*FIXME: currently anything*/);
   }
 
   // == Observable ================================================================
@@ -232,6 +254,9 @@ export class CollaborationListener {
     return this.pendingWrites$
                 .pipe(distinctUntilChanged());
   }
+
+  // ------------------------------------------------------------------------------
+  public onUsers$() { return notebookUsers$(this.notebookId); }
 
   // == Editor ====================================================================
   public getEditorIndex() {
@@ -409,6 +434,23 @@ export class CollaborationListener {
 
       // there are pending writes IFF there are Versions to be read
       this.pendingWrites$.next(this.isWaitingForNewVersions);
+    }
+  }
+
+  // -- User-Session --------------------------------------------------------------
+  private async writeUserSession(cursorPosition: number) {
+    if(!this.initialized) { log.warn(`Trying to write Notebook User-Session before initialization or after shutdown ${this.logContext()}.`); return/*prevent invalid actions*/; }
+    if(!this.initialContentLoaded) throw new ApplicationError('functions/internal', `Trying to write Notebook User-Session before initial content is loaded  ${this.logContext()}.`);
+
+    try {
+      const ref = notebookUserSessionsRef(this.notebookId, this.user.userId, this.user.sessionId);
+      const userSession: NotebookUserSession_Write = {
+        cursorPosition,
+        timestamp: serverTimestamp()/*write-always server-set*/,
+      };
+      await set(ref, userSession);
+    } catch(error) {
+      log.error(`Error writing Notebook User-Session ${this.logContext()}: `, error);
     }
   }
 

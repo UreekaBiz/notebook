@@ -1,8 +1,8 @@
 import { BiCodeAlt } from 'react-icons/bi';
 
-import { createBlockNodeCommand, generateNodeId, getParentNode, getSelectedNode, isCodeBlockNode, AttributeType, NodeName } from '@ureeka-notebook/web-service';
+import { generateNodeId, getParentNode, getSelectedNode, isCodeBlockNode, AttributeType, CreateBlockNodeDocumentUpdate, NodeName } from '@ureeka-notebook/web-service';
 
-import { toolItemCommandWrapper } from 'notebookEditor/command/util';
+import { applyDocumentUpdates } from 'notebookEditor/command/update';
 import { markBold } from 'notebookEditor/extension/bold/toolbar';
 import { markCode } from 'notebookEditor/extension/code/toolbar';
 import { markItalic } from 'notebookEditor/extension/italic/toolbar';
@@ -36,7 +36,7 @@ export const codeBlockToolItem: ToolItem = {
 
     return false/*enabled*/;
   },
-  onClick: (editor, depth) => toolItemCommandWrapper(editor, depth, createBlockNodeCommand(NodeName.CODEBLOCK, { [AttributeType.Id]: generateNodeId() })),
+  onClick: (editor) => applyDocumentUpdates(editor, [ new CreateBlockNodeDocumentUpdate(NodeName.CODEBLOCK, { [AttributeType.Id]: generateNodeId() })]),
 };
 
 const codeBlockTypeToolItem: ToolItem = {

@@ -99,7 +99,10 @@ export const DefaultTheme: Theme = {
       [AttributeType.TextAlign]: TextAlign.left,
       [AttributeType.VerticalAlign]: VerticalAlign.bottom,
     },
-    [NodeName.LIST_ITEM]: {/*no defined value*/},
+    [NodeName.LIST_ITEM]: {
+      [AttributeType.PaddingTop]: '4px',
+      [AttributeType.PaddingBottom]: '4px',
+    },
     [NodeName.LIST_ITEM_CONTENT]: {/*no defined value*/},
     [NodeName.MARK_HOLDER]: {/*no defined value*/},
     [NodeName.ORDERED_LIST]: {/*no defined value*/},
@@ -115,7 +118,10 @@ export const DefaultTheme: Theme = {
       [AttributeType.MarginLeft]: '1em',
       [AttributeType.PaddingLeft]: '1em',
     },
-    [NodeName.TASK_LIST_ITEM]: {/*no defined value*/},
+    [NodeName.TASK_LIST_ITEM]: {
+      [AttributeType.PaddingTop]: '4px',
+      [AttributeType.PaddingBottom]: '4px',
+    },
     [NodeName.TEXT]: {/*no defined value*/},
   },
 
@@ -219,7 +225,10 @@ export const GoogleDocsTheme: Theme = {
       [AttributeType.MarginLeft]: '1em',
       [AttributeType.PaddingLeft]: '1em',
     },
-    [NodeName.TASK_LIST_ITEM]: {/*no defined value*/},
+    [NodeName.TASK_LIST_ITEM]: {
+      [AttributeType.PaddingTop]: '10px',
+      [AttributeType.PaddingBottom]: '10px',
+    },
     [NodeName.TEXT]: {/*no defined value*/},
   },
 

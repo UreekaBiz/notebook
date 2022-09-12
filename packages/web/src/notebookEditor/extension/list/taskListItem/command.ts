@@ -1,6 +1,6 @@
 import { EditorState, TextSelection, Transaction } from 'prosemirror-state';
 
-import { createStrikethroughMark, AbstractDocumentUpdate, AttributeType, Command, NotebookSchemaType } from '@ureeka-notebook/web-service';
+import { createStrikethroughMark, getStrikethroughMarkType, AbstractDocumentUpdate, AttributeType, Command, NotebookSchemaType } from '@ureeka-notebook/web-service';
 
 // ********************************************************************************
 /**
@@ -38,16 +38,16 @@ export class CrossTaskListItemDocumentUpdate implements AbstractDocumentUpdate {
           { pos: startingHead } = tr.selection.$head;
 
     if(this.checked) {
-      tr.setNodeMarkup(this.taskListItemPos, undefined, { ...currentNode.attrs, [AttributeType.Checked]: this.checked })
+      tr.setNodeMarkup(this.taskListItemPos, undefined/*maintain type*/, { ...currentNode.attrs, [AttributeType.Checked]: this.checked })
         .addMark(this.taskListItemPos + 1/*inside the node*/,
                  this.taskListItemPos + firstChild.nodeSize,
                  createStrikethroughMark(editorState.schema))
         .setSelection(TextSelection.create(tr.doc, startingAnchor, startingHead));
     } else {
-      tr.setNodeMarkup(this.taskListItemPos, undefined, { ...currentNode.attrs, [AttributeType.Checked]: this.checked })
+      tr.setNodeMarkup(this.taskListItemPos, undefined/*maintain type*/, { ...currentNode.attrs, [AttributeType.Checked]: this.checked })
         .removeMark(this.taskListItemPos + 1/*inside the node*/,
                     this.taskListItemPos + firstChild.nodeSize,
-                    undefined/*remove all marks of any type*/)
+                    getStrikethroughMarkType(editorState.schema)/*only remove the Strikethrough Mark*/)
         .setSelection(TextSelection.create(tr.doc, startingAnchor, startingHead));
     }
     return tr/*updated*/;

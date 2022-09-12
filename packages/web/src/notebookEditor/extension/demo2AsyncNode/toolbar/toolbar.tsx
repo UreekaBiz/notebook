@@ -1,8 +1,8 @@
 import { MdFindReplace } from 'react-icons/md';
 
-import { createBlockNodeCommand, generateNodeId, AttributeType, NodeName } from '@ureeka-notebook/web-service';
+import { generateNodeId, AttributeType, CreateBlockNodeDocumentUpdate, NodeName } from '@ureeka-notebook/web-service';
 
-import { toolItemCommandWrapper } from 'notebookEditor/command/util';
+import { applyDocumentUpdates } from 'notebookEditor/command/update';
 import { markBold } from 'notebookEditor/extension/bold/toolbar';
 import { markCode } from 'notebookEditor/extension/code/toolbar';
 import { markItalic } from 'notebookEditor/extension/italic/toolbar';
@@ -29,7 +29,7 @@ export const demo2AsyncNodeToolItem: ToolItem = {
 
   shouldBeDisabled: () => false,
   shouldShow: (editor, depth) => depth === undefined || editor.state.selection.$anchor.depth === depth/*direct parent*/,
-  onClick: (editor, depth) => toolItemCommandWrapper(editor, depth, createBlockNodeCommand(NodeName.DEMO_2_ASYNC_NODE, { [AttributeType.Id]: generateNodeId() })),
+  onClick: (editor) => applyDocumentUpdates(editor, [ new CreateBlockNodeDocumentUpdate(NodeName.DEMO_2_ASYNC_NODE, { [AttributeType.Id]: generateNodeId() })]),
 };
 
 const demo2AsyncNodeReplaceTextToolItem: ToolItem = {

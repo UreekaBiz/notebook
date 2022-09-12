@@ -9,6 +9,7 @@ import { HISTORY_META } from 'notebookEditor/extension/history/History';
 
 // ********************************************************************************
 // == Async =======================================================================
+// replace an entire inline CodeBlockAsyncNode with another one
 export const replaceInlineCodeBlockAsyncNode = (editor: Editor, newAsyncNode: CodeBlockAsyncNodeType, replacementPosition: number) =>
   editor.chain()
         .command(({ tr }) => {
@@ -22,6 +23,8 @@ export const replaceInlineCodeBlockAsyncNode = (editor: Editor, newAsyncNode: Co
         .run();
 
 // == Content =====================================================================
+// get the combined content of all CodeBlocks referenced by the given
+// CodeBlockReference array
 export const getCodeBlocksContent = (editor: Editor, codeBlockReferences: CodeBlockReference[]) => {
   const codeBlockViewStorage = getCodeBlockViewStorage(editor);
 
@@ -35,6 +38,22 @@ export const getCodeBlocksContent = (editor: Editor, codeBlockReferences: CodeBl
   // FIXME: Do we want this as a delimiter?
   const content = codeBlocksContent.filter(value => value !== undefined).join('\n');
   return content;
+};
+
+// check if all CodeBlocks referenced by the given CodeBlockReference array
+// are empty. Leave as early as possible.
+export const areCodeBlocksEmpty = (editor: Editor, codeBlockReferences: CodeBlockReference[]) => {
+  const codeBlockViewStorage = getCodeBlockViewStorage(editor);
+
+  for(let i=0; i<codeBlockReferences.length; i++) {
+    const codeBlockView = codeBlockViewStorage.getNodeView(codeBlockReferences[i]);
+    if(!codeBlockView) continue/*no node view*/;
+
+    const { node } = codeBlockView;
+    if(node.textContent.length > 0) return false/*at least one CodeBlock has content*/;
+  }
+
+  return true/*all of the CodeBlocks are empty*/;
 };
 
 // == Visual Id ===================================================================
@@ -59,6 +78,7 @@ export const hashesFromCodeBlockReferences = (editor: Editor, codeBlockReference
   return newCodeBlockHashes;
 };
 
+// return a Hash given a CodeBlockReference
 const hashFromCodeBlockReference = (editor: Editor, codeBlockReference: CodeBlockReference) => {
   const codeBlockStorage = getCodeBlockViewStorage(editor),
         codeBlockView = codeBlockStorage.getNodeView(codeBlockReference);
@@ -68,6 +88,8 @@ const hashFromCodeBlockReference = (editor: Editor, codeBlockReference: CodeBloc
   return codeBlockHash(codeBlockView.node);
 };
 
+// compute the Hash of a CodeBlock's textContent, or return the default
+// empty CodeBlock Hash if it is empty
 export const codeBlockHash = (node: CodeBlockNodeType) => {
   let { textContent } = node;
   return isBlank(textContent) ? EMPTY_CODEBLOCK_HASH : hashString(textContent);

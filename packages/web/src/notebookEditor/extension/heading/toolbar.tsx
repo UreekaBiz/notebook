@@ -10,6 +10,7 @@ import { toolItemCommandWrapper } from 'notebookEditor/command/util';
 import { markBold } from 'notebookEditor/extension/bold/toolbar';
 import { markCode } from 'notebookEditor/extension/code/toolbar';
 import { markItalic } from 'notebookEditor/extension/italic/toolbar';
+import { linkToolItem } from 'notebookEditor/extension//link/toolbar';
 import { markStrikethrough } from 'notebookEditor/extension/strikethrough/toolbar';
 import { markSubScript } from 'notebookEditor/extension/subScript/toolbar';
 import { markSuperScript } from 'notebookEditor/extension/superScript/toolbar';
@@ -52,6 +53,7 @@ export const HeadingToolbar: Toolbar = {
       markSuperScript,
       markSubScript,
       markCode,
+      linkToolItem,
       heading1,
       heading2,
       heading3,

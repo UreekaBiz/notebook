@@ -64,8 +64,7 @@ img.ProseMirror-selectednode/*target inline nodes with content (e.g. asyncNodes)
 /* -- Node Styles -------------------------------------------------------------- */
 /* .. Chip ..................................................................... */
 .chip {
-  /* NOTE: This is needed to remove the white background while dragging the chip */
-  transform: translate(0, 0);
+  transform: translate(0, 0)/*needed to remove the white background while dragging the chip*/;
   position: relative;
   padding: 3px 28px 2px 10px;
   background-color: #4299E1;
@@ -110,8 +109,8 @@ img.ProseMirror-selectednode/*target inline nodes with content (e.g. asyncNodes)
 [data-node-type="taskListItem"] > div > [data-node-type="listItemContent"] {
   margin-left: 4px;
   margin-right: 4px;
-  margin-top: 0.5rem;
-  margin-bottom: 0.5rem;
+  margin-top: 0.25rem;
+  margin-bottom: 0.25rem;
 }
 
 /* .. OrderedList .............................................................. */
@@ -125,7 +124,7 @@ ol[data-node-type="orderedList"] > li[data-node-type="listItem"] {
 }
 ol[data-node-type="orderedList"] > li[data-node-type="listItem"]::marker {
   /* NOTE: the listStyle variable is added by the renderer. (SEE: listItem.ts) */
-  content: counter(list, var(--listStyleType)) attr(data-attribute-separator)
+  content: counter(list, var(--listStyleType)) attr(data-attribute-separator) ' '/*add separation between content and Marker*/;
 }
 
 /* .. BulletList ............................................................... */
@@ -152,7 +151,7 @@ ul[data-node-type="taskList"] {
 ul[data-node-type="taskList"] > li { display: flex; }
 ul[data-node-type="taskList"] > li > label {
 	 flex: 0 0 auto;
-   margin-top: 0.55em;
+   margin-top: 0.25em;
 	 margin-right: 0.25rem;
 	 user-select: none;
 }
@@ -187,7 +186,7 @@ ul[data-node-type="taskList"] > li > label {
 /* -- Mark Styles -------------------------------------------------------------- */
 [data-mark-type="code"] {
   font-family: monospace;
-  font-size: 0.8rem;
+  font-size: 0.8em;
   border: 1px solid #EEEEEE;
   border-radius: 0.25em;
   padding: 1px;

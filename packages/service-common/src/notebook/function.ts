@@ -23,6 +23,13 @@ export type NotebookCreate_Rest = Modify<Validate.InferType<typeof NotebookCreat
   type: NotebookType/*explicit*/;
 }>>;
 
+// .. Copy ........................................................................
+export const NotebookCopy_Rest_Schema = Validate.object({
+  notebookId: Identifier_Schema
+      .required(),
+}).noUnknown();
+export type NotebookCopy_Rest = Validate.InferType<typeof NotebookCopy_Rest_Schema>;
+
 // .. Delete ......................................................................
 export const NotebookDelete_Rest_Schema = Validate.object({
   notebookId: Identifier_Schema

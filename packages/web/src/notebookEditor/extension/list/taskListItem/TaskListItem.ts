@@ -1,9 +1,10 @@
 import { Node } from '@tiptap/core';
 import { Plugin } from 'prosemirror-state';
 
-import { getNodeOutputSpec, isNodeSelection, isTaskListItemNode, AttributeType, NodeName, TaskListItemNodeSpec, NotebookSchemaType, DATA_NODE_TYPE, DATA_TASK_LIST_ITEM_CHECKED } from '@ureeka-notebook/web-service';
+import { getNodeOutputSpec, isNodeSelection, isTaskListItemNode, AttributeType, NodeName, NotebookSchemaType, SetAttributeType, TaskListItemNodeSpec, DATA_NODE_TYPE, DATA_TASK_LIST_ITEM_CHECKED } from '@ureeka-notebook/web-service';
 
 import { shortcutCommandWrapper } from 'notebookEditor/command/util';
+import { setAttributeParsingBehavior } from 'notebookEditor/extension/util/attribute';
 import { NoOptions, NoStorage, ParseRulePriority } from 'notebookEditor/model/type';
 
 import { splitListItemCommand } from '../command/splitListItemCommand';
@@ -27,6 +28,9 @@ export const TaskListItem = Node.create<NoOptions, NoStorage>({
   // -- Attribute -----------------------------------------------------------------
   addAttributes() {
     return {
+      [AttributeType.PaddingTop]: setAttributeParsingBehavior(AttributeType.PaddingTop, SetAttributeType.STRING),
+      [AttributeType.PaddingBottom]: setAttributeParsingBehavior(AttributeType.PaddingBottom, SetAttributeType.STRING),
+
       // CHECK: is it correct for this to be inline? This is not a blocker but
       //        some time needs to be spent thinking on how to parse custom attributes
       [AttributeType.Checked]: {

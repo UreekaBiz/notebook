@@ -62,7 +62,7 @@ export enum ExtensionPriority {
 
   // NOTE: custom InputRules just need to be triggered before Text so that their
   //       effects are applied (SEE: InputRule.ts)
-  INPUT_RULE = 100,
+  INPUT_RULE = 114/*T&E*/,
 
   // NOTE: Since the text extension adds a \t whenever Tab is pressed, but this
   //       behavior is not always guaranteed to be the desired one (e.g. when

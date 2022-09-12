@@ -5,6 +5,7 @@ import { useEffect } from 'react';
 import { getLogger, getSelectedNode, isDemoAsyncNode, AttributeType, Logger, NodeName, NotebookEditorService, NotebookIdentifier, REMOVED_CODEBLOCK_VISUALID } from '@ureeka-notebook/web-service';
 
 import { visualIdFromCodeBlockReference } from 'notebookEditor/extension/codeblock/util';
+import { areCodeBlocksEmpty } from 'notebookEditor/extension/codeBlockAsyncNode/util';
 import { useNotebookEditor } from 'notebookEditor/hook/useNotebookEditor';
 import { getNodeViewStorage } from 'notebookEditor/model/NodeViewStorage';
 import { EditorToolComponentProps, TOOL_ITEM_DATA_TYPE } from 'notebookEditor/toolbar/type';
@@ -35,9 +36,10 @@ export const ExecuteButtons: React.FC<Props> = ({ editor, depth }) => {
 
   const isLoading = demoAsyncNodeView.nodeModel.getPerformingAsyncOperation();
 
-  const disabled = codeBlockReferences.length < 1
-                || codeBlockReferences.some((reference) => visualIdFromCodeBlockReference(editor, reference) === REMOVED_CODEBLOCK_VISUALID)
-                || isLoading;
+  const disabled = codeBlockReferences.length < 1 ||
+                areCodeBlocksEmpty(editor, codeBlockReferences) ||
+                codeBlockReferences.some((reference) => visualIdFromCodeBlockReference(editor, reference) === REMOVED_CODEBLOCK_VISUALID) ||
+                isLoading;
 
 
   // == Handler ===================================================================
@@ -141,5 +143,5 @@ const ExecuteShortcut: React.FC<ExecuteShortcutProps> = ({ editorService, notebo
     return () => { window.removeEventListener('keydown', handler); };
   }, [notebookId, editorService, demoAsyncNodeView, disabled]);
 
-  return null;
+  return null/*do not display anything, just add Effect*/;
 };

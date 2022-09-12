@@ -1,9 +1,10 @@
 import { BsCodeSlash } from 'react-icons/bs';
 
-import { isNodeSelection, MarkName } from '@ureeka-notebook/web-service';
+import { getParentNode, isListItemContentNode, isNodeSelection, MarkName } from '@ureeka-notebook/web-service';
 
 import { toolItemCommandWrapper } from 'notebookEditor/command/util';
 import { inMarkHolder } from 'notebookEditor/extension/markHolder/util';
+import { shouldShowToolItemInsideList } from 'notebookEditor/extension/list/util';
 import { ToolItem } from 'notebookEditor/toolbar/type';
 
 import { toggleCodeCommand } from './command';
@@ -24,12 +25,17 @@ export const markCode: ToolItem = {
 
     return true;
   },
-  shouldShow: (editor, depth) => depth === undefined || editor.state.selection.$anchor.depth === depth/*direct parent*/,
-  onClick: (editor, depth) => toolItemCommandWrapper(editor, depth, toggleCodeCommand),
+  shouldShow: (editor, depth) => {
+    if(isListItemContentNode(getParentNode(editor.state.selection))) {
+      return shouldShowToolItemInsideList(editor.state, depth);
+    } /* else -- not inside ListItemContent */
 
+    return depth === undefined || editor.state.selection.$anchor.depth === depth;/*direct parent*/
+  },
   isActive: (editor) => {
     if(inMarkHolder(editor, MarkName.CODE)) return true/*is active in MarkHolder*/;
 
     return editor.isActive(MarkName.CODE);
   },
+  onClick: (editor, depth) => toolItemCommandWrapper(editor, depth, toggleCodeCommand),
 };

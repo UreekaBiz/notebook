@@ -15,8 +15,13 @@ import { maybeJoinList } from '../util';
 //       this level (SEE: maybeJoinList).
 
 // == Plugin ======================================================================
-export const ListItemTaskListItemPlugin = () =>
-new Plugin<NoPluginState, NotebookSchemaType>({
+export const ListItemTaskListItemPlugin = () => {
+  // used to distinguish between a regular paste and a plain text paste,
+  // whose presence has influence only when pasting inside ListItems
+  // (SEE: #handlePaste below)
+  let isPlainTextPaste = false/*default*/;
+
+  return new Plugin<NoPluginState, NotebookSchemaType>({
     // -- Transaction -------------------------------------------------------------
     // ensure that Lists are joined if possible (SEE: maybeJoinList)
     appendTransaction(transactions, oldState, newState) {
@@ -31,7 +36,8 @@ new Plugin<NoPluginState, NotebookSchemaType>({
 
     // -- Props -------------------------------------------------------------------
     props: {
-      // ensure textBlocks that get pasted into Lists become ListItems
+      // ensure textBlocks that get pasted into Lists become ListItems, or that
+      // their content gets pasted correctly if pasting as plain-text
       handlePaste: (view: EditorView, event: ClipboardEvent, slice: Slice) => {
         const { selection, schema } = view.state;
         const { $anchor } = selection;
@@ -42,28 +48,52 @@ new Plugin<NoPluginState, NotebookSchemaType>({
         const grandParentList = $anchor.node(-2/*(SEE: comment above)*/);
         const { tr } = view.state;
 
-        const newSliceContent: ProseMirrorNode[] = [];
-        slice.content.descendants(node => {
-          if(node.isTextblock) {
-            const { textContent } = node;
-            if(textContent.length < 1) return true/*do nothing, keep descending*/;
+        try {
+          if(isPlainTextPaste) {
+            tr.insertText(slice.content.textBetween(0, slice.content.size, ' '/*add a space per pasted Block Node*/));
+            view.dispatch(tr);
+            return true/*event handled*/;
+          } /* else -- not a plain text event, ensure right paste behavior */
 
-            if(isTaskListNode(grandParentList)) {
-              const taskListItemNode = createTaskListItemNode(schema, { ...parentListItem.attrs }, createListItemContentNode(schema, { ...parentListItem.attrs }, schema.text(textContent)));
-              newSliceContent.push(taskListItemNode);
-            } else {
-              const listItemNode = createListItemNode(schema, { ...parentListItem.attrs }, createListItemContentNode(schema, { ...parentListItem.attrs }, schema.text(textContent)));
-              newSliceContent.push(listItemNode);
-            }
-            return false/*do not descend further into children*/;
-          } /* else -- not a textBlock, keep descending */
+          const newSliceContent: ProseMirrorNode[] = [];
+          slice.content.descendants(node => {
+            if(node.isTextblock) {
+              const { textContent } = node;
+              if(textContent.length < 1) return true/*do nothing, keep descending*/;
 
-          return true/*keep descending*/;
-        });
+              if(isTaskListNode(grandParentList)) {
+                const taskListItemNode = createTaskListItemNode(schema, { ...parentListItem.attrs }, createListItemContentNode(schema, { ...parentListItem.attrs }, schema.text(textContent)));
+                newSliceContent.push(taskListItemNode);
+              } else {
+                const listItemNode = createListItemNode(schema, { ...parentListItem.attrs }, createListItemContentNode(schema, { ...parentListItem.attrs }, schema.text(textContent)));
+                newSliceContent.push(listItemNode);
+              }
+              return false/*do not descend further into children*/;
+            } /* else -- not a textBlock, keep descending */
 
-        tr.replaceSelection(new Slice(Fragment.from(newSliceContent), 0/*use full Slice*/, 0/*use full Slice*/));
-        view.dispatch(tr);
-        return true/*event handled*/;
+            return true/*keep descending*/;
+          });
+
+          tr.replaceSelection(new Slice(Fragment.from(newSliceContent), 0/*use full Slice*/, 0/*use full Slice*/));
+          view.dispatch(tr);
+          return true/*event handled*/;
+        } finally {
+          isPlainTextPaste = false/*default*/;
+        }
+      },
+
+      // check to see if a paste is a plain text paste so it gets handled
+      // accordingly, only when pasting inside ListItems or TaskListItems
+      // (SEE: #handlePaste above)
+      handleKeyDown: (view: EditorView, event: KeyboardEvent) => {
+        if(event.shiftKey && event.metaKey && event.code === 'KeyV') {
+          isPlainTextPaste = true/*set the flag*/;
+          return false/*allow event to pass, it will be manually handled above*/;
+        } else {
+          isPlainTextPaste = false/*by definition*/;
+          return false/*let PM handle the event*/;
+        }
       },
     },
   });
+};
