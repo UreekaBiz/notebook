@@ -16,6 +16,8 @@ interface Props extends EditorToolComponentProps {
   /** the name of the ToolItem */
   name: string;
 
+  placeholder?: string;
+
   /** a function that validates if a label is valid for the Chip */
   validate: (label: string) => boolean;
   /** gets a valid value from the given label */
@@ -25,7 +27,7 @@ interface Props extends EditorToolComponentProps {
 
   onChipClick?: (chip: ChipValue, index: number) => void;
 }
-export const ChipToolItem: React.FC<Props> = ({ editor, attributeType, depth, name, nodeName, validate, getLabelFromValue, getValueFromLabel, onChipClick }) => {
+export const ChipToolItem: React.FC<Props> = ({ editor, attributeType, depth, name, nodeName, validate, placeholder, getLabelFromValue, getValueFromLabel, onChipClick }) => {
   const { state } = editor;
   const { selection } = state;
   const node = getSelectedNode(state, depth);
@@ -42,7 +44,7 @@ export const ChipToolItem: React.FC<Props> = ({ editor, attributeType, depth, na
   };
 
   const handleChange = (chips: ChipValue[], focus?: boolean) => {
-    const newValue = chips.map(chip => chip.value);
+    const newValue = chips.length > 0 ? chips.map(chip => chip.value) : undefined/*no value*/;
     editor.chain().focus().updateAttributes(nodeName, { [attributeType]: newValue }).run();
 
     const position = state.selection.anchor;
@@ -61,6 +63,7 @@ export const ChipToolItem: React.FC<Props> = ({ editor, attributeType, depth, na
         nodeId={id}
         value={chips}
         validate={validate}
+        placeholder={placeholder}
         onAddValue={handleAddValue}
         onChange={handleChange}
         onChipClick={onChipClick}

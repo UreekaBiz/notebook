@@ -6,6 +6,8 @@ import { applyDocumentUpdates } from 'notebookEditor/command/update';
 import { markBold } from 'notebookEditor/extension/bold/toolbar';
 import { markCode } from 'notebookEditor/extension/code/toolbar';
 import { markItalic } from 'notebookEditor/extension/italic/toolbar';
+import { SliderToolItem } from 'notebookEditor/extension/shared/component/SliderToolItem';
+import { InputToolItem } from 'notebookEditor/extension/shared/component/InputToolItem';
 import { markStrikethrough } from 'notebookEditor/extension/strikethrough/toolbar';
 import { markSubScript } from 'notebookEditor/extension/subScript/toolbar';
 import { markSuperScript } from 'notebookEditor/extension/superScript/toolbar';
@@ -14,8 +16,6 @@ import { markUnderline } from 'notebookEditor/extension/underline/toolbar';
 import { Toolbar, ToolItem } from 'notebookEditor/toolbar/type';
 
 import { ExecuteButtons } from './ExecuteButtons';
-import { SliderToolItem } from 'notebookEditor/extension/shared/component/SliderToolItem';
-import { InputToolItem } from 'notebookEditor/extension/shared/component/InputToolItem';
 
 //*********************************************************************************
 // == Tool Items ==================================================================

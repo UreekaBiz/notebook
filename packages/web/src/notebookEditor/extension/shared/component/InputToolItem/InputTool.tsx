@@ -1,19 +1,19 @@
-import { Input } from '@chakra-ui/react';
+import { Input, InputProps } from '@chakra-ui/react';
 import { ChangeEventHandler, KeyboardEventHandler } from 'react';
 
 import { useLocalValue } from 'notebookEditor/shared/hook/useLocalValue';
 import { TOOL_ITEM_DATA_TYPE } from 'notebookEditor/toolbar/type';
 
 // ********************************************************************************
-type Props = {
+type Props = Omit<InputProps, 'onChange'> & {
   value: string;
 
   placeholder: string;
 
   onChange: (value: string) => void;
 }
-export const InputTool: React.FC<Props> = ({ value: initialInputValue, placeholder, onChange }) => {
-  const { commitChange, localValue, resetLocalValue, updateLocalValue } = useLocalValue<string>(initialInputValue, onChange);
+export const InputTool: React.FC<Props> = ({ value: initialInputValue, placeholder, onChange, ...props }) => {
+  const { commitChange, localValue, updateLocalValue } = useLocalValue<string>(initialInputValue, onChange);
 
   // == Handler ===================================================================
   const handleValueChange: ChangeEventHandler<HTMLInputElement> = (event) => {
@@ -22,8 +22,7 @@ export const InputTool: React.FC<Props> = ({ value: initialInputValue, placehold
   };
 
   const saveChange = (focus: boolean = true) => {
-    if(localValue) commitChange(undefined/*use stored value*/, focus);
-    else resetLocalValue();
+    commitChange(undefined/*use stored value*/, focus);
   };
 
   const handleKeyDown: KeyboardEventHandler<HTMLInputElement> = (event) => {
@@ -44,6 +43,7 @@ export const InputTool: React.FC<Props> = ({ value: initialInputValue, placehold
       onBlur={() => saveChange(false)}
       onChange={handleValueChange}
       onKeyDown={handleKeyDown}
+      {...props}
     />
   );
 };
