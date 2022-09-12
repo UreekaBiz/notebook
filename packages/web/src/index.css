@@ -124,7 +124,7 @@ ol[data-node-type="orderedList"] > li[data-node-type="listItem"] {
 }
 ol[data-node-type="orderedList"] > li[data-node-type="listItem"]::marker {
   /* NOTE: the listStyle variable is added by the renderer. (SEE: listItem.ts) */
-  content: counter(list, var(--listStyleType)) attr(data-attribute-separator)
+  content: counter(list, var(--listStyleType)) attr(data-attribute-separator) ' '/*add separation between content and Marker*/;
 }
 
 /* .. BulletList ............................................................... */
