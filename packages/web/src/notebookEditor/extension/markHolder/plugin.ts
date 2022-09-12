@@ -2,7 +2,7 @@ import { Slice } from 'prosemirror-model';
 import { NodeSelection, Plugin, TextSelection } from 'prosemirror-state';
 import { EditorView } from 'prosemirror-view';
 
-import { createBoldMark, createMarkHolderNode, createParagraphNode, getNodesAffectedByStepMap, isHeadingNode, isMarkHolderNode, markFromJSONMark, parseStringifiedMarksArray, stringifyMarksArray, AttributeType, NodeName, NotebookSchemaType } from '@ureeka-notebook/web-service';
+import { createMarkHolderNode, createParagraphNode, getNodesAffectedByStepMap, isMarkHolderNode, markFromJSONMark, parseStringifiedMarksArray, stringifyMarksArray, AttributeType, NodeName, NotebookSchemaType } from '@ureeka-notebook/web-service';
 
 import { parseStoredMarks } from './util';
 
@@ -47,31 +47,30 @@ export const MarkHolderPlugin = () => new Plugin<NotebookSchemaType>({
           const { storedMarks } = transactions[i];
 
           // ensure no MarkHolders ever get pasted or set in places they should not be
-          for(let j=0; j<newNodePositions.length; j++) {
-            newNodePositions[j].node.content.forEach((descendant, offsetIntoParent) => {
+          for(let newNPIndex=0; newNPIndex<newNodePositions.length; newNPIndex++) {
+            const nodeContentSize = newNodePositions[newNPIndex].node.content.size;
+            newNodePositions[newNPIndex].node.content.forEach((descendant, offsetIntoParent) => {
               if(
-                  // if the MarkHolder is not the only child (prevent any possible
-                  // weird Block Node splitting / lifting results)
-                  isMarkHolderNode(descendant)
-                  && newNodePositions[i].node.content.size > 1 /*more than one child*/
-                  && offsetIntoParent !== 0 /*MarkHolder is not the first one*/
+                  // if there are any MarkHolders in the middle of a Block
+                  (isMarkHolderNode(descendant)
+                  && nodeContentSize > 1 /*more than one child*/
+                  && offsetIntoParent !== 0 /*MarkHolder is not the first one*/)
+                  ||
+                  // if there are any MarkHolders at the start of a non-empty Block
+                  (isMarkHolderNode(descendant)
+                  && nodeContentSize > 1 /*more than one child*/)
               ) {
-                tr.setSelection(NodeSelection.create(tr.doc, (newNodePositions[j].position+1/*inside the parent*/) + offsetIntoParent))
+                tr.setSelection(NodeSelection.create(tr.doc, (newNodePositions[newNPIndex].position+1/*inside the parent*/) + offsetIntoParent))
                   .deleteSelection();
               }
             });
           }
 
           // check if any legitimate MarkHolders must be added
-          for(let j=0; j<newNodePositions.length; j++) {
-            // Headings should default to MarkHolder with Bold
-            if(newNodePositions[j].node.content.size < 1/*no content*/ && isHeadingNode(newNodePositions[j].node)) {
-              tr.insert(newNodePositions[j].position + 1/*inside the parent*/, createMarkHolderNode(newState.schema, { storedMarks: stringifyMarksArray([createBoldMark(newState.schema)]) }));
-              continue/*nothing left to do*/;
-            } /* else -- not an empty Heading, perform default checks */
+          for(let newNPIndex=0; newNPIndex<newNodePositions.length; newNPIndex++) {
+            if(newNodePositions[newNPIndex].node.content.size > 0/*has content*/ || !storedMarks /*no storedMarks*/) continue/*nothing to do*/;
 
-            if(newNodePositions[j].node.content.size > 0/*has content*/ || !storedMarks /*no storedMarks*/) continue/*nothing to do*/;
-            tr.insert(newNodePositions[j].position + 1/*inside the parent*/, createMarkHolderNode(newState.schema, { storedMarks: stringifyMarksArray(storedMarks) }));
+            tr.insert(newNodePositions[newNPIndex].position + 1/*inside the parent*/, createMarkHolderNode(newState.schema, { storedMarks: stringifyMarksArray(storedMarks) }));
           }
         });
       }

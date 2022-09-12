@@ -4,7 +4,7 @@ import { getNodeOutputSpec, ListItemNodeSpec, NodeName, AttributeType, SetAttrib
 
 import { shortcutCommandWrapper } from 'notebookEditor/command/util';
 import { setAttributeParsingBehavior } from 'notebookEditor/extension/util/attribute';
-import { NoOptions, NoStorage } from 'notebookEditor/model/type';
+import { ExtensionPriority, NoOptions, NoStorage } from 'notebookEditor/model/type';
 
 import { splitListItemCommand } from '../command/splitListItemCommand';
 import { indentListCommand } from '../keyboardShortcut/indent';
@@ -18,6 +18,7 @@ import { ListItemTaskListItemPlugin } from './plugin';
 // == Node ========================================================================
 export const ListItem = Node.create<NoOptions, NoStorage>({
   ...ListItemNodeSpec,
+  priority: ExtensionPriority.LIST_ITEM,
 
   // -- Attribute -----------------------------------------------------------------
   addAttributes() { return {
