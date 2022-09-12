@@ -3,7 +3,7 @@ import { Editor } from '@tiptap/core';
 import { AsyncNodeStatus, CodeBlockAsyncNodeType, DemoAsyncNodeType } from '@ureeka-notebook/web-service';
 
 import { AbstractCodeBlockAsyncNodeModel } from 'notebookEditor/extension/codeBlockAsyncNode/nodeView/model';
-import { replaceInlineCodeBlockAsyncNode } from 'notebookEditor/extension/codeBlockAsyncNode/util';
+import { replaceInlineCodeBlockAsyncNodeCommand } from 'notebookEditor/extension/codeBlockAsyncNode/command';
 
 import { DemoAsyncNodeStorageType } from './controller';
 
@@ -32,6 +32,6 @@ export class DemoAsyncNodeModel extends AbstractCodeBlockAsyncNodeModel<string, 
 
   protected replaceCodeBlockAsyncNode(editor: Editor, node: CodeBlockAsyncNodeType, position: number): boolean {
     // Replace the CodeBlockAsyncNode with a new one with the updated attributes
-    return replaceInlineCodeBlockAsyncNode(editor, node, position);
+    return replaceInlineCodeBlockAsyncNodeCommand(node, position)(editor.state, editor.view.dispatch);
   }
 }
