@@ -55,13 +55,16 @@ export class DemoAsyncNodeController extends AbstractCodeBlockAsyncNodeControlle
 
   // .. Mutation ..................................................................
   /**
-   * Ignore Mutation that modify the ChildList of the Nodes within this view.
-   * This happens when explicitly modifying HTML of the view. Returning true
-   * prevents the Selection from being re-read around the Mutation.
+   * Ignore Mutations that modify the ChildList, Attributes or CharacterData
+   * of this NodeView. This happens when explicitly modifying HTML of the view.
+   * Returning true prevents the Selection from being re-read around the Mutation.
    * @see NodeView#ignoreMutation()
    */
    public ignoreMutation(mutation: MutationRecord | { type: 'selection'; target: Element; }) {
-    // ignore if modifying the ChildList of the Nodes within this View
-    return (mutation.type === 'childList') || (mutation.type === 'attributes');
+    // ignore if modifying the ChildList, Attributes or CharacterData the NodeView
+    // CHECK: ensure there is no weird behavior when preventing characterData
+    //        mutation. Currently prevented so that the NodeSelection for the
+    //        NodeView does not become a TextSelection on execution
+    return (mutation.type === 'childList') || (mutation.type === 'attributes') || (mutation.type === 'characterData');
   }
 }
