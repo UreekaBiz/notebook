@@ -1,27 +1,11 @@
 import { Editor } from '@tiptap/core';
-import { NodeSelection } from 'prosemirror-state';
 
-import { hashString, isBlank, isCodeBlockNode, resolveNewSelection, CodeBlockAsyncNodeType, CodeBlockNodeType, CodeBlockReference, NodeName, EMPTY_CODEBLOCK_HASH, REMOVED_CODEBLOCK_VISUALID } from '@ureeka-notebook/web-service';
+import { hashString, isBlank, isCodeBlockNode, CodeBlockNodeType, CodeBlockReference, NodeName, EMPTY_CODEBLOCK_HASH, REMOVED_CODEBLOCK_VISUALID } from '@ureeka-notebook/web-service';
 
 import { getCodeBlockViewStorage } from 'notebookEditor/extension/codeblock/nodeView/storage';
 import { visualIdFromCodeBlockReference } from 'notebookEditor/extension/codeblock/util';
-import { HISTORY_META } from 'notebookEditor/extension/history/History';
 
 // ********************************************************************************
-// == Async =======================================================================
-// replace an entire inline CodeBlockAsyncNode with another one
-export const replaceInlineCodeBlockAsyncNode = (editor: Editor, newAsyncNode: CodeBlockAsyncNodeType, replacementPosition: number) =>
-  editor.chain()
-        .command(({ tr }) => {
-          const replacedNodePos = tr.doc.resolve(replacementPosition);
-                tr.setSelection(new NodeSelection(replacedNodePos))
-                  .replaceSelectionWith(newAsyncNode)
-                  .setSelection(resolveNewSelection(editor.state.selection, tr));
-          return true/*successfully replaced async node*/;
-        })
-        .setMeta(HISTORY_META, false/*once executed, an async node cannot go back to non-executed*/)
-        .run();
-
 // == Content =====================================================================
 // get the combined content of all CodeBlocks referenced by the given
 // CodeBlockReference array

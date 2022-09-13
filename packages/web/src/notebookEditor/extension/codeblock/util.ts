@@ -1,33 +1,27 @@
 import { Editor } from '@tiptap/core';
 
-import { CodeBlockReference, VisualId } from '@ureeka-notebook/web-service';
+import { CodeBlockReference, VisualId, REMOVED_CODEBLOCK_VISUALID } from '@ureeka-notebook/web-service';
 
 import { getCodeBlockViewStorage } from 'notebookEditor/extension/codeblock/nodeView/storage';
 
 import { CodeBlockController } from '../codeblock/nodeView/controller';
 
 // ********************************************************************************
-// ================================================================================
-export const focusCodeBlock = (editor: Editor, codeBlockVisualId: VisualId) => {
-  const codeBlockReference = isValidCodeBlockReference(editor, codeBlockVisualId);
-  if(!codeBlockReference.isValid) return false/*ignore call*/;
-
-  const { codeBlockView } = codeBlockReference;
-  return editor.commands.focus(codeBlockView.getPos() + 1/*inside the CodeBlock*/ + codeBlockView.node.textContent.length/*at the end of its content*/, { scrollIntoView: true/*scroll into view*/ });
-};
-
 // == Visual Id ===================================================================
+// return the VisualId for a CodeBlock given its Reference (Id)
 export const visualIdFromCodeBlockReference = (editor: Editor, codeBlockReference: CodeBlockReference) => {
   const codeBlockStorage = getCodeBlockViewStorage(editor),
         codeBlockView = codeBlockStorage.getNodeView(codeBlockReference);
 
-  if(!codeBlockView) return;
+  if(!codeBlockView) return REMOVED_CODEBLOCK_VISUALID;
   /* else -- codeBlock still exists, return its visualId */
 
   return codeBlockStorage.getVisualId(codeBlockReference);
 };
 
 type ValidCodeBlockReference = Readonly<{ isValid: false; } | { isValid: true; codeBlockView: CodeBlockController; }>;
+// check if a CodeBlockReference references a CodeBlock that still exists
+// and thus has a valid VisualId
 export const isValidCodeBlockReference = (editor: Editor, visualId: VisualId): ValidCodeBlockReference => {
   const codeBlockStorage = getCodeBlockViewStorage(editor);
 
@@ -39,4 +33,14 @@ export const isValidCodeBlockReference = (editor: Editor, visualId: VisualId): V
   // else -- codeBlockView don't exists
 
   return { isValid: false };
+};
+
+// == Util ========================================================================
+// focus a CodeBlock at the end of its convent given its Visual Id
+export const focusCodeBlock = (editor: Editor, codeBlockVisualId: VisualId) => {
+  const codeBlockReference = isValidCodeBlockReference(editor, codeBlockVisualId);
+  if(!codeBlockReference.isValid) return false/*ignore call*/;
+
+  const { codeBlockView } = codeBlockReference;
+  return editor.commands.focus(codeBlockView.getPos() + 1/*inside the CodeBlock*/ + codeBlockView.node.textContent.length/*at the end of its content*/, { scrollIntoView: true/*scroll into view*/ });
 };
