@@ -10,6 +10,7 @@ import { Demo2AsyncNode } from 'notebookEditor/extension/demo2AsyncNode/Demo2Asy
 import { DemoAsyncNode } from 'notebookEditor/extension/demoAsyncNode/DemoAsyncNode';
 import { Document } from 'notebookEditor/extension/document/Document';
 import { DropCursor } from 'notebookEditor/extension/dropCursor/DropCursor';
+import { EmojiSuggestion } from 'notebookEditor/extension/emojiSuggestion/EmojiSuggestion';
 import { GapCursor } from 'notebookEditor/extension/gapcursor/GapCursor';
 import { Heading } from 'notebookEditor/extension/heading/Heading';
 import { Highlight } from 'notebookEditor/extension/highlight/Highlight';
@@ -54,6 +55,7 @@ export const editorDefinition = {
     Demo2AsyncNode,
     DemoAsyncNode,
     DropCursor,
+    EmojiSuggestion,
     Document,
     GapCursor,
     Heading,

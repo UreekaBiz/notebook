@@ -18,6 +18,7 @@ export enum ExtensionName {
   ASYNC_NODE = 'asyncNode',
   CODEBLOCK_ASYNC_NODE = 'codeBlockAsyncNode',
   DROP_CURSOR = 'dropCursor',
+  EMOJI_SUGGESTION = 'emojiSuggestion',
   GAP_CURSOR = 'gapCursor',
   GAP_CURSOR_ALLOW = 'allowGapCursor'/*CHECK: is this the right place for this?*/,
   HIGHLIGHT = 'highlight',
@@ -55,24 +56,29 @@ export enum ExtensionPriority {
   //       been recomputed. Hence this must run before other Extensions
   ASYNC_NODE = 116,
 
+  // NOTE: since Suggestions have specific behavior for the Enter and arrow
+  //       keydown events, they must run before other Extensions with these
+  //       keydown handlers run
+  EMOJI_SUGGESTION = 115,
+
   // NOTE: ListItemContent Nodes have special Enter and Backspace behavior
   //       that should be handled before other List-related Extensions are
   //       called to check their handlers. (SEE: ListItemContent.ts)
-  LIST_ITEM_CONTENT = 115,
+  LIST_ITEM_CONTENT = 114,
 
   // NOTE: ListItem Commands should be checked-for before TaskListItem Commands.
   //       This priority is not to be confused with the parseRule priority,
   //       where TaskLists should be parsed first (SEE: ParseRulePriority)
-  LIST_ITEM = 114,
+  LIST_ITEM = 113,
 
   // NOTE: handle TaskListItem Commands after having tried ListItem Commands.
   //       This priority is not to be confused with the parseRule priority,
   //       where TaskLists should be parsed first (SEE: ParseRulePriority)
-  TASK_LIST_ITEM = 113,
+  TASK_LIST_ITEM = 112,
 
   // NOTE: custom InputRules just need to be triggered before Text so that their
   //       effects are applied (SEE: InputRule.ts)
-  INPUT_RULE = 112/*T&E*/,
+  INPUT_RULE = 111,
 
   // NOTE: Since the text extension adds a \t whenever Tab is pressed, but this
   //       behavior is not always guaranteed to be the desired one (e.g. when
