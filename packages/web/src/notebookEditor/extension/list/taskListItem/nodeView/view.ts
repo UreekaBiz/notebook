@@ -35,7 +35,7 @@ export class TaskListItemView extends AbstractNodeView<TaskListItemNodeType, NoS
     this.dom.append(checkBoxWrapper, contentWrapper);
     this.checkBox = checkBox;
 
-    // setup view functionality
+    // setup View functionality
     this.addEventListener();
 
     // .. ProseMirror .............................................................
@@ -55,10 +55,10 @@ export class TaskListItemView extends AbstractNodeView<TaskListItemNodeType, NoS
   // -- Update --------------------------------------------------------------------
   // update the attributes of the DOM element based on the Node attributes
   public updateView() {
-    this.dom.dataset.checked = this.node.attrs.checked ? 'true' : 'false';
-
-    if(this.node.attrs.checked) this.checkBox.setAttribute('checked', 'true');
-    else this.checkBox.removeAttribute('checked');
+    // NOTE: there is no need to update any other DOM element for the view besides
+    //       setting this attribute, which has to be set through the .checked
+    //       property. Otherwise the DOM elements won't reflect the changes
+    this.checkBox.checked = this.node.attrs.checked ? true : false;
   }
 
   // -- Destroy -------------------------------------------------------------------

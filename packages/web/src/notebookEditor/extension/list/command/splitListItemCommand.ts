@@ -2,7 +2,7 @@ import { Fragment, NodeType, Slice } from 'prosemirror-model';
 import { EditorState, Selection, Transaction } from 'prosemirror-state';
 import { canSplit } from 'prosemirror-transform';
 
-import { isNodeSelection, AbstractDocumentUpdate, Command, NotebookSchemaType, NodeName } from '@ureeka-notebook/web-service';
+import { isNodeSelection, AbstractDocumentUpdate, AttributeType, Command, NotebookSchemaType, NodeName } from '@ureeka-notebook/web-service';
 
 // ********************************************************************************
 // == Type ========================================================================
@@ -82,6 +82,10 @@ export class SplitListItemDocumentUpdate implements AbstractDocumentUpdate {
     } /* else -- not in an empty Block */
 
     const listItemAttributes = Object.fromEntries(Object.entries(grandParent.attrs));
+    // ensure new TaskListItems do not inherit the checked attribute from their parent
+    if(listItemAttributes[AttributeType.Checked]) {
+      listItemAttributes[AttributeType.Checked] = false/*prevent inheriting the attribute*/;
+    } /* else -- not creating a new TaskListItem, do not modify attributes */
 
     // the content placed inside the split ListItem
     const contentType = $to.pos === $from.end() ? grandParent.contentMatchAt(0).defaultType : null/*no content*/;

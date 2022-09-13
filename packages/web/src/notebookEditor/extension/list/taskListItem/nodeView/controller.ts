@@ -1,7 +1,6 @@
 import { Editor } from '@tiptap/core';
-import { Node as ProseMirrorNode } from 'prosemirror-model';
 
-import { getPosType, isTaskListItemNode, NotebookSchemaType, TaskListItemNodeType } from '@ureeka-notebook/web-service';
+import { getPosType, TaskListItemNodeType } from '@ureeka-notebook/web-service';
 
 import { NoStorage } from 'notebookEditor/model/type';
 import { AbstractNodeController } from 'notebookEditor/model/AbstractNodeController';
@@ -18,15 +17,5 @@ export class TaskListItemController extends AbstractNodeController<TaskListItemN
 
     super(model, view, editor, node, taskListItemStorage, getPos);
     this.nodeView.updateView();
-  }
-
-  // .. Update ....................................................................
-  public update(node: ProseMirrorNode<NotebookSchemaType>): boolean {
-    if(!isTaskListItemNode(node)) return false/*nothing else to do*/;
-
-    // Update node and node view
-    this.node = node;
-    this.nodeView.updateView();
-    return true;
   }
 }
