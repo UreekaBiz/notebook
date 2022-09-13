@@ -1,8 +1,7 @@
 import { Checkbox } from '@chakra-ui/react';
-import { isNodeSelection } from '@tiptap/core';
 import { ChangeEvent } from 'react';
 
-import { AttributeType, getSelectedNode, isNodeType, NodeName } from '@ureeka-notebook/service-common';
+import { getSelectedNode, isNodeSelection, isNodeType, AttributeType, NodeName } from '@ureeka-notebook/web-service';
 
 import { EditorToolComponentProps, TOOL_ITEM_DATA_TYPE } from 'notebookEditor/toolbar/type';
 
@@ -46,7 +45,7 @@ export const CheckBoxToolItem: React.FC<Props> = ({ attributeType, depth, editor
     <InputToolItemContainer name={name}>
       <Checkbox
         isChecked={value}
-        datatype={TOOL_ITEM_DATA_TYPE/*(SEE: notebookEditor/toolbar/type )*/}
+        datatype={TOOL_ITEM_DATA_TYPE/*(SEE: journalEditor/toolbar/type )*/}
         onChange={handleChange}
       >
         {name}
