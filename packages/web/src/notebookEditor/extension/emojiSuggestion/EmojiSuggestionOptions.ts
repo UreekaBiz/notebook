@@ -77,10 +77,7 @@ export const emojiSuggestionOptions: Omit<SuggestionOptions<SuggestionSymbol>, '
           if(!component.ref) return false/*ref not set yet*/;
 
           if(props.event.key === 'Escape') {
-            // only hide the popup. It will be destroyed when
-            // onExit gets called by the updated Suggestion Plugin
-            // (SEE: suggestionPlugin.ts, #onExit below)
-            tippyPopup.hide();
+            destroyPopup(tippyPopup, component);
             return true/*nothing left to do*/;
           }/* else -- not trying to hide the tippyPopup */
 
@@ -118,9 +115,14 @@ const sortByFilterString = (objA: SuggestionSymbol, objB: SuggestionSymbol) => {
 // (SEE: symbol.ts)
 const formatTrigger = (trigger: string) => trigger.substring(1/*remove '\'*/);
 
+// flag to ensure this removal does not occur performed twice at the same time
+let destroying = false;
+
 // remove the tippy popup, unmount the component
 const destroyPopup = (tippyPopup: TippyInstance<TippyProps>, component: EmojiSuggestionOptionsComponent) => {
+  if(destroying) return/*already destroying*/;
   try {
+    destroying = true;
     if(!tippyPopup.state.isDestroyed) {
       tippyPopup.destroy();
       component.destroy();
@@ -129,5 +131,7 @@ const destroyPopup = (tippyPopup: TippyInstance<TippyProps>, component: EmojiSug
   } catch(error) {
     console.warn(`Error on EmojiSuggestion Rendering: ${error}`);
     return false/*allow default event behavior to be handled by PM*/;
+  } finally {
+    destroying = false;
   }
 };
