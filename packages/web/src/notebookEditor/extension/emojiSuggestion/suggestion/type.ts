@@ -1,5 +1,5 @@
 import { Editor, Range } from '@tiptap/core';
-import { EditorState, PluginKey } from 'prosemirror-state';
+import { PluginKey } from 'prosemirror-state';
 import { EditorView } from 'prosemirror-view';
 
 // ********************************************************************************
@@ -72,9 +72,6 @@ export type SuggestionOptions<I = any> = {
     onExit?: (props: SuggestionProps<I>) => void;
     onKeyDown?: (props: SuggestionKeyDownProps) => boolean;
   };
-
-  // function to define specific logic for the matched text
-  allow: (props: { editor: Editor; state: EditorState; range: Range; }) => boolean;
 };
 
 // -- Props -----------------------------------------------------------------------

@@ -22,7 +22,6 @@ export const emojiSuggestionOptions: Omit<SuggestionOptions<SuggestionSymbol>, '
 
   startOfLine: false/*show regardless of whether or not Selection is at the start of a line*/,
 
-  allow: () => true/*allow any match*/,
   allowSpaces: false/*disallow spaces on suggested items*/,
   allowedPrefixes: [' ']/*default allowed prefix characters to trigger the Suggestions*/,
 
@@ -78,7 +77,10 @@ export const emojiSuggestionOptions: Omit<SuggestionOptions<SuggestionSymbol>, '
           if(!component.ref) return false/*ref not set yet*/;
 
           if(props.event.key === 'Escape') {
-            destroyPopup(tippyPopup, component);
+            // only hide the popup. It will be destroyed when
+            // onExit gets called by the updated Suggestion Plugin
+            // (SEE: suggestionPlugin.ts, #onExit below)
+            tippyPopup.hide();
             return true/*nothing left to do*/;
           }/* else -- not trying to hide the tippyPopup */
 
