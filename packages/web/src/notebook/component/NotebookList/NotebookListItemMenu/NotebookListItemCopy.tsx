@@ -20,8 +20,8 @@ export const NotebookListItemCopy: React.FC<Props> = ({ notebookId }) => {
   const [status, setStatus] = useAsyncStatus();
 
   // == Handler ===================================================================
-  // copy the notebook and opens it in a new tab
-  const handleCopyClick: MouseEventHandler<HTMLButtonElement>  = async () => {
+  // copy the Notebook and opens it in a new tab
+  const handleCopyClick: MouseEventHandler<HTMLButtonElement> = async () => {
     if(status === 'loading') return/*nothing to do*/;
 
     setStatus('loading');
