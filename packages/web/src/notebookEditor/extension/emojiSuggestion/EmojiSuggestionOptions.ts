@@ -22,7 +22,6 @@ export const emojiSuggestionOptions: Omit<SuggestionOptions<SuggestionSymbol>, '
 
   startOfLine: false/*show regardless of whether or not Selection is at the start of a line*/,
 
-  allow: () => true/*allow any match*/,
   allowSpaces: false/*disallow spaces on suggested items*/,
   allowedPrefixes: [' ']/*default allowed prefix characters to trigger the Suggestions*/,
 
@@ -116,9 +115,14 @@ const sortByFilterString = (objA: SuggestionSymbol, objB: SuggestionSymbol) => {
 // (SEE: symbol.ts)
 const formatTrigger = (trigger: string) => trigger.substring(1/*remove '\'*/);
 
+// flag to ensure this removal does not occur performed twice at the same time
+let destroying = false;
+
 // remove the tippy popup, unmount the component
 const destroyPopup = (tippyPopup: TippyInstance<TippyProps>, component: EmojiSuggestionOptionsComponent) => {
+  if(destroying) return/*already destroying*/;
   try {
+    destroying = true;
     if(!tippyPopup.state.isDestroyed) {
       tippyPopup.destroy();
       component.destroy();
@@ -127,5 +131,7 @@ const destroyPopup = (tippyPopup: TippyInstance<TippyProps>, component: EmojiSug
   } catch(error) {
     console.warn(`Error on EmojiSuggestion Rendering: ${error}`);
     return false/*allow default event behavior to be handled by PM*/;
+  } finally {
+    destroying = false;
   }
 };

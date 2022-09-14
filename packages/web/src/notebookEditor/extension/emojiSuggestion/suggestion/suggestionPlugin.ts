@@ -13,9 +13,18 @@ import { SuggestionOptions, SuggestionProps } from './type';
 // == Constant ====================================================================
 const DATA_SUGGESTION_ID = 'data-suggestion-id';
 
+// MetaData that gets appended to a Transaction the first time the User inputs
+// the Suggestion trigger character so that future possible Suggestions are shown.
+// A Transaction that sets it back to false should be dispatched from the
+// Command / onExit behavior of of the Suggestion Options so that the
+// Suggestion is no longer shown. This ensures that the Suggestion is shown
+// only the first time the User types the trigger character
+export const SHOULD_SHOW_SUGGESTION_META = 'shouldShowSuggestion';
+
 // == Class =======================================================================
 class SuggestionState {
   constructor(
+    public shouldShowSuggestion: boolean,
     public active: boolean,
     public range: Range,
     public query: string,
@@ -26,6 +35,16 @@ class SuggestionState {
 
   // produce a new Plugin state
   apply = (tr: Transaction, thisPluginState: SuggestionState, oldEditorState: EditorState, newEditorState: EditorState, editor: Editor, suggestionOptions: SuggestionOptions) => {
+    // NOTE: checking for strict boolean values since a value of 'undefined'
+    //       should not modify this prop of the SuggestionState,
+    //       as various Transactions without the Metadata can be dispatched in between
+    if(tr.getMeta(SHOULD_SHOW_SUGGESTION_META) === true) {
+      thisPluginState.shouldShowSuggestion = true;
+    } /* else -- check for false */
+    if(tr.getMeta(SHOULD_SHOW_SUGGESTION_META) === false) {
+      thisPluginState.shouldShowSuggestion = false;
+    } /* else -- maintain current state across Transactions */
+
     const { isEditable } = editor;
     const { composing } = editor.view;
     const { selection } = tr;
@@ -34,41 +53,34 @@ class SuggestionState {
     const nextPluginState = { ...thisPluginState };
     nextPluginState.composing = composing;
 
-    // only suggest if the view is editable and there is no
-    // selection or composition active
-    // (SEE: https://github.com/ueberdosis/tiptap/issues/1449)
-    if(isEditable && (empty || editor.view.composing)) {
-      // reset active state if the previous suggestion range was left
-      if(((from < thisPluginState.range.from) || from > thisPluginState.range.to) && !composing && !thisPluginState.composing) {
-        nextPluginState.active = false;
-      } /* else -- do not reset active state */
+    if(!isEditable || !empty) {
+      return resetSuggestionState(nextPluginState);
+    } /* else -- the View is editable and there is no multiple Selection */
 
-      // try to match against the current cursor position
-      const { char, allowSpaces, allowedPrefixes, startOfLine } = suggestionOptions;
-      const match = findSuggestionMatch({ char, allowSpaces, allowedPrefixes, startOfLine, $position: selection.$from });
-      const decorationId = generateUUID();
+    // change active state if the previous Suggestion Range was left
+    if(((from < thisPluginState.range.from) || from > thisPluginState.range.to) && !composing && !thisPluginState.composing) {
+      nextPluginState.active = false;
+    } /* else -- do not change active state */
 
-      // if a match was found, update the state to show it
-      if(match && suggestionOptions.allow({ editor, state: newEditorState, range: match.range })) {
-        nextPluginState.active = true;
-        nextPluginState.decorationId = thisPluginState.decorationId ? thisPluginState.decorationId : decorationId;
-        nextPluginState.range = match.range;
-        nextPluginState.query = match.query;
-        nextPluginState.text = match.text;
-      } else {
-        nextPluginState.active = false/*no match was found*/;
-      }
+    // try to match against the current cursor position
+    const { char, allowSpaces, allowedPrefixes, startOfLine } = suggestionOptions;
+    const match = findSuggestionMatch({ char, allowSpaces, allowedPrefixes, startOfLine, $position: selection.$from });
+    const decorationId = generateUUID();
 
+    // if a match was found, update the state to show it
+    if(match && nextPluginState.shouldShowSuggestion) {
+      nextPluginState.active = true;
+      nextPluginState.decorationId = thisPluginState.decorationId ? thisPluginState.decorationId : decorationId;
+      nextPluginState.range = match.range;
+      nextPluginState.query = match.query;
+      nextPluginState.text = match.text;
     } else {
-      nextPluginState.active = false/*by definition, since View is not editable or a composition event is happening*/;
+      nextPluginState.active = false/*no match was found*/;
     }
 
     // reset the state if Suggestion is inactive
     if(!nextPluginState.active) {
-      nextPluginState.decorationId = ''/*none*/;
-      nextPluginState.range = { from: 0, to: 0 };
-      nextPluginState.query = ''/*none*/;
-      nextPluginState.text = ''/*none*/;
+      return resetSuggestionState(nextPluginState);
     } /* else -- no need to reset the Plugin state */
 
     return nextPluginState/*updated the Plugin state*/;
@@ -96,6 +108,7 @@ export const suggestionPlugin = <I = any>(suggestionOptions: SuggestionOptions<I
       // initialize the plugin state
       init: (_, state) => {
         return new SuggestionState(
+          false/*default should not show Suggestion*/,
           false/*default not active*/,
           { from: 0, to:0 }/*default Range*/,
           ''/*default no query*/,
@@ -175,6 +188,7 @@ export const suggestionPlugin = <I = any>(suggestionOptions: SuggestionOptions<I
 
           if(handleExit) {
             renderer?.onExit?.(props);
+            hideSuggestion(view)/*ensure suggestion is no longer shown*/;
           } /* else -- User did not try to exit, check for updates */
 
           if(handleChange) {
@@ -186,12 +200,14 @@ export const suggestionPlugin = <I = any>(suggestionOptions: SuggestionOptions<I
           } /* else -- nothing left to check, do nothing */
         },
 
+        // called when the whole View gets destroyed
         destroy: () => {
           if(!props) {
             return/*nothing to do*/;
           } /* else -- props given, do onExit behavior */
 
           renderer.onExit?.(props);
+          hideSuggestion(props.editor.view)/*ensure suggestion is no longer shown*/;
         },
       };
     },
@@ -200,6 +216,12 @@ export const suggestionPlugin = <I = any>(suggestionOptions: SuggestionOptions<I
     props: {
       // call the keydown hook if Suggestion is active
       handleKeyDown: (view: EditorView, event: KeyboardEvent) => {
+        // allow the Suggestion to be shown
+        if(event.key === suggestionOptions.char) {
+          view.dispatch(view.state.tr.setMeta(SHOULD_SHOW_SUGGESTION_META, true));
+          return false/*let PM handle the event*/;
+        } /* else -- check if the Suggestion is already active */
+
         const { active, range } = suggestionPlugin.getState(view.state);
         if(!active) return false/*Suggestion not active, let PM handle the event*/;
 
@@ -221,3 +243,20 @@ export const suggestionPlugin = <I = any>(suggestionOptions: SuggestionOptions<I
   return suggestionPlugin;
 };
 
+// == Util ========================================================================
+// reset the Suggestion state. Note that this function does not change the
+// 'shouldShow' SuggestionState property since that should remain constant
+// across different Transactions, until another one sets it back to false
+// (SEE: SHOULD_SHOW_META)
+const resetSuggestionState = (suggestionState: SuggestionState) => {
+  suggestionState.active = false/*default*/;
+  suggestionState.decorationId = ''/*none*/;
+  suggestionState.range = { from: 0, to: 0 };
+  suggestionState.query = ''/*none*/;
+  suggestionState.text = ''/*none*/;
+  return suggestionState;
+};
+
+// dispatch a Transaction whose Metadata indicates that the Suggestion should
+// no longer be shown. (SEE: SHOULD_SHOW_SUGGESTION_META)
+const hideSuggestion = (view: EditorView) => view.dispatch(view.state.tr.setMeta(SHOULD_SHOW_SUGGESTION_META, false));
