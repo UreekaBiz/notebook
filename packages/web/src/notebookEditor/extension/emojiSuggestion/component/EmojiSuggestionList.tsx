@@ -52,12 +52,12 @@ export const EmojiSuggestionList = React.forwardRef((props: EmojiSuggestionListP
         case ('Backspace'): {
           const { state, dispatch } = props.view;
           const { tr } = state;
-          const { to } = props.range;
+          const { from, to } = props.range;
 
-          // only delete 1 char, multi Selection and delete are handled regularly
-          const from = to-1;
+          // if cmd or ctrl are pressed, delete the whole range, else only a single char
+          let computedFrom = (props.event.metaKey || props.event.ctrlKey) ? from : to-1;
 
-          tr.deleteRange(from, to);
+          tr.deleteRange(computedFrom, to);
           dispatch(tr);
           return true/*handled*/;
         }
