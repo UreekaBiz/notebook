@@ -1,8 +1,9 @@
-import { useToast, Flex, IconButton, Menu, MenuButton, MenuItem, MenuList, Spinner } from '@chakra-ui/react';
+import { useToast, Flex, IconButton, Menu, MenuButton, MenuItem, MenuList, Spinner, MenuDivider } from '@chakra-ui/react';
 import { useState } from 'react';
 import { BsGrid, BsThreeDots } from 'react-icons/bs';
 import { FiUsers } from 'react-icons/fi';
 import { HiTrash } from 'react-icons/hi';
+import { MdPublish } from 'react-icons/md';
 
 import { getLogger, isNotebookCreator, Logger, NotebookService, NotebookTuple } from '@ureeka-notebook/web-service';
 
@@ -11,6 +12,7 @@ import { AddToCollectionDialog } from 'label/component/AddToCollectionDialog';
 import { ShareNotebookDialog } from 'notebookEditor/component/ShareNotebookDialog';
 import { ConfirmationModal } from 'shared/component/ConfirmationModal';
 import { useAsyncStatus, useIsMounted } from 'shared/hook';
+import { NotebookListItemCopy } from './NotebookListItemCopy';
 
 const log = getLogger(Logger.NOTEBOOK);
 
@@ -32,6 +34,9 @@ export const NotebookListItemMenu: React.FC<Props> = ({ notebookTuple }) => {
   const [status, setStatus] = useAsyncStatus();
 
   // == Handler ===================================================================
+  // -- Publish -------------------------------------------------------------------
+  const handlePublishClick = () => {/*not implemented*/};
+
   // -- Delete --------------------------------------------------------------------
   const handleDeleteClick = () => {
     setIsDeleteAYSOpen(true);
@@ -91,25 +96,36 @@ export const NotebookListItemMenu: React.FC<Props> = ({ notebookTuple }) => {
           color='#999'
         />
         <MenuList>
+          <MenuItem disabled icon={<MdPublish />} onClick={handlePublishClick}>
+            Publish
+          </MenuItem>
           <ShareNotebookDialog notebook={obj} notebookId={id} component={onClick => (
             <MenuItem disabled icon={<FiUsers />} onClick={onClick}>
               Share
             </MenuItem>
             )}
           />
+          <NotebookListItemCopy  notebookId={id} />
+
           {isCreator && (
-            <AddToCollectionDialog notebook={obj} notebookId={id} component={onClick => (
-              <MenuItem disabled icon={<BsGrid />} onClick={onClick}>
-                Add to collection
-              </MenuItem>
-              )}
-            />
+            <>
+              <MenuDivider />
+              <AddToCollectionDialog notebook={obj} notebookId={id} component={onClick => (
+                <MenuItem disabled icon={<BsGrid />} onClick={onClick}>
+                  Add to collection
+                </MenuItem>
+                )}
+              />
+            </>
           )}
 
           {isCreator && (
-            <MenuItem disabled icon={<HiTrash />} onClick={handleDeleteClick}>
-              Delete
-            </MenuItem>
+            <>
+              <MenuDivider />
+              <MenuItem disabled icon={<HiTrash />} onClick={handleDeleteClick}>
+                Delete
+              </MenuItem>
+            </>
           )}
         </MenuList>
       </Menu>
