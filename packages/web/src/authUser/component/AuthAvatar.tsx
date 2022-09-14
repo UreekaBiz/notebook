@@ -4,7 +4,7 @@ import { AiOutlineFileText } from 'react-icons/ai';
 import { BiHomeAlt, BiLogOut } from 'react-icons/bi';
 import { FiSettings } from 'react-icons/fi';
 
-import { getEnvBoolean, isLoggedOut } from '@ureeka-notebook/web-service';
+import { getEnvBoolean, getPackageVersion, isLoggedOut, Package } from '@ureeka-notebook/web-service';
 
 import { useAuthedUser } from 'authUser/hook/useAuthedUser';
 import { useRouter } from 'next/router';
@@ -33,6 +33,10 @@ export const AuthAvatar: React.FC<Props> = ({ buttonSize, showLogIn = true }) =>
   const authedUser = useAuthedUser();
 
   const router = useRouter();
+
+  const version = getPackageVersion(),
+        versionNumber = version.packages[Package.Web],
+        versionDate = version.date ? new Date(version.date).toLocaleDateString() : 'unknown';
 
   // == Handler ===================================================================
   const handleHomeClick = () => router.push(coreRoutes.root);
@@ -77,6 +81,26 @@ export const AuthAvatar: React.FC<Props> = ({ buttonSize, showLogIn = true }) =>
         <MenuDivider />
         <MenuItem icon={<FiSettings />} onClick={handleSettingsClick}>Settings</MenuItem>
         <MenuItem icon={<BiLogOut />} onClick={handleSignOutClick}>Sign out</MenuItem>
+
+        <MenuDivider />
+        <MenuItem
+          disabled
+          paddingY={0}
+          color='#666'
+          fontSize='12px'
+          fontWeight='600'
+        >
+          Version: {versionNumber ?? '(local)'}
+        </MenuItem>
+        <MenuItem
+          disabled
+          paddingY={0}
+          color='#666'
+          fontSize='12px'
+          fontWeight='600'
+        >
+          {versionDate}
+        </MenuItem>
       </MenuList>
     </Menu>
   );
