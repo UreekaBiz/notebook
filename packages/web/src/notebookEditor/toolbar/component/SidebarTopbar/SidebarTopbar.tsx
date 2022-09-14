@@ -1,4 +1,4 @@
-import { Flex, Text } from '@chakra-ui/react';
+import { Box, Flex, Text } from '@chakra-ui/react';
 import { useRouter } from 'next/router';
 import { useCallback, useEffect, useState } from 'react';
 import { BsBook } from 'react-icons/bs';
@@ -115,7 +115,9 @@ export const SidebarTopbar: React.FC<Props> = ({ background }) => {
             <Text marginLeft={1}>Saving...</Text>
           </Flex>
         ): null/*nothing*/}
+        <Box marginRight={2}>
           <SidebarTopbarButton notebookId={notebookId} />
+        </Box>
         <AuthAvatar />
       </Flex>
     </Flex>

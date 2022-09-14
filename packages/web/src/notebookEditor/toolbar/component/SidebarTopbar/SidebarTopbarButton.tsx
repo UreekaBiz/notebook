@@ -1,76 +1,34 @@
-import { useToast, Button, Spinner } from '@chakra-ui/react';
-import { useCallback, useState } from 'react';
-import { CgFileAdd } from 'react-icons/cg';
+import { Button, Flex, Menu, MenuButton, MenuList } from '@chakra-ui/react';
+import { IoIosArrowDown } from 'react-icons/io';
 
-import { getLogger, Logger, NotebookIdentifier, NotebookService, NotebookType } from '@ureeka-notebook/web-service';
+import { NotebookIdentifier } from '@ureeka-notebook/web-service';
 
-import { useIsMounted } from 'shared/hook';
-import { notebookRoute } from 'shared/routes';
-
-const log = getLogger(Logger.NOTEBOOK);
+import { NewNotebookButton } from 'notebook/component/NewNotebookButton';
+import { NotebookListItemCopy } from 'notebook/component/NotebookList/NotebookListItemMenu/NotebookListItemCopy';
 
 // ********************************************************************************
 interface Props {
   notebookId: NotebookIdentifier;
 }
 export const SidebarTopbarButton: React.FC<Props> = ({ notebookId, ...props }) => {
-  const isMounted = useIsMounted();
-  const toast = useToast();
-
-  // == State =====================================================================
-  const [isLoading, setIsLoading] = useState<boolean>(false/*default not loading*/);
-
-  // == Handler ===================================================================
-  const handleCreateNotebook = useCallback(async () => {
-    setIsLoading(true);
-
-    let notebookId: string;
-    try {
-      notebookId = await NotebookService.getInstance().createNotebook({
-        name: 'Untitled'/*default*/,
-        type: NotebookType.Notebook/*default*/,
-      });
-    } catch(error) {
-      log.error('Error creating Notebook, reason: ', error);
-      if(isMounted()) toast({ title: 'Error creating Notebook', status: 'error' });
-
-      return /*nothing else to do*/;
-    }
-
-    if(!isMounted()) return/*component is unmounted, prevent unwanted state updates*/;
-
-    setIsLoading(false/*no longer loading*/);
-
-    // open a new tab with the newly created Notebook
-    const notebookPath = notebookRoute(notebookId);
-    const route = `${window.location.origin}${notebookPath}`;
-    window.open(route, '_blank'/*new tab*/);
-  }, [isMounted, toast]);
-
-  // == UI ========================================================================
-  if(isLoading) return (
-    <Button
-      disabled
-      colorScheme='gray'
-      variant='ghost'
-      size='sm'
-      leftIcon={<Spinner size='sm' />}
-      {...props}
-    >
-      Creating...
-    </Button>
-  );
-
   return (
-    <Button
-      colorScheme='gray'
-      variant='ghost'
-      size='sm'
-      leftIcon={<CgFileAdd size={16} />}
-      onClick={handleCreateNotebook}
-      {...props}
-    >
-      New
-    </Button>
+    <Flex alignItems='center'>
+      <NewNotebookButton size='xs' borderRadius='4px'/>
+      <Menu size='xs'>
+        <MenuButton
+          as={Button}
+          size='xs'
+          aria-label='Options'
+          variant='ghost'
+          borderRadius='4px'
+          color='#333'
+        >
+          <IoIosArrowDown />
+        </MenuButton>
+        <MenuList>
+          <NotebookListItemCopy notebookId={notebookId}/>
+        </MenuList>
+      </Menu>
+    </Flex>
   );
 };
