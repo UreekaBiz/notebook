@@ -64,8 +64,10 @@ export const emojiSuggestionOptions: Omit<SuggestionOptions<SuggestionSymbol>, '
         const { clientRect } = props;
         if(!isValidClientRect(clientRect)) return/*not a valid clientRect function, nothing to do*/;
         try {
-          component.updateProps(props);
-          tippyPopup.setProps({ getReferenceClientRect: clientRect });
+          if(tippyPopup.state.isMounted) {
+            component.updateProps(props);
+            tippyPopup.setProps({ getReferenceClientRect: clientRect });
+          } /* else -- no longer mounted, do not update */
         } catch(error) {
           console.warn(`Error on EmojiSuggestion Rendering: ${error}`);
         }
@@ -76,7 +78,7 @@ export const emojiSuggestionOptions: Omit<SuggestionOptions<SuggestionSymbol>, '
           if(!component.ref) return false/*ref not set yet*/;
 
           if(props.event.key === 'Escape') {
-            tippyPopup.hide();
+            destroyPopup(tippyPopup, component);
             return true/*nothing left to do*/;
           }/* else -- not trying to hide the tippyPopup */
 
@@ -117,8 +119,10 @@ const formatTrigger = (trigger: string) => trigger.substring(1/*remove '\'*/);
 // remove the tippy popup, unmount the component
 const destroyPopup = (tippyPopup: TippyInstance<TippyProps>, component: EmojiSuggestionOptionsComponent) => {
   try {
-    tippyPopup.destroy();
-    component.destroy();
+    if(!tippyPopup.state.isDestroyed) {
+      tippyPopup.destroy();
+      component.destroy();
+    } /* else -- already destroyed, do nothing */
     return false/*allow default event behavior to be handled by PM*/;
   } catch(error) {
     console.warn(`Error on EmojiSuggestion Rendering: ${error}`);
