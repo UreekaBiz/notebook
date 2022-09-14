@@ -1,4 +1,4 @@
-import { Button, Menu, MenuButton, MenuDivider, MenuItem, MenuList } from '@chakra-ui/react';
+import { Box, Button, Flex, Menu, MenuButton, MenuDivider, MenuItem, MenuList } from '@chakra-ui/react';
 import Link from 'next/link';
 import { AiOutlineFileText } from 'react-icons/ai';
 import { BiHomeAlt, BiLogOut } from 'react-icons/bi';
@@ -83,24 +83,21 @@ export const AuthAvatar: React.FC<Props> = ({ buttonSize, showLogIn = true }) =>
         <MenuItem icon={<BiLogOut />} onClick={handleSignOutClick}>Sign out</MenuItem>
 
         <MenuDivider />
-        <MenuItem
-          disabled
-          paddingY={0}
-          color='#666'
-          fontSize='12px'
+        <Flex
+          alignItems='center'
+          justifyContent='space-between'
+          paddingX={2}
+          color='#777'
+          fontSize='9px'
           fontWeight='600'
         >
-          Version: {versionNumber ?? '(local)'}
-        </MenuItem>
-        <MenuItem
-          disabled
-          paddingY={0}
-          color='#666'
-          fontSize='12px'
-          fontWeight='600'
-        >
-          {versionDate}
-        </MenuItem>
+          <Box>
+            Version: {versionNumber ?? '(local)'}
+          </Box>
+          <Box>
+            {versionDate}
+          </Box>
+        </Flex>
       </MenuList>
     </Menu>
   );
