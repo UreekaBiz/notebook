@@ -1,16 +1,16 @@
-import { useToast, Button, Flex, Spinner, Text } from '@chakra-ui/react';
+import { Flex, Text } from '@chakra-ui/react';
 import { useRouter } from 'next/router';
 import { useCallback, useEffect, useState } from 'react';
 import { BsBook } from 'react-icons/bs';
 import { MdLoop } from 'react-icons/md';
-import { RiFileAddLine } from 'react-icons/ri';
 
-import { debounce, getLogger, Logger, NotebookService, NotebookType } from '@ureeka-notebook/web-service';
+import { debounce, getLogger, Logger } from '@ureeka-notebook/web-service';
 
 import { AuthAvatar } from 'authUser/component/AuthAvatar';
 import { useNotebookEditor } from 'notebookEditor/hook/useNotebookEditor';
 import { useIsMounted } from 'shared/hook';
-import { coreRoutes, notebookRoute } from 'shared/routes';
+import { coreRoutes } from 'shared/routes';
+import { SidebarTopbarButton } from './SidebarTopbarButton';
 
 const log = getLogger(Logger.NOTEBOOK);
 
@@ -21,18 +21,16 @@ const log = getLogger(Logger.NOTEBOOK);
 // ********************************************************************************
 interface Props { background?: string; }
 export const SidebarTopbar: React.FC<Props> = ({ background }) => {
-  const { editorService } = useNotebookEditor();
+  const { editorService, notebookId } = useNotebookEditor();
 
   const router = useRouter();
   const isMounted = useIsMounted();
-  const toast = useToast();
 
   // == State =====================================================================
   const [hasPendingWrite, setHasPendingWrite] = useState(false/*default not writing*/);
-  const [isLoading, setIsLoading] = useState<boolean>(false/*default not loading*/);
 
   // == Effect ====================================================================
-  // ..............................................................................
+  // ------------------------------------------------------------------------------
   // 'Saving' state
   useEffect(() => {
     // debounce setting setHasPendingWrite to true to avoid flashing the text onn
@@ -61,7 +59,7 @@ export const SidebarTopbar: React.FC<Props> = ({ background }) => {
     };
   }, [editorService, isMounted]);
 
-  // ..............................................................................
+  // ------------------------------------------------------------------------------
   // currently Collaborating Users
   useEffect(() => {
     const subscription = editorService.onUsers$().subscribe({
@@ -86,32 +84,6 @@ export const SidebarTopbar: React.FC<Props> = ({ background }) => {
   const handleAppNameClick = useCallback(() => {
     router.push(coreRoutes.root);
   }, [router]);
-
-  const handleCreateNotebook = useCallback(async () => {
-    setIsLoading(true);
-
-    let notebookId: string;
-    try {
-      notebookId = await NotebookService.getInstance().createNotebook({
-        name: 'Untitled'/*default*/,
-        type: NotebookType.Notebook/*default*/,
-      });
-    } catch(error) {
-      log.error('Error creating Notebook, reason: ', error);
-      if(isMounted()) toast({ title: 'Error creating Notebook', status: 'error' });
-
-      return /*nothing else to do*/;
-    }
-
-    if(!isMounted()) return/*component is unmounted, prevent unwanted state updates*/;
-
-    setIsLoading(false/*no longer loading*/);
-
-    // open a new tab with the newly created Notebook
-    const notebookPath = notebookRoute(notebookId);
-    const route = `${window.location.origin}${notebookPath}`;
-    window.open(route, '_blank'/*new tab*/);
-  }, [isMounted, toast]);
 
   // == UI ========================================================================
   return (
@@ -143,16 +115,7 @@ export const SidebarTopbar: React.FC<Props> = ({ background }) => {
             <Text marginLeft={1}>Saving...</Text>
           </Flex>
         ): null/*nothing*/}
-        {isLoading ?
-          (
-            <Button disabled colorScheme='gray' variant='ghost' size='sm' leftIcon={<Spinner size='sm' />} >
-              Creating...
-            </Button>
-          ) : (
-            <Button colorScheme='gray' variant='ghost' size='sm' leftIcon={<RiFileAddLine size={16} />} onClick={handleCreateNotebook}>
-              New
-            </Button>
-          )}
+          <SidebarTopbarButton notebookId={notebookId} />
         <AuthAvatar />
       </Flex>
     </Flex>
