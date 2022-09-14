@@ -52,7 +52,11 @@ export const EmojiSuggestionList = React.forwardRef((props: EmojiSuggestionListP
         case ('Backspace'): {
           const { state, dispatch } = props.view;
           const { tr } = state;
-          const { from, to } = props.range;
+          const { to } = props.range;
+
+          // only delete 1 char, multi Selection and delete are handled regularly
+          const from = to-1;
+
           tr.deleteRange(from, to);
           dispatch(tr);
           return true/*handled*/;
