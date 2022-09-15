@@ -29,17 +29,26 @@ const getInitials = (firstName?: string, lastName?: string ) => {
 // == Background Color ============================================================
 /** A collection of colors used as a background colors */
 const DEFAULT_IMAGE_BACKGROUND_COLORS = [
-  '#F9EBC8',
-  '#FEFBE7',
-  '#DAE5D0',
-  '#A0BCC2',
+  '#C92A2A',
+  '#A61E4D',
+  '#862E9C',
+  '#5F3DC4',
+  '#364FC7',
+  '#1864AB',
+  '#0B7285',
+  '#087F5B',
+  '#2B8A3E',
+  '#5C940D',
+  '#E67700',
+  '#D9480F',
 ];
 
 /** Gets a background color from the given userId. This implementation ensures that
  *  the returned value is consistent for a given userId */
 export const getBackgroundImageColor = (userId: string) => {
   const hash = stringHashCode(userId);
-  const index = hash % DEFAULT_IMAGE_BACKGROUND_COLORS.length;
+  // NOTE: A hash can be negative, so we need to make it positive
+  const index = Math.abs(hash % DEFAULT_IMAGE_BACKGROUND_COLORS.length);
 
   return DEFAULT_IMAGE_BACKGROUND_COLORS[index];
 };
