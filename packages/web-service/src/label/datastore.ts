@@ -70,7 +70,7 @@ export const labelPrefixQuery = (queryString: string) =>
 export const notebookLabelQuery = (userId: UserIdentifier, notebookId: NotebookIdentifier) =>
   query(labelCollection, where(nameof<Label_Storage>('notebookIds'), 'array-contains', notebookId),
                          where(nameof<Label_Storage>('createdBy'), '==', userId));
-                         // FIXME: really really want this!!!
+                         // FIXME: really really want this so that Labels can be shared
                          //where(nameof<Label_Storage>('viewers'), 'array-contains', userId));
 
 // -- Label Published -------------------------------------------------------------

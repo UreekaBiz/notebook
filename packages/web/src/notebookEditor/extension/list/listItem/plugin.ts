@@ -6,7 +6,7 @@ import { createListItemContentNode, createListItemNode, createTaskListItemNode, 
 
 import { NoPluginState } from 'notebookEditor/model/type';
 
-import { maybeJoinList } from '../util';
+import { isListNode, isListWithSingleItemContent, maybeJoinList } from '../util';
 
 // ********************************************************************************
 // NOTE: this Plugin is located at the ListItem level for name consistency.
@@ -49,11 +49,17 @@ export const ListItemTaskListItemPlugin = () => {
         const { tr } = view.state;
 
         try {
-          if(isPlainTextPaste) {
-            tr.insertText(slice.content.textBetween(0, slice.content.size, ' '/*add a space per pasted Block Node*/));
+          // if the contents of a single Block are being pasted,
+          // a List with single ListItemContent is being pasted,
+          // or a plain Text paste is happening,
+          // paste the Slice's content as Text only
+          const firstSliceChild = slice.content.child(0);
+          const pasteAsSingleBlock = slice.content.childCount === 1 && (firstSliceChild.isTextblock || (isListNode(firstSliceChild) && isListWithSingleItemContent(firstSliceChild)));
+          if(isPlainTextPaste || pasteAsSingleBlock) {
+            tr.insertText(slice.content.textBetween(0/*slice start*/, slice.content.size, ' '/*add a space per pasted Block Node*/));
             view.dispatch(tr);
             return true/*event handled*/;
-          } /* else -- not a plain text event, ensure right paste behavior */
+          } /* else -- not a plain text event, turn each Block into a ListItem */
 
           const newSliceContent: ProseMirrorNode[] = [];
           slice.content.descendants(node => {

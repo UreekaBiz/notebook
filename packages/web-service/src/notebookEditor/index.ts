@@ -149,6 +149,7 @@ export {
   AsyncNodeType,
   isAsyncNode,
 
+  BulletListNodeType,
   isBulletListNode,
 
   CodeBlockNodeType,
@@ -215,8 +216,10 @@ export {
   getParagraphNodeType,
   isParagraphNode,
 
-  createTaskListItemNode,
+  TaskListNodeType,
   isTaskListNode,
+
+  createTaskListItemNode,
 
   TaskListItemNodeType,
   isTaskListItemNode,
