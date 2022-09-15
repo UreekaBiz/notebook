@@ -8,6 +8,8 @@ import { useNotebookEditor } from 'notebookEditor/hook/useNotebookEditor';
 import { useIsMounted } from 'shared/hook';
 import { UserProfileAvatarLive } from 'user/component/UserProfileAvatarLive';
 
+const MAX_USERS = 2/*T&E*/;
+
 const log = getLogger(Logger.NOTEBOOK);
 // *********************************************************************************
 interface Props {/*currently nothing*/}
@@ -64,29 +66,43 @@ export const CollaborationUsers: React.FC<Props> = () => {
   // == UI ========================================================================
   if(!collaboratingUsers) return null/*nothing to render*/;
 
+  const usersArray = Object.keys(collaboratingUsers).filter((userId, index) => userId !== currentUserId/*don't display own user*/),
+        usersToDisplay = usersArray.slice(0, MAX_USERS);
+  const showMore = usersArray.length > MAX_USERS;
+
   return (
     <Flex alignItems='center'>
-      {Object.keys(collaboratingUsers).map((userId, index) => userId === currentUserId ? null/*don't display own user*/ : (
-        <Box
+      {usersToDisplay.map((userId, index) =>
+        <UserProfileAvatarLive
           key={userId}
-          width='34px'
-          height='34px'
-          marginRight={index < Object.keys(collaboratingUsers).length - 1 ? '-8px' : '0px'} // all but last avatar
-          borderRadius='34px'
-          border='2px solid #F3F3F3'
+          userId={userId}
+          width='32px'
+          height='32px'
+          marginRight={showMore || index < usersArray.length - 1 ? '-8px' : '0px'} // there is content on the right
+          showBorder
           _hover={{
             cursor: 'pointer',
           }}
+          onClick={() => handleUserClick(userId)}
+        />
+      )}
+      {usersArray.length > MAX_USERS && (
+        <Box
+          width='32px'
+          height='32px'
+          borderRadius='32px'
+          border='2px solid #367FC7'
+          backgroundColor='#367FC7'
+          display='flex'
+          alignItems='center'
+          justifyContent='center'
+          color='#FAFAFA'
+          fontSize='14px'
+          fontWeight='bold'
         >
-          <UserProfileAvatarLive
-            userId={userId}
-            width='32px'
-            height='32px'
-            showBorder
-            onClick={() => handleUserClick(userId)}
-          />
+          +{usersArray.length - MAX_USERS}
         </Box>
-      ))}
+      )}
     </Flex>
   );
 };
