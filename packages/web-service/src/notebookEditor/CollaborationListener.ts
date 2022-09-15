@@ -268,6 +268,14 @@ export class CollaborationListener {
     return collab.getVersion(this.editor.view.state);
   }
 
+  // ------------------------------------------------------------------------------
+  private async handleSelectionUpdate() {
+    const selection = this.editor.view.state.selection;
+    if(!selection) return/*nothing to do*/;
+
+    return this.writeUserSession(selection.$anchor.pos);
+  }
+
   // == Read ======================================================================
   // callback from Firestore when a new latest Version (specified) becomes available.
   // This gets all latest Versions (including any new ones that may have appeared)
@@ -443,13 +451,6 @@ export class CollaborationListener {
   }
 
   // -- User-Session --------------------------------------------------------------
-  private async handleSelectionUpdate(){
-    const selection = this.editor.view.state.selection;
-    if(!selection) return/*nothing to do*/;
-
-    return this.writeUserSession(selection.$anchor.pos);
-  }
-
   private async writeUserSession(cursorPosition: number) {
     if(!this.initialized) { log.warn(`Trying to write Notebook User-Session before initialization or after shutdown ${this.logContext()}.`); return/*prevent invalid actions*/; }
     if(!this.initialContentLoaded) throw new ApplicationError('functions/internal', `Trying to write Notebook User-Session before initial content is loaded  ${this.logContext()}.`);
