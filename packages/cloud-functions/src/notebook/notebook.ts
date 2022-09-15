@@ -94,6 +94,11 @@ export const copyNotebook = async (
       //        be able to check if the User is also an admin
       if(!isNotebookViewer(userId, notebook)) throw new ApplicationError('functions/permission-denied', `Cannot copy non-viewable Notebook (${notebookId}) for User (${userId}).`);
 
+      // backward compatibility for hashtags (i.e. they didn't exist before)
+      // NOTE: not 100% necessary since the data is clean in production but useful
+      //       to model this case
+      const hashtags = notebook.hashtags || [/*none by default*/];
+
       // get the latest Notebook document (content)
       const latestDocument = await getOrUpdateToLatestDocument(transaction, userId, notebook.schemaVersion, notebookId)/*throws on error*/;
 
@@ -103,7 +108,7 @@ export const copyNotebook = async (
 
         name: extractDocumentName(notebook.schemaVersion, notebookId, latestDocument.document)/*extract latest*/,
 
-        hashtags: notebook.hashtags/*must update the hashtag occurrences (see below)*/,
+        hashtags/*must update the hashtag occurrences (see below)*/,
 
         isPublished: false/*cannot be published at creation*/,
 
@@ -123,7 +128,7 @@ export const copyNotebook = async (
       transaction.create(newNotebookRef, create)/*create by definition*/;
       writeCheckpoint(transaction, notebook.schemaVersion, newNotebookId, latestDocument.document);
 
-      return notebook.hashtags;
+      return hashtags;
     });
   } catch(error) {
     if(error instanceof ApplicationError) throw error;
