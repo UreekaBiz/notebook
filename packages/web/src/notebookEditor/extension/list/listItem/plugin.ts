@@ -49,11 +49,14 @@ export const ListItemTaskListItemPlugin = () => {
         const { tr } = view.state;
 
         try {
-          if(isPlainTextPaste) {
-            tr.insertText(slice.content.textBetween(0, slice.content.size, ' '/*add a space per pasted Block Node*/));
+          // if the contents of a single Block are being pasted, or a plain Text
+          // paste is happening, paste the Slice's content as Text only
+          const pastingSingleBlock = slice.content.childCount === 1 && slice.content.child(0/*first child*/).isTextblock;
+          if(isPlainTextPaste || pastingSingleBlock) {
+            tr.insertText(slice.content.textBetween(0/*slice start*/, slice.content.size, ' '/*add a space per pasted Block Node*/));
             view.dispatch(tr);
             return true/*event handled*/;
-          } /* else -- not a plain text event, ensure right paste behavior */
+          } /* else -- not a plain text event, turn each Block into a ListItem */
 
           const newSliceContent: ProseMirrorNode[] = [];
           slice.content.descendants(node => {
