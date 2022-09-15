@@ -170,10 +170,15 @@ export class CollaborationListener {
   private async listenEditor() {
     if(!this.initialContentLoaded) { log.warn(`Listening to Editor before initial content is loaded ${this.logContext()}.`); return/*prevent invalid actions*/; }
 
-    const callback = this.writePendingSteps.bind(this);
     const editor = this.editor/*local closure so doesn't change on remove*/;
-          editor.on('update', callback);
-    this.editorUnsubscribes.push(() => editor.off('update', callback));
+
+    const updateCallback = this.writePendingSteps.bind(this);
+    editor.on('update', updateCallback);
+    this.editorUnsubscribes.push(() => editor.off('update', updateCallback));
+
+    const selectionUpdateCallback = this.handleSelectionUpdate.bind(this);
+    editor.on('selectionUpdate', selectionUpdateCallback);
+    this.editorUnsubscribes.push(() => editor.off('selectionUpdate', selectionUpdateCallback));
   }
 
   private async unsubscribeEditor() {
@@ -438,10 +443,17 @@ export class CollaborationListener {
   }
 
   // -- User-Session --------------------------------------------------------------
+  private async handleSelectionUpdate(){
+    const selection = this.editor.view.state.selection;
+    if(!selection) return/*nothing to do*/;
+
+    return this.writeUserSession(selection.$anchor.pos);
+  }
+
   private async writeUserSession(cursorPosition: number) {
     if(!this.initialized) { log.warn(`Trying to write Notebook User-Session before initialization or after shutdown ${this.logContext()}.`); return/*prevent invalid actions*/; }
     if(!this.initialContentLoaded) throw new ApplicationError('functions/internal', `Trying to write Notebook User-Session before initial content is loaded  ${this.logContext()}.`);
-
+log.info(`Writing Notebook User-Session at position ${cursorPosition}.`);
     try {
       const ref = notebookUserSessionsRef(this.notebookId, this.user.userId, this.user.sessionId);
       const userSession: NotebookUserSession_Write = {
