@@ -52,8 +52,7 @@ export const liftEmptyListItemContent = (editor: Editor): boolean => {
 
   if(empty && isListItemContentNode(parent/*guaranteed to be same parent as head by previous check*/) &&
     $anchor.depth === 3/*child of ListItem inside List Node*/ &&
-    isDocumentNode($anchor.node(-3/*parent of Grandparent List*/)) &&
-    parent.content.size < 1/*ListItemContent Node is empty*/
+    isDocumentNode($anchor.node(-3/*parent of Grandparent List*/))
   ) {
     return applyDocumentUpdates(editor, [ new LiftEmptyBlockNodeDocumentUpdate(), new SetParagraphDocumentUpdate() ]);
   } /* else -- not inside an empty ListItemContent that should become a Paragraph */
