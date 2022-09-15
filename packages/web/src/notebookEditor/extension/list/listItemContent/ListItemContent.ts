@@ -5,7 +5,7 @@ import { getNodeOutputSpec, ListItemContentNodeSpec, NodeName, DATA_NODE_TYPE } 
 import { ExtensionPriority, NoOptions, NoStorage } from 'notebookEditor/model/type';
 
 import { listItemContentPlugin } from './plugin';
-import { liftEmptyListItemContent } from './update';
+import { liftListItemContent } from './update';
 
 // ********************************************************************************
 export const ListItemContent = Node.create<NoOptions, NoStorage>({
@@ -17,8 +17,8 @@ export const ListItemContent = Node.create<NoOptions, NoStorage>({
   // (SEE: #liftEmptyListItemContent)
   addKeyboardShortcuts() {
     return {
-      'Enter': () => liftEmptyListItemContent(this.editor),
-      'Backspace': () => liftEmptyListItemContent(this.editor),
+      'Enter': () => liftListItemContent(this.editor, 'enter'),
+      'Backspace': () => liftListItemContent(this.editor, 'backspace'),
     };
   },
 

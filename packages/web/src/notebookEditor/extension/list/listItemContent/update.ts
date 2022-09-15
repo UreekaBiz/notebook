@@ -6,6 +6,8 @@ import { getBlockNodeRange, getListItemContentNodeType, isListItemContentNode, i
 import { applyDocumentUpdates } from 'notebookEditor/command/update';
 import { SetParagraphDocumentUpdate } from 'notebookEditor/extension/paragraph/command';
 
+import { ListBackSpaceDocumentUpdate } from '../keyboardShortcut/listBackspace';
+
 // ********************************************************************************
 // === Update =====================================================================
 // -- Setter ----------------------------------------------------------------------
@@ -45,16 +47,28 @@ export class SetListItemContentDocumentUpdate implements AbstractDocumentUpdate 
 // -- Lift ------------------------------------------------------------------------
 // ensure that whenever an empty ListItemContent Node which is a direct child of
 // the Document, with only a single ListItem (and hence a single ListItemContent)
-// that is empty, the default behavior of pressing Enter or Backspace is maintained
-export const liftEmptyListItemContent = (editor: Editor): boolean => {
+// the default behavior of pressing Enter or Backspace is maintained
+export const liftListItemContent = (editor: Editor, key: 'enter' | 'backspace'): boolean => {
   const { $anchor, empty } = editor.state.selection;
   const { parent } = $anchor;
 
-  if(empty && isListItemContentNode(parent/*guaranteed to be same parent as head by previous check*/) &&
-    $anchor.depth === 3/*child of ListItem inside List Node*/ &&
-    isDocumentNode($anchor.node(-3/*parent of Grandparent List*/))
+  if(empty
+    && isListItemContentNode(parent/*guaranteed to be same parent as head by previous check*/)
+    && $anchor.depth === 3/*child of ListItem inside List Node*/
+    && isDocumentNode($anchor.node(-3/*parent of Grandparent List*/))
   ) {
-    return applyDocumentUpdates(editor, [ new LiftEmptyBlockNodeDocumentUpdate(), new SetParagraphDocumentUpdate() ]);
+    if(key === 'enter') {
+      // the User is creating a new ListItem with Enter, and the resulting
+      // Node should be a Paragraph that is a direct child of the Doc.
+      // Since new ListItems are created without content by default,
+      // lift it (it will be empty) and make it a Paragraph
+      return applyDocumentUpdates(editor, [new LiftEmptyBlockNodeDocumentUpdate(), new SetParagraphDocumentUpdate()]);
+    } else {
+      // the User is backspacing at the start of a List. The resulting Node
+      // should be a Paragraph that is a direct child of the Doc. Do default
+      // List backspace behavior and turn the Node into a Paragraph
+      return applyDocumentUpdates(editor, [new ListBackSpaceDocumentUpdate(), new SetParagraphDocumentUpdate()]);
+    }
   } /* else -- not inside an empty ListItemContent that should become a Paragraph */
 
   return false/*let PM handle the event*/;
