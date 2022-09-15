@@ -7,9 +7,11 @@ import { MdLoop } from 'react-icons/md';
 import { debounce, getLogger, Logger } from '@ureeka-notebook/web-service';
 
 import { AuthAvatar } from 'authUser/component/AuthAvatar';
+import { CollaborationUsers } from 'notebookEditor/component/CollaborationUsers';
 import { useNotebookEditor } from 'notebookEditor/hook/useNotebookEditor';
 import { useIsMounted } from 'shared/hook';
 import { coreRoutes } from 'shared/routes';
+
 import { SidebarTopbarButton } from './SidebarTopbarButton';
 
 const log = getLogger(Logger.NOTEBOOK);
@@ -59,26 +61,6 @@ export const SidebarTopbar: React.FC<Props> = ({ background }) => {
     };
   }, [editorService, isMounted]);
 
-  // ------------------------------------------------------------------------------
-  // currently Collaborating Users
-  useEffect(() => {
-    const subscription = editorService.onUsers$().subscribe({
-      next: (collaboratingUsers) => {
-        // FIXME: do something useful!!! (Some work will need to be done since the
-        //        data is at the User-Session level (in case the same User is in the
-        //        document more than once). The visual can be just a list of avatars.
-        //        When one of the avatars is clicked the *latest* session navigated to.)
-        console.log('collaboratingUsers: ', collaboratingUsers);
-      },
-      error: (error) => {
-        log.info(`Unexpected error listening Notebook Editor Collaborating Users. Reason: `, error);
-      },
-    });
-
-    return () => {
-      subscription.unsubscribe();
-    };
-  }, [editorService, isMounted]);
 
   // == Handler ===================================================================
   const handleAppNameClick = useCallback(() => {
@@ -115,6 +97,9 @@ export const SidebarTopbar: React.FC<Props> = ({ background }) => {
             <Text marginLeft={1}>Saving...</Text>
           </Flex>
         ): null/*nothing*/}
+        <Box marginRight={2}>
+          <CollaborationUsers />
+        </Box>
         <Box marginRight={2}>
           <SidebarTopbarButton notebookId={notebookId} />
         </Box>
