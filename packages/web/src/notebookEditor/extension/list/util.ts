@@ -3,7 +3,7 @@ import { Node as ProseMirrorNode, NodeType, ResolvedPos } from 'prosemirror-mode
 import { EditorState, Selection, Transaction } from 'prosemirror-state';
 import { canJoin, findWrapping } from 'prosemirror-transform';
 
-import { getAllAscendantsFromSelection, isBulletListNode, isDocumentNode, isOrderedListNode, isTaskListNode, isTaskListItemNode, isListItemNode, isListItemContentNode, AttributeType, NodeName, SelectionDepth, SetTextSelectionDocumentUpdate } from '@ureeka-notebook/web-service';
+import { getAllAscendantsFromSelection, isBulletListNode, isDocumentNode, isOrderedListNode, isTaskListNode, isTaskListItemNode, isListItemNode, isListItemContentNode, AttributeType, BulletListNodeType, NodeName, SelectionDepth, SetTextSelectionDocumentUpdate, TaskListNodeType, OrderedListNodeType } from '@ureeka-notebook/web-service';
 
 import { applyDocumentUpdates } from 'notebookEditor/command/update';
 
@@ -23,6 +23,22 @@ export const isListNode = (node: ProseMirrorNode) => isBulletListNode(node) || i
  */
 export const isListBlockNode = (node: ProseMirrorNode) => isListNode(node) || isListItemNode(node) || isListItemContentNode(node);
 
+/**
+ * Checks whether a List Node contains only a single
+ * ListItemContent Node inside it
+ */
+export const isListWithSingleItemContent = (listNode: OrderedListNodeType | BulletListNodeType | TaskListNodeType) => {
+  let count = 0/*default*/;
+
+  listNode.descendants((node, pos, parent) => {
+    if(isListItemContentNode(node)) {
+      count += 1;
+    } /* else -- do not add */
+  });
+
+  return count === 1;
+};
+
 // -- Update ----------------------------------------------------------------------
 /**
  * ensures the correct behavior is followed by both ToolItems and Keyboard
@@ -31,7 +47,7 @@ export const isListBlockNode = (node: ProseMirrorNode) => isListNode(node) || is
  * is passed, it will be used as the starting position for the Selection when the
  * DocumentUpdates are executed
  */
- export const handleListDocumentUpdates = (editor: Editor, listTypeName: NodeName.ORDERED_LIST | NodeName.BULLET_LIST | NodeName.TASK_LIST, startingAnchor?: number) => {
+export const handleListDocumentUpdates = (editor: Editor, listTypeName: NodeName.ORDERED_LIST | NodeName.BULLET_LIST | NodeName.TASK_LIST, startingAnchor?: number) => {
   const toggleListUpdate = new ToggleListDocumentUpdate(listTypeName, startingAnchor);
 
   // ensure that toggling Lists either through Keyboard Shortcuts or ToolItems
@@ -144,7 +160,7 @@ export const getListNodesFromDepth = (editorState: EditorState, depth: Selection
         listItemAtDepthPos = listAtDepthPos + 1/*first position inside the List, ListItem by contract*/;
 
   if( !listAtDepth || !isListNode(listAtDepth)
-    || !listItemAtDepth || !(isListItemAtDepth(listItemAtDepth))
+   || !listItemAtDepth || !(isListItemAtDepth(listItemAtDepth))
   ) return/*invalid conditions*/;
 
   return { listAtDepthPos, listAtDepth, listItemAtDepth, listItemAtDepthPos };
