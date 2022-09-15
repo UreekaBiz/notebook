@@ -82,11 +82,10 @@ export const SidebarTopbar: React.FC<Props> = ({ background }) => {
       <Flex align='center' _hover={{ cursor: 'pointer' }} onClick={handleAppNameClick}>
         <BsBook size={20} />
         <Text marginLeft={2} fontSize={20}>Notebook</Text>
-      </Flex>
-      <Flex align='center'>
         {hasPendingWrite ? (
           <Flex
             alignItems='center'
+            justifyContent='flex-start'
             marginLeft={2}
             fontSize={12}
             lineHeight='25px'
@@ -94,12 +93,14 @@ export const SidebarTopbar: React.FC<Props> = ({ background }) => {
             fontWeight={600}
           >
             <MdLoop size={14}/>
-            <Text marginLeft={1}>Saving...</Text>
           </Flex>
         ): null/*nothing*/}
+      </Flex>
+      <Flex align='center'>
         <Box marginRight={2}>
           <CollaborationUsers />
         </Box>
+
         <Box marginRight={2}>
           <SidebarTopbarButton notebookId={notebookId} />
         </Box>

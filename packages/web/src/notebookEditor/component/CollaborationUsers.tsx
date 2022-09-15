@@ -8,7 +8,7 @@ import { useNotebookEditor } from 'notebookEditor/hook/useNotebookEditor';
 import { useIsMounted } from 'shared/hook';
 import { UserProfileAvatarLive } from 'user/component/UserProfileAvatarLive';
 
-const MAX_USERS = 2/*T&E*/;
+const MAX_USERS = 3/*T&E*/;
 
 const log = getLogger(Logger.NOTEBOOK);
 // *********************************************************************************
@@ -79,6 +79,7 @@ export const CollaborationUsers: React.FC<Props> = () => {
           width='32px'
           height='32px'
           marginRight={showMore || index < usersArray.length - 1 ? '-8px' : '0px'} // there is content on the right
+          size='sm'
           showBorder
           _hover={{
             cursor: 'pointer',
