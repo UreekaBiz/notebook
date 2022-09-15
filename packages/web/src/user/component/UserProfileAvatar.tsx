@@ -2,7 +2,7 @@ import { Avatar, AvatarProps } from '@chakra-ui/react';
 
 import { UserIdentifier, UserProfilePrivate, UserProfilePublic } from '@ureeka-notebook/web-service';
 
-import { getPrivateDisplayName, getPublicDisplayName } from 'user/util';
+import { getBackgroundImageColor, getPrivateDisplayName, getPublicDisplayName } from 'user/util';
 
 // ********************************************************************************
 type Props = AvatarProps & {
@@ -34,5 +34,7 @@ export const UserProfileAvatar: React.FC<Props> = ({ userId, ...props }) => {
     profileImageUrl = userPrivateProfile.profileImageUrl;
   }
 
-  return <Avatar name={name} src={profileImageUrl} {...rest} />;
+  const color = getBackgroundImageColor(userId);
+
+  return <Avatar name={name} src={profileImageUrl} background={color} borderColor={color} {...rest} />;
 };
