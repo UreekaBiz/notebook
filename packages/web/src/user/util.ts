@@ -46,8 +46,8 @@ const DEFAULT_IMAGE_BACKGROUND_COLORS = [
 /** Gets a background color from the given userId. This implementation ensures that
  *  the returned value is consistent for a given userId */
 export const getBackgroundImageColor = (userId: string) => {
+  // NOTE: hash can be negative, so make it positive
   const hash = stringHashCode(userId);
-  // NOTE: A hash can be negative, so we need to make it positive
   const index = Math.abs(hash % DEFAULT_IMAGE_BACKGROUND_COLORS.length);
 
   return DEFAULT_IMAGE_BACKGROUND_COLORS[index];
