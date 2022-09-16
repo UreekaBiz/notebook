@@ -1,3 +1,5 @@
+import { Editor } from '@tiptap/core';
+import { Slice } from 'prosemirror-model';
 import { Plugin, PluginKey } from 'prosemirror-state';
 import { EditorView } from 'prosemirror-view';
 
@@ -5,12 +7,14 @@ import { NotebookSchemaType } from '@ureeka-notebook/web-service';
 
 import { NoPluginState } from 'notebookEditor/model/type';
 
+import { serializeDocumentFragment } from './serialize';
+
 // ********************************************************************************
 // this Plugin implements behavior that is common to all the document
 
 // == Plugin ======================================================================
 const documentKey = new PluginKey<NoPluginState, NotebookSchemaType>('documentKey');
-export const DocumentPlugin = () => {
+export const DocumentPlugin = (editor: Editor) => {
   const plugin = new Plugin<NoPluginState, NotebookSchemaType>({
     // -- Setup -------------------------------------------------------------------
     key: documentKey,
@@ -26,6 +30,9 @@ export const DocumentPlugin = () => {
 
         return false/*allow regular event handling*/;
       },
+
+      // define custom clipboard Text representations for Nodes
+      clipboardTextSerializer: (slice: Slice) => serializeDocumentFragment(editor, slice.content),
     },
   });
 
