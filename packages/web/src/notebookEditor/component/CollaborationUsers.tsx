@@ -8,9 +8,11 @@ import { useNotebookEditor } from 'notebookEditor/hook/useNotebookEditor';
 import { useIsMounted } from 'shared/hook';
 import { UserProfileAvatarLive } from 'user/component/UserProfileAvatarLive';
 
+const log = getLogger(Logger.NOTEBOOK);
+
+// *********************************************************************************
 const MAX_USERS = 3/*T&E*/;
 
-const log = getLogger(Logger.NOTEBOOK);
 // *********************************************************************************
 interface Props {/*currently nothing*/}
 export const CollaborationUsers: React.FC<Props> = () => {
@@ -23,7 +25,6 @@ export const CollaborationUsers: React.FC<Props> = () => {
   const [collaboratingUsers, setCollaboratingUsers] = useState<NotebookUsers | null/*no value*/>(null/*initial value*/);
 
   // == Effect ====================================================================
-  // ------------------------------------------------------------------------------
   // currently Collaborating Users
   useEffect(() => {
     const subscription = editorService.onUsers$().subscribe({
@@ -41,7 +42,7 @@ export const CollaborationUsers: React.FC<Props> = () => {
   // == Handler ===================================================================
   const handleUserClick = (userId: UserIdentifier) => {
     const sessions = collaboratingUsers?.[userId];
-    if(!sessions) return/*invalid session -- nothing to do*/;
+    if(!sessions) return/*invalid User-Session -- nothing to do*/;
 
     // get the most recent session
     // NOTE: Due to the fact that a user can have multiple sessions in the case of
@@ -66,7 +67,7 @@ export const CollaborationUsers: React.FC<Props> = () => {
   // == UI ========================================================================
   if(!collaboratingUsers) return null/*nothing to render*/;
 
-  const usersArray = Object.keys(collaboratingUsers).filter((userId, index) => userId !== currentUserId/*don't display own user*/),
+  const usersArray = Object.keys(collaboratingUsers).filter((userId, index) => userId !== currentUserId/*don't display own User*/),
         usersToDisplay = usersArray.slice(0, MAX_USERS);
   const showMore = usersArray.length > MAX_USERS;
 
