@@ -6,7 +6,7 @@ import { Step as ProseMirrorStep } from 'prosemirror-transform';
 
 import { distinctUntilChanged, BehaviorSubject } from 'rxjs';
 
-import { contentToJSONStep, generateClientIdentifier, getNodeName, isNodeSelection, sleep, AuthedUser, NotebookIdentifier, NotebookVersion, NotebookSchemaVersion, Unsubscribe, UserIdentifier, NO_NOTEBOOK_VERSION, NotebookUserSession_Write } from '@ureeka-notebook/service-common';
+import { contentToJSONStep, generateClientIdentifier, getNodeName, isNodeSelection, sleep, AuthedUser, NotebookIdentifier, NotebookVersion, NotebookSchemaVersion, NotebookUserSession_Write, Unsubscribe, UserIdentifier, NO_NOTEBOOK_VERSION } from '@ureeka-notebook/service-common';
 
 import { getLogger, ServiceLogger } from '../logging/type';
 import { getEnvNumber } from '../util/environment';
