@@ -15,7 +15,7 @@ export const Document = Node.create<NoOptions, NoStorage>({
   ...DocumentNodeSpec,
 
   // -- Plugin --------------------------------------------------------------------
-  addProseMirrorPlugins() { return [DocumentPlugin()]; },
+  addProseMirrorPlugins() { return [DocumentPlugin(this.editor)]; },
 
   // -- Keyboard Shortcut ---------------------------------------------------------
   // REF: https://prosemirror.net/docs/ref/#commands.pcBaseKeymap
@@ -26,7 +26,6 @@ export const Document = Node.create<NoOptions, NoStorage>({
   //       other Nodes at a Document level, return true
   //       (preventing the default behavior)
   addKeyboardShortcuts() { return { 'Mod-Enter': () => true/*do not let PM handle the shortcut*/ }; },
-
 
   // -- Update --------------------------------------------------------------------
   onSelectionUpdate() {
