@@ -5,6 +5,7 @@ import { canJoin, canSplit, liftTarget, replaceStep, ReplaceAroundStep, ReplaceS
 import { isBlank } from '../../../util';
 import { Attributes } from '../attribute';
 import { isMarkHolderNode } from '../extension/markHolder';
+import { isTextNode } from '../extension/text';
 import { NodeName } from '../node';
 import { NotebookSchemaType } from '../schema';
 import { isGapCursorSelection } from '../selection';
@@ -40,11 +41,19 @@ export class CreateBlockNodeDocumentUpdate implements AbstractDocumentUpdate {
     // if the current Block and the Selection are both empty
     // (or only a MarkHolder is present), replace the
     // parent Block with the desired Block
-    const { content, textContent, firstChild } = $anchor.parent;
+    const { content, firstChild } = $anchor.parent;
     const { size: contentSize } = content;
+
+    let onlyContainsEmptyTextNodes = true/*default*/;
+    $anchor.parent.content.forEach(child => {
+      if(!isTextNode(child) || !isBlank(child.textContent)) {
+        onlyContainsEmptyTextNodes = false;
+      } /* else -- do not change default */
+    });
+
     if(tr.selection.empty/*empty implies parent($anchor) === parent($head)*/ &&
       (contentSize < 1/*parent has no content*/ ||
-      isBlank(textContent)/*the content is only white space*/ ||
+      onlyContainsEmptyTextNodes/*the content is only white space and there are no atom nodes*/ ||
       contentSize === 1 && firstChild && isMarkHolderNode(firstChild)/*parent only has a MarkHolder*/)
     ) {
       const parentBlockRange = $anchor.blockRange($anchor);
