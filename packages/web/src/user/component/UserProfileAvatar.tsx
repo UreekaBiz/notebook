@@ -44,17 +44,11 @@ export const UserProfileAvatar: React.FC<UserProfileAvatarProps> = ({ userId, sh
 
   const color = getBackgroundImageColor(userId);
 
-  // SEE: index.css
-  const className = presence === PresenceState.Active ? 'user_avatar-active'
-                  : presence === PresenceState.Idle ? 'user_avatar--idle'
-                  : 'user_avatar--offline';
-
   return (
     <Avatar
       name={name}
       src={profileImageUrl}
-      // only add the className if the presence is true
-      className={showPresence ? className : undefined}
+      filter={showPresence && presence === PresenceState.Idle ? 'opacity(0.5)' : undefined}
       background={color}
       borderColor={color}
       {...rest}
