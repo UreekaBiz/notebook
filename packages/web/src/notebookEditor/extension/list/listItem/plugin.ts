@@ -2,7 +2,7 @@ import { Fragment, Node as ProseMirrorNode, Slice } from 'prosemirror-model';
 import { Plugin } from 'prosemirror-state';
 import { EditorView } from 'prosemirror-view';
 
-import { createListItemContentNode, createListItemNode, createTaskListItemNode, isListItemContentNode, isListItemNode, isTaskListItemNode, isTaskListNode, NotebookSchemaType } from '@ureeka-notebook/web-service';
+import { createListItemContentNode, createListItemNode, createTaskListItemNode, isListItemContentNode, isTaskListNode, NotebookSchemaType } from '@ureeka-notebook/web-service';
 
 import { NoPluginState } from 'notebookEditor/model/type';
 
@@ -67,14 +67,15 @@ export const ListItemTaskListItemPlugin = () => {
             // single ListItemContent being pasted, only paste
             // the last parent of said ListItemContent (which will
             // be a ListItem or a TaskListItem by contract) by descending
-            let pastedLisItem = firstSliceChild/*default*/;
+            let pastedListItemContent = firstSliceChild/*default*/;
             firstSliceChild.content.descendants(descendant => {
-              if(isListItemNode(descendant) || isTaskListItemNode(descendant)) {
-                pastedLisItem = descendant;
+              if(isListItemContentNode(descendant)) {
+                pastedListItemContent = descendant;
               } /* else -- do not change default */
             });
 
-            tr.insert(tr.selection.anchor, pastedLisItem);
+            // insert the content of the pasted ListItemContent
+            tr.replaceSelection(new Slice(pastedListItemContent.content, 0, 0));
             view.dispatch(tr);
             return true/*event handled*/;
           } /* else -- turn each Block into a ListItem */
@@ -98,6 +99,9 @@ export const ListItemTaskListItemPlugin = () => {
           tr.replaceSelection(new Slice(Fragment.from(newSliceContent), 0/*use full Slice*/, 0/*use full Slice*/));
           view.dispatch(tr);
           return true/*event handled*/;
+        } catch(error) {
+          console.warn(`Something went wrong while handling paste for Lists: ${error}`);
+          return true/*prevent more side effects by marking event as handled*/;
         } finally {
           isPlainTextPaste = false/*default*/;
         }
