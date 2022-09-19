@@ -55,23 +55,26 @@ export const ListItemTaskListItemPlugin = () => {
           // paste the Slice's content as Text only
           const firstSliceChild = slice.content.child(0);
           const pasteAsSingleBlock = slice.content.childCount === 1 && (firstSliceChild.isTextblock || (isListNode(firstSliceChild) && isListWithSingleItemContent(firstSliceChild)));
-          if(isPlainTextPaste || pasteAsSingleBlock) {
+          if(isPlainTextPaste) {
             tr.insertText(slice.content.textBetween(0/*slice start*/, slice.content.size, ' '/*add a space per pasted Block Node*/));
             view.dispatch(tr);
             return true/*event handled*/;
-          } /* else -- not a plain text event, turn each Block into a ListItem */
+          } /* else -- not a plain text event, check if pasting as single block  */
+
+          if(pasteAsSingleBlock) {
+            tr.insert(tr.selection.anchor, firstSliceChild.content);
+            view.dispatch(tr);
+            return true/*event handled*/;
+          } /* else -- turn each Block into a ListItem */
 
           const newSliceContent: ProseMirrorNode[] = [];
           slice.content.descendants(node => {
             if(node.isTextblock) {
-              const { textContent } = node;
-              if(textContent.length < 1) return true/*do nothing, keep descending*/;
-
               if(isTaskListNode(grandParentList)) {
-                const taskListItemNode = createTaskListItemNode(schema, { ...parentListItem.attrs }, createListItemContentNode(schema, { ...parentListItem.attrs }, schema.text(textContent)));
+                const taskListItemNode = createTaskListItemNode(schema, { ...parentListItem.attrs }, createListItemContentNode(schema, { ...parentListItem.attrs }, node.content));
                 newSliceContent.push(taskListItemNode);
               } else {
-                const listItemNode = createListItemNode(schema, { ...parentListItem.attrs }, createListItemContentNode(schema, { ...parentListItem.attrs }, schema.text(textContent)));
+                const listItemNode = createListItemNode(schema, { ...parentListItem.attrs }, createListItemContentNode(schema, { ...parentListItem.attrs }, node.content));
                 newSliceContent.push(listItemNode);
               }
               return false/*do not descend further into children*/;
