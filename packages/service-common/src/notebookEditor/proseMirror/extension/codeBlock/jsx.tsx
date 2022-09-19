@@ -20,25 +20,28 @@ export const CodeBlockComponentJSX: React.FC<CodeBlockComponentRenderProps> = ({
 
   return (
     <Box
-      style={style}
-      data-node-type={NodeName.CODEBLOCK}
       data-visualid={visualId}
 
-      position='relative'
       display='flex'
       alignItems='center'
-      gap='10px'
-      background='#EDF2F7'
-      border='1px solid'
-      borderColor='#CBD5E0'
-      borderRadius='4px'
+      gap='4px'
+      paddingRight='4px'
 
       whiteSpace={wrap ? 'break-spaces' : 'pre'}
     >
       <Box
+        style={style}
+        data-node-type={NodeName.CODEBLOCK}
+
         width='100%'
         overflow='auto'
         minHeight='1.5em'
+
+        background='#EDF2F7'
+        border='1px solid'
+        borderColor='#CBD5E0'
+        borderRadius='4px'
+
         fontSize='16px'
         fontFamily={type === CodeBlockType.Code ? 'monospace' : 'inherit'}
       >
@@ -48,10 +51,9 @@ export const CodeBlockComponentJSX: React.FC<CodeBlockComponentRenderProps> = ({
       <Box
         {...{ [DATA_VISUAL_ID]:visualId }}
         contentEditable={false}
-        position='absolute'
-        top='50%'
-        left='calc(100% + 8px)'
-        transform='translateY(-50%)'
+        // @ts-ignore: !important is not a valid attribute but its a valid css value
+        whiteSpace='nowrap !important'/*overrides the prosemirror's white-space*/
+        minWidth='64px' /*spacing for visual id -- max content equals to "0.0.0.0"*/
       >
         {visualId}
       </Box>
