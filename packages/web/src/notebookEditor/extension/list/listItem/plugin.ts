@@ -2,7 +2,7 @@ import { Fragment, Node as ProseMirrorNode, Slice } from 'prosemirror-model';
 import { Plugin } from 'prosemirror-state';
 import { EditorView } from 'prosemirror-view';
 
-import { createListItemContentNode, createListItemNode, createTaskListItemNode, isListItemContentNode, isTaskListNode, NotebookSchemaType } from '@ureeka-notebook/web-service';
+import { createListItemContentNode, createListItemNode, createTaskListItemNode, isListItemContentNode, isListItemNode, isTaskListItemNode, isTaskListNode, NotebookSchemaType } from '@ureeka-notebook/web-service';
 
 import { NoPluginState } from 'notebookEditor/model/type';
 
@@ -62,7 +62,19 @@ export const ListItemTaskListItemPlugin = () => {
           } /* else -- not a plain text event, check if pasting as single block  */
 
           if(pasteAsSingleBlock) {
-            tr.insert(tr.selection.anchor, firstSliceChild.content);
+            // since paste can occur several levels deep across Lists,
+            // yet the above check guarantees that there is a
+            // single ListItemContent being pasted, only paste
+            // the last parent of said ListItemContent (which will
+            // be a ListItem or a TaskListItem by contract) by descending
+            let pastedLisItem = firstSliceChild/*default*/;
+            firstSliceChild.content.descendants(descendant => {
+              if(isListItemNode(descendant) || isTaskListItemNode(descendant)) {
+                pastedLisItem = descendant;
+              } /* else -- do not change default */
+            });
+
+            tr.insert(tr.selection.anchor, pastedLisItem);
             view.dispatch(tr);
             return true/*event handled*/;
           } /* else -- turn each Block into a ListItem */
