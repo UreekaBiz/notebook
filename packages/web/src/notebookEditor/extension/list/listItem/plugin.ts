@@ -75,7 +75,7 @@ export const ListItemTaskListItemPlugin = () => {
             });
 
             // insert the content of the pasted ListItemContent
-            tr.replaceSelection(new Slice(pastedListItemContent.content, 0, 0));
+            tr.replaceSelection(new Slice(pastedListItemContent.content, 0/*use full Slice*/, 0/*use full Slice*/));
             view.dispatch(tr);
             return true/*event handled*/;
           } /* else -- turn each Block into a ListItem */
