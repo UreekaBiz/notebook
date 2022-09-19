@@ -293,6 +293,18 @@ html body {
   overflow: hidden;
 }
 
+/* == User ===================================================================== */
+/* SEE: UserProfileAvatar.tsx */
+.user_avatar--active > img {
+  filter: opacity(0);
+}
+.user_avatar--idle > img {
+  filter: grayscale(0.5);
+}
+.user_avatar--offline > img {
+  filter: grayscale(1);
+}
+
 /* == Utilities ================================================================ */
 /* NOTE: Using class name to override the (seemingly impossible!) styles for the
          input with the accessible props. */
