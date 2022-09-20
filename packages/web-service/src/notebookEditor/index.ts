@@ -110,6 +110,7 @@ export {
   DATA_LIST_ITEM_LIST_STYLE,
   DATA_LIST_ITEM_SEPARATOR,
 
+  OrderedListAttributes,
   ORDERED_LIST_DEFAULT_START,
 
   DATA_TASK_LIST_ITEM_CHECKED,
@@ -209,6 +210,7 @@ export {
   isMarkHolderNode,
   storedMarksFromDOM,
 
+  getOrderedListNodeType,
   OrderedListNodeType,
 
   ParagraphNodeType,

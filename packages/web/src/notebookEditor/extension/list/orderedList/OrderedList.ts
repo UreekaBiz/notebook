@@ -19,11 +19,7 @@ export const OrderedList = Node.create<NoOptions, NoStorage>({
   ...OrderedListNodeSpec,
 
   // -- Attribute -----------------------------------------------------------------
-  addAttributes() {
-    return {
-      [AttributeType.StartValue]: setAttributeParsingBehavior(AttributeType.StartValue, SetAttributeType.NUMBER, ORDERED_LIST_DEFAULT_START),
-    };
-  },
+  addAttributes() { return { [AttributeType.StartValue]: setAttributeParsingBehavior(AttributeType.StartValue, SetAttributeType.NUMBER, ORDERED_LIST_DEFAULT_START) }; },
 
   // -- Command -------------------------------------------------------------------
   addKeyboardShortcuts() {

@@ -1,8 +1,33 @@
 import { EditorState, Transaction } from 'prosemirror-state';
 
-import { getListItemNodeType, isListItemNode, AbstractDocumentUpdate, Command, ListItemAttributes, NotebookSchemaType, OrderedListNodeType } from '@ureeka-notebook/web-service';
+import { getListItemNodeType, getOrderedListNodeType, isListItemNode, AbstractDocumentUpdate, Command, ListItemAttributes, NotebookSchemaType, OrderedListNodeType, OrderedListAttributes } from '@ureeka-notebook/web-service';
 
 // ********************************************************************************
+// modify the attributes of the OrderedList at the given position
+export const updateOrderedListCommand = (orderedListPosition: number, attributes: Partial<OrderedListAttributes>): Command => (state, dispatch) => {
+  const updatedTr = new UpdateOrderedListDocumentUpdate(orderedListPosition, attributes).update(state, state.tr);
+  if(updatedTr) {
+    dispatch(updatedTr);
+    return true/*Command executed*/;
+  } /* else -- Command cannot be executed */
+
+  return false/*not executed*/;
+};
+export class UpdateOrderedListDocumentUpdate implements AbstractDocumentUpdate {
+  public constructor(private readonly orderedListPosition: number, private readonly attributes: Partial<OrderedListAttributes>) {/*nothing additional*/}
+
+  /**
+   * modify the given Transaction such that the attributes of the OrderedList
+   * at the given position are modified
+   */
+  public update(editorState: EditorState<NotebookSchemaType>, tr: Transaction<NotebookSchemaType>) {
+    tr.setNodeMarkup(this.orderedListPosition, getOrderedListNodeType(editorState.schema), { ...this.attributes });
+    return tr/*updated*/;
+  }
+}
+
+// --------------------------------------------------------------------------------
+// update the attributes of all ListItem children of the given OrderedList
 export const updateListItemsInOrderedListCommand = (parentOrderedList: OrderedListNodeType, orderedListPosition: number, attributes: Partial<ListItemAttributes>): Command => (state, dispatch) => {
   const updatedTr = new UpdateListItemsInOrderedListDocumentUpdate(parentOrderedList, orderedListPosition, attributes).update(state, state.tr);
   if(updatedTr) {
@@ -17,7 +42,7 @@ export class UpdateListItemsInOrderedListDocumentUpdate implements AbstractDocum
 
   /**
    * modify the given Transaction such that all ListItem children of the
-   * closest OrderedList get their attributes updated
+   * given OrderedList get their attributes updated
    */
   public update(editorState: EditorState<NotebookSchemaType>, tr: Transaction<NotebookSchemaType>) {
     const from = this.orderedListPosition,
