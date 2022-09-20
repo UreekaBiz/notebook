@@ -41,7 +41,10 @@ export const OrderedListNodeRendererSpec: NodeRendererSpec<OrderedListAttributes
       if(!startVariable) { startVariable = ORDERED_LIST_DEFAULT_START; }
       else { startVariable -= 1/*(SEE: NOTE above)*/; }
 
-      return { style: `--${AttributeType.StartValue}: ${startVariable};` };
+      return {
+        [AttributeType.StartValue]: (attributes[AttributeType.StartValue] ?? ORDERED_LIST_DEFAULT_START).toString(),
+        style: `--${AttributeType.StartValue}: ${startVariable};`,
+      };
     },
   },
 };
