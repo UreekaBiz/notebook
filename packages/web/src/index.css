@@ -117,7 +117,9 @@ img.ProseMirror-selectednode/*target inline nodes with content (e.g. asyncNodes)
 ol[data-node-type="orderedList"] {
   margin-left: 1em;
   padding-left: 1em;
-  counter-reset: list;
+
+  /* NOTE: the start variable is added by the renderer. (SEE: OrderedList.ts) */
+  counter-reset: list var(--start);
 }
 ol[data-node-type="orderedList"] > li[data-node-type="listItem"] {
   counter-increment: list;
