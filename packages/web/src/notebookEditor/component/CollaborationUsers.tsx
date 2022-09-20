@@ -77,6 +77,7 @@ export const CollaborationUsers: React.FC<Props> = () => {
         <UserProfileAvatarLive
           key={userId}
           userId={userId}
+          showPresence
           width='32px'
           height='32px'
           marginRight={showMore || index < usersArray.length - 1 ? '-8px' : '0px'} // there is content on the right

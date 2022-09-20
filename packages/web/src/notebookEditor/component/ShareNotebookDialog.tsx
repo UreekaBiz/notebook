@@ -30,6 +30,11 @@ interface Props {
 export const ShareNotebookDialog: React.FC<Props> = ({ notebook, notebookId, component }) => {
   const authedUser = useAuthedUser();
 
+  // used to identify the typeahead input element to perform the focus.
+  // NOTE: this is used instead of using the ref of the input element since it cannot
+  //       be passed as a prop to the TypeaheadUserProfile component.
+  const notebookTypeaheadId = `notebook-share-${notebookId}`;
+
   // == State =====================================================================
   // -- Share ---------------------------------------------------------------------
   // NOTE: shareRoles must have the User's profile in this map since it's
@@ -133,6 +138,10 @@ export const ShareNotebookDialog: React.FC<Props> = ({ notebook, notebookId, com
     newShareRoles.set(userId, { role, userProfile });
 
     setShareRoles(newShareRoles);
+
+    // focus the typeahead input element
+    const typeahead = document.getElementById(notebookTypeaheadId) as HTMLInputElement;
+    if(typeahead) typeahead.focus();
   };
   const handleRemoveUserRole = (userId: UserIdentifier) => {
     const newShareRoles = new Map(shareRoles);
@@ -211,6 +220,7 @@ export const ShareNotebookDialog: React.FC<Props> = ({ notebook, notebookId, com
                   <Flex alignItems='center' justifyContent='space-between' width='100%' marginBottom={4} paddingX={6}>
                     <Box flex='1 1' minWidth={0} marginRight={2}>
                       <TypeaheadUserProfile
+                        id={notebookTypeaheadId}
                         autoFocus
                         disabled={!isCreator || shareRoles.size >= MAX_NOTEBOOK_SHARE_USERS || status === 'loading'}
                         ignoreUserIds={existingSharedUserIds}

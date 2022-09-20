@@ -2,6 +2,8 @@ import { NodeName } from '@ureeka-notebook/web-service';
 
 import { markBold } from 'notebookEditor/extension/bold/toolbar';
 import { markCode } from 'notebookEditor/extension/code/toolbar';
+import { codeBlockReferenceToolItem } from 'notebookEditor/extension/codeBlockReference/toolbar';
+import { demoAsyncNodeToolItem } from 'notebookEditor/extension/demoAsyncNode/toolbar';
 import { markItalic } from 'notebookEditor/extension/italic/toolbar';
 import { linkToolItem } from 'notebookEditor/extension/link/toolbar';
 import { markStrikethrough } from 'notebookEditor/extension/strikethrough/toolbar';
@@ -26,6 +28,10 @@ export const ListItemToolbar: Toolbar = {
       markSubScript,
       markCode,
       linkToolItem,
+    ],
+    [
+      demoAsyncNodeToolItem,
+      codeBlockReferenceToolItem,
     ],
   ],
 };
