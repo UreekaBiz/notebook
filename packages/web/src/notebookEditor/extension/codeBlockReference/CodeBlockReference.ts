@@ -19,7 +19,7 @@ export const CodeBlockReference = Node.create<NoOptions, CodeBlockReferenceStora
   addAttributes() {
     return {
       // Creates a new id for the node when it is created.
-    [AttributeType.Id]: uniqueIdParsingBehavior(this.storage),
+      [AttributeType.Id]: uniqueIdParsingBehavior(this.storage),
 
       [AttributeType.LeftDelimiter]: setAttributeParsingBehavior(AttributeType.LeftDelimiter, SetAttributeType.STRING),
       [AttributeType.CodeBlockReference]: setAttributeParsingBehavior(AttributeType.CodeBlockReference, SetAttributeType.STRING),
