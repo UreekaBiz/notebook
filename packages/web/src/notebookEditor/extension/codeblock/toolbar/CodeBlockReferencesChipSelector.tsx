@@ -98,6 +98,7 @@ export const CodeBlockReferencesChipSelector: React.FC<Props> = ({ editor, depth
       {...props}
 
       name='References'
+      placeholder='References'
       attributeType={AttributeType.CodeBlockReferences}
       getLabelFromValue={getLabelFromValue}
       getValueFromLabel={getValueFromLabel}
