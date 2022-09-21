@@ -32,6 +32,10 @@ export const LinkURLToolItem: React.FC<Props> = ({ editor }) => {
     initialValues: { href: initialValue },
     validationSchema: LinkDialog_Create_Schema,
 
+    // REF: https://github.com/jaredpalmer/formik/issues/811
+    // explicitly re-initialize when the values change
+    enableReinitialize: true,
+
     // NOTE: not using onSubmit since the way the input is submitted must be handled
     //       by the caller in order to control the focus of the User
     onSubmit: () => {},
