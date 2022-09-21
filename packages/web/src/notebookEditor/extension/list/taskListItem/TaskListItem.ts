@@ -46,10 +46,10 @@ export const TaskListItem = Node.create<NoOptions, NoStorage>({
   // -- Keyboard Shortcut ---------------------------------------------------------
   addKeyboardShortcuts() {
     return {
-      Enter: () => shortcutCommandWrapper(this.editor, splitListItemCommand(NodeName.TASK_LIST_ITEM)),
-      Tab: () => shortcutCommandWrapper(this.editor, indentListCommand),
+      'Enter': () => shortcutCommandWrapper(this.editor, splitListItemCommand(NodeName.TASK_LIST_ITEM)),
+      'Tab': () => shortcutCommandWrapper(this.editor, indentListCommand),
       'Shift-Tab': () => shortcutCommandWrapper(this.editor, dedentListCommand),
-      Backspace: () => shortcutCommandWrapper(this.editor, listBackspaceCommand),
+      'Backspace': () => shortcutCommandWrapper(this.editor, listBackspaceCommand),
       'Mod-Backspace': () => shortcutCommandWrapper(this.editor, listBackspaceCommand),
     };
   },
