@@ -2,7 +2,7 @@ import { Fragment, Node as ProseMirrorNode, NodeRange, ResolvedPos, Slice } from
 import { EditorState, Transaction } from 'prosemirror-state';
 import { liftTarget, ReplaceAroundStep } from 'prosemirror-transform';
 
-import { isListItemNode, AbstractDocumentUpdate, Command, NotebookSchemaType } from '@ureeka-notebook/web-service';
+import { isListItemNode, isTaskListItemNode, AbstractDocumentUpdate, Command, NotebookSchemaType } from '@ureeka-notebook/web-service';
 
 import { isListNode, maybeJoinList } from '../util';
 import { getListItemRange, wrapSelectedItems } from './util';
@@ -62,7 +62,7 @@ const findParentListItem = ($from: ResolvedPos, range: NodeRange) => {
   const parentListItem = $from.node(range.depth - 1/*direct parent*/);
   const grandParentList = $from.node(range.depth - 2/*parent of direct parent*/);
 
-  if(!isListItemNode(parentListItem) || !isListNode(grandParentList)) return false/*not a valid List structure*/;
+  if(!(isListItemNode(parentListItem) || isTaskListItemNode(parentListItem)) || !isListNode(grandParentList)) return false/*not a valid List structure*/;
 
   return { parentListItem, grandParentList };
 };
