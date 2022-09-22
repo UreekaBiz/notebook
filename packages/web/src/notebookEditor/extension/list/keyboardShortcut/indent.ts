@@ -1,7 +1,7 @@
 import { Fragment, Node as ProseMirrorNode, NodeRange, ResolvedPos, Slice } from 'prosemirror-model';
 import { EditorState, TextSelection, Transaction } from 'prosemirror-state';
 
-import { isListItemNode, AbstractDocumentUpdate, Command, NotebookSchemaType } from '@ureeka-notebook/web-service';
+import { isListItemNode, isTaskListItemNode, AbstractDocumentUpdate, AttributeType, Command, NotebookSchemaType } from '@ureeka-notebook/web-service';
 
 import { isListNode } from '../util';
 import { getListItemRange } from './util';
@@ -37,6 +37,30 @@ export class IndentListDocumentUpdate implements AbstractDocumentUpdate {
 
     const { previousListItem, previousList, previousListItemStart } = findPreviousListItemResult;
     const { selectedSlice, unselectedSlice } = sliceSelectedItems(tr.doc, $to, range);
+
+    // make the selectedSlice inherit the styles of the unselected
+    // Slice if it exists, so that the indented Items get the styles
+    // of the List they are incorporating themselves into
+    if(unselectedSlice) {
+      // get the first Item in the unselectedSlice
+      let firstUnselectedItem: ProseMirrorNode | undefined = undefined/*default*/;
+      unselectedSlice.content.descendants((descendant) => {
+        if(firstUnselectedItem) return false/*already found*/;
+
+        if((isListItemNode(descendant) || isTaskListItemNode(descendant))) {
+          firstUnselectedItem = descendant;
+        } /* else -- ignore */
+
+        return true/*keep looking*/;
+      });
+
+      selectedSlice.content.descendants((descendant) => {
+        if(isListItemNode(descendant) || isTaskListItemNode(descendant)) {
+          descendant.attrs = { ...descendant.attrs, [AttributeType.ListStyleType]: firstUnselectedItem?.attrs[AttributeType.ListStyleType] };
+        } /* else -- do not modify attributes */
+      });
+    } /* else -- no unselected slice */
+
 
     const newPreviousListItemContent: Fragment = previousListItem.content
       .append(Fragment.fromArray([selectedList.copy(selectedSlice.content)]))

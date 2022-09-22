@@ -2,7 +2,7 @@ import { Fragment, Node as ProseMirrorNode, NodeRange, ResolvedPos, Slice } from
 import { EditorState, Transaction } from 'prosemirror-state';
 import { liftTarget, ReplaceAroundStep } from 'prosemirror-transform';
 
-import { isListItemNode, isTaskListItemNode, AbstractDocumentUpdate, Command, NotebookSchemaType } from '@ureeka-notebook/web-service';
+import { isListItemNode, isTaskListItemNode, AbstractDocumentUpdate, AttributeType, Command, NotebookSchemaType } from '@ureeka-notebook/web-service';
 
 import { isListNode, maybeJoinList } from '../util';
 import { getListItemRange, wrapSelectedItems } from './util';
@@ -23,7 +23,7 @@ export class DedentListDocumentUpdate implements AbstractDocumentUpdate {
 
   /**
    * modify the given Transaction such that the indentation level of the
-   * List at the current Selection is decreased and return it
+   * List or ListItem at the current Selection is decreased and return it
    */
   public update(editorState: EditorState<NotebookSchemaType>, tr: Transaction<NotebookSchemaType>) {
     let range = getListItemRange(tr.selection);
@@ -47,6 +47,13 @@ export class DedentListDocumentUpdate implements AbstractDocumentUpdate {
     tr.lift(range, target);
     range = getListItemRange(tr.selection);
     if(range) {
+      // ensure de-dented ListItems inherit the style of their new ListItem parent
+      tr.doc.nodesBetween(range.$from.pos, range.$to.pos, (node, pos) => {
+        if(isListItemNode(node) || isTaskListItemNode(node)) {
+          tr.setNodeMarkup(pos, undefined/*maintain type*/, { ...node.attrs, [AttributeType.ListStyleType]:  parentListItem.attrs[AttributeType.ListStyleType] });
+        } /* else -- ignore */
+      });
+
       maybeJoinList(tr, tr.doc.resolve(range.end - 2));
     } /* else -- new Range not found, just return the updated Transaction thus far  */
 
