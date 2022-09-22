@@ -1,8 +1,8 @@
 import { Editor } from '@tiptap/core';
-import { Center, forwardRef, Menu, MenuButton, MenuItem, MenuList, Text, Tooltip } from '@chakra-ui/react';
+import { forwardRef, Center, Menu, MenuButton, MenuItem, MenuList, Text, Tooltip } from '@chakra-ui/react';
 import { BiHeading } from 'react-icons/bi';
 
-import { AttributeType, getParentNode, HeadingLevel, isHeadingLevel, isHeadingNode, isNumber, SelectionDepth } from '@ureeka-notebook/web-service';
+import { getParentNode, HeadingLevel, isHeadingLevel, isHeadingNode, isNumber, AttributeType, SelectionDepth } from '@ureeka-notebook/web-service';
 
 import { toolItemCommandWrapper } from 'notebookEditor/command/util';
 import { ACTIVE_BUTTON_COLOR, ICON_BUTTON_CLASS } from 'notebookEditor/theme/theme';
