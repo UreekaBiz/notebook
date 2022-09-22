@@ -1,9 +1,10 @@
 import { AiOutlineClockCircle } from 'react-icons/ai';
 
-import { getSelectedNode, isAsyncNode, isDemoAsyncNode, AttributeType, NodeName } from '@ureeka-notebook/web-service';
+import { getSelectedNode, getParentNode, isAsyncNode, isDemoAsyncNode, isListItemContentNode, AttributeType, NodeName } from '@ureeka-notebook/web-service';
 
 import { toolItemCommandWrapper } from 'notebookEditor/command/util';
 import { CodeBlockReferencesChipSelector } from 'notebookEditor/extension/codeblock/toolbar/CodeBlockReferencesChipSelector';
+import { shouldShowToolItemInsideList } from 'notebookEditor/extension/list/util';
 import { SliderToolItem } from 'notebookEditor/extension/shared/component/SliderToolItem';
 import { Toolbar, ToolItem } from 'notebookEditor/toolbar/type';
 
@@ -30,6 +31,13 @@ export const demoAsyncNodeToolItem: ToolItem = {
     if(isAsyncNode(parentNode)) return true/*(SEE: comment above)*/;
 
     return false/*enabled*/;
+  },
+  shouldShow: (editor, depth) => {
+    if(isListItemContentNode(getParentNode(editor.state.selection))) {
+      return shouldShowToolItemInsideList(editor.state, depth);
+    } /* else -- not inside ListItemContent */
+
+    return depth === undefined || editor.state.selection.$anchor.depth === depth;/*direct parent*/
   },
   onClick: (editor, depth) => toolItemCommandWrapper(editor, depth, insertAndSelectDemoAsyncNodeCommand),
 };
