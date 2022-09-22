@@ -49,7 +49,7 @@ export class DedentListDocumentUpdate implements AbstractDocumentUpdate {
     if(range) {
       // ensure de-dented ListItems inherit the style of their new ListItem parent
       tr.doc.nodesBetween(range.$from.pos, range.$to.pos, (node, pos) => {
-        if(isListItemNode(node) || isTaskListItemNode(node)) {
+        if(isListItemNode(node)) {
           tr.setNodeMarkup(pos, undefined/*maintain type*/, { ...node.attrs, [AttributeType.ListStyleType]:  parentListItem.attrs[AttributeType.ListStyleType] });
         } /* else -- ignore */
       });

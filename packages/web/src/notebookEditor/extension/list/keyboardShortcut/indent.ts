@@ -1,7 +1,7 @@
 import { Fragment, Node as ProseMirrorNode, NodeRange, ResolvedPos, Slice } from 'prosemirror-model';
 import { EditorState, TextSelection, Transaction } from 'prosemirror-state';
 
-import { isListItemNode, isTaskListItemNode, AbstractDocumentUpdate, AttributeType, Command, NotebookSchemaType } from '@ureeka-notebook/web-service';
+import { isListItemNode, AbstractDocumentUpdate, AttributeType, Command, NotebookSchemaType } from '@ureeka-notebook/web-service';
 
 import { isListNode } from '../util';
 import { getListItemRange } from './util';
@@ -47,7 +47,7 @@ export class IndentListDocumentUpdate implements AbstractDocumentUpdate {
       unselectedSlice.content.descendants((descendant) => {
         if(firstUnselectedItem) return false/*already found*/;
 
-        if((isListItemNode(descendant) || isTaskListItemNode(descendant))) {
+        if((isListItemNode(descendant))) {
           firstUnselectedItem = descendant;
         } /* else -- ignore */
 
@@ -55,7 +55,7 @@ export class IndentListDocumentUpdate implements AbstractDocumentUpdate {
       });
 
       selectedSlice.content.descendants((descendant) => {
-        if(isListItemNode(descendant) || isTaskListItemNode(descendant)) {
+        if(isListItemNode(descendant)) {
           descendant.attrs = { ...descendant.attrs, [AttributeType.ListStyleType]: firstUnselectedItem?.attrs[AttributeType.ListStyleType] };
         } /* else -- do not modify attributes */
       });
