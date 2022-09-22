@@ -2,7 +2,7 @@ import { Slice, Fragment, NodeType, NodeRange } from 'prosemirror-model';
 import { EditorState, Transaction } from 'prosemirror-state';
 import { canSplit, findWrapping, liftTarget, ReplaceAroundStep } from 'prosemirror-transform';
 
-import { isListItemNode, isListItemNodeType, AbstractDocumentUpdate, Attributes, Command, NotebookSchemaType } from '@ureeka-notebook/web-service';
+import { isListItemNode, isListItemNodeType, AbstractDocumentUpdate, Attributes, AttributeType, Command, NotebookSchemaType } from '@ureeka-notebook/web-service';
 
 // ********************************************************************************
 // REF: https://github.com/ProseMirror/prosemirror-schema-list/blob/master/src/schema-list.ts
@@ -120,25 +120,35 @@ export class LiftListItemDocumentUpdate implements AbstractDocumentUpdate {
     const range = $from.blockRange($to, node => node.childCount > 0/*not empty*/ && node.firstChild!.type == this.listItemType);
     if(!range) return false;
 
-    if($from.node(range.depth - 1).type == this.listItemType) {
-      // inside a parent List
-      return liftToOuterList(editorState, this.listItemType, range);
+    const nearestListItem = $from.node(range.depth - 1);
+    if(nearestListItem.type == this.listItemType) {
+      // inside a parent List, ensure lifted ListItems inherit the style
+      // of their new ListItem parent, by computing the depth
+      // at which the style should be copied
+      tr.doc.nodesBetween(range.$from.pos, range.$to.pos, (node, pos) => {
+        const { depth: nodeDepth } = tr.doc.resolve(pos);
+        const liftedDepth = tr.selection.$from.depth-2/*account for ListItemContent and ListItem*/;
+
+        if(isListItemNode(node) && (nodeDepth === liftedDepth)) {
+          tr.setNodeMarkup(pos, undefined/*maintain type*/, { ...node.attrs, [AttributeType.ListStyleType]: nearestListItem.attrs[AttributeType.ListStyleType] });
+        } /* else -- ignore */
+      });
+      return liftToOuterList(tr, this.listItemType, range);
     } else {
       // outer List node
-      return liftOutOfList(editorState, range);
+      return liftOutOfList(tr, range);
     }
   }
 }
-const liftToOuterList = (state: EditorState, itemType: NodeType, range: NodeRange) => {
-  const tr = state.tr;
+const liftToOuterList = (tr: Transaction, itemType: NodeType, range: NodeRange) => {
   const end = range.end;
   const endOfList = range.$to.end(range.depth);
 
   if(end < endOfList) {
     // there are siblings after the lifted items, which must become
-    // children of the last item
-    tr.step(new ReplaceAroundStep(end - 1, endOfList, end, endOfList,
-                                  new Slice(Fragment.from(itemType.create(null, range.parent.copy())), 1, 0), 1, true));
+    // children of the lifted item
+    const liftedItemsSlice = new Slice(Fragment.from(itemType.create(null, range.parent.copy())), 1, 0);
+    tr.step(new ReplaceAroundStep(end - 1, endOfList, end, endOfList, liftedItemsSlice, 1, true));
     range = new NodeRange(tr.doc.resolve(range.$from.pos), tr.doc.resolve(endOfList), range.depth);
   }
 
@@ -149,8 +159,7 @@ const liftToOuterList = (state: EditorState, itemType: NodeType, range: NodeRang
 
   return tr/*updated*/;
 };
-const liftOutOfList = (state: EditorState, range: NodeRange) => {
-  const tr = state.tr;
+const liftOutOfList = (tr: Transaction, range: NodeRange) => {
   const list = range.parent;
 
   // merge the ListItem into a single big ListItem
