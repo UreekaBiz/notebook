@@ -120,5 +120,8 @@ export const getHeadingThemeValue = (attribute: AttributeType.FontSize | Attribu
     case HeadingLevel.One: return customSelectors[CustomSelector.HeadingLevelOne][attribute];
     case HeadingLevel.Two: return customSelectors[CustomSelector.HeadingLevelTwo][attribute];
     case HeadingLevel.Three: return customSelectors[CustomSelector.HeadingLevelThree][attribute];
+    case HeadingLevel.Four: return customSelectors[CustomSelector.HeadingLevelFour][attribute];
+    case HeadingLevel.Five: return customSelectors[CustomSelector.HeadingLevelFive][attribute];
+    case HeadingLevel.Six: return customSelectors[CustomSelector.HeadingLevelSix][attribute];
   }
 };

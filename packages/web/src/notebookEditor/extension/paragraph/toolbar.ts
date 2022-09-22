@@ -7,7 +7,7 @@ import { codeBlockToolItem } from 'notebookEditor/extension/codeblock/toolbar';
 import { codeBlockReferenceToolItem } from 'notebookEditor/extension/codeBlockReference/toolbar';
 import { demo2AsyncNodeToolItem } from 'notebookEditor/extension/demo2AsyncNode/toolbar';
 import { demoAsyncNodeToolItem } from 'notebookEditor/extension/demoAsyncNode/toolbar';
-import { heading1, heading2, heading3 } from 'notebookEditor/extension/heading/toolbar';
+import { headingLevelToolItem } from 'notebookEditor/extension/heading/toolbar/toolbar';
 import { imageToolItem } from 'notebookEditor/extension/image/toolbar';
 import { linkToolItem } from 'notebookEditor/extension/link/toolbar';
 import { bulletListToolItem, orderedListToolItem, taskListToolItem } from 'notebookEditor/extension/list/toolbar';
@@ -39,15 +39,11 @@ export const ParagraphToolbar: Toolbar = {
       linkToolItem,
     ],
     [
+      headingLevelToolItem,
       demo2AsyncNodeToolItem,
       demoAsyncNodeToolItem,
       codeBlockToolItem,
       codeBlockReferenceToolItem,
-      heading1,
-      heading2,
-      heading3,
-    ],
-    [
       imageToolItem,
     ],
     [

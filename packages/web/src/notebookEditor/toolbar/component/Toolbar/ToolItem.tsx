@@ -2,10 +2,9 @@ import { useToast, Center, Tooltip } from '@chakra-ui/react';
 import { Editor } from '@tiptap/core';
 import { useCallback } from 'react';
 
-import { NodeName, SelectionDepth } from '@ureeka-notebook/web-service';
+import { SelectionDepth } from '@ureeka-notebook/web-service';
 
 import ErrorBoundary from 'core/component/ErrorBoundary';
-import { isHeadingToolActive } from 'notebookEditor/extension/heading/toolbar';
 import { ACTIVE_BUTTON_COLOR, ICON_BUTTON_CLASS } from 'notebookEditor/theme/theme';
 import { ToolItem, TOOL_ITEM_DATA_TYPE } from 'notebookEditor/toolbar/type';
 
@@ -88,7 +87,6 @@ export const ToolItemComponent: React.FC<Props> = (props) => {
 const isToolActive = (editor: Editor, depth: SelectionDepth, tool: ToolItem) => {
   // NOTE: This is a special case since Heading node uses multiple Tool Items for
   //       the same kind of node only differentiated by the Level attribute.
-  if(tool.name.includes(NodeName.HEADING)) return isHeadingToolActive(editor, tool.name);
   if(tool.toolType === 'component') return false/*no active state for components*/;
 
   // Use component implementation if defined

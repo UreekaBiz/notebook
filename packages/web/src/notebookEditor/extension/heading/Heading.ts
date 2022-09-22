@@ -41,7 +41,7 @@ export const Heading = Node.create<HeadingOptions, NoStorage>({
   },
   addOptions() {
     return {
-      levels: [HeadingLevel.One, HeadingLevel.Two, HeadingLevel.Three],
+      levels: [HeadingLevel.One, HeadingLevel.Two, HeadingLevel.Three, HeadingLevel.Four, HeadingLevel.Five, HeadingLevel.Six],
       HTMLAttributes: {/*currently nothing*/},
     };
   },
@@ -54,7 +54,7 @@ export const Heading = Node.create<HeadingOptions, NoStorage>({
   },
 
   // -- Plugin --------------------------------------------------------------------
-  addProseMirrorPlugins() { return [ HeadingPlugin()]; },
+  addProseMirrorPlugins() { return [HeadingPlugin()]; },
 
   // -- Input ---------------------------------------------------------------------
   // Create a Heading Node if the user types '#' a certain amount of times and

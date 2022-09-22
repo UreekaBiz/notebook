@@ -61,7 +61,7 @@ export const HeadingNodeRendererSpec: NodeRendererSpec<HeadingAttributes> = {
 };
 
 // == Type ========================================================================
-export enum HeadingLevel { One = 1, Two = 2, Three = 3 }
+export enum HeadingLevel { One = 1, Two = 2, Three = 3, Four = 4, Five = 5, Six = 6 }
 export const isHeadingLevel = (level: number): level is HeadingLevel => level in HeadingLevel;
 
 /** Gets the heading level from a H1, H2 or H3 tag. This tag is case insensitive. */
