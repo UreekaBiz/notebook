@@ -1,8 +1,8 @@
 import { Editor } from '@tiptap/core';
-import { Center, forwardRef, Menu, MenuButton, MenuItem, MenuList, Tooltip } from '@chakra-ui/react';
+import { Center, forwardRef, Menu, MenuButton, MenuItem, MenuList, Text, Tooltip } from '@chakra-ui/react';
 import { BiHeading } from 'react-icons/bi';
 
-import { AttributeType, HeadingLevel, isHeadingLevel, isNumber, NodeName, SelectionDepth } from '@ureeka-notebook/web-service';
+import { AttributeType, getParentNode, HeadingLevel, isHeadingLevel, isHeadingNode, isNumber, SelectionDepth } from '@ureeka-notebook/web-service';
 
 import { toolItemCommandWrapper } from 'notebookEditor/command/util';
 import { ACTIVE_BUTTON_COLOR, ICON_BUTTON_CLASS } from 'notebookEditor/theme/theme';
@@ -24,7 +24,8 @@ const applyHeading = (editor: Editor, depth: SelectionDepth, newLevel: number) =
 
 // == Component ===================================================================
 export const HeadingLevelToolItem: React.FC<EditorToolComponentProps> = ({ editor, depth }) => {
-  const isButtonActive = editor.isActive(NodeName.HEADING);
+  const parent = getParentNode(editor.state.selection);
+  const isButtonActive = isHeadingNode(parent);
   const shouldBeDisabled = depth !== 1/*only show on the direct parent node of a TextNode*/;
 
   // == Handler ===================================================================
@@ -58,7 +59,9 @@ export const HeadingLevelToolItem: React.FC<EditorToolComponentProps> = ({ edito
                 command={`(⌘ + ⌥ + ${option.value})`}
                 onClick={() => handleChange(option.value)}
               >
-                {`Heading ${option.value}`}
+                <Text decoration={isHeadingNode(parent) && parent.attrs[AttributeType.Level] === (optionIndex+1/*account for 0 indexing*/) ? 'underline' : ''/*do not specify*/}>
+                  {`Heading ${option.value}`}
+                </Text>
               </MenuItem>
             )}
           </MenuList>
