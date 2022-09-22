@@ -54,6 +54,12 @@ export const HeadingNodeRendererSpec: NodeRendererSpec<HeadingAttributes> = {
         return 'h2';
       case HeadingLevel.Three:
         return 'h3';
+      case HeadingLevel.Four:
+        return 'h4';
+      case HeadingLevel.Five:
+        return 'h5';
+      case HeadingLevel.Six:
+        return 'h6';
     }
   },
 
