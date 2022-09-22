@@ -47,9 +47,12 @@ export class DedentListDocumentUpdate implements AbstractDocumentUpdate {
     tr.lift(range, target);
     range = getListItemRange(tr.selection);
     if(range) {
-      // ensure de-dented ListItems inherit the style of their new ListItem parent
-      tr.doc.nodesBetween(range.$from.pos, range.$to.pos, (node, pos) => {
-        if(isListItemNode(node)) {
+      // ensure de-dented ListItems inherit the style of their new ListItem parent,
+      // by computing the depth at which the style should be copied
+      tr.doc.nodesBetween(range.$from.pos, range.$to.pos, (node, pos, parent) => {
+        const { depth: nodeDepth } = tr.doc.resolve(pos);
+        const dedentDepth = tr.selection.$from.depth-2/*account for ListItemContent and ListItem*/;
+        if(isListItemNode(node) &&  (nodeDepth === dedentDepth)) {
           tr.setNodeMarkup(pos, undefined/*maintain type*/, { ...node.attrs, [AttributeType.ListStyleType]:  parentListItem.attrs[AttributeType.ListStyleType] });
         } /* else -- ignore */
       });

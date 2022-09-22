@@ -41,7 +41,7 @@ export class IndentListDocumentUpdate implements AbstractDocumentUpdate {
     // make the selectedSlice inherit the styles of the unselected
     // Slice if it exists, so that the indented Items get the styles
     // of the List they are incorporating themselves into
-    if(unselectedSlice) {
+    if(unselectedSlice && unselectedSlice.content.size > 0) {
       // get the first Item in the unselectedSlice
       let firstUnselectedItem: ProseMirrorNode | undefined = undefined/*default*/;
       unselectedSlice.content.descendants((descendant) => {
@@ -59,8 +59,20 @@ export class IndentListDocumentUpdate implements AbstractDocumentUpdate {
           descendant.attrs = { ...descendant.attrs, [AttributeType.ListStyleType]: firstUnselectedItem?.attrs[AttributeType.ListStyleType] };
         } /* else -- do not modify attributes */
       });
-    } /* else -- no unselected slice */
-
+    } else {
+      // no unselectedSlice from which to take the styles, take them from the nearest ListItem above
+      let nearestListItemAbove: ProseMirrorNode | undefined = undefined;
+      previousListItem.descendants((descendant) => {
+        if(isListItemNode(descendant)) {
+          nearestListItemAbove = descendant;
+        } /* else -- ignore */
+      });
+      selectedSlice.content.descendants((descendant) => {
+        if(isListItemNode(descendant)) {
+          descendant.attrs = { ...descendant.attrs, [AttributeType.ListStyleType]: nearestListItemAbove?.attrs[AttributeType.ListStyleType] };
+        } /* else -- ignore */
+      });
+    }
 
     const newPreviousListItemContent: Fragment = previousListItem.content
       .append(Fragment.fromArray([selectedList.copy(selectedSlice.content)]))
