@@ -134,13 +134,6 @@ ul[data-node-type="bulletList"] {
   margin-left: 1em;
   padding-left: 1em;
 }
-ul[data-node-type="bulletList"] > li[data-node-type="listItem"] {
-  /*
-    ensure ListItems that are children of BulletLists have the default
-    style regardless of where they are located
-  */
-  list-style-type: disc !important;
-}
 
 /* .. TaskList ................................................................. */
 ul[data-node-type="taskList"] {
