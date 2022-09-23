@@ -72,7 +72,7 @@ export const isHeadingLevel = (level: number): level is HeadingLevel => level in
 
 /** Gets the heading level from a H1, H2 or H3 tag. This tag is case insensitive. */
 export const getHeadingLevelFromTag = (tag: string): HeadingLevel | undefined => {
-  const match = tag.match(/^h([1-3])$/i);
+  const match = tag.match(/^h([1-6])$/i);
   if(!match) return undefined/*invalid heading level*/;
 
   const level = parseInt(match[1]/*second element is the one in the group selection from the regex*/);
