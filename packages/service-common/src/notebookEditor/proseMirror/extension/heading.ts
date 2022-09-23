@@ -70,7 +70,7 @@ export const HeadingNodeRendererSpec: NodeRendererSpec<HeadingAttributes> = {
 export enum HeadingLevel { One = 1, Two = 2, Three = 3, Four = 4, Five = 5, Six = 6 }
 export const isHeadingLevel = (level: number): level is HeadingLevel => level in HeadingLevel;
 
-/** Gets the heading level from a H1, H2 or H3 tag. This tag is case insensitive. */
+/** Gets the heading level from a H1-H6 tag. This tag is case insensitive. */
 export const getHeadingLevelFromTag = (tag: string): HeadingLevel | undefined => {
   const match = tag.match(/^h([1-6])$/i);
   if(!match) return undefined/*invalid heading level*/;
