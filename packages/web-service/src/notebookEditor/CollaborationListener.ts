@@ -29,7 +29,7 @@ type CollaborationDelay = Readonly<{
   /** time in millis to delay before writing. No delay if <= 0 */
   writeDelayMs: number;
 }>;
-const collaborationDelay: CollaborationDelay = { readDelayMs: 5000, writeDelayMs: 5000 };
+const collaborationDelay: CollaborationDelay = { readDelayMs: 0, writeDelayMs: 0 };
 
 // ================================================================================
 // handles the collaboration of the associated Editor with Firestore. The basic
