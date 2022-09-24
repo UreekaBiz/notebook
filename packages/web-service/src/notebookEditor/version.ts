@@ -37,7 +37,7 @@ export const getVersionsFromIndex = async (notebookId: NotebookIdentifier, index
 // writes the batch of ProseMirror Steps as NotebookVersions
 // SEE: @cloud-functions: notebookEditor/version.ts
 export const writeVersions = async (userId: UserIdentifier, clientId: ClientIdentifier, schemaVersion: NotebookSchemaVersion, notebookId: NotebookIdentifier, startingIndex: number, pmSteps: ProseMirrorStep[]): Promise<boolean> => {
-// log.debug(`Start step transaction for startingIndex (${startingIndex})`);
+log.debug(`Start step transaction for startingIndex (${startingIndex})`);
   return runTransaction(firestore, async transaction => {
     // NOTE: only checks against first Version since if that doesn't exist then no
     //       other Version can exist by definition (since monotonically increasing)
@@ -47,7 +47,7 @@ export const writeVersions = async (userId: UserIdentifier, clientId: ClientIden
     const firstVersionId = generateNotebookVersionIdentifier(startingIndex),
           firstVersionRef = notebookVersionDocument(notebookId, firstVersionId);
     const snapshot = await transaction.get(firstVersionRef);
-// log.debug(`Trying to write Notebook Versions ${startingIndex} - ${startingIndex + pmSteps.length - 1}`);
+log.debug(`Trying to write Notebook Versions ${startingIndex} - ${startingIndex + pmSteps.length - 1}`);
     if(snapshot.exists()) return false/*abort -- NotebookVersion with startingIndex already exists*/;
 
     pmSteps.forEach((pmStep, index) => {
