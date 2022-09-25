@@ -430,6 +430,9 @@ log.debug(`Editor at version ${editorIndex} with last read ${this.lastReadIndex}
           }
         } /* else -- PM Steps were written */
 
+        // NOTE: the successfully-written-steps case does *not* cause `hasPendingReads = true`
+        //       since this client knows what the latest sequence value is (since it
+        //       just wrote it) and can continue to write new versions until it fails
         log.debug(`Wrote Notebook Versions ${(pmSteps.length <= 1) ? `${this.lastWriteIndex + 1}` : `from ${this.lastWriteIndex + 1} to ${this.lastWriteIndex + pmSteps.length}`} ${this.logContext()}.`);
         this.lastWriteIndex += pmSteps.length/*increment by number of Steps written*/;
       }
