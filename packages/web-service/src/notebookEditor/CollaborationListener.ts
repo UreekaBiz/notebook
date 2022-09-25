@@ -392,7 +392,7 @@ export class CollaborationListener {
       //       changes from other clients then the last read index may be more
       //       than the last write index so it is advanced
       let lastReadIndex = this.lastReadIndex/*record what was last read before writing (to know if read while writing)*/;
-      if(lastReadIndex > this.lastWriteIndex) this.lastWriteIndex = lastReadIndex/*update last write index*/;
+      if(lastReadIndex > this.lastWriteIndex) this.lastWriteIndex = lastReadIndex/*update last write index since read more recent (from other clients)*/;
       let sendableStep;
       while(sendableStep = collab.sendableSteps(this.editor.view.state)) {
         if(sendableStep.steps.length < 1) { log.warn(`Expected ProseMirror Steps but found none ${this.logContext()}.`); return/*nothing to do*/; }
