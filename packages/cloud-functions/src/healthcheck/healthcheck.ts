@@ -68,6 +68,8 @@ const endpointNames = [
   'notebookEditorDemo2AsyncNodeExecute',
 
   'reactionToggle',
+
+  'versionWrite',
 ];
 
 // ================================================================================

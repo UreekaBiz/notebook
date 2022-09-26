@@ -24,6 +24,7 @@ export enum ServiceLogger {
   REACTION = 'service.reaction',
   USER = 'service.user',
   UTIL = 'service.util',
+  VERSION = 'service.version',
 }
 
 export enum Logger {
