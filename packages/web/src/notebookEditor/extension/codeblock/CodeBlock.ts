@@ -1,10 +1,10 @@
 import { textblockTypeInputRule, Node } from '@tiptap/core';
 
-import { generateNodeId, getNodeOutputSpec, isCodeBlockNode, AttributeType, CodeBlockNodeSpec, CodeBlockType, CreateBlockNodeDocumentUpdate, NodeName, SetAttributeType, DATA_NODE_TYPE } from '@ureeka-notebook/web-service';
+import { blockArrowDownCommand, blockArrowUpCommand, blockBackspaceCommand, generateNodeId, getNodeOutputSpec, isCodeBlockNode, AttributeType, CodeBlockNodeSpec, CodeBlockType, CreateBlockNodeDocumentUpdate, NodeName, SetAttributeType, DATA_NODE_TYPE } from '@ureeka-notebook/web-service';
 
 import { applyDocumentUpdates } from 'notebookEditor/command/update';
+import { shortcutCommandWrapper } from 'notebookEditor/command/util';
 import { setAttributeParsingBehavior, uniqueIdParsingBehavior } from 'notebookEditor/extension/util/attribute';
-import { handleBlockArrowDown, handleBlockArrowUp, handleBlockBackspace } from 'notebookEditor/extension/util/node';
 import { NoOptions } from 'notebookEditor/model/type';
 
 import { CodeBlockController } from './nodeView/controller';
@@ -41,20 +41,18 @@ export const CodeBlock = Node.create<NoOptions, CodeBlockStorage>({
   addKeyboardShortcuts() {
     return {
       // create a CodeBlock
-      // NOTE: current implementation adds a CodeBlock below the
-      //       current Block instead of splitting it on purpose
-      'Shift-Mod-c': () => applyDocumentUpdates(this.editor, [ new CreateBlockNodeDocumentUpdate(NodeName.CODEBLOCK, { [AttributeType.Id]: generateNodeId() })]),
-      'Shift-Mod-C': () => applyDocumentUpdates(this.editor, [ new CreateBlockNodeDocumentUpdate(NodeName.CODEBLOCK, { [AttributeType.Id]: generateNodeId() })]),
+      'Shift-Mod-c': () => applyDocumentUpdates(this.editor, [new CreateBlockNodeDocumentUpdate(NodeName.CODEBLOCK, { [AttributeType.Id]: generateNodeId() })]),
+      'Shift-Mod-C': () => applyDocumentUpdates(this.editor, [new CreateBlockNodeDocumentUpdate(NodeName.CODEBLOCK, { [AttributeType.Id]: generateNodeId() })]),
 
-      // remove CodeBlock when at start of document or code block is empty
-      'Backspace': ({ editor }) => handleBlockBackspace(editor, NodeName.CODEBLOCK),
+      // remove CodeBlock when at start of document or CodeBlock is empty
+      'Backspace': () => shortcutCommandWrapper(this.editor, blockBackspaceCommand(NodeName.CODEBLOCK)),
 
       // set GapCursor if necessary
-      'ArrowUp': ({ editor }) => handleBlockArrowUp(editor, NodeName.CODEBLOCK),
-      'ArrowDown': ({ editor }) => handleBlockArrowDown(editor, NodeName.CODEBLOCK),
+      'ArrowUp': () => shortcutCommandWrapper(this.editor, blockArrowUpCommand(NodeName.CODEBLOCK)),
+      'ArrowDown': () => shortcutCommandWrapper(this.editor, blockArrowDownCommand(NodeName.CODEBLOCK)),
 
       // exit Node on shift enter, inserting a Paragraph below
-      'Shift-Enter': ({ editor }) => editor.commands.exitCode(),
+      'Shift-Enter': () => this.editor.commands.exitCode(),
     };
   },
 

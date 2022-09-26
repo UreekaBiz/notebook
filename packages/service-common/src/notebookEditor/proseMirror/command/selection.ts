@@ -1,9 +1,13 @@
+import { GapCursor } from 'prosemirror-gapcursor';
 import { Node as ProseMirrorNode, ResolvedPos } from 'prosemirror-model';
 import { EditorState, NodeSelection, Selection, TextSelection, Transaction } from 'prosemirror-state';
 import { EditorView } from 'prosemirror-view';
 
 import { minFromMax } from '../../../util/number';
+import { NodeName } from '../node';
 import { NotebookSchemaType } from '../schema';
+import { isGapCursorSelection } from '../selection';
+import { ClearNodesDocumentUpdate } from './node';
 import { AbstractDocumentUpdate, Command } from './type';
 import { findCutBefore } from './util';
 
@@ -90,6 +94,107 @@ export class DeleteSelectionDocumentUpdate implements AbstractDocumentUpdate {
     if(editorState.selection.empty) return false;
     tr.deleteSelection().scrollIntoView();
     return tr;
+  }
+}
+
+// -- Block Selection -------------------------------------------------------------
+/** ensure the Block at the Selection is deleted on Backspace if its empty */
+export const blockBackspaceCommand = (blockNodeName: NodeName): Command => (state, dispatch) => {
+  const updatedTr =  new BlockBackspaceDocumentUpdate(blockNodeName).update(state, state.tr);
+  if(updatedTr) {
+    dispatch(updatedTr);
+    return true/*Command executed*/;
+  } /* else -- Command cannot be executed */
+
+  return false/*not executed*/;
+};
+export class BlockBackspaceDocumentUpdate implements AbstractDocumentUpdate {
+  public constructor(private readonly blockNodeName: NodeName) {/*nothing additional*/ }
+
+  /*
+   * modify the given Transaction such that the Block at the Selection
+   * is deleted on Backspace if it is empty and return it
+   */
+  public update(editorState: EditorState<NotebookSchemaType>, tr: Transaction<NotebookSchemaType>) {
+    const { empty, $anchor, anchor } = editorState.selection,
+    isAtStartOfDoc = anchor === 1/*first position inside the node, at start of Doc*/;
+
+    if(!empty || $anchor.parent.type.name !== this.blockNodeName) return false/*let event be handled elsewhere*/;
+    if(isAtStartOfDoc || !$anchor.parent.textContent.length) {
+      const clearedNodesUpdatedTr = new ClearNodesDocumentUpdate().update(editorState, tr);
+      return clearedNodesUpdatedTr/*updated*/;
+    } /* else -- no need to delete blockNode */
+
+    return false/*let Backspace event be handled elsewhere*/;
+  }
+}
+
+/**
+ * ensure correct arrow up behavior inside a Block Node by creating a new
+ * {@link GapCursor} selection when the arrowUp key is pressed if the selection
+ * is at the start of it
+ */
+export const blockArrowUpCommand = (blockNodeName: NodeName): Command => (state, dispatch) => {
+  const updatedTr =  new BlockArrowUpDocumentUpdate(blockNodeName).update(state, state.tr);
+  if(updatedTr) {
+    dispatch(updatedTr);
+    return true/*Command executed*/;
+  } /* else -- Command cannot be executed */
+
+  return false/*not executed*/;
+};
+export class BlockArrowUpDocumentUpdate implements AbstractDocumentUpdate {
+  public constructor(private readonly blockNodeName: NodeName) {/*nothing additional*/ }
+
+  /*
+   * modify the given Transaction such that the Selection becomes a
+   * GapCursor Selection when the arrowUp key is pressed if the Selection
+   * is at the start of it and return it
+   */
+  public update(editorState: EditorState<NotebookSchemaType>, tr: Transaction<NotebookSchemaType>) {
+    const { selection } = editorState;
+    if(selection.$anchor.parent.type.name !== this.blockNodeName) return false/*let event be handled elsewhere*/;
+
+    const isAtStart = selection.anchor === 1/*at the start of the doc*/;
+    if(!isAtStart) return false/*no need to set GapCursor*/;
+
+    tr.setSelection(new GapCursor(tr.doc.resolve(0/*at the start of the doc*/)));
+    return tr/*updated*/;
+  }
+}
+
+/**
+ * ensure correct arrow up behavior inside a Block Node by creating a new
+ * {@link GapCursor} selection when the arrowDown is pressed if the selection
+ * is at the end of it
+ */
+export const blockArrowDownCommand = (blockNodeName: NodeName): Command => (state, dispatch) => {
+  const updatedTr =  new BlockArrowDownDocumentUpdate(blockNodeName).update(state, state.tr);
+  if(updatedTr) {
+    dispatch(updatedTr);
+    return true/*Command executed*/;
+  } /* else -- Command cannot be executed */
+
+  return false/*not executed*/;
+};
+export class BlockArrowDownDocumentUpdate implements AbstractDocumentUpdate {
+  public constructor(private readonly blockNodeName: NodeName) {/*nothing additional*/ }
+
+  /*
+   * modify the given Transaction such that the Selection becomes a
+   * GapCursor Selection when the arrowDown key is pressed if the Selection
+   * is at the start of it and return it
+   */
+  public update(editorState: EditorState<NotebookSchemaType>, tr: Transaction<NotebookSchemaType>) {
+    const { selection } = editorState;
+    if(selection.$anchor.parent.type.name !== this.blockNodeName) return false/*node does not allow GapCursor*/;
+    if(isGapCursorSelection(selection) && (selection.anchor !== 0)) return false/*selection already a GapCursor*/;
+
+    const isAtEnd = selection.anchor === editorState.doc.nodeSize - 3/*past the Node, including the doc tag*/;
+    if(!isAtEnd) return false/*no need to set GapCursor*/;
+
+    tr.setSelection(new GapCursor(tr.doc.resolve(editorState.doc.nodeSize - 2/*past the Node*/)));
+    return tr/*updated*/;
   }
 }
 
