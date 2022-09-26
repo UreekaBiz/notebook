@@ -57,7 +57,7 @@ export const handleBlockBackspace = (editor: Editor, nodeName: NodeName) => {
 
   if(!empty || $anchor.parent.type.name !== nodeName) return false/*let event be handled elsewhere*/;
   if(isAtStartOfDoc || !$anchor.parent.textContent.length) {
-    return clearNodesCommand()(editor.state, editor.view.dispatch);
+    return clearNodesCommand(editor.state, editor.view.dispatch);
   } /* else -- no need to delete blockNode */
 
   return false/*let event be handled elsewhere*/;

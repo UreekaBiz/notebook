@@ -84,7 +84,7 @@ export class CreateBlockNodeDocumentUpdate implements AbstractDocumentUpdate {
 
 // -- Clear -----------------------------------------------------------------------
 /** clear the Nodes in the current Block */
-export const clearNodesCommand = (): Command => (state, dispatch) => {
+export const clearNodesCommand: Command = (state, dispatch) => {
   const updatedTr =  new ClearNodesDocumentUpdate().update(state, state.tr);
   if(updatedTr) {
     dispatch(updatedTr);

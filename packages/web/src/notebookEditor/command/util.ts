@@ -4,6 +4,7 @@ import { EditorView } from 'prosemirror-view';
 import { Command, SelectionDepth } from '@ureeka-notebook/web-service';
 
 // ********************************************************************************
+// == Wrapper =====================================================================
 /**
  * Executes the given {@link Command} with the current {@link Editor} props.
  * Used by Keyboard Shortcuts
@@ -33,4 +34,18 @@ const getCommandPropsFromEditor = (editor: Editor) => ({
 const focusViewAndReturn = (commandResult: boolean, view: EditorView) => {
   setTimeout(() => view.focus()/*immediately after the view updates*/);
   return commandResult;
+};
+
+// == Apply =======================================================================
+/**
+ * apply the first Command whose effects are valid from the given array of
+ * Commands. These Commands may be ProseMirror Commands or custom Commands
+ */
+export const applyFirstValidCommand = (editor: Editor, commands: Command[]): boolean => {
+  for(let i = 0; i < commands.length; i++) {
+    if(commands[i](editor.state, editor.view.dispatch, editor.view)) {
+      return true/*Command applied*/;
+    }
+  }
+  return false/*no Command was valid*/;
 };

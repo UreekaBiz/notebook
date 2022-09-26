@@ -133,7 +133,7 @@ export class SelectNodeBackwardDocumentUpdate implements AbstractDocumentUpdate 
 }
 
 // ................................................................................
-/** @returns the node before the current {@link Selection}'s anchor */
+/** return the Node before the current {@link Selection}'s anchor */
 const getNodeBefore = (selection: Selection) => {
   const { nodeBefore } = selection.$anchor;
   return nodeBefore;
