@@ -1,6 +1,6 @@
 import { CollectionReference } from 'firebase-admin/firestore';
 
-import { LabelIdentifier, LabelPublished_Storage, Label_Storage, LABELS, LABEL_PUBLISHEDS, nameof } from '@ureeka-notebook/service-common';
+import { nameof, LabelIdentifier, LabelPublished_Storage, Label_Storage, LABELS, LABEL_PUBLISHEDS } from '@ureeka-notebook/service-common';
 
 import { firestore } from '../firebase';
 
