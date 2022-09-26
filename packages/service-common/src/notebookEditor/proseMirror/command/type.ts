@@ -1,4 +1,5 @@
 import { EditorState, Transaction } from 'prosemirror-state';
+import { EditorView } from 'prosemirror-view';
 
 import { NotebookSchemaType } from '../schema';
 
@@ -11,7 +12,7 @@ import { NotebookSchemaType } from '../schema';
 // Transaction dispatched by a Command goes through one DocumentUpdate. Multiple
 // DocumentUpdates can be executed in a single operation through the
 // applyDocumentUpdates method (SEE: web/src/command/update.ts)
-export type Command = (state: EditorState, dispatch: (tr: Transaction) => void)
+export type Command = (state: EditorState, dispatch: (tr: Transaction) => void, view?: EditorView)
   => boolean/*indicates whether the command can be performed*/;
 
 // == Update ======================================================================
@@ -21,7 +22,7 @@ export type Command = (state: EditorState, dispatch: (tr: Transaction) => void)
 // through the applyDocumentUpdates method (SEE: web/src/command/update.ts)
 export type DocumentUpdate = Readonly<{
   /** modifies the specified ProseMirror Document */
-  update: (editorState: EditorState<NotebookSchemaType>, tr: Transaction<NotebookSchemaType>) => UpdateResult;
+  update: (editorState: EditorState<NotebookSchemaType>, tr: Transaction<NotebookSchemaType>, view?: EditorView) => UpdateResult;
 }>;
 
 // AbstractDocumentUpdates provide an unified interface that can be used by the
@@ -29,7 +30,7 @@ export type DocumentUpdate = Readonly<{
 // their 'single operation' semantics
 export abstract class AbstractDocumentUpdate implements DocumentUpdate {
   // NOTE: return the modified Transaction so that it can be dispatched by Commands
-  public abstract update(editorState: EditorState<NotebookSchemaType>, tr: Transaction<NotebookSchemaType>): UpdateResult;
+  public abstract update(editorState: EditorState<NotebookSchemaType>, tr: Transaction<NotebookSchemaType>, view?: EditorView): UpdateResult;
 }
 
 // allow maintaining ProseMirror Command 'return' semantics. Whenever a Command or
