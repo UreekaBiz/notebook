@@ -237,7 +237,7 @@ export class JoinBackwardDocumentUpdate implements AbstractDocumentUpdate {
 }
 // -- Util ------------------------------------------------------------------------
 const textblockAt = (node: ProseMirrorNode, side: 'start' | 'end', only = false) => {
-  for(let scan: ProseMirrorNode | undefined | null = node; scan; scan = (side == 'start' ? scan.firstChild : scan.lastChild)) {
+  for(let scan: ProseMirrorNode | undefined | null = node; scan; scan = (side === 'start' ? scan.firstChild : scan.lastChild)) {
     if(scan.isTextblock) return true/*Node is Text Block*/;
     if(only && scan.childCount != 1) return false/*default*/;
   }
@@ -245,7 +245,7 @@ const textblockAt = (node: ProseMirrorNode, side: 'start' | 'end', only = false)
 };
 
 // ................................................................................
-const findCutBefore = ($pos: ResolvedPos): ResolvedPos | null => {
+export const findCutBefore = ($pos: ResolvedPos): ResolvedPos | null => {
   if(!$pos.parent.type.spec.isolating) {
     for(let i=$pos.depth-1/*start with parent of $pos*/; i >= 0; i--) {
       if($pos.index(i) > 0) {
