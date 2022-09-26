@@ -38,7 +38,7 @@ export const createHashtag = async (hashtag: string) => {
         createdBy: SystemUserId/*by definition*/,
         createTimestamp: ServerTimestamp/*server set by contract*/,
       };
-      transaction.set(hashtagDoc, document);
+      transaction.create(hashtagDoc, document)/*explicit create so fails if already exists*/;
 
       return true/*wrote document*/;
     });

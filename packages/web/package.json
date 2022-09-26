@@ -25,7 +25,7 @@
     "@types/node": "18.7.16",
     "@types/react": "18.0.15",
     "@types/react-dom": "18.0.6",
-		"firebase-tools": "11.9.0",
+		"firebase-tools": "11.10.0",
     "typescript": "4.7.4"
 	},
 	"dependencies": {
@@ -40,9 +40,9 @@
 		"compression": "1.7.4",
 		"dotenv": "16.0.2",
 		"feather-icons": "4.29.0",
-		"firebase": "9.9.4",
+		"firebase": "9.10.0",
 		"firebase-admin": "11.0.1",
-		"firebase-functions": "3.23.0",
+		"firebase-functions": "3.24.0",
     "framer-motion": "6.5.1",
 		"helmet": "5.1.1",
     "linkifyjs": "3.0.5",

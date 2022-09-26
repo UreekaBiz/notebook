@@ -81,7 +81,13 @@ export class CollaborationListener {
   private initialized: boolean = false/*by default*/;
 
   //...............................................................................
+  // the last read index via #handleNewVersion()
   private lastReadIndex = NO_NOTEBOOK_VERSION/*default - set on #loadInitialContent()*/;
+
+  // the last written index via #writePendingSteps(). This is needed since the Editor
+  // only commits what has been read but more may have already been written. Until
+  // the last read index catches up with the last written index, there are written
+  // changes that have not been committed to the Editor.
   private lastWriteIndex = NO_NOTEBOOK_VERSION/*default - set on #loadInitialContent()*/;
 
   //...............................................................................
@@ -96,7 +102,7 @@ export class CollaborationListener {
   // if a Version is known to exist in Firestore but hasn't been read yet then
   // this flag is set to true to wait for that Version to be read. (This is set
   // while trying to write NotebookVersions to Firestore.)
-  private isWaitingForNewVersions: boolean = false/*by contract*/;
+  private hasPendingReads: boolean = false/*by contract*/;
 
   // Observable that emits when a change has been made to the Editor but that change
   // has not yet been written to Firestore
@@ -155,12 +161,11 @@ export class CollaborationListener {
     await this.unsubscribeFirebase();
 
     this.lastReadIndex = NO_NOTEBOOK_VERSION/*reset*/;
-    this.lastWriteIndex = NO_NOTEBOOK_VERSION/*reset*/;
 
     this.isReadingVersions = false/*by contract*/;
     this.isWritingPendingSteps = false/*by contract*/;
     this.initialContentLoaded = false/*by contract*/;
-    this.isWaitingForNewVersions = false/*by contract*/;
+    this.hasPendingReads = false/*by contract*/;
 
     // NOTE: explicitly *not* setting `initialized = false` because this is one-shot
   }
@@ -230,7 +235,7 @@ export class CollaborationListener {
     if(!this.initialized) return/*listener was terminated before finished initialization*/;
     log.debug(`Loaded initial content at Version ${latestIndex} ${this.logContext()}.`);
     this.lastReadIndex = latestIndex/*by definition*/;
-    this.lastWriteIndex = latestIndex/*start at the latest index*/;
+    this.lastWriteIndex = latestIndex/*matches last read*/;
 
     // set the initial Editor content from what was just read
     // REF: https://github.com/ueberdosis/tiptap/issues/491
@@ -287,20 +292,16 @@ export class CollaborationListener {
     if(collaborationDelay.readDelayMs > 0) await sleep(collaborationDelay.readDelayMs)/*before latch-check for sanity*/;
     if(this.isReadingVersions) return/*prevent multiple handlers if Firestore gets multiple updates*/;
 
-    // get all stored Versions after the current Editor index
-    // NOTE: the Editor index (which is equal to the last-read index) must be used
-    //       since it is the last 'committed' Version. This ensures that any pending
-    //       changes are rebased into the newly to-be read Versions
+    // get all stored Versions after last-read index
     // NOTE: for a plethora of reasons (the easiest being the artificial delay added
     //       above), the actual Version that triggered this callback is not actually
     //       relevant. Because of this, there may be 'pending' Firestore callbacks
     //       that result in no Versions being read below since they were read in
     //       another callback
-    const editorIndex = this.getEditorIndex();
     let versions: NotebookVersion[];
     this.isReadingVersions = true/*close latch*/;
     try {
-      versions = await getVersionsFromIndex(this.notebookId, editorIndex);
+      versions = await getVersionsFromIndex(this.notebookId, this.lastReadIndex);
       if(!this.initialized) return/*listener was terminated before finished async request*/;
       if(versions.length < 1) return/*nothing more to do (SEE: NOTE above)*/;
     } catch(error) {
@@ -312,28 +313,19 @@ export class CollaborationListener {
 
     // update the reader state based on what was just read
     const lastVersionIndex = versions[versions.length - 1].index/*since in order by contract, must be last*/;
-    log.debug(`Read ${versions.length} Notebook Versions (${this.lastReadIndex} - ${lastVersionIndex}) (Editor at ${editorIndex} and last wrote ${this.lastWriteIndex}) ${this.logContext()}.`);
+    log.debug(`Read ${versions.length} Notebook Versions (${this.lastReadIndex} - ${lastVersionIndex}) ${this.logContext()}.`);
     this.lastReadIndex = lastVersionIndex;
 
     // update the Editor with the read Versions
     this.updateEditorWithVersions(versions);
 
-    // if the Editor is now past the last written Version then advance the writer
-    // index continue after the last read (since it must be the latest Version)
-    if(this.getEditorIndex() > this.lastWriteIndex) {
-      log.debug(`Editor is past last written Version after read (${this.getEditorIndex()} > ${this.lastWriteIndex}) ${this.logContext()}. Advancing last write.`);
-      this.lastWriteIndex = this.getEditorIndex();
-    } /* else -- Editor still has pending writes */
-
     // clear the latch set in #writePendingSteps()
-    // NOTE: this must be done *after* updating the last write index above or risk
-    //       attempting to overwrite just-read Versions
-    this.isWaitingForNewVersions = false/*by definition*/;
+    this.hasPendingReads = false/*by definition*/;
 
     // write any pending changes since it may have aborted waiting for this read
-    // (specifically isWaitingForNewVersions *was* true). Can't assume that there
-    // will be additional User edits that will force the pending changes to write
-    // CHECK: can pre-check isWaitingForNewVersions and only call if was set
+    // (specifically hasPendingReads *was* true). Can't assume that there will be
+    // additional User edits that will force the pending changes to write
+    // CHECK: can pre-check hasPendingReads and only call if was set
     // NOTE: if above CHECK is followed this this would need to explicitly reset
     //       pendingWrites$ to 'false' by definition
     await this.writePendingSteps();
@@ -386,16 +378,21 @@ export class CollaborationListener {
     if(!this.initialContentLoaded) throw new ApplicationError('functions/internal', `Trying to get write changes before initial content is loaded  ${this.logContext()}.`);
 
     if(this.isWritingPendingSteps) return/*prevent multiple handlers if ProseMirror gets multiple updates*/;
-    if(this.isWaitingForNewVersions) return/*do nothing -- transactions will fail until the most recent data is acquired*/;
+    if(this.hasPendingReads) return/*do nothing -- transactions will fail until the most recent data is acquired*/;
 
     this.isWritingPendingSteps = true/*close latch*/;
     try {
       // because this is within a latch and it's possible that additional edits
       // have occurred while writing, it simply loops until there are no more
       // sendable Steps
-      // NOTE: there is a complication that since Steps are only 'committed' on read,
-      //       this will continue to think that there are pending Steps. See the logic
-      //       below ('startIndex') for how this is handled.
+      // NOTE: because Steps are only 'committed' on read, this may continue to
+      //       think that there are pending Steps. 'lastWriteIndex' is used to
+      //       preserve this state.
+      // NOTE: last write must be *at least* the last read index. If there were
+      //       changes from other clients then the last read index may be more
+      //       than the last write index so it is advanced
+      let lastReadIndex = this.lastReadIndex/*record what was last read before writing (to know if read while writing)*/;
+      if(lastReadIndex > this.lastWriteIndex) this.lastWriteIndex = lastReadIndex/*update last write index since read more recent (from other clients)*/;
       let sendableStep;
       while(sendableStep = collab.sendableSteps(this.editor.view.state)) {
         if(sendableStep.steps.length < 1) { log.warn(`Expected ProseMirror Steps but found none ${this.logContext()}.`); return/*nothing to do*/; }
@@ -405,39 +402,39 @@ export class CollaborationListener {
         // CHECK: is retrying a valid strategy when out of sync?
         const editorIndex = this.getEditorIndex();
         if(editorIndex !== sendableStep.version) { log.warn(`Editor Version and Sendable Steps do not match (${editorIndex} !== ${sendableStep.version}) ${this.logContext()}. Retrying.`); continue/*retry*/; }
+log.debug(`Editor at version ${editorIndex} with last read ${this.lastReadIndex} ${this.logContext()}.`);
 
-        // attempt to write the ProseMirror Steps in batches to Firestore.
-        // Since Steps are only 'committed' on read, the Editor may be at a
-        // Version behind the last written index. Only those Steps that are
-        // after the last written index are written.
-        // TODO: always ensure that #getEditorIndex() and sendableStep.version match?
+        // since Steps are only committed on read, only those sendable Steps that
+        // have not been written should be written
         let startIndex = this.lastWriteIndex - editorIndex;/*starting index for batch*/
         if(startIndex >= sendableStep.steps.length) return/*all Steps have been written -- waiting on read*/;
         this.pendingWrites$.next(true/*has pending writes*/)/*specifically here so as to not get spurious updates*/;
-        log.debug(`Editor (at Version ${editorIndex}) has ${sendableStep.steps.length} Sendable Steps (at Version ${sendableStep.version}) and last written (${this.lastWriteIndex}) will write starting at ${startIndex} ${this.logContext()}.`);
-        while(startIndex < sendableStep.steps.length) { /*loop until all Steps are written*/
-          const pmSteps = sendableStep.steps.slice(startIndex, startIndex + versionBatchSize)/*take next batch of PM Steps*/;
-          const result = await writeVersions(this.user.userId, this.clientId, this.schemaVersion, this.notebookId, this.lastWriteIndex + 1/*next Version*/, pmSteps);
-          if(!this.initialized) return/*listener was terminated before finished transaction*/;
-          if(!result) { /*PM Steps were not written*/
-            // FIXME: it's possible that the write failed and that the reads that
-            //        would have brought it back up to date already happened while
-            //        the write-failure was being handled. Net-net: this can't just
-            //        always set isWaitingForNewVersions = true. It needs to check!
-            log.debug(`Failed to write Notebook Versions at index ${editorIndex + 1} ${this.logContext()}. Will wait for latest to be read and retry.`);
-            this.isWaitingForNewVersions = true/*by definition*/;
+
+        // write the next back of Steps starting from the starting index
+        const pmSteps = sendableStep.steps.slice(startIndex, startIndex + versionBatchSize)/*take next batch of PM Steps*/;
+        if(collaborationDelay.writeDelayMs > 0) await sleep(collaborationDelay.writeDelayMs)/*emulate slow write*/;
+        const result = await writeVersions(this.user.userId, this.clientId, this.schemaVersion, this.notebookId, this.lastWriteIndex + 1/*next Version*/, pmSteps);
+        if(!this.initialized) return/*listener was terminated before finished transaction*/;
+        if(!result) { /*PM Steps were not written*/
+          if(this.lastReadIndex === lastReadIndex) { /*no new data has been read*/
+            log.debug(`Failed to write Notebook Versions at index ${this.lastWriteIndex + 1} ${this.logContext()}. Will wait for latest to be read and retry.`);
+            this.hasPendingReads = true/*by definition*/;
             return/*stop writing changes to wait for new Versions to be read*/;
-          } /* else -- PM Steps were written */
-          log.debug(`Wrote Notebook Versions ${(pmSteps.length <= 1) ? `${this.lastWriteIndex + 1}` : `from ${this.lastWriteIndex + 1} to ${this.lastWriteIndex + pmSteps.length}`} ${this.logContext()}.`);
+          } else { /*new data has been read*/
+            log.debug(`Failed to write Notebook Versions at index ${this.lastWriteIndex + 1} ${this.logContext()}. New data was read while writing so will immediately retry.`);
 
-          this.lastWriteIndex += pmSteps.length/*increment by number of Steps written*/;
-          startIndex += pmSteps.length/*increment by number of Steps written*/;
+            // reset the state as if this will be a completely new write attempt
+            lastReadIndex = this.lastReadIndex/*update last read index*/;
+            if(lastReadIndex > this.lastWriteIndex) this.lastWriteIndex = lastReadIndex/*update last write index*/;
+            continue/*retry*/;
+          }
+        } /* else -- PM Steps were written */
 
-          // if the reader read while writing then it's possible that the Editor is
-          // at a different Version. Leave this loop since there may be a different
-          // set of Sendable Steps to write.
-          if(editorIndex !== this.getEditorIndex()) { log.debug(`Reader read while writing Notebook Version (${editorIndex} !== ${this.getEditorIndex()}) ${this.logContext()}. Stopping batch write and will retry pending writes.`); break/*retry outer*/; }
-        }
+        // NOTE: the successfully-written-steps case does *not* cause `hasPendingReads = true`
+        //       since this client knows what the latest sequence value is (since it
+        //       just wrote it) and can continue to write new versions until it fails
+        log.debug(`Wrote Notebook Versions ${(pmSteps.length <= 1) ? `${this.lastWriteIndex + 1}` : `from ${this.lastWriteIndex + 1} to ${this.lastWriteIndex + pmSteps.length}`} ${this.logContext()}.`);
+        this.lastWriteIndex += pmSteps.length/*increment by number of Steps written*/;
       }
     } catch(error) {
       // FIXME: what is the best way to handle errors in handlers from ProseMirror?
@@ -446,7 +443,7 @@ export class CollaborationListener {
       this.isWritingPendingSteps = false/*open latch*/;
 
       // there are pending writes IFF there are Versions to be read
-      this.pendingWrites$.next(this.isWaitingForNewVersions);
+      this.pendingWrites$.next(this.hasPendingReads);
     }
   }
 
