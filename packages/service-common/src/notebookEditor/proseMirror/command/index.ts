@@ -4,3 +4,4 @@ export  * from './mark';
 export  * from './node';
 export  * from './selection';
 export  * from './type';
+export  * from './util';

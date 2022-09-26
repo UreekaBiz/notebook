@@ -4,8 +4,8 @@ import { EditorView } from 'prosemirror-view';
 
 import { minFromMax } from '../../../util/number';
 import { NotebookSchemaType } from '../schema';
-import { findCutBefore } from './node';
 import { AbstractDocumentUpdate, Command } from './type';
+import { findCutBefore } from './util';
 
 // ********************************************************************************
 // == Type ========================================================================
