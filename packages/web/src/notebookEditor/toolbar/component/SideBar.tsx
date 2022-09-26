@@ -52,14 +52,16 @@ export const SideBar = () => {
       // Only render toolbar if it exists and allows it with shouldShow
       if(!toolbar || (toolbar.shouldShow && !toolbar.shouldShow(editor, undefined))) return/*nothing to do*/;
 
-      toolbars.push(<Toolbar
-                      key={`mark-toolbar-${i}`}
-                      depth={undefined}
-                      nodeOrMarkName={markName}
-                      selectedDepth={selectedDepth}
-                      toolbar={toolbar}
-                      onSelection={handleDepthSelection}
-                    />);
+      toolbars.push(
+        <Toolbar
+          key={`mark-toolbar-${i}`}
+          depth={undefined}
+          nodeOrMarkName={markName}
+          selectedDepth={selectedDepth}
+          toolbar={toolbar}
+          onSelection={handleDepthSelection}
+        />
+      );
       return;
     });
 
@@ -75,14 +77,16 @@ export const SideBar = () => {
       // Only render toolbar if it exists and allows it with shouldShow
       if(!toolbar || (toolbar.shouldShow && !toolbar.shouldShow(editor, undefined))) return/*nothing to do*/;
 
-      toolbars.push(<Toolbar
-                      key={`node-toolbar-${i}`}
-                      depth={depth}
-                      nodeOrMarkName={nodeName}
-                      selectedDepth={selectedDepth}
-                      toolbar={toolbar}
-                      onSelection={handleDepthSelection}
-                    />);
+      toolbars.push(
+        <Toolbar
+          key={`node-toolbar-${depth}`}
+          depth={depth}
+          nodeOrMarkName={nodeName}
+          selectedDepth={selectedDepth}
+          toolbar={toolbar}
+          onSelection={handleDepthSelection}
+        />
+      );
       return/*nothing else to do*/;
     });
     return toolbars;
