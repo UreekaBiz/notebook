@@ -42,8 +42,10 @@ try {
 // .. Output ......................................................................
 // SEE: PackageVersion in @web-service: util/version.ts
 console.log(JSON.stringify({
-  date: new Date().toISOString()/*now*/,
-  hash,
   branch,
+  hash,
+
+  date: new Date().toISOString()/*now*/,
+
   packages: packageVersions,
 }));
