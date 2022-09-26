@@ -17,7 +17,7 @@ export class DemoAsyncNodeModel extends AbstractCodeBlockAsyncNodeModel<string, 
       const chance = Math.random(),
             log = `${chance < 0.25 ? 'Failure' : 'Success'}: The current time is ${new Date().toISOString()}`;
 
-      return new Promise<string>(resolve => setTimeout(() => resolve(log), this.node.attrs.delay));
+      return new Promise<string>((resolve) => setTimeout(() => resolve(log), this.node.attrs.delay));
     } catch(error) {
       return `Failure: The current time is ${new Date().toISOString()}`;
     }

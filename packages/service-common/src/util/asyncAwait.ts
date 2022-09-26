@@ -16,4 +16,4 @@ export const waitFor = (fn: () => boolean, wait: number = 100/*0.1s*/, noLongerT
 };
 
 // --------------------------------------------------------------------------------
-export const sleep = (ms: number) => new Promise(resolve => setTimeout(resolve, ms));
+export const sleep = (ms: number) => new Promise((resolve) => setTimeout(resolve, ms));

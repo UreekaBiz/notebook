@@ -10,7 +10,7 @@ export class Demo2AsyncNodeModel extends AbstractAsyncNodeModel<string, Demo2Asy
   // == Abstract Methods ==========================================================
   // creates a promise that returns a random string after 2 seconds
   protected createPromise() {
-    return new Promise<string>(resolve => {
+    return new Promise<string>((resolve) => {
       const length = Math.floor(Math.random() * (100/*T&E*/) + 1);
       const string = createRandomString(length);
       const delay = this.node.attrs[AttributeType.Delay] ?? 0/*default*/;

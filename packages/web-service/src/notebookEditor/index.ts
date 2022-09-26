@@ -412,6 +412,14 @@ export {
   NodePosition,
 
   // .. Selection .................................................................
+  blockBackspaceCommand,
+  BlockBackspaceDocumentUpdate,
+  blockArrowDownCommand,
+  BlockArrowDownDocumentUpdate,
+  blockArrowUpCommand,
+  BlockArrowUpDocumentUpdate,
+  deleteSelectionCommand,
+  DeleteSelectionDocumentUpdate,
   getAllAscendantsFromSelection,
   getBlockNodeRange,
   getPosType,
@@ -424,6 +432,8 @@ export {
   resolveNewSelection,
   SelectionRange,
   SelectionDepth,
+  selectNodeBackwardCommand,
+  SelectNodeBackwardDocumentUpdate,
   setNodeSelectionCommand,
   SetNodeSelectionDocumentUpdate,
   setTextSelectionCommand,
