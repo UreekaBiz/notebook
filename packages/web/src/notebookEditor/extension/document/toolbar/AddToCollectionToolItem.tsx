@@ -3,7 +3,7 @@ import { isNotebookCreator } from '@ureeka-notebook/web-service';
 import { useValidatedAuthedUser } from 'authUser/hook/useValidatedAuthedUser';
 import { AddToCollectionDialog } from 'label/component/AddToCollectionDialog';
 import { useNotebook } from 'notebook/hook/useNotebook';
-import { EditorToolComponentProps } from 'notebookEditor/toolbar/type';
+import { EditorToolComponentProps } from 'notebookEditor/sidebar/toolbar/type';
 
 // ********************************************************************************
 interface Props extends EditorToolComponentProps {/*no additional*/}

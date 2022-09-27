@@ -1,6 +1,6 @@
 import { NodeName } from '@ureeka-notebook/web-service';
 
-import { Toolbar } from 'notebookEditor/toolbar/type';
+import { Toolbar } from 'notebookEditor/sidebar/toolbar/type';
 
 import { bulletListToolItem, orderedListToolItem, startNewListToolItem, taskListToolItem } from '../toolbar';
 

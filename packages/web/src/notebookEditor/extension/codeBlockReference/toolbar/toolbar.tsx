@@ -5,7 +5,7 @@ import { getParentNode, getSelectedNode, isCodeBlockReferenceNode, isListItemCon
 import { toolItemCommandWrapper } from 'notebookEditor/command/util';
 import { CodeBlockReferenceChipSelector } from 'notebookEditor/extension/codeblock/toolbar/CodeBlockReferenceChipSelector';
 import { shouldShowToolItemInsideList } from 'notebookEditor/extension/list/util';
-import { Toolbar, ToolItem } from 'notebookEditor/toolbar/type';
+import { Toolbar, ToolItem } from 'notebookEditor/sidebar/toolbar/type';
 
 import { insertAndSelectCodeBlockReferenceCommand } from '../command';
 import { CodeBlockReferenceDelimiterToolItem } from './CodeBlockReferenceDelimiterToolItem/CodeBlockReferenceDelimiterToolItem';

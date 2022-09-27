@@ -4,7 +4,7 @@ import { useCallback, useEffect, useState } from 'react';
 import { nodeToContent } from '@ureeka-notebook/web-service';
 
 import { NotebookViewer } from 'notebookEditor/component/NotebookViewer';
-import { EditorToolComponentProps } from 'notebookEditor/toolbar/type';
+import { EditorToolComponentProps } from 'notebookEditor/sidebar/toolbar/type';
 
 // ********************************************************************************
 interface Props extends EditorToolComponentProps {/*no additional*/}

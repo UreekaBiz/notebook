@@ -1,37 +1,20 @@
 import { Divider, Flex, VStack } from '@chakra-ui/react';
-import { useCallback, useEffect, useMemo, useState } from 'react';
+import { useCallback, useMemo, useState } from 'react';
 
 import { getAllAscendantsFromSelection, getMarkName, getNodeName, SelectionDepth } from '@ureeka-notebook/web-service';
 
 import { getAllMarksFromSelection } from 'notebookEditor/extension/util/mark';
 import { useValidatedEditor } from 'notebookEditor/hook/useValidatedEditor';
 
-import { getToolbar } from '../toolbar';
-import { Debugger } from './Debugger';
+import { getToolbar } from '../../toolbar/toolbar';
 import { Toolbar } from './Toolbar';
 import { ToolbarBreadcrumbs } from './ToolbarBreadcrumbs';
-import { SidebarTopbar } from './SidebarTopbar';
 
 // ********************************************************************************
-export const SideBar = () => {
+export const ToolbarPanel = () => {
   // == State =====================================================================
-  const [showDebugger, setShowDebugger] = useState(false);
   const [selectedDepth, setSelectedDepth] = useState<SelectionDepth | undefined/*current node*/>(undefined);
   const editor = useValidatedEditor();
-
-  // == Effect ====================================================================
-  useEffect(() => {
-    const handleKeydown = (e: KeyboardEvent) => {
-      const isSequence = e.ctrlKey && e.altKey && e.code === 'Period';
-      if(!isSequence) return/*nothing to do*/;
-
-      setShowDebugger(prevValue => !prevValue);
-      e.preventDefault();
-    };
-
-    window.addEventListener('keydown', handleKeydown);
-    return () => window.removeEventListener('keydown', handleKeydown);
-  }, []);
 
   // == Handler ===================================================================
   const handleDepthSelection = useCallback((depth: SelectionDepth) => { setSelectedDepth(depth); }, []);
@@ -96,14 +79,12 @@ export const SideBar = () => {
   }, [editor, editor.state, handleDepthSelection, selectedDepth]);
 
   return (
-    <Flex flexDir='column' minH={0} width='100%' height='100%' background='#FCFCFC' borderLeft='1px solid' borderColor='gray.300' overflow='hidden'>
-      <SidebarTopbar background='#f3f3f3' />
+    <Flex flex='1 1' flexDirection='column'>
       <ToolbarBreadcrumbs onSelection={handleDepthSelection} selectedDepth={selectedDepth} />
       <Flex flexDir='column' flex='1 1'>
         <VStack divider={<Divider />} spacing={0} flex='1 1 0' alignItems='stretch' overflowY='scroll'>
           {Toolbars}
         </VStack>
-        {showDebugger && <Debugger />}
       </Flex>
     </Flex>
   );

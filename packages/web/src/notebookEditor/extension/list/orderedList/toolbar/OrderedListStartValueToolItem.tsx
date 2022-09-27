@@ -2,7 +2,7 @@ import { isNumber, isOrderedListNode, AttributeType, ORDERED_LIST_DEFAULT_START 
 
 import { InputTool } from 'notebookEditor/extension/shared/component/InputToolItem/InputTool';
 import { InputToolItemContainer } from 'notebookEditor/extension/shared/component/InputToolItemContainer';
-import { EditorToolComponentProps } from 'notebookEditor/toolbar/type';
+import { EditorToolComponentProps } from 'notebookEditor/sidebar/toolbar/type';
 
 import { getListNodesFromDepth } from '../../util';
 import { updateOrderedListCommand } from '../command';

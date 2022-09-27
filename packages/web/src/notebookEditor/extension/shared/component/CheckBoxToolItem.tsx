@@ -3,7 +3,7 @@ import { ChangeEvent } from 'react';
 
 import { getSelectedNode, isNodeSelection, isNodeType, AttributeType, NodeName } from '@ureeka-notebook/web-service';
 
-import { EditorToolComponentProps, TOOL_ITEM_DATA_TYPE } from 'notebookEditor/toolbar/type';
+import { EditorToolComponentProps, TOOL_ITEM_DATA_TYPE } from 'notebookEditor/sidebar/toolbar/type';
 
 import { InputToolItemContainer } from './InputToolItemContainer';
 

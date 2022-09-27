@@ -3,7 +3,7 @@ import { AttributeType, MarkName } from '@ureeka-notebook/service-common';
 import { InputWithUnitMarkToolItem } from 'notebookEditor/extension/shared/component/InputWithUnitToolItem';
 import { ColorPickerMarkToolItem } from 'notebookEditor/extension/shared/component/ColorPickerToolItem';
 import { SpacingToolItem } from 'notebookEditor/extension/shared/component/SpacingToolItem';
-import { ToolItem } from 'notebookEditor/toolbar/type';
+import { ToolItem } from 'notebookEditor/sidebar/toolbar/type';
 
 // ********************************************************************************
 // == Tool Items ==================================================================

@@ -1,6 +1,6 @@
 import { NodeName } from '@ureeka-notebook/web-service';
 
-import { Toolbar, ToolItem } from 'notebookEditor/toolbar/type';
+import { Toolbar, ToolItem } from 'notebookEditor/sidebar/toolbar/type';
 import { AddToCollectionToolItem } from './AddToCollectionToolItem';
 
 import { PreviewPublishedNotebookToolItem } from './PreviewPublishedNotebookToolItem';

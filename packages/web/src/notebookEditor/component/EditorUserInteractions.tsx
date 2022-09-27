@@ -6,7 +6,7 @@ import { getDialogStorage } from 'notebookEditor/model/DialogStorage';
 import { useValidatedEditor } from 'notebookEditor/hook/useValidatedEditor';
 import { unsetLinkCommand } from 'notebookEditor/extension/link/command';
 import { isValidHTMLElement } from 'notebookEditor/extension/util/parse';
-import { TOOL_ITEM_DATA_TYPE } from 'notebookEditor/toolbar/type';
+import { TOOL_ITEM_DATA_TYPE } from 'notebookEditor/sidebar/toolbar/type';
 
 import { ImageDialog } from './ImageDialog';
 import { LinkDialog } from './LinkDialog';

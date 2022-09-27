@@ -13,7 +13,7 @@ import { useNotebook } from 'notebook/hook/useNotebook';
 import { NotebookServiceWrapper } from 'notebook/NotebookServiceWrapper';
 import { Editor } from 'notebookEditor/component/Editor';
 import { NotebookEditorProvider } from 'notebookEditor/context/NotebookEditorProvider';
-import { SideBar } from 'notebookEditor/toolbar/component/SideBar';
+import { SideBar } from 'notebookEditor/sidebar/component/SideBar';
 import { SideBarLayout } from 'shared/layout/SideBarLayout';
 import { coreRoutes } from 'shared/routes';
 import { UserProfileServiceWrapper } from 'user/UserProfileServiceWrapper';

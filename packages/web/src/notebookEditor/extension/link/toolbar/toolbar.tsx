@@ -7,7 +7,7 @@ import { shouldShowToolItemInsideList } from 'notebookEditor/extension/list/util
 import { toggleMarkInMarkHolderCommand } from 'notebookEditor/extension/markHolder/command';
 import { getMarkHolder, inMarkHolder } from 'notebookEditor/extension/markHolder/util';
 import { getDialogStorage } from 'notebookEditor/model/DialogStorage';
-import { Toolbar, ToolItem } from 'notebookEditor/toolbar/type';
+import { Toolbar, ToolItem } from 'notebookEditor/sidebar/toolbar/type';
 
 import { LinkColorToolItem } from './component/LinkColorToolItem';
 import { LinkTargetToolItem } from './component/LinkTargetToolItem';

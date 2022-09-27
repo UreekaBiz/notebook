@@ -8,7 +8,7 @@ import { RiListOrdered } from 'react-icons/ri';
 import { getParentNode, isBulletListNode, isListItemContentNode, isNodeSelection, isOrderedListNode, isParagraphNode, isTaskListNode, NodeName, SelectionDepth, SetTextSelectionDocumentUpdate } from '@ureeka-notebook/web-service';
 
 import { applyDocumentUpdates } from 'notebookEditor/command/update';
-import { ToolItem } from 'notebookEditor/toolbar/type';
+import { ToolItem } from 'notebookEditor/sidebar/toolbar/type';
 
 import { SplitListItemDocumentUpdate } from './command/splitListItemCommand';
 import { IndentListDocumentUpdate } from './keyboardShortcut/indent';

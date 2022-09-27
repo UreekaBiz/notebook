@@ -5,7 +5,7 @@ import { getParentNode, isListItemContentNode, isNodeSelection, MarkName } from 
 import { toolItemCommandWrapper } from 'notebookEditor/command/util';
 import { shouldShowToolItemInsideList } from 'notebookEditor/extension/list/util';
 import { inMarkHolder } from 'notebookEditor/extension/markHolder/util';
-import { ToolItem } from 'notebookEditor/toolbar/type';
+import { ToolItem } from 'notebookEditor/sidebar/toolbar/type';
 
 import { toggleUnderlineCommand } from './command';
 

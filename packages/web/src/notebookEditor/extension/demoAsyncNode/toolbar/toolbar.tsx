@@ -6,7 +6,7 @@ import { toolItemCommandWrapper } from 'notebookEditor/command/util';
 import { CodeBlockReferencesChipSelector } from 'notebookEditor/extension/codeblock/toolbar/CodeBlockReferencesChipSelector';
 import { shouldShowToolItemInsideList } from 'notebookEditor/extension/list/util';
 import { SliderToolItem } from 'notebookEditor/extension/shared/component/SliderToolItem';
-import { Toolbar, ToolItem } from 'notebookEditor/toolbar/type';
+import { Toolbar, ToolItem } from 'notebookEditor/sidebar/toolbar/type';
 
 import { insertAndSelectDemoAsyncNodeCommand } from '../command';
 import { ExecuteButtons } from './ExecuteButtons';

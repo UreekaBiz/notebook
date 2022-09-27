@@ -4,7 +4,7 @@ import { useState, ChangeEventHandler } from 'react';
 import { notebookEditorTheme, ThemeName, Themes } from '@ureeka-notebook/web-service';
 
 import { setThemeStylesheet } from 'notebookEditor/theme/theme';
-import { EditorToolComponentProps } from 'notebookEditor/toolbar/type';
+import { EditorToolComponentProps } from 'notebookEditor/sidebar/toolbar/type';
 
 // ********************************************************************************
 interface Props extends EditorToolComponentProps {/*no additional*/}

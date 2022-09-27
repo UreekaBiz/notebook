@@ -6,7 +6,7 @@ import { focusCodeBlock, visualIdFromCodeBlockReference } from 'notebookEditor/e
 import { ChipValue } from 'notebookEditor/extension/shared/component/chipTool/Chip';
 import { ChipTool } from 'notebookEditor/extension/shared/component/chipTool/ChipTool';
 import { InputToolItemContainer } from 'notebookEditor/extension/shared/component/InputToolItemContainer';
-import { EditorToolComponentProps } from 'notebookEditor/toolbar/type';
+import { EditorToolComponentProps } from 'notebookEditor/sidebar/toolbar/type';
 
 import { isValidCodeBlockReference } from '../util';
 

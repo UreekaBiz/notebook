@@ -5,7 +5,7 @@ import { RiFileAddLine } from 'react-icons/ri';
 import { extractDocumentName, getLogger, Logger, NotebookService } from '@ureeka-notebook/web-service';
 
 import { useNotebook } from 'notebook/hook/useNotebook';
-import { EditorToolComponentProps } from 'notebookEditor/toolbar/type';
+import { EditorToolComponentProps } from 'notebookEditor/sidebar/toolbar/type';
 import { useNotebookEditor } from 'notebookEditor/hook/useNotebookEditor';
 
 const log = getLogger(Logger.NOTEBOOK);
