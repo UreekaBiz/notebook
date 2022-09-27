@@ -10,3 +10,4 @@ export * from './logging';
 export * from './reaction';
 export * from './user';
 export * from './util';
+export * from './version';

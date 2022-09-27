@@ -22,6 +22,10 @@ export type MarkThemeElements = Record<MarkName, ThemeElement>
 // NOTE: this uses an object instead of a enum since the values are using template
 //       literals and cannot be used as values for the Enum
 export const CustomSelector = {
+    // NOTE: This is a special case since the Doc (the root node) cannot be modified
+  //       in the normal way, so we need to use a custom selector to target it.
+  Editor: '.Editor', // SEE: index.css
+
   HeadingLevelOne: `[${DATA_NODE_TYPE}="${NodeName.HEADING}"][level="${HeadingLevel.One}"]`,
   HeadingLevelTwo: `[${DATA_NODE_TYPE}="${NodeName.HEADING}"][level="${HeadingLevel.Two}"]`,
   HeadingLevelThree: `[${DATA_NODE_TYPE}="${NodeName.HEADING}"][level="${HeadingLevel.Three}"]`,
@@ -77,6 +81,9 @@ export const DefaultTheme: Theme = {
       [AttributeType.LeftDelimiter]: '(',
       [AttributeType.RightDelimiter]: ')',
     },
+    // NOTE: DOC cannot be used to define a Theme since it is the root node,
+    //       therefore it cannot be styled. The "Editor" custom selector must be
+    //       used instead.
     [NodeName.DOC]: {/*no defined value*/},
     [NodeName.DEMO_2_ASYNC_NODE]: {
       [AttributeType.TextColor]: '#000',
@@ -146,6 +153,7 @@ export const DefaultTheme: Theme = {
   },
 
   customSelectors: {
+    [CustomSelector.Editor]: {/*no defined value*/},
     [CustomSelector.HeadingLevelOne]: {
       [AttributeType.FontSize]: '34px',
       [AttributeType.TextColor]: '#1C5987',
@@ -197,6 +205,9 @@ export const GoogleDocsTheme: Theme = {
       [AttributeType.LeftDelimiter]: '[',
       [AttributeType.RightDelimiter]: ']',
     },
+    // NOTE: DOC cannot be used to define a Theme since it is the root node,
+    //       therefore it cannot be styled. The "Editor" custom selector must be
+    //       used instead.
     [NodeName.DOC]: {/*no defined value*/},
     [NodeName.DEMO_2_ASYNC_NODE]: {
       [AttributeType.TextColor]: '#000',
@@ -263,6 +274,7 @@ export const GoogleDocsTheme: Theme = {
   },
 
   customSelectors: {
+    [CustomSelector.Editor]: {/*no defined value*/},
     [CustomSelector.HeadingLevelOne]: {
       [AttributeType.FontSize]: '14pt',
       [AttributeType.TextColor]: '#00577C',
