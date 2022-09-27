@@ -19,11 +19,6 @@ export type CodeAttributes = AttributesTypeFromNodeSpecAttributes<typeof CodeAtt
 export const CodeMarkSpec: MarkSpec = {
   name: MarkName.CODE/*expected and guaranteed to be unique*/,
 
-  // REF: https://prosemirror.net/docs/ref/#model.MarkSpec.excludes
-  // NOTE: Marks that specify this prop must exclude themselves (which is the
-  //       default behavior when not specified)
-  // only allow Code Mark to coexist with Superscript, Subscript, Strikethrough Marks
-  excludes: `${MarkName.BOLD} ${MarkName.CODE/*exclude itself*/} ${MarkName.ITALIC} ${MarkName.LINK} ${MarkName.REPLACED_TEXT_MARK} ${MarkName.TEXT_STYLE} ${MarkName.UNDERLINE}`,
   code: true/*contains Code*/,
 
   // NOTE: toDOM must be defined so that the Schema knows how to create it
