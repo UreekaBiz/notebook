@@ -2,6 +2,15 @@ import { Asset, AssetDelete_Rest, AssetDelete_Rest_Schema, AssetUpdate_Rest, Ass
 
 import { SortableFilter } from '../util/firestore';
 
+// ** Firebase ********************************************************************
+// purely for convenience
+export {
+  getBlob,
+  getBytes,
+  getDownloadURL,
+  getMetadata,
+} from 'firebase/storage';
+
 // ** Service-Common **************************************************************
 export {
   // SEE: @ureeka-notebook/service-common: asset/type.ts
