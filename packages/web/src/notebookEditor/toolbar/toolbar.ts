@@ -5,7 +5,7 @@ import { CodeBlockReferenceToolbar } from 'notebookEditor/extension/codeBlockRef
 import { Demo2AsyncNodeToolbar } from 'notebookEditor/extension/demo2AsyncNode/toolbar';
 import { DemoAsyncNodeToolbar } from 'notebookEditor/extension/demoAsyncNode/toolbar';
 import { DocumentToolbar } from 'notebookEditor/extension/document/toolbar';
-import { HeadingToolbar } from 'notebookEditor/extension/heading/toolbar/toolbar';
+import { HeadingToolbar } from 'notebookEditor/extension/heading/toolbar';
 import { ImageToolbar } from 'notebookEditor/extension/image/toolbar';
 import { LinkToolbar } from 'notebookEditor/extension/link/toolbar';
 import { BulletListToolbar } from 'notebookEditor/extension/list/bulletList/toolbar';
