@@ -1,6 +1,6 @@
 import { Node } from '@tiptap/core';
 
-import { blockArrowDownCommand, blockArrowUpCommand, blockBackspaceCommand, generateNodeId, getNodeOutputSpec, isDemo2AsyncNode, AttributeType, CreateBlockNodeDocumentUpdate, Demo2AsyncNodeSpec, NodeName, SetAttributeType, DATA_NODE_TYPE, DEFAULT_DEMO_2_ASYNC_NODE_DELAY, DEFAULT_DEMO_2_ASYNC_NODE_STATUS } from '@ureeka-notebook/web-service';
+import { blockBackspaceCommand, generateNodeId, getNodeOutputSpec, isDemo2AsyncNode, AttributeType, CreateBlockNodeDocumentUpdate, Demo2AsyncNodeSpec, NodeName, SetAttributeType, DATA_NODE_TYPE, DEFAULT_DEMO_2_ASYNC_NODE_DELAY, DEFAULT_DEMO_2_ASYNC_NODE_STATUS } from '@ureeka-notebook/web-service';
 
 import { applyDocumentUpdates } from 'notebookEditor/command/update';
 import { shortcutCommandWrapper } from 'notebookEditor/command/util';
@@ -8,6 +8,7 @@ import { setAttributeParsingBehavior, uniqueIdParsingBehavior } from 'notebookEd
 import { NodeViewStorage } from 'notebookEditor/model/NodeViewStorage';
 import { NoOptions } from 'notebookEditor/model/type';
 
+import { blockArrowUpCommand, blockArrowDownCommand } from '../util/node';
 import { Demo2AsyncNodeController, Demo2AsyncNodeStorageType } from './nodeView/controller';
 
 // ********************************************************************************

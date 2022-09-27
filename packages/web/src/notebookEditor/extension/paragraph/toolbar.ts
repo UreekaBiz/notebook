@@ -26,6 +26,7 @@ export const ParagraphToolbar: Toolbar = {
 
   toolsCollections: [
     [
+      headingLevelToolItem,
       orderedListToolItem,
       bulletListToolItem,
       taskListToolItem,
@@ -39,7 +40,6 @@ export const ParagraphToolbar: Toolbar = {
       linkToolItem,
     ],
     [
-      headingLevelToolItem,
       demo2AsyncNodeToolItem,
       demoAsyncNodeToolItem,
       codeBlockToolItem,

@@ -414,10 +414,6 @@ export {
   // .. Selection .................................................................
   blockBackspaceCommand,
   BlockBackspaceDocumentUpdate,
-  blockArrowDownCommand,
-  BlockArrowDownDocumentUpdate,
-  blockArrowUpCommand,
-  BlockArrowUpDocumentUpdate,
   deleteSelectionCommand,
   DeleteSelectionDocumentUpdate,
   getAllAscendantsFromSelection,

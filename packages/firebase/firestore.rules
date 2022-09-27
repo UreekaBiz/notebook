@@ -238,6 +238,16 @@ service cloud.firestore {
       allow list:   if isUser(); // but they're not 'discoverable' unless logged in
       allow delete: if false; // only soft-delete
     }
+
+    // == Version =================================================================
+    // NOTE: the document identifier is simply a random id that has no intentional meaning
+    // NOTE: all documents are created server-side by contract
+    match /versions/{id} {
+      allow create: if false; // server-side only
+      allow update: if false; // server-side only
+      allow read:   if true;  // all Versions are visible to the world
+      allow delete: if false; // no delete (it's a ledger)
+    }
   }
 
   // == Auth ======================================================================

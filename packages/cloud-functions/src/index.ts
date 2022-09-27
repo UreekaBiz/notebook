@@ -34,3 +34,4 @@ export * from './notebook/task';
 export * from './notebookEditor/onCreate';
 export * from './notebookEditor/callable';
 export * from './reaction/callable';
+export * from './version/callable';
