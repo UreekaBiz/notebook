@@ -1,13 +1,22 @@
-import { Flex } from '@chakra-ui/react';
+import { Box, Flex } from '@chakra-ui/react';
 import { useEffect, useState } from 'react';
 
+import { OutlinePanel } from '../outline/OutlinePanel';
 import { ToolbarPanel } from '../toolbar/component/ToolbarPanel';
+import { SidebarPanel } from '../type';
 import { Debugger } from './Debugger';
+import { SidebarPanelsNavigation } from './SidebarPanelsNavigation';
 import { SidebarTopbar } from './SidebarTopbar';
+
+const Panels: Record<SidebarPanel, React.FC> = {
+  [SidebarPanel.Toolbar]: ToolbarPanel,
+  [SidebarPanel.Outline]: OutlinePanel,
+};
 
 // ********************************************************************************
 export const SideBar = () => {
   // == State =====================================================================
+  const [panel, setPanel] = useState<SidebarPanel>(SidebarPanel.Toolbar/*default*/);
   const [showDebugger, setShowDebugger] = useState(false);
 
   // == Effect ====================================================================
@@ -24,10 +33,16 @@ export const SideBar = () => {
     return () => window.removeEventListener('keydown', handleKeydown);
   }, []);
 
+  // == Handler ===================================================================
+  const handlePanelChange = (panel: SidebarPanel) => {
+    setPanel(panel);
+  };
+
   // == UI ========================================================================
+  const Panel = Panels[panel];
   return (
     <Flex
-      flexDir='column'
+      flexDirection='column'
       width='100%'
       height='100%'
       minHeight={0}
@@ -37,7 +52,10 @@ export const SideBar = () => {
       borderColor='gray.300'
     >
       <SidebarTopbar background='#f3f3f3' />
-      <ToolbarPanel />
+      <Box flex='1 1' minHeight='0'>
+        <Panel />
+      </Box>
+      <SidebarPanelsNavigation value={panel} onChange={handlePanelChange} />
       {showDebugger && <Debugger />}
     </Flex>
   );

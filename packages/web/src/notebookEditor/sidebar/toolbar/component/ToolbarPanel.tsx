@@ -79,9 +79,9 @@ export const ToolbarPanel = () => {
   }, [editor, editor.state, handleDepthSelection, selectedDepth]);
 
   return (
-    <Flex flex='1 1' flexDirection='column'>
+    <Flex height='100%' flexDirection='column'>
       <ToolbarBreadcrumbs onSelection={handleDepthSelection} selectedDepth={selectedDepth} />
-      <Flex flexDir='column' flex='1 1'>
+      <Flex flexDirection='column' flex='1 1'>
         <VStack divider={<Divider />} spacing={0} flex='1 1 0' alignItems='stretch' overflowY='scroll'>
           {Toolbars}
         </VStack>
