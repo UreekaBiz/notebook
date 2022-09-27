@@ -2,7 +2,7 @@ import { Fragment, Node as ProseMirrorNode, Slice } from 'prosemirror-model';
 import { Plugin } from 'prosemirror-state';
 import { EditorView } from 'prosemirror-view';
 
-import { createListItemContentNode, createListItemNode, createTaskListItemNode, isListItemContentNode, isTaskListNode, NotebookSchemaType } from '@ureeka-notebook/web-service';
+import { createListItemContentNode, createListItemNode, createStrikethroughMark, createTaskListItemNode, isListItemContentNode, isTaskListItemNode, isTaskListNode, AttributeType, NotebookSchemaType } from '@ureeka-notebook/web-service';
 
 import { NoPluginState } from 'notebookEditor/model/type';
 
@@ -73,6 +73,10 @@ export const ListItemTaskListItemPlugin = () => {
                 pastedListItemContent = descendant;
               } /* else -- do not change default */
             });
+
+            if(isTaskListItemNode(parentListItem) && parentListItem.attrs[AttributeType.Checked]) {
+              pastedListItemContent.content.descendants((node) => { node.marks = [createStrikethroughMark(view.state.schema)]; });
+            } /* else -- the content is not being pasted into a TaskListItem or it is not checked, no need to add Strikethrough Mark */
 
             // insert the content of the pasted ListItemContent
             tr.replaceSelection(new Slice(pastedListItemContent.content, 0/*use full Slice*/, 0/*use full Slice*/));
