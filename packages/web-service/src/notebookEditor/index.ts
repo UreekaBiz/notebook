@@ -412,8 +412,6 @@ export {
   NodePosition,
 
   // .. Selection .................................................................
-  blockBackspaceCommand,
-  BlockBackspaceDocumentUpdate,
   deleteSelectionCommand,
   DeleteSelectionDocumentUpdate,
   getAllAscendantsFromSelection,

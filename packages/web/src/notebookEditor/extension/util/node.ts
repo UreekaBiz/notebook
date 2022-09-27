@@ -1,8 +1,8 @@
 import { GapCursor } from 'prosemirror-gapcursor';
 import { DOMParser, Fragment, Node as ProseMirrorNode, ParseOptions } from 'prosemirror-model';
-import { EditorState, Transaction } from 'prosemirror-state';
+import { EditorState, TextSelection, Transaction } from 'prosemirror-state';
 
-import { isGapCursorSelection, AbstractDocumentUpdate, Command, JSONNode, NodeName, NotebookSchemaType } from '@ureeka-notebook/web-service';
+import { isGapCursorSelection, AbstractDocumentUpdate, ClearNodesDocumentUpdate, Command, JSONNode, NodeName, NotebookSchemaType } from '@ureeka-notebook/web-service';
 
 import { elementFromString } from './parse';
 
@@ -49,10 +49,81 @@ type CreateNodeFromContentOptions = {
   return createNodeFromContent(schema, '', options);
 };
 
+// -- Block Backspace -------------------------------------------------------------
+// NOTE: the following Block Commands must be located in web since
+//       whenever they come from common or a similar place there are issues with
+//       the GapCursor Selection or the state getting stuck
+/** ensure the Block at the Selection is deleted on Backspace if its empty */
+export const blockBackspaceCommand = (blockNodeName: NodeName): Command => (state, dispatch) => {
+  const updatedTr =  new BlockBackspaceDocumentUpdate(blockNodeName).update(state, state.tr);
+  if(updatedTr) {
+    dispatch(updatedTr);
+    return true/*Command executed*/;
+  } /* else -- Command cannot be executed */
+
+  return false/*not executed*/;
+};
+export class BlockBackspaceDocumentUpdate implements AbstractDocumentUpdate {
+  public constructor(private readonly blockNodeName: NodeName) {/*nothing additional*/ }
+
+  /*
+   * modify the given Transaction such that the Block at the Selection
+   * is deleted on Backspace if it is empty and return it
+   */
+  public update(editorState: EditorState<NotebookSchemaType>, tr: Transaction<NotebookSchemaType>) {
+    const { empty, $anchor, anchor } = editorState.selection,
+    isAtStartOfDoc = anchor === 1/*first position inside the node, at start of Doc*/;
+
+    if(!empty || $anchor.parent.type.name !== this.blockNodeName) return false/*let event be handled elsewhere*/;
+    if(isAtStartOfDoc || !$anchor.parent.textContent.length) {
+      const clearedNodesUpdatedTr = new ClearNodesDocumentUpdate().update(editorState, tr);
+      return clearedNodesUpdatedTr/*updated*/;
+    } /* else -- no need to delete blockNode */
+
+    return false/*let Backspace event be handled elsewhere*/;
+  }
+}
+
+/**
+ * ensure the expected Mod-Backspace behavior is maintained inside
+ * Block Nodes by removing a '\n' if required
+ * */
+ export const blockModBackspaceCommand = (blockNodeName: NodeName): Command => (state, dispatch) => {
+  const updatedTr =  new BlockModBackspaceDocumentUpdate(blockNodeName).update(state, state.tr);
+  if(updatedTr) {
+    dispatch(updatedTr);
+    return true/*Command executed*/;
+  } /* else -- Command cannot be executed */
+
+  return false/*not executed*/;
+};
+export class BlockModBackspaceDocumentUpdate implements AbstractDocumentUpdate {
+  public constructor(private readonly blockNodeName: NodeName) {/*nothing additional*/ }
+
+  /*
+   * modify the given Transaction such that the expected Mod-Backspace behavior
+   * is maintained inside Block Nodes, by removing a '\n' if
+   * required, and return it
+   */
+  public update(editorState: EditorState<NotebookSchemaType>, tr: Transaction<NotebookSchemaType>) {
+    const { selection } = tr;
+    const { empty, $from, from } = selection;
+
+    if(!empty || $from.parent.type.name !== this.blockNodeName) return false/*let event be handled elsewhere*/;
+
+    const { parentOffset } = $from;
+    if($from.parent.textContent.charAt(parentOffset-1/*account for start of parentNode*/) === '\n') {
+      tr.setSelection(TextSelection.create(tr.doc, from, from-1/*remove the '\n'*/))
+        .deleteSelection();
+
+      return tr/*updated*/;
+    } /* else -- */
+
+    return false/*let event be handled elsewhere*/;
+  }
+}
+
 // -- Block Selection -------------------------------------------------------------
-// NOTE: these Commands must be located in web since whenever the Commands come
-//       from service-common or another package, the GapCursor is set, but it does
-//       not get shown in the UI
 /**
  * ensure correct arrow up behavior inside a Block Node by creating a new
  * {@link GapCursor} selection when the arrowUp key is pressed if the selection

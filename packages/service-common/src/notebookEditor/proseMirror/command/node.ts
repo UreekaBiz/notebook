@@ -83,37 +83,6 @@ export class CreateBlockNodeDocumentUpdate implements AbstractDocumentUpdate {
   }
 }
 
-/** ensure the Block at the Selection is deleted on Backspace if its empty */
-export const blockBackspaceCommand = (blockNodeName: NodeName): Command => (state, dispatch) => {
-  const updatedTr =  new BlockBackspaceDocumentUpdate(blockNodeName).update(state, state.tr);
-  if(updatedTr) {
-    dispatch(updatedTr);
-    return true/*Command executed*/;
-  } /* else -- Command cannot be executed */
-
-  return false/*not executed*/;
-};
-export class BlockBackspaceDocumentUpdate implements AbstractDocumentUpdate {
-  public constructor(private readonly blockNodeName: NodeName) {/*nothing additional*/ }
-
-  /*
-   * modify the given Transaction such that the Block at the Selection
-   * is deleted on Backspace if it is empty and return it
-   */
-  public update(editorState: EditorState<NotebookSchemaType>, tr: Transaction<NotebookSchemaType>) {
-    const { empty, $anchor, anchor } = editorState.selection,
-    isAtStartOfDoc = anchor === 1/*first position inside the node, at start of Doc*/;
-
-    if(!empty || $anchor.parent.type.name !== this.blockNodeName) return false/*let event be handled elsewhere*/;
-    if(isAtStartOfDoc || !$anchor.parent.textContent.length) {
-      const clearedNodesUpdatedTr = new ClearNodesDocumentUpdate().update(editorState, tr);
-      return clearedNodesUpdatedTr/*updated*/;
-    } /* else -- no need to delete blockNode */
-
-    return false/*let Backspace event be handled elsewhere*/;
-  }
-}
-
 // -- Clear -----------------------------------------------------------------------
 /** clear the Nodes in the current Block */
 export const clearNodesCommand: Command = (state, dispatch) => {
