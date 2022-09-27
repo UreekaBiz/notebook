@@ -1,13 +1,14 @@
-import { Box, Button, Flex, Menu, MenuButton, MenuDivider, MenuItem, MenuList } from '@chakra-ui/react';
-import Link from 'next/link';
-import { AiOutlineFileText } from 'react-icons/ai';
+import { Box, Button, Flex, Link, Menu, MenuButton, MenuDivider, MenuItem, MenuList } from '@chakra-ui/react';
+import NextLink from 'next/link';
 import { BiHomeAlt, BiLogOut } from 'react-icons/bi';
-import { FiSettings } from 'react-icons/fi';
+import { CgFileDocument } from 'react-icons/cg';
+import { FaHashtag } from 'react-icons/fa';
+import { HiOutlineViewGrid } from 'react-icons/hi';
+import { TbSettings } from 'react-icons/tb';
 
 import { getEnvBoolean, getPackageVersion, isLoggedOut, Package } from '@ureeka-notebook/web-service';
 
 import { useAuthedUser } from 'authUser/hook/useAuthedUser';
-import { useRouter } from 'next/router';
 import { coreRoutes, profileRoutes } from 'shared/routes';
 import { UserProfileAvatar } from 'user/component/UserProfileAvatar';
 import { getPrivateDisplayName } from 'user/util';
@@ -32,18 +33,9 @@ interface Props {
 export const AuthAvatar: React.FC<Props> = ({ buttonSize, showLogIn = true }) => {
   const authedUser = useAuthedUser();
 
-  const router = useRouter();
-
   const version = getPackageVersion(),
         versionNumber = version.packages[Package.Web],
         versionDate = version.date ? new Date(version.date).toLocaleDateString() : 'unknown';
-
-  // == Handler ===================================================================
-  const handleHomeClick = () => router.push(coreRoutes.root);
-  const handleNotebooksClick = () => router.push(profileRoutes.notebooks);
-
-  const handleSettingsClick = () => router.push(coreRoutes.settings);
-  const handleSignOutClick = () => router.push(coreRoutes.logout);
 
   // == UI ========================================================================
   if(authedUser === undefined/*AuthUserService not initialized*/) return null/*don't render anything*/;
@@ -75,14 +67,46 @@ export const AuthAvatar: React.FC<Props> = ({ buttonSize, showLogIn = true }) =>
       </MenuButton>
       {/* FIXME: make that it so that options can be a prop from the component? */}
       <MenuList>
-        <MenuItem icon={<BiHomeAlt />} onClick={handleHomeClick}>Home</MenuItem>
-        <MenuItem icon={<AiOutlineFileText />} onClick={handleNotebooksClick}>Notebooks</MenuItem>
+        <NextLink href={coreRoutes.root} passHref>
+          <MenuItem as={Link} icon={<BiHomeAlt />} textDecoration='none !important'/*overrides default*/>
+              Home
+          </MenuItem>
+        </NextLink>
+
+        <NextLink href={profileRoutes.notebooks} passHref>
+          <MenuItem as={Link} icon={<CgFileDocument />} textDecoration='none !important'/*overrides default*/>
+            Notebooks
+          </MenuItem>
+        </NextLink>
+
+        <NextLink href={profileRoutes.collections} passHref>
+          <MenuItem as={Link} icon={<HiOutlineViewGrid />} textDecoration='none !important'/*overrides default*/>
+            Collections
+          </MenuItem>
+        </NextLink>
+
+        <NextLink href={profileRoutes.hashtags} passHref>
+          <MenuItem as={Link} icon={<FaHashtag />} textDecoration='none !important'/*overrides default*/>
+            Hashtags
+          </MenuItem>
+        </NextLink>
 
         <MenuDivider />
-        <MenuItem icon={<FiSettings />} onClick={handleSettingsClick}>Settings</MenuItem>
-        <MenuItem icon={<BiLogOut />} onClick={handleSignOutClick}>Sign out</MenuItem>
+
+        <NextLink href={coreRoutes.settings} passHref>
+          <MenuItem as={Link} icon={<TbSettings />} textDecoration='none !important'/*overrides default*/>
+            Settings
+          </MenuItem>
+        </NextLink>
+
+        <NextLink href={coreRoutes.logout} passHref>
+          <MenuItem as={Link}  icon={<BiLogOut />} textDecoration='none !important'/*overrides default*/>
+            Sign out
+          </MenuItem>
+        </NextLink>
 
         <MenuDivider />
+
         <Flex
           alignItems='center'
           justifyContent='space-between'
