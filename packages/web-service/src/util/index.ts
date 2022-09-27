@@ -92,6 +92,7 @@ export {
   throttle,
 
   // SEE: @ureeka-notebook/service-common: util/type.ts
+  assertNever,
   isType,
   Identifier,
   Modify,

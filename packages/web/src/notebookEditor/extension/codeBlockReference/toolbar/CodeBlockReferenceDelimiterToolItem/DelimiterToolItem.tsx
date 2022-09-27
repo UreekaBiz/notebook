@@ -1,7 +1,7 @@
 import { Input } from '@chakra-ui/react';
 import { ChangeEventHandler, KeyboardEventHandler } from 'react';
 
-import { TOOL_ITEM_DATA_TYPE } from 'notebookEditor/toolbar/type';
+import { TOOL_ITEM_DATA_TYPE } from 'notebookEditor/sidebar/toolbar/type';
 
 import { CodeBlockReferenceDelimiterToolItemProps } from './CodeBlockReferenceDelimiterToolItem';
 

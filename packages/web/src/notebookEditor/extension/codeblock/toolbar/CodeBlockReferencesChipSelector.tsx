@@ -5,7 +5,7 @@ import { getLogger, getSelectedNode, isNodeSelection, AttributeType, Logger, Nod
 import { focusCodeBlock, visualIdFromCodeBlockReference } from 'notebookEditor/extension/codeblock/util';
 import { ChipValue } from 'notebookEditor/extension/shared/component/chipTool/Chip';
 import { ChipToolItem } from 'notebookEditor/extension/shared/component/chipTool/ChipToolItem';
-import { EditorToolComponentProps } from 'notebookEditor/toolbar/type';
+import { EditorToolComponentProps } from 'notebookEditor/sidebar/toolbar/type';
 
 import { isValidCodeBlockReference } from '../util';
 

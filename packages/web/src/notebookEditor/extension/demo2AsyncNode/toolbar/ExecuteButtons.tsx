@@ -6,7 +6,7 @@ import { getSelectedNode, getLogger, isDemo2AsyncNode, AttributeType, Logger, No
 
 import { useNotebookEditor } from 'notebookEditor/hook/useNotebookEditor';
 import { getNodeViewStorage } from 'notebookEditor/model/NodeViewStorage';
-import { EditorToolComponentProps, TOOL_ITEM_DATA_TYPE } from 'notebookEditor/toolbar/type';
+import { EditorToolComponentProps, TOOL_ITEM_DATA_TYPE } from 'notebookEditor/sidebar/toolbar/type';
 import { useIsMounted } from 'shared/hook';
 
 import { Demo2AsyncNodeController, Demo2AsyncNodeStorageType } from '../nodeView/controller';

@@ -8,7 +8,7 @@ import { isLinkMarkAttributes, urlSchema, AttributeType, ExtendMarkRangeDocument
 
 import { applyDocumentUpdates } from 'notebookEditor/command/update';
 import { InputToolItemContainer } from 'notebookEditor/extension/shared/component/InputToolItemContainer';
-import { EditorToolComponentProps, TOOL_ITEM_DATA_TYPE } from 'notebookEditor/toolbar/type';
+import { EditorToolComponentProps, TOOL_ITEM_DATA_TYPE } from 'notebookEditor/sidebar/toolbar/type';
 
 import { SetLinkDocumentUpdate } from '../../command';
 

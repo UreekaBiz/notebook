@@ -2,7 +2,7 @@ import { Flex, Text } from '@chakra-ui/react';
 
 import { SelectionDepth } from '@ureeka-notebook/web-service';
 
-import { Toolbar } from 'notebookEditor/toolbar/type';
+import { Toolbar } from 'notebookEditor/sidebar/toolbar/type';
 import { useValidatedEditor } from 'notebookEditor/hook/useValidatedEditor';
 
 // ********************************************************************************

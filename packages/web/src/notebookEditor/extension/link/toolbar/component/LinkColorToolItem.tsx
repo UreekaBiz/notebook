@@ -4,7 +4,7 @@ import { getThemeValue, isLinkMarkAttributes, AttributeType, MarkName, ExtendMar
 
 import { applyDocumentUpdates } from 'notebookEditor/command/update';
 import { ColorPickerTool } from 'notebookEditor/extension/shared/component/ColorPickerToolItem/ColorPickerTool';
-import { EditorToolComponentProps } from 'notebookEditor/toolbar/type';
+import { EditorToolComponentProps } from 'notebookEditor/sidebar/toolbar/type';
 
 import { SetLinkDocumentUpdate } from '../../command';
 

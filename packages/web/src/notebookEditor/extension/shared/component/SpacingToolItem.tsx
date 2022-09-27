@@ -2,7 +2,7 @@ import { getSelectedNode, isNodeSelection, updateAttributesInRangeCommand, Attri
 
 import { getTextDOMRenderedValue } from 'notebookEditor/extension/util/attribute';
 import { Unit } from 'notebookEditor/theme/type';
-import { EditorToolComponentProps } from 'notebookEditor/toolbar/type';
+import { EditorToolComponentProps } from 'notebookEditor/sidebar/toolbar/type';
 
 import { SpacingControls } from './SpacingControls';
 

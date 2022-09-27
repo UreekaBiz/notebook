@@ -4,7 +4,7 @@ import { getAllAscendantsFromSelection, getMarkName, getNodeName, isTextNode, Se
 
 import { getAllMarksFromSelection } from 'notebookEditor/extension/util/mark';
 import { useValidatedEditor } from 'notebookEditor/hook/useValidatedEditor';
-import { getToolbar } from 'notebookEditor/toolbar/toolbar';
+import { getToolbar } from 'notebookEditor/sidebar/toolbar/toolbar';
 
 import { ToolbarBreadcrumbItem } from './ToolbarBreadcrumbItem';
 

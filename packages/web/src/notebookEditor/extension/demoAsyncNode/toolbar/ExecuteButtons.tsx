@@ -8,7 +8,7 @@ import { visualIdFromCodeBlockReference } from 'notebookEditor/extension/codeblo
 import { areCodeBlocksEmpty } from 'notebookEditor/extension/codeBlockAsyncNode/util';
 import { useNotebookEditor } from 'notebookEditor/hook/useNotebookEditor';
 import { getNodeViewStorage } from 'notebookEditor/model/NodeViewStorage';
-import { EditorToolComponentProps, TOOL_ITEM_DATA_TYPE } from 'notebookEditor/toolbar/type';
+import { EditorToolComponentProps, TOOL_ITEM_DATA_TYPE } from 'notebookEditor/sidebar/toolbar/type';
 import { useIsMounted } from 'shared/hook';
 
 import { DemoAsyncNodeController, DemoAsyncNodeStorageType } from '../nodeView/controller';

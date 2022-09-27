@@ -1,7 +1,7 @@
 import { IconButton } from '@chakra-ui/react';
 import { ReactElement } from 'react';
 
-import { TOOL_ITEM_DATA_TYPE } from 'notebookEditor/toolbar/type';
+import { TOOL_ITEM_DATA_TYPE } from 'notebookEditor/sidebar/toolbar/type';
 
 // ********************************************************************************
 interface Props {

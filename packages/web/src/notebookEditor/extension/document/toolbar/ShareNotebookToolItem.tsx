@@ -1,6 +1,6 @@
 import { useNotebook } from 'notebook/hook/useNotebook';
 import { ShareNotebookDialog } from 'notebookEditor/component/ShareNotebookDialog';
-import { EditorToolComponentProps } from 'notebookEditor/toolbar/type';
+import { EditorToolComponentProps } from 'notebookEditor/sidebar/toolbar/type';
 
 // ********************************************************************************
 interface Props extends EditorToolComponentProps {/*no additional*/}

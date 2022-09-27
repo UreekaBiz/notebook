@@ -2,7 +2,7 @@ import { isCodeBlockNode, AttributeType, CodeBlockType, NodeName } from '@ureeka
 
 import { DropdownTool, DropdownToolItemType } from 'notebookEditor/extension/shared/component/DropdownToolItem/DropdownTool';
 import { InputToolItemContainer } from 'notebookEditor/extension/shared/component/InputToolItemContainer';
-import { EditorToolComponentProps } from 'notebookEditor/toolbar/type';
+import { EditorToolComponentProps } from 'notebookEditor/sidebar/toolbar/type';
 
 // ********************************************************************************
 // NOTE: Using directly DropdownTool instead of DropdownToolItem because this needs

@@ -2,7 +2,7 @@ import { Input, InputProps } from '@chakra-ui/react';
 import { ChangeEventHandler, KeyboardEventHandler } from 'react';
 
 import { useLocalValue } from 'notebookEditor/shared/hook/useLocalValue';
-import { TOOL_ITEM_DATA_TYPE } from 'notebookEditor/toolbar/type';
+import { TOOL_ITEM_DATA_TYPE } from 'notebookEditor/sidebar/toolbar/type';
 
 // ********************************************************************************
 type Props = Omit<InputProps, 'onChange'> & {

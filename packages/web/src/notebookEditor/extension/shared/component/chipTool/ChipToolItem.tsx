@@ -1,6 +1,6 @@
 import { getSelectedNode, isNodeSelection, isNodeType, AttributeType, NodeName } from '@ureeka-notebook/web-service';
 
-import { EditorToolComponentProps } from 'notebookEditor/toolbar/type';
+import { EditorToolComponentProps } from 'notebookEditor/sidebar/toolbar/type';
 
 import { InputToolItemContainer } from '../InputToolItemContainer';
 import { ChipValue } from './Chip';

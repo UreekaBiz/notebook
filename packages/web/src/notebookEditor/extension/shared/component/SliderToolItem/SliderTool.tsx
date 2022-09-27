@@ -1,7 +1,7 @@
 import { Input, Slider, SliderFilledTrack, SliderThumb, SliderTrack } from '@chakra-ui/react';
 import { ChangeEventHandler, KeyboardEventHandler } from 'react';
 
-import { TOOL_ITEM_DATA_TYPE } from 'notebookEditor/toolbar/type';
+import { TOOL_ITEM_DATA_TYPE } from 'notebookEditor/sidebar/toolbar/type';
 import { useLocalValue } from 'notebookEditor/shared/hook/useLocalValue';
 import { InputToolItemContainer } from '../InputToolItemContainer';
 

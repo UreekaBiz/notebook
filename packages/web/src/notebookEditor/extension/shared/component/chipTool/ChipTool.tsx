@@ -5,7 +5,7 @@ import { HTML5Backend } from 'react-dnd-html5-backend';
 
 import { getLogger, Logger } from '@ureeka-notebook/web-service';
 
-import { TOOL_ITEM_DATA_TYPE } from 'notebookEditor/toolbar/type';
+import { TOOL_ITEM_DATA_TYPE } from 'notebookEditor/sidebar/toolbar/type';
 
 import { Chip, ChipValue } from './Chip';
 

@@ -7,7 +7,7 @@ import { getTextDOMRenderedValue } from 'notebookEditor/extension/util/attribute
 import { getDialogStorage } from 'notebookEditor/model/DialogStorage';
 import { InputWithUnitNodeToolItem } from 'notebookEditor/extension/shared/component/InputWithUnitToolItem';
 import { InputToolItem } from 'notebookEditor/extension/shared/component/InputToolItem';
-import { Toolbar, ToolItem } from 'notebookEditor/toolbar/type';
+import { Toolbar, ToolItem } from 'notebookEditor/sidebar/toolbar/type';
 
 import { setVerticalAlign } from '../command';
 import { ImageSrcToolItem } from './ImageSrcToolItem';

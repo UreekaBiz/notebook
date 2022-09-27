@@ -5,7 +5,7 @@ import { isLinkMarkAttributes, AttributeType, ExtendMarkRangeDocumentUpdate, Lin
 import { applyDocumentUpdates } from 'notebookEditor/command/update';
 import { DropdownTool, DropdownToolItemType } from 'notebookEditor/extension/shared/component/DropdownToolItem/DropdownTool';
 import { InputToolItemContainer } from 'notebookEditor/extension/shared/component/InputToolItemContainer';
-import { EditorToolComponentProps } from 'notebookEditor/toolbar/type';
+import { EditorToolComponentProps } from 'notebookEditor/sidebar/toolbar/type';
 
 import { SetLinkDocumentUpdate } from '../../command';
 import { getReadableLinkTarget } from '../../util';

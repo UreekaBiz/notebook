@@ -6,7 +6,7 @@ import { getParentNode, HeadingLevel, isHeadingLevel, isHeadingNode, isNumber, A
 
 import { toolItemCommandWrapper } from 'notebookEditor/command/util';
 import { ACTIVE_BUTTON_COLOR, ICON_BUTTON_CLASS } from 'notebookEditor/theme/theme';
-import { EditorToolComponentProps, TOOL_ITEM_DATA_TYPE } from 'notebookEditor/toolbar/type';
+import { EditorToolComponentProps, TOOL_ITEM_DATA_TYPE } from 'notebookEditor/sidebar/toolbar/type';
 
 import { setHeadingCommand } from '../command';
 

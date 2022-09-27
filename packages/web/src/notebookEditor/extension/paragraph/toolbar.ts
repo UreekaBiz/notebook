@@ -16,7 +16,7 @@ import { markSuperScript } from 'notebookEditor/extension/superScript/toolbar';
 import { markSubScript } from 'notebookEditor/extension/subScript/toolbar';
 import { fontSizeToolItem, spacingToolItem, textColorToolItem } from 'notebookEditor/extension/textStyle/toolbar';
 import { markUnderline } from 'notebookEditor/extension/underline/toolbar';
-import { Toolbar } from 'notebookEditor/toolbar/type';
+import { Toolbar } from 'notebookEditor/sidebar/toolbar/type';
 
 //*********************************************************************************
 // == Toolbar =====================================================================

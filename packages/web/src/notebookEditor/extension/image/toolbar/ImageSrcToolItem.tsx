@@ -6,7 +6,7 @@ import * as Validate from 'yup';
 import { isImageNode, isNodeSelection, urlSchema, AttributeType, NodeName } from '@ureeka-notebook/web-service';
 
 import { InputToolItemContainer } from 'notebookEditor/extension/shared/component/InputToolItemContainer';
-import { EditorToolComponentProps, TOOL_ITEM_DATA_TYPE } from 'notebookEditor/toolbar/type';
+import { EditorToolComponentProps, TOOL_ITEM_DATA_TYPE } from 'notebookEditor/sidebar/toolbar/type';
 
 // ********************************************************************************
 // == Schema ======================================================================

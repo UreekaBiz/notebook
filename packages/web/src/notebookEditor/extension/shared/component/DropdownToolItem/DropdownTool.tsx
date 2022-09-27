@@ -1,7 +1,7 @@
 import { Select } from '@chakra-ui/react';
 import { ChangeEventHandler } from 'react';
 
-import { TOOL_ITEM_DATA_TYPE } from 'notebookEditor/toolbar/type';
+import { TOOL_ITEM_DATA_TYPE } from 'notebookEditor/sidebar/toolbar/type';
 
 // ********************************************************************************
 export type DropdownToolItemType = { value: string; label: string; };

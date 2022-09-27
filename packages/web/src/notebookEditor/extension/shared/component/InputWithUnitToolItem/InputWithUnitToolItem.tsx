@@ -1,7 +1,7 @@
 import { getSelectedNode, isNodeSelection, isNodeType, AttributeType, InvalidMergedAttributeValue, MarkName, NodeName } from '@ureeka-notebook/web-service';
 
 import { getTextDOMRenderedValue } from 'notebookEditor/extension/util/attribute';
-import { EditorToolComponentProps } from 'notebookEditor/toolbar/type';
+import { EditorToolComponentProps } from 'notebookEditor/sidebar/toolbar/type';
 
 import { InputWithUnitTool } from './InputWithUnitTool';
 

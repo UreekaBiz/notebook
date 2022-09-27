@@ -5,8 +5,8 @@ import { useCallback } from 'react';
 import { SelectionDepth } from '@ureeka-notebook/web-service';
 
 import ErrorBoundary from 'core/component/ErrorBoundary';
+import { ToolItem, TOOL_ITEM_DATA_TYPE } from 'notebookEditor/sidebar/toolbar/type';
 import { ACTIVE_BUTTON_COLOR, ICON_BUTTON_CLASS } from 'notebookEditor/theme/theme';
-import { ToolItem, TOOL_ITEM_DATA_TYPE } from 'notebookEditor/toolbar/type';
 
 // ********************************************************************************
 interface Props {
