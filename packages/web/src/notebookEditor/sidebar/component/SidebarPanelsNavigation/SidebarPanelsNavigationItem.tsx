@@ -19,7 +19,6 @@ export const SidebarPanelsNavigationItem: React.FC<Props> = ({ panel, isActive, 
       border='1px solid'
       borderColor='gray.300'
       fontSize='12px'
-      fontColor='#333'
       fontWeight='500'
       transition='all 0.2s'
       _hover={{
@@ -27,7 +26,7 @@ export const SidebarPanelsNavigationItem: React.FC<Props> = ({ panel, isActive, 
       }}
       {...props}
     >
-      <Text>{getReadableSidebarPanel(panel)}</Text>
+      <Text color='#333'>{getReadableSidebarPanel(panel)}</Text>
     </Box>
   );
 };
