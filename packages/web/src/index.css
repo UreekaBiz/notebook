@@ -49,16 +49,18 @@
   cursor: pointer;
 }
 
+/* -- Editor Selection --------------------------------------------------------- */
+[data-node-type="image"].ProseMirror-selectednode {
+  outline: 1px solid #666;
+}
+.ProseMirror-selectednode > span:first-child/*target inline nodes with content*/{
+  outline: 1px solid #666;
+}
+
 /* -- Inline Node -------------------------------------------------------------- */
 .inlineNodeContainer {
   position: relative;
   display: inline;
-}
-.ProseMirror-selectednode > span:first-child/*target inline nodes with content (e.g. asyncNodes)*/{
-  outline: 1px solid #666;
-}
-img.ProseMirror-selectednode/*target inline nodes with content (e.g. asyncNodes)*/{
-  outline: 1px solid #666;
 }
 
 /* -- Node Styles -------------------------------------------------------------- */
