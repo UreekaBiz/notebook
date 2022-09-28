@@ -1,5 +1,6 @@
 import { Fragment, Node as ProseMirrorNode, Slice } from 'prosemirror-model';
 import { Plugin } from 'prosemirror-state';
+import { AddMarkStep } from 'prosemirror-transform';
 import { EditorView } from 'prosemirror-view';
 
 import { createListItemContentNode, createListItemNode, createStrikethroughMark, createTaskListItemNode, isListItemContentNode, isTaskListItemNode, isTaskListNode, AttributeType } from '@ureeka-notebook/web-service';
@@ -80,12 +81,16 @@ export const ListItemTaskListItemPlugin = () => {
               } /* else -- do not change default */
             });
 
-            if(isTaskListItemNode(parentListItem) && parentListItem.attrs[AttributeType.Checked]) {
-              pastedListItemContent.content.descendants((node) => { node.marks = [createStrikethroughMark(view.state.schema)]; });
-            } /* else -- the content is not being pasted into a TaskListItem or it is not checked, no need to add Strikethrough Mark */
-
             // insert the content of the pasted ListItemContent
             tr.replaceSelection(new Slice(pastedListItemContent.content, 0/*use full Slice*/, 0/*use full Slice*/));
+
+            // if pasting into a checked TaskListItem, ensure
+            // the pasted content receives the Strikethrough Mark
+            if(isTaskListItemNode(parentListItem) && parentListItem.attrs[AttributeType.Checked]) {
+              const from = tr.selection.to - parentListItem.content.size;
+              tr.step(new AddMarkStep(from, tr.selection.to, createStrikethroughMark(view.state.schema)));
+            } /* else -- the content is not being pasted into a TaskListItem or it is not checked, no need to add Strikethrough Mark */
+
             view.dispatch(tr);
             return true/*event handled*/;
           } /* else -- turn each Block into a ListItem */
