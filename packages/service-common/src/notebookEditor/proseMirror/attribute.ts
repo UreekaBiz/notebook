@@ -65,6 +65,7 @@ export enum AttributeType {
   Alt = 'alt',
   Src = 'src',
   Title = 'title',
+  Uploaded = 'uploaded',
 
   // .. Link ......................................................................
   Href = 'href',

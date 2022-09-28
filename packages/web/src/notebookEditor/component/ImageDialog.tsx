@@ -4,11 +4,13 @@ import { useFormik, Field, FormikProvider } from 'formik';
 import { useState } from 'react';
 import * as Validate from 'yup';
 
-import { urlSchema, DefaultImageAttributes } from '@ureeka-notebook/web-service';
+import { getLogger, urlSchema, defaultImageAttributes, Logger } from '@ureeka-notebook/web-service';
 
 import { useIsMounted } from 'shared/hook/useIsMounted';
 import { fitImageDimension, getImageMeta } from 'notebookEditor/extension/image/util';
 import { insertAndSelectImageCommand } from 'notebookEditor/extension/image/command';
+
+const log = getLogger(Logger.DEFAULT);
 
 // ********************************************************************************
 // == Schema ======================================================================
@@ -42,9 +44,9 @@ export const ImageDialog: React.FC<Props> = ({ editor, isOpen, onClose }) => {
       const img = await getImageMeta(value);
       const { src, fittedWidth: width, fittedHeight: height } = fitImageDimension(img);
 
-      insertAndSelectImageCommand({ ...DefaultImageAttributes, src, width, height })(editor.state, editor.view.dispatch);
+      insertAndSelectImageCommand({ ...defaultImageAttributes, src, width, height })(editor.state, editor.view.dispatch);
     } catch(error) {
-      console.error(`Error loading image for src (${value}). Reason: `, error);
+      log.info(`Error loading image for src (${value}). Reason: `, error);
       // REF: https://chromestatus.com/feature/5629709824032768
       // NOTE: CORB might cause the URL response to be invalid (SEE: REF above)
       if(!isMounted()) return/*nothing to do*/;

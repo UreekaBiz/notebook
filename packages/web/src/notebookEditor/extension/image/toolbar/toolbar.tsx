@@ -1,7 +1,7 @@
 import { AiOutlineVerticalAlignBottom, AiOutlineVerticalAlignMiddle, AiOutlineVerticalAlignTop } from 'react-icons/ai';
 import { FiImage } from 'react-icons/fi';
 
-import { AttributeType, NodeName, VerticalAlign, MAX_IMAGE_HEIGHT, MAX_IMAGE_WIDTH, MIN_IMAGE_HEIGHT, MIN_IMAGE_WIDTH } from '@ureeka-notebook/web-service';
+import { AttributeType, NodeName, VerticalAlign, DEFAULT_IMAGE_MAX_HEIGHT, DEFAULT_IMAGE_MIN_HEIGHT, DEFAULT_IMAGE_MAX_WIDTH, DEFAULT_IMAGE_MIN_WIDTH } from '@ureeka-notebook/web-service';
 
 import { getTextDOMRenderedValue } from 'notebookEditor/extension/util/attribute';
 import { getDialogStorage } from 'notebookEditor/model/DialogStorage';
@@ -77,8 +77,8 @@ const imageWidthToolItem: ToolItem =  {
       name='Width'
       nodeName={NodeName.IMAGE}
       attributeType={AttributeType.Width}
-      minValue={MIN_IMAGE_WIDTH}
-      maxValue={MAX_IMAGE_WIDTH}
+      minValue={DEFAULT_IMAGE_MIN_WIDTH}
+      maxValue={DEFAULT_IMAGE_MAX_WIDTH}
     />,
 };
 
@@ -92,8 +92,8 @@ const imageHeightToolItem: ToolItem =  {
       name='Height'
       nodeName={NodeName.IMAGE}
       attributeType={AttributeType.Height}
-      minValue={MIN_IMAGE_HEIGHT}
-      maxValue={MAX_IMAGE_HEIGHT}
+      minValue={DEFAULT_IMAGE_MIN_HEIGHT}
+      maxValue={DEFAULT_IMAGE_MAX_HEIGHT}
     />,
 };
 

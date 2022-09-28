@@ -11,6 +11,10 @@ export {
   getMetadata,
 } from 'firebase/storage';
 
+// ** RXJS ********************************************************************
+// purely for convenience
+export { lastValueFrom } from 'rxjs';
+
 // ** Service-Common **************************************************************
 export {
   // SEE: @ureeka-notebook/service-common: asset/type.ts

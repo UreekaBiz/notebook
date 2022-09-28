@@ -14,7 +14,14 @@ import { MarkName, NodeName } from '@ureeka-notebook/web-service';
 //       storage and must also show dialogs then it is recommended to add said
 //       state to create a custom storage for the extension, node or mark
 // ********************************************************************************
-export class DialogStorage {
+// == Interface ===================================================================
+export interface DialogStorageInterface {
+  getShouldInsertNodeOrMark: () => boolean;
+  setShouldInsertNodeOrMark: (value: boolean) => void;
+}
+
+// == Class =======================================================================
+export class DialogStorage implements DialogStorageInterface {
   // -- Attribute -----------------------------------------------------------------
   // When set to true, a dialog prompting the user for the image URL appears
   // SEE: EditorUserInteractions.tsx

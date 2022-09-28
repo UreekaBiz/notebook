@@ -1,4 +1,4 @@
-import { MAX_IMAGE_HEIGHT, MAX_IMAGE_WIDTH } from '@ureeka-notebook/web-service';
+import { DEFAULT_IMAGE_MAX_HEIGHT, DEFAULT_IMAGE_MAX_WIDTH } from '@ureeka-notebook/web-service';
 
 // ********************************************************************************
 // check whether the dimensions of HTMLImageElement are within the boundaries of
@@ -7,7 +7,7 @@ import { MAX_IMAGE_HEIGHT, MAX_IMAGE_WIDTH } from '@ureeka-notebook/web-service'
 export const fitImageDimension = (imageNode: HTMLImageElement) => {
   const { src, width, height } = imageNode;
 
-  if(width < MAX_IMAGE_WIDTH && height < MAX_IMAGE_HEIGHT) {
+  if(width < DEFAULT_IMAGE_MAX_WIDTH && height < DEFAULT_IMAGE_MAX_HEIGHT) {
     return {
       src,
       fittedWidth: width.toString() + 'px'/*default units*/,
@@ -15,7 +15,7 @@ export const fitImageDimension = (imageNode: HTMLImageElement) => {
     };
   } /* else -- image exceeds limits and must be resized while maintaining ratio */
 
-  const ratio = Math.min(MAX_IMAGE_WIDTH / width, MAX_IMAGE_HEIGHT / height),
+  const ratio = Math.min(DEFAULT_IMAGE_MAX_WIDTH / width, DEFAULT_IMAGE_MAX_HEIGHT / height),
         newWidth = Math.floor(ratio * width),
         newHeight = Math.floor(ratio * height);
 
