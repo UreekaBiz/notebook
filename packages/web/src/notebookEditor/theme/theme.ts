@@ -14,6 +14,7 @@ export const ICON_BUTTON_CLASS = 'iconButton';
 // .. Node ........................................................................
 // added to the selected Node by default by ProseMirror
 export const PM_SELECTED_CLASS = 'ProseMirror-selectednode';
+
 export const INLINE_NODE_CONTAINER_CLASS = 'inlineNodeContainer';
 export const SELECTED_TEXT_CLASS = 'selected_text';
 
