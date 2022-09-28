@@ -1,6 +1,6 @@
 import { Editor } from '@tiptap/core';
 
-import { defaultImageAttributes, getDownloadURL, getLogger, getPosType, lastValueFrom, AssetService, AttributeType, ImageNodeType, Logger, NodeName, SetNodeSelectionDocumentUpdate, UpdateAttributesDocumentUpdate } from '@ureeka-notebook/web-service';
+import { defaultImageAttributes, getDownloadURL, getPosType, lastValueFrom, AssetService, AttributeType, ImageNodeType, NodeName, SetNodeSelectionDocumentUpdate, UpdateAttributesDocumentUpdate, DEFAULT_IMAGE_WIDTH, DEFAULT_IMAGE_HEIGHT } from '@ureeka-notebook/web-service';
 
 import { applyDocumentUpdates } from 'notebookEditor/command/update';
 import { AbstractNodeController } from 'notebookEditor/model/AbstractNodeController';
@@ -9,8 +9,6 @@ import { getImageMeta, fitImageDimension } from '../util';
 import { ImageModel } from './model';
 import { ImageStorage } from './storage';
 import { ImageView } from './view';
-
-const log = getLogger(Logger.DEFAULT);
 
 // ********************************************************************************
 export class ImageController extends AbstractNodeController<ImageNodeType, ImageStorage, ImageModel, ImageView> {
@@ -28,10 +26,9 @@ export class ImageController extends AbstractNodeController<ImageNodeType, Image
 
   private async uploadImage() {
     const src = this.node.attrs[AttributeType.Src];
+    if(!src) return/*invalid src, nothing to do*/;
 
     try {
-      if(!src) return/*invalid src, nothing to do*/;
-
       const img = await getImageMeta(src);
       const { fittedWidth: width, fittedHeight: height } = fitImageDimension(img);
 
@@ -46,7 +43,11 @@ export class ImageController extends AbstractNodeController<ImageNodeType, Image
         new UpdateAttributesDocumentUpdate(NodeName.IMAGE, { ...defaultImageAttributes, src: storageUrl, width, height, uploaded: true/*uploaded to Storage*/ }),
       ]);
     } catch(error) {
-      log.info(`Error loading image for src (${src}). Reason: `, error);
+      // if unable to load and fit, use defaults
+      applyDocumentUpdates(this.editor, [
+        new SetNodeSelectionDocumentUpdate(this.getPos()),
+        new UpdateAttributesDocumentUpdate(NodeName.IMAGE, { ...defaultImageAttributes, src, width: DEFAULT_IMAGE_WIDTH, height: DEFAULT_IMAGE_HEIGHT, uploaded: true/*do not retry upload*/ }),
+      ]);
     } finally {
       this.nodeView.updateView();
     }

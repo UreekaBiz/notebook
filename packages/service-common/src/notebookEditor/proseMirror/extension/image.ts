@@ -63,7 +63,6 @@ export type ImageJSONNodeType = JSONNode<ImageAttributes> & { type: NodeName.IMA
 export const isImageJSONNode = (node: JSONNode): node is ImageJSONNodeType => node.type === NodeName.IMAGE;
 
 // --------------------------------------------------------------------------------
-export const DEFAULT_IMAGE_SRC = 'https://via.placeholder.com/300.png/09f/fff';
 export const DEFAULT_IMAGE_PARSE_TAG = 'img[src]';
 
 export const DEFAULT_IMAGE_WIDTH = '300px';
@@ -81,8 +80,6 @@ export const defaultImageAttributes: Partial<ImageAttributes> = {
   // NOTE: Images built from the default attributes should not be uploaded
   //       since they are already hosted somewhere else (SEE: ImageDialog.tsx)
   [AttributeType.Uploaded]: true,
-
-  [AttributeType.Src]: DEFAULT_IMAGE_SRC,
 
   [AttributeType.Width]: DEFAULT_IMAGE_WIDTH,
   [AttributeType.Height]: DEFAULT_IMAGE_HEIGHT,

@@ -1,6 +1,6 @@
 import { Editor } from '@tiptap/core';
 
-import { getPosType, AttributeType, NodeName, ImageNodeType, DATA_NODE_TYPE, DEFAULT_IMAGE_HEIGHT, DEFAULT_IMAGE_SRC, DEFAULT_IMAGE_WIDTH } from '@ureeka-notebook/web-service';
+import { getPosType, AttributeType, NodeName, ImageNodeType, DATA_NODE_TYPE } from '@ureeka-notebook/web-service';
 
 import { AbstractNodeView } from 'notebookEditor/model/AbstractNodeView';
 
@@ -28,8 +28,6 @@ export class ImageView extends AbstractNodeView<ImageNodeType, ImageStorage, Ima
     // create an Image with default attributes
     const image = document.createElement('img');
           image.setAttribute(DATA_NODE_TYPE, NodeName.IMAGE);
-          image.setAttribute(AttributeType.Src, DEFAULT_IMAGE_SRC);
-          image.setAttribute('style', `${[AttributeType.Width]}: ${DEFAULT_IMAGE_WIDTH}; ${[AttributeType.Height]}: ${DEFAULT_IMAGE_HEIGHT};`);
     return image;
   }
 
@@ -43,9 +41,7 @@ export class ImageView extends AbstractNodeView<ImageNodeType, ImageStorage, Ima
     if(!src) return/*nothing to do*/;
     this.imageDOM.setAttribute(AttributeType.Src, src);
 
-
-    if(width && height) {
-      this.imageDOM.setAttribute('style', `${[AttributeType.Width]}: ${width}; ${[AttributeType.Height]}: ${height};`);
-    } /* else -- do not update dimensions */
+    if(!width || !height) return/*no dimensions to update*/;
+    this.imageDOM.setAttribute('style', `${[AttributeType.Width]}: ${width}; ${[AttributeType.Height]}: ${height};`);
   }
 }
