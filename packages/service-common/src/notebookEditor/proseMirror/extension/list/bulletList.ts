@@ -33,11 +33,11 @@ export const BulletListNodeRendererSpec: NodeRendererSpec<BulletListAttributes> 
 // -- Node Type -------------------------------------------------------------------
 // NOTE: this is the only way since PM does not provide a way to specify the type
 //       of the attributes
-export type BulletListNodeType = ProseMirrorNode<NotebookSchemaType> & { attrs: BulletListAttributes; };
-export const isBulletListNode = (node: ProseMirrorNode<NotebookSchemaType>): node is BulletListNodeType => node.type.name === NodeName.BULLET_LIST;
+export type BulletListNodeType = ProseMirrorNode & { attrs: BulletListAttributes; };
+export const isBulletListNode = (node: ProseMirrorNode): node is BulletListNodeType => node.type.name === NodeName.BULLET_LIST;
 
 export const getBulletListNodeType = (schema: NotebookSchemaType) => schema.nodes[NodeName.BULLET_LIST];
-export const createBulletListNode = (schema: NotebookSchemaType, attributes?: Partial<BulletListAttributes>, content?: ProseMirrorNodeContent, marks?: Mark<NotebookSchemaType>[]) =>
+export const createBulletListNode = (schema: NotebookSchemaType, attributes?: Partial<BulletListAttributes>, content?: ProseMirrorNodeContent, marks?: Mark[]) =>
   getBulletListNodeType(schema).create(attributes, content, marks);
 
 // -- JSON Node Type --------------------------------------------------------------

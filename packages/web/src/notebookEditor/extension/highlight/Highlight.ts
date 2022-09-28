@@ -30,7 +30,7 @@ const highlightPlugin = (editor: Editor) => new Plugin({
 
       const decorations: Decoration[] = [];
       state.doc.nodesBetween(from, to, (node, pos, parent) => {
-        if(node.isText && parent.isTextblock/*parent is not a nested Editor View*/) {
+        if(node.isText && parent && parent.isTextblock/*parent is not a nested Editor View*/) {
           const nodeStart = pos;
           const nodeEnd = pos + node.nodeSize;
 

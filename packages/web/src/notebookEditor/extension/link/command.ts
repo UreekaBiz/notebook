@@ -1,6 +1,6 @@
 import { EditorState, TextSelection, Transaction } from 'prosemirror-state';
 
-import { createLinkMark, AbstractDocumentUpdate, Command, LinkAttributes, MarkName, NotebookSchemaType, SetMarkDocumentUpdate, UnsetMarkDocumentUpdate, PREVENT_LINK_META } from '@ureeka-notebook/web-service';
+import { createLinkMark, AbstractDocumentUpdate, Command, LinkAttributes, MarkName, SetMarkDocumentUpdate, UnsetMarkDocumentUpdate, PREVENT_LINK_META } from '@ureeka-notebook/web-service';
 
 // ********************************************************************************
 // NOTE: the desired behavior for these Commands is that creating a Link in a
@@ -26,7 +26,7 @@ export class SetLinkDocumentUpdate implements AbstractDocumentUpdate {
    * modify the given Transaction such that a the Link Mark
    * is set across the current Selection, and return it
    */
-  public update(editorState: EditorState<NotebookSchemaType>, tr: Transaction<NotebookSchemaType>) {
+  public update(editorState: EditorState, tr: Transaction) {
     tr.setMeta(PREVENT_LINK_META, true/*(SEE: ../plugin.ts)*/);
     const updatedTr = new SetMarkDocumentUpdate(MarkName.LINK, this.attributes).update(editorState, tr);
     return updatedTr/*updated*/;
@@ -51,7 +51,7 @@ export class UnsetLinkDocumentUpdate implements AbstractDocumentUpdate {
    * modify the given Transaction such that a the Link Mark
    * is unset across the current Selection, and return it
    */
-  public update(editorState: EditorState<NotebookSchemaType>, tr: Transaction<NotebookSchemaType>) {
+  public update(editorState: EditorState, tr: Transaction) {
     tr.setMeta(PREVENT_LINK_META, true/*(SEE: ../plugin.ts)*/);
     const updatedTr = new UnsetMarkDocumentUpdate(MarkName.LINK, true/*extend empty Mark Range*/).update(editorState, tr);
     return updatedTr/*updated*/;
@@ -78,7 +78,7 @@ export class InsertLinkDocumentUpdate implements AbstractDocumentUpdate {
    * modify the given Transaction such that Text content is inserted
    * into the Editor, it receives the Link Mark, and then return it
    */
-  public update(editorState: EditorState<NotebookSchemaType>, tr: Transaction<NotebookSchemaType>) {
+  public update(editorState: EditorState, tr: Transaction) {
     const { href } = this.attributes;
     if(!href) return false/*no Link content to insert*/;
 

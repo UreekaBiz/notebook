@@ -2,7 +2,6 @@ import { EditorState, TextSelection, Transaction } from 'prosemirror-state';
 
 import { Attributes } from '../attribute';
 import { getMarkAttributes, getMarkRange, isMarkActive, MarkName } from '../mark';
-import { NotebookSchemaType } from '../schema';
 import { AbstractDocumentUpdate, Command } from './type';
 
 // ********************************************************************************
@@ -24,7 +23,7 @@ export class SetMarkDocumentUpdate implements AbstractDocumentUpdate {
    * modify the given Transaction such that a Mark
    * is set across the current Selection, and return it
    */
-  public update(editorState: EditorState<NotebookSchemaType>, tr: Transaction<NotebookSchemaType>) {
+  public update(editorState: EditorState, tr: Transaction) {
     const { empty, ranges } = tr.selection;
     const markType = editorState.schema.marks[this.markName];
     if(empty) {
@@ -80,7 +79,7 @@ export class UnsetMarkDocumentUpdate implements AbstractDocumentUpdate {
    * across the current Selection. If extendEmptyMarkRange,
    * is true, they will be removed even across (i.e. past) it
    */
-  public update(editorState: EditorState<NotebookSchemaType>, tr: Transaction<NotebookSchemaType>) {
+  public update(editorState: EditorState, tr: Transaction) {
     const { selection } = editorState;
     const markType = editorState.schema.marks[this.markName];
     const { $from, empty, ranges } = selection;
@@ -123,7 +122,7 @@ export class ToggleMarkDocumentUpdate implements AbstractDocumentUpdate {
    * modify the given Transaction such that the given Mark is set or unset
    * depending on whether or not it is currently active
    */
-  public update(editorState: EditorState<NotebookSchemaType>, tr: Transaction<NotebookSchemaType>) {
+  public update(editorState: EditorState, tr: Transaction) {
     if(isMarkActive(editorState, this.markName, this.attributes)) {
       return new UnsetMarkDocumentUpdate(this.markName, false/*default not extend Mark Range*/).update(editorState, tr);
     } /* else -- Mark is not active, set it */
@@ -155,7 +154,7 @@ export class ExtendMarkRangeDocumentUpdate implements AbstractDocumentUpdate {
    * of the given name in it, and if it does, modifies the Transaction so that
    * the Range covers it completely, and returns it
    */
-  public update(editorState: EditorState<NotebookSchemaType>, tr: Transaction<NotebookSchemaType>) {
+  public update(editorState: EditorState, tr: Transaction) {
     const markType = editorState.schema.marks[this.markName];
 
     const { doc, selection } = tr;

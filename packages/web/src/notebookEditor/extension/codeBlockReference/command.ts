@@ -1,6 +1,6 @@
 import { EditorState, Transaction } from 'prosemirror-state';
 
-import { createCodeBlockReferenceNode, generateNodeId, getSelectedNode, isCodeBlockReferenceNode, AbstractDocumentUpdate, CodeBlockReferenceAttributes, Command, NotebookSchemaType, ReplaceAndSelectNodeDocumentUpdate } from '@ureeka-notebook/web-service';
+import { createCodeBlockReferenceNode, generateNodeId, getSelectedNode, isCodeBlockReferenceNode, AbstractDocumentUpdate, CodeBlockReferenceAttributes, Command, ReplaceAndSelectNodeDocumentUpdate } from '@ureeka-notebook/web-service';
 
 import { focusChipToolInput } from 'notebookEditor/util';
 
@@ -25,7 +25,7 @@ export class InsertAndSelectCodeBlockReferenceDocumentUpdate implements Abstract
    * modify the given Transaction such that a CodeBlockReference is inserted
    * and selected, then return it
    */
-  public update(editorState: EditorState<NotebookSchemaType>, tr: Transaction<NotebookSchemaType>) {
+  public update(editorState: EditorState, tr: Transaction) {
     const node = getSelectedNode(editorState);
     if(node && isCodeBlockReferenceNode(node)) return tr/*no updates, ignore if selected Node already is a CodeBlockReference*/;
 

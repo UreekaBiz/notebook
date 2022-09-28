@@ -1,7 +1,7 @@
 import { EditorState, Plugin, PluginKey, Transaction } from 'prosemirror-state';
 import { Decoration, DecorationSet, EditorView } from 'prosemirror-view';
 
-import { isInlineNodeWithContent, NotebookSchemaType } from '@ureeka-notebook/web-service';
+import { isInlineNodeWithContent } from '@ureeka-notebook/web-service';
 
 // ********************************************************************************
 // REF: https://discuss.prosemirror.net/t/cursor-appears-in-the-wrong-position-in-chrome-98/4409
@@ -33,13 +33,13 @@ class InlineNodeWithContent {
 }
 
 // == Plugin ======================================================================
-const inlineNodeWithContentKey = new PluginKey<InlineNodeWithContent, NotebookSchemaType>('inlineNodeWithContentKey');
+const inlineNodeWithContentKey = new PluginKey<InlineNodeWithContent>('inlineNodeWithContentKey');
 export const InlineNodeWithContentPlugin = () => {
   // differentiate between the state where the User is composing an input
   // (e.g. inserting a special character after inserting a '~' symbol)
   let composingInput = false/*default*/;
 
-  const plugin = new Plugin<InlineNodeWithContent, NotebookSchemaType>({
+  const plugin = new Plugin<InlineNodeWithContent>({
     // -- Setup -------------------------------------------------------------------
     key: inlineNodeWithContentKey,
 
@@ -146,4 +146,4 @@ export const InlineNodeWithContentPlugin = () => {
 // == Util ========================================================================
 // NOTE: defined by contract given the way the state for the Plugin is computed
 //       (SEE: InlineNodeWithContent#apply)
-const getInlineNodeWithContentState = (state: EditorState<NotebookSchemaType>) => inlineNodeWithContentKey.getState(state) as InlineNodeWithContent/*by contract*/;
+const getInlineNodeWithContentState = (state: EditorState) => inlineNodeWithContentKey.getState(state) as InlineNodeWithContent/*by contract*/;

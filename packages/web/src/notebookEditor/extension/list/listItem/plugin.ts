@@ -2,7 +2,7 @@ import { Fragment, Node as ProseMirrorNode, Slice } from 'prosemirror-model';
 import { Plugin } from 'prosemirror-state';
 import { EditorView } from 'prosemirror-view';
 
-import { createListItemContentNode, createListItemNode, createStrikethroughMark, createTaskListItemNode, isListItemContentNode, isTaskListItemNode, isTaskListNode, AttributeType, NotebookSchemaType } from '@ureeka-notebook/web-service';
+import { createListItemContentNode, createListItemNode, createStrikethroughMark, createTaskListItemNode, isListItemContentNode, isTaskListItemNode, isTaskListNode, AttributeType } from '@ureeka-notebook/web-service';
 
 import { NoPluginState } from 'notebookEditor/model/type';
 
@@ -21,7 +21,7 @@ export const ListItemTaskListItemPlugin = () => {
   // (SEE: #handlePaste below)
   let isPlainTextPaste = false/*default*/;
 
-  return new Plugin<NoPluginState, NotebookSchemaType>({
+  return new Plugin<NoPluginState>({
     // -- Transaction -------------------------------------------------------------
     // ensure that Lists are joined if possible (SEE: maybeJoinList)
     appendTransaction(transactions, oldState, newState) {

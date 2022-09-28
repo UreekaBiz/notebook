@@ -48,11 +48,11 @@ export const TaskListItemNodeRendererSpec: NodeRendererSpec<TaskListItemAttribut
 // -- Node Type -------------------------------------------------------------------
 // NOTE: this is the only way since PM does not provide a way to specify the type
 //       of the attributes
-export type TaskListItemNodeType = ProseMirrorNode<NotebookSchemaType> & { attrs: TaskListItemAttributes; };
-export const isTaskListItemNode = (node: ProseMirrorNode<NotebookSchemaType>): node is TaskListItemNodeType => node.type.name === NodeName.TASK_LIST_ITEM;
+export type TaskListItemNodeType = ProseMirrorNode & { attrs: TaskListItemAttributes; };
+export const isTaskListItemNode = (node: ProseMirrorNode): node is TaskListItemNodeType => node.type.name === NodeName.TASK_LIST_ITEM;
 
 export const getTaskListItemNodeType = (schema: NotebookSchemaType) => schema.nodes[NodeName.TASK_LIST_ITEM];
-export const createTaskListItemNode = (schema: NotebookSchemaType, attributes?: Partial<TaskListItemAttributes>, content?: ProseMirrorNodeContent, marks?: Mark<NotebookSchemaType>[]) =>
+export const createTaskListItemNode = (schema: NotebookSchemaType, attributes?: Partial<TaskListItemAttributes>, content?: ProseMirrorNodeContent, marks?: Mark[]) =>
   getTaskListItemNodeType(schema).create(attributes, content, marks);
 
 // -- JSON Node Type --------------------------------------------------------------

@@ -51,11 +51,11 @@ export const ImageNodeRendererSpec: NodeRendererSpec<ImageAttributes> = {
 // -- Node Type -------------------------------------------------------------------
 // NOTE: this is the only way since PM does not provide a way to specify the type
 //       of the Attributes
-export type ImageNodeType = ProseMirrorNode<NotebookSchemaType> & { attrs: ImageAttributes; };
-export const isImageNode = (node: ProseMirrorNode<NotebookSchemaType>): node is ImageNodeType => node.type.name === NodeName.IMAGE;
+export type ImageNodeType = ProseMirrorNode & { attrs: ImageAttributes; };
+export const isImageNode = (node: ProseMirrorNode): node is ImageNodeType => node.type.name === NodeName.IMAGE;
 
 export const getImageNodeType = (schema: NotebookSchemaType) => schema.nodes[NodeName.IMAGE];
-export const createImageNode = (schema: NotebookSchemaType, attributes?: Partial<ImageAttributes>, content?: ProseMirrorNodeContent, marks?: Mark<NotebookSchemaType>[]) =>
+export const createImageNode = (schema: NotebookSchemaType, attributes?: Partial<ImageAttributes>, content?: ProseMirrorNodeContent, marks?: Mark[]) =>
   getImageNodeType(schema).create(attributes, content, marks);
 
 // -- JSON Node Type --------------------------------------------------------------

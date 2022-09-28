@@ -70,7 +70,7 @@ export class BlockBackspaceDocumentUpdate implements AbstractDocumentUpdate {
    * modify the given Transaction such that the Block at the Selection
    * is deleted on Backspace if it is empty and return it
    */
-  public update(editorState: EditorState<NotebookSchemaType>, tr: Transaction<NotebookSchemaType>) {
+  public update(editorState: EditorState, tr: Transaction) {
     const { empty, $anchor, anchor } = editorState.selection,
     isAtStartOfDoc = anchor === 1/*first position inside the node, at start of Doc*/;
 
@@ -105,7 +105,7 @@ export class BlockModBackspaceDocumentUpdate implements AbstractDocumentUpdate {
    * is maintained inside Block Nodes, by removing a '\n' if
    * required, and return it
    */
-  public update(editorState: EditorState<NotebookSchemaType>, tr: Transaction<NotebookSchemaType>) {
+  public update(editorState: EditorState, tr: Transaction) {
     const { selection } = tr;
     const { empty, $from, from } = selection;
 
@@ -146,7 +146,7 @@ export class BlockArrowUpDocumentUpdate implements AbstractDocumentUpdate {
    * GapCursor Selection when the arrowUp key is pressed if the Selection
    * is at the start of it and return it
    */
-  public update(editorState: EditorState<NotebookSchemaType>, tr: Transaction<NotebookSchemaType>) {
+  public update(editorState: EditorState, tr: Transaction) {
     const { selection } = editorState;
     if(selection.$anchor.parent.type.name !== this.blockNodeName) return false/*let event be handled elsewhere*/;
 
@@ -180,7 +180,7 @@ export class BlockArrowDownDocumentUpdate implements AbstractDocumentUpdate {
    * GapCursor Selection when the arrowDown key is pressed if the Selection
    * is at the start of it and return it
    */
-  public update(editorState: EditorState<NotebookSchemaType>, tr: Transaction<NotebookSchemaType>) {
+  public update(editorState: EditorState, tr: Transaction) {
     const { selection } = editorState;
     if(selection.$anchor.parent.type.name !== this.blockNodeName) return false/*node does not allow GapCursor*/;
     if(isGapCursorSelection(selection) && (selection.anchor !== 0)) return false/*selection already a GapCursor*/;

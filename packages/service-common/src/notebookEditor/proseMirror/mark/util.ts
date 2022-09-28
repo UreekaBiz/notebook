@@ -179,11 +179,11 @@ return { ...mark.attrs };
  * {@link MarkType} as the given one, as well as the same set of attributes, and
  * return the Mark that matches
  */
-export const findSameMarkInArray = (marks: ProseMirrorMark[], markType: MarkType, attributes: Record<AttributeType | string, any> = {}): ProseMirrorMark | undefined =>
+export const findSameMarkInArray = (marks: readonly ProseMirrorMark[], markType: MarkType, attributes: Record<AttributeType | string, any> = {}): ProseMirrorMark | undefined =>
   marks.find(mark => mark.type === markType && objectIncludes(mark.attrs, attributes));
 
 /**
  * Check if any of the Marks in the given {@link ProseMirrorMark} array are of the
  * same type as the given {@link MarkType} and have the same attributes
  */
-export const isSameMarkInArray = (marks: ProseMirrorMark[], markType: MarkType, attributes: Record<AttributeType | string, any> = {}) => !!findSameMarkInArray(marks, markType, attributes);
+export const isSameMarkInArray = (marks: readonly ProseMirrorMark[], markType: MarkType, attributes: Record<AttributeType | string, any> = {}) => !!findSameMarkInArray(marks, markType, attributes);

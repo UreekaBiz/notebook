@@ -41,8 +41,8 @@ export const BoldMarkRendererSpec: MarkRendererSpec<BoldAttributes> = {
 // -- Mark Type -------------------------------------------------------------------
 // NOTE: this is the only way since PM does not provide a way to specify the type
 //       of the attributes
-export type BoldMarkType = ProseMirrorMark<NotebookSchemaType> & { attrs: BoldAttributes; };
-export const isBoldMark = (mark: ProseMirrorMark<NotebookSchemaType>): mark is BoldMarkType => mark.type.name === MarkName.BOLD;
+export type BoldMarkType = ProseMirrorMark & { attrs: BoldAttributes; };
+export const isBoldMark = (mark: ProseMirrorMark): mark is BoldMarkType => mark.type.name === MarkName.BOLD;
 
 export const getBoldMarkType = (schema: NotebookSchemaType) => schema.marks[MarkName.BOLD];
 export const createBoldMark = (schema: NotebookSchemaType, attributes?: Partial<BoldAttributes>) => getBoldMarkType(schema).create(attributes);

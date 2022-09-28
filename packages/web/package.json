@@ -33,7 +33,7 @@
     "@chakra-ui/react": "2.2.4",
     "@emotion/react": "11.9.3",
     "@emotion/styled": "11.9.3",
-		"@tiptap/react": "2.0.0-beta.109",
+		"@tiptap/react": "2.0.0-beta.197",
 		"@ureeka-notebook/service-common": "file:./lib/service-common",
 		"@ureeka-notebook/ssr-service": "file:./lib/ssr-service",
 		"@ureeka-notebook/web-service": "file:./lib/web-service",
@@ -56,15 +56,15 @@
 		"web-vitals": "2.1.4"
 	},
 	"peerDependencies": {
-		"@tiptap/core": "2.0.0-beta.175",
-    "prosemirror-collab":"1.2.2",
-    "prosemirror-dropcursor": "1.4.0",
+		"@tiptap/core": "2.0.0-beta.197",
+    "prosemirror-collab":"1.3.0",
+    "prosemirror-model": "1.18.1",
+    "prosemirror-state": "1.4.1",
+    "prosemirror-transform": "1.7.0",
+    "prosemirror-dropcursor": "1.6.0",
 		"prosemirror-gapcursor": "1.3.1",
-		"prosemirror-history": "1.2.0",
-    "prosemirror-model": "1.16.1",
-    "prosemirror-state": "1.3.4",
-    "prosemirror-transform": "1.3.4",
-    "prosemirror-view": "1.23.13"
+		"prosemirror-history": "1.3.0",
+    "prosemirror-view": "1.28.2"
   },
 
 	"eslintConfig": {

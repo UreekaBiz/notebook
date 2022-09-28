@@ -1,7 +1,7 @@
 import { Mark, MarkType } from 'prosemirror-model';
 import { EditorState, TextSelection, Transaction } from 'prosemirror-state';
 
-import { getMarkName, isMarkActive, stringifyMarksArray, AbstractDocumentUpdate, AttributeType, Command, MarkName, MarkHolderNodeType, NotebookSchemaType, SetMarkDocumentUpdate, UnsetMarkDocumentUpdate } from '@ureeka-notebook/web-service';
+import { getMarkName, isMarkActive, stringifyMarksArray, AbstractDocumentUpdate, AttributeType, Command, MarkName, MarkHolderNodeType, SetMarkDocumentUpdate, UnsetMarkDocumentUpdate } from '@ureeka-notebook/web-service';
 
 import { getMarkHolder, parseStoredMarks } from './util';
 
@@ -25,7 +25,7 @@ export class ToggleOrSetMarkDocumentUpdate implements AbstractDocumentUpdate {
    * modify the given Transaction such that it is toggled or set depending on
    * whether or not the given MarkType is active in a MarkHolder
    */
-  public update(editorState: EditorState<NotebookSchemaType>, tr: Transaction<NotebookSchemaType>) {
+  public update(editorState: EditorState, tr: Transaction) {
     // if MarkHolder is defined toggle the Mark inside it
     const markHolder = getMarkHolder(editorState);
     if(markHolder) {
@@ -61,7 +61,7 @@ export class ToggleMarkInMarkHolderDocumentUpdate implements AbstractDocumentUpd
    * modify the given Transaction such that a Mark is toggled in the
    * MarkHolder and return it
    */
-  public update(editorState: EditorState<NotebookSchemaType>, tr: Transaction<NotebookSchemaType>) {
+  public update(editorState: EditorState, tr: Transaction) {
     let newMarksArray: Mark[] = [];
     const storedMarks = this.markHolder.attrs[AttributeType.StoredMarks];
     if(!storedMarks) return false/*no Marks to store*/;

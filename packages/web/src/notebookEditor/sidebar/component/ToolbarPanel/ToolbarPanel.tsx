@@ -3,12 +3,12 @@ import { useCallback, useMemo, useState } from 'react';
 
 import { getAllAscendantsFromSelection, getMarkName, getNodeName, SelectionDepth } from '@ureeka-notebook/web-service';
 
+import { Toolbar } from 'notebookEditor/sidebar/toolbar/component/Toolbar';
 import { getAllMarksFromSelection } from 'notebookEditor/extension/util/mark';
+import { ToolbarBreadcrumbs } from 'notebookEditor/sidebar/toolbar/component/ToolbarBreadcrumbs';
 import { useValidatedEditor } from 'notebookEditor/hook/useValidatedEditor';
 
 import { getToolbar } from '../../toolbar/toolbar';
-import { Toolbar } from './Toolbar';
-import { ToolbarBreadcrumbs } from './ToolbarBreadcrumbs';
 
 // ********************************************************************************
 export const ToolbarPanel = () => {

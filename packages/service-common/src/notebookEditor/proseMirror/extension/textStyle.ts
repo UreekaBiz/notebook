@@ -43,8 +43,8 @@ export const TextStyleMarkRendererSpec: MarkRendererSpec<TextStyleAttributes> = 
 // -- Mark Type -------------------------------------------------------------------
 // NOTE: this is the only way since PM does not provide a way to specify the type
 //       of the Attributes
-export type TextStyleMarkType = ProseMirrorMark<NotebookSchemaType> & { attrs: TextStyleAttributes; };
-export const isTextStyleMark = (mark: ProseMirrorMark<NotebookSchemaType>): mark is TextStyleMarkType => mark.type.name === MarkName.TEXT_STYLE;
+export type TextStyleMarkType = ProseMirrorMark & { attrs: TextStyleAttributes; };
+export const isTextStyleMark = (mark: ProseMirrorMark): mark is TextStyleMarkType => mark.type.name === MarkName.TEXT_STYLE;
 
 export const getTextStyleMarkType = (schema: NotebookSchemaType) => schema.marks[MarkName.TEXT_STYLE];
 export const createTextStyleMark = (schema: NotebookSchemaType, attributes?: Partial<TextStyleAttributes>) => getTextStyleMarkType(schema).create(attributes);

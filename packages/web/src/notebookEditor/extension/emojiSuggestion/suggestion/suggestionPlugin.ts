@@ -2,7 +2,7 @@ import { Editor, Range } from '@tiptap/core';
 import { EditorState, Plugin, Transaction } from 'prosemirror-state';
 import { Decoration, DecorationSet, EditorView } from 'prosemirror-view';
 
-import { generateUUID, NotebookSchemaType } from '@ureeka-notebook/web-service';
+import { generateUUID } from '@ureeka-notebook/web-service';
 
 import { findSuggestionMatch } from '../util';
 import { SuggestionOptions, SuggestionProps } from './type';
@@ -99,7 +99,7 @@ export const suggestionPlugin = <I = any>(suggestionOptions: SuggestionOptions<I
   const renderer = createRenderer();
 
   // -- Implementation ------------------------------------------------------------
-  const suggestionPlugin: Plugin<SuggestionState, NotebookSchemaType> = new Plugin<SuggestionState, NotebookSchemaType>({
+  const suggestionPlugin: Plugin<SuggestionState> = new Plugin<SuggestionState>({
     // -- Setup -------------------------------------------------------------------
     key: pluginKey,
 
@@ -222,7 +222,10 @@ export const suggestionPlugin = <I = any>(suggestionOptions: SuggestionOptions<I
           return false/*let PM handle the event*/;
         } /* else -- check if the Suggestion is already active */
 
-        const { active, range } = suggestionPlugin.getState(view.state);
+        const pluginState = suggestionPlugin.getState(view.state);
+        if(!pluginState) return false/*Suggestion not active, let PM handle the event*/;
+
+        const { active, range } = pluginState;
         if(!active) return false/*Suggestion not active, let PM handle the event*/;
 
         return renderer.onKeyDown?.({ view, event, range }) || false/*let PM handle the event*/;
@@ -230,7 +233,10 @@ export const suggestionPlugin = <I = any>(suggestionOptions: SuggestionOptions<I
 
       // setup the decorator on the currently active Suggestion
       decorations: (state: EditorState) => {
-        const { active, range, decorationId } = suggestionPlugin.getState(state);
+        const pluginState = suggestionPlugin.getState(state);
+        if(!pluginState) return null/*nothing to do*/;
+
+        const { active, range, decorationId } = pluginState;
         if(!active) return null/*Suggestion not active, nothing to do*/;
 
         return DecorationSet.create(state.doc, [

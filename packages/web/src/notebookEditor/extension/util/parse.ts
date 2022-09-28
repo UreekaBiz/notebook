@@ -2,7 +2,7 @@ import { isString } from '@ureeka-notebook/web-service';
 
 // ********************************************************************************
 // == Type ========================================================================
-type GetAttrsReturnType = ((p: string | Node) => false | { [key: string]: any; } | null | undefined) | null | undefined;
+type GetAttrsReturnType = ((p: string | Node) => false | { [key: string]: any; } | null ) | undefined;
 
 // == Validation ==================================================================
 /**
@@ -38,7 +38,7 @@ export const safeParseTag = (tagName: string) => {
  * @param getAttrsCallback The callback function that will be used as the getAttrs call
  * @returns An instance of {@link GetAttrsReturnType}
  */
-export const wrapGetTagAttrs = (getAttrsCallback: (node: HTMLElement) => boolean | { [key: string]: any; } | null | undefined): GetAttrsReturnType => {
+export const wrapGetTagAttrs = (getAttrsCallback: (node: HTMLElement) => boolean | { [key: string]: any; } | null): GetAttrsReturnType => {
   const validatedGetAttrsFunction: GetAttrsReturnType = (node) =>
     !isValidHTMLElement(node)
       ? null/*not a valid HTML Element*/
@@ -54,13 +54,13 @@ export const elementFromString = (value: string): HTMLElement =>
 
 // == Style =======================================================================
 /**
- * A wrapper function that allows parseHTML style getAttr calls to safely use node
+ * A wrapper function that allows parseHTML style getAttr calls to safely use Node
  * as an HTMLElement
  *
  * @param getAttrsCallback The callback function that will be used as the getAttrs call
  * @returns An instance of {@link GetAttrsReturnType}
  */
-export const wrapGetStyleAttrs = (getAttrsCallback: (value: string) => boolean | { [key: string]: any; } | null | undefined): GetAttrsReturnType => {
+export const wrapGetStyleAttrs = (getAttrsCallback: (value: string) => boolean | { [key: string]: any; } | null): GetAttrsReturnType => {
   const validatedGetAttrsFunction: GetAttrsReturnType = (value) =>
     !isString(value)
       ? null/*not a string*/

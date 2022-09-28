@@ -1,6 +1,6 @@
 import { Editor } from '@tiptap/core';
 
-import { getThemeValue, AttributeType, NodeName, NotebookSchemaType, DEFAULT_DEMO_ASYNC_NODE_TEXT, DEFAULT_CODEBLOCK_REFERENCE_NODE_TEXT, REMOVED_CODEBLOCK_VISUALID } from '@ureeka-notebook/web-service';
+import { getThemeValue, AttributeType, NodeName, DEFAULT_DEMO_ASYNC_NODE_TEXT, DEFAULT_CODEBLOCK_REFERENCE_NODE_TEXT, REMOVED_CODEBLOCK_VISUALID } from '@ureeka-notebook/web-service';
 
 import { Fragment, Node as ProseMirrorNode } from 'prosemirror-model';
 
@@ -12,7 +12,7 @@ import { visualIdFromCodeBlockReference } from '../codeblock/util';
 // == Constant ====================================================================
 // a Map defining specific Text serialization functions (i.e. how the Node) gets
 // pasted into the clipboard for Text only paste) for Nodes, given their NodeName
-const customSerializerMap = new Map<NodeName, (editor: Editor, node: ProseMirrorNode<NotebookSchemaType>) => string>([
+const customSerializerMap = new Map<NodeName, (editor: Editor, node: ProseMirrorNode) => string>([
   [
     NodeName.CODEBLOCK_REFERENCE,
     (editor, node) => {

@@ -34,11 +34,11 @@ export const TextNodeRendererSpec: NodeRendererSpec = {
 // -- Node Type -------------------------------------------------------------------
 // NOTE: this is the only way since PM does not provide a way to specify the type
 //       of the Attributes
-export type TextNodeType = ProseMirrorNode<NotebookSchemaType> & {/*nothing additional*/};
-export const isTextNode = (node: ProseMirrorNode<NotebookSchemaType>): node is TextNodeType => node.type.name === NodeName.TEXT;
+export type TextNodeType = ProseMirrorNode & {/*nothing additional*/};
+export const isTextNode = (node: ProseMirrorNode) => node.type.name === NodeName.TEXT;
 
 export const getTextNodeType = (schema: NotebookSchemaType) => schema.marks[NodeName.TEXT];
-export const createTextNode = (schema: NotebookSchemaType, text: string, marks?: Mark<NotebookSchemaType>[]) => schema.text(text, marks);
+export const createTextNode = (schema: NotebookSchemaType, text: string, marks?: Mark[]) => schema.text(text, marks);
 
 // -- JSON Node Type --------------------------------------------------------------
 export type TextJSONNodeType = JSONNode<TextAttributes> & { type: NodeName.TEXT; };

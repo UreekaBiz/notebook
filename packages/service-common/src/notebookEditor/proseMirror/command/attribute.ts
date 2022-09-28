@@ -4,7 +4,6 @@ import { EditorState, Transaction } from 'prosemirror-state';
 import { Attributes, AttributeType } from '../attribute';
 import { isMarkName, MarkName } from '../mark';
 import { isNodeName, NodeName } from '../node';
-import { NotebookSchemaType } from '../schema';
 import { getSelectedNode, SelectionDepth } from '../selection';
 import { AbstractDocumentUpdate, Command } from './type';
 
@@ -30,7 +29,7 @@ export class UpdateAttributesDocumentUpdate implements AbstractDocumentUpdate {
    * modify the given Transaction such that the Nodes in the current Selection
    * get the specified attribute updated to the specified value
    */
-  public update(editorState: EditorState<NotebookSchemaType>, tr: Transaction<NotebookSchemaType>) {
+  public update(editorState: EditorState, tr: Transaction) {
     let nodeType: NodeType | undefined = undefined/*default*/,
         markType: MarkType | undefined = undefined/*default*/;
     const { schema } = editorState;
@@ -92,7 +91,7 @@ export class UpdateAttributesInRangeDocumentUpdate implements AbstractDocumentUp
    * modify the given Transaction such that the Nodes in the current Selection
    * get the specified attribute updated to the specified value
    */
-  public update(editorState: EditorState<NotebookSchemaType>, tr: Transaction<NotebookSchemaType>) {
+  public update(editorState: EditorState, tr: Transaction) {
     tr.setSelection(editorState.selection);
     const { from, to } = tr.selection;
 

@@ -1,6 +1,6 @@
 import { EditorState, Transaction } from 'prosemirror-state';
 
-import { createBoldMark, createMarkHolderNode, getBlockNodeRange, getHeadingNodeType, generateNodeId, getSelectedNode, isHeadingLevel, isHeadingNode, stringifyMarksArray, AbstractDocumentUpdate, AttributeType, Command, HeadingAttributes, NodeName, MarkName, NodeIdentifier, NotebookSchemaType, UpdateAttributesDocumentUpdate } from '@ureeka-notebook/web-service';
+import { createBoldMark, createMarkHolderNode, getBlockNodeRange, getHeadingNodeType, generateNodeId, getSelectedNode, isHeadingLevel, isHeadingNode, stringifyMarksArray, AbstractDocumentUpdate, AttributeType, Command, HeadingAttributes, NodeName, MarkName, NodeIdentifier, UpdateAttributesDocumentUpdate } from '@ureeka-notebook/web-service';
 
 import { SetParagraphDocumentUpdate } from '../paragraph/command';
 
@@ -17,7 +17,7 @@ export const setHeadingCommand = (attributes: Partial<HeadingAttributes>): Comma
 export class SetHeadingDocumentUpdate implements AbstractDocumentUpdate {
   public constructor(private readonly attributes: Partial<HeadingAttributes>) {/*nothing additional*/ }
 
-  public update(editorState: EditorState<NotebookSchemaType>, tr: Transaction<NotebookSchemaType>) {
+  public update(editorState: EditorState, tr: Transaction) {
     const { level } = this.attributes;
     if(!level || !isHeadingLevel(level)) return false/*invalid command, level for Heading not supported*/;
 

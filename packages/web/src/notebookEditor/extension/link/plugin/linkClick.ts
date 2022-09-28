@@ -2,7 +2,7 @@ import { getAttributes } from '@tiptap/core';
 import { Plugin, PluginKey } from 'prosemirror-state';
 import { EditorView } from 'prosemirror-view';
 
-import { AttributeType, NotebookSchemaType, MarkName } from '@ureeka-notebook/web-service';
+import { AttributeType, MarkName } from '@ureeka-notebook/web-service';
 
 import { NoPluginState } from 'notebookEditor/model/type';
 import { isValidHTMLElement } from 'notebookEditor/extension/util/parse';
@@ -17,7 +17,7 @@ import { sanitizeLinkInput } from '../util';
 // REF: https://github.com/ueberdosis/tiptap/blob/main/packages/extension-link/src/helpers/clickHandler.ts
 
 // == Plugin ======================================================================
-const linkClickKey = new PluginKey<NoPluginState, NotebookSchemaType>('linkClickKey');
+const linkClickKey = new PluginKey<NoPluginState>('linkClickKey');
 export const linkClick = (): Plugin => {
   return new Plugin({
     // -- Setup -------------------------------------------------------------------

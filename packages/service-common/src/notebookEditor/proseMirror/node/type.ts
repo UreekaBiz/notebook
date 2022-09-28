@@ -3,7 +3,6 @@ import { Fragment, Node as ProseMirrorNode, Schema } from 'prosemirror-model';
 
 import { Attributes, AttributeType } from '../attribute';
 import { JSONMark } from '../mark';
-import { NotebookSchemaType } from '../schema';
 
 // ********************************************************************************
 // == Node Definition =============================================================
@@ -63,11 +62,11 @@ export type JSONNode<A extends Attributes = {}> = {
 export type NodeContent = string/*alias*/;
 
 /** Type of ProseMirror Node Content when creating Nodes or Marks from a Node or Mark type */
-export type ProseMirrorNodeContent = Fragment<NotebookSchemaType> | ProseMirrorNode<NotebookSchemaType> | ProseMirrorNode<NotebookSchemaType>[];
+export type ProseMirrorNodeContent = Fragment | ProseMirrorNode | ProseMirrorNode[];
 
 // --------------------------------------------------------------------------------
 export const nodeToJSONNode = (node: ProseMirrorNode) => node.toJSON() as JSONNode;
-export const nodeToContent = (node: ProseMirrorNode<Schema>) => JSON.stringify(nodeToJSONNode(node)) as NodeContent;
+export const nodeToContent = (node: ProseMirrorNode) => JSON.stringify(nodeToJSONNode(node)) as NodeContent;
 export const contentToJSONNode = (content: NodeContent) => JSON.parse(content) as JSONNode/*FIXME: handle exceptions!!!*/;
 export const contentToNode = (schema: Schema, content?: NodeContent) => content ? ProseMirrorNode.fromJSON(schema, contentToJSONNode(content)) : undefined/*none*/;
 

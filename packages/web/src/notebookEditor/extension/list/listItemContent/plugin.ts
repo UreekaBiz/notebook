@@ -1,6 +1,6 @@
 import { Plugin } from 'prosemirror-state';
 
-import { getNodesAffectedByStepMap, getParagraphNodeType, isDocumentNode, NodeName, NotebookSchemaType } from '@ureeka-notebook/web-service';
+import { getNodesAffectedByStepMap, getParagraphNodeType, isDocumentNode, NodeName } from '@ureeka-notebook/web-service';
 
 import { ALLOW_LIST_ITEM_CONTENT_META } from './update';
 
@@ -12,7 +12,7 @@ const listItemContentNodeSet = new Set([NodeName.LIST_ITEM_CONTENT]);
 // this Plugin prevents ListItemContent Nodes from ever being direct children of
 // the Document node. This can happen when Lists are toggled back to Paragraphs
 // or when they are deleted (e.g. through backspace)
-export const listItemContentPlugin = () => new Plugin<NotebookSchemaType>({
+export const listItemContentPlugin = () => new Plugin({
   // -- Transaction ---------------------------------------------------------------
   appendTransaction(transactions, oldState, newState) {
     if(oldState.doc === newState.doc) return/*no changes*/;

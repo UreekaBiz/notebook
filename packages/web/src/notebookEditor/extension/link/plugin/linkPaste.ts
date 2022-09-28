@@ -4,14 +4,14 @@ import { Slice } from 'prosemirror-model';
 import { Plugin, PluginKey } from 'prosemirror-state';
 import { EditorView } from 'prosemirror-view';
 
-import { urlSchema, NotebookSchemaType, MarkName } from '@ureeka-notebook/web-service';
+import { urlSchema, MarkName } from '@ureeka-notebook/web-service';
 import { NoPluginState } from 'notebookEditor/model/type';
 
 // ********************************************************************************
 // REF: https://github.com/ueberdosis/tiptap/blob/main/packages/extension-link/src/helpers/pasteHandler.ts
 
 // == Plugin ======================================================================
-const linkPasteKey = new PluginKey<NoPluginState, NotebookSchemaType>('linkPasteKey');
+const linkPasteKey = new PluginKey<NoPluginState>('linkPasteKey');
 export const linkPaste = (editor: Editor): Plugin => {
   return new Plugin({
     key: linkPasteKey,

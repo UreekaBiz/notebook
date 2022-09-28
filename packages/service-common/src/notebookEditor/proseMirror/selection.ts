@@ -2,7 +2,6 @@ import { Node as ProseMirrorNode, ResolvedPos } from 'prosemirror-model';
 import { EditorState, NodeSelection, Selection, TextSelection, Transaction } from 'prosemirror-state';
 
 import { isListItemContentNode } from './extension/list/listItemContent';
-import { NotebookSchemaType } from './schema';
 import { isObject } from '../../util';
 
 // ********************************************************************************
@@ -44,14 +43,14 @@ export const isSelection = (value: unknown): value is Selection => {
 };
 
 /** Type guard that defines if a {@link Selection} is a {@link NodeSelection} */
-export const isNodeSelection = (selection: Selection<NotebookSchemaType>): selection is NodeSelection<NotebookSchemaType> => 'node' in selection;
+export const isNodeSelection = (selection: Selection): selection is NodeSelection => 'node' in selection;
 
 /** Checks whether the given {@link Selection} is of GapCursor type */
 const GAP_CURSOR = 'gapcursor';
-export const isGapCursorSelection = (selection: Selection<NotebookSchemaType>) => selection.toJSON().type === GAP_CURSOR;
+export const isGapCursorSelection = (selection: Selection) => selection.toJSON().type === GAP_CURSOR;
 
 /** Check if the {@link Selection} is inside a ListItemContent Node */
-export const isInsideList = (selection: Selection<NotebookSchemaType>) => isListItemContentNode(selection.$anchor.parent) || isListItemContentNode(selection.$head.parent);
+export const isInsideList = (selection: Selection) => isListItemContentNode(selection.$anchor.parent) || isListItemContentNode(selection.$head.parent);
 
 // == Node ========================================================================
 /** @returns currently selected Node. The Node selection is based on the depth of
@@ -94,7 +93,7 @@ export const isInsideList = (selection: Selection<NotebookSchemaType>) => isList
   LEFT = -1,
   RIGHT = 1
 }
-export const resolveNewSelection = (selection: Selection<NotebookSchemaType>, tr: Transaction<NotebookSchemaType>, bias?: SelectionBias) => {
+export const resolveNewSelection = (selection: Selection, tr: Transaction, bias?: SelectionBias) => {
   if(isNodeSelection(selection)) {
     return new NodeSelection(tr.doc.resolve(selection.anchor));
   } /* else -- a Node is not selected */

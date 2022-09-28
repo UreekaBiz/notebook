@@ -35,11 +35,11 @@ export const ListItemContentNodeRendererSpec: NodeRendererSpec<ListItemContentAt
 // -- Node Type -------------------------------------------------------------------
 // NOTE: this is the only way since PM does not provide a way to specify the type
 //       of the Attributes
-export type ListItemContentNodeType = ProseMirrorNode<NotebookSchemaType> & { attrs: ListItemContentAttributes; };
-export const isListItemContentNode = (node: ProseMirrorNode<NotebookSchemaType>): node is ListItemContentNodeType => node.type.name === NodeName.LIST_ITEM_CONTENT;
+export type ListItemContentNodeType = ProseMirrorNode & { attrs: ListItemContentAttributes; };
+export const isListItemContentNode = (node: ProseMirrorNode): node is ListItemContentNodeType => node.type.name === NodeName.LIST_ITEM_CONTENT;
 
 export const getListItemContentNodeType = (schema: NotebookSchemaType) => schema.nodes[NodeName.LIST_ITEM_CONTENT];
-export const createListItemContentNode = (schema: NotebookSchemaType, attributes?: Partial<ListItemContentAttributes>, content?: ProseMirrorNodeContent, marks?: Mark<NotebookSchemaType>[]) =>
+export const createListItemContentNode = (schema: NotebookSchemaType, attributes?: Partial<ListItemContentAttributes>, content?: ProseMirrorNodeContent, marks?: Mark[]) =>
   getListItemContentNodeType(schema).create(attributes, content, marks);
 
 // -- JSON Node Type --------------------------------------------------------------

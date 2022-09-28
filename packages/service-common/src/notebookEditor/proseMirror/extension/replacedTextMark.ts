@@ -41,8 +41,8 @@ export const ReplacedTextMarkMarkRendererSpec: MarkRendererSpec<ReplacedTextMark
 // -- Mark Type -------------------------------------------------------------------
 // NOTE: this is the only way since PM does not provide a way to specify the type
 //       of the attributes
-export type ReplacedTextMarkMarkType = ProseMirrorMark<NotebookSchemaType> & { attrs: ReplacedTextMarkAttributes; };
-export const isReplacedTextMarkMark = (mark: ProseMirrorMark<NotebookSchemaType>): mark is ReplacedTextMarkMarkType => mark.type.name === MarkName.REPLACED_TEXT_MARK;
+export type ReplacedTextMarkMarkType = ProseMirrorMark & { attrs: ReplacedTextMarkAttributes; };
+export const isReplacedTextMarkMark = (mark: ProseMirrorMark): mark is ReplacedTextMarkMarkType => mark.type.name === MarkName.REPLACED_TEXT_MARK;
 
 export const getReplacedTextMarkMarkType = (schema: NotebookSchemaType) => schema.marks[MarkName.REPLACED_TEXT_MARK];
 export const createReplacedTextMarkMark = (schema: NotebookSchemaType, attributes?: Partial<ReplacedTextMarkAttributes>) => getReplacedTextMarkMarkType(schema).create(attributes);

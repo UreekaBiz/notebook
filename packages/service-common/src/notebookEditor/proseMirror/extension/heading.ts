@@ -84,11 +84,11 @@ export const getHeadingLevelFromTag = (tag: string): HeadingLevel | undefined =>
 // -- Node Type -------------------------------------------------------------------
 // NOTE: this is the only way since PM does not provide a way to specify the type
 //       of the Attributes
-export type HeadingNodeType = ProseMirrorNode<NotebookSchemaType> & { attrs: HeadingAttributes; };
-export const isHeadingNode = (node: ProseMirrorNode<NotebookSchemaType>): node is HeadingNodeType => node.type.name === NodeName.HEADING;
+export type HeadingNodeType = ProseMirrorNode & { attrs: HeadingAttributes; };
+export const isHeadingNode = (node: ProseMirrorNode): node is HeadingNodeType => node.type.name === NodeName.HEADING;
 
 export const getHeadingNodeType = (schema: NotebookSchemaType) => schema.nodes[NodeName.HEADING];
-export const createHeadingNode = (schema: NotebookSchemaType, attributes?: Partial<HeadingAttributes>, content?: ProseMirrorNodeContent, marks?: Mark<NotebookSchemaType>[]) =>
+export const createHeadingNode = (schema: NotebookSchemaType, attributes?: Partial<HeadingAttributes>, content?: ProseMirrorNodeContent, marks?: Mark[]) =>
   getHeadingNodeType(schema).create(attributes, content, marks);
 
 // -- JSON Node Type --------------------------------------------------------------

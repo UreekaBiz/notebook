@@ -2,7 +2,7 @@ import { combineTransactionSteps, findChildrenInRange, getChangedRanges, getMark
 import { find, test } from 'linkifyjs';
 import { Plugin, PluginKey } from 'prosemirror-state';
 
-import { getLinkMarkType, isLinkMark, NotebookSchemaType, PREVENT_LINK_META } from '@ureeka-notebook/web-service';
+import { getLinkMarkType, isLinkMark, PREVENT_LINK_META } from '@ureeka-notebook/web-service';
 
 import { NoPluginState } from 'notebookEditor/model/type';
 
@@ -12,7 +12,7 @@ import { NoPluginState } from 'notebookEditor/model/type';
 // REF: https://github.com/ueberdosis/tiptap/blob/main/packages/extension-link/src/helpers/autolink.ts
 
 // == Plugin ======================================================================
-const linkCreateKey = new PluginKey<NoPluginState, NotebookSchemaType>('linkCreateKey');
+const linkCreateKey = new PluginKey<NoPluginState>('linkCreateKey');
 export const linkCreate = (validate?: (url: string) => boolean): Plugin => {
   return new Plugin({
     // -- Setup -------------------------------------------------------------------

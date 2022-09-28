@@ -2,12 +2,12 @@ import { Fragment, NodeType, Slice } from 'prosemirror-model';
 import { EditorState, Selection, Transaction } from 'prosemirror-state';
 import { canSplit } from 'prosemirror-transform';
 
-import { isNodeSelection, AbstractDocumentUpdate, AttributeType, Command, NotebookSchemaType, NodeName } from '@ureeka-notebook/web-service';
+import { isNodeSelection, AbstractDocumentUpdate, AttributeType, Command, NodeName } from '@ureeka-notebook/web-service';
 
 // ********************************************************************************
 // == Type ========================================================================
 // the types of the Nodes that will be set after the split point
-type TypeAfter = { type: NodeType; attrs: any; } | null | undefined;
+type TypeAfter = { type: NodeType; attrs: any; } | null;
 type TypesAfter = TypeAfter[];
 
 // == Command =====================================================================
@@ -31,7 +31,7 @@ export class SplitListItemDocumentUpdate implements AbstractDocumentUpdate {
    * modify the Transaction such that a non-empty Text Block at the top level
    * of a ListItem is split, and return it
    */
-  public update(editorState: EditorState<NotebookSchemaType>, tr: Transaction<NotebookSchemaType>) {
+  public update(editorState: EditorState, tr: Transaction) {
     const listItemType = editorState.schema.nodes[this.listItemName];
     const { $from, $to } = tr.selection;
 

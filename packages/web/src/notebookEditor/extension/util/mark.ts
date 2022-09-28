@@ -1,5 +1,5 @@
 import { markInputRule as tiptapMarkInputRule, markPasteRule as tiptapMarkPasteRule, InputRule, PasteRule } from '@tiptap/core';
-import { MarkType, Mark as ProseMirrorMark } from 'prosemirror-model';
+import { MarkType } from 'prosemirror-model';
 import { EditorState } from 'prosemirror-state';
 
 // ********************************************************************************
@@ -23,7 +23,7 @@ export const markPasteRule = (regExp: RegExp, type: MarkType): PasteRule => tipt
 
 // == Selection ===================================================================
 /** Gets all the ascendants of the current selected Node */
-export const getAllMarksFromSelection = (state: EditorState): ProseMirrorMark[] => {
+export const getAllMarksFromSelection = (state: EditorState) => {
   const { selection } = state;
   const { $anchor } = selection;
 

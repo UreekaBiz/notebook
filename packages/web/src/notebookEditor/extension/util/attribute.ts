@@ -113,8 +113,8 @@ export const getTextDOMRenderedValue = (editor: Editor, attributeType: Attribute
 
     // TextNode will inherit the vale of the parent Node, use its attribute
     // value instead.
-    const attributeValue = getDOMNodeRenderedValue(parent, attributeType);
-    mergedValue = mergeAttributeValues(mergedValue, attributeValue);
+    const attributeValue = parent && getDOMNodeRenderedValue(parent, attributeType);
+    mergedValue = mergeAttributeValues(mergedValue, attributeValue ?? undefined/*none*/);
     return/*nothing else to do*/;
   });
 

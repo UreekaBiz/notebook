@@ -1,6 +1,6 @@
 import { EditorState, TextSelection, Transaction } from 'prosemirror-state';
 
-import { createStrikethroughMark, getStrikethroughMarkType, AbstractDocumentUpdate, AttributeType, Command, NotebookSchemaType } from '@ureeka-notebook/web-service';
+import { createStrikethroughMark, getStrikethroughMarkType, AbstractDocumentUpdate, AttributeType, Command } from '@ureeka-notebook/web-service';
 
 // ********************************************************************************
 /**
@@ -24,7 +24,7 @@ export class CrossTaskListItemDocumentUpdate implements AbstractDocumentUpdate {
    * to the contents of the clicked TaskListItem depending on whether checked
    * is true or false
    */
-  public update(editorState: EditorState<NotebookSchemaType>, tr: Transaction<NotebookSchemaType>) {
+  public update(editorState: EditorState, tr: Transaction) {
     const currentNode = tr.doc.nodeAt(this.taskListItemPos);
     if(!currentNode) return false/*Node does not exist*/;
 

@@ -2,7 +2,7 @@ import { Editor } from '@tiptap/core';
 import { Node as ProseMirrorNode } from 'prosemirror-model';
 import { NodeView as ProseMirrorNodeView } from 'prosemirror-view';
 
-import { getPosType, isGetPos, AttributeType, NotebookSchemaType } from '@ureeka-notebook/web-service';
+import { getPosType, isGetPos, AttributeType } from '@ureeka-notebook/web-service';
 
 import { PM_SELECTED_CLASS } from 'notebookEditor/theme/theme';
 
@@ -56,7 +56,7 @@ export abstract class AbstractNodeController<NodeType extends ProseMirrorNode, S
   }
 
   // == PM Life-Cycle =============================================================
-  public update(node: ProseMirrorNode<NotebookSchemaType>): boolean {
+  public update(node: ProseMirrorNode): boolean {
     if(this.node.type.name !== node.type.name) return false/*different node so nothing was updated*/;
 
     // update both storage and our reference to the Node
