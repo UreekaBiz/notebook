@@ -45,7 +45,7 @@ export const CheckBoxToolItem: React.FC<Props> = ({ attributeType, depth, editor
     <InputToolItemContainer name={name}>
       <Checkbox
         isChecked={value}
-        datatype={TOOL_ITEM_DATA_TYPE/*(SEE: journalEditor/toolbar/type )*/}
+        datatype={TOOL_ITEM_DATA_TYPE/*(SEE: journalEditor/sidebar/toolbar/type )*/}
         onChange={handleChange}
       >
         {name}
