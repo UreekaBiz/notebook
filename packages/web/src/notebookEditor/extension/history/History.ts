@@ -7,9 +7,6 @@ import { ExtensionName } from 'notebookEditor/model/type';
 // ********************************************************************************
 // REF: https://github.com/ProseMirror/prosemirror-history/blob/master/src/history.ts
 
-// == Constant ====================================================================
-export const HISTORY_META = 'addToHistory';
-
 // == Extension ===================================================================
 export const History = Extension.create({
   name: ExtensionName.HISTORY/*Expected and guaranteed to be unique*/,

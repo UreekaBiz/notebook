@@ -5,6 +5,11 @@ import { EditorView } from 'prosemirror-view';
 // TODO: create applyDocumentUpdates for cloud-functions and use
 //       AbstractDocumentUpdates as needed
 
+// == Constant ====================================================================
+// constant for the Metadata key name to use whenever a Transaction should not have
+// its effects be undo-able by an Undo Command. (SEE: History.ts)
+export const HISTORY_META = 'addToHistory';
+
 // == Command =====================================================================
 // Commands are meant to be atomic (i.e. they "encapsulate functionality"). The
 // Transaction dispatched by a Command goes through one DocumentUpdate. Multiple

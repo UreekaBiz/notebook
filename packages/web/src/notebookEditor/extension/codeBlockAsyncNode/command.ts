@@ -1,8 +1,6 @@
 import { EditorState, NodeSelection, Transaction } from 'prosemirror-state';
 
-import { AbstractDocumentUpdate, CodeBlockAsyncNodeType, Command } from '@ureeka-notebook/web-service';
-
-import { HISTORY_META } from 'notebookEditor/extension/history/History';
+import { AbstractDocumentUpdate, CodeBlockAsyncNodeType, Command, HISTORY_META } from '@ureeka-notebook/web-service';
 
 // == Async =======================================================================
 // replace an entire inline CodeBlockAsyncNode with another one

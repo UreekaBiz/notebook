@@ -1,15 +1,16 @@
 import { MarkType, NodeType } from 'prosemirror-model';
 import { EditorState, Transaction } from 'prosemirror-state';
+import { AttrStep } from 'prosemirror-transform';
 
 import { Attributes, AttributeType } from '../attribute';
 import { isMarkName, MarkName } from '../mark';
 import { isNodeName, NodeName } from '../node';
 import { getSelectedNode, SelectionDepth } from '../selection';
-import { AbstractDocumentUpdate, Command } from './type';
+import { AbstractDocumentUpdate, Command, HISTORY_META } from './type';
 
 // ********************************************************************************
 /**
- * update the attributes for the Nodes or Marks in the Selection whose name
+ *  update the attributes for the Nodes or Marks in the Selection whose name
  *  equals the given {@link NodeName} or {@link MarkName}. Differs from
  *  UpdateAttributesInRangeCommand in that only Nodes that have the specified
  *  name get their attributes updated (SEE: UpdateAttributesInRangeCommand below)
@@ -118,6 +119,47 @@ export class UpdateAttributesInRangeDocumentUpdate implements AbstractDocumentUp
 
       tr.setNodeMarkup(pos, undefined/*preserve type*/, nodeAttrs);
     }
+
+    return tr/*updated*/;
+  }
+}
+
+// --------------------------------------------------------------------------------
+// REF: https://discuss.prosemirror.net/t/preventing-image-placeholder-replacement-from-being-undone/1394/2
+/**
+ * update the Attributes of the Node at the given position,
+ * using {@link AttrStep}s, which do not replace the Node entirely (they do not
+ * add content, (SEE: REF above)). This type of Command can hence be used
+ * whenever the update of the attributes should not go into the History or for
+ * updates that are meant to be granular.
+ *
+ * If {@param addToHistory} is 'false' (defaults to 'true'), the operation
+ * Transaction will not be added to the History. This is ideal for asynchronous
+ * update attributes, whose effects should (usually) not be undo-able
+ */
+ export const updateSingleNodeAttributesCommand = <T extends Attributes>(nodePosition: number, attributes: Partial<T>, addToHistory = true): Command => (state, dispatch) => {
+  const updatedTr = new UpdateSingleNodeAttributesDocumentUpdate(nodePosition, attributes, addToHistory).update(state, state.tr);
+  if(updatedTr) {
+    dispatch(updatedTr);
+    return true/*Command executed*/;
+  } /* else -- Command cannot be executed */
+
+  return false/*not executed*/;
+};
+export class UpdateSingleNodeAttributesDocumentUpdate implements AbstractDocumentUpdate {
+  public constructor(private readonly nodePosition: number, private readonly attributes: Partial<Attributes>, private readonly addToHistory: boolean) {/*nothing additional*/}
+
+  /*
+   * Modify the Transaction such that the Attributes of the Node at the given
+   * position are modified, using AttrSteps
+   * (SEE: #updateSingleNodeAttributesCommand above)
+   */
+  public update(editorState: EditorState, tr: Transaction) {
+    Object.entries(this.attributes).forEach(([attributeName, attributeValue]) => tr.step(new AttrStep(this.nodePosition, attributeName, attributeValue)));
+
+    if(!this.addToHistory) {
+      tr.setMeta(HISTORY_META, this.addToHistory);
+    } /* else -- allow Transaction to be undo-able*/
 
     return tr/*updated*/;
   }
