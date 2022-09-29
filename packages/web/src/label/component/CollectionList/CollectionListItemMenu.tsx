@@ -54,7 +54,7 @@ export const CollectionListItemMenu: React.FC<Props> = ({ labelTuple }) => {
 
       // NOTE: No need to update the state since deleting the Collection will
       //       automatically remove it from the list
-    } catch(error){
+    } catch(error) {
       log.error(`Error deleting Collection (${id}): `, error);
       if(!isMounted()) return/*nothing to do*/;
 
@@ -68,7 +68,7 @@ export const CollectionListItemMenu: React.FC<Props> = ({ labelTuple }) => {
   };
 
   // == UI ========================================================================
-  if(status === 'loading'){
+  if(status === 'loading') {
     return (
       <Flex width='32px'/*matches the Menu size*/ justifyContent='center'>
         <Spinner size='sm'/>

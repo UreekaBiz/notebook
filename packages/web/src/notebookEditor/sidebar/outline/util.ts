@@ -97,7 +97,7 @@ export const updateOutline = (editor: Editor, outline: Outline, changes: NodeCha
 
     const outlineItem = outline[index];
     const level = change.node.attrs[AttributeType.Level];
-    if(level !== outlineItem.level){
+    if(level !== outlineItem.level) {
       recreate = true;
       break/*stop iterating*/;
     } /* else -- level is the same */
