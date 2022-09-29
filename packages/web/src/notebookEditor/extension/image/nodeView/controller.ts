@@ -24,7 +24,7 @@ export class ImageController extends AbstractNodeController<ImageNodeType, Image
   }
 
   private async uploadImage() {
-const src = this.node.attrs[AttributeType.Src];
+    const src = this.node.attrs[AttributeType.Src];
     if(!src) return/*invalid src, nothing to do*/;
 
     try {
