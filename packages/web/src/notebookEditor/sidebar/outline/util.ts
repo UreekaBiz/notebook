@@ -85,7 +85,7 @@ export const updateOutline = (editor: Editor, outline: Outline, changes: NodeCha
     if(change.removed) {
       recreate = true;
       break/*stop iterating*/;
-    } // else -- Heading is not removed.
+    } /* else -- Heading is not removed */
 
     const index = newOutline.findIndex((item) => item.id === change.node.attrs[AttributeType.Id]);
 
@@ -93,14 +93,14 @@ export const updateOutline = (editor: Editor, outline: Outline, changes: NodeCha
     if(index === -1) {
       recreate = true;
       break/*stop iterating*/;
-    } // else -- Heading was present.
+    } /* else -- Heading was present */
 
     const outlineItem = outline[index];
     const level = change.node.attrs[AttributeType.Level];
     if(level !== outlineItem.level){
       recreate = true;
       break/*stop iterating*/;
-    } // else -- level is the same.
+    } /* else -- level is the same */
 
     // update the OutlineItem
     newOutline[index] = {
