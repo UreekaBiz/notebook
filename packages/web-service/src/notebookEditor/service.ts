@@ -1,4 +1,5 @@
 import { Editor } from '@tiptap/core';
+import { Node } from 'prosemirror-model';
 import { Observable } from 'rxjs';
 
 import { AuthedUser, NodeIdentifier, NodeName, NotebookIdentifier, NotebookSchemaVersion, NotebookUsers } from '@ureeka-notebook/service-common';
@@ -93,16 +94,16 @@ export class NotebookEditorService {
    * @returns an Observable over the changes to the {@link Node} identified by the
    *         given {@link NodeName} and {@link NodeId}.
    */
-  public onNode$(nodeName: NodeName, nodeId: NodeIdentifier) {
-    return this.nodeObserver.onNode$(nodeName, nodeId);
+  public onNode$<T extends Node>(nodeName: NodeName, nodeId: NodeIdentifier) {
+    return this.nodeObserver.onNode$<T>(nodeName, nodeId);
   }
 
   /**
    * @returns and Observable over the changes for all {@link Node}s in the identified
    *         {@link NodeName}.
    */
-  public onNodes$(nodeName: NodeName) {
-    return this.nodeObserver.onNodes$(nodeName);
+  public onNodes$<T extends Node>(nodeName: NodeName) {
+    return this.nodeObserver.onNodes$<T>(nodeName);
   }
 
   // == Editor ====================================================================

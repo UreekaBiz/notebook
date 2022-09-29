@@ -17,5 +17,6 @@ export type NodeChange<T extends Node = Node> = {
   node: T;
   position: number;
   removed: boolean;
+  // CHECK: created?
 };
 export type NodeChanges = Map<NodeName, NodeChange[]>;
