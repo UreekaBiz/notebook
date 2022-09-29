@@ -6,6 +6,7 @@ import Router from 'next/router';
 import { findNodeById, getLogger, Logger } from '@ureeka-notebook/web-service';
 
 import { useNotebookEditor } from 'notebookEditor/hook/useNotebookEditor';
+import { getFocusedNodeIdFromURL } from 'notebookEditor/util';
 
 import { EditorUserInteractions } from './EditorUserInteractions';
 
@@ -26,7 +27,7 @@ export const Editor = () => {
   // the Editor has been created and rendered (and hence its content loaded)
   // SEE: Document.ts
   useEffect(() => {
-    const nodeId = Router.asPath.split('#')[1/*after the '#'*/];
+    const nodeId = getFocusedNodeIdFromURL(Router.asPath);
     if(!nodeId) return/*no nodeId specified, nothing to do*/;
 
     const nodePosition = findNodeById(editor.state.doc, nodeId);

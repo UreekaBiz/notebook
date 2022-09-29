@@ -1,7 +1,7 @@
 import { Box, Flex } from '@chakra-ui/react';
 import { useEffect, useState } from 'react';
 
-import { OutlinePanel } from '../outline/OutlinePanel';
+import { OutlinePanel } from '../outline/component/OutlinePanel';
 import { ToolbarPanel } from '../toolbar/component/ToolbarPanel';
 import { SidebarPanel } from '../type';
 import { Debugger } from './Debugger';

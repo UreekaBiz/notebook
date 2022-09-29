@@ -82,19 +82,69 @@ export const findNodeById = (document: DocumentNodeType, nodeId: NodeIdentifier)
   return { docsDifferenceStart, docDifferenceEnds };
 };
 
+export const getNodesAffectedByTransaction = (transaction: Transaction, nodeNames?: Set<NodeName>): NodePosition[] => {
+  const { maps } = transaction.mapping;
+  let affectedNodes: NodePosition[] = [];
+
+  for(let i=0; i<maps.length; i++) {
+    maps[i].forEach((start, end) => {
+      const { newNodePositions } = getNodesAffectedByStepMap(transaction, i, start, end, nodeNames);
+      affectedNodes = [...affectedNodes, ...newNodePositions];
+    });
+  }
+
+  return affectedNodes;
+};
+
+/**
+ * @param transaction The transaction whose stepMaps will be looked through
+ * @param nodeNameSet The set of nodeNames that will be looked for deletions in
+ *        the Transaction's stepMaps. If not provided all nodes will be considered
+ * @returns an array of {@link NodePosition} with the Nodes of the specified types
+ *          that were deleted by the Transaction if any
+ */
+ export const getNodesRemovedByTransaction = (transaction: Transaction, nodeNameSet?: Set<NodeName>) => {
+  const { maps } = transaction.mapping;
+  let nodePositions: NodePosition[] = [/*empty by default*/];
+  // NOTE: since certain operations (e.g. dragging and dropping a Node) occur
+  //       throughout more than one stepMapIndex, returning as soon as possible
+  //       from this method can lead to incorrect behavior (e.g. the dragged Node's
+  //       nodeView being deleted before the next stepMap adds it back). For this
+  //       reason the removed Nodes are computed on each stepMap and the final
+  //       nodePositions array is what is returned
+  // NOTE: this is true for this method specifically given its intent (checking to
+  //       see if Nodes of a specific type got deleted), and does not mean that
+  //       other extensions or plugins that use similar functionality to see if
+  //       Nodes got deleted or added cannot return early, as this will depend on
+  //       their specific intent
+  for(let stepMapIndex=0; stepMapIndex < maps.length; stepMapIndex++) {
+    maps[stepMapIndex].forEach((unmappedOldStart, unmappedOldEnd) => {
+      const { oldNodePositions, newNodePositions } = getNodesAffectedByStepMap(transaction, stepMapIndex, unmappedOldStart, unmappedOldEnd, nodeNameSet);
+      nodePositions = computeRemovedNodePositions(oldNodePositions, newNodePositions);
+    });
+  }
+  return nodePositions;
+};
+
+/** Get Node-Positions that are no longer present in the newArray */
+export const computeRemovedNodePositions = (oldArray: NodePosition[], newArray: NodePosition[]) =>
+  oldArray.filter(oldNodeObj => !newArray.some(newNodeObj => newNodeObj.node.attrs[AttributeType.Id] === oldNodeObj.node.attrs[AttributeType.Id]));
+
+
 /**
  * @param transaction The transaction whose affected ranges are being computed
  * @param stepMapIndex The stepMapIndex of the corresponding stepMap of the Transaction
  * @param unmappedOldStart The default oldStart of the stepMap of the Transaction
- * @param unmappedOldEnd The default oldEnd of the stepMap of the Transaction
- * @param nodeNames The names of the Nodes that are being looked for in the affected range
+ * @param unmappedOldEnd The default oldEnd of the stepMap of the Transaction.
+ * @param nodeNames The names of the Nodes that are being looked for in the affected
+ *                  range. If not provided all nodes are considered.
  * @returns The Nodes of the specified types that existed in the affected range
  *          of the Transaction before the steps were applied, and the Nodes of the
  *          specified types that exist after the Steps have been applied
  */
 // NOTE: separated into its own method since all logic that needs to check whether
 //       some node was deleted in a transaction uses this approach
-export const getNodesAffectedByStepMap = (transaction: Transaction, stepMapIndex: number, unmappedOldStart: number, unmappedOldEnd: number, nodeNames: Set<NodeName>) => {
+export const getNodesAffectedByStepMap = (transaction: Transaction, stepMapIndex: number, unmappedOldStart: number, unmappedOldEnd: number, nodeNames?: Set<NodeName>) => {
   // map to get the oldStart, oldEnd that account for history
   const { mappedOldStart, mappedOldEnd, mappedNewStart, mappedNewEnd } = mapOldStartAndOldEndThroughHistory(transaction, stepMapIndex, unmappedOldStart, unmappedOldEnd);
 
@@ -108,11 +158,11 @@ export const getNodesAffectedByStepMap = (transaction: Transaction, stepMapIndex
 // {@link #from} and {@link #to} in the given {@link #rootNode}, adding those Nodes
 // whose type name is included in the given {@link #nodeNames} set. Very similar to
 // doc.nodesBetween, but specifically for {@link NodePosition} objects.
-const getNodesBetween = (rootNode: ProseMirrorNode, from: number, to: number, nodeNames: Set<NodeName>) => {
+const getNodesBetween = (rootNode: ProseMirrorNode, from: number, to: number, nodeNames?: Set<NodeName>) => {
   const nodesOfType: NodePosition[] = [];
   rootNode.nodesBetween(from, to, (node, position) => {
     const nodeName = getNodeName(node);
-    if(nodeNames.has(nodeName)) {
+    if(nodeNames === undefined/*not provided -- all nodes considered*/ || nodeNames.has(nodeName)) {
       nodesOfType.push({ node, position });
     } /* else -- ignore Node */
   });
@@ -160,37 +210,3 @@ export const wereNodesAffectedByTransaction = (transaction: Transaction, nodeNam
 };
 const nodeFoundArrayContainsNodesOfType = (nodeObjs: NodePosition[], nodeNameSet: Set<NodeName>) =>
   nodeObjs.some(({ node }) => nodeNameSet.has(node.type.name as NodeName/*by definition*/));
-
-/**
- * @param transaction The transaction whose stepMaps will be looked through
- * @param nodeNameSet The set of nodeNames that will be looked for deletions in
- *        the Transaction's stepMaps
- * @returns an array of {@link NodePosition} with the Nodes of the specified types
- *          that were deleted by the Transaction if any
- */
-export const getRemovedNodesByTransaction = (transaction: Transaction, nodeNameSet: Set<NodeName>) => {
-  const { maps } = transaction.mapping;
-  let removedNodeObjs: NodePosition[] = [/*empty by default*/];
-  // NOTE: since certain operations (e.g. dragging and dropping a Node) occur
-  //       throughout more than one stepMapIndex, returning as soon as possible
-  //       from this method can lead to incorrect behavior (e.g. the dragged Node's
-  //       nodeView being deleted before the next stepMap adds it back). For this
-  //       reason the removed Nodes are computed on each stepMap and the final
-  //       removedNodeObjs array is what is returned
-  // NOTE: this is true for this method specifically given its intent (checking to
-  //       see if Nodes of a specific type got deleted), and does not mean that
-  //       other extensions or plugins that use similar functionality to see if
-  //       Nodes got deleted or added cannot return early, as this will depend on
-  //       their specific intent
-  for(let stepMapIndex=0; stepMapIndex < maps.length; stepMapIndex++) {
-    maps[stepMapIndex].forEach((unmappedOldStart, unmappedOldEnd) => {
-      const { oldNodePositions, newNodePositions } = getNodesAffectedByStepMap(transaction, stepMapIndex, unmappedOldStart, unmappedOldEnd, nodeNameSet);
-      removedNodeObjs = computeRemovedNodePositions(oldNodePositions, newNodePositions);
-    });
-  }
-  return removedNodeObjs;
-};
-
-/** Get Node-Positions that are no longer present in the newArray */
-export const computeRemovedNodePositions = (oldArray: NodePosition[], newArray: NodePosition[]) =>
-  oldArray.filter(oldNodeObj => !newArray.some(newNodeObj => newNodeObj.node.attrs[AttributeType.Id] === oldNodeObj.node.attrs[AttributeType.Id]));

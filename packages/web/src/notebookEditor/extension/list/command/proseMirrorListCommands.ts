@@ -73,23 +73,23 @@ const doWrapInList = (tr: Transaction, range: NodeRange, wrappers: { type: NodeT
 
   // wrap the content with the given wrappers
   let content = Fragment.empty;
-  for(let i = wrappers.length - 1; i >= 0; i--) {
+  for(let i=wrappers.length - 1; i>=0; i--) {
     content = Fragment.from(wrappers[i].type.create(wrappers[i].attrs, content));
   }
   tr.step(new ReplaceAroundStep(range.start - (joinBefore ? 2 : 0), range.end, range.start, range.end, new Slice(content, 0, 0), wrappers.length, true));
 
   // compute offset for splitDepth
   let found = 0/*default*/;
-  for(let i = 0; i < wrappers.length; i++) {
-    if(wrappers[i].type == listType){
-        found = i + 1;
+  for(let i=0; i<wrappers.length; i++) {
+    if(wrappers[i].type == listType) {
+      found = i + 1;
     } /* else -- not of the same type, do not change found offset */
   }
   const splitDepth = wrappers.length - found;
 
   // split at depth
   let splitPos = range.start + wrappers.length - (joinBefore ? 2/*account for Node before*/ : 0/*do not account*/);
-  for(let i = range.startIndex, e = range.endIndex, first = true; i < e; i++, first = false) {
+  for(let i=range.startIndex, e=range.endIndex, first = true; i < e; i++, first = false) {
     if(!first && canSplit(tr.doc, splitPos, splitDepth)) {
       tr.split(splitPos, splitDepth);
       splitPos += 2 * splitDepth;
@@ -150,7 +150,7 @@ const liftToOuterList = (tr: Transaction, itemType: NodeType, range: NodeRange) 
     const liftedItemsSlice = new Slice(Fragment.from(itemType.create(null, range.parent.copy())), 1, 0);
     tr.step(new ReplaceAroundStep(end - 1, endOfList, end, endOfList, liftedItemsSlice, 1, true));
     range = new NodeRange(tr.doc.resolve(range.$from.pos), tr.doc.resolve(endOfList), range.depth);
-  }
+  } /* else -- FIXME */
 
   const target = liftTarget(range);
   if(target == null) return false/*no target Depth to which the Content in Range can be lifted found*/;
@@ -163,7 +163,7 @@ const liftOutOfList = (tr: Transaction, range: NodeRange) => {
   const list = range.parent;
 
   // merge the ListItem into a single big ListItem
-  for(let pos = range.end, i = range.endIndex - 1, e = range.startIndex; i > e; i--) {
+  for(let pos=range.end, i=range.endIndex - 1, e=range.startIndex; i>e; i--) {
     pos -= list.child(i).nodeSize;
     tr.delete(pos - 1, pos + 1);
   }

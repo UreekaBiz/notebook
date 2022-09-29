@@ -1,5 +1,6 @@
 // ** Local ***********************************************************************
 export * from './service';
+export * from './NodeObserver/type';
 
 // ** Service-Common **************************************************************
 export {
@@ -407,7 +408,9 @@ export {
   findNodeById,
   findParentNode,
   getParentNode,
+  getNodesAffectedByTransaction,
   getNodesAffectedByStepMap,
+  getNodesRemovedByTransaction,
   liftEmptyBlockNodeCommand,
   LiftEmptyBlockNodeDocumentUpdate,
   joinBackwardCommand,

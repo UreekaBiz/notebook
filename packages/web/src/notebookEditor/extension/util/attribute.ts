@@ -101,7 +101,7 @@ export const getTextDOMRenderedValue = (editor: Editor, attributeType: Attribute
       const attributeValue = getDOMNodeRenderedValue(node, attributeType);
       mergedValue = mergeAttributeValues(mergedValue, attributeValue);
       return/*nothing else to do*/;
-    } // else -- node is a TextNode
+    } /* else -- node is a TextNode */
 
     // Marks are applied to TextNodes only, get the Attribute value form the Mark.
     const markValue = markType ? getMarkValue(node, markType, attributeType) : undefined/*no mark value*/;
@@ -109,7 +109,7 @@ export const getTextDOMRenderedValue = (editor: Editor, attributeType: Attribute
     if(markValue !== undefined) {
       mergedValue = mergeAttributeValues(mergedValue, markValue);
       return/*nothing else to do*/;
-    } // else -- no value was found for the given Mark */
+    } /* else -- no value was found for the given Mark */
 
     // TextNode will inherit the vale of the parent Node, use its attribute
     // value instead.

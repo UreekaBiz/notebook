@@ -35,6 +35,11 @@ export const focusEditor = (editor: Editor, nodeId: NodeIdentifier | undefined/*
   editor.commands.focus(nodeFound.position);
 };
 
+// --------------------------------------------------------------------------------
+export const getFocusedNodeIdFromURL = (path: string) => {
+  return path.split('#')[1/*after the '#'*/];
+};
+
 /**
  * focus the ChipTool input after a Command that inserts a new Node
  * (SEE: ChipTool.tsx)

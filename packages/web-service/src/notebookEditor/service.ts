@@ -1,13 +1,16 @@
 import { Editor } from '@tiptap/core';
+import { Node } from 'prosemirror-model';
 import { Observable } from 'rxjs';
 
-import { AuthedUser, NotebookIdentifier, NotebookSchemaVersion, NotebookUsers } from '@ureeka-notebook/service-common';
+import { AuthedUser, NodeIdentifier, NodeName, NotebookIdentifier, NotebookSchemaVersion, NotebookUsers } from '@ureeka-notebook/service-common';
 
 import { getLogger, ServiceLogger } from '../logging';
 import { ApplicationError } from '../util';
 import { notebookEditorDemo2AsyncNodeExecute, notebookEditorDemoAsyncNodeExecute } from './function';
 import { NotebookEditorDemo2AsyncNode_Execute, NotebookEditorDemoAsyncNode_Execute } from './type';
 import { CollaborationListener } from './CollaborationListener';
+import { NodeChange } from './NodeObserver/type';
+import { NodeObserver } from './NodeObserver/NodeObserver';
 
 const log = getLogger(ServiceLogger.NOTEBOOK_EDITOR);
 
@@ -17,6 +20,7 @@ export class NotebookEditorService {
 
   //...............................................................................
   protected readonly collaborationListener: CollaborationListener;
+  protected readonly nodeObserver: NodeObserver;
 
   // == Lifecycle =================================================================
   /**
@@ -28,6 +32,7 @@ export class NotebookEditorService {
    */
   public constructor(private readonly user: AuthedUser, private editor: Editor, schemaVersion: NotebookSchemaVersion, private readonly notebookId: NotebookIdentifier) {
     this.collaborationListener = new CollaborationListener(user, editor, schemaVersion, notebookId);
+    this.nodeObserver = new NodeObserver(editor);
   }
 
   // ------------------------------------------------------------------------------
@@ -43,6 +48,8 @@ export class NotebookEditorService {
 
     this.initialized = 'initializing';
     await this.collaborationListener.initialize()/*throws on error*/;
+
+    this.nodeObserver.initialize();
     // NOTE:  will remain 'initializing' if an error occurs
     log.info(`Notebook Editor service initialized ${this.logContext()}.`);
 
@@ -61,6 +68,7 @@ export class NotebookEditorService {
 
     log.info(`Shutting down Notebook Editor service ...`);
     this.collaborationListener.shutdown();
+    this.nodeObserver.shutdown();
 
     this.initialized = 'not-initialized';
   }
@@ -81,6 +89,23 @@ export class NotebookEditorService {
    */
   public onUsers$(): Observable<NotebookUsers> {
     return this.collaborationListener.onUsers$();
+  }
+
+  // ------------------------------------------------------------------------------
+  /**
+   * @returns and Observable over the changes for all {@link Node}s in the identified
+   *         {@link NodeName}.
+   */
+  public onNodes$<T extends Node>(nodeName: NodeName): Observable<NodeChange<T>[]> {
+    return this.nodeObserver.onNodes$<T>(nodeName);
+  }
+
+  /**
+   * @returns an Observable over the changes to the {@link Node} identified by the
+   *          specified {@link NodeName} and {@link NodeId}.
+   */
+  public onNode$<T extends Node>(nodeName: NodeName, nodeId: NodeIdentifier): Observable<NodeChange<T> | null/*not-found*/> {
+    return this.nodeObserver.onNode$<T>(nodeName, nodeId);
   }
 
   // == Editor ====================================================================
