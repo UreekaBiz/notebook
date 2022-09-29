@@ -82,19 +82,34 @@ export const findNodeById = (document: DocumentNodeType, nodeId: NodeIdentifier)
   return { docsDifferenceStart, docDifferenceEnds };
 };
 
+export const getNodesAffectedByTransaction = (transaction: Transaction, nodeNames?: Set<NodeName>): NodePosition[] => {
+  const { maps } = transaction.mapping;
+  let affectedNodes: NodePosition[] = [];
+
+  for(let i=0; i<maps.length; i++) {
+    maps[i].forEach((start, end) => {
+      const { newNodePositions } = getNodesAffectedByStepMap(transaction, i, start, end, nodeNames);
+      affectedNodes = [...affectedNodes, ...newNodePositions];
+    });
+  }
+
+  return affectedNodes;
+};
+
 /**
  * @param transaction The transaction whose affected ranges are being computed
  * @param stepMapIndex The stepMapIndex of the corresponding stepMap of the Transaction
  * @param unmappedOldStart The default oldStart of the stepMap of the Transaction
- * @param unmappedOldEnd The default oldEnd of the stepMap of the Transaction
- * @param nodeNames The names of the Nodes that are being looked for in the affected range
+ * @param unmappedOldEnd The default oldEnd of the stepMap of the Transaction.
+ * @param nodeNames The names of the Nodes that are being looked for in the affected
+ *                  range. If not provided all nodes are considered.
  * @returns The Nodes of the specified types that existed in the affected range
  *          of the Transaction before the steps were applied, and the Nodes of the
  *          specified types that exist after the Steps have been applied
  */
 // NOTE: separated into its own method since all logic that needs to check whether
 //       some node was deleted in a transaction uses this approach
-export const getNodesAffectedByStepMap = (transaction: Transaction, stepMapIndex: number, unmappedOldStart: number, unmappedOldEnd: number, nodeNames: Set<NodeName>) => {
+export const getNodesAffectedByStepMap = (transaction: Transaction, stepMapIndex: number, unmappedOldStart: number, unmappedOldEnd: number, nodeNames?: Set<NodeName>) => {
   // map to get the oldStart, oldEnd that account for history
   const { mappedOldStart, mappedOldEnd, mappedNewStart, mappedNewEnd } = mapOldStartAndOldEndThroughHistory(transaction, stepMapIndex, unmappedOldStart, unmappedOldEnd);
 
@@ -108,11 +123,11 @@ export const getNodesAffectedByStepMap = (transaction: Transaction, stepMapIndex
 // {@link #from} and {@link #to} in the given {@link #rootNode}, adding those Nodes
 // whose type name is included in the given {@link #nodeNames} set. Very similar to
 // doc.nodesBetween, but specifically for {@link NodePosition} objects.
-const getNodesBetween = (rootNode: ProseMirrorNode, from: number, to: number, nodeNames: Set<NodeName>) => {
+const getNodesBetween = (rootNode: ProseMirrorNode, from: number, to: number, nodeNames?: Set<NodeName>) => {
   const nodesOfType: NodePosition[] = [];
   rootNode.nodesBetween(from, to, (node, position) => {
     const nodeName = getNodeName(node);
-    if(nodeNames.has(nodeName)) {
+    if(nodeNames === undefined/*not provided -- all nodes considered*/ || nodeNames.has(nodeName)) {
       nodesOfType.push({ node, position });
     } /* else -- ignore Node */
   });

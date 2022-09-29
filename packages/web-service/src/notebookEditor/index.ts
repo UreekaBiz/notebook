@@ -404,6 +404,7 @@ export {
   findNodeById,
   findParentNode,
   getParentNode,
+  getNodesAffectedByTransaction,
   getNodesAffectedByStepMap,
   liftEmptyBlockNodeCommand,
   LiftEmptyBlockNodeDocumentUpdate,
