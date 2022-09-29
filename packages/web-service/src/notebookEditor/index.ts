@@ -410,10 +410,16 @@ export {
   LiftEmptyBlockNodeDocumentUpdate,
   joinBackwardCommand,
   JoinBackwardDocumentUpdate,
-  nodeToTagId,
-  wereNodesAffectedByTransaction,
-  ParentNodePosition,
   NodePosition,
+  nodeToTagId,
+  ParentNodePosition,
+  updateAttributesCommand,
+  UpdateAttributesDocumentUpdate,
+  updateAttributesInRangeCommand,
+  UpdateAttributesInRangeDocumentUpdate,
+  updateSingleNodeAttributesCommand,
+  UpdateSingleNodeAttributesDocumentUpdate,
+  wereNodesAffectedByTransaction,
 
   // .. Selection .................................................................
   deleteSelectionCommand,
@@ -436,10 +442,6 @@ export {
   SetNodeSelectionDocumentUpdate,
   setTextSelectionCommand,
   SetTextSelectionDocumentUpdate,
-  updateAttributesCommand,
-  UpdateAttributesDocumentUpdate,
-  updateAttributesInRangeCommand,
-  UpdateAttributesInRangeDocumentUpdate,
 
   // ..............................................................................
 } from '@ureeka-notebook/service-common';
