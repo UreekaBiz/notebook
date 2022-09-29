@@ -90,6 +90,7 @@ export {
   ImageAttributes,
   defaultImageAttributes,
   DEFAULT_IMAGE_PARSE_TAG,
+  DEFAULT_IMAGE_SRC,
   DEFAULT_IMAGE_WIDTH,
   DEFAULT_IMAGE_HEIGHT,
   DEFAULT_IMAGE_MIN_WIDTH,

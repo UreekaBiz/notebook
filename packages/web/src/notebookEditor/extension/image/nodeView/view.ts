@@ -1,6 +1,6 @@
 import { Editor } from '@tiptap/core';
 
-import { getPosType, AttributeType, NodeName, ImageNodeType, DATA_NODE_TYPE } from '@ureeka-notebook/web-service';
+import { getPosType, AttributeType, NodeName, ImageNodeType, DATA_NODE_TYPE, DEFAULT_IMAGE_SRC, DEFAULT_IMAGE_HEIGHT, DEFAULT_IMAGE_WIDTH } from '@ureeka-notebook/web-service';
 
 import { AbstractNodeView } from 'notebookEditor/model/AbstractNodeView';
 
@@ -25,15 +25,24 @@ export class ImageView extends AbstractNodeView<ImageNodeType, ImageStorage, Ima
 
   // -- Creation ------------------------------------------------------------------
   protected createDomElement() {
-    // create an Image with default attributes
+    // default view is an Image with the default attributes
     const image = document.createElement('img');
           image.setAttribute(DATA_NODE_TYPE, NodeName.IMAGE);
-    return image;
+          image.setAttribute(AttributeType.Src, DEFAULT_IMAGE_SRC);
+          image.setAttribute(AttributeType.Width, DEFAULT_IMAGE_WIDTH);
+          image.setAttribute(AttributeType.Height, DEFAULT_IMAGE_HEIGHT);
+
+    return image/*defaults set*/;
   }
 
+  // -- Update --------------------------------------------------------------------
   public updateView(): void {
     super.updateView();
+    this.syncView();
+  }
 
+  // ensure the Image DOM element has the latest attributes
+  private syncView() {
     const src = this.node.attrs[AttributeType.Src];
     const width = this.node.attrs[AttributeType.Width];
     const height = this.node.attrs[AttributeType.Height];

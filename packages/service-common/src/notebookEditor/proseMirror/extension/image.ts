@@ -64,9 +64,9 @@ export const isImageJSONNode = (node: JSONNode): node is ImageJSONNodeType => no
 
 // --------------------------------------------------------------------------------
 export const DEFAULT_IMAGE_PARSE_TAG = 'img[src]';
-
-export const DEFAULT_IMAGE_WIDTH = '300px';
-export const DEFAULT_IMAGE_HEIGHT = '300px';
+export const DEFAULT_IMAGE_SRC = 'https://via.placeholder.com/100x101?text=+';
+export const DEFAULT_IMAGE_HEIGHT = '100px';
+export const DEFAULT_IMAGE_WIDTH = '100px';
 
 // NOTE: exported limits are used in ToolItems to enforce that they do not get exceeded
 // SEE: ImageWidthToolItem.tsx, ImageHeightToolItem.tsx
