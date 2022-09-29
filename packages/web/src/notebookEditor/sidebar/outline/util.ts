@@ -90,7 +90,7 @@ export const updateOutline = (editor: Editor, outline: Outline, changes: NodeCha
     const index = newOutline.findIndex((item) => item.id === change.node.attrs[AttributeType.Id]);
 
     // Heading was not present
-    if(index === -1) {
+    if(index === -1) { // FIXME: index < 0
       recreate = true;
       break/*stop iterating*/;
     } /* else -- Heading was present */
