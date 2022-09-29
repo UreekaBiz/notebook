@@ -137,8 +137,8 @@ export class UpdateAttributesInRangeDocumentUpdate implements AbstractDocumentUp
  * Transaction will not be added to the History. This is ideal for asynchronous
  * update attributes, whose effects should (usually) not be undo-able
  */
- export const updateSingleNodeAttributesCommand = <T extends Attributes>(nodePosition: number, attributes: Partial<T>, addToHistory = true): Command => (state, dispatch) => {
-  const updatedTr = new UpdateSingleNodeAttributesDocumentUpdate(nodePosition, attributes, addToHistory).update(state, state.tr);
+ export const updateSingleNodeAttributesCommand = <T extends Attributes>(nodeName: NodeName, nodePosition: number, attributes: Partial<T>, addToHistory = true): Command => (state, dispatch) => {
+  const updatedTr = new UpdateSingleNodeAttributesDocumentUpdate(nodeName, nodePosition, attributes, addToHistory).update(state, state.tr);
   if(updatedTr) {
     dispatch(updatedTr);
     return true/*Command executed*/;
@@ -147,7 +147,7 @@ export class UpdateAttributesInRangeDocumentUpdate implements AbstractDocumentUp
   return false/*not executed*/;
 };
 export class UpdateSingleNodeAttributesDocumentUpdate implements AbstractDocumentUpdate {
-  public constructor(private readonly nodePosition: number, private readonly attributes: Partial<Attributes>, private readonly addToHistory: boolean) {/*nothing additional*/}
+  public constructor(private readonly nodeName: NodeName, private readonly nodePosition: number, private readonly attributes: Partial<Attributes>, private readonly addToHistory: boolean) {/*nothing additional*/}
 
   /*
    * Modify the Transaction such that the Attributes of the Node at the given
@@ -155,12 +155,24 @@ export class UpdateSingleNodeAttributesDocumentUpdate implements AbstractDocumen
    * (SEE: #updateSingleNodeAttributesCommand above)
    */
   public update(editorState: EditorState, tr: Transaction) {
-    Object.entries(this.attributes).forEach(([attributeName, attributeValue]) => tr.step(new AttrStep(this.nodePosition, attributeName, attributeValue)));
+    // since this Document update can be used to update attributes of Nodes
+    // asynchronously, wrap to prevent errors
+    try {
+      const attrEntries = Object.entries(this.attributes);
+      for(let i=0; i<attrEntries.length; i++) {
+        const updatedNode = tr.doc.nodeAt(this.nodePosition);
+        if(!updatedNode || updatedNode.type.name !== this.nodeName) return false/*Node no longer exists or its position changed*/;
 
-    if(!this.addToHistory) {
-      tr.setMeta(HISTORY_META, this.addToHistory);
-    } /* else -- allow Transaction to be undo-able*/
+        tr.step(new AttrStep(this.nodePosition, attrEntries[i][0/*attributeName*/], attrEntries[i][1/*attributeValue*/]));
+      }
 
-    return tr/*updated*/;
+      if(!this.addToHistory) {
+        tr.setMeta(HISTORY_META, this.addToHistory);
+      } /* else -- allow Transaction to be undo-able*/
+
+      return tr/*updated*/;
+    } catch(error) {
+      return false/*Node no longer exists or its position changed*/;
+    }
   }
 }

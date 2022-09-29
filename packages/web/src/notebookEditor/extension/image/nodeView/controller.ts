@@ -1,6 +1,6 @@
 import { Editor } from '@tiptap/core';
 
-import { defaultImageAttributes, getDownloadURL, getPosType, lastValueFrom, updateSingleNodeAttributesCommand, AssetService, AttributeType, ImageAttributes, ImageNodeType, DEFAULT_IMAGE_ERROR_SRC, DEFAULT_IMAGE_HEIGHT, DEFAULT_IMAGE_WIDTH } from '@ureeka-notebook/web-service';
+import { defaultImageAttributes, getDownloadURL, getPosType, lastValueFrom, updateSingleNodeAttributesCommand, AssetService, AttributeType, ImageAttributes, ImageNodeType, NodeName, DEFAULT_IMAGE_ERROR_SRC, DEFAULT_IMAGE_HEIGHT, DEFAULT_IMAGE_WIDTH } from '@ureeka-notebook/web-service';
 
 import { AbstractNodeController } from 'notebookEditor/model/AbstractNodeController';
 
@@ -36,12 +36,12 @@ export class ImageController extends AbstractNodeController<ImageNodeType, Image
 
       const firstSnapshot = await lastValueFrom(AssetService.getInstance().upload$(blob));
       const storageUrl = await getDownloadURL(firstSnapshot.ref);
-      updateSingleNodeAttributesCommand<ImageAttributes>(this.getPos(),
+      updateSingleNodeAttributesCommand<ImageAttributes>(NodeName.IMAGE, this.getPos(),
         { ...defaultImageAttributes, src: storageUrl, width, height, uploaded: true/*uploaded to Storage*/ },
         false/*User should not be able to undo this update*/)(this.editor.state, this.editor.view.dispatch);
     } catch(error) {
-      // if unable to load and fit, use defaults
-      updateSingleNodeAttributesCommand<ImageAttributes>(this.getPos(),
+      // if unable to fit and upload, use defaults
+      updateSingleNodeAttributesCommand<ImageAttributes>(NodeName.IMAGE, this.getPos(),
         { ...defaultImageAttributes, src: DEFAULT_IMAGE_ERROR_SRC, width: DEFAULT_IMAGE_WIDTH, height: DEFAULT_IMAGE_HEIGHT, uploaded: true/*do not retry upload*/ },
         false/*User should not be able to undo this update*/)(this.editor.state, this.editor.view.dispatch);
     } finally {
