@@ -46,8 +46,8 @@ export const SubScriptMarkRendererSpec: MarkRendererSpec<SubScriptAttributes> = 
 // -- Mark Type -------------------------------------------------------------------
 // NOTE: this is the only way since PM does not provide a way to specify the type
 //       of the attributes
-export type SubScriptMarkType = ProseMirrorMark<NotebookSchemaType> & { attrs: SubScriptAttributes; };
-export const isSubScriptMark = (mark: ProseMirrorMark<NotebookSchemaType>): mark is SubScriptMarkType => mark.type.name === MarkName.SUB_SCRIPT;
+export type SubScriptMarkType = ProseMirrorMark & { attrs: SubScriptAttributes; };
+export const isSubScriptMark = (mark: ProseMirrorMark): mark is SubScriptMarkType => mark.type.name === MarkName.SUB_SCRIPT;
 
 export const getSubScriptMarkType = (schema: NotebookSchemaType) => schema.marks[MarkName.SUB_SCRIPT];
 export const createSubScriptMark = (schema: NotebookSchemaType, attributes?: Partial<SubScriptAttributes>) => getSubScriptMarkType(schema).create(attributes);

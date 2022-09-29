@@ -74,11 +74,11 @@ export const CodeBlockReferenceNodeRendererSpec: NodeRendererSpec<CodeBlockRefer
 // -- Node Type -------------------------------------------------------------------
 // NOTE: this is the only way to ensure the right attributes will be available
 //       since PM does not provide a way to specify their type
-export type CodeBlockReferenceNodeType = ProseMirrorNode<NotebookSchemaType> & { attrs: CodeBlockReferenceAttributes; };
-export const isCodeBlockReferenceNode = (node: ProseMirrorNode<NotebookSchemaType>): node is CodeBlockReferenceNodeType => node.type.name === NodeName.CODEBLOCK_REFERENCE;
+export type CodeBlockReferenceNodeType = ProseMirrorNode & { attrs: CodeBlockReferenceAttributes; };
+export const isCodeBlockReferenceNode = (node: ProseMirrorNode): node is CodeBlockReferenceNodeType => node.type.name === NodeName.CODEBLOCK_REFERENCE;
 
 export const getCodeBlockReferenceNodeType = (schema: NotebookSchemaType) => schema.nodes[NodeName.CODEBLOCK_REFERENCE];
-export const createCodeBlockReferenceNode = (schema: NotebookSchemaType, attributes?: Partial<CodeBlockReferenceAttributes>, content?: ProseMirrorNodeContent, marks?: Mark<NotebookSchemaType>[]) =>
+export const createCodeBlockReferenceNode = (schema: NotebookSchemaType, attributes?: Partial<CodeBlockReferenceAttributes>, content?: ProseMirrorNodeContent, marks?: Mark[]) =>
   getCodeBlockReferenceNodeType(schema).create(attributes, content, marks);
 
 // -- JSON Node Type --------------------------------------------------------------

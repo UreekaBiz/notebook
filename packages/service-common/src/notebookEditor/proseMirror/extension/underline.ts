@@ -41,8 +41,8 @@ export const UnderlineMarkRendererSpec: MarkRendererSpec<UnderlineAttributes> = 
 // -- Mark Type -------------------------------------------------------------------
 // NOTE: this is the only way since PM does not provide a way to specify the type
 //       of the attributes
-export type UnderlineMarkType = ProseMirrorMark<NotebookSchemaType> & { attrs: UnderlineAttributes; };
-export const isUnderlineMark = (mark: ProseMirrorMark<NotebookSchemaType>): mark is UnderlineMarkType => mark.type.name === MarkName.UNDERLINE;
+export type UnderlineMarkType = ProseMirrorMark & { attrs: UnderlineAttributes; };
+export const isUnderlineMark = (mark: ProseMirrorMark): mark is UnderlineMarkType => mark.type.name === MarkName.UNDERLINE;
 
 export const getUnderlineMarkType = (schema: NotebookSchemaType) => schema.marks[MarkName.UNDERLINE];
 export const createUnderlineMark = (schema: NotebookSchemaType, attributes?: Partial<UnderlineAttributes>) => getUnderlineMarkType(schema).create(attributes);

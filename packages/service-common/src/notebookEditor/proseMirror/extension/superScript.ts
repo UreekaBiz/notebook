@@ -46,8 +46,8 @@ export const SuperScriptMarkRendererSpec: MarkRendererSpec<SuperScriptAttributes
 // -- Mark Type -------------------------------------------------------------------
 // NOTE: this is the only way since PM does not provide a way to specify the type
 //       of the attributes
-export type SuperScriptMarkType = ProseMirrorMark<NotebookSchemaType> & { attrs: SuperScriptAttributes; };
-export const isSuperScriptMark = (mark: ProseMirrorMark<NotebookSchemaType>): mark is SuperScriptMarkType => mark.type.name === MarkName.SUPER_SCRIPT;
+export type SuperScriptMarkType = ProseMirrorMark & { attrs: SuperScriptAttributes; };
+export const isSuperScriptMark = (mark: ProseMirrorMark): mark is SuperScriptMarkType => mark.type.name === MarkName.SUPER_SCRIPT;
 
 export const getSuperScriptMarkType = (schema: NotebookSchemaType) => schema.marks[MarkName.SUPER_SCRIPT];
 export const createSuperScriptMark = (schema: NotebookSchemaType, attributes?: Partial<SuperScriptAttributes>) => getSuperScriptMarkType(schema).create(attributes);

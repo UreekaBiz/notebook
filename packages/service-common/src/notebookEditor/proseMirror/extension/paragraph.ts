@@ -50,11 +50,11 @@ export const ParagraphNodeRendererSpec: NodeRendererSpec<ParagraphAttributes> = 
 // -- Node Type -------------------------------------------------------------------
 // NOTE: this is the only way since PM does not provide a way to specify the type
 //       of the Attributes
-export type ParagraphNodeType = ProseMirrorNode<NotebookSchemaType> & { attrs: ParagraphAttributes; };
-export const isParagraphNode = (node: ProseMirrorNode<NotebookSchemaType>): node is ParagraphNodeType => node.type.name === NodeName.PARAGRAPH;
+export type ParagraphNodeType = ProseMirrorNode & { attrs: ParagraphAttributes; };
+export const isParagraphNode = (node: ProseMirrorNode): node is ParagraphNodeType => node.type.name === NodeName.PARAGRAPH;
 
 export const getParagraphNodeType = (schema: NotebookSchemaType) => schema.nodes[NodeName.PARAGRAPH];
-export const createParagraphNode = (schema: NotebookSchemaType, attributes?: Partial<ParagraphAttributes>, content?: ProseMirrorNodeContent, marks?: Mark<NotebookSchemaType>[]) =>
+export const createParagraphNode = (schema: NotebookSchemaType, attributes?: Partial<ParagraphAttributes>, content?: ProseMirrorNodeContent, marks?: Mark[]) =>
   getParagraphNodeType(schema).create(attributes, content, marks);
 
 // -- JSON Node Type --------------------------------------------------------------

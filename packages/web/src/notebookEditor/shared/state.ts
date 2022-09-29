@@ -1,7 +1,7 @@
 import { Editor } from '@tiptap/core';
 import { Node as ProseMirrorNode } from 'prosemirror-model';
 
-import { codeBlockLevel, isCodeBlockNode, isHeadingNode, updateStack, AttributeType, CodeBlockRendererState, NotebookSchemaType, RendererState, NodeName } from '@ureeka-notebook/web-service';
+import { codeBlockLevel, isCodeBlockNode, isHeadingNode, updateStack, AttributeType, CodeBlockRendererState, RendererState, NodeName } from '@ureeka-notebook/web-service';
 
 // FIXME: Find a better approach to shared this with common.
 // ********************************************************************************
@@ -18,7 +18,7 @@ export const computeState = (editor: Editor): RendererState => {
 
   // determine the headings before the specified code block using a depth-first search
   // REF: https://en.wikipedia.org/wiki/Depth-first_search
-  const incorporateNode = (node: ProseMirrorNode<NotebookSchemaType>): boolean/*false when done traversing*/ => {
+  const incorporateNode = (node: ProseMirrorNode): boolean/*false when done traversing*/ => {
     if(isCodeBlockNode(node) && node.attrs) {
       updateStack(codeBlockLevel/*by definition*/, codeBlockState);
 

@@ -1,7 +1,7 @@
 import { Node } from '@tiptap/core';
 import { Plugin } from 'prosemirror-state';
 
-import { getNodeOutputSpec, isNodeSelection, isTaskListItemNode, AttributeType, NodeName, NotebookSchemaType, SetAttributeType, TaskListItemNodeSpec, DATA_NODE_TYPE, DATA_TASK_LIST_ITEM_CHECKED } from '@ureeka-notebook/web-service';
+import { getNodeOutputSpec, isNodeSelection, isTaskListItemNode, AttributeType, NodeName, SetAttributeType, TaskListItemNodeSpec, DATA_NODE_TYPE, DATA_TASK_LIST_ITEM_CHECKED } from '@ureeka-notebook/web-service';
 
 import { shortcutCommandWrapper } from 'notebookEditor/command/util';
 import { setAttributeParsingBehavior } from 'notebookEditor/extension/util/attribute';
@@ -60,7 +60,7 @@ export const TaskListItem = Node.create<NoOptions, NoStorage>({
   //       unchecking the TaskListItem checkbox repeatedly and quickly
   addProseMirrorPlugins() {
     return [
-      new Plugin<NotebookSchemaType>({
+      new Plugin({
         filterTransaction(transaction) {
           if(isNodeSelection(transaction.selection) && isTaskListItemNode(transaction.selection.node)) {
             return false/*do not allow Task List Item Nodes to be selected*/;

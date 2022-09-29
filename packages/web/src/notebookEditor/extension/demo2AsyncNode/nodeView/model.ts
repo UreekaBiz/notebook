@@ -1,7 +1,6 @@
-import { AsyncNodeStatus, Demo2AsyncNodeType, AttributeType, createReplacedTextMarkMark } from '@ureeka-notebook/web-service';
+import { createReplacedTextMarkMark, AsyncNodeStatus, Demo2AsyncNodeType, AttributeType, HISTORY_META } from '@ureeka-notebook/web-service';
 
 import { AbstractAsyncNodeModel } from 'notebookEditor/extension/asyncNode/nodeView/model';
-import { HISTORY_META } from 'notebookEditor/extension/history/History';
 
 import { Demo2AsyncNodeStorageType } from './controller';
 

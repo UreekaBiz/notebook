@@ -1,10 +1,10 @@
 import { Plugin } from 'prosemirror-state';
 import { EditorView } from 'prosemirror-view';
 
-import { getParagraphNodeType, getSelectedNode, generateNodeId, isHeadingNode, AttributeType, HeadingAttributes, NotebookSchemaType } from '@ureeka-notebook/web-service';
+import { getParagraphNodeType, getSelectedNode, generateNodeId, isHeadingNode, AttributeType, HeadingAttributes } from '@ureeka-notebook/web-service';
 
 // ********************************************************************************
-export const HeadingPlugin = () => new Plugin<NotebookSchemaType>({
+export const HeadingPlugin = () => new Plugin({
   // -- Props ---------------------------------------------------------------------
   props: {
     // .. Handler .................................................................

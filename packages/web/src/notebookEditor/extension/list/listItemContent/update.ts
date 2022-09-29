@@ -1,7 +1,7 @@
 import { Editor } from '@tiptap/core';
 import { EditorState, Transaction } from 'prosemirror-state';
 
-import { getBlockNodeRange, getListItemContentNodeType, isListItemContentNode, isDocumentNode, AbstractDocumentUpdate, LiftEmptyBlockNodeDocumentUpdate, NotebookSchemaType } from '@ureeka-notebook/web-service';
+import { getBlockNodeRange, getListItemContentNodeType, isListItemContentNode, isDocumentNode, AbstractDocumentUpdate, LiftEmptyBlockNodeDocumentUpdate } from '@ureeka-notebook/web-service';
 
 import { applyDocumentUpdates } from 'notebookEditor/command/update';
 import { SetParagraphDocumentUpdate } from 'notebookEditor/extension/paragraph/command';
@@ -31,7 +31,7 @@ export class SetListItemContentDocumentUpdate implements AbstractDocumentUpdate 
    * Modify the given Transaction such that the current Block becomes a
    * ListItemContent Node and return it (SEE: NOTE above)
    */
-  public update(editorState: EditorState<NotebookSchemaType>, tr: Transaction<NotebookSchemaType>) {
+  public update(editorState: EditorState, tr: Transaction) {
     if(tr.selection.empty && isListItemContentNode(tr.selection.$anchor.parent)) {
       return tr/*already in ListItemContent*/;
     } /* else -- set ListItemContent */

@@ -60,11 +60,11 @@ export const DEFAULT_DEMO_2_ASYNC_NODE_DELAY = 4000/*ms*/;
 // -- Node Type -------------------------------------------------------------------
 // NOTE: this is the only way to ensure the right attributes will be available
 //       since PM does not provide a way to specify their type
-export type Demo2AsyncNodeType = ProseMirrorNode<NotebookSchemaType> & { attrs: Demo2AsyncNodeAttributes; };
-export const isDemo2AsyncNode = (node: ProseMirrorNode<NotebookSchemaType>): node is Demo2AsyncNodeType => node.type.name === NodeName.DEMO_2_ASYNC_NODE;
+export type Demo2AsyncNodeType = ProseMirrorNode & { attrs: Demo2AsyncNodeAttributes; };
+export const isDemo2AsyncNode = (node: ProseMirrorNode): node is Demo2AsyncNodeType => node.type.name === NodeName.DEMO_2_ASYNC_NODE;
 
 export const getDemo2AsyncNodeNodeType = (schema: NotebookSchemaType) => schema.nodes[NodeName.DEMO_2_ASYNC_NODE];
-export const createDemo2AsyncNodeNode = (schema: NotebookSchemaType, attributes?: Partial<Demo2AsyncNodeAttributes>, content?: ProseMirrorNodeContent, marks?: Mark<NotebookSchemaType>[]) =>
+export const createDemo2AsyncNodeNode = (schema: NotebookSchemaType, attributes?: Partial<Demo2AsyncNodeAttributes>, content?: ProseMirrorNodeContent, marks?: Mark[]) =>
   getDemo2AsyncNodeNodeType(schema).create(attributes, content, marks);
 
 // -- JSON Node Type --------------------------------------------------------------

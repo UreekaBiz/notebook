@@ -73,9 +73,9 @@ export const LinkMarkRendererSpec: MarkRendererSpec<LinkAttributes> = {
 // -- Mark Type -------------------------------------------------------------------
 // NOTE: this is the only way since PM does not provide a way to specify the type
 //       of the attributes
-export type LinkMarkType = ProseMirrorMark<NotebookSchemaType> & { attrs: LinkAttributes; };
+export type LinkMarkType = ProseMirrorMark & { attrs: LinkAttributes; };
 export const isLinkMarkAttributes = (attrs: any): attrs is LinkAttributes => 'href' in attrs && 'target' in attrs;
-export const isLinkMark = (mark: ProseMirrorMark<NotebookSchemaType>): mark is LinkMarkType => mark.type.name === MarkName.LINK;
+export const isLinkMark = (mark: ProseMirrorMark): mark is LinkMarkType => mark.type.name === MarkName.LINK;
 
 export const getLinkMarkType = (schema: NotebookSchemaType) => schema.marks[MarkName.LINK];
 export const createLinkMark = (schema: NotebookSchemaType, attributes?: Partial<LinkAttributes>) => getLinkMarkType(schema).create(attributes);

@@ -1,6 +1,6 @@
 import { EditorState, Transaction } from 'prosemirror-state';
 
-import { AbstractDocumentUpdate, Command, NotebookSchemaType } from '@ureeka-notebook/web-service';
+import { AbstractDocumentUpdate, Command } from '@ureeka-notebook/web-service';
 
 // ********************************************************************************
 /** Inserts a Tab. (SEE: ExtensionPriority) for details on handling */
@@ -19,7 +19,7 @@ export class InsertTabDocumentUpdate implements AbstractDocumentUpdate {
   /**
    * modify the given Transaction such that a Tab is inserted and return it
    */
-  public update(editorState: EditorState<NotebookSchemaType>, tr: Transaction<NotebookSchemaType>) {
+  public update(editorState: EditorState, tr: Transaction) {
     tr.insertText('\t');
     return tr/*updated*/;
   }

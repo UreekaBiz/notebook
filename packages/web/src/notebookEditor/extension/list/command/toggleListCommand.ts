@@ -1,7 +1,7 @@
 import { Fragment, Node as ProseMirrorNode, NodeType } from 'prosemirror-model';
 import { EditorState, Selection, TextSelection, Transaction } from 'prosemirror-state';
 
-import { findParentNode, Command, NodeName, AbstractDocumentUpdate, NotebookSchemaType, ParentNodePosition } from '@ureeka-notebook/web-service';
+import { findParentNode, Command, NodeName, AbstractDocumentUpdate, ParentNodePosition } from '@ureeka-notebook/web-service';
 
 import { isListNode } from '../util';
 import { LiftListItemOutOfListDocumentUpdate } from './liftListItemOutOfListCommand';
@@ -30,7 +30,7 @@ export class ToggleListDocumentUpdate implements AbstractDocumentUpdate {
    * it will be set as the starting point for the Selection before any
    * other Transaction update
    */
-  public update(editorState: EditorState<NotebookSchemaType>, tr: Transaction<NotebookSchemaType>) {
+  public update(editorState: EditorState, tr: Transaction) {
     // -- Setup -------------------------------------------------------------------
     // the original anchor, where the User currently is
     const originalAnchor = tr.selection.anchor;

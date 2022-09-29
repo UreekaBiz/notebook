@@ -45,7 +45,7 @@ const writeVersions = async (
   transaction: Transaction | undefined/*outside transaction*/,
   userId: UserIdentifier, clientId: ClientIdentifier,
   schemaVersion: NotebookSchemaVersion,  notebookId: NotebookIdentifier,
-  startingIndex: number, pmSteps: ProseMirrorStep[]
+  startingIndex: number, pmSteps: readonly ProseMirrorStep[]
 ): Promise<boolean> => {
   const transactionBody = async (transaction: Transaction): Promise<boolean> => {
     // NOTE: only checks against first Version since if that doesn't exist then no

@@ -2,7 +2,7 @@ import { Fragment, Node as ProseMirrorNode, NodeRange, ResolvedPos, Slice } from
 import { EditorState, Transaction } from 'prosemirror-state';
 import { liftTarget, ReplaceAroundStep } from 'prosemirror-transform';
 
-import { isListItemNode, isTaskListItemNode, AbstractDocumentUpdate, AttributeType, Command, NotebookSchemaType } from '@ureeka-notebook/web-service';
+import { isListItemNode, isTaskListItemNode, AbstractDocumentUpdate, AttributeType, Command } from '@ureeka-notebook/web-service';
 
 import { isListNode, maybeJoinList } from '../util';
 import { getListItemRange, wrapSelectedItems } from './util';
@@ -25,7 +25,7 @@ export class DedentListDocumentUpdate implements AbstractDocumentUpdate {
    * modify the given Transaction such that the indentation level of the
    * List or ListItem at the current Selection is decreased and return it
    */
-  public update(editorState: EditorState<NotebookSchemaType>, tr: Transaction<NotebookSchemaType>) {
+  public update(editorState: EditorState, tr: Transaction) {
     let range = getListItemRange(tr.selection);
     if(!range) return false/*no Range for ListItems found*/;
 

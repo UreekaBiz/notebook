@@ -3,7 +3,6 @@ import { EditorState, NodeSelection, Selection, TextSelection, Transaction } fro
 import { EditorView } from 'prosemirror-view';
 
 import { minFromMax } from '../../../util/number';
-import { NotebookSchemaType } from '../schema';
 import { AbstractDocumentUpdate, Command } from './type';
 import { findCutBefore } from './util';
 
@@ -28,7 +27,7 @@ export class SetTextSelectionDocumentUpdate implements AbstractDocumentUpdate {
    * modify the given Transaction such that a TextSelection
    * is set across the given Range
    */
-  public update(editorState: EditorState<NotebookSchemaType>, tr: Transaction<NotebookSchemaType>) {
+  public update(editorState: EditorState, tr: Transaction) {
     const { doc } = editorState;
     const { from, to } = this.selectionRange;
 
@@ -61,7 +60,7 @@ export class SetNodeSelectionDocumentUpdate implements AbstractDocumentUpdate {
    * modify the given Transaction such that a NodeSelection
    * is set at the given position
    */
-  public update(editorState: EditorState<NotebookSchemaType>, tr: Transaction<NotebookSchemaType>) {
+  public update(editorState: EditorState, tr: Transaction) {
     const { doc } = tr;
     tr.setSelection(NodeSelection.create(doc, minFromMax(this.nodePos, 0/*Doc start*/, doc.content.size)));
     return tr/*updated*/;
@@ -86,7 +85,7 @@ export class DeleteSelectionDocumentUpdate implements AbstractDocumentUpdate {
    * modify the given Transaction such that the Selection
    * is deleted if it is not empty and return it
    */
-  public update(editorState: EditorState<NotebookSchemaType>, tr: Transaction<NotebookSchemaType>) {
+  public update(editorState: EditorState, tr: Transaction) {
     if(editorState.selection.empty) return false;
     tr.deleteSelection().scrollIntoView();
     return tr;
@@ -115,7 +114,7 @@ export class SelectNodeBackwardDocumentUpdate implements AbstractDocumentUpdate 
    * modify the given Transaction such that when the Selection is at
    * the start of a Text Block, the Node before it is selected
    */
-  public update(editorState: EditorState<NotebookSchemaType>, tr: Transaction<NotebookSchemaType>, view?: EditorView) {
+  public update(editorState: EditorState, tr: Transaction, view?: EditorView) {
     const { $head, empty } = editorState.selection;
     let $cutPos: ResolvedPos | null = $head/*default*/;
     if(!empty) return false;
@@ -144,7 +143,7 @@ const getNodeBefore = (selection: Selection) => {
  * Replaces the node at the {@link Selection} of the given {@link Transaction} and
  * selects the new, replaced Node
  */
-export const replaceAndSelectNodeCommand = (node: ProseMirrorNode<NotebookSchemaType>): Command => (state, dispatch) => {
+export const replaceAndSelectNodeCommand = (node: ProseMirrorNode): Command => (state, dispatch) => {
   const updatedTr =  new ReplaceAndSelectNodeDocumentUpdate(node).update(state, state.tr);
   if(updatedTr) {
     dispatch(updatedTr);
@@ -154,13 +153,13 @@ export const replaceAndSelectNodeCommand = (node: ProseMirrorNode<NotebookSchema
   return false/*not executed*/;
 };
 export class ReplaceAndSelectNodeDocumentUpdate implements AbstractDocumentUpdate {
-  public constructor(private readonly node: ProseMirrorNode<NotebookSchemaType>) {/*nothing additional*/ }
+  public constructor(private readonly node: ProseMirrorNode) {/*nothing additional*/ }
 
   /*
    * modify the given Transaction such that a Block Node is created
    * below the current Selection
    */
-  public update(editorState: EditorState<NotebookSchemaType>, tr: Transaction<NotebookSchemaType>) {
+  public update(editorState: EditorState, tr: Transaction) {
     tr.replaceSelectionWith(this.node);
 
     const nodeBefore = getNodeBefore(tr.selection),

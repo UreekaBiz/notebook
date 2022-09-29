@@ -2,7 +2,7 @@ import { Editor } from '@tiptap/core';
 import { NodeSelection, Selection, TextSelection } from 'prosemirror-state';
 import { Step } from 'prosemirror-transform';
 
-import { isNodeSelection, AbstractDocumentUpdate, NotebookSchemaType } from '@ureeka-notebook/web-service';
+import { isNodeSelection, AbstractDocumentUpdate } from '@ureeka-notebook/web-service';
 
 // ********************************************************************************
 /**
@@ -11,8 +11,8 @@ import { isNodeSelection, AbstractDocumentUpdate, NotebookSchemaType } from '@ur
  * use them
  */
 export const applyDocumentUpdates = (editor: Editor, documentUpdates: AbstractDocumentUpdate[]): boolean => {
-  const steps: Step<NotebookSchemaType>[] = [];
-  let finalSelection: Selection<NotebookSchemaType> = editor.state.selection/*default*/;
+  const steps: Step[] = [];
+  let finalSelection: Selection = editor.state.selection/*default*/;
 
   let currentState = editor.state/*default starting state*/;
   for(let i=0; i<documentUpdates.length; i++) {

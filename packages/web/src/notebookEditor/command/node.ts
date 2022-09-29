@@ -2,7 +2,7 @@ import { ParseOptions } from 'prosemirror-model';
 import { EditorState, Selection, Transaction } from 'prosemirror-state';
 import { ReplaceStep, ReplaceAroundStep } from 'prosemirror-transform';
 
-import { AbstractDocumentUpdate, Command, JSONNode, NotebookSchemaType, SelectionRange } from '@ureeka-notebook/web-service';
+import { AbstractDocumentUpdate, Command, JSONNode, SelectionRange } from '@ureeka-notebook/web-service';
 
 import { createNodeFromContent, isFragment } from 'notebookEditor/extension/util/node';
 
@@ -31,7 +31,7 @@ export class InsertContentAtDocumentUpdate implements AbstractDocumentUpdate  {
    * modify the given Transaction such that the given content is inserted at
    * the specified SelectionRange and return it
    */
-  public update(editorState: EditorState<NotebookSchemaType>, tr: Transaction<NotebookSchemaType>) {
+  public update(editorState: EditorState, tr: Transaction) {
     const options = { parseOptions: {/*default none*/}, updateSelection: true, ...this.options };
     const content = createNodeFromContent(editorState.schema, this.value, { parseOptions: { preserveWhitespace: 'full', ...options.parseOptions } });
 

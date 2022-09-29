@@ -7,7 +7,6 @@ import { Attributes } from '../attribute';
 import { isMarkHolderNode } from '../extension/markHolder';
 import { isTextNode } from '../extension/text';
 import { NodeName } from '../node';
-import { NotebookSchemaType } from '../schema';
 import { isGapCursorSelection } from '../selection';
 import { AbstractDocumentUpdate, Command } from './type';
 import { deleteBarrier, findCutBefore, textblockAt } from './util';
@@ -32,7 +31,7 @@ export class CreateBlockNodeDocumentUpdate implements AbstractDocumentUpdate {
    * modify the given Transaction such that a Bloc Node is created
    * below the current Selection
    */
-  public update(editorState: EditorState<NotebookSchemaType>, tr: Transaction<NotebookSchemaType>) {
+  public update(editorState: EditorState, tr: Transaction) {
     const { schema } = editorState;
     if(isGapCursorSelection(tr.selection)) return false/*do not allow creation when selection is GapCursor*/;
 
@@ -97,7 +96,7 @@ export const clearNodesCommand: Command = (state, dispatch) => {
 export class ClearNodesDocumentUpdate implements AbstractDocumentUpdate {
   public constructor() {/*nothing additional*/}
 
-  public update(editorState: EditorState<NotebookSchemaType>, tr: Transaction<NotebookSchemaType>) {
+  public update(editorState: EditorState, tr: Transaction) {
     const { selection } = tr;
     const { ranges } = selection;
 
@@ -151,7 +150,7 @@ export class LiftEmptyBlockNodeDocumentUpdate implements AbstractDocumentUpdate 
    * modify the given Transaction such that an empty Block Node is lifted
    * if it exists, and return it
    */
-  public update(editorState: EditorState<NotebookSchemaType>, tr: Transaction<NotebookSchemaType>) {
+  public update(editorState: EditorState, tr: Transaction) {
     const { $cursor } = editorState.selection as TextSelection/*specifically looking for $cursor*/;
     if(!$cursor || $cursor.parent.content.size) return false/*not a TextSelection or Block is not empty*/;
 
@@ -193,7 +192,7 @@ export class JoinBackwardDocumentUpdate implements AbstractDocumentUpdate {
    * modify the given Transaction such that the conditions described by the
    * joinBackward Command (SEE: joinBackwardCommand above) hold
    */
-  public update(editorState: EditorState<NotebookSchemaType>, tr: Transaction<NotebookSchemaType>) {
+  public update(editorState: EditorState, tr: Transaction) {
     const { $cursor } = editorState.selection as TextSelection/*specifically looking for $cursor*/;
     if(!$cursor) return false/*selection is not an empty Text selection*/;
 

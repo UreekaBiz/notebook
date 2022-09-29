@@ -1,7 +1,7 @@
 import { Editor } from '@tiptap/core';
 import { EditorState, Transaction } from 'prosemirror-state';
 
-import { createImageNode, isNodeSelection, AbstractDocumentUpdate, AttributeType, Command, ImageAttributes, NotebookSchemaType, ReplaceAndSelectNodeDocumentUpdate, VerticalAlign, UpdateAttributesDocumentUpdate, NodeName, SetNodeSelectionDocumentUpdate } from '@ureeka-notebook/web-service';
+import { createImageNode, isNodeSelection, AbstractDocumentUpdate, AttributeType, Command, ImageAttributes, ReplaceAndSelectNodeDocumentUpdate, VerticalAlign, UpdateAttributesDocumentUpdate, NodeName, SetNodeSelectionDocumentUpdate } from '@ureeka-notebook/web-service';
 
 import { applyDocumentUpdates } from 'notebookEditor/command/update';
 
@@ -24,7 +24,7 @@ export class InsertAndSelectImageDocumentUpdate implements AbstractDocumentUpdat
    * modify the given Transaction such that an Image Node is created and
    * replaces the current Selection, then return it
    */
-  public update(editorState: EditorState<NotebookSchemaType>, tr: Transaction<NotebookSchemaType>) {
+  public update(editorState: EditorState, tr: Transaction) {
     const image = createImageNode(editorState.schema, this.attributes);
     const updatedTr =  new ReplaceAndSelectNodeDocumentUpdate(image).update(editorState, editorState.tr);
     return updatedTr/*updated*/;

@@ -2,7 +2,6 @@ import { Transaction } from 'prosemirror-state';
 import { Step as ProseMirrorStep } from 'prosemirror-transform';
 
 import { NotebookVersionContent } from '../type';
-import { NotebookSchemaType } from './schema';
 
 // ********************************************************************************
 // == JSON ========================================================================
@@ -28,7 +27,7 @@ export const contentToJSONStep = (content: NotebookVersionContent) => JSON.parse
  *          stepMapIndex
  */
 // REF: https://discuss.prosemirror.net/t/how-to-calculate-the-changed-ranges-for-transactions/3771/3
-export const mapOldStartAndOldEndThroughHistory = (transaction: Transaction<NotebookSchemaType>, stepMapIndex: number, unmappedOldStart: number, unmappedOldEnd: number) => {
+export const mapOldStartAndOldEndThroughHistory = (transaction: Transaction, stepMapIndex: number, unmappedOldStart: number, unmappedOldEnd: number) => {
   // To ensure every step computes the right positions for oldStart, oldEnd,
   // newStart and newEnd regardless of whether something was done or undone
   // in the history, map the unmappedOldStart and unmappedOldEnd forward

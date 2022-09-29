@@ -2,7 +2,7 @@ import { Slice } from 'prosemirror-model';
 import { NodeSelection, Plugin, TextSelection } from 'prosemirror-state';
 import { EditorView } from 'prosemirror-view';
 
-import { createMarkHolderNode, createParagraphNode, getNodesAffectedByStepMap, isMarkHolderNode, markFromJSONMark, parseStringifiedMarksArray, stringifyMarksArray, AttributeType, NodeName, NotebookSchemaType } from '@ureeka-notebook/web-service';
+import { createMarkHolderNode, createParagraphNode, getNodesAffectedByStepMap, isMarkHolderNode, markFromJSONMark, parseStringifiedMarksArray, stringifyMarksArray, AttributeType, NodeName } from '@ureeka-notebook/web-service';
 
 import { parseStoredMarks } from './util';
 
@@ -12,7 +12,7 @@ import { parseStoredMarks } from './util';
 const blockNodesThatPreserveMarks = new Set([NodeName.HEADING, NodeName.PARAGRAPH, NodeName.LIST_ITEM_CONTENT]);
 
 // == Plugin ======================================================================
-export const MarkHolderPlugin = () => new Plugin<NotebookSchemaType>({
+export const MarkHolderPlugin = () => new Plugin({
   // -- Transaction ---------------------------------------------------------------
   // when a BlockNode that must preserve Marks (SEE: blockNodesThatPreserveMarks Set
   // above) gets its Content removed but the Node is not deleted (i.e., the

@@ -63,12 +63,12 @@ export enum ListStyle {
 // -- Node Type -------------------------------------------------------------------
 // NOTE: this is the only way since PM does not provide a way to specify the type
 //       of the attributes
-export type ListItemNodeType = ProseMirrorNode<NotebookSchemaType> & { attrs: ListItemAttributes; };
+export type ListItemNodeType = ProseMirrorNode & { attrs: ListItemAttributes; };
 export const isListItemNodeType = (type: NodeType) => type.name === NodeName.LIST_ITEM;
-export const isListItemNode = (node: ProseMirrorNode<NotebookSchemaType>): node is ListItemNodeType => node.type.name === NodeName.LIST_ITEM;
+export const isListItemNode = (node: ProseMirrorNode): node is ListItemNodeType => node.type.name === NodeName.LIST_ITEM;
 
 export const getListItemNodeType = (schema: NotebookSchemaType) => schema.nodes[NodeName.LIST_ITEM];
-export const createListItemNode = (schema: NotebookSchemaType, attributes?: Partial<ListItemAttributes>, content?: ProseMirrorNodeContent, marks?: Mark<NotebookSchemaType>[]) =>
+export const createListItemNode = (schema: NotebookSchemaType, attributes?: Partial<ListItemAttributes>, content?: ProseMirrorNodeContent, marks?: Mark[]) =>
   getListItemNodeType(schema).create(attributes, content, marks);
 
 // -- JSON Node Type --------------------------------------------------------------

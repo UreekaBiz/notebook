@@ -1,6 +1,6 @@
 import { EditorState, TextSelection, Transaction } from 'prosemirror-state';
 
-import { isListItemNode, AbstractDocumentUpdate, Command, JoinBackwardDocumentUpdate, NotebookSchemaType } from '@ureeka-notebook/web-service';
+import { isListItemNode, AbstractDocumentUpdate, Command, JoinBackwardDocumentUpdate } from '@ureeka-notebook/web-service';
 
 import { LiftListItemDocumentUpdate } from '../command/proseMirrorListCommands';
 import { isListNode } from '../util';
@@ -25,7 +25,7 @@ export class ListBackSpaceDocumentUpdate implements AbstractDocumentUpdate {
    * handled correctly when the Selection is inside a
    * ListItemContent Node and return it
    */
-  public update(editorState: EditorState<NotebookSchemaType>, tr: Transaction<NotebookSchemaType>) {
+  public update(editorState: EditorState, tr: Transaction) {
     const $cursor = (editorState.selection as TextSelection/*specifically looking for $cursor*/).$cursor;
     if(!$cursor || $cursor.parentOffset > 0/*ListItemContent has content*/) return false/*nothing special to do*/;
 

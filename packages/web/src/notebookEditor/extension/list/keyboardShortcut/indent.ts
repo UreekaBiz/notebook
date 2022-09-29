@@ -1,7 +1,7 @@
 import { Fragment, Node as ProseMirrorNode, NodeRange, ResolvedPos, Slice } from 'prosemirror-model';
 import { EditorState, TextSelection, Transaction } from 'prosemirror-state';
 
-import { isListItemNode, AbstractDocumentUpdate, AttributeType, Command, NotebookSchemaType } from '@ureeka-notebook/web-service';
+import { isListItemNode, AbstractDocumentUpdate, AttributeType, Command } from '@ureeka-notebook/web-service';
 
 import { isListNode } from '../util';
 import { getListItemRange } from './util';
@@ -24,7 +24,7 @@ export class IndentListDocumentUpdate implements AbstractDocumentUpdate {
    * modify the given Transaction such that the indentation of the
    * List at the current Selection is increased and return it
    */
-   public update(editorState: EditorState<NotebookSchemaType>, tr: Transaction<NotebookSchemaType>) {
+   public update(editorState: EditorState, tr: Transaction) {
     const { $from, $to } = tr.selection;
     const range = getListItemRange(tr.selection);
     if(!range) return false/*no Range for ListItems found*/;

@@ -1,6 +1,6 @@
 import { EditorState, Transaction } from 'prosemirror-state';
 
-import { AbstractDocumentUpdate, Command, MarkName, NotebookSchemaType } from '@ureeka-notebook/web-service';
+import { AbstractDocumentUpdate, Command, MarkName } from '@ureeka-notebook/web-service';
 
 import { ToggleOrSetMarkDocumentUpdate } from '../markHolder/command';
 
@@ -22,7 +22,7 @@ export class ToggleSubScriptDocumentUpdate implements AbstractDocumentUpdate {
    * modify the given Transaction such that the SubScript Mark
    * is toggled and return it
    */
-  public update(editorState: EditorState<NotebookSchemaType>, tr: Transaction<NotebookSchemaType>) {
+  public update(editorState: EditorState, tr: Transaction) {
     const updatedTr = new ToggleOrSetMarkDocumentUpdate(MarkName.SUB_SCRIPT, editorState.schema.marks[MarkName.SUB_SCRIPT]).update(editorState, tr);
     return updatedTr/*updated*/;
   }

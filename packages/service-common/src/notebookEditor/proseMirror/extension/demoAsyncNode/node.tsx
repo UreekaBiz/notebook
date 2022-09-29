@@ -55,11 +55,11 @@ export const DemoAsyncNodeRendererSpec: NodeRendererSpec<DemoAsyncNodeAttributes
 // -- Node Type -------------------------------------------------------------------
 // NOTE: this is the only way to ensure the right attributes will be available
 //       since PM does not provide a way to specify their type
-export type DemoAsyncNodeType = ProseMirrorNode<NotebookSchemaType> & { attrs: DemoAsyncNodeAttributes; };
-export const isDemoAsyncNode = (node: ProseMirrorNode<NotebookSchemaType>): node is DemoAsyncNodeType => node.type.name === NodeName.DEMO_ASYNC_NODE;
+export type DemoAsyncNodeType = ProseMirrorNode & { attrs: DemoAsyncNodeAttributes; };
+export const isDemoAsyncNode = (node: ProseMirrorNode): node is DemoAsyncNodeType => node.type.name === NodeName.DEMO_ASYNC_NODE;
 
 export const getDemoAsyncNodeNodeType = (schema: NotebookSchemaType) => schema.nodes[NodeName.DEMO_ASYNC_NODE];
-export const createDemoAsyncNodeNode = (schema: NotebookSchemaType, attributes?: Partial<DemoAsyncNodeAttributes>, content?: ProseMirrorNodeContent, marks?: Mark<NotebookSchemaType>[]) =>
+export const createDemoAsyncNodeNode = (schema: NotebookSchemaType, attributes?: Partial<DemoAsyncNodeAttributes>, content?: ProseMirrorNodeContent, marks?: Mark[]) =>
   getDemoAsyncNodeNodeType(schema).create(attributes, content, marks);
 
 // -- JSON Node Type --------------------------------------------------------------

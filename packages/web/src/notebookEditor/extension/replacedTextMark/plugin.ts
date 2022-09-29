@@ -1,10 +1,10 @@
-import { Plugin, PluginSpec } from 'prosemirror-state';
+import { Plugin } from 'prosemirror-state';
 import { EditorView } from 'prosemirror-view';
 
-import { getReplacedTextMarkMarkType, NotebookSchemaType } from '@ureeka-notebook/web-service';
+import { getReplacedTextMarkMarkType } from '@ureeka-notebook/web-service';
 
 // == Plugin ======================================================================
-export const ReplacedTextMarkPlugin = () => new Plugin<NotebookSchemaType>({
+export const ReplacedTextMarkPlugin = () => new Plugin({
   // -- Props ---------------------------------------------------------------------
   props: {
     // .. Handler .................................................................
@@ -25,4 +25,4 @@ export const ReplacedTextMarkPlugin = () => new Plugin<NotebookSchemaType>({
       return true/*handled*/;
     },
   },
-} as PluginSpec);
+});

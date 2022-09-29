@@ -45,8 +45,8 @@ export const CodeMarkRendererSpec: MarkRendererSpec<CodeAttributes> = {
 // -- Mark Type -------------------------------------------------------------------
 // NOTE: this is the only way since PM does not provide a way to specify the type
 //       of the attributes
-export type CodeMarkType = ProseMirrorMark<NotebookSchemaType> & { attrs: CodeAttributes; };
-export const isCodeMark = (mark: ProseMirrorMark<NotebookSchemaType>): mark is CodeMarkType => mark.type.name === MarkName.CODE;
+export type CodeMarkType = ProseMirrorMark & { attrs: CodeAttributes; };
+export const isCodeMark = (mark: ProseMirrorMark): mark is CodeMarkType => mark.type.name === MarkName.CODE;
 
 export const getCodeMarkType = (schema: NotebookSchemaType) => schema.marks[MarkName.CODE];
 export const createCodeMark = (schema: NotebookSchemaType, attributes?: Partial<CodeAttributes>) => getCodeMarkType(schema).create(attributes);

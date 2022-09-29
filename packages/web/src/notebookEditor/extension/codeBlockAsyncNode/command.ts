@@ -1,8 +1,6 @@
 import { EditorState, NodeSelection, Transaction } from 'prosemirror-state';
 
-import { AbstractDocumentUpdate, CodeBlockAsyncNodeType, Command, NotebookSchemaType } from '@ureeka-notebook/web-service';
-
-import { HISTORY_META } from 'notebookEditor/extension/history/History';
+import { AbstractDocumentUpdate, CodeBlockAsyncNodeType, Command, HISTORY_META } from '@ureeka-notebook/web-service';
 
 // == Async =======================================================================
 // replace an entire inline CodeBlockAsyncNode with another one
@@ -21,7 +19,7 @@ export class ReplaceInlineCodeBlockAsyncNodeDocumentUpdate implements AbstractDo
    * modify the given Transaction such that an entire CodeBlockAsyncNode is
    * replaced with another one and return it
    */
-  public update(editorState: EditorState<NotebookSchemaType>, tr: Transaction<NotebookSchemaType>) {
+  public update(editorState: EditorState, tr: Transaction) {
       tr.setSelection(NodeSelection.create(tr.doc, this.replacementPosition))
         .replaceSelectionWith(this.newAsyncNode)
         .setSelection(NodeSelection.create(tr.doc, this.replacementPosition))

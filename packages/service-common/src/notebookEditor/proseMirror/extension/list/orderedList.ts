@@ -53,11 +53,11 @@ export const OrderedListNodeRendererSpec: NodeRendererSpec<OrderedListAttributes
 // -- Node Type -------------------------------------------------------------------
 // NOTE: this is the only way since PM does not provide a way to specify the type
 //       of the attributes
-export type OrderedListNodeType = ProseMirrorNode<NotebookSchemaType> & { attrs: OrderedListAttributes; };
-export const isOrderedListNode = (node: ProseMirrorNode<NotebookSchemaType>): node is OrderedListNodeType => node.type.name === NodeName.ORDERED_LIST;
+export type OrderedListNodeType = ProseMirrorNode & { attrs: OrderedListAttributes; };
+export const isOrderedListNode = (node: ProseMirrorNode): node is OrderedListNodeType => node.type.name === NodeName.ORDERED_LIST;
 
 export const getOrderedListNodeType = (schema: NotebookSchemaType) => schema.nodes[NodeName.ORDERED_LIST];
-export const createOrderedListNode = (schema: NotebookSchemaType, attributes?: Partial<OrderedListAttributes>, content?: ProseMirrorNodeContent, marks?: Mark<NotebookSchemaType>[]) =>
+export const createOrderedListNode = (schema: NotebookSchemaType, attributes?: Partial<OrderedListAttributes>, content?: ProseMirrorNodeContent, marks?: Mark[]) =>
   getOrderedListNodeType(schema).create(attributes, content, marks);
 
 // -- JSON Node Type --------------------------------------------------------------

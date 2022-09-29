@@ -1,6 +1,6 @@
 import { EditorState, Transaction } from 'prosemirror-state';
 
-import { createDemoAsyncNodeNode, generateNodeId, getSelectedNode, isDemoAsyncNode, AbstractDocumentUpdate, Command, DemoAsyncNodeAttributes, ReplaceAndSelectNodeDocumentUpdate, NotebookSchemaType } from '@ureeka-notebook/web-service';
+import { createDemoAsyncNodeNode, generateNodeId, getSelectedNode, isDemoAsyncNode, AbstractDocumentUpdate, Command, DemoAsyncNodeAttributes, ReplaceAndSelectNodeDocumentUpdate } from '@ureeka-notebook/web-service';
 
 import { focusChipToolInput } from 'notebookEditor/util';
 
@@ -24,7 +24,7 @@ export class InsertAndSelectDemoAsyncNodeDocumentUpdate implements AbstractDocum
    * modify the given Transaction such that a DemoAsyncNode is inserted
    * and selected, then return it
    */
-  public update(editorState: EditorState<NotebookSchemaType>, tr: Transaction<NotebookSchemaType>) {
+  public update(editorState: EditorState, tr: Transaction) {
     const node = getSelectedNode(editorState);
     if(node && isDemoAsyncNode(node)) return tr/*no updates, ignore if selected Node already is a DemoAsyncNode*/;
 

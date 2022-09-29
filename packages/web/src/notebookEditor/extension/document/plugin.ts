@@ -3,8 +3,6 @@ import { Slice } from 'prosemirror-model';
 import { Plugin, PluginKey } from 'prosemirror-state';
 import { EditorView } from 'prosemirror-view';
 
-import { NotebookSchemaType } from '@ureeka-notebook/web-service';
-
 import { NoPluginState } from 'notebookEditor/model/type';
 
 import { serializeDocumentFragment } from './serialize';
@@ -13,9 +11,9 @@ import { serializeDocumentFragment } from './serialize';
 // this Plugin implements behavior that is common to all the document
 
 // == Plugin ======================================================================
-const documentKey = new PluginKey<NoPluginState, NotebookSchemaType>('documentKey');
+const documentKey = new PluginKey<NoPluginState>('documentKey');
 export const DocumentPlugin = (editor: Editor) => {
-  const plugin = new Plugin<NoPluginState, NotebookSchemaType>({
+  const plugin = new Plugin<NoPluginState>({
     // -- Setup -------------------------------------------------------------------
     key: documentKey,
 

@@ -1,16 +1,16 @@
 import { MarkType, NodeType } from 'prosemirror-model';
 import { EditorState, Transaction } from 'prosemirror-state';
+import { AttrStep } from 'prosemirror-transform';
 
 import { Attributes, AttributeType } from '../attribute';
 import { isMarkName, MarkName } from '../mark';
 import { isNodeName, NodeName } from '../node';
-import { NotebookSchemaType } from '../schema';
 import { getSelectedNode, SelectionDepth } from '../selection';
-import { AbstractDocumentUpdate, Command } from './type';
+import { AbstractDocumentUpdate, Command, HISTORY_META } from './type';
 
 // ********************************************************************************
 /**
- * update the attributes for the Nodes or Marks in the Selection whose name
+ *  update the attributes for the Nodes or Marks in the Selection whose name
  *  equals the given {@link NodeName} or {@link MarkName}. Differs from
  *  UpdateAttributesInRangeCommand in that only Nodes that have the specified
  *  name get their attributes updated (SEE: UpdateAttributesInRangeCommand below)
@@ -30,7 +30,7 @@ export class UpdateAttributesDocumentUpdate implements AbstractDocumentUpdate {
    * modify the given Transaction such that the Nodes in the current Selection
    * get the specified attribute updated to the specified value
    */
-  public update(editorState: EditorState<NotebookSchemaType>, tr: Transaction<NotebookSchemaType>) {
+  public update(editorState: EditorState, tr: Transaction) {
     let nodeType: NodeType | undefined = undefined/*default*/,
         markType: MarkType | undefined = undefined/*default*/;
     const { schema } = editorState;
@@ -92,7 +92,7 @@ export class UpdateAttributesInRangeDocumentUpdate implements AbstractDocumentUp
    * modify the given Transaction such that the Nodes in the current Selection
    * get the specified attribute updated to the specified value
    */
-  public update(editorState: EditorState<NotebookSchemaType>, tr: Transaction<NotebookSchemaType>) {
+  public update(editorState: EditorState, tr: Transaction) {
     tr.setSelection(editorState.selection);
     const { from, to } = tr.selection;
 
@@ -121,5 +121,58 @@ export class UpdateAttributesInRangeDocumentUpdate implements AbstractDocumentUp
     }
 
     return tr/*updated*/;
+  }
+}
+
+// --------------------------------------------------------------------------------
+// REF: https://discuss.prosemirror.net/t/preventing-image-placeholder-replacement-from-being-undone/1394/2
+/**
+ * update the Attributes of the Node at the given position,
+ * using {@link AttrStep}s, which do not replace the Node entirely (they do not
+ * add content, (SEE: REF above)). This type of Command can hence be used
+ * whenever the update of the attributes should not go into the History or for
+ * updates that are meant to be granular.
+ *
+ * If {@param addToHistory} is 'false' (defaults to 'true'), the operation
+ * Transaction will not be added to the History. This is ideal for asynchronous
+ * update attributes, whose effects should (usually) not be undo-able
+ */
+ export const updateSingleNodeAttributesCommand = <T extends Attributes>(nodeName: NodeName, nodePosition: number, attributes: Partial<T>, addToHistory = true): Command => (state, dispatch) => {
+  const updatedTr = new UpdateSingleNodeAttributesDocumentUpdate(nodeName, nodePosition, attributes, addToHistory).update(state, state.tr);
+  if(updatedTr) {
+    dispatch(updatedTr);
+    return true/*Command executed*/;
+  } /* else -- Command cannot be executed */
+
+  return false/*not executed*/;
+};
+export class UpdateSingleNodeAttributesDocumentUpdate implements AbstractDocumentUpdate {
+  public constructor(private readonly nodeName: NodeName, private readonly nodePosition: number, private readonly attributes: Partial<Attributes>, private readonly addToHistory: boolean) {/*nothing additional*/}
+
+  /*
+   * Modify the Transaction such that the Attributes of the Node at the given
+   * position are modified, using AttrSteps
+   * (SEE: #updateSingleNodeAttributesCommand above)
+   */
+  public update(editorState: EditorState, tr: Transaction) {
+    // since this Document update can be used to update attributes of Nodes
+    // asynchronously, wrap to prevent errors
+    try {
+      const attrEntries = Object.entries(this.attributes);
+      for(let i=0; i<attrEntries.length; i++) {
+        const updatedNode = tr.doc.nodeAt(this.nodePosition);
+        if(!updatedNode || updatedNode.type.name !== this.nodeName) return false/*Node no longer exists or its position changed*/;
+
+        tr.step(new AttrStep(this.nodePosition, attrEntries[i][0/*attributeName*/], attrEntries[i][1/*attributeValue*/]));
+      }
+
+      if(!this.addToHistory) {
+        tr.setMeta(HISTORY_META, this.addToHistory);
+      } /* else -- allow Transaction to be undo-able*/
+
+      return tr/*updated*/;
+    } catch(error) {
+      return false/*Node no longer exists or its position changed*/;
+    }
   }
 }

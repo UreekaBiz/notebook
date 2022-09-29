@@ -41,8 +41,8 @@ export const ItalicMarkRendererSpec: MarkRendererSpec<ItalicAttributes> = {
 // -- Mark Type -------------------------------------------------------------------
 // NOTE: this is the only way since PM does not provide a way to specify the type
 //       of the attributes
-export type ItalicMarkType = ProseMirrorMark<NotebookSchemaType> & { attrs: ItalicAttributes; };
-export const isItalicMark = (mark: ProseMirrorMark<NotebookSchemaType>): mark is ItalicMarkType => mark.type.name === MarkName.ITALIC;
+export type ItalicMarkType = ProseMirrorMark & { attrs: ItalicAttributes; };
+export const isItalicMark = (mark: ProseMirrorMark): mark is ItalicMarkType => mark.type.name === MarkName.ITALIC;
 
 export const getItalicMarkType = (schema: NotebookSchemaType) => schema.marks[MarkName.ITALIC];
 export const createItalicMark = (schema: NotebookSchemaType, attributes?: Partial<ItalicAttributes>) => getItalicMarkType(schema).create(attributes);

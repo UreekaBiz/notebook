@@ -2,7 +2,6 @@ import { Node as ProseMirrorNode } from 'prosemirror-model';
 
 import { noNodeOrMarkSpecAttributeDefaultValue, AttributeType, AttributesTypeFromNodeSpecAttributes } from '../attribute';
 import { generateNodeId, NodeIdentifier, NodeName } from '../node';
-import { NotebookSchemaType } from '../schema';
 
 // ********************************************************************************
 // NOTE: AsyncNodes are meant to be an abstraction for all async nodes. As such,
@@ -40,8 +39,8 @@ export const DEFAULT_ASYNC_NODE_EDITABLE = true;
 // -- Node Type -------------------------------------------------------------------
 // NOTE: this is the only way to ensure the right attributes will be available
 //       since PM does not provide a way to specify their type
-export type AsyncNodeType = ProseMirrorNode<NotebookSchemaType> & { attrs: AsyncNodeAttributes; };
-export const isAsyncNode = (node: ProseMirrorNode<NotebookSchemaType>): node is AsyncNodeType => asyncNodes.has(node.type.name as NodeName/*by definition*/);
+export type AsyncNodeType = ProseMirrorNode & { attrs: AsyncNodeAttributes; };
+export const isAsyncNode = (node: ProseMirrorNode): node is AsyncNodeType => asyncNodes.has(node.type.name as NodeName/*by definition*/);
 
 // == Util ========================================================================
 export const asyncNodeStatusToColor = (status: AsyncNodeStatus): string => {

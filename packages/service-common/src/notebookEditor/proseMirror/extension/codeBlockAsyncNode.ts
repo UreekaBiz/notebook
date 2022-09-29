@@ -2,7 +2,6 @@ import { Node as ProseMirrorNode } from 'prosemirror-model';
 
 import { noNodeOrMarkSpecAttributeDefaultValue, AttributeType, AttributesTypeFromNodeSpecAttributes } from '../attribute';
 import { NodeName } from '../node';
-import { NotebookSchemaType } from '../schema';
 import { createDefaultAsyncNodeAttributes, AsyncNodeAttributeSpec, DEFAULT_ASYNC_NODE_STATUS } from './asyncNode';
 import { CodeBlockHash } from './codeBlock';
 import { CodeBlockReference } from './codeBlockReference';
@@ -42,8 +41,8 @@ export const DEFAULT_CODEBLOCK_ASYNC_NODE_STATUS = DEFAULT_ASYNC_NODE_STATUS/*al
 // -- Node Type -------------------------------------------------------------------
 // NOTE: this is the only way to ensure the right attributes will be available
 //       since PM does not provide a way to specify their type
-export type CodeBlockAsyncNodeType = ProseMirrorNode<NotebookSchemaType> & { attrs: CodeBlockAsyncNodeAttributes; };
-export const isCodeBlockAsyncNode = (node: ProseMirrorNode<NotebookSchemaType>): node is CodeBlockAsyncNodeType => codeBlockAsyncNodes.has(node.type.name as NodeName/*by definition*/);
+export type CodeBlockAsyncNodeType = ProseMirrorNode & { attrs: CodeBlockAsyncNodeAttributes; };
+export const isCodeBlockAsyncNode = (node: ProseMirrorNode): node is CodeBlockAsyncNodeType => codeBlockAsyncNodes.has(node.type.name as NodeName/*by definition*/);
 
 // == Util ========================================================================
 export const createDefaultCodeBlockAsyncNodeAttributes = (): Partial<CodeBlockAsyncNodeAttributes> =>

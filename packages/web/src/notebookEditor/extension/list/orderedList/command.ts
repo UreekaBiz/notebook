@@ -1,6 +1,6 @@
 import { EditorState, Transaction } from 'prosemirror-state';
 
-import { getListItemNodeType, getOrderedListNodeType, isListItemNode, AbstractDocumentUpdate, Command, ListItemAttributes, NotebookSchemaType, OrderedListNodeType, OrderedListAttributes } from '@ureeka-notebook/web-service';
+import { getListItemNodeType, getOrderedListNodeType, isListItemNode, AbstractDocumentUpdate, Command, ListItemAttributes, OrderedListNodeType, OrderedListAttributes } from '@ureeka-notebook/web-service';
 
 // ********************************************************************************
 // modify the attributes of the OrderedList at the given position
@@ -20,7 +20,7 @@ export class UpdateOrderedListDocumentUpdate implements AbstractDocumentUpdate {
    * modify the given Transaction such that the attributes of the OrderedList
    * at the given position are modified
    */
-  public update(editorState: EditorState<NotebookSchemaType>, tr: Transaction<NotebookSchemaType>) {
+  public update(editorState: EditorState, tr: Transaction) {
     tr.setNodeMarkup(this.orderedListPosition, getOrderedListNodeType(editorState.schema), { ...this.attributes });
     return tr/*updated*/;
   }
@@ -44,7 +44,7 @@ export class UpdateListItemsInOrderedListDocumentUpdate implements AbstractDocum
    * modify the given Transaction such that all ListItem children of the
    * given OrderedList get their attributes updated
    */
-  public update(editorState: EditorState<NotebookSchemaType>, tr: Transaction<NotebookSchemaType>) {
+  public update(editorState: EditorState, tr: Transaction) {
     const from = this.orderedListPosition,
           to = this.orderedListPosition + this.parentOrderedList.nodeSize;
 

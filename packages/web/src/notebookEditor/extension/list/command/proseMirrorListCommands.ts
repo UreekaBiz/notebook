@@ -2,7 +2,7 @@ import { Slice, Fragment, NodeType, NodeRange } from 'prosemirror-model';
 import { EditorState, Transaction } from 'prosemirror-state';
 import { canSplit, findWrapping, liftTarget, ReplaceAroundStep } from 'prosemirror-transform';
 
-import { isListItemNode, isListItemNodeType, AbstractDocumentUpdate, Attributes, AttributeType, Command, NotebookSchemaType } from '@ureeka-notebook/web-service';
+import { isListItemNode, isListItemNodeType, AbstractDocumentUpdate, Attributes, AttributeType, Command } from '@ureeka-notebook/web-service';
 
 // ********************************************************************************
 // REF: https://github.com/ProseMirror/prosemirror-schema-list/blob/master/src/schema-list.ts
@@ -25,7 +25,7 @@ export class WrapInListDocumentUpdate implements AbstractDocumentUpdate {
    * modify the given Transaction such that the Selection is wrapped in a List with the
    * given Type and Attributes, and return it
    */
-  public update(editorState: EditorState<NotebookSchemaType>, tr: Transaction<NotebookSchemaType>) {
+  public update(editorState: EditorState, tr: Transaction) {
     const { $from, $to } = editorState.selection;
     let range = $from.blockRange($to)/*default*/;
     if(!range) return false/*no valid starting Range, do nothing*/;
@@ -114,7 +114,7 @@ export const liftListItemCommand = (listItemType: NodeType): Command => (state, 
 export class LiftListItemDocumentUpdate implements AbstractDocumentUpdate {
   public constructor(private readonly listItemType: NodeType) {/*nothing additional*/}
 
-  public update(editorState: EditorState<NotebookSchemaType>, tr: Transaction<NotebookSchemaType>) {
+  public update(editorState: EditorState, tr: Transaction) {
     const { $from, $to } = editorState.selection;
 
     const range = $from.blockRange($to, node => node.childCount > 0/*not empty*/ && node.firstChild!.type == this.listItemType);

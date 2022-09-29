@@ -2,7 +2,7 @@ import { Fragment, NodeRange, Slice } from 'prosemirror-model';
 import { EditorState, Transaction } from 'prosemirror-state';
 import { ReplaceAroundStep } from 'prosemirror-transform';
 
-import { AbstractDocumentUpdate, Command, NodeName, NotebookSchemaType } from '@ureeka-notebook/web-service';
+import { AbstractDocumentUpdate, Command, NodeName } from '@ureeka-notebook/web-service';
 
 import { getListItemRange } from '../util';
 
@@ -26,7 +26,7 @@ export class LiftListItemOutOfListDocumentUpdate implements AbstractDocumentUpda
   /** modify the given Transaction such that the content of a ListItem or a
    * TaskListItem around the Selection is lifted out of the List
    */
-  public update(editorState: EditorState<NotebookSchemaType>, tr: Transaction<NotebookSchemaType>) {
+  public update(editorState: EditorState, tr: Transaction) {
     const range = getListItemRange(this.itemTypeName, tr.selection);
     if(!range) return false/*block is not a ListItem or TaskListItem*/;
 

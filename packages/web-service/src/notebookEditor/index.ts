@@ -91,6 +91,8 @@ export {
   ImageAttributes,
   defaultImageAttributes,
   DEFAULT_IMAGE_PARSE_TAG,
+  DEFAULT_IMAGE_SRC,
+  DEFAULT_IMAGE_ERROR_SRC,
   DEFAULT_IMAGE_WIDTH,
   DEFAULT_IMAGE_HEIGHT,
   DEFAULT_IMAGE_MIN_WIDTH,
@@ -394,6 +396,7 @@ export {
   // -- Misc ----------------------------------------------------------------------
   // .. Document ..................................................................
   extractDocumentName,
+  HISTORY_META,
 
   // .. Node .....................................................................
   clearNodesCommand,
@@ -412,10 +415,16 @@ export {
   LiftEmptyBlockNodeDocumentUpdate,
   joinBackwardCommand,
   JoinBackwardDocumentUpdate,
-  nodeToTagId,
-  wereNodesAffectedByTransaction,
-  ParentNodePosition,
   NodePosition,
+  nodeToTagId,
+  ParentNodePosition,
+  updateAttributesCommand,
+  UpdateAttributesDocumentUpdate,
+  updateAttributesInRangeCommand,
+  UpdateAttributesInRangeDocumentUpdate,
+  updateSingleNodeAttributesCommand,
+  UpdateSingleNodeAttributesDocumentUpdate,
+  wereNodesAffectedByTransaction,
 
   // .. Selection .................................................................
   deleteSelectionCommand,
@@ -438,10 +447,6 @@ export {
   SetNodeSelectionDocumentUpdate,
   setTextSelectionCommand,
   SetTextSelectionDocumentUpdate,
-  updateAttributesCommand,
-  UpdateAttributesDocumentUpdate,
-  updateAttributesInRangeCommand,
-  UpdateAttributesInRangeDocumentUpdate,
 
   // ..............................................................................
 } from '@ureeka-notebook/service-common';
