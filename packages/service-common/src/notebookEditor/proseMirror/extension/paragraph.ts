@@ -12,7 +12,7 @@ import { NotebookSchemaType } from '../schema';
 // NOTE: this value must have matching types -- the ones defined in the Extension
 const ParagraphAttributesSpec = {
   [AttributeType.FontSize]: noNodeOrMarkSpecAttributeDefaultValue<string>(),
-  [AttributeType.TextColor]: noNodeOrMarkSpecAttributeDefaultValue<string>(),
+  [AttributeType.Color]: noNodeOrMarkSpecAttributeDefaultValue<string>(),
 
   [AttributeType.PaddingTop]: noNodeOrMarkSpecAttributeDefaultValue<string>(),
   [AttributeType.PaddingBottom]: noNodeOrMarkSpecAttributeDefaultValue<string>(),

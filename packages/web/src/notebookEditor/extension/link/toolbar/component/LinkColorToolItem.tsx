@@ -18,8 +18,8 @@ export const LinkColorToolItem: React.FC<Props> = ({ editor, depth }) => {
   if(!isLinkMarkAttributes(attrs)) return null/*nothing to render*/;
 
   // Get the value of the mark from the actual attribute or the theme is not present
-  const themeValue = getThemeValue(MarkName.LINK, AttributeType.TextColor);
-  const inputValue = attrs[AttributeType.TextColor] ?? themeValue ?? '';
+  const themeValue = getThemeValue(MarkName.LINK, AttributeType.Color);
+  const inputValue = attrs[AttributeType.Color] ?? themeValue ?? '';
 
   // == Handler ===================================================================
   const handleChange = (value: string) => {
@@ -27,7 +27,7 @@ export const LinkColorToolItem: React.FC<Props> = ({ editor, depth }) => {
 
     applyDocumentUpdates(editor, [
       new ExtendMarkRangeDocumentUpdate(MarkName.LINK, {/*no attributes*/}),
-      new SetLinkDocumentUpdate({ ...attrs, [AttributeType.TextColor]: value }),
+      new SetLinkDocumentUpdate({ ...attrs, [AttributeType.Color]: value }),
       new SetTextSelectionDocumentUpdate({ from: prevPos, to: prevPos }),
     ]);
 

@@ -109,11 +109,11 @@ export const getThemeValue = (nodeOrMarkName: NodeName | MarkName, attribute: At
   return value/*valid but undefined*/;
 };
 
-// gets the TextColor or FontSize for a Heading from the Theme
-// NOTE: Heading Nodes are a special case since the FontSize and TextColor are
+// gets the Color or FontSize for a Heading from the Theme
+// NOTE: Heading Nodes are a special case since the FontSize and Color are
 //       defined by its level, in this case a special CustomSelector is used and
 //       must be manually matched here
-export const getHeadingThemeValue = (attribute: AttributeType.FontSize | AttributeType.TextColor, level: HeadingLevel): string | undefined => {
+export const getHeadingThemeValue = (attribute: AttributeType.FontSize | AttributeType.Color, level: HeadingLevel): string | undefined => {
   const theme = notebookEditorTheme.getTheme();
   const { customSelectors } = theme;
   switch(level) {

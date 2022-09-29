@@ -30,7 +30,7 @@ export const textColorToolItem: ToolItem = {
       {...props}
       name='Text Color'
       markName={MarkName.TEXT_STYLE}
-      attributeType={AttributeType.TextColor}
+      attributeType={AttributeType.Color}
     />,
 };
 

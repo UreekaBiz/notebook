@@ -135,9 +135,9 @@ export const getDOMNodeRenderedValue = (node: ProseMirrorNode, attributeType: At
   //       do a special check for the default attributes.
   if(node.attrs[attributeType]) return node.attrs[attributeType];
 
-  // Heading nodes are a special case since the FontSize and TextColor are defined
+  // Heading nodes are a special case since the FontSize and Color are defined
   // by its level
-  if(isHeadingNode(node) && (attributeType === AttributeType.FontSize || attributeType === AttributeType.TextColor)) return getHeadingThemeValue(attributeType, node.attrs[AttributeType.Level] ?? HeadingLevel.One/*default level if not present*/);
+  if(isHeadingNode(node) && (attributeType === AttributeType.FontSize || attributeType === AttributeType.Color)) return getHeadingThemeValue(attributeType, node.attrs[AttributeType.Level] ?? HeadingLevel.One/*default level if not present*/);
 
   const nodeName = getNodeName(node);
 

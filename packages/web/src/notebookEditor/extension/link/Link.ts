@@ -25,7 +25,7 @@ export const Link = Mark.create<NoOptions, DialogStorage>({
       [AttributeType.Href]: setAttributeParsingBehavior(AttributeType.Href, SetAttributeType.STRING, DEFAULT_LINK_HREF),
       [AttributeType.Target]: setAttributeParsingBehavior(AttributeType.Target, SetAttributeType.STRING, DEFAULT_LINK_TARGET),
 
-      [AttributeType.TextColor]: setAttributeParsingBehavior(AttributeType.TextColor, SetAttributeType.STRING),
+      [AttributeType.Color]: setAttributeParsingBehavior(AttributeType.Color, SetAttributeType.STRING),
     };
   },
 

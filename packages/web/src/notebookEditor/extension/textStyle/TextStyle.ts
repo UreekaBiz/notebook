@@ -17,7 +17,7 @@ export const TextStyle = Mark.create<NoOptions, NoStorage>({
         parseHTML: element => element.style.fontSize.replace(/['"]+/g, ''),
       },
 
-      [AttributeType.TextColor]: {
+      [AttributeType.Color]: {
         default: undefined,
         parseHTML: element => element.style.color.replace(/['"]+/g, ''),
       },
