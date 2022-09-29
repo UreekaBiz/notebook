@@ -13,9 +13,9 @@ export type TransactionEvent = {
 }
 
 // ================================================================================
-// What else is needed here?
 export type NodeChange<T extends Node = Node> = {
   node: T;
   position: number;
+  removed: boolean;
 };
 export type NodeChanges = Map<NodeName, NodeChange[]>;

@@ -406,6 +406,7 @@ export {
   getParentNode,
   getNodesAffectedByTransaction,
   getNodesAffectedByStepMap,
+  getNodesRemovedByTransaction,
   liftEmptyBlockNodeCommand,
   LiftEmptyBlockNodeDocumentUpdate,
   joinBackwardCommand,

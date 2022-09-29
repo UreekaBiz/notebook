@@ -2,7 +2,7 @@ import { Editor } from '@tiptap/core';
 import { Node } from 'prosemirror-model';
 import { Observable, Subject } from 'rxjs';
 
-import { getNodesAffectedByTransaction, getNodeName, NodeIdentifier, NodeName } from '@ureeka-notebook/service-common';
+import { getNodesAffectedByTransaction, getNodeName, getNodesRemovedByTransaction, isType, NodeIdentifier, NodeName } from '@ureeka-notebook/service-common';
 
 import { ApplicationError } from '../../util';
 import { nodeChangeById$, nodeChangesByNodeName$ } from './observable';
@@ -99,14 +99,29 @@ export class NodeObserver {
   }
 
   private onTransaction({ transaction }: TransactionEvent) {
-    const affectedNodes = getNodesAffectedByTransaction(transaction);
-    if(affectedNodes.length < 1) return/*no changes -- nothing to do*/;
-
     // create a new map with the node changes
     const changes = new Map<NodeName, NodeChange[]>();
-    affectedNodes.forEach(({ node, position }) => {
+
+    // get the nodes that were affected by the transaction. Getting the nodes that
+    // where removed must be done in a separate step because the logic to define
+    // "affected" is different than "removed".
+
+    const updatedNodes = getNodesAffectedByTransaction(transaction);
+    updatedNodes.forEach(({ node, position }) => {
       const nodeName = getNodeName(node);
-      const nodeChange = { node, position };
+      const nodeChange = isType<NodeChange>({ node, position, removed: false/*still exists*/ });
+
+      // add the node change to the map of changes
+      const nodeChangesForNode = changes.get(nodeName) || []/*create if not exists yet*/;
+            nodeChangesForNode.push(nodeChange);
+
+      changes.set(nodeName, nodeChangesForNode);
+    });
+
+    const removedNodes = getNodesRemovedByTransaction(transaction);
+    removedNodes.forEach(({ node, position }) => {
+      const nodeName = getNodeName(node);
+      const nodeChange = isType<NodeChange>({ node, position, removed: true/*by definition*/ });
 
       // add the node change to the map of changes
       const nodeChangesForNode = changes.get(nodeName) || []/*create if not exists yet*/;
