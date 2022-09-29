@@ -1,6 +1,6 @@
 import { Editor } from '@tiptap/core';
 
-import { defaultImageAttributes, getDownloadURL, getPosType, lastValueFrom, updateSingleNodeAttributesCommand, AssetService, AttributeType, ImageAttributes, ImageNodeType, DEFAULT_IMAGE_WIDTH, DEFAULT_IMAGE_HEIGHT } from '@ureeka-notebook/web-service';
+import { defaultImageAttributes, getDownloadURL, getPosType, lastValueFrom, updateSingleNodeAttributesCommand, AssetService, AttributeType, ImageAttributes, ImageNodeType, DEFAULT_IMAGE_ERROR_SRC, DEFAULT_IMAGE_HEIGHT, DEFAULT_IMAGE_WIDTH } from '@ureeka-notebook/web-service';
 
 import { AbstractNodeController } from 'notebookEditor/model/AbstractNodeController';
 
@@ -42,7 +42,7 @@ export class ImageController extends AbstractNodeController<ImageNodeType, Image
     } catch(error) {
       // if unable to load and fit, use defaults
       updateSingleNodeAttributesCommand<ImageAttributes>(this.getPos(),
-        { ...defaultImageAttributes, src, width: DEFAULT_IMAGE_WIDTH, height: DEFAULT_IMAGE_HEIGHT, uploaded: true/*do not retry upload*/ },
+        { ...defaultImageAttributes, src: DEFAULT_IMAGE_ERROR_SRC, width: DEFAULT_IMAGE_WIDTH, height: DEFAULT_IMAGE_HEIGHT, uploaded: true/*do not retry upload*/ },
         false/*User should not be able to undo this update*/)(this.editor.state, this.editor.view.dispatch);
     } finally {
       this.nodeView.updateView();
