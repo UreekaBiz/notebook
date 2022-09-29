@@ -50,9 +50,6 @@
 }
 
 /* -- Editor Selection --------------------------------------------------------- */
-[data-node-type="image"].ProseMirror-selectednode {
-  outline: 1px solid #666;
-}
 .ProseMirror-selectednode > span:first-child/*target inline nodes with content*/{
   outline: 1px solid #666;
 }
@@ -174,10 +171,12 @@ ul[data-node-type="taskList"] > li > label {
   background-color: rgba(0,0,0,0.1);
 }
 /* .. Image .................................................................... */
-/* NOTE: Using selector since images are inline nodes but do not have a NodeView */
 [data-node-type="image"] {
   position: relative;
   display: inline-block;
+}
+[data-node-type="image"].ProseMirror-selectednode {
+  outline: 1px solid #666;
 }
 
 /* -- Mark Styles -------------------------------------------------------------- */

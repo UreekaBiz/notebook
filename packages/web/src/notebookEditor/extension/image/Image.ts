@@ -1,6 +1,6 @@
 import { Node } from '@tiptap/core';
 
-import { getNodeOutputSpec, isImageNode, AttributeType, ImageNodeSpec, SetAttributeType, DEFAULT_IMAGE_HEIGHT, DEFAULT_IMAGE_PARSE_TAG, DEFAULT_IMAGE_WIDTH } from '@ureeka-notebook/web-service';
+import { getNodeOutputSpec, isImageNode, AttributeType, ImageNodeSpec, SetAttributeType, DEFAULT_IMAGE_HEIGHT, DEFAULT_IMAGE_PARSE_TAG, DEFAULT_IMAGE_WIDTH, DEFAULT_IMAGE_SRC } from '@ureeka-notebook/web-service';
 
 import { setAttributeParsingBehavior, uniqueIdParsingBehavior } from 'notebookEditor/extension/util/attribute';
 import { NoOptions } from 'notebookEditor/model/type';
@@ -58,8 +58,18 @@ export const Image = Node.create<NoOptions, ImageStorage>({
         return controller;
       } /* else -- controller don't exists */
 
-      // Create a new controller and NodeView instead.
-      return new ImageController(editor, node, this.storage, getPos);
+      // NOTE: since the default string for a pasted Image can be invalid (e.g.
+      //       be a very large base64 image), it should never be added into the
+      //       document. Hence, a Node with a default SRC is inserted into the
+      //       document initially and the right source is loaded correctly
+      //       afterwards (SEE: ImageController.tsx)
+      const initialSrc = node.attrs[AttributeType.Src];
+      if(!node.attrs[AttributeType.Uploaded]) {
+        node.attrs[AttributeType.Src] = DEFAULT_IMAGE_SRC;
+      } /* else -- Image has already been uploaded, allow src */
+
+      // Create a new Controller and NodeView
+      return new ImageController(editor, node, this.storage, getPos, initialSrc);
     };
   },
   parseHTML() { return [{ tag: DEFAULT_IMAGE_PARSE_TAG }]; },

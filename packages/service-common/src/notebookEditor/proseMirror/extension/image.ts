@@ -64,8 +64,8 @@ export const isImageJSONNode = (node: JSONNode): node is ImageJSONNodeType => no
 
 // --------------------------------------------------------------------------------
 export const DEFAULT_IMAGE_PARSE_TAG = 'img[src]';
-export const DEFAULT_IMAGE_SRC = 'https://via.placeholder.com/100x101?text=+';
-export const DEFAULT_IMAGE_ERROR_SRC = 'https://via.placeholder.com/100x101?text=+Error+While+Uploading+Image';
+export const DEFAULT_IMAGE_SRC = 'defaultImageSrc';
+export const DEFAULT_IMAGE_ERROR_SRC = 'defaultImageErrorSrc';
 export const DEFAULT_IMAGE_HEIGHT = '100px';
 export const DEFAULT_IMAGE_WIDTH = '100px';
 
