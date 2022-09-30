@@ -1,6 +1,6 @@
 import { Node, InputRule } from '@tiptap/core';
 
-import { createBoldMark, createMarkHolderNode, generateNodeId, getHeadingLevelFromTag, getNodeOutputSpec, stringifyMarksArray, AttributeType, HeadingLevel, HeadingNodeSpec, SetAttributeType } from '@ureeka-notebook/web-service';
+import { createBoldMark, createMarkHolderNode, getBlockNodeRange, generateNodeId, getHeadingLevelFromTag, getNodeOutputSpec, stringifyMarksArray, AttributeType, HeadingLevel, HeadingNodeSpec, SetAttributeType } from '@ureeka-notebook/web-service';
 
 import { shortcutCommandWrapper } from 'notebookEditor/command/util';
 import { setAttributeParsingBehavior } from 'notebookEditor/extension/util/attribute';
@@ -73,11 +73,20 @@ export const Heading = Node.create<HeadingOptions, NoStorage>({
           } /* else -- the resulting Node Content is valid, set Heading Block Type */
 
           const { tr } = state;
-          const storedMarks = stringifyMarksArray([createBoldMark(state.schema)]);
+          const boldMark = createBoldMark(state.schema);
+          const storedMarks = stringifyMarksArray([boldMark]);
 
           tr.delete(range.from, range.to)
-            .setBlockType(range.from, range.from, this.type, { [AttributeType.Id]: generateNodeId(), [AttributeType.Level]: level })
-            .insert(tr.selection.anchor, createMarkHolderNode(state.schema, { storedMarks } ));
+            .setBlockType(range.from, range.from, this.type, { [AttributeType.Id]: generateNodeId(), [AttributeType.Level]: level });
+
+            if(tr.selection.$from.parent.content.childCount === 0/*empty parent*/) {
+              // add MarkHolder
+              tr.insert(tr.selection.anchor, createMarkHolderNode(state.schema, { storedMarks } ));
+            } else {
+              // apply default Bold Mark
+              const { from, to } = getBlockNodeRange(tr.selection);
+              tr.addMark(from, to, boldMark);
+          }
 
           return/*nothing left to do*/;
         },
