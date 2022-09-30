@@ -69,7 +69,7 @@ const HeadingMenuButton = forwardRef((props, ref) => {
 
   // -- UI ------------------------------------------------------------------------
   return (
-    <Tooltip label='Heading (⌘ + ⌥ + #)'>
+    <Tooltip label='Heading (⌘ + ⌥ + #)' hasArrow>
       <button
         id='headingLevelToolItemButton'
         ref={ref}
