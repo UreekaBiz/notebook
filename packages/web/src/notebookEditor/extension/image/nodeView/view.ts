@@ -1,6 +1,6 @@
 import { Editor } from '@tiptap/core';
 
-import { getPosType, AttributeType, NodeName, ImageNodeType, DATA_NODE_TYPE, DEFAULT_IMAGE_ERROR_SRC, DEFAULT_IMAGE_HEIGHT, DEFAULT_IMAGE_SRC, DEFAULT_IMAGE_WIDTH } from '@ureeka-notebook/web-service';
+import { getPosType, AttributeType, NodeName, ImageNodeType, DEFAULT_IMAGE_BORDER_COLOR, DEFAULT_IMAGE_BORDER_STYLE, DEFAULT_IMAGE_BORDER_WIDTH, DEFAULT_IMAGE_CONTAINER_CLASS, DEFAULT_IMAGE_SRC, DEFAULT_IMAGE_ERROR_SRC, DATA_NODE_TYPE } from '@ureeka-notebook/web-service';
 
 import { createInlineNodeContainer } from 'notebookEditor/extension/inlineNodeWithContent/util';
 import { AbstractNodeView } from 'notebookEditor/model/AbstractNodeView';
@@ -12,6 +12,7 @@ import { ImageStorage } from './storage';
 // NOTE: this NodeView does not use React since TaskListItems do not have a
 //       complex structure, nor do they require a Storage or an Id
 export class ImageView extends AbstractNodeView<ImageNodeType, ImageStorage, ImageModel> {
+  // == Attribute =================================================================
   // the HTML Image tag that displays this image
   private imageElement: HTMLImageElement;
 
@@ -31,9 +32,7 @@ export class ImageView extends AbstractNodeView<ImageNodeType, ImageStorage, Ima
     this.dom.appendChild(this.divElement);
     this.dom.appendChild(this.imageElement);
 
-    if(this.node.attrs[AttributeType.Uploaded]) {
-      this.updateView();
-    } /* else -- not uploaded yet, no need to update the View */
+    this.updateView();
   }
 
   // -- Creation ------------------------------------------------------------------
@@ -47,14 +46,10 @@ export class ImageView extends AbstractNodeView<ImageNodeType, ImageStorage, Ima
   // create the elements used by this Node with default styles
   private createViewElements() {
     const imageElement = document.createElement('img');
-          imageElement.style.display = 'none';
+          imageElement.style.display = 'auto';
 
     const divElement = document.createElement('div');
-          divElement.style.display = 'auto';
-          divElement.style.backgroundColor = '#CCCCCC'/*gray*/;
-          divElement.style[AttributeType.Width] = DEFAULT_IMAGE_WIDTH;
-          divElement.style[AttributeType.Height] = DEFAULT_IMAGE_HEIGHT;
-
+          divElement.classList.add(DEFAULT_IMAGE_CONTAINER_CLASS);
     return { imageElement, divElement };
   }
 
@@ -66,22 +61,24 @@ export class ImageView extends AbstractNodeView<ImageNodeType, ImageStorage, Ima
 
   // ensure the Image DOM element has the latest attributes
   private syncView() {
-    const src = this.node.attrs[AttributeType.Src];
-    const width = this.node.attrs[AttributeType.Width];
-    const height = this.node.attrs[AttributeType.Height];
+    const { src, borderStyle, borderWidth, borderColor, width, height } = this.node.attrs;
 
     // if invalid src, show the default div
     if(!src || src === DEFAULT_IMAGE_SRC || src === DEFAULT_IMAGE_ERROR_SRC) {
       this.imageElement.style.display = 'none';
       this.divElement.style.display = 'auto';
-      return;
+      return/*no image to display*/;
     } /* else -- show the Image's content */
 
     this.divElement.style.display = 'none';
     this.imageElement.style.display = 'auto';
     this.imageElement.setAttribute(AttributeType.Src, src);
 
-    if(!width || !height) return/*no dimensions to update*/;
-    this.imageElement.setAttribute('style', `${[AttributeType.Width]}: ${width}; ${[AttributeType.Height]}: ${height};`);
+    // apply the styles to the DOM container
+    width ? this.dom.style.width = width : this.dom.style.width = ''/*none*/;
+    height ? this.dom.style.height = height : this.dom.style.height = ''/*none*/;
+    borderColor ? this.dom.style.borderColor = borderColor : this.dom.style.borderColor = DEFAULT_IMAGE_BORDER_COLOR;
+    borderStyle ? this.dom.style.borderStyle = borderStyle : this.dom.style.borderStyle = DEFAULT_IMAGE_BORDER_STYLE;
+    borderWidth ? this.dom.style.borderWidth = borderWidth : this.dom.style.borderWidth = DEFAULT_IMAGE_BORDER_WIDTH;
   }
 }

@@ -12,6 +12,10 @@ export type HTMLAttributes = Record<string, AttributeValue>;
 
 export enum AttributeType {
   // -- CSS Styles ----------------------------------------------------------------
+  BorderColor = 'borderColor',
+  BorderStyle = 'borderStyle',
+  BorderWidth = 'borderWidth',
+
   Width = 'width',
   Height = 'height',
 
@@ -87,6 +91,10 @@ export enum AttributeType {
 }
 
 export type StyleAttributes = {
+  [AttributeType.BorderColor]: string;
+  [AttributeType.BorderStyle]: string;
+  [AttributeType.BorderWidth]: string;
+
   [AttributeType.Width]: string;
   [AttributeType.Height]: string;
 
@@ -105,6 +113,10 @@ export type StyleAttributes = {
   [AttributeType.PaddingRight]: string;
 };
 const styleAttributeSet = new Set([
+  AttributeType.BorderColor,
+  AttributeType.BorderStyle,
+  AttributeType.BorderWidth,
+
   AttributeType.Width,
   AttributeType.Height,
 
@@ -180,6 +192,14 @@ export enum VerticalAlign {
   middle = 'middle',
   bottom = 'sub'/*default*/,
 }
+
+// -- Border ----------------------------------------------------------------------
+export enum BorderStyle {
+  dashed = 'dashed',
+  dotted = 'dotted',
+  solid = 'solid',
+}
+export const isBorderStyle = (value: any): value is BorderStyle => Object.values(BorderStyle).includes(value);
 
 // == Node Spec ===================================================================
 export type NodeSpecAttributeDefaultValue = { default: any; };

@@ -178,6 +178,12 @@ ul[data-node-type="taskList"] > li > label {
 [data-node-type="image"].ProseMirror-selectednode {
   outline: 1px solid #666;
 }
+div .defaultImageContainer {
+  /* default styles for the fallback Image Div */
+  background-color: '#CCCCCC'/*gray*/;
+  width: 100px/*default*/;
+  height: 100px/*default*/;
+}
 
 /* -- Mark Styles -------------------------------------------------------------- */
 [data-mark-type="code"] {

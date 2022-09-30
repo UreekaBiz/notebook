@@ -1,6 +1,6 @@
 import { Node } from '@tiptap/core';
 
-import { getNodeOutputSpec, isImageNode, AttributeType, ImageNodeSpec, SetAttributeType, DEFAULT_IMAGE_HEIGHT, DEFAULT_IMAGE_PARSE_TAG, DEFAULT_IMAGE_WIDTH, DEFAULT_IMAGE_SRC } from '@ureeka-notebook/web-service';
+import { getNodeOutputSpec, isImageNode, AttributeType, ImageNodeSpec, SetAttributeType, DEFAULT_IMAGE_BORDER_COLOR, DEFAULT_IMAGE_BORDER_STYLE, DEFAULT_IMAGE_BORDER_WIDTH, DEFAULT_IMAGE_HEIGHT, DEFAULT_IMAGE_PARSE_TAG, DEFAULT_IMAGE_SRC, DEFAULT_IMAGE_WIDTH } from '@ureeka-notebook/web-service';
 
 import { setAttributeParsingBehavior, uniqueIdParsingBehavior } from 'notebookEditor/extension/util/attribute';
 import { NoOptions } from 'notebookEditor/model/type';
@@ -30,6 +30,9 @@ export const Image = Node.create<NoOptions, ImageStorage>({
 
       // NOTE: using custom parseHTML for these since the parsing behavior
       //       for styles has not been defined yet
+      [AttributeType.BorderColor]: { default: DEFAULT_IMAGE_BORDER_COLOR, parseHTML: (element) => element.style.borderColor },
+      [AttributeType.BorderStyle]: { default: DEFAULT_IMAGE_BORDER_STYLE, parseHTML: (element) => element.style.borderStyle },
+      [AttributeType.BorderWidth]: { default: DEFAULT_IMAGE_BORDER_WIDTH, parseHTML: (element) => element.style.borderWidth },
       [AttributeType.Width]: { default: DEFAULT_IMAGE_WIDTH, parseHTML: (element) => element.style.width },
       [AttributeType.Height]: { default: DEFAULT_IMAGE_HEIGHT, parseHTML: (element) => element.style.height },
       [AttributeType.TextAlign]: { default: undefined/*none*/, parseHTML: (element) => element.style.textAlign },

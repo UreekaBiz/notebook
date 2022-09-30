@@ -11,6 +11,7 @@ import { Toolbar, ToolItem } from 'notebookEditor/sidebar/toolbar/type';
 
 import { setVerticalAlign } from '../command';
 import { ImageSrcToolItem } from './ImageSrcToolItem';
+import { ImageBorderToolItem } from './ImageBorderToolItem';
 
 //*********************************************************************************
 // == Tool Items ==================================================================
@@ -97,6 +98,14 @@ const imageHeightToolItem: ToolItem =  {
     />,
 };
 
+// -- Border ----------------------------------------------------------------------
+const imageBorderToolItem: ToolItem = {
+  toolType: 'component',
+  name: 'imageBorderToolItem',
+
+  component: ImageBorderToolItem,
+};
+
 // -- Alignment -------------------------------------------------------------------
 // NOTE: VerticalAlign toolItems are currently used only in this branch
 const verticalAlignTopToolItem: ToolItem = {
@@ -162,6 +171,7 @@ export const ImageToolbar: Toolbar = {
       imageTitleToolItem,
       imageWidthToolItem,
       imageHeightToolItem,
+      imageBorderToolItem,
     ],
     [
       verticalAlignTopToolItem,
