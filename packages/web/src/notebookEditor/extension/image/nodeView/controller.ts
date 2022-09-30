@@ -25,7 +25,7 @@ export class ImageController extends AbstractNodeController<ImageNodeType, Image
 
   private async uploadImage() {
     const src = this.initialSrc;
-    if(!src || src === DEFAULT_IMAGE_SRC) return/*src does not exist or is the default one, no need to upload*/;
+    if(!src || src === DEFAULT_IMAGE_SRC || src === DEFAULT_IMAGE_ERROR_SRC) return/*src does not exist or is the default one, no need to upload*/;
 
     try {
       const img = await getImageMeta(src);
