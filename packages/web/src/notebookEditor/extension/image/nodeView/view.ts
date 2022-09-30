@@ -1,6 +1,6 @@
 import { Editor } from '@tiptap/core';
 
-import { getPosType, AttributeType, NodeName, ImageNodeType, DEFAULT_IMAGE_BORDER_COLOR, DEFAULT_IMAGE_BORDER_STYLE, DEFAULT_IMAGE_BORDER_WIDTH, DEFAULT_IMAGE_CONTAINER_CLASS, DEFAULT_IMAGE_SRC, DEFAULT_IMAGE_ERROR_SRC, DATA_NODE_TYPE } from '@ureeka-notebook/web-service';
+import { getPosType, AttributeType, NodeName, ImageNodeType, DEFAULT_IMAGE_BORDER_COLOR, DATA_NODE_TYPE, DEFAULT_IMAGE_BORDER_STYLE, DEFAULT_IMAGE_BORDER_WIDTH, DEFAULT_IMAGE_CONTAINER_CLASS, DEFAULT_IMAGE_SRC, DEFAULT_IMAGE_ERROR_SRC } from '@ureeka-notebook/web-service';
 
 import { createInlineNodeContainer } from 'notebookEditor/extension/inlineNodeWithContent/util';
 import { AbstractNodeView } from 'notebookEditor/model/AbstractNodeView';
@@ -64,13 +64,13 @@ export class ImageView extends AbstractNodeView<ImageNodeType, ImageStorage, Ima
 
     // if invalid src, show the default div
     if(!src || src === DEFAULT_IMAGE_SRC || src === DEFAULT_IMAGE_ERROR_SRC) {
-      this.imageElement.style.display = ''/*default*/;
-      this.divElement.style.display = 'auto';
+      this.imageElement.style.display = 'none'/*hide*/;
+      this.divElement.style.display = 'inline'/*show*/;
       return/*no image to display*/;
     } /* else -- show the Image's content */
 
-    this.divElement.style.display = ''/*default*/;
-    this.imageElement.style.display = 'auto';
+    this.imageElement.style.display = 'inline'/*show*/;
+    this.divElement.style.display = 'none'/*hide*/;
     this.imageElement.setAttribute(AttributeType.Src, src);
 
     // apply the styles to the DOM container
