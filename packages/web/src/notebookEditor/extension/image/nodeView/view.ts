@@ -46,7 +46,6 @@ export class ImageView extends AbstractNodeView<ImageNodeType, ImageStorage, Ima
   // create the elements used by this Node with default styles
   private createViewElements() {
     const imageElement = document.createElement('img');
-          imageElement.style.display = 'auto';
 
     const divElement = document.createElement('div');
           divElement.classList.add(DEFAULT_IMAGE_CONTAINER_CLASS);
@@ -65,12 +64,12 @@ export class ImageView extends AbstractNodeView<ImageNodeType, ImageStorage, Ima
 
     // if invalid src, show the default div
     if(!src || src === DEFAULT_IMAGE_SRC || src === DEFAULT_IMAGE_ERROR_SRC) {
-      this.imageElement.style.display = 'none';
+      this.imageElement.style.display = ''/*default*/;
       this.divElement.style.display = 'auto';
       return/*no image to display*/;
     } /* else -- show the Image's content */
 
-    this.divElement.style.display = 'none';
+    this.divElement.style.display = ''/*default*/;
     this.imageElement.style.display = 'auto';
     this.imageElement.setAttribute(AttributeType.Src, src);
 
