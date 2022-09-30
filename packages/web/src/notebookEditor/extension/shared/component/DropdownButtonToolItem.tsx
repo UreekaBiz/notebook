@@ -56,7 +56,10 @@ export const DropdownButtonToolItem: React.FC<DropdownButtonToolItemProps> = ({ 
                 command={option.commandLabel}
                 onClick={() => handleClick(option.value)}
               >
-                <Text decoration={selectedOptionCheck(parent, option.value, optionIndex) ? 'underline' : ''/*none*/}>
+                <Text
+                  decoration={selectedOptionCheck(parent, option.value, optionIndex) ? 'underline' : ''/*none*/}
+                  textTransform='capitalize'
+                >
                   {option.displayLabel}
                 </Text>
               </MenuItem>
