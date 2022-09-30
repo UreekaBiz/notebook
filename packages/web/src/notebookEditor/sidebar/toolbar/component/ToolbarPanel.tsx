@@ -82,7 +82,7 @@ export const ToolbarPanel = () => {
     <Flex height='100%' flexDirection='column'>
       <ToolbarBreadcrumbs onSelection={handleDepthSelection} selectedDepth={selectedDepth} />
       <Flex flexDirection='column' flex='1 1'>
-        <VStack divider={<Divider />} spacing={0} flex='1 1 0' alignItems='stretch' overflowY='scroll'>
+        <VStack divider={<Divider />} spacing={0} flex='1 1 0' alignItems='stretch' overflowY='auto'>
           {Toolbars}
         </VStack>
       </Flex>
