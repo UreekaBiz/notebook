@@ -35,6 +35,7 @@ export const ImageNodeSpec: NodeSpec = {
 
   marks: getAllowedMarks([/*no Marks allowed for MarkHolder Node*/]),
 
+  atom: true/*node does not have directly editable content*/,
   group: NodeGroup.INLINE,
   inline: true,
   draggable: true,
