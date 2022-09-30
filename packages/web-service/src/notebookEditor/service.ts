@@ -9,6 +9,7 @@ import { ApplicationError } from '../util';
 import { notebookEditorDemo2AsyncNodeExecute, notebookEditorDemoAsyncNodeExecute } from './function';
 import { NotebookEditorDemo2AsyncNode_Execute, NotebookEditorDemoAsyncNode_Execute } from './type';
 import { CollaborationListener } from './CollaborationListener';
+import { NodeChange } from './NodeObserver/type';
 import { NodeObserver } from './NodeObserver/NodeObserver';
 
 const log = getLogger(ServiceLogger.NOTEBOOK_EDITOR);
@@ -90,20 +91,21 @@ export class NotebookEditorService {
     return this.collaborationListener.onUsers$();
   }
 
-  /**
-   * @returns an Observable over the changes to the {@link Node} identified by the
-   *         given {@link NodeName} and {@link NodeId}.
-   */
-  public onNode$<T extends Node>(nodeName: NodeName, nodeId: NodeIdentifier) {
-    return this.nodeObserver.onNode$<T>(nodeName, nodeId);
-  }
-
+  // ------------------------------------------------------------------------------
   /**
    * @returns and Observable over the changes for all {@link Node}s in the identified
    *         {@link NodeName}.
    */
-  public onNodes$<T extends Node>(nodeName: NodeName) {
+  public onNodes$<T extends Node>(nodeName: NodeName): Observable<NodeChange<T>[]> {
     return this.nodeObserver.onNodes$<T>(nodeName);
+  }
+
+  /**
+   * @returns an Observable over the changes to the {@link Node} identified by the
+   *          specified {@link NodeName} and {@link NodeId}.
+   */
+  public onNode$<T extends Node>(nodeName: NodeName, nodeId: NodeIdentifier): Observable<NodeChange<T> | null/*not-found*/> {
+    return this.nodeObserver.onNode$<T>(nodeName, nodeId);
   }
 
   // == Editor ====================================================================

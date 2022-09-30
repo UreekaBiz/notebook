@@ -91,7 +91,7 @@ export class NodeObserver {
   }
 
   // == Subscription ==============================================================
-  private listenEditor(){
+  private listenEditor() {
     const callback = this.onTransaction.bind(this);
 
     this.editor.on('transaction', callback);

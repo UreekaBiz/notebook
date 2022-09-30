@@ -14,7 +14,7 @@ export const Demo2AsyncNodeAttributeSpec = {
   [AttributeType.TextToReplace]: noNodeOrMarkSpecAttributeDefaultValue<string>(),
 
   [AttributeType.FontSize]: noNodeOrMarkSpecAttributeDefaultValue<string>(),
-  [AttributeType.TextColor]: noNodeOrMarkSpecAttributeDefaultValue<string>(),
+  [AttributeType.Color]: noNodeOrMarkSpecAttributeDefaultValue<string>(),
 
   [AttributeType.PaddingTop]: noNodeOrMarkSpecAttributeDefaultValue<string>(),
   [AttributeType.PaddingBottom]: noNodeOrMarkSpecAttributeDefaultValue<string>(),

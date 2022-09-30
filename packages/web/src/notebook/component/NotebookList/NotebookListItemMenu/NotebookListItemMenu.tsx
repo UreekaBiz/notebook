@@ -62,7 +62,7 @@ export const NotebookListItemMenu: React.FC<Props> = ({ notebookTuple }) => {
 
       // NOTE: No need to update the state since deleting the Notebook will
       //       automatically remove it from the list
-    } catch(error){
+    } catch(error) {
       log.error(`Error deleting Notebook (${id}): `, error);
       if(!isMounted()) return/*nothing to do*/;
 
@@ -76,7 +76,7 @@ export const NotebookListItemMenu: React.FC<Props> = ({ notebookTuple }) => {
   };
 
   // == UI ========================================================================
-  if(status === 'loading'){
+  if(status === 'loading') {
     return (
       <Flex width='32px'/*matches the Menu size*/ justifyContent='center'>
         <Spinner size='sm'/>

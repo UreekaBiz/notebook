@@ -14,7 +14,7 @@ const LinkAttributeSpec = {
   /* (SEE: REF below) */
   [AttributeType.Target]: noNodeOrMarkSpecAttributeDefaultValue<LinkTarget>(),
 
-  [AttributeType.TextColor]: noNodeOrMarkSpecAttributeDefaultValue<string>(),
+  [AttributeType.Color]: noNodeOrMarkSpecAttributeDefaultValue<string>(),
 };
 export type LinkAttributes = AttributesTypeFromNodeSpecAttributes<typeof LinkAttributeSpec>
 

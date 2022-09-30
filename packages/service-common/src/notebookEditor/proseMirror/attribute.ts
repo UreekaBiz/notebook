@@ -29,7 +29,7 @@ export enum AttributeType {
 
   // -- Text Style ----------------------------------------------------------------
   FontSize = 'fontSize',
-  TextColor = 'color',
+  Color = 'color',
   TextAlign = 'textAlign',
   VerticalAlign = 'verticalAlign',
 
@@ -91,8 +91,7 @@ export type StyleAttributes = {
   [AttributeType.Height]: string;
 
   [AttributeType.FontSize]: string;
-  [AttributeType.TextColor]: string;
-  [AttributeType.TextColor]: string;
+  [AttributeType.Color]: string;
   [AttributeType.VerticalAlign]: string;
 
   [AttributeType.MarginTop]: string;
@@ -110,7 +109,7 @@ const styleAttributeSet = new Set([
   AttributeType.Height,
 
   AttributeType.FontSize,
-  AttributeType.TextColor,
+  AttributeType.Color,
   AttributeType.TextAlign,
   AttributeType.VerticalAlign,
 
