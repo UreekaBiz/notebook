@@ -1,7 +1,7 @@
 import { Menu, MenuButton, MenuItem, MenuList, Text, ComponentWithAs, As } from '@chakra-ui/react';
 import { Node as ProseMirrorNode } from 'prosemirror-model';
 
-import { getParentNode, AttributeType, NodeName } from '@ureeka-notebook/web-service';
+import { getParentNode, NodeName } from '@ureeka-notebook/web-service';
 
 import { ICON_BUTTON_CLASS } from 'notebookEditor/theme/theme';
 import { EditorToolComponentProps } from 'notebookEditor/sidebar/toolbar/type';
@@ -10,9 +10,6 @@ import { EditorToolComponentProps } from 'notebookEditor/sidebar/toolbar/type';
 // == Interface ===================================================================
 interface DropdownButtonToolItemProps extends EditorToolComponentProps {
   nodeName: NodeName;
-
-  /** the attribute that this ToolItem corresponds to */
-  attributeType: AttributeType;
 
   /** the name of the ToolItem */
   name: string;

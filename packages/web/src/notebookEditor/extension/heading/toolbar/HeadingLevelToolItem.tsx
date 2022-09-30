@@ -51,7 +51,6 @@ export const HeadingLevelToolItem: React.FC<EditorToolComponentProps> = ({ edito
       editor={editor}
       depth={depth}
       nodeName={NodeName.HEADING}
-      attributeType={AttributeType.Level}
       name='headingLevelToolItem'
       asMenuButton={HeadingMenuButton}
       options={headingLevelOptions}
@@ -72,7 +71,7 @@ const HeadingMenuButton = forwardRef((props, ref) => {
   return (
     <Tooltip label='Heading (⌘ + ⌥ + #)'>
       <button
-        id={'headingLevelToolItemButton'}
+        id='headingLevelToolItemButton'
         ref={ref}
         datatype={TOOL_ITEM_DATA_TYPE/*(SEE: notebookEditor/toolbar/type )*/}
         disabled={shouldBeDisabled}
