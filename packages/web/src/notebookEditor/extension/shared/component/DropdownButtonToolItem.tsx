@@ -23,7 +23,7 @@ interface DropdownButtonToolItemProps extends EditorToolComponentProps {
   options: { value: string | number | boolean; commandLabel: string; displayLabel: string;  }[];
 
   /** the function that evaluates whether the current ToolItem option is selected  */
-  selectedOptionCheck: (parent: ProseMirrorNode, optionIndex: number) => boolean;
+  selectedOptionCheck: (parent: ProseMirrorNode, optionValue: string | number | boolean, optionIndex: number) => boolean;
 
   /** the function that handles click events inside the ToolItem  */
   handleClick: (value: string | number | boolean) => void;
@@ -56,7 +56,7 @@ export const DropdownButtonToolItem: React.FC<DropdownButtonToolItemProps> = ({ 
                 command={option.commandLabel}
                 onClick={() => handleClick(option.value)}
               >
-                <Text decoration={selectedOptionCheck(parent, optionIndex) ? 'underline' : ''/*none*/}>
+                <Text decoration={selectedOptionCheck(parent, option.value, optionIndex) ? 'underline' : ''/*none*/}>
                   {option.displayLabel}
                 </Text>
               </MenuItem>

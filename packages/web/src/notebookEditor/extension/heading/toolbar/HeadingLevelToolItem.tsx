@@ -54,7 +54,7 @@ export const HeadingLevelToolItem: React.FC<EditorToolComponentProps> = ({ edito
       name='headingLevelToolItem'
       asMenuButton={HeadingMenuButton}
       options={headingLevelOptions}
-      selectedOptionCheck={(parent, optionIndex) => isHeadingNode(parent) && parent.attrs[AttributeType.Level] === (optionIndex+1/*account for 0 indexing*/)}
+      selectedOptionCheck={(parent, optionValue, optionIndex) => isHeadingNode(parent) && parent.attrs[AttributeType.Level] === (optionIndex+1/*account for 0 indexing*/)}
       handleClick={handleClick}
       handleKeydown={handleKeydown}
     />
