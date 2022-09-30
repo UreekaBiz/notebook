@@ -1,6 +1,6 @@
 import { Node } from '@tiptap/core';
 
-import { getNodeOutputSpec, isImageNode, AttributeType, ImageNodeSpec, SetAttributeType, DEFAULT_IMAGE_BORDER_COLOR, DEFAULT_IMAGE_BORDER_STYLE, DEFAULT_IMAGE_BORDER_WIDTH, DEFAULT_IMAGE_HEIGHT, DEFAULT_IMAGE_PARSE_TAG, DEFAULT_IMAGE_SRC, DEFAULT_IMAGE_WIDTH } from '@ureeka-notebook/web-service';
+import { getNodeOutputSpec, isImageNode, AttributeType, ImageNodeSpec, NodeName, SetAttributeType, DATA_NODE_TYPE, DEFAULT_IMAGE_BORDER_COLOR, DEFAULT_IMAGE_BORDER_STYLE, DEFAULT_IMAGE_BORDER_WIDTH, DEFAULT_IMAGE_HEIGHT, DEFAULT_IMAGE_PARSE_TAG, DEFAULT_IMAGE_SRC, DEFAULT_IMAGE_WIDTH } from '@ureeka-notebook/web-service';
 
 import { setAttributeParsingBehavior, uniqueIdParsingBehavior } from 'notebookEditor/extension/util/attribute';
 import { NoOptions } from 'notebookEditor/model/type';
@@ -75,6 +75,9 @@ export const Image = Node.create<NoOptions, ImageStorage>({
       return new ImageController(editor, node, this.storage, getPos, initialSrc);
     };
   },
-  parseHTML() { return [{ tag: DEFAULT_IMAGE_PARSE_TAG }]; },
+
+  // turn elements that are pasted Images, as well
+  // as ImageNodeViews, into Image Nodes
+  parseHTML() { return [{ tag: `${DEFAULT_IMAGE_PARSE_TAG}, span[${DATA_NODE_TYPE}="${NodeName.IMAGE}"]` }]; },
   renderHTML({ node, HTMLAttributes }) { return getNodeOutputSpec(node, HTMLAttributes, true/*is leaf node*/); },
 });
