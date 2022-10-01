@@ -3,7 +3,7 @@ import { useFormik, Field, FormikProvider } from 'formik';
 import { KeyboardEventHandler } from 'react';
 import * as Validate from 'yup';
 
-import { isImageNode, isNodeSelection, urlSchema, AttributeType, NodeName } from '@ureeka-notebook/web-service';
+import { isImageNode, isNodeSelection, urlSchema, AttributeType, NodeName, DEFAULT_IMAGE_SRC, DEFAULT_IMAGE_ERROR_SRC } from '@ureeka-notebook/web-service';
 
 import { InputToolItemContainer } from 'notebookEditor/extension/shared/component/InputToolItemContainer';
 import { EditorToolComponentProps, TOOL_ITEM_DATA_TYPE } from 'notebookEditor/sidebar/toolbar/type';
@@ -25,7 +25,12 @@ export const ImageSrcToolItem: React.FC<Props> = ({ editor }) => {
   const { pos: prevPos } = selection.$anchor;
   if(!isNodeSelection(selection) || !isImageNode(selection.node)) throw new Error(`Invalid ImageSrcToolItem render: ${JSON.stringify(selection)}`);
 
-  const initialValue = selection.node.attrs[AttributeType.Src] ?? ''/*default*/;
+  let initialValue = selection.node.attrs[AttributeType.Src];
+  if(!initialValue || initialValue === DEFAULT_IMAGE_SRC || initialValue === DEFAULT_IMAGE_ERROR_SRC) {
+    // set as none so that the User can change an invalid src to a valid one
+    initialValue = ''/*none*/;
+  } /* else -- valid src value */
+
   const formik = useFormik<ImageDialog_Create>({
     initialValues: { src: initialValue },
     validationSchema: ImageDialog_Create_Schema,

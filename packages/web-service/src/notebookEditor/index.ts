@@ -32,6 +32,7 @@ export {
   SpacingType,
   getOppositeSpacingAttribute,
 
+  BorderStyle,
   TextStyleAttributes,
   TextAlign,
   VerticalAlign,
@@ -41,6 +42,7 @@ export {
 
   SetAttributeType,
 
+  isBorderStyle,
   InvalidMergedAttributeValue,
   MergedAttributeValue,
   mergeAttributes,
@@ -90,15 +92,19 @@ export {
 
   ImageAttributes,
   defaultImageAttributes,
-  DEFAULT_IMAGE_PARSE_TAG,
-  DEFAULT_IMAGE_SRC,
+  DEFAULT_IMAGE_BORDER_COLOR,
+  DEFAULT_IMAGE_BORDER_STYLE,
+  DEFAULT_IMAGE_BORDER_WIDTH,
+  DEFAULT_IMAGE_CONTAINER_CLASS,
   DEFAULT_IMAGE_ERROR_SRC,
-  DEFAULT_IMAGE_WIDTH,
   DEFAULT_IMAGE_HEIGHT,
-  DEFAULT_IMAGE_MIN_WIDTH,
-  DEFAULT_IMAGE_MIN_HEIGHT,
-  DEFAULT_IMAGE_MAX_WIDTH,
   DEFAULT_IMAGE_MAX_HEIGHT,
+  DEFAULT_IMAGE_MAX_WIDTH,
+  DEFAULT_IMAGE_MIN_HEIGHT,
+  DEFAULT_IMAGE_MIN_WIDTH,
+  DEFAULT_IMAGE_SRC,
+  DEFAULT_IMAGE_PARSE_TAG,
+  DEFAULT_IMAGE_WIDTH,
 
   LinkAttributes,
   isLinkMarkAttributes,

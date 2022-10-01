@@ -106,6 +106,9 @@ export const DefaultTheme: Theme = {
       [AttributeType.MarginBottom]: '0.25rem',
     },
     [NodeName.IMAGE]: {
+      [AttributeType.Color]: '#000',
+      [AttributeType.BorderWidth]: '1px',
+      [AttributeType.BorderStyle]: 'solid',
       [AttributeType.TextAlign]: TextAlign.left,
       [AttributeType.VerticalAlign]: VerticalAlign.bottom,
     },
@@ -229,6 +232,9 @@ export const GoogleDocsTheme: Theme = {
       [AttributeType.MarginBottom]: '0.25rem',
     },
     [NodeName.IMAGE]: {
+      [AttributeType.Color]: '#353744',
+      [AttributeType.BorderWidth]: '1px',
+      [AttributeType.BorderStyle]: 'solid',
       [AttributeType.TextAlign]: TextAlign.left,
       [AttributeType.VerticalAlign]: VerticalAlign.bottom,
     },
