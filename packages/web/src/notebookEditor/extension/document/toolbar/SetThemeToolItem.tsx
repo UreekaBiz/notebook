@@ -1,44 +1,39 @@
-import { Flex, Select, Text } from '@chakra-ui/react';
-import { useState, ChangeEventHandler } from 'react';
+import { useState } from 'react';
 
 import { notebookEditorTheme, ThemeName, Themes } from '@ureeka-notebook/web-service';
 
-import { setThemeStylesheet } from 'notebookEditor/theme/theme';
+import { InputToolItemContainer } from 'notebookEditor/extension/shared/component/InputToolItemContainer';
+import { DropdownTool, DropdownToolItemType } from 'notebookEditor/extension/shared/component/DropdownToolItem/DropdownTool';
 import { EditorToolComponentProps } from 'notebookEditor/sidebar/toolbar/type';
+import { setThemeStylesheet } from 'notebookEditor/theme/theme';
 
 // ********************************************************************************
+// NOTE: Using directly DropdownTool instead of DropdownToolItem because this needs
+//       doesn't update an Attribute.
+const options: DropdownToolItemType[] = Object.entries(ThemeName).map(([key, value]) => ({ value, label: value }));
+
 interface Props extends EditorToolComponentProps {/*no additional*/}
 export const SetThemeToolItem: React.FC<Props> = () => {
   // == State =====================================================================
   const [theme, setTheme] = useState<ThemeName>(ThemeName.Default);
 
   // == Handler ===================================================================
-  const handleChange: ChangeEventHandler<HTMLSelectElement> = (event) => {
-    const value = event.target.value as ThemeName/*by contract*/;
-    const theme = Themes[value];
+  const handleChange = (value: string) => {
+    const themeValue = value as ThemeName/*by definition*/;
+    const theme = Themes[themeValue];
 
     if(!theme) return/*invalid value -- ignore*/;
-    setTheme(value);
+    setTheme(themeValue);
     notebookEditorTheme.setTheme(theme);
     setThemeStylesheet();
   };
 
   // == UI ========================================================================
-  return (
-    <Flex alignItems='center'>
-      <Text
-        marginRight={1}
-        color='#333'
-        fontSize='12px'
-        fontWeight='600'
-      >
-        Theme
-      </Text>
-      <Select value={theme} onChange={handleChange} size='xs' width={130}>
-        <option disabled value=''>Theme</option> {/*placeholder*/}
 
-        {Object.entries(ThemeName).map(([key, value]) => (<option key={key} value={value}>{value}</option>))}
-      </Select>
-    </Flex>
+
+  return (
+    <InputToolItemContainer name='Theme'>
+      <DropdownTool value={theme} options={options} placeholder='Type' onChange={handleChange}/>
+    </InputToolItemContainer>
   );
 };
