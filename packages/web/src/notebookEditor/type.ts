@@ -19,6 +19,7 @@ import { Image } from 'notebookEditor/extension/image/Image';
 import { InputRule } from 'notebookEditor/extension/inputRule/InputRule';
 import { InlineNodeWithContent } from 'notebookEditor/extension/inlineNodeWithContent/InlineNodeWithContent';
 import { Italic } from 'notebookEditor/extension/italic/Italic';
+import { Keymap } from 'notebookEditor/extension/keymap/Keymap';
 import { ListItem } from 'notebookEditor/extension/list/listItem/ListItem';
 import { ListItemContent } from 'notebookEditor/extension/list/listItemContent/ListItemContent';
 import { Link } from 'notebookEditor/extension/link/Link';
@@ -65,6 +66,7 @@ export const editorDefinition = {
     Image,
     InlineNodeWithContent,
     InputRule,
+    Keymap,
     Link,
     ListItem,
     ListItemContent,

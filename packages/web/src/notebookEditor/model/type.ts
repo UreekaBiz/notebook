@@ -25,6 +25,8 @@ export enum ExtensionName {
   HISTORY = 'history',
   INLINE_NODE_WITH_CONTENT = 'inlineNodeWithContent',
   INPUT_RULE = 'inputRule',
+  // NOTE: not simply called 'keymap' since it's already used internally by Tiptap.
+  KEYMAP = 'notebookKeymap',
   NODEVIEW_REMOVAL = 'nodeViewRemoval',
   SET_DEFAULT_MARKS = 'setDefaultMarks',
 }
@@ -37,6 +39,7 @@ export enum ExtensionName {
 // NOTE: names match extension, Node or Mark names for sanity.
 export enum ExtensionPriority {
   // -- Extension -----------------------------------------------------------------
+  KEYMAP = 121/*T&E*/,
   NODEVIEW_REMOVAL = 119,
 
   // -- Node ----------------------------------------------------------------------
