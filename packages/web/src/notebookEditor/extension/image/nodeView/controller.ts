@@ -18,14 +18,18 @@ export class ImageController extends AbstractNodeController<ImageNodeType, Image
 
     super(model, view, editor, node, storage, getPos);
 
+    // NOTE: not retrying upload on attribute update since updated src can be
+    //       hosted somewhere else on the Internet, in which case it does not
+    //       make sense to try and upload it to Storage
     if(!this.node.attrs[AttributeType.Uploaded]) {
       this.uploadImage();
     } /* else -- this Image has already been uploaded to Storage, do nothing */
   }
 
+  // == Upload ====================================================================
   private async uploadImage() {
     const src = this.initialSrc;
-    if(!src || src === DEFAULT_IMAGE_SRC || src === DEFAULT_IMAGE_ERROR_SRC) return/*src does not exist or is the default one, no need to upload*/;
+    if(!src || src === DEFAULT_IMAGE_SRC || src === DEFAULT_IMAGE_ERROR_SRC) return/*src does not exist or is invalid, no need to upload*/;
 
     try {
       const img = await getImageMeta(src);

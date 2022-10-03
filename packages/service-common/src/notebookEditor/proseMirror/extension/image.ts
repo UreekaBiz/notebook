@@ -70,9 +70,6 @@ export const DEFAULT_IMAGE_BORDER_COLOR = 'transparent';
 export const DEFAULT_IMAGE_BORDER_STYLE = BorderStyle.solid;
 export const DEFAULT_IMAGE_BORDER_WIDTH = '1px';
 
-// the class of the fallback container that gets shown while the Image is
-// being uploaded, or if the Upload errors out
-export const DEFAULT_IMAGE_CONTAINER_CLASS = 'defaultImageContainer'/*NOTE: must match index.css*/;
 export const DEFAULT_IMAGE_ERROR_SRC = 'defaultImageErrorSrc';
 export const DEFAULT_IMAGE_HEIGHT = '100px';
 
@@ -85,6 +82,8 @@ export const DEFAULT_IMAGE_MIN_WIDTH = 5/*px*/;
 export const DEFAULT_IMAGE_SRC = 'defaultImageSrc';
 export const DEFAULT_IMAGE_PARSE_TAG = 'img[src]';
 export const DEFAULT_IMAGE_WIDTH = '100px';
+
+export const IMAGE_ERROR_CLASS = 'imageError'/*NOTE: must match index.css*/;
 
 // == Util ========================================================================
 export const defaultImageAttributes: Partial<ImageAttributes> = {

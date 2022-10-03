@@ -40,9 +40,16 @@ export const ListItemTaskListItemPlugin = () => {
       // ensure textBlocks that get pasted into Lists become ListItems, or that
       // their content gets pasted correctly if pasting as plain-text
       handlePaste: (view: EditorView, event: ClipboardEvent, slice: Slice) => {
+        // NOTE: pasting can occur throughout multiple ClipboardEvents, some
+        //       of which might produce the empty Slice. If a 'true' is returned
+        //       in between these multiple ClipboardEvents, the next ones won't be
+        //       processed. Hence the check below
+        if(slice.content.size < 1) return false/*(SEE: NOTE above)*/;
+
         const { selection, schema } = view.state;
         const { $anchor } = selection;
         const { parent } = $anchor;
+
         if(!isListItemContentNode(parent)) return false/*let PM handle the event*/;
 
         const parentListItem = $anchor.node(-1/*depth is ListItemContent, -1 is ListItem, -2 is List*/);
@@ -58,16 +65,16 @@ export const ListItemTaskListItemPlugin = () => {
           } /* else -- not a plain text event, check if pasting as single block  */
 
           // -- check for single Atom paste ---------------------------------------
-          const firstSliceChild = slice.content.child(0);
+          const firstSliceChild = slice.content.firstChild;
           const pastingSingleChild = slice.content.childCount === 1;
-          if(firstSliceChild.isAtom && pastingSingleChild) {
+          if(firstSliceChild && firstSliceChild.isAtom && pastingSingleChild) {
             tr.insert(tr.selection.from, firstSliceChild);
             view.dispatch(tr);
             return true/*event handled*/;
           } /* else -- not pasting a single Atom check if pasting as single block  */
 
           // -- check for singleBlock paste ---------------------------------------
-          const pasteAsSingleBlock = pastingSingleChild && (firstSliceChild.isTextblock || (isListNode(firstSliceChild) && isListWithSingleItemContent(firstSliceChild)));
+          const pasteAsSingleBlock = pastingSingleChild && (firstSliceChild && firstSliceChild.isTextblock || (firstSliceChild && isListNode(firstSliceChild) && isListWithSingleItemContent(firstSliceChild)));
           if(pasteAsSingleBlock) {
             // since paste can occur several levels deep across Lists,
             // yet the above check guarantees that there is a
