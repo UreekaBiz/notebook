@@ -447,6 +447,8 @@ export {
   resolveNewSelection,
   SelectionRange,
   SelectionDepth,
+  selectBlockNodeContentCommand,
+  SelectBlockNodeContentDocumentUpdate,
   selectNodeBackwardCommand,
   SelectNodeBackwardDocumentUpdate,
   setNodeSelectionCommand,

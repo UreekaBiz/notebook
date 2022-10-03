@@ -3,6 +3,7 @@ import { EditorState, NodeSelection, Selection, TextSelection, Transaction } fro
 import { EditorView } from 'prosemirror-view';
 
 import { minFromMax } from '../../../util/number';
+import { getBlockNodeRange } from '../selection';
 import { AbstractDocumentUpdate, Command } from './type';
 import { findCutBefore } from './util';
 
@@ -68,6 +69,39 @@ export class SetNodeSelectionDocumentUpdate implements AbstractDocumentUpdate {
 }
 
 // ................................................................................
+/** select the contents of the current parent Block Node */
+export const selectBlockNodeContentCommand: Command = (state, dispatch) => {
+  const updatedTr =  new SelectBlockNodeContentDocumentUpdate().update(state, state.tr);
+  if(updatedTr) {
+    dispatch(updatedTr);
+    return true/*Command executed*/;
+  } /* else -- Command cannot be executed */
+
+  return false/*not executed*/;
+};
+export class SelectBlockNodeContentDocumentUpdate implements AbstractDocumentUpdate {
+  public constructor() {/*nothing additional*/ }
+
+  /*
+   * modify the given Transaction such that the contents of the current
+   * parent Block Node are selected and return it
+   */
+  public update(editorState: EditorState, tr: Transaction) {
+    const { selection } = tr;
+    const { $from, empty } = selection;
+
+    if(!empty) return false/*do not overwrite Selection*/;
+    if(!$from.parent.isTextblock) return false/*not a valid Node*/;
+    if($from.parent.textContent.length < 1) return false/*nothing to Select*/;
+
+    const { from, to } = getBlockNodeRange(tr.selection);
+    tr.setSelection(TextSelection.create(tr.doc, from, to));
+
+    return tr/*updated*/;
+  }
+}
+
+// ................................................................................
 // Delete the selection, if there is one.
 export const deleteSelectionCommand: Command = (state, dispatch) => {
   const updatedTr =  new DeleteSelectionDocumentUpdate().update(state, state.tr);
@@ -91,7 +125,6 @@ export class DeleteSelectionDocumentUpdate implements AbstractDocumentUpdate {
     return tr;
   }
 }
-
 
 // ................................................................................
 /**
