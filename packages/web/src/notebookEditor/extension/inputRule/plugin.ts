@@ -1,8 +1,6 @@
 import { EditorState, Plugin, TextSelection, Transaction } from 'prosemirror-state';
 import { EditorView } from 'prosemirror-view';
 
-import { NotebookSchemaType } from '@ureeka-notebook/web-service';
-
 // ********************************************************************************
 // REF: https://github.com/ProseMirror/prosemirror-inputrules/blob/d60b7920d040e9b18ee893bad4213180fedc47f5/src/inputrules.ts
 
@@ -43,7 +41,7 @@ export class InputRule {
 // input that matches any of the given rules to trigger the rule's
 // action.
 export const inputRulePlugin = ({ rules }: { rules: readonly InputRule[]; }) => {
-  const plugin: Plugin<InputRulePluginState> = new Plugin<InputRulePluginState, NotebookSchemaType>({
+  const plugin: Plugin<InputRulePluginState> = new Plugin<InputRulePluginState>({
     // -- State -------------------------------------------------------------------
     state: {
       init() { return null/*default no state*/; },
