@@ -85,14 +85,17 @@ export abstract class AbstractNestedViewNodeView<NodeType extends NestedViewNode
   // set up the Node's DOM layout so that the Content of the Node can be rendered
   // correctly. This should happen on creation and every time the View gets reused
   public setupView() {
-    this.renderDisplayContainer = document.createElement('span');
-		this.renderDisplayContainer.classList.add(NESTED_NODE_VIEW_RENDER_DISPLAY_CONTAINER_CLASS);
+    if(!this.renderDisplayContainer) {
+      this.renderDisplayContainer = document.createElement('span');
+      this.renderDisplayContainer.classList.add(NESTED_NODE_VIEW_RENDER_DISPLAY_CONTAINER_CLASS);
+      this.dom.appendChild(this.renderDisplayContainer);
+    } /* else -- already set up */
 
-		this.innerViewDisplayContainer = document.createElement('span');
-		this.innerViewDisplayContainer.classList.add(NESTED_NODE_VIEW_INNER_VIEW_DISPLAY_CONTAINER_CLASS);
-
-		this.dom.appendChild(this.renderDisplayContainer);
-		this.dom.appendChild(this.innerViewDisplayContainer);
+    if(!this.innerViewDisplayContainer) {
+      this.innerViewDisplayContainer = document.createElement('span');
+      this.innerViewDisplayContainer.classList.add(NESTED_NODE_VIEW_INNER_VIEW_DISPLAY_CONTAINER_CLASS);
+      this.dom.appendChild(this.innerViewDisplayContainer);
+    } /* else -- already set up, do nothing */
   }
 
   // displays the content of this Node in a special way that does not involve
