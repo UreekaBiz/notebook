@@ -32,6 +32,14 @@ const customSerializerMap = new Map<NodeName, (editor: Editor, node: ProseMirror
     NodeName.DEMO_ASYNC_NODE,
     (editor, node) => `${node.attrs[AttributeType.Text] ?? DEFAULT_DEMO_ASYNC_NODE_TEXT}`,
   ],
+  [
+    NodeName.EDITABLE_INLINE_NODE_WITH_CONTENT,
+    (editor, node) => `~${node.textContent}~`,
+  ],
+  [
+    NodeName.NESTED_VIEW_BLOCK_NODE,
+    (editor, node) => `\n~${node.textContent}~\n`,
+  ],
 ]);
 
 // == Serialize ===================================================================
