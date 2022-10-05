@@ -33,14 +33,14 @@ export const NestedViewBlockNodeSpec: NodeSpec = {
 };
 
 // -- Render Spec -----------------------------------------------------------------
-const renderNestedViewBlockNodeNodeView = (attributes: NestedViewBlockNodeAttributes, content: string) =>
+const renderNestedViewBlockNodeView = (attributes: NestedViewBlockNodeAttributes, content: string) =>
   createNestedViewNodeRenderedView(NodeName.NESTED_VIEW_BLOCK_NODE, content);
 
 export const NestedViewBlockNodeRendererSpec: NodeRendererSpec<NestedViewBlockNodeAttributes> = {
   tag: 'div',
 
   isNodeViewRenderer: true/*by definition*/,
-  renderNodeView: renderNestedViewBlockNodeNodeView,
+  renderNodeView: renderNestedViewBlockNodeView,
   attributes: {/*no need to render attributes*/},
 };
 
