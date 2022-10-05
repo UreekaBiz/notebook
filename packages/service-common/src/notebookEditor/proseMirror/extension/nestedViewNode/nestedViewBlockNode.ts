@@ -58,7 +58,3 @@ export const createNestedViewBlockNode = (schema: NotebookSchemaType, attributes
 // -- JSON Node Type --------------------------------------------------------------
 export type NestedViewBlockNodeJSONNodeType = JSONNode<NestedViewBlockNodeAttributes> & { type: NodeName.NESTED_VIEW_BLOCK_NODE; };
 export const isNestedViewBlockNodeJSONNode = (node: JSONNode): node is NestedViewBlockNodeJSONNodeType => node.type === NodeName.NESTED_VIEW_BLOCK_NODE;
-
-// == Util ========================================================================
-// .. CSS .........................................................................
-export const EMPTY_NESTED_VIEW_BLOCK_NODE_CLASS = 'emptyNVBN';
