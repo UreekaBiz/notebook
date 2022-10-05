@@ -26,7 +26,7 @@ export const insertAndSelectEditableInlineNodeWithContent = (editor: Editor, dep
   setTimeout(() => {
     const storage = getNodeViewStorage<EditableInlineNodeWithContentStorageType>(editor, NodeName.EDITABLE_INLINE_NODE_WITH_CONTENT);
     storage.getNodeView(id)?.nodeView.ensureFocus();
-  }, 50/*T&E, after rendering*/);
+  }/*after rendering*/);
 
   return result/*result of the operation*/;
 };

@@ -2,7 +2,7 @@ import { GapCursor } from 'prosemirror-gapcursor';
 import { EditorState, NodeSelection, TextSelection, Transaction } from 'prosemirror-state';
 import { EditorView } from 'prosemirror-view';
 
-import { createEditableInlineNodeWithContent, isEditableInlineNodeWithContentNode, isNestedViewBlockNode, AbstractDocumentUpdate, CreateBlockNodeDocumentUpdate, NodeName, EditableInlineNodeWithContentAttributes, DEFAULT_EDITABLE_INLINE_NODE_WITH_CONTENT_TEXT } from '@ureeka-notebook/web-service';
+import { createEditableInlineNodeWithContent, isEditableInlineNodeWithContentNode, isNestedViewBlockNode, isNodeSelection, isTextSelection, AbstractDocumentUpdate, CreateBlockNodeDocumentUpdate, NodeName, EditableInlineNodeWithContentAttributes, DEFAULT_EDITABLE_INLINE_NODE_WITH_CONTENT_TEXT } from '@ureeka-notebook/web-service';
 
 // ********************************************************************************
 // == Type ========================================================================
@@ -45,7 +45,28 @@ export class InsertNestedViewNodeDocumentUpdate implements AbstractDocumentUpdat
     } /* else -- setting nestedViewBlockNode */
 
     const updatedTr = new CreateBlockNodeDocumentUpdate(NodeName.NESTED_VIEW_BLOCK_NODE, this.attributes).update(editorState, tr)/*updated*/;
-    return updatedTr;
+    if(!updatedTr) return false/*default*/;
+
+    // set the right Selection for the new NVBN. Since they are not regular
+    // TextBlocks, the resulting Selection from CreateBlockNodeDocumentUpdate
+    // is not enough and must be set manually so that the inner View opens
+    try {
+      if(isNodeSelection(updatedTr.selection)) {
+        updatedTr.setSelection(NodeSelection.create(updatedTr.doc, updatedTr.selection.from));
+        return updatedTr;
+      } /* else -- NVBN was inserted in a TextBlock that already had content */
+
+      if(isTextSelection(updatedTr.selection)) {
+        // since the resulting TextSelection of a CreateBlockNodeDocumentUpdate
+        // is inside the BlockNode, subtract 1 to select it
+        updatedTr.setSelection(NodeSelection.create(updatedTr.doc, updatedTr.selection.from-1/*(SEE: Comment above)*/));
+        return updatedTr;
+      } /* else -- invalid Selection, return default */
+    } catch(error) {
+      return false/*the resulting Selection was invalid*/;
+    }
+
+    return false/*default*/;
   }
 }
 

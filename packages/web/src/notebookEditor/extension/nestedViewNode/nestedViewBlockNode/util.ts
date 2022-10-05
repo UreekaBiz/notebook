@@ -27,7 +27,7 @@ export const insertAndSelectNestedViewBlockNode = (editor: Editor, depth: Select
   setTimeout(() => {
     const storage = getNodeViewStorage<NestedViewBlockNodeStorageType>(editor, NodeName.NESTED_VIEW_BLOCK_NODE);
     storage.getNodeView(id)?.nodeView.ensureFocus();
-  }, 50/*T&E, after rendering*/);
+  }/*after rendering*/);
 
   return result/*result of the operation*/;
 };
