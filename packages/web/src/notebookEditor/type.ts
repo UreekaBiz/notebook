@@ -10,6 +10,7 @@ import { Demo2AsyncNode } from 'notebookEditor/extension/demo2AsyncNode/Demo2Asy
 import { DemoAsyncNode } from 'notebookEditor/extension/demoAsyncNode/DemoAsyncNode';
 import { Document } from 'notebookEditor/extension/document/Document';
 import { DropCursor } from 'notebookEditor/extension/dropCursor/DropCursor';
+import { EditableInlineNodeWithContent } from 'notebookEditor/extension/nestedViewNode/editableInlineNodeWithContent/EditableInlineNodeWithContent';
 import { EmojiSuggestion } from 'notebookEditor/extension/emojiSuggestion/EmojiSuggestion';
 import { GapCursor } from 'notebookEditor/extension/gapcursor/GapCursor';
 import { Heading } from 'notebookEditor/extension/heading/Heading';
@@ -24,6 +25,8 @@ import { ListItem } from 'notebookEditor/extension/list/listItem/ListItem';
 import { ListItemContent } from 'notebookEditor/extension/list/listItemContent/ListItemContent';
 import { Link } from 'notebookEditor/extension/link/Link';
 import { MarkHolder } from 'notebookEditor/extension/markHolder/MarkHolder';
+import { NestedViewBlockNode } from 'notebookEditor/extension/nestedViewNode/nestedViewBlockNode/NestedViewBlockNode';
+import { NestedViewNode } from 'notebookEditor/extension/nestedViewNode/NestedViewNode';
 import { NodeViewRemoval } from 'notebookEditor/extension/nodeViewRemoval/NodeViewRemoval';
 import { OrderedList } from 'notebookEditor/extension/list/orderedList/OrderedList';
 import { Paragraph } from 'notebookEditor/extension/paragraph/Paragraph';
@@ -56,6 +59,7 @@ export const editorDefinition = {
     Demo2AsyncNode,
     DemoAsyncNode,
     DropCursor,
+    EditableInlineNodeWithContent,
     EmojiSuggestion,
     Document,
     GapCursor,
@@ -71,6 +75,8 @@ export const editorDefinition = {
     ListItem,
     ListItemContent,
     MarkHolder,
+    NestedViewBlockNode,
+    NestedViewNode,
     NodeViewRemoval,
     OrderedList,
     Paragraph,

@@ -80,6 +80,10 @@ export {
   DEFAULT_DEMO_ASYNC_NODE_STATUS,
   DEFAULT_DEMO_ASYNC_NODE_TEXT,
 
+  createEditableInlineNodeWithContent,
+  DEFAULT_EDITABLE_INLINE_NODE_WITH_CONTENT_TEXT,
+  EditableInlineNodeWithContentAttributes,
+
   HeadingLevel,
   getHeadingLevelFromTag,
   isHeadingLevel,
@@ -121,6 +125,11 @@ export {
   LIST_ITEM_DEFAULT_SEPARATOR,
   DATA_LIST_ITEM_LIST_STYLE,
   DATA_LIST_ITEM_SEPARATOR,
+
+  getNestedViewNodeTextString,
+  NESTED_VIEW_NODE_EMPTY_NODE_CLASS,
+  NESTED_NODE_VIEW_INNER_VIEW_DISPLAY_CONTAINER_CLASS,
+  NESTED_NODE_VIEW_RENDER_DISPLAY_CONTAINER_CLASS,
 
   OrderedListAttributes,
   ORDERED_LIST_DEFAULT_START,
@@ -188,6 +197,10 @@ export {
   getDemoAsyncNodeNodeType,
   isDemoAsyncNode,
 
+  EditableInlineNodeWithContentNodeType,
+  EditableInlineNodeWithContentNodeSpec,
+  isEditableInlineNodeWithContentNode,
+
   DocumentNodeType,
   getDocumentNodeType,
   isDocumentNode,
@@ -221,6 +234,12 @@ export {
   getMarkHolderNodeType,
   isMarkHolderNode,
   storedMarksFromDOM,
+
+  NestedViewNodeType,
+
+  NestedViewBlockNodeType,
+  NestedViewBlockNodeSpec,
+  isNestedViewBlockNode,
 
   getOrderedListNodeType,
   OrderedListNodeType,
@@ -442,6 +461,7 @@ export {
   isGapCursorSelection,
   isGetPos,
   isNodeSelection,
+  isTextSelection,
   replaceAndSelectNodeCommand,
   ReplaceAndSelectNodeDocumentUpdate,
   resolveNewSelection,

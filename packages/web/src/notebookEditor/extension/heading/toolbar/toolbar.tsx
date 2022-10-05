@@ -3,7 +3,10 @@ import { NodeName } from '@ureeka-notebook/web-service';
 import { markBold } from 'notebookEditor/extension/bold/toolbar';
 import { markCode } from 'notebookEditor/extension/code/toolbar';
 import { markItalic } from 'notebookEditor/extension/italic/toolbar';
-import { linkToolItem } from 'notebookEditor/extension//link/toolbar';
+import { linkToolItem } from 'notebookEditor/extension/link/toolbar';
+import { bulletListToolItem, orderedListToolItem, taskListToolItem } from 'notebookEditor/extension/list/toolbar';
+import { editableInlineNodeWithContentToolItem } from 'notebookEditor/extension/nestedViewNode/editableInlineNodeWithContent/toolbar';
+import { nestedViewBlockNodeToolItem } from 'notebookEditor/extension/nestedViewNode/nestedViewBlockNode/toolbar';
 import { markStrikethrough } from 'notebookEditor/extension/strikethrough/toolbar';
 import { markSubScript } from 'notebookEditor/extension/subScript/toolbar';
 import { markSuperScript } from 'notebookEditor/extension/superScript/toolbar';
@@ -31,6 +34,9 @@ export const HeadingToolbar: Toolbar = {
   toolsCollections: [
     [
       headingLevelToolItem,
+      orderedListToolItem,
+      bulletListToolItem,
+      taskListToolItem,
       markBold,
       markItalic,
       markUnderline,
@@ -39,6 +45,10 @@ export const HeadingToolbar: Toolbar = {
       markSubScript,
       markCode,
       linkToolItem,
+    ],
+    [
+      editableInlineNodeWithContentToolItem,
+      nestedViewBlockNodeToolItem,
     ],
     [
       fontSizeToolItem,

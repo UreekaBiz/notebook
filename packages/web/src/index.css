@@ -91,6 +91,32 @@
 .chipCloseButton:hover { color: rgba(255, 255, 255, 0.7);}
 .chipCloseButton:focus { color: rgba(255, 255, 255, 0.7); }
 
+/* .. Highlight ................................................................ */
+.ProseMirror-focused .selected_text {
+  /*only show background when editor is no longer focused*/
+  background-color: transparent !important;
+}
+/* set background color on selected text while the editor is not focused. This
+   background is not set to data-node-view attributes since it mess up the styles */
+.selected_text:not([data-node-view]) {
+  background-color: rgba(0,0,0,0.1);
+}
+/* .. Image .................................................................... */
+[data-node-type="image"] {
+  position: relative;
+  display: inline-block;
+}
+[data-node-type="image"].ProseMirror-selectednode {
+  outline: 1px solid #666;
+}
+[data-node-type="image"].imageError::after {
+  content: "⚠️"/*warning*/;
+  font-size: 85px;
+  position: relative;
+  left: 8px;
+  bottom: 15px;
+}
+
 /* -- List --------------------------------------------------------------------- */
 /* NOTE: the following listItem styles ensure paragraphs inside ListItems or
          TaskListItems do not inherit the regular paragraph styles, which modify
@@ -160,30 +186,116 @@ ul[data-node-type="taskList"] > li > label {
   display: none/* do not add to PM View */;
 }
 
-/* .. Highlight ................................................................ */
-.ProseMirror-focused .selected_text {
-  /*only show background when editor is no longer focused*/
-  background-color: transparent !important;
+/* == Nested View Nodes ======================================================== */
+/* -- Shared Styles ------------------------------------------------------------ */
+/* .. General View ............................................................. */
+[data-node-type="nestedViewBlockNode"],
+[data-node-type="editableInlineNodeWithContent"] {
+  /* default styles for both Nodes */
+  font-size: 1em;
+  font-weight: bold;
+  font-family: 'Courier New', Courier, monospace;
+  cursor: auto;
 }
-/* set background color on selected text while the editor is not focused. This
-   background is not set to data-node-view attributes since it mess up the styles */
-.selected_text:not([data-node-view]) {
-  background-color: rgba(0,0,0,0.1);
+
+/* .. PM Selection ............................................................. */
+/*
+  NOTE: ProseMirror hides the Cursor and the Selection inside a
+        NestedView whenever the previous Selection was a GapCursor Selection.
+        Prevent this from happening, while maintaining defaults
+*/
+[data-node-type="nestedViewBlockNode"] > .innerViewDisplay > div { caret-color: black !important/*do not allow hiding the cursor*/; }
+[data-node-type="nestedViewBlockNode"] > .innerViewDisplay > div::selection { background: #ACCEF7/*Chrome Default*/; }
+[data-node-type="nestedViewBlockNode"] > .innerViewDisplay > div::-moz-selection { background: #ACCEF7/*Chrome Default*/; }
+[data-node-type="nestedViewBlockNode"].ProseMirror-selectednode > span,
+
+/* do not show blue outline inside the NestedViews */
+[data-node-type="editableInlineNodeWithContent"].ProseMirror-selectednode > span { outline: 1px solid transparent; }
+[data-node-type="nestedViewBlockNode"] > .innerViewDisplay > .ProseMirror,
+[data-node-type="editableInlineNodeWithContent"] > .innerViewDisplay > .ProseMirror { outline: 1px solid transparent; }
+
+/* .. Inner View ............................................................... */
+/* address FireFox bug with contenteditable, https://bugzilla.mozilla.org/show_bug.cgi?id=1252108 */
+[data-node-type="nestedViewBlockNode"] .innerViewDisplay .ProseMirror,
+[data-node-type="editableInlineNodeWithContent"] .innerViewDisplay .ProseMirror {
+	border-right: 1px solid transparent;
+	border-left: 1px solid transparent;
 }
-/* .. Image .................................................................... */
-[data-node-type="image"] {
-  position: relative;
-  display: inline-block;
+
+/* .. Rendered View ............................................................ */
+/* hide the rendered Node content when the Nodes are not selected */
+[data-node-type="nestedViewBlockNode"].ProseMirror-selectednode .renderedViewDisplay,
+[data-node-type="editableInlineNodeWithContent"].ProseMirror-selectednode .renderedViewDisplay {
+  display: none;
 }
-[data-node-type="image"].ProseMirror-selectednode {
-  outline: 1px solid #666;
+
+/* show default content when the NestedViewNodes are empty */
+[data-node-type="nestedViewBlockNode"].emptyNVN .renderedViewDisplay::before,
+[data-node-type="editableInlineNodeWithContent"].emptyNVN .renderedViewDisplay::before {
+	content: "(Empty)";
+	color: red;
 }
-[data-node-type="image"].imageError::after {
-  content: "⚠️"/*warning*/;
-  font-size: 85px;
-  position: relative;
-  left: 8px;
-  bottom: 15px;
+
+/* == Editable Inline Node with Content ======================================== */
+/* .. General View ............................................................. */
+[data-node-type="editableInlineNodeWithContent"] {
+  min-width: 1em;
+	min-height: 1em;
+  display: inline;
+  word-break: break-word;
+
+}
+/* .. PM Selection ............................................................. */
+[data-node-type="editableInlineNodeWithContent"].ProseMirror-selectednode .innerViewDisplay,
+[data-node-type="editableInlineNodeWithContent"] .innerViewDisplay .ProseMirror {
+  display: inline;
+}
+
+/* .. Inner View ............................................................... */
+[data-node-type="editableInlineNodeWithContent"] .innerViewDisplay {
+	display: none/*do not show*/;
+	color: rgb(161, 28, 201);
+	tab-size: 4;
+}
+[data-node-type="editableInlineNodeWithContent"] .innerViewDisplay::after,
+[data-node-type="editableInlineNodeWithContent"] .innerViewDisplay::before {
+  content: '~'/*T&E*/;
+  color: #b0b0b0;
+}
+
+/* .. Rendered View ............................................................ */
+[data-node-type="editableInlineNodeWithContent"] .renderedViewDisplay {
+  /* show the rendered Node Content correctly */
+	display: inline-block;
+	font-size: 0.85em;
+	cursor: pointer;
+}
+
+/* == Nested View Block Node =================================================== */
+/* .. PM Selection ............................................................. */
+[data-node-type="nestedViewBlockNode"].ProseMirror-selectednode {
+  background-color: #eee;
+}
+
+/* .. Inner View ............................................................... */
+[data-node-type="nestedViewBlockNode"].ProseMirror-selectednode .innerViewDisplay::before,
+[data-node-type="nestedViewBlockNode"].ProseMirror-selectednode .innerViewDisplay::after {
+  background-color: #eee;
+  content: '~'/*T&E*/;
+  color: #b0b0b0;
+}
+[data-node-type="nestedViewBlockNode"] .innerViewDisplay {
+  display: block;
+  width: 100%;
+  color: rgb(161, 28, 201);
+	tab-size: 4;
+  text-align: left;
+}
+
+/* .. Rendered View ............................................................ */
+[data-node-type="nestedViewBlockNode"] .renderedViewDisplay {
+  display: block;
+  text-align: center;
 }
 
 /* -- Mark Styles -------------------------------------------------------------- */

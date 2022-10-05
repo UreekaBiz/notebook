@@ -15,6 +15,7 @@ import { ItalicMarkRendererSpec } from '../extension/italic';
 import { LinkMarkRendererSpec } from '../extension/link';
 import { BulletListNodeRendererSpec, ListItemContentNodeRendererSpec, ListItemNodeRendererSpec, OrderedListNodeRendererSpec, TaskListItemNodeRendererSpec, TaskListNodeRendererSpec } from '../extension/list';
 import { MarkHolderNodeRendererSpec } from '../extension/markHolder';
+import { EditableInlineNodeWithContentNodeRendererSpec, NestedViewBlockNodeRendererSpec } from '../extension/nestedViewNode';
 import { isParagraphJSONNode, ParagraphNodeRendererSpec } from '../extension/paragraph';
 import { ReplacedTextMarkMarkRendererSpec } from '../extension/replacedTextMark';
 import { StrikethroughMarkRendererSpec } from '../extension/strikethrough';
@@ -39,11 +40,13 @@ export const NodeRendererSpecs: Record<NodeName, NodeRendererSpec> = {
   [NodeName.DEMO_2_ASYNC_NODE]: Demo2AsyncNodeRendererSpec as any/*FIXME!!!*/,
   [NodeName.DEMO_ASYNC_NODE]: DemoAsyncNodeRendererSpec as any/*FIXME!!!*/,
   [NodeName.DOC]: DocumentNodeRendererSpec,
+  [NodeName.EDITABLE_INLINE_NODE_WITH_CONTENT]: EditableInlineNodeWithContentNodeRendererSpec as any /*FIXME!!!*/,
   [NodeName.HEADING]: HeadingNodeRendererSpec as any/*FIXME!!!*/,
   [NodeName.LIST_ITEM]: ListItemNodeRendererSpec as any/*FIXME!!!*/,
   [NodeName.LIST_ITEM_CONTENT]: ListItemContentNodeRendererSpec as any/*FIXME!!!*/,
   [NodeName.IMAGE]: ImageNodeRendererSpec as any/*FIXME!!!*/,
   [NodeName.MARK_HOLDER]: MarkHolderNodeRendererSpec as any/*FIXME!!!*/,
+  [NodeName.NESTED_VIEW_BLOCK_NODE]: NestedViewBlockNodeRendererSpec as any /*FIXME!!!*/,
   [NodeName.ORDERED_LIST]: OrderedListNodeRendererSpec as any/*FIXME!!!*/,
   [NodeName.PARAGRAPH]: ParagraphNodeRendererSpec as any/*FIXME!!!*/,
   [NodeName.TASK_LIST]: TaskListNodeRendererSpec as any/*FIXME!!!*/,

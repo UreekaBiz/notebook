@@ -14,6 +14,7 @@ import { ItalicMarkSpec } from './extension/italic';
 import { LinkMarkSpec } from './extension/link';
 import { BulletListNodeSpec, ListItemContentNodeSpec, ListItemNodeSpec, OrderedListNodeSpec, TaskListItemNodeSpec, TaskListNodeSpec } from './extension/list';
 import { MarkHolderNodeSpec } from './extension/markHolder';
+import { EditableInlineNodeWithContentNodeSpec, NestedViewBlockNodeSpec } from './extension/nestedViewNode';
 import { ParagraphNodeSpec } from './extension/paragraph';
 import { ReplacedTextMarkMarkSpec } from './extension/replacedTextMark';
 import { StrikethroughMarkSpec } from './extension/strikethrough';
@@ -42,10 +43,12 @@ export const NodeSpecs: Record<NodeName, NodeSpec> = {
   [NodeName.CODEBLOCK_REFERENCE]: CodeBlockReferenceNodeSpec,
   [NodeName.DEMO_2_ASYNC_NODE]: Demo2AsyncNodeSpec,
   [NodeName.DEMO_ASYNC_NODE]: DemoAsyncNodeSpec,
+  [NodeName.EDITABLE_INLINE_NODE_WITH_CONTENT]: EditableInlineNodeWithContentNodeSpec,
   [NodeName.HEADING]: HeadingNodeSpec,
   [NodeName.IMAGE]: ImageNodeSpec,
   [NodeName.LIST_ITEM]: ListItemNodeSpec,
   [NodeName.MARK_HOLDER]: MarkHolderNodeSpec,
+  [NodeName.NESTED_VIEW_BLOCK_NODE]: NestedViewBlockNodeSpec,
   [NodeName.ORDERED_LIST]: OrderedListNodeSpec,
   [NodeName.TASK_LIST]: TaskListNodeSpec,
   [NodeName.TASK_LIST_ITEM]: TaskListItemNodeSpec,

@@ -25,6 +25,7 @@ export * from './extension/inlineNodeWithContent';
 export * from './extension/link';
 export * from './extension/list';
 export * from './extension/markHolder';
+export * from './extension/nestedViewNode';
 export * from './extension/paragraph';
 export * from './extension/replacedTextMark';
 export * from './extension/subScript';

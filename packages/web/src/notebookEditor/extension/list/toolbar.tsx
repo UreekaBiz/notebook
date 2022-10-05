@@ -5,7 +5,7 @@ import { BsListTask } from 'react-icons/bs';
 import { MdFormatListBulleted } from 'react-icons/md';
 import { RiListOrdered } from 'react-icons/ri';
 
-import { getParentNode, isBulletListNode, isListItemContentNode, isNodeSelection, isOrderedListNode, isParagraphNode, isTaskListNode, NodeName, SelectionDepth, SetTextSelectionDocumentUpdate } from '@ureeka-notebook/web-service';
+import { getParentNode, isBulletListNode, isHeadingNode, isListItemContentNode, isNodeSelection, isOrderedListNode, isParagraphNode, isTaskListNode, NodeName, SelectionDepth, SetTextSelectionDocumentUpdate } from '@ureeka-notebook/web-service';
 
 import { applyDocumentUpdates } from 'notebookEditor/command/update';
 import { ToolItem } from 'notebookEditor/sidebar/toolbar/type';
@@ -32,8 +32,10 @@ export const orderedListToolItem: ToolItem = {
   shouldBeDisabled: (editor) => {
     const { selection } = editor.state;
     if(isNodeSelection(selection)) return true/*disabled*/;
-    if(isParagraphNode(selection.$anchor.parent) || isListItemContentNode(selection.$anchor.parent)) return false/*enabled*/;
-    /* else -- selection somewhere that does not allow bullet list */
+
+    const { parent } = selection.$anchor;
+    if(isParagraphNode(parent) || isHeadingNode(parent) || isListItemContentNode(parent)) return false/*enabled*/;
+    /* else -- selection somewhere that does not allow an OrderedList */
 
     return true/*disabled*/;
   },
@@ -55,9 +57,9 @@ export const bulletListToolItem: ToolItem = {
     const { selection } = editor.state;
     if(isNodeSelection(selection)) return true/*disabled*/;
 
-    // Only enable tool if the parent of the selected node is a paragraph node.
-    if(isParagraphNode(selection.$anchor.parent) || isListItemContentNode(selection.$anchor.parent)) return false/*enabled*/;
-    /* else -- selection somewhere that does not allow bullet list */
+    const { parent } = selection.$anchor;
+    if(isParagraphNode(parent) || isHeadingNode(parent) || isListItemContentNode(parent)) return false/*enabled*/;
+    /* else -- selection somewhere that does not allow a BulletList */
 
     return true/*disabled*/;
   },
@@ -78,8 +80,10 @@ export const taskListToolItem: ToolItem = {
   shouldBeDisabled: (editor) => {
     const { selection } = editor.state;
     if(isNodeSelection(selection)) return true/*disabled*/;
-    if(isParagraphNode(selection.$anchor.parent) || isListItemContentNode(selection.$anchor.parent)) return false/*enabled*/;
-    /* else -- selection somewhere that does not allow task list */
+
+    const { parent } = selection.$anchor;
+    if(isParagraphNode(parent) || isHeadingNode(parent) || isListItemContentNode(parent)) return false/*enabled*/;
+    /* else -- selection somewhere that does not allow a TaskList */
 
     return true/*disabled*/;
   },

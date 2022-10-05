@@ -10,6 +10,8 @@ import { demoAsyncNodeToolItem } from 'notebookEditor/extension/demoAsyncNode/to
 import { headingLevelToolItem } from 'notebookEditor/extension/heading/toolbar';
 import { imageToolItem } from 'notebookEditor/extension/image/toolbar';
 import { linkToolItem } from 'notebookEditor/extension/link/toolbar';
+import { editableInlineNodeWithContentToolItem } from 'notebookEditor/extension/nestedViewNode/editableInlineNodeWithContent/toolbar';
+import { nestedViewBlockNodeToolItem } from 'notebookEditor/extension/nestedViewNode/nestedViewBlockNode/toolbar';
 import { bulletListToolItem, orderedListToolItem, taskListToolItem } from 'notebookEditor/extension/list/toolbar';
 import { markStrikethrough } from 'notebookEditor/extension/strikethrough/toolbar';
 import { markSuperScript } from 'notebookEditor/extension/superScript/toolbar';
@@ -40,6 +42,8 @@ export const ParagraphToolbar: Toolbar = {
       linkToolItem,
     ],
     [
+      nestedViewBlockNodeToolItem,
+      editableInlineNodeWithContentToolItem,
       demo2AsyncNodeToolItem,
       demoAsyncNodeToolItem,
       codeBlockToolItem,

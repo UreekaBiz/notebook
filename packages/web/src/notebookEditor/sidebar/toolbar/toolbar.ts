@@ -13,6 +13,8 @@ import { ListItemToolbar } from 'notebookEditor/extension/list/listItem/toolbar'
 import { OrderedListToolbar } from 'notebookEditor/extension/list/orderedList/toolbar';
 import { TaskListToolbar } from 'notebookEditor/extension/list/taskList/toolbar';
 import { TaskListItemToolbar } from 'notebookEditor/extension/list/taskListItem/toolbar';
+import { EditableInlineNodeWithContentToolbar } from 'notebookEditor/extension/nestedViewNode/editableInlineNodeWithContent/toolbar';
+import { NestedViewBlockNodeToolbar } from 'notebookEditor/extension/nestedViewNode/nestedViewBlockNode/toolbar';
 import { ParagraphToolbar } from 'notebookEditor/extension/paragraph/toolbar';
 
 import { Toolbar } from './type';
@@ -27,12 +29,14 @@ const TOOLBAR_MAP: Record<NodeName | MarkName, Toolbar | null> = {
   [NodeName.DEMO_2_ASYNC_NODE]: Demo2AsyncNodeToolbar,
   [NodeName.DEMO_ASYNC_NODE]: DemoAsyncNodeToolbar,
   [NodeName.DOC]: DocumentToolbar,
+  [NodeName.EDITABLE_INLINE_NODE_WITH_CONTENT]: EditableInlineNodeWithContentToolbar,
   [NodeName.TEXT]: null/*none*/,
   [NodeName.HEADING]: HeadingToolbar,
   [NodeName.IMAGE]: ImageToolbar,
   [NodeName.LIST_ITEM]: ListItemToolbar,
   [NodeName.LIST_ITEM_CONTENT]: null/*none since User interacts with ListItem*/,
   [NodeName.MARK_HOLDER]: null/*none*/,
+  [NodeName.NESTED_VIEW_BLOCK_NODE]: NestedViewBlockNodeToolbar,
   [NodeName.ORDERED_LIST]: OrderedListToolbar,
   [NodeName.PARAGRAPH]: ParagraphToolbar/*none*/,
   [NodeName.TASK_LIST]: TaskListToolbar,

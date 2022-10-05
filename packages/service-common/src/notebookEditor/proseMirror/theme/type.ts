@@ -100,6 +100,7 @@ export const DefaultTheme: Theme = {
       [AttributeType.MarginBottom]: '0.5rem',
     },
     [NodeName.DEMO_ASYNC_NODE]: {/*no defined value*/},
+    [NodeName.EDITABLE_INLINE_NODE_WITH_CONTENT]: {/*no defined value*/},
     [NodeName.HEADING]: {
       [AttributeType.MarginLeft]: '4px',
       [AttributeType.MarginRight]: '4px',
@@ -118,6 +119,7 @@ export const DefaultTheme: Theme = {
     },
     [NodeName.LIST_ITEM_CONTENT]: {/*no defined value*/},
     [NodeName.MARK_HOLDER]: {/*no defined value*/},
+    [NodeName.NESTED_VIEW_BLOCK_NODE]: {/*no defined value*/},
     [NodeName.ORDERED_LIST]: {/*no defined value*/},
     [NodeName.PARAGRAPH]: {
       [AttributeType.Color]: '#000',
@@ -227,6 +229,7 @@ export const GoogleDocsTheme: Theme = {
       [AttributeType.MarginBottom]: '0.5rem',
     },
     [NodeName.DEMO_ASYNC_NODE]: {/*no defined value*/},
+    [NodeName.EDITABLE_INLINE_NODE_WITH_CONTENT]: {/*no defined value*/},
     [NodeName.HEADING]: {
       [AttributeType.MarginLeft]: '4px',
       [AttributeType.MarginBottom]: '0.25rem',
@@ -244,6 +247,7 @@ export const GoogleDocsTheme: Theme = {
     },
     [NodeName.LIST_ITEM_CONTENT]: {/*no defined value*/},
     [NodeName.MARK_HOLDER]: {/*no defined value*/},
+    [NodeName.NESTED_VIEW_BLOCK_NODE]: {/*no defined value*/},
     [NodeName.ORDERED_LIST]: {/*no defined value*/},
     [NodeName.PARAGRAPH]: {
       [AttributeType.FontSize]: '11pt',

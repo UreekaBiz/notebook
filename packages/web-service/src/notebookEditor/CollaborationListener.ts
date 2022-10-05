@@ -6,7 +6,7 @@ import { Step as ProseMirrorStep } from 'prosemirror-transform';
 
 import { distinctUntilChanged, BehaviorSubject } from 'rxjs';
 
-import { contentToJSONStep, generateClientIdentifier, getNodeName, isNodeSelection, sleep, AuthedUser, NotebookIdentifier, NotebookVersion, NotebookSchemaVersion, NotebookUserSession_Write, Unsubscribe, UserIdentifier, NO_NOTEBOOK_VERSION } from '@ureeka-notebook/service-common';
+import { contentToJSONStep, generateClientIdentifier, getNodeName, isNestedViewNode, isNodeSelection, sleep, AuthedUser, NotebookIdentifier, NotebookVersion, NotebookSchemaVersion, NotebookUserSession_Write, Unsubscribe, UserIdentifier, NO_NOTEBOOK_VERSION } from '@ureeka-notebook/service-common';
 
 import { getLogger, ServiceLogger } from '../logging/type';
 import { getEnvNumber } from '../util/environment';
@@ -350,7 +350,10 @@ export class CollaborationListener {
     //       NodeSelection is created from the previous position mapped through the
     //       Transaction from `collab`.
     const currentSelection = this.editor.state.selection;
-    if(isNodeSelection(currentSelection)) {
+    if(isNodeSelection(currentSelection)
+      // do not modify a Selection with a NestedViewNode, since the inner View of
+      // those Nodes should be always focused when they are selected
+      && !isNestedViewNode(currentSelection.node)) {
       // NOTE: creating a NodeSelection can throw an error if there is no Node to
       //       select. This can happen if the Node was removed.
       try {

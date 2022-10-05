@@ -27,6 +27,7 @@ export enum ExtensionName {
   INPUT_RULE = 'inputRule',
   // NOTE: not simply called 'keymap' since it's already used internally by Tiptap.
   KEYMAP = 'notebookKeymap',
+  NESTED_VIEW_NODE = 'nestedViewNode',
   NODEVIEW_REMOVAL = 'nodeViewRemoval',
   SET_DEFAULT_MARKS = 'setDefaultMarks',
 }
