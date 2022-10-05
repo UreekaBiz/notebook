@@ -32,9 +32,13 @@ export enum AttributeType {
   BackgroundColor = 'backgroundColor',
 
   // -- Text Style ----------------------------------------------------------------
-  FontSize = 'fontSize',
   Color = 'color',
+  FontFamily = 'fontFamily',
+  FontWeight = 'fontWeight',
+  FontSize = 'fontSize',
+  LineHeight = 'lineHeight',
   TextAlign = 'textAlign',
+  TextDecoration = 'textDecoration',
   VerticalAlign = 'verticalAlign',
 
   // -- Custom --------------------------------------------------------------------

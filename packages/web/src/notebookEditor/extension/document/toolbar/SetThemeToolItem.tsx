@@ -10,7 +10,7 @@ import { setThemeStylesheet } from 'notebookEditor/theme/theme';
 // ********************************************************************************
 // NOTE: Using directly DropdownTool instead of DropdownToolItem because this needs
 //       doesn't update an Attribute.
-const options: DropdownToolItemType[] = Object.entries(ThemeName).map(([key, value]) => ({ value, label: value }));
+const options: DropdownToolItemType[] = Object.entries(ThemeName).map(([key, value]) => ({ value, label: Themes[value].displayName }));
 
 interface Props extends EditorToolComponentProps {/*no additional*/}
 export const SetThemeToolItem: React.FC<Props> = () => {
