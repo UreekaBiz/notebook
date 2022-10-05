@@ -34,7 +34,7 @@ export const isNestedViewNode = (node: ProseMirrorNode): node is NestedViewNodeT
 // == Util ========================================================================
 /**
  * compute the length of the shown textString for
- * the given {@link EditableInlineNodeWithContentNodeType}
+ * the given NestedViewNode
  */
  export const getNestedViewNodeTextString = (node: EditableInlineNodeWithContentNodeType | NestedViewBlockNodeType) => {
   const { textContent } = node;
