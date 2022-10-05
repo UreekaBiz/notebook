@@ -209,7 +209,7 @@ export abstract class AbstractNestedNodeViewNodeController<NodeType extends Nest
 
     // request outer cursor position before Node was selected
     const maybePrevCursorPos = nestedViewNodePluginKey.getState(this.nodeView.outerView.state)?.prevCursorPos;
-    if(maybePrevCursorPos === undefined/*explicit check since it can be 0*/) console.warn('unable to get EditableInlineNodeWithContentPluginState from key');
+    if(maybePrevCursorPos === undefined/*explicit check since it can be 0*/) console.warn('unable to get NestedViewNode plugin state from key');
 
     // compute the position that the cursor should appear in the expanded Node
     const prevCursorPos: number = maybePrevCursorPos ?? 0/*set at the start of the Node by default*/;
