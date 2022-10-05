@@ -1,11 +1,11 @@
 import { Node } from '@tiptap/core';
 
-import { getNodeOutputSpec, isNestedViewBlockNode, AttributeType, NestedViewBlockNodeSpec, NodeName, SetAttributeType, DATA_NODE_TYPE } from '@ureeka-notebook/web-service';
+import { getNodeOutputSpec, isNestedViewBlockNode, AttributeType, NestedViewBlockNodeSpec, NodeName, DATA_NODE_TYPE } from '@ureeka-notebook/web-service';
 
 import { NodeViewStorage } from 'notebookEditor/model/NodeViewStorage';
 import { NoOptions } from 'notebookEditor/model/type';
 
-import { setAttributeParsingBehavior, uniqueIdParsingBehavior } from '../../util/attribute';
+import { uniqueIdParsingBehavior } from '../../util/attribute';
 import { NestedViewBlockNodeController, NestedViewBlockNodeStorageType } from './nodeView/controller';
 import { insertAndSelectNestedViewBlockNode } from './util';
 
@@ -19,16 +19,6 @@ export const NestedViewBlockNode = Node.create<NoOptions, NestedViewBlockNodeSto
     return {
       // Creates a new id for the node when it is created.
       [AttributeType.Id]: uniqueIdParsingBehavior(this.storage),
-
-      [AttributeType.PaddingTop]: setAttributeParsingBehavior(AttributeType.PaddingTop, SetAttributeType.STRING),
-      [AttributeType.PaddingBottom]: setAttributeParsingBehavior(AttributeType.PaddingBottom, SetAttributeType.STRING),
-      [AttributeType.PaddingLeft]: setAttributeParsingBehavior(AttributeType.PaddingLeft, SetAttributeType.STRING),
-      [AttributeType.PaddingRight]: setAttributeParsingBehavior(AttributeType.PaddingRight, SetAttributeType.STRING),
-
-      [AttributeType.MarginTop]: setAttributeParsingBehavior(AttributeType.MarginTop, SetAttributeType.STRING),
-      [AttributeType.MarginLeft]: setAttributeParsingBehavior(AttributeType.MarginLeft, SetAttributeType.STRING),
-      [AttributeType.MarginBottom]: setAttributeParsingBehavior(AttributeType.MarginBottom, SetAttributeType.STRING),
-      [AttributeType.MarginRight]: setAttributeParsingBehavior(AttributeType.MarginRight, SetAttributeType.STRING),
     };
   },
 
