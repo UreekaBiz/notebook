@@ -153,10 +153,10 @@ export abstract class AbstractNestedNodeViewNodeController<NodeType extends Nest
         doc: this.node,
         plugins: [keymap(
           {
-            'ArrowDown': nestedViewNodeBehaviorCommand(this.nodeView.outerView, this.node.type.name, +1/*place cursor after the Node*/, true/*requireOnBorder*/),
-            'ArrowLeft': nestedViewNodeBehaviorCommand(this.nodeView.outerView, this.node.type.name, -1/*place cursor before the Node*/, true/*requireOnBorder*/),
-            'ArrowRight': nestedViewNodeBehaviorCommand(this.nodeView.outerView, this.node.type.name, +1/*place cursor after the Node*/, true/*requireOnBorder*/),
-            'ArrowUp': nestedViewNodeBehaviorCommand(this.nodeView.outerView, this.node.type.name, -1/*place cursor before the Node*/, true/*requireOnBorder*/),
+            'ArrowDown': nestedViewNodeBehaviorCommand(this.nodeView.outerView, this.node.type.name, 'after'/*place cursor after the Node*/, true/*requireOnBorder*/),
+            'ArrowLeft': nestedViewNodeBehaviorCommand(this.nodeView.outerView, this.node.type.name, 'before'/*place cursor before the Node*/, true/*requireOnBorder*/),
+            'ArrowRight': nestedViewNodeBehaviorCommand(this.nodeView.outerView, this.node.type.name, 'after'/*place cursor after the Node*/, true/*requireOnBorder*/),
+            'ArrowUp': nestedViewNodeBehaviorCommand(this.nodeView.outerView, this.node.type.name, 'before'/*place cursor before the Node*/, true/*requireOnBorder*/),
 
             'Backspace': (state: EditorState, dispatch: ((tr: Transaction) => void) | undefined) => {
               if(!dispatch) return false/*nothing to do*/;
@@ -183,9 +183,9 @@ export abstract class AbstractNestedNodeViewNodeController<NodeType extends Nest
               return true/*handled*/;
             },
 
-            'Shift-Enter': nestedViewNodeBehaviorCommand(this.nodeView.outerView, this.node.type.name, +1/*place cursor after the Node*/, false/*do not requireOnBorder*/),
+            'Shift-Enter': nestedViewNodeBehaviorCommand(this.nodeView.outerView, this.node.type.name, 'after'/*place cursor after the Node*/, false/*do not requireOnBorder*/),
 
-            'Enter': chainCommands(newlineInCode, nestedViewNodeBehaviorCommand(this.nodeView.outerView, this.node.type.name, +1/*place cursor after the Node*/, false/*do not requireOnBorder*/)),
+            'Enter': chainCommands(newlineInCode, nestedViewNodeBehaviorCommand(this.nodeView.outerView, this.node.type.name, 'after'/*place cursor after the Node*/, false/*do not requireOnBorder*/)),
 
             // bind undo and redo to the outer View, since Transactions in the inner View
             // ensure that the outer one reflects them appropriately
