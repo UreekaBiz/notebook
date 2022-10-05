@@ -32,9 +32,17 @@ export const ImageBorderToolItem: React.FC<Props> = ({ editor, depth }) => {
   let colorValue = node.attrs[AttributeType.BorderColor],
       borderWeightValue = node.attrs[AttributeType.BorderWidth],
       borderDashValue = node.attrs[AttributeType.BorderStyle];
-  isBlank(colorValue) || colorValue === undefined ? colorValue = DEFAULT_IMAGE_BORDER_COLOR : colorValue/*don't change*/;
-  isBlank(borderWeightValue) || borderWeightValue === undefined ? borderWeightValue = DEFAULT_IMAGE_BORDER_WIDTH : borderWeightValue/*don't change*/;
-  isBlank(borderDashValue) || borderDashValue === undefined ? borderDashValue = DEFAULT_IMAGE_BORDER_STYLE : borderDashValue/*don't change*/;
+
+  if(blankOrUndefined(colorValue)) {
+    colorValue = DEFAULT_IMAGE_BORDER_COLOR;
+  } /* else -- do not change */
+  if(blankOrUndefined(borderWeightValue)) {
+    borderWeightValue = DEFAULT_IMAGE_BORDER_WIDTH;
+  } /* else -- do not change */
+  if(blankOrUndefined(borderDashValue)) {
+    borderDashValue = DEFAULT_IMAGE_BORDER_STYLE;
+  } /* else -- do not change */
+
   return (
     <Box>
       <ColorPickerTool
@@ -61,3 +69,6 @@ export const ImageBorderToolItem: React.FC<Props> = ({ editor, depth }) => {
     </Box>
   );
 };
+
+// == Util ========================================================================
+const blankOrUndefined = (value: string | undefined): value is undefined => isBlank(value) || value === undefined;
