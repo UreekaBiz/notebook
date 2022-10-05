@@ -20,7 +20,10 @@ export const NestedViewBlockNodeSpec: NodeSpec = {
 
   atom: true/*this Node counts as a single unit within the View*/,
   code: true/*this Node's content should be treated as code*/,
-  content: `${NodeName.TEXT}*`,
+
+  // EINwC's that are pasted or put inside the NVBN will be turned into Text Nodes
+  content: `(${NodeName.TEXT}|${NodeName.EDITABLE_INLINE_NODE_WITH_CONTENT})*`,
+
   draggable: false,
   group: NodeGroup.BLOCK,
   marks: '_'/*all marks allowed*/,
