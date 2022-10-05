@@ -43,14 +43,19 @@ This is the list of keyboard shortcuts that is built into the Notebook Editor.
 | <kbd>cmd</kbd><kbd>X</kbd>                                  | Cut the selected text or nodes from the editor                 |
 | <kbd>cmd</kbd><kbd>Shift</kbd><kbd>Arrow Keys</kbd>         | Select the corresponding text or nodes with the arrow keys     |
 | <kbd>cmd</kbd><kbd>option</kbd><kbd>0</kbd>                 | Toggle a Paragraph Node                                        |
-| <kbd>cmd</kbd><kbd>option</kbd><kbd>1</kbd>                 | Toggle a Heading1 Node                                         |
-| <kbd>cmd</kbd><kbd>option</kbd><kbd>2</kbd>                 | Toggle a Heading2 Node                                         |
-| <kbd>cmd</kbd><kbd>option</kbd><kbd>3</kbd>                 | Toggle a Heading3 Node                                         |
-| <kbd>cmd</kbd><kbd>shift</kbd><kbd>Option</kbd><kbd>I</kbd> | Toggle an Image Node                                           |
+| <kbd>cmd</kbd><kbd>option</kbd><kbd>1</kbd>                 | Toggle a Heading 1 Node                                        |
+| <kbd>cmd</kbd><kbd>option</kbd><kbd>2</kbd>                 | Toggle a Heading 2 Node                                        |
+| <kbd>cmd</kbd><kbd>option</kbd><kbd>3</kbd>                 | Toggle a Heading 3 Node                                        |
+| <kbd>cmd</kbd><kbd>option</kbd><kbd>4</kbd>                 | Toggle a Heading 4 Node                                        |
+| <kbd>cmd</kbd><kbd>option</kbd><kbd>5</kbd>                 | Toggle a Heading 5 Node                                        |
+| <kbd>cmd</kbd><kbd>option</kbd><kbd>6</kbd>                 | Toggle a Heading 6 Node                                        |
+| <kbd>cmd</kbd><kbd>shift</kbd><kbd>B</kbd>                  | Insert a Nested View Block Node                                |
+| <kbd>cmd</kbd><kbd>shift</kbd><kbd>Option</kbd><kbd>I</kbd> | Insert an Image Node                                           |
 | <kbd>cmd</kbd><kbd>shift</kbd><kbd>C</kbd>                  | Toggle a CodeBlock Node                                        |
 | <kbd>cmd</kbd><kbd>shift</kbd><kbd>Option</kbd><kbd>C</kbd> | Insert a CodeBlockReference Node                               |
 | <kbd>cmd</kbd><kbd>shift</kbd><kbd>D</kbd>                  | Insert and select a DemoAsyncNode                              |
 | <kbd>cmd</kbd><kbd>shift</kbd><kbd>Option</kbd><kbd>D</kbd> | Insert a Demo2AsyncNode and place cursor inside                |
+| <kbd>cmd</kbd><kbd>shift</kbd><kbd>E</kbd>                  | Insert an Editable Inline Node with Content                    |
 | <kbd>shift</kbd><kbd>enter</kbd>                            | (When inside a CodeBlock Node), insert a Paragraph Node below  |
 | <kbd>ctrl</kbd><kbd>option</kbd><kbd>,</kbd>                | Preview Published Notebook                                     |
 | <kbd>ctrl</kbd><kbd>option</kbd><kbd>,</kbd>                | Toggle Development Mode                                        |
