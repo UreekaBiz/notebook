@@ -32,6 +32,9 @@ interface Props {
   /** placeholder */
   placeholder?: string;
 
+  /** keep the focus on the ChipTool when a value is added. Defaults to true */
+  keepFocus?: boolean;
+
   /** callback to be called to validate if the chip label is valid.*/
   validate: (label: string) => boolean;
   onAddValue: (label: string, focus?: boolean) => void;
@@ -39,7 +42,7 @@ interface Props {
   onChipClick?: (chip: ChipValue, index: number) => void;
 }
 
-export const ChipTool: React.FC<Props> = ({ nodeId, value, maxValues, isDraggable = true, allowDuplicates = false, validate, placeholder, onAddValue, onChange, onChipClick }) => {
+export const ChipTool: React.FC<Props> = ({ nodeId, value, maxValues, isDraggable = true, allowDuplicates = false, validate, placeholder, keepFocus = true, onAddValue, onChange, onChipClick }) => {
   // == State =====================================================================
   const [inputValue, setInputValue] = useState('');
 
@@ -58,7 +61,7 @@ export const ChipTool: React.FC<Props> = ({ nodeId, value, maxValues, isDraggabl
     setInputValue('');
 
     if(maxValues !== undefined && maxValues >= 0 && value.length >= maxValues) return/*max values reached*/;
-    onAddValue(inputValue, event.code === 'Enter'/*focus on Enter*/);
+    onAddValue(inputValue, !keepFocus && event.code === 'Enter'/*focus on Enter*/);
   };
 
   // -- Chips ---------------------------------------------------------------------
