@@ -64,7 +64,6 @@ export const LinkMarkRendererSpec: MarkRendererSpec<LinkAttributes> = {
   render: {
     [ACTIONABLE_NODE]: ''/*add actionable style*/,
     rel: 'noopener noreferrer nofollow'/*for general link sanity*/,
-    style: 'text-decoration: underline;',
   },
 
   attributes: {/*use default renderer*/},

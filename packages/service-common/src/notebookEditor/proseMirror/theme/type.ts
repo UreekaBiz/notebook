@@ -148,6 +148,7 @@ export const DefaultTheme: Theme = {
     [MarkName.ITALIC]:  {/*no defined value*/},
     [MarkName.LINK]:  {
       [AttributeType.Color]: '#1a73e8',
+      [AttributeType.TextDecoration]: 'underline',
     },
     [MarkName.REPLACED_TEXT_MARK]:  {/*no defined value*/},
     [MarkName.STRIKETHROUGH]:  {/*no defined value*/},
@@ -191,7 +192,7 @@ export const DefaultTheme: Theme = {
 
 export const GoogleDocsTheme: Theme = {
   name: ThemeName.GoogleDocs/*expected and guaranteed to be unique*/,
-  displayName: 'Default',
+  displayName: 'Google Docs',
 
   nodes: {
     [NodeName.BULLET_LIST]: {/*no defined value*/},
@@ -274,6 +275,7 @@ export const GoogleDocsTheme: Theme = {
     [MarkName.ITALIC]:  {/*no defined value*/},
     [MarkName.LINK]:  {
       [AttributeType.Color]: '#1a73e8',
+      [AttributeType.TextDecoration]: 'underline',
     },
     [MarkName.REPLACED_TEXT_MARK]:  {/*no defined value*/},
     [MarkName.STRIKETHROUGH]: {/*no defined value*/},

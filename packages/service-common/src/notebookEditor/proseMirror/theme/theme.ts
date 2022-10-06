@@ -78,6 +78,8 @@ class NotebookEditorTheme {
   }
 }
 // singleton class to manage the Theme
+// TODO: Initialize the theme without a default value since the value will be set
+//       by the user.
 export const notebookEditorTheme = new NotebookEditorTheme(DefaultTheme);
 
 // ================================================================================
