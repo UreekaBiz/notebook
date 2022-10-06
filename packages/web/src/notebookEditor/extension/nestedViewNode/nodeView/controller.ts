@@ -289,6 +289,7 @@ const selectAllInsideNestedView = (state: EditorState, dispatch: ((tr: Transacti
 
   const { tr } = state;
   const { parentStart, parentEnd } = computeInnerViewSelection(state);
+  if(tr.selection.from === parentStart && tr.selection.to === parentEnd) return false/*already selected all inside this NestedViewNode*/;
 
   tr.setSelection(TextSelection.create(tr.doc, parentStart, parentEnd));
   dispatch(tr);
