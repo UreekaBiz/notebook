@@ -81,7 +81,6 @@ export {
   DEFAULT_DEMO_ASYNC_NODE_TEXT,
 
   createEditableInlineNodeWithContent,
-  DEFAULT_EDITABLE_INLINE_NODE_WITH_CONTENT_TEXT,
   EditableInlineNodeWithContentAttributes,
 
   HeadingLevel,
