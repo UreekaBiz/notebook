@@ -75,19 +75,20 @@ export class InsertNestedViewNodeDocumentUpdate implements AbstractDocumentUpdat
  *
  * @param outerView The main EditorView containing this Node
  *
- * @param closeNodeCursorPos
- * the desired cursor position upon closing this Node
+ * @param closeNodeCursorPos the desired cursor position upon closing this Node
  *
- * @param requireOnBorder An exit condition based on cursor position and direction
- * that collapses the inner View only when the cursor is
- * about to leave the bounds of the Node
+ * @param wouldLeaveInnerView whether the inner View of the Nested View Node
+ * would be left after changing the Cursor given the key that was pressed
  *
- * @param requireEmptySelection if true, exit the node only if the inner
- *                              Selection is empty
  */
-export const nestedViewNodeBehaviorCommand = (outerView: EditorView, nodeName: string,  closeNodeCursorPos: 'before' | 'after', requireOnBorder: boolean, requireEmptySelection: boolean = true/*default only leave Node if Selection empty*/): NestedViewCommand => (state, dispatch) => {
+export const nestedViewNodeBehaviorCommand = (
+  outerView: EditorView,
+  nodeName: string,
+  closeNodeCursorPos: 'before' | 'after',
+  wouldLeaveInnerView: boolean
+): NestedViewCommand => (state, dispatch) => {
   // (SEE: NOTE below)
-  const updatedTransactions = new NestedViewNodeBehaviorDocumentUpdate(outerView, nodeName, closeNodeCursorPos, requireOnBorder, requireEmptySelection).update(state, state.tr);
+  const updatedTransactions = new NestedViewNodeBehaviorDocumentUpdate(outerView, nodeName, closeNodeCursorPos, wouldLeaveInnerView).update(state, state.tr);
   if(dispatch && updatedTransactions) {
     const { innerViewTr, outerViewTr } = updatedTransactions;
 
@@ -106,7 +107,12 @@ export const nestedViewNodeBehaviorCommand = (outerView: EditorView, nodeName: s
 //       to return an updated Transaction for both the inner View and the
 //       outer View of the Node
 export class NestedViewNodeBehaviorDocumentUpdate {
-  public constructor(private readonly outerView: EditorView, private readonly nodeName: string, private readonly dir: 'before' | 'after', private readonly requireOnBorder: boolean, private readonly requireEmptySelection: boolean = true/*default only leave Node if Selection empty*/) {/*nothing additional*/}
+  public constructor(
+    private readonly outerView: EditorView,
+    private readonly nodeName: string,
+    private readonly closeNodeCursorPos: 'before' | 'after',
+    private readonly wouldLeaveInnerSelection: boolean
+  ) {/*nothing additional*/}
 
   /**
    * modify the given Transaction such that the inner state of an
@@ -118,20 +124,11 @@ export class NestedViewNodeBehaviorDocumentUpdate {
   public update(editorState: EditorState, tr: Transaction) {
 		// get Selections from both Views
 		const outerState: EditorState = this.outerView.state;
-		let { to : outerTo, from : outerFrom } = outerState.selection;
-		let { to : innerTo, from : innerFrom } = editorState.selection;
+		const { from : outerFrom, to : outerTo } = outerState.selection;
+		const { empty: innerViewSelectionEmpty } = editorState.selection;
 
-		if(this.requireEmptySelection && innerTo !== innerFrom) return false/*only exit Node if Selection is empty*/;
-		const currentPos: number = (this.dir === 'after') ? innerTo : innerFrom;
-
-    // if requireOnBorder, collapse only when the cursor is about
-    // to leave the bounds of the Node
-		if(this.requireOnBorder) {
-			const nodeSize = editorState.doc.nodeSize - 2/*account for start and end of Node*/;
-
-			if(this.dir === 'after' && currentPos < nodeSize) return false/*exit conditions not met*/;
-			if(this.dir === 'before' && currentPos > 0) return false/*exit conditions not met*/;
-		} /* else -- no need to check for border exit condition */
+		if(!innerViewSelectionEmpty) return false/*only exit Node if Selection is empty*/;
+    if(!this.wouldLeaveInnerSelection) return false/*let the inner View handle the Event*/;
 
 		// close the Node by moving the cursor outside,
     // setting the outer View's Selection to be outside of the inner View
@@ -142,18 +139,15 @@ export class NestedViewNodeBehaviorDocumentUpdate {
     //       2. is a GapCursor Selection if there is no NodeBefore or NodeAfter
     //       3. considers the case where a GapCursor Selection must be set
     //          in between consecutive NodeViewBlockNodes
-    const targetPos: number = (this.dir === 'before') ? outerFrom : outerTo;
+    const targetPos: number = (this.closeNodeCursorPos === 'before') ? outerFrom : outerTo;
     const { tr: outerViewTr } = outerState;
     outerViewTr.setSelection(TextSelection.create(outerState.doc, targetPos))/*default*/;
 
     if(this.nodeName === NodeName.EDITABLE_INLINE_NODE_WITH_CONTENT) {
-      return {
-        innerViewTr: tr,
-        outerViewTr,
-      };
+      return { innerViewTr: tr, outerViewTr };
     } /* else -- need to perform special checks */
 
-    if(this.dir === 'before') {
+    if(this.closeNodeCursorPos === 'before') {
       const nodeBefore = outerViewTr.selection.$anchor.nodeBefore;
       if(!nodeBefore || isNestedViewBlockNode(nodeBefore)) {
         outerViewTr.setSelection(new GapCursor(outerState.tr.doc.resolve(targetPos)));
@@ -174,10 +168,7 @@ export class NestedViewNodeBehaviorDocumentUpdate {
       } /* else -- GapCursor will work as expected */
     }
 
-    return {
-      innerViewTr: tr,
-      outerViewTr,
-    };
+    return { innerViewTr: tr, outerViewTr };
   }
 }
 
