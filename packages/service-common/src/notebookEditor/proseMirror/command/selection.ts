@@ -95,8 +95,9 @@ export class SelectBlockNodeContentDocumentUpdate implements AbstractDocumentUpd
     if($from.parent.textContent.length < 1) return false/*nothing to Select*/;
 
     const { from, to } = getBlockNodeRange(tr.selection);
-    tr.setSelection(TextSelection.create(tr.doc, from, to));
+    if(tr.selection.from === from && tr.selection.to === to) return false/*already selected all inside this Block*/;
 
+    tr.setSelection(TextSelection.create(tr.doc, from, to));
     return tr/*updated*/;
   }
 }
