@@ -1,7 +1,7 @@
 import { Attribute, Editor } from '@tiptap/core';
 import { Node as ProseMirrorNode } from 'prosemirror-model';
 
-import { generateNodeId, getHeadingThemeValue, getMarkValue, getNodeName, getSelectedNode, getThemeValue, isHeadingNode, isTextNode, mergeAttributeValues, AttributeType, HeadingLevel, InvalidMergedAttributeValue, MarkName, MergedAttributeValue, SetAttributeType } from '@ureeka-notebook/web-service';
+import { generateNodeId, getHeadingThemeValue, getMarkValue, getNodeName, getSelectedNode, getThemeValue, isHeadingNode, isNumber, isTextNode, mergeAttributeValues, AttributeType, HeadingLevel, InvalidMergedAttributeValue, MarkName, MergedAttributeValue, SetAttributeType } from '@ureeka-notebook/web-service';
 
 import { NodeViewStorage } from 'notebookEditor/model/NodeViewStorage';
 
@@ -16,7 +16,7 @@ import { NodeViewStorage } from 'notebookEditor/model/NodeViewStorage';
  * @returns The {@link Attribute} spec object that defines the parsing behavior of the {@link Attribute}
  */
 export const setAttributeParsingBehavior = (name: string, type: SetAttributeType,  defaultValue?: string | string[] | boolean | number | undefined): Attribute => {
-  let parseHTML: (element: HTMLElement) => string | string[] | boolean | number | null = (element: HTMLElement) => element.getAttribute(name);
+  let parseHTML: (element: HTMLElement) => string | string[] | boolean | number | null | undefined = (element: HTMLElement) => element.getAttribute(name);
 
   switch(type) {
     case SetAttributeType.STRING:
@@ -29,7 +29,12 @@ export const setAttributeParsingBehavior = (name: string, type: SetAttributeType
       };
       break;
     case SetAttributeType.NUMBER:
-      parseHTML = (element: HTMLElement) => Number(element.getAttribute(name));
+      parseHTML = (element: HTMLElement) => {
+        const value = element.getAttribute(name);
+        if(value == null || isNumber(value)) return undefined/*no value*/;
+
+        return Number(value);
+      };
       break;
     case SetAttributeType.ARRAY:
       parseHTML = (element: HTMLElement) => {
@@ -101,7 +106,7 @@ export const getTextDOMRenderedValue = (editor: Editor, attributeType: Attribute
       const attributeValue = getDOMNodeRenderedValue(node, attributeType);
       mergedValue = mergeAttributeValues(mergedValue, attributeValue);
       return/*nothing else to do*/;
-    } /* else -- node is a TextNode */
+    } // else -- node is a TextNode
 
     // Marks are applied to TextNodes only, get the Attribute value form the Mark.
     const markValue = markType ? getMarkValue(node, markType, attributeType) : undefined/*no mark value*/;
@@ -109,7 +114,7 @@ export const getTextDOMRenderedValue = (editor: Editor, attributeType: Attribute
     if(markValue !== undefined) {
       mergedValue = mergeAttributeValues(mergedValue, markValue);
       return/*nothing else to do*/;
-    } /* else -- no value was found for the given Mark */
+    } // else -- no value was found for the given Mark */
 
     // TextNode will inherit the vale of the parent Node, use its attribute
     // value instead.
