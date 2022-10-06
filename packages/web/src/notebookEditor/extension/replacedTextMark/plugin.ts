@@ -1,7 +1,7 @@
 import { Plugin } from 'prosemirror-state';
 import { EditorView } from 'prosemirror-view';
 
-import { getReplacedTextMarkMarkType } from '@ureeka-notebook/web-service';
+import { getReplacedTextMarkMarkType, isGapCursorSelection } from '@ureeka-notebook/web-service';
 
 // == Plugin ======================================================================
 export const ReplacedTextMarkPlugin = () => new Plugin({
@@ -12,6 +12,9 @@ export const ReplacedTextMarkPlugin = () => new Plugin({
     // content is inserted inside text within a ReplacedTextMark,
     // the Mark will be splitted into two
     handleTextInput: (view: EditorView, from: number, to: number, text: string) => {
+      // prevent incorrect resulting Selection behavior when coming from GapCursor Selection
+      if(isGapCursorSelection(view.state.selection)) return false/*let PM handle the event*/;
+
       const { dispatch, state } = view;
       const { tr } = state;
       const replacedNodeMarkType = getReplacedTextMarkMarkType(view.state.schema);

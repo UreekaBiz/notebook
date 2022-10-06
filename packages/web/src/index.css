@@ -188,10 +188,10 @@ ul[data-node-type="taskList"] > li > label {
 
 /* == Nested View Nodes ======================================================== */
 /* -- Shared Styles ------------------------------------------------------------ */
+/* default styles for both Nodes */
 /* .. General View ............................................................. */
 [data-node-type="nestedViewBlockNode"],
 [data-node-type="editableInlineNodeWithContent"] {
-  /* default styles for both Nodes */
   font-size: 1em;
   font-weight: bold;
   font-family: 'Courier New', Courier, monospace;

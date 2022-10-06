@@ -215,7 +215,7 @@ export abstract class AbstractNestedNodeViewNodeController<NodeType extends Nest
     const prevCursorPos: number = maybePrevCursorPos ?? 0/*set at the start of the Node by default*/;
 
     let innerViewPos = this.node.nodeSize - 2/*set the selection at the end of the Node by default*/;
-    if(prevCursorPos < this.getPos()) {
+    if(prevCursorPos <= this.getPos()) {
       innerViewPos = 0;
     } /* else -- no need to modify the innerView position */
 

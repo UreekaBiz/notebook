@@ -115,9 +115,9 @@ export abstract class AbstractNestedViewNodeView<NodeType extends NestedViewNode
         this.renderDisplayContainer.firstChild.remove();
       }
       return/*nothing left to do*/;
-		} else {
-			this.dom.classList.remove(NESTED_VIEW_NODE_EMPTY_NODE_CLASS);
-		}
+		} /* else -- not empty */
+
+    this.dom.classList.remove(NESTED_VIEW_NODE_EMPTY_NODE_CLASS);
 
     // show the default representation of the content of this Node
     this.renderDisplayContainer.firstChild?.remove();
