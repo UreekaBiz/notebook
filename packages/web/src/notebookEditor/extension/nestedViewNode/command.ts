@@ -2,7 +2,7 @@ import { GapCursor } from 'prosemirror-gapcursor';
 import { EditorState, NodeSelection, TextSelection, Transaction } from 'prosemirror-state';
 import { EditorView } from 'prosemirror-view';
 
-import { createEditableInlineNodeWithContent, isEditableInlineNodeWithContentNode, isNestedViewBlockNode, isNodeSelection, isTextSelection, AbstractDocumentUpdate, CreateBlockNodeDocumentUpdate, NodeName, EditableInlineNodeWithContentAttributes, DEFAULT_EDITABLE_INLINE_NODE_WITH_CONTENT_TEXT } from '@ureeka-notebook/web-service';
+import { createEditableInlineNodeWithContent, isEditableInlineNodeWithContentNode, isNestedViewBlockNode, isNodeSelection, isTextSelection, AbstractDocumentUpdate, CreateBlockNodeDocumentUpdate, NodeName, EditableInlineNodeWithContentAttributes } from '@ureeka-notebook/web-service';
 
 // ********************************************************************************
 // == Type ========================================================================
@@ -35,7 +35,7 @@ export class InsertNestedViewNodeDocumentUpdate implements AbstractDocumentUpdat
     const fromIndex = $from.index();
 
     if(this.nodeName === NodeName.EDITABLE_INLINE_NODE_WITH_CONTENT) {
-      const newNode = createEditableInlineNodeWithContent(editorState.schema, this.attributes, editorState.schema.text(DEFAULT_EDITABLE_INLINE_NODE_WITH_CONTENT_TEXT));
+      const newNode = createEditableInlineNodeWithContent(editorState.schema, this.attributes);
       if(!$from.parent.canReplaceWith(fromIndex, fromIndex, newNode.type)) return false/*cannot replace at index with Node of this type*/;
 
       tr.replaceSelectionWith(newNode)

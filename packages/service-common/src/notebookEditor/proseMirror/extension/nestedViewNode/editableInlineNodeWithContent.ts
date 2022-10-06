@@ -54,7 +54,3 @@ export const createEditableInlineNodeWithContent = (schema: NotebookSchemaType, 
 // -- JSON Node Type --------------------------------------------------------------
 export type EditableInlineNodeWithContentJSONNodeType = JSONNode<EditableInlineNodeWithContentAttributes> & { type: NodeName.EDITABLE_INLINE_NODE_WITH_CONTENT; };
 export const isEditableInlineNodeWithContentJSONNode = (node: JSONNode): node is EditableInlineNodeWithContentJSONNodeType => node.type === NodeName.EDITABLE_INLINE_NODE_WITH_CONTENT;
-
-// == Util ========================================================================
-// .. Attribute ...................................................................
-export const DEFAULT_EDITABLE_INLINE_NODE_WITH_CONTENT_TEXT = 'Default EINwC Text';
