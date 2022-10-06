@@ -34,9 +34,8 @@ export class InsertNestedViewNodeDocumentUpdate implements AbstractDocumentUpdat
     const { $from } = editorState.selection;
     const fromIndex = $from.index();
 
-    let newNode = editorState.doc/*default*/;
     if(this.nodeName === NodeName.EDITABLE_INLINE_NODE_WITH_CONTENT) {
-      newNode = createEditableInlineNodeWithContent(editorState.schema, this.attributes, editorState.schema.text(DEFAULT_EDITABLE_INLINE_NODE_WITH_CONTENT_TEXT));
+      const newNode = createEditableInlineNodeWithContent(editorState.schema, this.attributes, editorState.schema.text(DEFAULT_EDITABLE_INLINE_NODE_WITH_CONTENT_TEXT));
       if(!$from.parent.canReplaceWith(fromIndex, fromIndex, newNode.type)) return false/*cannot replace at index with Node of this type*/;
 
       tr.replaceSelectionWith(newNode)

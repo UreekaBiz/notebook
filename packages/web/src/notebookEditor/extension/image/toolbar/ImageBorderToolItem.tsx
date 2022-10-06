@@ -1,6 +1,6 @@
 import { Box } from '@chakra-ui/react';
 
-import { isBlank, isImageNode, isNodeSelection, AttributeType, BorderStyle, NodeName, SetNodeSelectionDocumentUpdate, UpdateAttributesDocumentUpdate, DEFAULT_IMAGE_BORDER_COLOR, DEFAULT_IMAGE_BORDER_STYLE, DEFAULT_IMAGE_BORDER_WIDTH } from '@ureeka-notebook/web-service';
+import { isImageNode, isNodeSelection, AttributeType, BorderStyle, NodeName, SetNodeSelectionDocumentUpdate, UpdateAttributesDocumentUpdate, DEFAULT_IMAGE_BORDER_COLOR } from '@ureeka-notebook/web-service';
 
 import { applyDocumentUpdates } from 'notebookEditor/command/update';
 import { EditorToolComponentProps } from 'notebookEditor/sidebar/toolbar/type';
@@ -29,25 +29,13 @@ export const ImageBorderToolItem: React.FC<Props> = ({ editor, depth }) => {
 
   // == UI ========================================================================
   const { node } = selection;
-  let colorValue = node.attrs[AttributeType.BorderColor],
-      borderWeightValue = node.attrs[AttributeType.BorderWidth],
-      borderDashValue = node.attrs[AttributeType.BorderStyle];
-
-  if(blankOrUndefined(colorValue)) {
-    colorValue = DEFAULT_IMAGE_BORDER_COLOR;
-  } /* else -- do not change */
-  if(blankOrUndefined(borderWeightValue)) {
-    borderWeightValue = DEFAULT_IMAGE_BORDER_WIDTH;
-  } /* else -- do not change */
-  if(blankOrUndefined(borderDashValue)) {
-    borderDashValue = DEFAULT_IMAGE_BORDER_STYLE;
-  } /* else -- do not change */
+  let colorValue = node.attrs[AttributeType.BorderColor];
 
   return (
     <Box>
       <ColorPickerTool
         name='Border Color'
-        value={colorValue}
+        value={colorValue ?? DEFAULT_IMAGE_BORDER_COLOR}
         onChange={handleBorderColorChange}
         colors={textColors}
       />
@@ -69,6 +57,3 @@ export const ImageBorderToolItem: React.FC<Props> = ({ editor, depth }) => {
     </Box>
   );
 };
-
-// == Util ========================================================================
-const blankOrUndefined = (value: string | undefined): value is undefined => isBlank(value) || value === undefined;
