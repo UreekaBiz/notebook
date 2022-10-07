@@ -1,4 +1,4 @@
-import { Fragment, Node as ProseMirrorNode, ResolvedPos, Slice } from 'prosemirror-model';
+import { ContentMatch, Fragment, Node as ProseMirrorNode, ResolvedPos, Slice } from 'prosemirror-model';
 import { EditorState, Selection } from 'prosemirror-state';
 import { canJoin, liftTarget, ReplaceAroundStep } from 'prosemirror-transform';
 
@@ -11,6 +11,18 @@ export const textblockAt = (node: ProseMirrorNode, side: 'start' | 'end', onlyOn
     if(onlyOneChild && scannedNode.childCount !== 1) return false/*default*/;
   }
   return false/*default*/;
+};
+
+// ................................................................................
+export const defaultBlockAt = (match: ContentMatch) => {
+  for(let i=0; i<match.edgeCount; i++) {
+    const { type } = match.edge(i);
+    if(type.isTextblock && !type.hasRequiredAttrs()) {
+      return type;
+    } /* else -- keep looking */
+  }
+
+  return undefined/*no default Block found*/;
 };
 
 // ................................................................................
