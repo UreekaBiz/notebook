@@ -62,8 +62,8 @@ export abstract class AbstractNestedNodeViewNodeController<NodeType extends Nest
   // Only replace the changed part, so that the cursor remains in place
   // whenever possible. (SEE: NOTE at the top of this file)
   public update(node: NestedViewNodeType) {
+    if(!node.sameMarkup(this.node)) return false/*invalid Node Markup*/;
     if(!super.update(node)) return false/*invalid Node type*/;
-    if(!node.sameMarkup(this.node)) return false/*invalid Node markup*/;
 
     // else -- valid Node, sync the inner View
     if(this.nodeView.innerView) {
