@@ -49,6 +49,6 @@ export const Blockquote = Node.create<NoOptions, NoStorage>({
   addInputRules() { return [wrappingInputRule({ find: blockquoteRegex, type: this.type })]; },
 
   // -- View ----------------------------------------------------------------------
-  parseHTML() { return [{ tag: `div[${DATA_NODE_TYPE}="${NodeName.PARAGRAPH}"]` }]; },
+  parseHTML() { return [{ tag: `blockquote[${DATA_NODE_TYPE}="${NodeName.BLOCKQUOTE}"]` }]; },
   renderHTML({ node, HTMLAttributes }) { return getNodeOutputSpec(node, HTMLAttributes); },
 });
