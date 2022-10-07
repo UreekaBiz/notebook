@@ -26,7 +26,7 @@ export const NestedViewBlockNodeSpec: NodeSpec = {
 
   draggable: false,
   group: NodeGroup.BLOCK,
-  marks: '_'/*all marks allowed*/,
+  marks: ''/*no marks allowed inside*/,
   selectable: true/*this Node can be set as a NodeSelection*/,
 
   attrs: NestedViewBlockNodeAttributeSpec,

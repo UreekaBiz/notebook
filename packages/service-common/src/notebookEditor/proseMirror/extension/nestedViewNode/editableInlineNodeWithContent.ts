@@ -23,7 +23,7 @@ export const EditableInlineNodeWithContentNodeSpec: NodeSpec = {
   draggable: false,
   group: NodeGroup.INLINE,
   inline: true,
-  marks: '_'/*all marks allowed*/,
+  marks: ''/*no marks allowed inside*/,
 
   attrs: EditableInlineNodeWithContentContentNodeAttributeSpec,
 };
