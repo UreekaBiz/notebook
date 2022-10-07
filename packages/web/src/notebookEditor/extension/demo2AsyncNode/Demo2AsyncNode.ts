@@ -64,8 +64,8 @@ export const Demo2AsyncNode = Node.create<NoOptions, Demo2AsyncNodeStorageType>(
       'Shift-Enter': () => this.editor.commands.exitCode(),
 
       // select all the content of the Demo2AsyncNode
-      'Cmd-a':  () => shortcutCommandWrapper(this.editor, selectBlockNodeContentCommand),
-      'Cmd-A':  () => shortcutCommandWrapper(this.editor, selectBlockNodeContentCommand),
+      'Cmd-a':  () => shortcutCommandWrapper(this.editor, selectBlockNodeContentCommand(NodeName.DEMO_2_ASYNC_NODE)),
+      'Cmd-A':  () => shortcutCommandWrapper(this.editor, selectBlockNodeContentCommand(NodeName.DEMO_2_ASYNC_NODE)),
     };
   },
 

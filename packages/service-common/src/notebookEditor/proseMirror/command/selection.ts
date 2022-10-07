@@ -3,6 +3,7 @@ import { EditorState, NodeSelection, Selection, TextSelection, Transaction } fro
 import { EditorView } from 'prosemirror-view';
 
 import { minFromMax } from '../../../util/number';
+import { NodeName } from '../node';
 import { getBlockNodeRange } from '../selection';
 import { AbstractDocumentUpdate, Command } from './type';
 import { findCutBefore } from './util';
@@ -70,8 +71,8 @@ export class SetNodeSelectionDocumentUpdate implements AbstractDocumentUpdate {
 
 // ................................................................................
 /** select the contents of the current parent Block Node */
-export const selectBlockNodeContentCommand: Command = (state, dispatch) => {
-  const updatedTr =  new SelectBlockNodeContentDocumentUpdate().update(state, state.tr);
+export const selectBlockNodeContentCommand = (nodeName: NodeName): Command => (state, dispatch) => {
+  const updatedTr =  new SelectBlockNodeContentDocumentUpdate(nodeName).update(state, state.tr);
   if(updatedTr) {
     dispatch(updatedTr);
     return true/*Command executed*/;
@@ -80,7 +81,7 @@ export const selectBlockNodeContentCommand: Command = (state, dispatch) => {
   return false/*not executed*/;
 };
 export class SelectBlockNodeContentDocumentUpdate implements AbstractDocumentUpdate {
-  public constructor() {/*nothing additional*/ }
+  public constructor(private readonly nodeName: NodeName) {/*nothing additional*/ }
 
   /*
    * modify the given Transaction such that the contents of the current
@@ -92,6 +93,7 @@ export class SelectBlockNodeContentDocumentUpdate implements AbstractDocumentUpd
 
     if(!empty) return false/*do not overwrite Selection*/;
     if(!$from.parent.isTextblock) return false/*not a valid Node*/;
+    if($from.parent.type.name !== this.nodeName) return false/*do not handle inside this Node*/;
     if($from.parent.textContent.length < 1) return false/*nothing to Select*/;
 
     const { from, to } = getBlockNodeRange(tr.selection);

@@ -59,8 +59,8 @@ export const CodeBlock = Node.create<NoOptions, CodeBlockStorage>({
       'Shift-Enter': () => this.editor.commands.exitCode(),
 
       // select all the content of the CodeBlock
-      'Cmd-a':  () => shortcutCommandWrapper(this.editor, selectBlockNodeContentCommand),
-      'Cmd-A':  () => shortcutCommandWrapper(this.editor, selectBlockNodeContentCommand),
+      'Cmd-a':  () => shortcutCommandWrapper(this.editor, selectBlockNodeContentCommand(NodeName.CODEBLOCK)),
+      'Cmd-A':  () => shortcutCommandWrapper(this.editor, selectBlockNodeContentCommand(NodeName.CODEBLOCK)),
     };
   },
 
