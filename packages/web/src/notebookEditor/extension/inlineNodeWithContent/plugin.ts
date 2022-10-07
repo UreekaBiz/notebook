@@ -34,7 +34,7 @@ class InlineNodeWithContent {
 
 // == Plugin ======================================================================
 const inlineNodeWithContentKey = new PluginKey<InlineNodeWithContent>('inlineNodeWithContentKey');
-export const InlineNodeWithContentPlugin = () => {
+export const inlineNodeWithContentPlugin = () => {
   // differentiate between the state where the User is composing an input
   // (e.g. inserting a special character after inserting a '~' symbol)
   let composingInput = false/*default*/;

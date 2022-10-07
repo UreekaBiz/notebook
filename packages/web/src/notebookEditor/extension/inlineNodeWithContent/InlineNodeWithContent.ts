@@ -2,7 +2,7 @@ import { Extension } from '@tiptap/core';
 
 import { ExtensionName, NoOptions, NoStorage } from 'notebookEditor/model/type';
 
-import { InlineNodeWithContentPlugin } from './plugin';
+import { inlineNodeWithContentPlugin } from './plugin';
 
 // ********************************************************************************
 // implements common behavior to all inline Nodes with Content
@@ -14,5 +14,5 @@ export const InlineNodeWithContent = Extension.create<NoOptions, NoStorage>({
   name: ExtensionName.INLINE_NODE_WITH_CONTENT,
 
   // -- Plugin --------------------------------------------------------------------
-  addProseMirrorPlugins() { return [ InlineNodeWithContentPlugin() ]; },
+  addProseMirrorPlugins() { return [inlineNodeWithContentPlugin()]; },
 });

@@ -4,7 +4,7 @@ import { EditorView } from 'prosemirror-view';
 import { getParagraphNodeType, getSelectedNode, generateNodeId, isHeadingNode, AttributeType, HeadingAttributes } from '@ureeka-notebook/web-service';
 
 // ********************************************************************************
-export const HeadingPlugin = () => new Plugin({
+export const headingPlugin = () => new Plugin({
   // -- Props ---------------------------------------------------------------------
   props: {
     // .. Handler .................................................................

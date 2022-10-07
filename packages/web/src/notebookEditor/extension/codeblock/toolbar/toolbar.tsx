@@ -1,8 +1,7 @@
 import { BiCodeAlt } from 'react-icons/bi';
 
-import { generateNodeId, getParentNode, getSelectedNode, isCodeBlockNode, AttributeType, CreateBlockNodeDocumentUpdate, NodeName } from '@ureeka-notebook/web-service';
+import { generateNodeId, getParentNode, getSelectedNode, isCodeBlockNode, AttributeType, NodeName } from '@ureeka-notebook/web-service';
 
-import { applyDocumentUpdates } from 'notebookEditor/command/update';
 import { markBold } from 'notebookEditor/extension/bold/toolbar';
 import { markCode } from 'notebookEditor/extension/code/toolbar';
 import { markItalic } from 'notebookEditor/extension/italic/toolbar';
@@ -12,6 +11,7 @@ import { markSubScript } from 'notebookEditor/extension/subScript/toolbar';
 import { markSuperScript } from 'notebookEditor/extension/superScript/toolbar';
 import { spacingToolItem } from 'notebookEditor/extension/textStyle/toolbar';
 import { markUnderline } from 'notebookEditor/extension/underline/toolbar';
+import { toggleBlock } from 'notebookEditor/extension/util/node';
 import { Toolbar, ToolItem } from 'notebookEditor/sidebar/toolbar/type';
 
 import { CodeBlockTypeToolItem } from './CodeBlockTypeToolItem';
@@ -36,7 +36,7 @@ export const codeBlockToolItem: ToolItem = {
 
     return false/*enabled*/;
   },
-  onClick: (editor) => applyDocumentUpdates(editor, [ new CreateBlockNodeDocumentUpdate(NodeName.CODEBLOCK, { [AttributeType.Id]: generateNodeId() })]),
+  onClick: (editor) => toggleBlock(editor, NodeName.CODEBLOCK, { [AttributeType.Id]: generateNodeId() }),
 };
 
 const codeBlockTypeToolItem: ToolItem = {

@@ -5,12 +5,17 @@ import { getSelectedNode, AttributeType, DocumentNodeSpec } from '@ureeka-notebo
 
 import { NoOptions, NoStorage } from 'notebookEditor/model/type';
 
+import { documentPlugin } from './plugin';
+
 // ********************************************************************************
 // REF: https://github.com/ueberdosis/tiptap/blob/main/packages/extension-document/src/document.ts
 
 // == Node ========================================================================
 export const Document = Node.create<NoOptions, NoStorage>({
   ...DocumentNodeSpec,
+
+  // -- Plugin --------------------------------------------------------------------
+  addProseMirrorPlugins() { return [documentPlugin(this.editor)]; },
 
   // -- Update --------------------------------------------------------------------
   onSelectionUpdate() {

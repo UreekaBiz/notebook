@@ -8,14 +8,17 @@ import { NoPluginState } from 'notebookEditor/model/type';
 import { serializeDocumentFragment } from '../document/serialize';
 
 // ********************************************************************************
-// this Plugin implements behavior that is common to all the document
+// this Plugin implements behavior that is common to all the Document.
+// Its priority order of appearance must be low or unspecified (default is 100),
+// (SEE: ExtensionPriority) so that it does not interfere with the functionality
+// of other Extensions or Plugins.
 
 // == Plugin ======================================================================
-const keymapKey = new PluginKey<NoPluginState>('keymapKey');
-export const KeymapPlugin = (editor: Editor) => {
-  const plugin = new Plugin<NoPluginState>({
+const documentPluginKey = new PluginKey<NoPluginState>('documentPluginKey');
+export const documentPlugin = (editor: Editor) =>
+  new Plugin<NoPluginState>({
     // -- Setup -------------------------------------------------------------------
-    key: keymapKey,
+    key: documentPluginKey,
 
     // -- Props -------------------------------------------------------------------
     props: {
@@ -33,6 +36,3 @@ export const KeymapPlugin = (editor: Editor) => {
       clipboardTextSerializer: (slice: Slice) => serializeDocumentFragment(editor, slice.content),
     },
   });
-
-  return plugin;
-};

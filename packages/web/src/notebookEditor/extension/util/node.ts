@@ -1,9 +1,13 @@
+import { Editor } from '@tiptap/core';
 import { GapCursor } from 'prosemirror-gapcursor';
 import { DOMParser, Fragment, Node as ProseMirrorNode, ParseOptions } from 'prosemirror-model';
 import { EditorState, TextSelection, Transaction } from 'prosemirror-state';
 
-import { isGapCursorSelection, AbstractDocumentUpdate, ClearNodesDocumentUpdate, Command, JSONNode, NodeName, NotebookSchemaType } from '@ureeka-notebook/web-service';
+import { isGapCursorSelection, AbstractDocumentUpdate, Attributes, ClearNodesDocumentUpdate, CreateBlockNodeDocumentUpdate, Command, JSONNode, NodeName, NotebookSchemaType } from '@ureeka-notebook/web-service';
 
+import { applyDocumentUpdates } from 'notebookEditor/command/update';
+
+import { SetParagraphDocumentUpdate } from '../paragraph/command';
 import { elementFromString } from './parse';
 
 // ********************************************************************************
@@ -47,6 +51,23 @@ type CreateNodeFromContentOptions = {
   } /* else -- did not receive a string, return empty */
 
   return createNodeFromContent(schema, '', options);
+};
+
+// -- Block Toggle ----------------------------------------------------------------
+// NOTE: this Utility is located in web since it makes use of applyDocumentUpdates
+// NOTE: this is a Utility and not a Command for the same reason as above
+// NOTE: this Utility must make use of applyDocumentUpdates to ensure consistent
+//       resulting Selection behavior when toggling Block Nodes
+export const toggleBlock = (editor: Editor, blockNodeName: NodeName, blockAttrs: Partial<Attributes>) => {
+  const { selection } = editor.state;
+  if(!selection.empty) return false/*do not handle*/;
+
+  const togglingBlock = selection.$anchor.parent.type.name === blockNodeName;
+  if(togglingBlock) {
+    return applyDocumentUpdates(editor, [new SetParagraphDocumentUpdate()/*default Block*/]);
+  } /* else -- setting Block */
+
+  return applyDocumentUpdates(editor, [new CreateBlockNodeDocumentUpdate(blockNodeName, blockAttrs)]);
 };
 
 // -- Block Backspace -------------------------------------------------------------

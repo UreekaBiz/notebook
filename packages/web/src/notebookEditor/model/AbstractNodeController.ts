@@ -57,7 +57,8 @@ export abstract class AbstractNodeController<NodeType extends ProseMirrorNode, S
 
   // == PM Life-Cycle =============================================================
   public update(node: ProseMirrorNode): boolean {
-    if(this.node.type.name !== node.type.name) return false/*different node so nothing was updated*/;
+    if(this.node.attrs[AttributeType.Id] !== node.attrs[AttributeType.Id]) return false/*different Node, do not update*/;
+    if(this.node.type.name !== node.type.name) return false/*different Node, do not update*/;
 
     // update both storage and our reference to the Node
     if(this.storage && isNodeViewStorage(this.storage)) this.storage.addNodeView(this.node.attrs[AttributeType.Id], this);

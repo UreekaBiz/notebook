@@ -10,7 +10,7 @@ import { splitListItemCommand } from '../command/splitListItemCommand';
 import { indentListCommand } from '../keyboardShortcut/indent';
 import { dedentListCommand } from '../keyboardShortcut/dedent';
 import { listBackspaceCommand } from '../keyboardShortcut/listBackspace';
-import { ListItemTaskListItemPlugin } from './plugin';
+import { listItemTaskListItemPlugin } from './plugin';
 
 // ********************************************************************************
 // REF: https://github.com/ueberdosis/tiptap/blob/main/packages/extension-list-item/src/list-item.ts
@@ -33,7 +33,7 @@ export const ListItem = Node.create<NoOptions, NoStorage>({
   },
 
   // -- Plugin  ------------------------------------------------------------------
-  addProseMirrorPlugins() { return [ListItemTaskListItemPlugin()]; },
+  addProseMirrorPlugins() { return [listItemTaskListItemPlugin()]; },
 
   // -- Keyboard Shortcut  --------------------------------------------------------
   addKeyboardShortcuts() {

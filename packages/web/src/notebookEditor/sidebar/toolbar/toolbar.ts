@@ -1,5 +1,8 @@
-import { MarkName, NodeName } from '@ureeka-notebook/web-service';
+import { Editor } from '@tiptap/core';
 
+import { MarkName, NodeName, SelectionDepth } from '@ureeka-notebook/web-service';
+
+import { BlockquoteToolbar } from 'notebookEditor/extension/blockquote/toolbar';
 import { CodeBlockToolbar } from 'notebookEditor/extension/codeblock/toolbar';
 import { CodeBlockReferenceToolbar } from 'notebookEditor/extension/codeBlockReference/toolbar';
 import { Demo2AsyncNodeToolbar } from 'notebookEditor/extension/demo2AsyncNode/toolbar';
@@ -23,6 +26,7 @@ import { Toolbar } from './type';
 // A collection of Toolbars. Each Node can have its own Toolbar. If it's not defined
 // in the collection then nothing will be shown.
 const TOOLBAR_MAP: Record<NodeName | MarkName, Toolbar | null> = {
+  [NodeName.BLOCKQUOTE]: BlockquoteToolbar,
   [NodeName.BULLET_LIST]: BulletListToolbar,
   [NodeName.CODEBLOCK]: CodeBlockToolbar,
   [NodeName.CODEBLOCK_REFERENCE]: CodeBlockReferenceToolbar,
@@ -55,12 +59,27 @@ const TOOLBAR_MAP: Record<NodeName | MarkName, Toolbar | null> = {
 
 };
 
-// --------------------------------------------------------------------------------
+// == Util ========================================================================
 /**
  * @param nodeOrMarkName The name of the node or mark whose toolbar is being asked for
  * @returns The corresponding Toolbar for the given Node name
  */
-export const getToolbar = (nodeOrMarkName: NodeName | MarkName): Toolbar | null => {
+ export const getToolbar = (nodeOrMarkName: NodeName | MarkName): Toolbar | null => {
   let toolbar = TOOLBAR_MAP[nodeOrMarkName];
   return toolbar;
 };
+
+/**
+ * decide whether the Toolbar or the ToolbarBreadcrumbItem should be shown for a
+ * given Node by checking the properties of its Toolbar object
+ */
+export const shouldShowToolbarOrBreadcrumb = (editor: Editor, toolbar: Toolbar, depth: SelectionDepth): boolean => {
+  // if at least one Tool in the ToolCollection does not have the shouldShow
+  // property defined, or if at least one of the Tools that have it should be
+  // shown, show the Toolbar or BreadcrumbItem
+  const shouldShow = toolbar.toolsCollections.some(toolCollection =>
+    toolCollection.some(tool => !tool.shouldShow || (tool.shouldShow(editor, depth))));
+
+  return shouldShow;
+};
+

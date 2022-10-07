@@ -1,0 +1,49 @@
+import { Mark, Node as ProseMirrorNode, NodeSpec } from 'prosemirror-model';
+
+import { AttributesTypeFromNodeSpecAttributes } from '../attribute';
+import { NodeRendererSpec } from '../htmlRenderer/type';
+import { JSONNode, NodeGroup, NodeName, ProseMirrorNodeContent } from '../node';
+import { NotebookSchemaType } from '../schema';
+
+// ********************************************************************************
+// == Attribute ===================================================================
+// NOTE: must be present on the NodeSpec below
+// NOTE: this value must have matching types -- the ones defined in the Extension
+const BlockquoteAttributeSpec = {/*currently nothing*/};
+export type BlockquoteAttributes = AttributesTypeFromNodeSpecAttributes<typeof BlockquoteAttributeSpec>;
+
+// == Spec ========================================================================
+// -- Node Spec -------------------------------------------------------------------
+export const BlockquoteNodeSpec: NodeSpec = {
+  name: NodeName.BLOCKQUOTE,
+
+  // make Blockquotes behave like CodeBlock Nodes, (e.g. 'Enter' inserts a newline)
+  code: true,
+
+  content: `${NodeGroup.INLINE}*`,
+  group: `${NodeGroup.BLOCK}`,
+  defining: true/*(SEE: https://prosemirror.net/docs/ref/#model.NodeSpec.defining)*/,
+  attrs: BlockquoteAttributeSpec,
+};
+
+// -- Render Spec -----------------------------------------------------------------
+export const BlockquoteNodeRendererSpec: NodeRendererSpec<BlockquoteAttributes> = {
+  tag: 'blockquote',
+
+  attributes: {/*use the default renderer on all Attributes*/},
+};
+
+// == Type ========================================================================
+// -- Node Type -------------------------------------------------------------------
+// NOTE: this is the only way since PM does not provide a way to specify the type
+//       of the Attributes
+export type BlockquoteNodeType = ProseMirrorNode & { attrs: BlockquoteAttributes; };
+export const isBlockquoteNode = (node: ProseMirrorNode): node is BlockquoteNodeType => node.type.name === NodeName.BLOCKQUOTE;
+
+export const getBlockquoteNode = (schema: NotebookSchemaType) => schema.nodes[NodeName.BLOCKQUOTE];
+export const createBlockquoteNode = (schema: NotebookSchemaType, attributes?: Partial<BlockquoteAttributes>, content?: ProseMirrorNodeContent, marks?: Mark[]) =>
+  getBlockquoteNode(schema).create(attributes, content, marks);
+
+// -- JSON Node Type --------------------------------------------------------------
+export type BlockquoteJSONNodeType = JSONNode<BlockquoteAttributes> & { type: NodeName.BLOCKQUOTE; };
+export const isBlockquoteJSONNode = (node: JSONNode): node is BlockquoteJSONNodeType => node.type === NodeName.BLOCKQUOTE;

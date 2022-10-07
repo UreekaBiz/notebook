@@ -4,14 +4,14 @@ import { getMarkOutputSpec, MarkName, ReplacedTextMarkMarkSpec, DATA_MARK_TYPE }
 
 import { NoOptions, NoStorage } from 'notebookEditor/model/type';
 
-import { ReplacedTextMarkPlugin } from './plugin';
+import { replacedTextMarkPlugin } from './plugin';
 
 // ********************************************************************************
 export const ReplacedTextMark = Mark.create<NoOptions, NoStorage>({
   ...ReplacedTextMarkMarkSpec,
 
   // -- Plugin --------------------------------------------------------------------
-  addProseMirrorPlugins() { return [ReplacedTextMarkPlugin()]; },
+  addProseMirrorPlugins() { return [replacedTextMarkPlugin()]; },
 
   // -- View ----------------------------------------------------------------------
   parseHTML() { return [{ tag: `span[${DATA_MARK_TYPE}="${MarkName.REPLACED_TEXT_MARK}"]` }]; },

@@ -1,14 +1,13 @@
 import { Node } from '@tiptap/core';
 
-import { generateNodeId, getNodeOutputSpec, isDemo2AsyncNode, selectBlockNodeContentCommand, AttributeType, CreateBlockNodeDocumentUpdate, Demo2AsyncNodeSpec, NodeName, SetAttributeType, DATA_NODE_TYPE, DEFAULT_DEMO_2_ASYNC_NODE_DELAY, DEFAULT_DEMO_2_ASYNC_NODE_STATUS } from '@ureeka-notebook/web-service';
+import { generateNodeId, getNodeOutputSpec, isDemo2AsyncNode, leaveBlockNodeCommand, selectBlockNodeContentCommand, AttributeType, Demo2AsyncNodeSpec, NodeName, SetAttributeType, DATA_NODE_TYPE, DEFAULT_DEMO_2_ASYNC_NODE_DELAY, DEFAULT_DEMO_2_ASYNC_NODE_STATUS } from '@ureeka-notebook/web-service';
 
-import { applyDocumentUpdates } from 'notebookEditor/command/update';
 import { shortcutCommandWrapper } from 'notebookEditor/command/util';
 import { setAttributeParsingBehavior, uniqueIdParsingBehavior } from 'notebookEditor/extension/util/attribute';
 import { NodeViewStorage } from 'notebookEditor/model/NodeViewStorage';
 import { NoOptions } from 'notebookEditor/model/type';
 
-import { blockArrowUpCommand, blockArrowDownCommand, blockBackspaceCommand, blockModBackspaceCommand } from '../util/node';
+import { blockArrowUpCommand, blockArrowDownCommand, blockBackspaceCommand, blockModBackspaceCommand, toggleBlock } from '../util/node';
 import { Demo2AsyncNodeController, Demo2AsyncNodeStorageType } from './nodeView/controller';
 
 // ********************************************************************************
@@ -45,9 +44,9 @@ export const Demo2AsyncNode = Node.create<NoOptions, Demo2AsyncNodeStorageType>(
   // -- Keyboard Shortcut ---------------------------------------------------------
   addKeyboardShortcuts() {
     return {
-      // create a Demo2AsyncNode
-      'Shift-Mod-Alt-d': () => applyDocumentUpdates(this.editor, [new CreateBlockNodeDocumentUpdate(NodeName.DEMO_2_ASYNC_NODE, { [AttributeType.Id]: generateNodeId() })]),
-      'Shift-Mod-Alt-D': () => applyDocumentUpdates(this.editor, [new CreateBlockNodeDocumentUpdate(NodeName.DEMO_2_ASYNC_NODE, { [AttributeType.Id]: generateNodeId() })]),
+      // toggle a Demo2AsyncNode
+      'Shift-Mod-Alt-d': () => toggleBlock(this.editor, NodeName.DEMO_2_ASYNC_NODE, { [AttributeType.Id]: generateNodeId() }),
+      'Shift-Mod-Alt-D': () => toggleBlock(this.editor, NodeName.DEMO_2_ASYNC_NODE, { [AttributeType.Id]: generateNodeId() }),
 
       // remove Demo2AsyncNode when at start of document or Demo2AsyncNode is empty
       'Backspace': () => shortcutCommandWrapper(this.editor, blockBackspaceCommand(NodeName.DEMO_2_ASYNC_NODE)),
@@ -59,13 +58,12 @@ export const Demo2AsyncNode = Node.create<NoOptions, Demo2AsyncNodeStorageType>(
       'ArrowUp': () => shortcutCommandWrapper(this.editor, blockArrowUpCommand(NodeName.DEMO_2_ASYNC_NODE)),
       'ArrowDown': () => shortcutCommandWrapper(this.editor, blockArrowDownCommand(NodeName.DEMO_2_ASYNC_NODE)),
 
-      // (SEE: NOTE in Demo2AsyncNodeSpec for code property)
-      // exit Node on shift enter, inserting a Paragraph below
-      'Shift-Enter': () => this.editor.commands.exitCode(),
+      // exit Node on Shift-Enter
+      'Shift-Enter': () => shortcutCommandWrapper(this.editor, leaveBlockNodeCommand(NodeName.DEMO_2_ASYNC_NODE)),
 
       // select all the content of the Demo2AsyncNode
-      'Cmd-a':  () => shortcutCommandWrapper(this.editor, selectBlockNodeContentCommand),
-      'Cmd-A':  () => shortcutCommandWrapper(this.editor, selectBlockNodeContentCommand),
+      'Cmd-a':  () => shortcutCommandWrapper(this.editor, selectBlockNodeContentCommand(NodeName.DEMO_2_ASYNC_NODE)),
+      'Cmd-A':  () => shortcutCommandWrapper(this.editor, selectBlockNodeContentCommand(NodeName.DEMO_2_ASYNC_NODE)),
     };
   },
 

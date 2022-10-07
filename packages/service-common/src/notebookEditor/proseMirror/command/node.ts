@@ -9,7 +9,7 @@ import { isTextNode } from '../extension/text';
 import { NodeName } from '../node';
 import { isGapCursorSelection } from '../selection';
 import { AbstractDocumentUpdate, Command } from './type';
-import { deleteBarrier, findCutBefore, textblockAt } from './util';
+import { defaultBlockAt, deleteBarrier, findCutBefore, textblockAt } from './util';
 
 // ********************************************************************************
 // -- Create ----------------------------------------------------------------------
@@ -126,6 +126,50 @@ export class ClearNodesDocumentUpdate implements AbstractDocumentUpdate {
         } /* else -- do not lift */
       });
     });
+
+    return tr/*updated*/;
+  }
+}
+
+// -- Leave -----------------------------------------------------------------------
+// REF: https://github.com/ProseMirror/prosemirror-commands/blob/master/src/commands.ts
+// create a default Block Node after the one at the current Selection and
+// move the cursor there
+export const leaveBlockNodeCommand = (nodeName: NodeName): Command => (state, dispatch) => {
+  const updatedTr =  new LeaveBlockNodeDocumentUpdate(nodeName).update(state, state.tr);
+  if(updatedTr) {
+    dispatch(updatedTr);
+    return true/*Command executed*/;
+  } /* else -- Command cannot be executed */
+
+  return false/*not executed*/;
+};
+export class LeaveBlockNodeDocumentUpdate implements AbstractDocumentUpdate {
+  public constructor(private readonly nodeName: NodeName) {/*nothing additional*/}
+
+  /*
+   * modify the given Transaction such that a default Block Node is created
+   * after the one at the current Selection and the cursor is moved there
+   */
+  public update(editorState: EditorState, tr: Transaction) {
+    const { $head, $anchor } = editorState.selection;
+    if(!$head.sameParent($anchor)) return false/*Selection spans multiple Blocks*/;
+    if(!($head.parent.type.name === this.nodeName)) return false/*this Node should not handle the call*/;
+
+    const parentOfHead = $head.node(-1),
+          indexAfterHeadParent = $head.indexAfter(-1);
+    const type = defaultBlockAt(parentOfHead.contentMatchAt(indexAfterHeadParent));
+
+    if(!type) return false/*no valid type was found*/;
+    if(!parentOfHead.canReplaceWith(indexAfterHeadParent, indexAfterHeadParent, type)) return false/*invalid replacement*/;
+
+    const newBlockNode = type.createAndFill();
+    if(!newBlockNode) return false/*no valid wrapping was found*/;
+
+    const posAfterReplacement = $head.after();
+    tr.replaceWith(posAfterReplacement, posAfterReplacement, newBlockNode)
+      .setSelection(Selection.near(tr.doc.resolve(posAfterReplacement), 1/*look forwards first*/))
+      .scrollIntoView();
 
     return tr/*updated*/;
   }

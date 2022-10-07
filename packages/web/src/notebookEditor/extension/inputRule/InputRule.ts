@@ -19,7 +19,7 @@ export const InputRule = Extension.create<NoOptions, NoStorage>({
   priority: ExtensionPriority.INPUT_RULE,
 
   // -- Plugin --------------------------------------------------------------------
-  addProseMirrorPlugins() { return [ inputRulePlugin({ rules: inputRules.map(rule => createTextInputRule(rule.find, rule.replaceWith)) }) ]; },
+  addProseMirrorPlugins() { return [inputRulePlugin({ rules: inputRules.map(rule => createTextInputRule(rule.find, rule.replaceWith)) })]; },
 });
 
 // == Util ========================================================================

@@ -4,7 +4,7 @@ import { getNodeOutputSpec, storedMarksFromDOM, AttributeType, MarkHolderNodeSpe
 
 import { NoOptions, NoStorage, ParseRulePriority } from 'notebookEditor/model/type';
 
-import { MarkHolderPlugin } from './plugin';
+import { markHolderPlugin } from './plugin';
 
 // ********************************************************************************
 // == Node ========================================================================
@@ -33,7 +33,7 @@ export const MarkHolder = Node.create<NoOptions, NoStorage>({
   },
 
   // -- Plugin --------------------------------------------------------------------
-  addProseMirrorPlugins() { return [ MarkHolderPlugin() ]; },
+  addProseMirrorPlugins() { return [markHolderPlugin()]; },
 
   // -- View ----------------------------------------------------------------------
   parseHTML() { return [{
