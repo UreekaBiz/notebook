@@ -1,14 +1,12 @@
 import { useCallback, useEffect } from 'react';
 
-import { getLogger, getSelectedNode, isNodeType, isNodeSelection, AttributeType, Logger, NodeName, DATA_VISUAL_ID, REMOVED_CODEBLOCK_VISUALID } from '@ureeka-notebook/web-service';
+import { getLogger, getSelectedNode, isNodeType, isNodeSelection, AttributeType, Logger, NodeName, DATA_VISUAL_ID } from '@ureeka-notebook/web-service';
 
-import { focusCodeBlock, visualIdFromCodeBlockReference } from 'notebookEditor/extension/codeblock/util';
+import { focusCodeBlock, getLabelFromValue, getValueFromLabel, isValidCodeBlockReference, validateChip } from 'notebookEditor/extension/codeblock/util';
 import { ChipValue } from 'notebookEditor/extension/shared/component/chipTool/Chip';
 import { ChipTool } from 'notebookEditor/extension/shared/component/chipTool/ChipTool';
 import { InputToolItemContainer } from 'notebookEditor/extension/shared/component/InputToolItemContainer';
 import { EditorToolComponentProps } from 'notebookEditor/sidebar/toolbar/type';
-
-import { isValidCodeBlockReference } from '../util';
 
 const log = getLogger(Logger.NOTEBOOK);
 
@@ -73,10 +71,9 @@ export const CodeBlockReferenceChipSelector: React.FC<Props> = ({ editor, depth,
         value = reference ? [reference] : [],
         id = node.attrs[AttributeType.Id] ?? ''/*no id by default*/;
 
-
   // == Handler ===================================================================
   const handleAddValue = (label: string, focus?: boolean) => {
-    const newValue: ChipValue = { label, value: getValueFromLabel(label) };
+    const newValue: ChipValue = { label, value: getValueFromLabel(editor, label) };
     handleChange([...chips, newValue]);
   };
 
@@ -90,34 +87,10 @@ export const CodeBlockReferenceChipSelector: React.FC<Props> = ({ editor, depth,
   };
 
   // SEE: CodeBlockReferencesChipSelector.tsx
-  const getValueFromLabel = (visualId: string) => {
-    const codeBlockReference = isValidCodeBlockReference(editor, visualId);
-    if(!codeBlockReference.isValid) return ''/*invalid empty string*/;
-    const codeBlockView = codeBlockReference.codeBlockView,
-          codeBlock = codeBlockView.node,
-          codeBlockAttributes = codeBlock.attrs,
-          codeBlockId = codeBlockAttributes[AttributeType.Id];
-    // log the error but return the empty string
-    if(!codeBlockId) log.error('CodeBlockReferenceChipSelector: codeBlockId is missing in visualId: ', visualId);
-    return codeBlockId ?? '';
-  };
-
-  // SEE: CodeBlockReferencesChipSelector.tsx
-  const getLabelFromValue = (codeBlockReference: string) =>
-    visualIdFromCodeBlockReference(editor, codeBlockReference) ?? REMOVED_CODEBLOCK_VISUALID;
-
-  // SEE: CodeBlockReferencesChipSelector.tsx
-  /** validates if the visual id is valid for the chip */
-  const validate = (visualId: string): boolean => {
-    const codeBlockReference = isValidCodeBlockReference(editor, visualId/*visual id*/);
-    return codeBlockReference.isValid;
-  };
-
-  // SEE: CodeBlockReferencesChipSelector.tsx
   const handleChipClick = (chip: ChipValue) => focusCodeBlock(editor, chip.label/*visual id*/);
 
   // == UI ========================================================================
-  const chips = value.map(chip => ({ label: getLabelFromValue(chip), value: chip }));
+  const chips = value.map(chip => ({ label: getLabelFromValue(editor, chip), value: chip }));
 
   return (
     <InputToolItemContainer name={'Reference'}>
@@ -126,7 +99,7 @@ export const CodeBlockReferenceChipSelector: React.FC<Props> = ({ editor, depth,
         value={chips}
         maxValues={1}
         isDraggable={false}
-        validate={validate}
+        validate={(visualId) => validateChip(editor, visualId)}
         onAddValue={handleAddValue}
         onChange={handleChange}
         onChipClick={handleChipClick}

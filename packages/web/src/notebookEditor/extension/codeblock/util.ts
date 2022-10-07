@@ -1,6 +1,6 @@
 import { Editor } from '@tiptap/core';
 
-import { CodeBlockReference, VisualId, REMOVED_CODEBLOCK_VISUALID } from '@ureeka-notebook/web-service';
+import { AttributeType, CodeBlockReference, VisualId, REMOVED_CODEBLOCK_VISUALID } from '@ureeka-notebook/web-service';
 
 import { getCodeBlockViewStorage } from 'notebookEditor/extension/codeblock/nodeView/storage';
 
@@ -43,4 +43,27 @@ export const focusCodeBlock = (editor: Editor, codeBlockVisualId: VisualId) => {
 
   const { codeBlockView } = codeBlockReference;
   return editor.commands.focus(codeBlockView.getPos() + 1/*inside the CodeBlock*/ + codeBlockView.node.textContent.length/*at the end of its content*/, { scrollIntoView: true/*scroll into view*/ });
+};
+
+// -- Chip Selectors --------------------------------------------------------------
+export const getValueFromLabel = (editor: Editor, visualId: string) => {
+  const codeBlockReference = isValidCodeBlockReference(editor, visualId);
+  if(!codeBlockReference.isValid) return ''/*invalid empty string*/;
+  const codeBlockView = codeBlockReference.codeBlockView,
+        codeBlock = codeBlockView.node,
+        codeBlockAttributes = codeBlock.attrs,
+        codeBlockId = codeBlockAttributes[AttributeType.Id];
+  // log the error but return the empty string
+  return codeBlockId ?? '';
+};
+
+// SEE: CodeBlockReferencesChipSelector.tsx
+export const getLabelFromValue = (editor: Editor, codeBlockReference: string) =>
+  visualIdFromCodeBlockReference(editor, codeBlockReference) ?? REMOVED_CODEBLOCK_VISUALID;
+
+// SEE: CodeBlockReferencesChipSelector.tsx
+/** validates if the visual id is valid for the chip */
+export const validateChip = (editor: Editor, visualId: string): boolean => {
+  const codeBlockReference = isValidCodeBlockReference(editor, visualId/*visual id*/);
+  return codeBlockReference.isValid;
 };
