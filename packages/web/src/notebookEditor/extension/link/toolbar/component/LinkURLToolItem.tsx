@@ -1,10 +1,10 @@
-import { Box, FormControl, FormErrorMessage, Input } from '@chakra-ui/react';
+import { FormControl, FormErrorMessage, Input } from '@chakra-ui/react';
 import { getMarkAttributes } from '@tiptap/core';
 import { useFormik, Field, FormikProvider } from 'formik';
 import { KeyboardEventHandler } from 'react';
 import * as Validate from 'yup';
 
-import { isLinkMarkAttributes, urlSchema, AttributeType, ExtendMarkRangeDocumentUpdate, MarkName, SetTextSelectionDocumentUpdate  } from '@ureeka-notebook/web-service';
+import { isLinkMarkAttributes, urlSchema, AttributeType, ExtendMarkRangeDocumentUpdate, MarkName, SetTextSelectionDocumentUpdate } from '@ureeka-notebook/web-service';
 
 import { applyDocumentUpdates } from 'notebookEditor/command/update';
 import { InputToolItemContainer } from 'notebookEditor/extension/shared/component/InputToolItemContainer';
@@ -83,26 +83,24 @@ export const LinkURLToolItem: React.FC<Props> = ({ editor }) => {
   // == UI ========================================================================
   return (
     <FormikProvider value={formik}>
-      <form onSubmit={formik.handleSubmit}>
+      <form onSubmit={formik.handleSubmit} style={{ width:'100%' }}>
         <FormControl isInvalid={!!formik.errors.href}>
           <InputToolItemContainer name='URL'>
-            <Box width='full'>
-              <Field
-                as={Input}
-                id='href'
-                name='href'
-                datatype={TOOL_ITEM_DATA_TYPE/*(SEE: notebookEditor/toolbar/type )*/}
-                value={formik.values.href ?? ''/*explicit controlled component*/}
-                autoComplete='off'
-                placeholder='href'
-                variant='outline'
-                size='sm'
-                width='full'
-                onKeyDown={handleKeyDown}
-                onBlur={handleBlur}
-              />
-              <FormErrorMessage>{formik.errors.href}</FormErrorMessage>
-            </Box>
+            <Field
+              as={Input}
+              id='href'
+              name='href'
+              datatype={TOOL_ITEM_DATA_TYPE/*(SEE: notebookEditor/toolbar/type )*/}
+              value={formik.values.href ?? ''/*explicit controlled component*/}
+              autoComplete='off'
+              placeholder='href'
+              variant='outline'
+              size='sm'
+              width='full'
+              onKeyDown={handleKeyDown}
+              onBlur={handleBlur}
+            />
+            <FormErrorMessage>{formik.errors.href}</FormErrorMessage>
           </InputToolItemContainer>
         </FormControl>
       </form>
