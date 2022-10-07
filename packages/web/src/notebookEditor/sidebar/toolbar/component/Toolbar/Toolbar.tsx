@@ -6,6 +6,7 @@ import { useValidatedEditor } from 'notebookEditor/hook/useValidatedEditor';
 import { SidebarSectionTitle } from 'notebookEditor/sidebar/component/SidebarSectionTitle';
 import { Toolbar as ToolbarType } from 'notebookEditor/sidebar/toolbar/type';
 
+import { shouldShowToolbarOrBreadcrumb } from '../../toolbar';
 import { ToolItemComponent } from './ToolItem';
 
 // ********************************************************************************
@@ -31,13 +32,7 @@ export const Toolbar: React.FC<Props> = ({ depth, nodeOrMarkName, toolbar,  sele
   //       case that the caller does not check it.
   if(toolbar.shouldShow && !toolbar.shouldShow(editor, depth)) return null/*nothing to render*/;
 
-  // if at least one Tool in the ToolCollection does not have the shouldShow
-  // property defined, or if at least one of the Tools that have it should be
-  // shown, show the Toolbar
-  const shouldShow = toolbar.toolsCollections.some(toolCollection =>
-    toolCollection.some(tool => !tool.shouldShow || (tool.shouldShow(editor, depth))));
-
-  if(!shouldShow) return null/*nothing to render*/;
+  if(!shouldShowToolbarOrBreadcrumb(editor, toolbar, depth)) return null/*nothing to render*/;
 
   return (
     <>
