@@ -7,7 +7,7 @@ import { setAttributeParsingBehavior } from 'notebookEditor/extension/util/attri
 import { NoStorage } from 'notebookEditor/model/type';
 
 import { setHeadingCommand } from './command';
-import { HeadingPlugin } from './plugin';
+import { headingPlugin } from './plugin';
 import { HeadingOptions } from './type';
 
 // ********************************************************************************
@@ -54,7 +54,7 @@ export const Heading = Node.create<HeadingOptions, NoStorage>({
   },
 
   // -- Plugin --------------------------------------------------------------------
-  addProseMirrorPlugins() { return [HeadingPlugin()]; },
+  addProseMirrorPlugins() { return [headingPlugin()]; },
 
   // -- Input ---------------------------------------------------------------------
   // Create a Heading Node if the user types '#' a certain amount of times and

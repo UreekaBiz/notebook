@@ -11,7 +11,7 @@ export const GapCursor: Extension<NoOptions, NoStorage> = Extension.create<NoOpt
   name: ExtensionName.GAP_CURSOR/*Expected and guaranteed to be unique*/,
 
   // -- Plugin --------------------------------------------------------------------
-  addProseMirrorPlugins() { return [ gapCursor() ]; },
+  addProseMirrorPlugins() { return [gapCursor()]; },
 
   // -- Schema --------------------------------------------------------------------
   extendNodeSchema(extension) {

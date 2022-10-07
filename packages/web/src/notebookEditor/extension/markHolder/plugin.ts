@@ -12,7 +12,7 @@ import { parseStoredMarks } from './util';
 const blockNodesThatPreserveMarks = new Set([NodeName.HEADING, NodeName.PARAGRAPH, NodeName.LIST_ITEM_CONTENT]);
 
 // == Plugin ======================================================================
-export const MarkHolderPlugin = () => new Plugin({
+export const markHolderPlugin = () => new Plugin({
   // -- Transaction ---------------------------------------------------------------
   // when a BlockNode that must preserve Marks (SEE: blockNodesThatPreserveMarks Set
   // above) gets its Content removed but the Node is not deleted (i.e., the

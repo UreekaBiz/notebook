@@ -4,7 +4,7 @@ import { EditorView } from 'prosemirror-view';
 import { getReplacedTextMarkMarkType, isGapCursorSelection } from '@ureeka-notebook/web-service';
 
 // == Plugin ======================================================================
-export const ReplacedTextMarkPlugin = () => new Plugin({
+export const replacedTextMarkPlugin = () => new Plugin({
   // -- Props ---------------------------------------------------------------------
   props: {
     // .. Handler .................................................................

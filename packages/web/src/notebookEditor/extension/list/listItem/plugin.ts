@@ -16,7 +16,7 @@ import { isListNode, isListWithSingleItemContent, maybeJoinList } from '../util'
 //       this level (SEE: maybeJoinList).
 
 // == Plugin ======================================================================
-export const ListItemTaskListItemPlugin = () => {
+export const listItemTaskListItemPlugin = () => {
   // used to distinguish between a regular paste and a plain text paste,
   // whose presence has influence only when pasting inside ListItems
   // (SEE: #handlePaste below)
