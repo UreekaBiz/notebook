@@ -1,13 +1,12 @@
 import { textblockTypeInputRule, Node } from '@tiptap/core';
 
-import { generateNodeId, getNodeOutputSpec, isCodeBlockNode, leaveBlockNodeCommand, selectBlockNodeContentCommand, AttributeType, CodeBlockNodeSpec, CodeBlockType, CreateBlockNodeDocumentUpdate, NodeName, SetAttributeType, DATA_NODE_TYPE } from '@ureeka-notebook/web-service';
+import { generateNodeId, getNodeOutputSpec, isCodeBlockNode, leaveBlockNodeCommand, selectBlockNodeContentCommand, AttributeType, CodeBlockNodeSpec, CodeBlockType, NodeName, SetAttributeType, DATA_NODE_TYPE } from '@ureeka-notebook/web-service';
 
-import { applyDocumentUpdates } from 'notebookEditor/command/update';
 import { shortcutCommandWrapper } from 'notebookEditor/command/util';
 import { setAttributeParsingBehavior, uniqueIdParsingBehavior } from 'notebookEditor/extension/util/attribute';
 import { NoOptions } from 'notebookEditor/model/type';
 
-import { blockArrowUpCommand, blockArrowDownCommand, blockBackspaceCommand, blockModBackspaceCommand } from '../util/node';
+import { blockArrowUpCommand, blockArrowDownCommand, blockBackspaceCommand, blockModBackspaceCommand, toggleBlock } from '../util/node';
 import { CodeBlockController } from './nodeView/controller';
 import { CodeBlockStorage } from './nodeView/storage';
 import { codeBlockOnTransaction } from './transaction';
@@ -41,9 +40,9 @@ export const CodeBlock = Node.create<NoOptions, CodeBlockStorage>({
   // -- Keyboard Shortcut ---------------------------------------------------------
   addKeyboardShortcuts() {
     return {
-      // create a CodeBlock
-      'Shift-Mod-c': () => applyDocumentUpdates(this.editor, [new CreateBlockNodeDocumentUpdate(NodeName.CODEBLOCK, { [AttributeType.Id]: generateNodeId() })]),
-      'Shift-Mod-C': () => applyDocumentUpdates(this.editor, [new CreateBlockNodeDocumentUpdate(NodeName.CODEBLOCK, { [AttributeType.Id]: generateNodeId() })]),
+      // toggle a CodeBlock
+      'Shift-Mod-c': () => toggleBlock(this.editor, NodeName.CODEBLOCK, { [AttributeType.Id]: generateNodeId() }),
+      'Shift-Mod-C': () => toggleBlock(this.editor, NodeName.CODEBLOCK, { [AttributeType.Id]: generateNodeId() }),
 
       // remove CodeBlock when at start of document or CodeBlock is empty
       'Backspace': () => shortcutCommandWrapper(this.editor, blockBackspaceCommand(NodeName.CODEBLOCK)),

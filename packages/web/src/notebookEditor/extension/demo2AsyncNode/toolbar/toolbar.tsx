@@ -1,8 +1,7 @@
 import { MdFindReplace } from 'react-icons/md';
 
-import { generateNodeId, AttributeType, CreateBlockNodeDocumentUpdate, NodeName } from '@ureeka-notebook/web-service';
+import { generateNodeId, AttributeType, NodeName } from '@ureeka-notebook/web-service';
 
-import { applyDocumentUpdates } from 'notebookEditor/command/update';
 import { markBold } from 'notebookEditor/extension/bold/toolbar';
 import { markCode } from 'notebookEditor/extension/code/toolbar';
 import { markItalic } from 'notebookEditor/extension/italic/toolbar';
@@ -13,6 +12,7 @@ import { markSubScript } from 'notebookEditor/extension/subScript/toolbar';
 import { markSuperScript } from 'notebookEditor/extension/superScript/toolbar';
 import { fontSizeToolItem, spacingToolItem, textColorToolItem } from 'notebookEditor/extension/textStyle/toolbar';
 import { markUnderline } from 'notebookEditor/extension/underline/toolbar';
+import { toggleBlock } from 'notebookEditor/extension/util/node';
 import { Toolbar, ToolItem } from 'notebookEditor/sidebar/toolbar/type';
 
 import { ExecuteButtons } from './ExecuteButtons';
@@ -29,7 +29,7 @@ export const demo2AsyncNodeToolItem: ToolItem = {
 
   shouldBeDisabled: () => false,
   shouldShow: (editor, depth) => depth === undefined || editor.state.selection.$anchor.depth === depth/*direct parent*/,
-  onClick: (editor) => applyDocumentUpdates(editor, [ new CreateBlockNodeDocumentUpdate(NodeName.DEMO_2_ASYNC_NODE, { [AttributeType.Id]: generateNodeId() })]),
+  onClick: (editor) => toggleBlock(editor, NodeName.DEMO_2_ASYNC_NODE, { [AttributeType.Id]: generateNodeId() }),
 };
 
 const demo2AsyncNodeReplaceTextToolItem: ToolItem = {
