@@ -96,31 +96,65 @@ export const editorDefinition = {
   content: ''/*initially empty*/,
 };
 
-// NOTE: the following execution order goes from top-first to bottom-last
-// SEE: FeatureDoc, Changes section
-//
-// Current Schema Execution Order
-// SEE: notebookEditor/model/type/ExtensionPriority
-// appendedTransaction
-// 1. NodeViewRemoval
-// 2. SetDefaultMarks
-// 3. Paragraph
-// 4. all other extensions (in registration order, (SEE: Extension array above))
-//
-// onTransaction
-// 1. NodeViewRemoval
-// 2. SetDefaultMarks
-// 3. Paragraph
-// 4. all other extensions (in registration order, (SEE: Extension array above))
-//
-// onSelectionUpdate
-// 1. NodeViewRemoval
-// 2. SetDefaultMarks
-// 3. Paragraph
-// 4. all other extensions (in registration order, (SEE: Extension array above))
-//
-// onUpdate
-// 1. NodeViewRemoval
-// 2. SetDefaultMarks
-// 3. Paragraph
-// 4. all other extensions (in registration order, (SEE: Extension array above))
+/**
+ * NOTE: the following execution order goes from top-first to bottom-last
+ * (SEE: FeatureDoc, Changes section)
+ *
+ * Current Schema Execution Order
+ * (SEE: notebookEditor/model/type/ExtensionPriority)
+ * appendedTransaction
+ * 1. Keymap
+ * 2. NodeViewRemoval
+ * 3. Paragraph
+ * 4. Link
+ * 5. AsyncNode
+ * 6. EmojiSuggestion
+ * 7. ListItemContent
+ * 8. ListItem
+ * 9. TaskListItem
+ * 10. InputRule
+ * 11. Text
+ * 12. all other extensions (in registration order, (SEE: Extension array above))
+ *
+ * onTransaction
+ * 1. Keymap
+ * 2. NodeViewRemoval
+ * 3. Paragraph
+ * 4. Link
+ * 5. AsyncNode
+ * 6. EmojiSuggestion
+ * 7. ListItemContent
+ * 8. ListItem
+ * 9. TaskListItem
+ * 10. InputRule
+ * 11. Text
+ * 12. all other extensions (in registration order, (SEE: Extension array above))
+ *
+ * onSelectionUpdate
+ * 1. Keymap
+ * 2. NodeViewRemoval
+ * 3. Paragraph
+ * 4. Link
+ * 5. AsyncNode
+ * 6. EmojiSuggestion
+ * 7. ListItemContent
+ * 8. ListItem
+ * 9. TaskListItem
+ * 10. InputRule
+ * 11. Text
+ * 12. all other extensions (in registration order, (SEE: Extension array above))
+ *
+ * onUpdate
+ * 1. Keymap
+ * 2. NodeViewRemoval
+ * 3. Paragraph
+ * 4. Link
+ * 5. AsyncNode
+ * 6. EmojiSuggestion
+ * 7. ListItemContent
+ * 8. ListItem
+ * 9. TaskListItem
+ * 10. InputRule
+ * 11. Text
+ * 12. all other extensions (in registration order, (SEE: Extension array above))
+ */
