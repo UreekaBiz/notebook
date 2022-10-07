@@ -1,6 +1,7 @@
 import { MarkSpec, NodeSpec, Schema } from 'prosemirror-model';
 
 import { createApplicationError } from '../../util/error';
+import { BlockquoteNodeSpec } from './extension/blockquote';
 import { BoldMarkSpec } from './extension/bold';
 import { CodeMarkSpec } from './extension/code';
 import { CodeBlockNodeSpec } from './extension/codeBlock';
@@ -37,7 +38,10 @@ export const NodeSpecs: Record<NodeName, NodeSpec> = {
   [NodeName.DOC]: DocumentNodeSpec,
   [NodeName.PARAGRAPH]: ParagraphNodeSpec,
   [NodeName.LIST_ITEM_CONTENT]: ListItemContentNodeSpec,
+  [NodeName.LIST_ITEM]: ListItemNodeSpec,
+  [NodeName.TASK_LIST_ITEM]: TaskListItemNodeSpec,
 
+  [NodeName.BLOCKQUOTE]: BlockquoteNodeSpec,
   [NodeName.BULLET_LIST]: BulletListNodeSpec,
   [NodeName.CODEBLOCK]: CodeBlockNodeSpec,
   [NodeName.CODEBLOCK_REFERENCE]: CodeBlockReferenceNodeSpec,
@@ -46,20 +50,19 @@ export const NodeSpecs: Record<NodeName, NodeSpec> = {
   [NodeName.EDITABLE_INLINE_NODE_WITH_CONTENT]: EditableInlineNodeWithContentNodeSpec,
   [NodeName.HEADING]: HeadingNodeSpec,
   [NodeName.IMAGE]: ImageNodeSpec,
-  [NodeName.LIST_ITEM]: ListItemNodeSpec,
   [NodeName.MARK_HOLDER]: MarkHolderNodeSpec,
   [NodeName.NESTED_VIEW_BLOCK_NODE]: NestedViewBlockNodeSpec,
   [NodeName.ORDERED_LIST]: OrderedListNodeSpec,
   [NodeName.TASK_LIST]: TaskListNodeSpec,
-  [NodeName.TASK_LIST_ITEM]: TaskListItemNodeSpec,
   [NodeName.TEXT]: TextNodeSpec,
 };
 
 export const MarkSpecs: Record<MarkName, MarkSpec> = {
+  [MarkName.LINK]: LinkMarkSpec,
+
   [MarkName.BOLD]: BoldMarkSpec,
   [MarkName.CODE]: CodeMarkSpec,
   [MarkName.ITALIC]: ItalicMarkSpec,
-  [MarkName.LINK]: LinkMarkSpec,
   [MarkName.REPLACED_TEXT_MARK]: ReplacedTextMarkMarkSpec,
   [MarkName.STRIKETHROUGH]: StrikethroughMarkSpec,
   [MarkName.SUB_SCRIPT]: SubScriptMarkRendererSpec,

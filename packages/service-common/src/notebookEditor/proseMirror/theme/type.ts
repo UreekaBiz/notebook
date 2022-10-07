@@ -65,6 +65,7 @@ export const DefaultTheme: Theme = {
   displayName: 'Default',
 
   nodes: {
+    [NodeName.BLOCKQUOTE]: {/*no defined value*/},
     [NodeName.BULLET_LIST]: {/*no defined value*/},
     [NodeName.CODEBLOCK]: {
       [AttributeType.PaddingLeft]: '4px',
@@ -195,6 +196,7 @@ export const GoogleDocsTheme: Theme = {
   displayName: 'Google Docs',
 
   nodes: {
+    [NodeName.BLOCKQUOTE]: {/*no defined value*/},
     [NodeName.BULLET_LIST]: {/*no defined value*/},
     [NodeName.CODEBLOCK]: {
       [AttributeType.PaddingLeft]: '4px',

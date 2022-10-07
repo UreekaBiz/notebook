@@ -2,6 +2,7 @@ import { Editor } from '@tiptap/core';
 
 import { MarkName, NodeName, SelectionDepth } from '@ureeka-notebook/web-service';
 
+import { BlockquoteToolbar } from 'notebookEditor/extension/blockquote/toolbar';
 import { CodeBlockToolbar } from 'notebookEditor/extension/codeblock/toolbar';
 import { CodeBlockReferenceToolbar } from 'notebookEditor/extension/codeBlockReference/toolbar';
 import { Demo2AsyncNodeToolbar } from 'notebookEditor/extension/demo2AsyncNode/toolbar';
@@ -25,6 +26,7 @@ import { Toolbar } from './type';
 // A collection of Toolbars. Each Node can have its own Toolbar. If it's not defined
 // in the collection then nothing will be shown.
 const TOOLBAR_MAP: Record<NodeName | MarkName, Toolbar | null> = {
+  [NodeName.BLOCKQUOTE]: BlockquoteToolbar,
   [NodeName.BULLET_LIST]: BulletListToolbar,
   [NodeName.CODEBLOCK]: CodeBlockToolbar,
   [NodeName.CODEBLOCK_REFERENCE]: CodeBlockReferenceToolbar,

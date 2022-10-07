@@ -2,6 +2,7 @@ import { DOMOutputSpec, Mark as ProseMirrorMark, MarkSpec, Node as ProseMirrorNo
 
 import {  Attributes, HTMLAttributes } from '../attribute';
 import { NotebookDocumentContent } from '../document';
+import { BlockquoteNodeRendererSpec } from '../extension/blockquote';
 import { BoldMarkRendererSpec } from '../extension/bold';
 import { CodeMarkRendererSpec } from '../extension/code';
 import { CodeBlockNodeRendererSpec } from '../extension/codeBlock';
@@ -34,6 +35,7 @@ import { getRenderTag, HTMLString, MarkRendererSpec, NodeRendererSpec, DATA_MARK
 // ********************************************************************************
 // == Type ========================================================================
 export const NodeRendererSpecs: Record<NodeName, NodeRendererSpec> = {
+  [NodeName.BLOCKQUOTE]: BlockquoteNodeRendererSpec as any/*FIXME!!!*/,
   [NodeName.BULLET_LIST]: BulletListNodeRendererSpec as any/*FIXME!!!*/,
   [NodeName.CODEBLOCK]: CodeBlockNodeRendererSpec as any/*FIXME!!!*/,
   [NodeName.CODEBLOCK_REFERENCE]: CodeBlockReferenceNodeRendererSpec as any/*FIXME!!!*/,

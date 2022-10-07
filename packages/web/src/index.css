@@ -61,6 +61,13 @@
 }
 
 /* -- Node Styles -------------------------------------------------------------- */
+/* .. Blockquote ............................................................... */
+[data-node-type="blockquote"] {
+  border-left: 3px solid #CCCCCC;
+  margin-left: 1rem;
+  padding-left: 0.25rem;
+}
+
 /* .. Chip ..................................................................... */
 .chip {
   transform: translate(0, 0)/*needed to remove the white background while dragging the chip*/;
@@ -260,7 +267,7 @@ ul[data-node-type="taskList"] > li > label {
 [data-node-type="editableInlineNodeWithContent"] .innerViewDisplay::after,
 [data-node-type="editableInlineNodeWithContent"] .innerViewDisplay::before {
   content: '~'/*T&E*/;
-  color: #b0b0b0;
+  color: #B0B0B0;
 }
 
 /* .. Rendered View ............................................................ */
@@ -282,7 +289,7 @@ ul[data-node-type="taskList"] > li > label {
 [data-node-type="nestedViewBlockNode"].ProseMirror-selectednode .innerViewDisplay::after {
   background-color: #eee;
   content: '~'/*T&E*/;
-  color: #b0b0b0;
+  color: #B0B0B0;
 }
 [data-node-type="nestedViewBlockNode"] .innerViewDisplay {
   display: block;
@@ -353,8 +360,8 @@ ul[data-node-type="taskList"] > li > label {
 
 .node_tooltip > div   {
   max-height: 100px;
-  background-color: #eeeeee;
-  border: 1px solid #cccccc;
+  background-color: #EEEEEE;
+  border: 1px solid #CCCCCC;
   padding: 4px 8px;
   border-radius: 2px;
 

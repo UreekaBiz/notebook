@@ -1,5 +1,6 @@
 import { EDITOR_CLASS_NAME, EDITOR_EDITABLE_CLASS_NAME } from 'core/theme';
 import { AsyncNode } from 'notebookEditor/extension/asyncNode/AsyncNode';
+import { Blockquote } from 'notebookEditor/extension/blockquote/Blockquote';
 import { Bold } from 'notebookEditor/extension/bold/Bold';
 import { BulletList } from 'notebookEditor/extension/list/bulletList/BulletList';
 import { Code } from 'notebookEditor/extension/code/Code';
@@ -50,6 +51,7 @@ export const editorDefinition = {
   // SEE: /common/notebookEditor/prosemirror/schema.ts
   extensions: [
     AsyncNode,
+    Blockquote,
     Bold,
     BulletList,
     Code,
@@ -113,8 +115,9 @@ export const editorDefinition = {
  * 8. ListItem
  * 9. TaskListItem
  * 10. InputRule
- * 11. Text
- * 12. all other extensions (in registration order, (SEE: Extension array above))
+ * 11. Blockquote
+ * 12. Text
+ * 13. all other extensions (in registration order, (SEE: Extension array above))
  *
  * onTransaction
  * 1. Keymap
@@ -127,8 +130,9 @@ export const editorDefinition = {
  * 8. ListItem
  * 9. TaskListItem
  * 10. InputRule
- * 11. Text
- * 12. all other extensions (in registration order, (SEE: Extension array above))
+ * 11. Blockquote
+ * 12. Text
+ * 13. all other extensions (in registration order, (SEE: Extension array above))
  *
  * onSelectionUpdate
  * 1. Keymap
@@ -141,8 +145,9 @@ export const editorDefinition = {
  * 8. ListItem
  * 9. TaskListItem
  * 10. InputRule
- * 11. Text
- * 12. all other extensions (in registration order, (SEE: Extension array above))
+ * 11. Blockquote
+ * 12. Text
+ * 13. all other extensions (in registration order, (SEE: Extension array above))
  *
  * onUpdate
  * 1. Keymap
@@ -155,6 +160,7 @@ export const editorDefinition = {
  * 8. ListItem
  * 9. TaskListItem
  * 10. InputRule
- * 11. Text
- * 12. all other extensions (in registration order, (SEE: Extension array above))
+ * 11. Blockquote
+ * 12. Text
+ * 13. all other extensions (in registration order, (SEE: Extension array above))
  */

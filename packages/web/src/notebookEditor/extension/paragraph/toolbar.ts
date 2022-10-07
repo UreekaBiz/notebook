@@ -1,5 +1,6 @@
 import { NodeName } from '@ureeka-notebook/web-service';
 
+import { blockquoteToolItem } from 'notebookEditor/extension/blockquote/toolbar';
 import { markBold } from 'notebookEditor/extension/bold/toolbar';
 import { markCode } from 'notebookEditor/extension/code/toolbar';
 import { markItalic } from 'notebookEditor/extension/italic/toolbar';
@@ -32,6 +33,7 @@ export const ParagraphToolbar: Toolbar = {
       orderedListToolItem,
       bulletListToolItem,
       taskListToolItem,
+      blockquoteToolItem,
       markBold,
       markItalic,
       markUnderline,
