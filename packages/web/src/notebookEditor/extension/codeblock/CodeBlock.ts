@@ -1,6 +1,6 @@
 import { textblockTypeInputRule, Node } from '@tiptap/core';
 
-import { generateNodeId, getNodeOutputSpec, isCodeBlockNode, selectBlockNodeContentCommand, AttributeType, CodeBlockNodeSpec, CodeBlockType, CreateBlockNodeDocumentUpdate, NodeName, SetAttributeType, DATA_NODE_TYPE } from '@ureeka-notebook/web-service';
+import { generateNodeId, getNodeOutputSpec, isCodeBlockNode, leaveBlockNodeCommand, selectBlockNodeContentCommand, AttributeType, CodeBlockNodeSpec, CodeBlockType, CreateBlockNodeDocumentUpdate, NodeName, SetAttributeType, DATA_NODE_TYPE } from '@ureeka-notebook/web-service';
 
 import { applyDocumentUpdates } from 'notebookEditor/command/update';
 import { shortcutCommandWrapper } from 'notebookEditor/command/util';
@@ -55,8 +55,8 @@ export const CodeBlock = Node.create<NoOptions, CodeBlockStorage>({
       'ArrowUp': () => shortcutCommandWrapper(this.editor, blockArrowUpCommand(NodeName.CODEBLOCK)),
       'ArrowDown': () => shortcutCommandWrapper(this.editor, blockArrowDownCommand(NodeName.CODEBLOCK)),
 
-      // exit Node on shift enter, inserting a Paragraph below
-      'Shift-Enter': () => this.editor.commands.exitCode(),
+      // exit Node on Shift-Enter
+      'Shift-Enter': () => shortcutCommandWrapper(this.editor, leaveBlockNodeCommand(NodeName.CODEBLOCK)),
 
       // select all the content of the CodeBlock
       'Cmd-a':  () => shortcutCommandWrapper(this.editor, selectBlockNodeContentCommand(NodeName.CODEBLOCK)),

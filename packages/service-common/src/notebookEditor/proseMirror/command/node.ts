@@ -136,7 +136,7 @@ export class ClearNodesDocumentUpdate implements AbstractDocumentUpdate {
 // create a default Block Node after the one at the current Selection and
 // move the cursor there
 export const leaveBlockNodeCommand = (nodeName: NodeName): Command => (state, dispatch) => {
-  const updatedTr =  new LeaveBlockNodeDocumentUpdate().update(state, state.tr);
+  const updatedTr =  new LeaveBlockNodeDocumentUpdate(nodeName).update(state, state.tr);
   if(updatedTr) {
     dispatch(updatedTr);
     return true/*Command executed*/;
@@ -145,7 +145,7 @@ export const leaveBlockNodeCommand = (nodeName: NodeName): Command => (state, di
   return false/*not executed*/;
 };
 export class LeaveBlockNodeDocumentUpdate implements AbstractDocumentUpdate {
-  public constructor() {/*nothing additional*/}
+  public constructor(private readonly nodeName: NodeName) {/*nothing additional*/}
 
   /*
    * modify the given Transaction such that a default Block Node is created
@@ -154,6 +154,7 @@ export class LeaveBlockNodeDocumentUpdate implements AbstractDocumentUpdate {
   public update(editorState: EditorState, tr: Transaction) {
     const { $head, $anchor } = editorState.selection;
     if(!$head.sameParent($anchor)) return false/*Selection spans multiple Blocks*/;
+    if(!($head.parent.type.name === this.nodeName)) return false/*this Node should not handle the call*/;
 
     const parentOfHead = $head.node(-1),
           indexAfterHeadParent = $head.indexAfter(-1);

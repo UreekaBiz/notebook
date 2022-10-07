@@ -149,6 +149,7 @@ export {
 
   // -- Node Specs ----------------------------------------------------------------
   NodeSpecs,
+  BlockquoteNodeSpec,
   BulletListNodeSpec,
   CodeBlockNodeSpec,
   CodeBlockReferenceNodeSpec,
@@ -169,6 +170,9 @@ export {
   // -- Node Types ----------------------------------------------------------------
   AsyncNodeType,
   isAsyncNode,
+
+  BlockquoteNodeType,
+  isBlockquoteNode,
 
   BulletListNodeType,
   isBulletListNode,
@@ -435,6 +439,8 @@ export {
   getNodesAffectedByTransaction,
   getNodesAffectedByStepMap,
   getNodesRemovedByTransaction,
+  leaveBlockNodeCommand,
+  LeaveBlockNodeDocumentUpdate,
   liftEmptyBlockNodeCommand,
   LiftEmptyBlockNodeDocumentUpdate,
   joinBackwardCommand,
