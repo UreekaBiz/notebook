@@ -1,13 +1,14 @@
 import { Box, Flex } from '@chakra-ui/react';
 
-import { isCodeBlockReferenceNode, isNodeSelection, AttributeType, NodeName, InvalidMergedAttributeValue } from '@ureeka-notebook/web-service';
+import { isCodeBlockReferenceNode, isNodeSelection, AttributeType, NodeName, InvalidMergedAttributeValue, UpdateSingleNodeAttributesDocumentUpdate, SetNodeSelectionDocumentUpdate } from '@ureeka-notebook/web-service';
 
+import { applyDocumentUpdates } from 'notebookEditor/command/update';
+import { getTextDOMRenderedValue } from 'notebookEditor/extension/util/attribute';
 import { EditorToolComponentProps } from 'notebookEditor/sidebar/toolbar/type';
 import { useLocalValue } from 'notebookEditor/shared/hook/useLocalValue';
 import { separateUnitFromString } from 'notebookEditor/theme/type';
 
 import { DelimiterToolItem } from './DelimiterToolItem';
-import { getTextDOMRenderedValue } from 'notebookEditor/extension/util/attribute';
 
 // ********************************************************************************
 // == Interface ===================================================================
@@ -22,8 +23,9 @@ export interface CodeBlockReferenceDelimiterToolItemProps {
 }
 
 // == Component ===================================================================
-export const CodeBlockReferenceDelimiterToolItem: React.FC<Props> = ({ editor, depth }) => {
+export const CodeBlockReferenceDelimiterToolItem: React.FC<Props> = ({ editor }) => {
   const { selection } = editor.state;
+  const { anchor } = selection;
   if(!isNodeSelection(selection) || !isCodeBlockReferenceNode(selection.node)) throw new Error('Invalid CodeBlockReferenceLeftDelimiterToolItem  Render');
 
   const leftDelimiter = getTextDOMRenderedValue(editor, AttributeType.LeftDelimiter) ?? ''/*default*/,
@@ -38,10 +40,10 @@ export const CodeBlockReferenceDelimiterToolItem: React.FC<Props> = ({ editor, d
       ? ({ [AttributeType.LeftDelimiter]: value })
       : ({ [AttributeType.RightDelimiter]: value });
 
-    editor.chain()
-      .updateAttributes(NodeName.CODEBLOCK_REFERENCE, newDelimiterAttributeObj)
-      .setNodeSelection(selection.anchor)
-      .run();
+    applyDocumentUpdates(editor, [
+      new UpdateSingleNodeAttributesDocumentUpdate(NodeName.CODEBLOCK_REFERENCE, anchor, newDelimiterAttributeObj),
+      new SetNodeSelectionDocumentUpdate(anchor),
+    ]);
 
     // focus the editor again
     if(focusEditor) editor.commands.focus();

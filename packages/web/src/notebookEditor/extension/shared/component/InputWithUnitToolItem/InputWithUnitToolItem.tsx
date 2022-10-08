@@ -1,5 +1,6 @@
-import { getSelectedNode, isNodeSelection, isNodeType, AttributeType, InvalidMergedAttributeValue, MarkName, NodeName } from '@ureeka-notebook/web-service';
+import { getSelectedNode, isNodeSelection, isNodeType, AttributeType, InvalidMergedAttributeValue, MarkName, NodeName, SetNodeSelectionDocumentUpdate, SetTextSelectionDocumentUpdate, UpdateSingleNodeAttributesDocumentUpdate  } from '@ureeka-notebook/web-service';
 
+import { applyDocumentUpdates } from 'notebookEditor/command/update';
 import { getTextDOMRenderedValue } from 'notebookEditor/extension/util/attribute';
 import { EditorToolComponentProps } from 'notebookEditor/sidebar/toolbar/type';
 
@@ -22,6 +23,7 @@ interface InputWithUnitNodeToolItemProps extends EditorToolComponentProps {
 export const InputWithUnitNodeToolItem: React.FC<InputWithUnitNodeToolItemProps> = ({ editor, attributeType, depth, name, nodeName, minValue, maxValue }) => {
   const { state } = editor;
   const { selection } = state;
+  const { $anchor, anchor } = selection;
   const node = getSelectedNode(state, depth);
   if(!node || !isNodeType(node, nodeName)) return null/*nothing to render - invalid node render*/;
 
@@ -29,15 +31,18 @@ export const InputWithUnitNodeToolItem: React.FC<InputWithUnitNodeToolItemProps>
 
   // -- Handler -------------------------------------------------------------------
   const handleChange = (value: string, focus?: boolean) => {
-    editor.commands.updateAttributes(nodeName, { [attributeType]: value });
+    const nodeSelection = isNodeSelection(selection);
+    const updatePos = isNodeSelection(selection)
+      ? anchor
+      : anchor - $anchor.parentOffset - 1/*select the Node itself*/;
 
-    const position = state.selection.anchor;
-    // set the selection in the same position in case that the node was replaced
-    if(isNodeSelection(selection)) editor.commands.setNodeSelection(position);
-    else editor.commands.setTextSelection(position);
+    applyDocumentUpdates(editor, [
+      new UpdateSingleNodeAttributesDocumentUpdate(nodeName as NodeName/*by definition*/, updatePos, { [attributeType]: value }),
+      ...(nodeSelection ? [new SetNodeSelectionDocumentUpdate(anchor)] : [new SetTextSelectionDocumentUpdate({ from: anchor, to: anchor })]),
+    ]);
 
-    // Focus the editor again
-    if(focus) editor.commands.focus();
+    // focus the Editor again
+    if(focus) editor.view.focus();
   };
 
   // -- UI ------------------------------------------------------------------------

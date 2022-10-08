@@ -1,6 +1,6 @@
 import { useCallback, useEffect } from 'react';
 
-import { getLogger, getSelectedNode, isNodeType, isNodeSelection, AttributeType, Logger, NodeName, DATA_VISUAL_ID } from '@ureeka-notebook/web-service';
+import { getLogger, getSelectedNode, isNodeType, updateSingleNodeAttributesCommand, AttributeType, Logger, NodeName, DATA_VISUAL_ID } from '@ureeka-notebook/web-service';
 
 import { focusCodeBlock, getLabelFromValue, getValueFromLabel, isValidCodeBlockReference, validateChip } from 'notebookEditor/extension/codeblock/util';
 import { ChipValue } from 'notebookEditor/extension/shared/component/chipTool/Chip';
@@ -22,16 +22,10 @@ export const CodeBlockReferenceChipSelector: React.FC<Props> = ({ editor, depth,
   const node = getSelectedNode(state, depth);
 
   const updateAttribute = useCallback((value: string | undefined, focus?: boolean) => {
-    editor.chain().focus().updateAttributes(nodeName, { [AttributeType.CodeBlockReference]: value }).run();
-
-    const position = state.selection.anchor;
-    // set the selection in the same position in case that the node was replaced
-    if(isNodeSelection(selection)) editor.commands.setNodeSelection(position);
-    else editor.commands.setTextSelection(position);
-
-    // Focus the editor again
-    if(focus) editor.commands.focus();
-  }, [editor, nodeName, selection, state.selection.anchor]);
+    if(!node) return/*nothing to do*/;
+    updateSingleNodeAttributesCommand(node.type.name as NodeName/*by definition*/, selection.$anchor.pos, { [AttributeType.CodeBlockReference]: value })(editor.state, editor.view.dispatch);
+    if(focus) editor.view.focus();
+  }, [editor.state, editor.view, node, selection.$anchor.pos]);
 
   // == Effect ====================================================================
   /** doing CMD + Click on a VisualId toggles it from the CodeBlockReference */

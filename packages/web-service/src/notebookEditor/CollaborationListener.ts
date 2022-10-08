@@ -1,12 +1,12 @@
 import { Editor } from '@tiptap/core';
 import { onDisconnect, serverTimestamp, set } from 'firebase/database';
 import * as collab from 'prosemirror-collab';
-import { NodeSelection, TextSelection } from 'prosemirror-state';
+import { TextSelection } from 'prosemirror-state';
 import { Step as ProseMirrorStep } from 'prosemirror-transform';
 
 import { distinctUntilChanged, BehaviorSubject } from 'rxjs';
 
-import { contentToJSONStep, generateClientIdentifier, getNodeName, isNestedViewNode, isNodeSelection, sleep, AuthedUser, NotebookIdentifier, NotebookVersion, NotebookSchemaVersion, NotebookUserSession_Write, Unsubscribe, UserIdentifier, NO_NOTEBOOK_VERSION } from '@ureeka-notebook/service-common';
+import { contentToJSONStep, generateClientIdentifier, sleep, AuthedUser, NotebookIdentifier, NotebookVersion, NotebookSchemaVersion, NotebookUserSession_Write, Unsubscribe, UserIdentifier, NO_NOTEBOOK_VERSION } from '@ureeka-notebook/service-common';
 
 import { getLogger, ServiceLogger } from '../logging/type';
 import { getEnvNumber } from '../util/environment';
@@ -342,31 +342,6 @@ export class CollaborationListener {
     const clientIds = versions.map(({ clientId }) => clientId);
 
     const transaction = collab.receiveTransaction(this.editor.view.state, proseMirrorSteps, clientIds, { mapSelectionBackward: true });
-
-    // update the NodeSelection only if the Node still exits
-    // NOTE: updating the attributes of a Node causes it to be replaced and
-    //       ProseMirror changes the Selection from being NodeSelection to
-    //       TextSelection which causes the Selection to be lost. To fix that a new
-    //       NodeSelection is created from the previous position mapped through the
-    //       Transaction from `collab`.
-    const currentSelection = this.editor.state.selection;
-    if(isNodeSelection(currentSelection)
-      // do not modify a Selection with a NestedViewNode, since the inner View of
-      // those Nodes should be always focused when they are selected
-      && !isNestedViewNode(currentSelection.node)) {
-      // NOTE: creating a NodeSelection can throw an error if there is no Node to
-      //       select. This can happen if the Node was removed.
-      try {
-        // update the Selection when the selected Node was replaced with same Node
-        const nodeSelection = new NodeSelection(transaction.selection.$anchor);
-        if(getNodeName(nodeSelection.node) === getNodeName(currentSelection.node)) {
-          transaction.setSelection(nodeSelection);
-        } /* else -- not the same Node */
-      } catch(error) {
-        log.debug('New selection is not a Node Selection anymore. Node was deleted. Ignoring.');
-      }
-    } /* else -- was not a NodeSelection */
-
     this.editor.view.dispatch(transaction);
   }
 

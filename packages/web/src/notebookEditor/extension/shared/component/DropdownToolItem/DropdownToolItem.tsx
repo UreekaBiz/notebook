@@ -1,5 +1,6 @@
-import { getSelectedNode, isNodeType, isNodeSelection, AttributeType, NodeName } from '@ureeka-notebook/web-service';
+import { getSelectedNode, isNodeType, isNodeSelection, AttributeType, NodeName, SetNodeSelectionDocumentUpdate, SetTextSelectionDocumentUpdate, UpdateSingleNodeAttributesDocumentUpdate } from '@ureeka-notebook/web-service';
 
+import { applyDocumentUpdates } from 'notebookEditor/command/update';
 import { EditorToolComponentProps } from 'notebookEditor/sidebar/toolbar/type';
 
 import { InputToolItemContainer } from '../InputToolItemContainer';
@@ -20,20 +21,24 @@ interface Props extends EditorToolComponentProps {
 export const DropdownToolItem: React.FC<Props> = ({ editor, depth, nodeName, attributeType, name, options }) => {
   const { state } = editor;
   const { selection } = state;
+  const { $anchor, anchor } = selection;
   const node = getSelectedNode(state, depth);
   if(!node || !isNodeType(node, nodeName)) return null/*nothing to render - invalid node render*/;
 
   // == Handler ===================================================================
   const handleChange = (value: string) => {
-    editor.commands.updateAttributes(nodeName, { [attributeType]: value });
+    const nodeSelection = isNodeSelection(selection);
+    const updatePos = isNodeSelection(selection)
+      ? anchor
+      : anchor - $anchor.parentOffset - 1/*select the Node itself*/;
 
-    const position = state.selection.anchor;
-    // set the selection in the same position in case that the node was replaced
-    if(isNodeSelection(selection)) editor.commands.setNodeSelection(position);
-    else editor.commands.setTextSelection(position);
+    applyDocumentUpdates(editor, [
+      new UpdateSingleNodeAttributesDocumentUpdate(nodeName as NodeName/*by definition*/, updatePos, { [attributeType]: value }),
+      ...(nodeSelection ? [new SetNodeSelectionDocumentUpdate(anchor)] : [new SetTextSelectionDocumentUpdate({ from: anchor, to: anchor })]),
+    ]);
 
-    // Focus the editor again
-    editor.commands.focus();
+    // focus the Editor again
+    editor.view.focus();
   };
 
   // == UI ========================================================================

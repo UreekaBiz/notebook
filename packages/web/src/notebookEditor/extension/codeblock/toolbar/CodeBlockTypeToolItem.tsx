@@ -1,5 +1,6 @@
-import { isCodeBlockNode, AttributeType, CodeBlockType, NodeName } from '@ureeka-notebook/web-service';
+import { isCodeBlockNode, AttributeType, CodeBlockType, NodeName, UpdateSingleNodeAttributesDocumentUpdate, SetTextSelectionDocumentUpdate } from '@ureeka-notebook/web-service';
 
+import { applyDocumentUpdates } from 'notebookEditor/command/update';
 import { DropdownTool, DropdownToolItemType } from 'notebookEditor/extension/shared/component/DropdownToolItem/DropdownTool';
 import { InputToolItemContainer } from 'notebookEditor/extension/shared/component/InputToolItemContainer';
 import { EditorToolComponentProps } from 'notebookEditor/sidebar/toolbar/type';
@@ -12,7 +13,8 @@ const options: DropdownToolItemType[] = [{ value: CodeBlockType.Code, label: 'Co
 
 interface Props extends EditorToolComponentProps {/*no additional*/}
 export const CodeBlockTypeToolItem: React.FC<Props> = ({ editor }) => {
-  const parentNode = editor.state.selection.$anchor.parent;
+  const { $anchor, anchor } = editor.state.selection;
+  const parentNode = $anchor.parent;
   if(!isCodeBlockNode(parentNode)) throw new Error('Invalid CodeBlock WrapTool Render');
 
   const type = parentNode.attrs[AttributeType.Type] ?? CodeBlockType.Code/*default*/;
@@ -22,11 +24,10 @@ export const CodeBlockTypeToolItem: React.FC<Props> = ({ editor }) => {
     // text should wrap by contract (even though it can be change by the user)
     const wrap = type === CodeBlockType.Text;
     // (SEE: CodeBlock.ts)
-    editor.chain()
-          .focus()
-          .updateAttributes(NodeName.CODEBLOCK, { type, wrap })
-          .setTextSelection(editor.state.selection.anchor)
-          .run();
+    applyDocumentUpdates(editor, [
+      new UpdateSingleNodeAttributesDocumentUpdate(NodeName.CODEBLOCK, anchor - $anchor.parentOffset - 1/*the CodeBlock itself*/, { [AttributeType.Type]: type, [AttributeType.Wrap]: wrap }),
+      new SetTextSelectionDocumentUpdate({ from: anchor, to: anchor }),
+    ]);
   };
 
   // == UI ========================================================================

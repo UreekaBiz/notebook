@@ -1,6 +1,6 @@
 import { useEffect } from 'react';
 
-import { getSelectedNode, isNodeSelection, AttributeType, NodeName, DATA_VISUAL_ID } from '@ureeka-notebook/web-service';
+import { getSelectedNode, updateSingleNodeAttributesCommand, AttributeType, NodeName, DATA_VISUAL_ID } from '@ureeka-notebook/web-service';
 
 import { focusCodeBlock, getLabelFromValue, getValueFromLabel, isValidCodeBlockReference, validateChip } from 'notebookEditor/extension/codeblock/util';
 import { ChipValue } from 'notebookEditor/extension/shared/component/chipTool/Chip';
@@ -41,13 +41,7 @@ export const CodeBlockReferencesChipSelector: React.FC<Props> = ({ editor, depth
 
       // toggles the visualId from the CodeBlockReferences
       const newValue = references.includes(codeblockId) ? references.filter(ref => ref !== codeblockId) : [...references, codeblockId];
-      editor.chain().focus().updateAttributes(nodeName, { [AttributeType.CodeBlockReferences]: newValue }).run();
-
-      // set the selection in the same position in case that the node was replaced
-      const position = state.selection.anchor;
-      if(isNodeSelection(selection)) editor.commands.setNodeSelection(position);
-      else editor.commands.setTextSelection(position);
-
+      updateSingleNodeAttributesCommand(node.type.name as NodeName/*by definition*/, selection.$anchor.pos, { [AttributeType.CodeBlockReferences]: newValue })(editor.state, editor.view.dispatch);
       // no need to focus editor again
     };
 

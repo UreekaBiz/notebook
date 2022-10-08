@@ -1,6 +1,7 @@
 import { InputProps } from '@chakra-ui/react';
-import { getSelectedNode, isBlank, isNodeSelection, isNodeType, AttributeType, NodeName } from '@ureeka-notebook/web-service';
+import { getSelectedNode, isBlank, isNodeSelection, isNodeType, AttributeType, NodeName, SetNodeSelectionDocumentUpdate, SetTextSelectionDocumentUpdate, UpdateSingleNodeAttributesDocumentUpdate } from '@ureeka-notebook/web-service';
 
+import { applyDocumentUpdates } from 'notebookEditor/command/update';
 import { EditorToolComponentProps } from 'notebookEditor/sidebar/toolbar/type';
 
 import { InputToolItemContainer } from '../InputToolItemContainer';
@@ -19,6 +20,7 @@ interface Props extends EditorToolComponentProps, Omit<InputProps, 'onChange'> {
 export const InputToolItem: React.FC<Props> = ({ editor, depth, nodeName, attributeType, name, type, ...props }) => {
   const { state } = editor;
   const { selection } = state;
+  const { $anchor, anchor } = selection;
   const node = getSelectedNode(state, depth);
   if(!node || !isNodeType(node, nodeName)) return null/*nothing to render - invalid node render*/;
 
@@ -32,15 +34,18 @@ export const InputToolItem: React.FC<Props> = ({ editor, depth, nodeName, attrib
     else if(type === 'number') parsedValue = parseFloat(value);
     else parsedValue = value;
 
-    editor.commands.updateAttributes(nodeName, { [attributeType]: parsedValue });
+    const nodeSelection = isNodeSelection(selection);
+    const updatePos = isNodeSelection(selection)
+      ? anchor
+      : anchor - $anchor.parentOffset - 1/*select the Node itself*/;
 
-    const position = state.selection.anchor;
-    // set the selection in the same position in case that the node was replaced
-    if(isNodeSelection(selection)) editor.commands.setNodeSelection(position);
-    else editor.commands.setTextSelection(position);
+    applyDocumentUpdates(editor, [
+      new UpdateSingleNodeAttributesDocumentUpdate(nodeName as NodeName/*by definition*/, updatePos, { [attributeType]: parsedValue }),
+      ...(nodeSelection ? [new SetNodeSelectionDocumentUpdate(anchor)] : [new SetTextSelectionDocumentUpdate({ from: anchor, to: anchor })]),
+    ]);
 
-    // Focus the editor again
-    editor.commands.focus();
+    // focus the Editor again
+    editor.view.focus();
   };
 
   // == UI ========================================================================

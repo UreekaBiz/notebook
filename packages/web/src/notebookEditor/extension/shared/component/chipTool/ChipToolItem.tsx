@@ -1,5 +1,6 @@
-import { getSelectedNode, isNodeSelection, isNodeType, AttributeType, NodeName } from '@ureeka-notebook/web-service';
+import { getSelectedNode, isNodeSelection, isNodeType, AttributeType, NodeName, SetNodeSelectionDocumentUpdate, SetTextSelectionDocumentUpdate, UpdateSingleNodeAttributesDocumentUpdate } from '@ureeka-notebook/web-service';
 
+import { applyDocumentUpdates } from 'notebookEditor/command/update';
 import { EditorToolComponentProps } from 'notebookEditor/sidebar/toolbar/type';
 
 import { InputToolItemContainer } from '../InputToolItemContainer';
@@ -33,6 +34,7 @@ interface Props extends EditorToolComponentProps {
 export const ChipToolItem: React.FC<Props> = ({ editor, attributeType, depth, name, nodeName, validate, placeholder, keepFocus = true, getLabelFromValue, getValueFromLabel, onChipClick }) => {
   const { state } = editor;
   const { selection } = state;
+  const { $anchor, anchor } = selection;
   const node = getSelectedNode(state, depth);
   if(!node || !isNodeType(node, nodeName)) return null/*nothing to render - invalid node render*/;
 
@@ -49,15 +51,18 @@ export const ChipToolItem: React.FC<Props> = ({ editor, attributeType, depth, na
   const handleChange = (chips: ChipValue[], focus?: boolean) => {
     const newValue = chips.length > 0 ? chips.map(chip => chip.value) : undefined/*no value*/;
 
-    editor.commands.updateAttributes(nodeName, { [attributeType]: newValue });
+    const nodeSelection = isNodeSelection(selection);
+    const updatePos = isNodeSelection(selection)
+      ? anchor
+      : anchor - $anchor.parentOffset - 1/*select the Node itself*/;
 
-    const position = state.selection.anchor;
-    // set the selection in the same position in case that the node was replaced
-    if(isNodeSelection(selection)) editor.commands.setNodeSelection(position);
-    else editor.commands.setTextSelection(position);
+    applyDocumentUpdates(editor, [
+      new UpdateSingleNodeAttributesDocumentUpdate(nodeName as NodeName/*by definition*/, updatePos, { [attributeType]: newValue }),
+      ...(nodeSelection ? [new SetNodeSelectionDocumentUpdate(anchor)] : [new SetTextSelectionDocumentUpdate({ from: anchor, to: anchor })]),
+    ]);
 
-    // Focus the editor again
-    if(focus) editor.commands.focus();
+    // focus the Editor again
+    if(focus) editor.view.focus();
   };
 
   // == UI ========================================================================
