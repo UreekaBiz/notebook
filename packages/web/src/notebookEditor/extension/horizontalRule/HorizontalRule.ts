@@ -1,11 +1,10 @@
 import { nodeInputRule, Node } from '@tiptap/core';
 
-import { getNodeOutputSpec, AttributeType, HorizontalRuleNodeSpec, NodeName, SetAttributeType, DATA_NODE_TYPE } from '@ureeka-notebook/web-service';
+import { getNodeOutputSpec, AttributeType, HorizontalRuleNodeSpec, NodeName, DATA_NODE_TYPE, DEFAULT_HORIZONTAL_RULE_BACKGROUND_COLOR, DEFAULT_HORIZONTAL_RULE_HEIGHT } from '@ureeka-notebook/web-service';
 import { shortcutCommandWrapper } from 'notebookEditor/command/util';
 
 import { NoOptions, NoStorage } from 'notebookEditor/model/type';
 
-import { setAttributeParsingBehavior } from '../util/attribute';
 import { blockArrowDownCommand, blockArrowUpCommand } from '../util/node';
 import { insertOrToggleHorizontalRuleCommand } from './command';
 
@@ -22,8 +21,16 @@ export const HorizontalRule = Node.create<NoOptions, NoStorage>({
   // -- Attribute -----------------------------------------------------------------
   addAttributes() {
     return {
-      [AttributeType.BackgroundColor]: setAttributeParsingBehavior(AttributeType.Color, SetAttributeType.STRING),
-      [AttributeType.Height]: setAttributeParsingBehavior(AttributeType.Height, SetAttributeType.STRING),
+      // NOTE: using custom parseHTML for these since the parsing behavior
+      //       for styles has not been defined yet
+      [AttributeType.BackgroundColor]: {
+        default: DEFAULT_HORIZONTAL_RULE_BACKGROUND_COLOR,
+        parseHTML: (element) => element.style.backgroundColor,
+      },
+      [AttributeType.Height]: {
+        default: DEFAULT_HORIZONTAL_RULE_HEIGHT,
+        parseHTML: (element) => element.style.height,
+      },
     };
   },
 
@@ -45,5 +52,5 @@ export const HorizontalRule = Node.create<NoOptions, NoStorage>({
 
   // -- View ----------------------------------------------------------------------
   parseHTML() { return [ { tag: `hr[${DATA_NODE_TYPE}="${NodeName.HORIZONTAL_RULE}"]` } ]; },
-  renderHTML({ node, HTMLAttributes }) { return getNodeOutputSpec(node, HTMLAttributes); },
+  renderHTML({ node, HTMLAttributes }) { return getNodeOutputSpec(node, HTMLAttributes, true/*is leaf*/); },
 });

@@ -50,4 +50,5 @@ export type HorizontalRuleJSONNodeType = JSONNode<HorizontalRuleAttributes> & { 
 export const isHorizontalRuleJSONNode = (node: JSONNode): node is HorizontalRuleJSONNodeType => node.type === NodeName.HORIZONTAL_RULE;
 
 // --------------------------------------------------------------------------------
-export const DEFAULT_HORIZONTAL_RULE_DEFAULT_BACKGROUND_COLOR = '#CCCCCC'/*gray*/;
+export const DEFAULT_HORIZONTAL_RULE_BACKGROUND_COLOR = '#CCCCCC'/*gray*/;
+export const DEFAULT_HORIZONTAL_RULE_HEIGHT = '2px'/*T&E*/;
