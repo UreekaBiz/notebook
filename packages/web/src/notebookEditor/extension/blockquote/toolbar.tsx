@@ -14,7 +14,6 @@ import { markUnderline } from 'notebookEditor/extension/underline/toolbar';
 import { toggleBlock } from 'notebookEditor/extension/util/node';
 import { Toolbar, ToolItem } from 'notebookEditor/sidebar/toolbar/type';
 
-
 // ********************************************************************************
 // == Tool Items ==================================================================
 export const blockquoteToolItem: ToolItem = {

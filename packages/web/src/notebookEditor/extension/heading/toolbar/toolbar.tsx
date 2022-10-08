@@ -3,6 +3,7 @@ import { NodeName } from '@ureeka-notebook/web-service';
 import { blockquoteToolItem } from 'notebookEditor/extension/blockquote/toolbar';
 import { markBold } from 'notebookEditor/extension/bold/toolbar';
 import { markCode } from 'notebookEditor/extension/code/toolbar';
+import { horizontalRuleToolItem } from 'notebookEditor/extension/horizontalRule/toolbar/toolbar';
 import { markItalic } from 'notebookEditor/extension/italic/toolbar';
 import { linkToolItem } from 'notebookEditor/extension/link/toolbar';
 import { bulletListToolItem, orderedListToolItem, taskListToolItem } from 'notebookEditor/extension/list/toolbar';
@@ -39,6 +40,7 @@ export const HeadingToolbar: Toolbar = {
       bulletListToolItem,
       taskListToolItem,
       blockquoteToolItem,
+      horizontalRuleToolItem,
       markBold,
       markItalic,
       markUnderline,

@@ -88,6 +88,8 @@ export {
   isHeadingLevel,
   HeadingAttributes,
 
+  DEFAULT_HORIZONTAL_RULE_DEFAULT_BACKGROUND_COLOR,
+
   ParagraphAttributes,
 
   isInlineNodeWithContent,
@@ -157,6 +159,7 @@ export {
   Demo2AsyncNodeSpec,
   DocumentNodeSpec,
   HeadingNodeSpec,
+  HorizontalRuleNodeSpec,
   ImageNodeSpec,
   MarkHolderNodeSpec,
   OrderedListNodeSpec,
@@ -212,6 +215,11 @@ export {
   createHeadingNode,
   getHeadingNodeType,
   isHeadingNode,
+
+  createHorizontalRuleNode,
+  HorizontalRuleNodeType,
+  getHorizontalRuleNodeType,
+  isHorizontalRuleNode,
 
   ImageNodeType,
   createImageNode,

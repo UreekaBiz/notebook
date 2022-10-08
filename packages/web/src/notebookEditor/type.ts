@@ -17,6 +17,7 @@ import { GapCursor } from 'notebookEditor/extension/gapcursor/GapCursor';
 import { Heading } from 'notebookEditor/extension/heading/Heading';
 import { Highlight } from 'notebookEditor/extension/highlight/Highlight';
 import { History } from 'notebookEditor/extension/history/History';
+import { HorizontalRule } from 'notebookEditor/extension/horizontalRule/HorizontalRule';
 import { Image } from 'notebookEditor/extension/image/Image';
 import { InputRule } from 'notebookEditor/extension/inputRule/InputRule';
 import { InlineNodeWithContent } from 'notebookEditor/extension/inlineNodeWithContent/InlineNodeWithContent';
@@ -66,6 +67,7 @@ export const editorDefinition = {
     Document,
     GapCursor,
     Heading,
+    HorizontalRule,
     Highlight,
     History,
     Italic,

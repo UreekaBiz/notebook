@@ -12,6 +12,8 @@ export type HTMLAttributes = Record<string, AttributeValue>;
 
 export enum AttributeType {
   // -- CSS Styles ----------------------------------------------------------------
+  BackgroundColor = 'backgroundColor',
+
   BorderColor = 'borderColor',
   BorderStyle = 'borderStyle',
   BorderWidth = 'borderWidth',
@@ -28,8 +30,6 @@ export enum AttributeType {
   PaddingBottom = 'paddingBottom',
   PaddingLeft = 'paddingLeft',
   PaddingRight = 'paddingRight',
-
-  BackgroundColor = 'backgroundColor',
 
   // -- Text Style ----------------------------------------------------------------
   Color = 'color',
@@ -95,6 +95,8 @@ export enum AttributeType {
 }
 
 export type StyleAttributes = {
+  [AttributeType.BackgroundColor]: string;
+
   [AttributeType.BorderColor]: string;
   [AttributeType.BorderStyle]: string;
   [AttributeType.BorderWidth]: string;
@@ -117,6 +119,8 @@ export type StyleAttributes = {
   [AttributeType.PaddingRight]: string;
 };
 const styleAttributeSet = new Set([
+  AttributeType.BackgroundColor,
+
   AttributeType.BorderColor,
   AttributeType.BorderStyle,
   AttributeType.BorderWidth,

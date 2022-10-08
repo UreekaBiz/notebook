@@ -9,6 +9,7 @@ import { codeBlockReferenceToolItem } from 'notebookEditor/extension/codeBlockRe
 import { demo2AsyncNodeToolItem } from 'notebookEditor/extension/demo2AsyncNode/toolbar';
 import { demoAsyncNodeToolItem } from 'notebookEditor/extension/demoAsyncNode/toolbar';
 import { headingLevelToolItem } from 'notebookEditor/extension/heading/toolbar';
+import { horizontalRuleToolItem } from 'notebookEditor/extension/horizontalRule/toolbar/toolbar';
 import { imageToolItem } from 'notebookEditor/extension/image/toolbar';
 import { linkToolItem } from 'notebookEditor/extension/link/toolbar';
 import { editableInlineNodeWithContentToolItem } from 'notebookEditor/extension/nestedViewNode/editableInlineNodeWithContent/toolbar';
@@ -34,6 +35,7 @@ export const ParagraphToolbar: Toolbar = {
       bulletListToolItem,
       taskListToolItem,
       blockquoteToolItem,
+      horizontalRuleToolItem,
       markBold,
       markItalic,
       markUnderline,

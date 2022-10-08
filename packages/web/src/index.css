@@ -108,6 +108,15 @@
 .selected_text:not([data-node-view]) {
   background-color: rgba(0,0,0,0.1);
 }
+
+/* .. HorizontalRule ........................................................... */
+[data-node-type="horizontalRule"] {
+  margin: 0.5rem;
+}
+[data-node-type="horizontalRule"].ProseMirror-selectednode {
+  outline: 1px solid #666;
+}
+
 /* .. Image .................................................................... */
 [data-node-type="image"] {
   position: relative;
