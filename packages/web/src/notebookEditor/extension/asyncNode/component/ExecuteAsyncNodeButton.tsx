@@ -21,7 +21,7 @@ export const ExecuteAsyncNodeButton: React.FC<Props> = ({ editor, asyncNodeView,
   // == Callback ==================================================================
   const executeAsyncNode = useCallback(async () => {
     setStatus('loading');
-    editor.commands.focus();
+    editor.view.focus();
 
     try {
       await asyncNodeView.executeAsyncCall();
@@ -35,7 +35,7 @@ export const ExecuteAsyncNodeButton: React.FC<Props> = ({ editor, asyncNodeView,
     } finally {
       setStatus('complete');
     }
-  }, [asyncNodeView, editor.commands, setStatus, toast]);
+  }, [asyncNodeView, editor.view, setStatus, toast]);
 
   // == UI ========================================================================
   return (

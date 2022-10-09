@@ -31,7 +31,7 @@ export const imageToolItem: ToolItem = {
     if(!imageStorage) return/*nothing to do*/;
 
     imageStorage.setShouldInsertNodeOrMark(true);
-    editor.commands.focus()/*trigger editor update by focusing it*/;
+    editor.view.focus()/*trigger editor update by focusing it*/;
   },
 };
 

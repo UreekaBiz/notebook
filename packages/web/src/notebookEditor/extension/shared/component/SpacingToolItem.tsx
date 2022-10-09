@@ -41,7 +41,7 @@ export const SpacingToolItem: React.FC<Props> = ({ depth, editor }) => {
     else editor.commands.setTextSelection(position);
 
     // Focus the editor again
-    editor.commands.focus();
+    editor.view.focus();
   };
 
   // == UI ========================================================================

@@ -76,7 +76,7 @@ export const InputWithUnitMarkToolItem: React.FC<InputWithUnitMarkToolItemProps>
 
     // NOTE: No need to manually focus the position again since it's a mark update
     // Focus the editor again
-    if(focus) editor.commands.focus();
+    if(focus) editor.view.focus();
   };
 
   // -- UI ------------------------------------------------------------------------

@@ -42,7 +42,7 @@ export const ExecuteButtons: React.FC<Props> = ({ editor, depth }) => {
   // executes the remote async call in the Demo2AsyncNode NodeView
   const handleRemoteClick = async () => {
     if(isLoading) return/*nothing to do*/;
-    editor.commands.focus();
+    editor.view.focus();
 
     try {
       await demo2AsyncNodeView.executeRemote(notebookId, editorService);
@@ -61,7 +61,7 @@ export const ExecuteButtons: React.FC<Props> = ({ editor, depth }) => {
   // executes the local async call in the DemoAsyncNode NodeView
   const handleLocalClick = async () => {
     if(isLoading) return/*nothing to do*/;
-    editor.commands.focus();
+    editor.view.focus();
 
     try {
       await demo2AsyncNodeView.executeAsyncCall();

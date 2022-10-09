@@ -46,7 +46,7 @@ export const CodeBlockReferenceDelimiterToolItem: React.FC<Props> = ({ editor })
     ]);
 
     // focus the editor again
-    if(focusEditor) editor.commands.focus();
+    if(focusEditor) editor.view.focus();
   };
 
   // == State =====================================================================

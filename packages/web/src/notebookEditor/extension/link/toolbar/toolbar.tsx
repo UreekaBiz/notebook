@@ -63,7 +63,7 @@ export const linkToolItem: ToolItem = {
     linkStorage.setShouldInsertNodeOrMark(true);
 
     // focus the Editor again
-    return editor.commands.focus();
+    return editor.view.focus();
   },
 };
 

@@ -138,7 +138,7 @@ export const EditorUserInteractions = () => {
     // NOTE: if Editor is destroyed before the timeout runs, it wont be focused
     //       (i.e. no major side effects besides that)
     // focus Editor after the react re-render
-    setTimeout(() => editor.commands.focus(), 150/*T&E*/);
+    setTimeout(() => editor.view.focus(), 150/*T&E*/);
   };
 
   // -- Link ----------------------------------------------------------------------
@@ -151,7 +151,7 @@ export const EditorUserInteractions = () => {
     // NOTE: if Editor is destroyed before the timeout runs, it wont be focused
     //       (i.e. no major side effects besides that)
     // focus Editor after the react re-render
-    setTimeout(() => editor.commands.focus(), 150/*T&E*/);
+    setTimeout(() => editor.view.focus(), 150/*T&E*/);
   };
 
   // == UI ========================================================================
