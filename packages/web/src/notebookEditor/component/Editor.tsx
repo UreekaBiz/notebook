@@ -3,7 +3,7 @@ import { EditorContent } from '@tiptap/react';
 import { useEffect, useState } from 'react';
 import Router from 'next/router';
 
-import { findNodeById, getLogger, Logger } from '@ureeka-notebook/web-service';
+import { findNodeById, getLogger, setNodeSelectionCommand, setTextSelectionCommand, Logger } from '@ureeka-notebook/web-service';
 
 import { useNotebookEditor } from 'notebookEditor/hook/useNotebookEditor';
 import { getFocusedNodeIdFromURL } from 'notebookEditor/util';
@@ -34,10 +34,13 @@ export const Editor = () => {
     if(!nodePosition) return/*nothing to do, Node does not exist*/;
 
     if(nodePosition.node.isBlock) {
-      editor.commands.focus(nodePosition.position + nodePosition.node.nodeSize/*at the end of the node*/ - 1/*still inside of it*/);
+      const focusPos = nodePosition.position + nodePosition.node.nodeSize/*at the end of the node*/ - 1/*still inside of it*/;
+      setTextSelectionCommand({ from: focusPos, to: focusPos })(editor.view.state, editor.view.dispatch);
     } else {
-      editor.chain().focus().setNodeSelection(nodePosition.position).run();
+      setNodeSelectionCommand(nodePosition.position)(editor.view.state, editor.view.dispatch);
     }
+
+    editor.view.focus();
   // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [/*explicitly only on the first render*/]);
 
