@@ -1,21 +1,23 @@
 import { useEffect } from 'react';
 
-import { getSelectedNode, updateSingleNodeAttributesCommand, AttributeType, NodeName, DATA_VISUAL_ID } from '@ureeka-notebook/web-service';
+import { getSelectedNode, isNodeSelection, AttributeType, NodeName, SetNodeSelectionDocumentUpdate, SetTextSelectionDocumentUpdate, UpdateSingleNodeAttributesDocumentUpdate, DATA_VISUAL_ID } from '@ureeka-notebook/web-service';
 
+import { applyDocumentUpdates } from 'notebookEditor/command/update';
 import { focusCodeBlock, getLabelFromValue, getValueFromLabel, isValidCodeBlockReference, validateChip } from 'notebookEditor/extension/codeblock/util';
 import { ChipValue } from 'notebookEditor/extension/shared/component/chipTool/Chip';
 import { ChipToolItem } from 'notebookEditor/extension/shared/component/chipTool/ChipToolItem';
 import { EditorToolComponentProps } from 'notebookEditor/sidebar/toolbar/type';
 
 // ********************************************************************************
-// NOTE: This component is meant to be used with nodes that requires multiple
+// NOTE: This component is meant to be used with Nodes that requires multiple
 //       references to be selected.
 interface Props extends EditorToolComponentProps {
   nodeName: NodeName;
 }
 export const CodeBlockReferencesChipSelector: React.FC<Props> = ({ editor, depth, nodeName, ...props }) => {
   const { state } = editor,
-        { selection } = state;
+        { selection } = state,
+        { $anchor, anchor } = selection;
   const node = getSelectedNode(state, depth);
 
   // == Effect ====================================================================
@@ -30,26 +32,38 @@ export const CodeBlockReferencesChipSelector: React.FC<Props> = ({ editor, depth
       const { target } = event;
       if(!target) return/*no target -- nothing to do*/;
       if(!(target instanceof HTMLElement)) return/*not an element -- nothing to do*/;
+
       const visualId = target.getAttribute(DATA_VISUAL_ID);
       if(!visualId) return/*no visualId -- nothing to do*/;
+
       const codeBlockReference = isValidCodeBlockReference(editor, visualId);
       if(!codeBlockReference.isValid) return/*not a valid codeBlockReference -- nothing to do*/;
-      const codeblockId = codeBlockReference.codeBlockView.node.attrs[AttributeType.Id] ?? ''/*no id by default*/;
 
       event.preventDefault();
       event.stopPropagation();
 
       // toggles the visualId from the CodeBlockReferences
+      const codeblockId = codeBlockReference.codeBlockView.node.attrs[AttributeType.Id] ?? ''/*no id by default*/;
       const newValue = references.includes(codeblockId) ? references.filter(ref => ref !== codeblockId) : [...references, codeblockId];
-      updateSingleNodeAttributesCommand(node.type.name as NodeName/*by definition*/, selection.$anchor.pos, { [AttributeType.CodeBlockReferences]: newValue })(editor.state, editor.view.dispatch);
+
+      const nodeSelection = isNodeSelection(selection);
+      const updatePos = nodeSelection
+        ? anchor
+        : anchor - $anchor.parentOffset - 1/*select the Node itself*/;
+
+      applyDocumentUpdates(editor, [
+        new UpdateSingleNodeAttributesDocumentUpdate(nodeName as NodeName/*by definition*/, updatePos, { [AttributeType.CodeBlockReferences]: newValue }),
+        ...(nodeSelection ? [new SetNodeSelectionDocumentUpdate(anchor)] : [new SetTextSelectionDocumentUpdate({ from: anchor, to: anchor })]),
+      ]);
+
       // no need to focus editor again
     };
 
     window.addEventListener('mousedown', handler);
 
-    // removes the listener on unmount
-    return () => { window.removeEventListener('mousedown', handler); };
-  }, [editor, nodeName, node, selection, state.selection.anchor]);
+    // remove the listener on unmount
+    return () => window.removeEventListener('mousedown', handler);
+  }, [$anchor.parentOffset, anchor, editor, node, nodeName, selection]);
 
   // == Handler ===================================================================
   // SEE: CodeBlockReferenceChipSelector.tsx
