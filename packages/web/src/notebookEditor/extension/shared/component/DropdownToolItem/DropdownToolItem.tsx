@@ -28,7 +28,7 @@ export const DropdownToolItem: React.FC<Props> = ({ editor, depth, nodeName, att
   // == Handler ===================================================================
   const handleChange = (value: string) => {
     const nodeSelection = isNodeSelection(selection);
-    const updatePos = isNodeSelection(selection)
+    const updatePos = nodeSelection
       ? anchor
       : anchor - $anchor.parentOffset - 1/*select the Node itself*/;
 

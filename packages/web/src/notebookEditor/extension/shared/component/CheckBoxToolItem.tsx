@@ -32,7 +32,7 @@ export const CheckBoxToolItem: React.FC<Props> = ({ attributeType, depth, editor
     const value = event.target.checked;
 
     const nodeSelection = isNodeSelection(selection);
-    const updatePos = isNodeSelection(selection)
+    const updatePos = nodeSelection
       ? anchor
       : anchor - $anchor.parentOffset - 1/*select the Node itself*/;
 

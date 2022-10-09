@@ -29,7 +29,7 @@ export const ColorPickerNodeToolItem: React.FC<ColorPickerNodeToolItemProps> = (
   // -- Handler -------------------------------------------------------------------
   const handleChange = (value: string, focus?: boolean) => {
     const nodeSelection = isNodeSelection(selection);
-    const updatePos = isNodeSelection(selection)
+    const updatePos = nodeSelection
       ? anchor
       : anchor - $anchor.parentOffset - 1/*select the Node itself*/;
 

@@ -37,7 +37,7 @@ export const SliderToolItem: React.FC<Props> = ({ editor, depth, attributeType, 
   // == Handler ===================================================================
   const handleChange = (value: number, focus?: boolean) => {
     const nodeSelection = isNodeSelection(selection);
-    const updatePos = isNodeSelection(selection)
+    const updatePos = nodeSelection
       ? anchor
       : anchor - $anchor.parentOffset - 1/*select the Node itself*/;
 
