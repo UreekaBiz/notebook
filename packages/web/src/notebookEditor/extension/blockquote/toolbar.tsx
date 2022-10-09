@@ -22,7 +22,7 @@ export const blockquoteToolItem: ToolItem = {
   label: NodeName.BLOCKQUOTE,
 
   icon: <RiDoubleQuotesL size={16} />,
-  tooltip: 'Blockquote (⌘ + Shift + B)',
+  tooltip: 'Blockquote (⌘ + ⇧ + B)',
 
   shouldBeDisabled: () => false/*do not disable*/,
   shouldShow: (editor, depth) => depth === undefined || editor.state.selection.$anchor.depth === depth/*direct parent*/,

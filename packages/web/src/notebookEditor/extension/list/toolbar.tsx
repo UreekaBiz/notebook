@@ -25,7 +25,7 @@ export const orderedListToolItem: ToolItem = {
   label: NodeName.ORDERED_LIST,
 
   icon: <RiListOrdered size={16} />,
-  tooltip: 'Ordered List (⌘ + Shift + 7)',
+  tooltip: 'Ordered List (⌘ + ⇧ + 7)',
 
   isActive: (editor, depth) => isListToolItemActive(editor, depth, isOrderedListNode),
   shouldShow: (editor, depth) => shouldShowListToolItem(editor, depth),
@@ -49,7 +49,7 @@ export const bulletListToolItem: ToolItem = {
   label: NodeName.BULLET_LIST,
 
   icon: <MdFormatListBulleted size={16} />,
-  tooltip: 'Bullet List (⌘ + Shift + 8)',
+  tooltip: 'Bullet List (⌘ + ⇧ + 8)',
 
   isActive: (editor, depth) => isListToolItemActive(editor, depth, isBulletListNode),
   shouldShow: (editor, depth) => shouldShowListToolItem(editor, depth),
@@ -73,7 +73,7 @@ export const taskListToolItem: ToolItem = {
   label: NodeName.TASK_LIST,
 
   icon: <BsListTask size={16} />,
-  tooltip: 'Task List (⌘ + Shift + 9)',
+  tooltip: 'Task List (⌘ + ⇧ + 9)',
 
   isActive: (editor, depth) => isListToolItemActive(editor, depth, isTaskListNode),
   shouldShow: (editor, depth) => shouldShowListToolItem(editor, depth),
