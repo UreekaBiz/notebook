@@ -1,7 +1,8 @@
-import { createReplacedTextMarkMark, AsyncNodeStatus, Demo2AsyncNodeType, AttributeType, HISTORY_META } from '@ureeka-notebook/web-service';
+import { AsyncNodeStatus, Demo2AsyncNodeType, AttributeType } from '@ureeka-notebook/web-service';
 
 import { AbstractAsyncNodeModel } from 'notebookEditor/extension/asyncNode/nodeView/model';
 
+import { asyncReplaceDemo2AsyncNodeContentCommand } from '../command';
 import { Demo2AsyncNodeStorageType } from './controller';
 
 // ********************************************************************************
@@ -23,36 +24,14 @@ export class Demo2AsyncNodeModel extends AbstractAsyncNodeModel<string, Demo2Asy
   //       execution, not when it's first called.
   public async executeAsyncCall(): Promise<boolean> {
     try {
-      // For simplicity
       const textContent = this.node.textContent,
             textToReplace = this.node.attrs[AttributeType.TextToReplace];
 
-      // Gets the result from the promise
+      // get the result from the promise
       const result = await this.createPromise();
 
-      // Replaced the text and wrap it around the mark
-      this.editor.chain().command((props) => {
-        const { dispatch, tr, editor } = props;
-
-        // Text is no longer present in the document.
-        if(!textContent.includes(textToReplace)) return false/*nothing to do -- view not updated*/;
-
-        // Gets the position of the highlighted text and create a mark that will
-        // wrap it.
-        const replacementStart = this.getPos() + textContent.indexOf(textToReplace) + 1/*account for start of node*/,
-              replacementEnd = replacementStart + textToReplace.length,
-              markFrom = replacementStart,
-              markTo = markFrom + result.length;
-
-        const replaceTextMark = createReplacedTextMarkMark(editor.schema);
-
-        tr.insertText(result, replacementStart, replacementEnd)
-          .addMark(markFrom, markTo, replaceTextMark)
-          .setMeta(HISTORY_META, false/*do not include in the history*/);
-
-        if(dispatch) dispatch(tr);
-        return true/*can be done*/;
-      }).run();
+      // replace the Text and wrap it around the Mark
+      asyncReplaceDemo2AsyncNodeContentCommand(this.getPos(), textContent, textToReplace, result)(this.editor.state, this.editor.view.dispatch);
     } catch(error) {
       // node got deleted while performing the replacement call
       console.warn(error);
@@ -66,7 +45,7 @@ export class Demo2AsyncNodeModel extends AbstractAsyncNodeModel<string, Demo2Asy
   }
 
   public isAsyncNodeDirty(): boolean {
-    // FIXME: discuss and implement the conditions for a Demo2AsyncNode
+    // TODO: discuss and implement the conditions for a Demo2AsyncNode
     //        to be considered dirty
     return false;
   }
