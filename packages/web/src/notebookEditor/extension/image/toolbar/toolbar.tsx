@@ -5,11 +5,11 @@ import { AttributeType, NodeName, VerticalAlign, DEFAULT_IMAGE_MAX_HEIGHT, DEFAU
 
 import { getTextDOMRenderedValue } from 'notebookEditor/extension/util/attribute';
 import { getDialogStorage } from 'notebookEditor/model/DialogStorage';
+import { setVerticalAlign } from 'notebookEditor/shared/command';
 import { InputWithUnitNodeToolItem } from 'notebookEditor/extension/shared/component/InputWithUnitToolItem';
 import { InputToolItem } from 'notebookEditor/extension/shared/component/InputToolItem';
 import { Toolbar, ToolItem } from 'notebookEditor/sidebar/toolbar/type';
 
-import { setVerticalAlign } from '../command';
 import { ImageSrcToolItem } from './ImageSrcToolItem';
 import { ImageBorderToolItem } from './ImageBorderToolItem';
 

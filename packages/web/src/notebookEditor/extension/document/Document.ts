@@ -14,9 +14,6 @@ import { documentPlugin } from './plugin';
 export const Document = Node.create<NoOptions, NoStorage>({
   ...DocumentNodeSpec,
 
-  // -- Plugin --------------------------------------------------------------------
-  addProseMirrorPlugins() { return [documentPlugin(this.editor)]; },
-
   // -- Update --------------------------------------------------------------------
   onSelectionUpdate() {
     let node = getSelectedNode(this.editor.state);
@@ -35,4 +32,7 @@ export const Document = Node.create<NoOptions, NoStorage>({
 
     window.history.replaceState(undefined/*no data*/, ''/*(SEE: REF above)*/, `${notebookId}#${nodeId}`);
   },
+
+  // -- Plugin --------------------------------------------------------------------
+  addProseMirrorPlugins() { return [documentPlugin(this.editor)]; },
 });

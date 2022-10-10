@@ -214,7 +214,7 @@ export class BlockArrowDownDocumentUpdate implements AbstractDocumentUpdate {
   }
 }
 
-// -- Check -----------------------------------------------------------------------
+// -- Content ---------------------------------------------------------------------
 /** Check whether the given input is a {@link Fragment} */
 export const isFragment = (nodeOrFragment: ProseMirrorNode | Fragment): nodeOrFragment is Fragment =>
   nodeOrFragment.toString().startsWith('<');
