@@ -487,6 +487,8 @@ export {
   SelectNodeBackwardDocumentUpdate,
   setNodeSelectionCommand,
   SetNodeSelectionDocumentUpdate,
+  setSelectionCommand,
+  SetSelectionDocumentUpdate,
   setTextSelectionCommand,
   SetTextSelectionDocumentUpdate,
 
