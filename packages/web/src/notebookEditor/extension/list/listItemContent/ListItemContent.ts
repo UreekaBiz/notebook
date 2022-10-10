@@ -19,6 +19,7 @@ export const ListItemContent = Node.create<NoOptions, NoStorage>({
     return {
       'Enter': () => liftListItemContent(this.editor, 'enter'),
       'Backspace': () => liftListItemContent(this.editor, 'backspace'),
+      'Mod-Backspace': () => liftListItemContent(this.editor, 'backspace'),
     };
   },
 
