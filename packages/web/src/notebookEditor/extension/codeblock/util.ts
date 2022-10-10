@@ -1,6 +1,6 @@
 import { Editor } from '@tiptap/core';
 
-import { AttributeType, CodeBlockReference, VisualId, REMOVED_CODEBLOCK_VISUALID } from '@ureeka-notebook/web-service';
+import { AttributeType, CodeBlockReference, VisualId, REMOVED_CODEBLOCK_VISUALID, SetTextSelectionDocumentUpdate } from '@ureeka-notebook/web-service';
 
 import { getCodeBlockViewStorage } from 'notebookEditor/extension/codeblock/nodeView/storage';
 
@@ -42,7 +42,13 @@ export const focusCodeBlock = (editor: Editor, codeBlockVisualId: VisualId) => {
   if(!codeBlockReference.isValid) return false/*ignore call*/;
 
   const { codeBlockView } = codeBlockReference;
-  return editor.commands.focus(codeBlockView.getPos() + 1/*inside the CodeBlock*/ + codeBlockView.node.textContent.length/*at the end of its content*/, { scrollIntoView: true/*scroll into view*/ });
+  const focusPos = codeBlockView.getPos() + 1/*inside the CodeBlock*/ + codeBlockView.node.textContent.length/*at the end of its content*/;
+  const updatedTr = new SetTextSelectionDocumentUpdate({ from: focusPos, to: focusPos }).update(editor.state, editor.state.tr);
+        updatedTr.scrollIntoView();
+  editor.view.dispatch(updatedTr);
+  editor.view.focus();
+
+  return true/*focused*/;
 };
 
 // -- Chip Selectors --------------------------------------------------------------
