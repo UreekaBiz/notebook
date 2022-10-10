@@ -1,4 +1,4 @@
-import { getSelectedNode, isNodeSelection, isNodeType, AttributeType, InvalidMergedAttributeValue, MarkName, NodeName, SetNodeSelectionDocumentUpdate, SetTextSelectionDocumentUpdate, UpdateSingleNodeAttributesDocumentUpdate  } from '@ureeka-notebook/web-service';
+import { getSelectedNode, isNodeSelection, isNodeType, setMarkCommand, AttributeType, InvalidMergedAttributeValue, MarkName, NodeName, SetNodeSelectionDocumentUpdate, SetTextSelectionDocumentUpdate, UpdateSingleNodeAttributesDocumentUpdate  } from '@ureeka-notebook/web-service';
 
 import { applyDocumentUpdates } from 'notebookEditor/command/update';
 import { getTextDOMRenderedValue } from 'notebookEditor/extension/util/attribute';
@@ -72,10 +72,10 @@ export const InputWithUnitMarkToolItem: React.FC<InputWithUnitMarkToolItemProps>
 
   // -- Handler -------------------------------------------------------------------
   const handleChange = (value: string, focus?: boolean) => {
-    editor.commands.setMark(markName, { [attributeType]: value });
+    setMarkCommand(markName, { [attributeType]: value })(editor.state, editor.view.dispatch);
 
     // NOTE: No need to manually focus the position again since it's a mark update
-    // Focus the editor again
+    // focus the Editor again
     if(focus) editor.view.focus();
   };
 
