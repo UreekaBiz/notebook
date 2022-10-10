@@ -42,4 +42,3 @@ export * from './schema';
 export * from './selection';
 export * from './step';
 export * from './theme';
-export * from './type';
