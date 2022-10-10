@@ -1,4 +1,4 @@
-import { getSelectedNode, isNodeType, isNodeSelection, AttributeType, InvalidMergedAttributeValue, MarkName, NodeName, SetNodeSelectionDocumentUpdate, SetTextSelectionDocumentUpdate, UpdateSingleNodeAttributesDocumentUpdate } from '@ureeka-notebook/web-service';
+import { getSelectedNode, isNodeType, isNodeSelection, setMarkCommand, AttributeType, InvalidMergedAttributeValue, MarkName, NodeName, SetNodeSelectionDocumentUpdate, SetTextSelectionDocumentUpdate, UpdateSingleNodeAttributesDocumentUpdate } from '@ureeka-notebook/web-service';
 
 import { applyDocumentUpdates } from 'notebookEditor/command/update';
 import { getTextDOMRenderedValue  } from 'notebookEditor/extension/util/attribute';
@@ -66,9 +66,9 @@ export const ColorPickerMarkToolItem: React.FC<ColorPickerMarkToolItemProps> = (
 
   // -- Handler -------------------------------------------------------------------
   const handleChange = (value: string, focus?: boolean) => {
-    editor.commands.setMark(markName, { [attributeType]: value });
+    setMarkCommand(markName, { [attributeType]: value })(editor.state, editor.view.dispatch);
 
-    // NOTE: No need to manually focus the position again since it's a mark update
+    // NOTE: No need to manually focus the position again since it's a Mark update
     // Focus the editor again
     if(focus) editor.view.focus();
   };
