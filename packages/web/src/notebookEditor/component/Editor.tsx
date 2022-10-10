@@ -109,7 +109,9 @@ export const Editor = () => {
     if(!editor) return/*nothing to do*/;
     if(editor.isFocused) return/*already focused*/;
 
-    editor.commands.focus(editor.state.doc.nodeSize/*go to the end of the doc*/);
+    const focusPos = editor.state.doc.nodeSize - 2/*account for start and end of Doc*/;
+    setTextSelectionCommand({ from: focusPos, to: focusPos })(editor.state, editor.view.dispatch);
+    editor.view.focus();
   };
 
   // == UI ========================================================================
