@@ -12,6 +12,8 @@ import { markSuperScript } from 'notebookEditor/extension/superScript/toolbar';
 import { markUnderline } from 'notebookEditor/extension/underline/toolbar';
 import { Toolbar } from 'notebookEditor/sidebar/toolbar/type';
 
+import { dedentListToolItem, indentListToolItem } from '../toolItem';
+
 //*********************************************************************************
 // == Toolbar =====================================================================
 export const TaskListItemToolbar: Toolbar = {
@@ -30,6 +32,8 @@ export const TaskListItemToolbar: Toolbar = {
       linkToolItem,
       demoAsyncNodeToolItem,
       codeBlockReferenceToolItem,
+      dedentListToolItem,
+      indentListToolItem,
     ],
   ],
 };
