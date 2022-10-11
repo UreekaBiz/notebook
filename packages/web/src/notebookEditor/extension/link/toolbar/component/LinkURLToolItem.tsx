@@ -61,10 +61,11 @@ export const LinkURLToolItem: React.FC<Props> = ({ editor }) => {
   };
 
   const handleKeyDown: KeyboardEventHandler<HTMLInputElement> = (event) => {
+    // save changes when user presses enter
     if(event.key !== 'Enter') return/*nothing to do*/;
     if(!formik.isValid) return/*nothing to do*/;
 
-    // save changes when user presses enter
+    // prevent defaults so that PM does not handle the event
     event.preventDefault();
     event.stopPropagation();
     handleSubmit(formik.values, true/*focus editor*/);
