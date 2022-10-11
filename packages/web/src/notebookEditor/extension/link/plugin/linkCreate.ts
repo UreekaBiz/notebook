@@ -2,9 +2,11 @@ import { combineTransactionSteps, findChildrenInRange, getChangedRanges, getMark
 import { find, test } from 'linkifyjs';
 import { Plugin, PluginKey } from 'prosemirror-state';
 
-import { getLinkMarkType, isLinkMark, PREVENT_LINK_META } from '@ureeka-notebook/web-service';
+import { AttributeType, getLinkMarkType, isLinkMark, LinkTarget, PREVENT_LINK_META } from '@ureeka-notebook/web-service';
 
 import { NoPluginState } from 'notebookEditor/model/type';
+
+import { linkIsInDoc } from '../util';
 
 // ********************************************************************************
 // Plugin that automatically creates a link when the user writes a text that is a
@@ -19,7 +21,7 @@ export const linkCreate = (validate?: (url: string) => boolean): Plugin => {
     key: linkCreateKey,
 
     // -- Transaction -------------------------------------------------------------
-    // Ensures that Link get created when the user types something that is a valid
+    // ensures that Link get created when the user types something that is a valid
     // Link in the editor
     appendTransaction: (transactions, oldState, newState) => {
       const docChanged = transactions.some(transaction => transaction.docChanged) && !oldState.doc.eq(newState.doc);
@@ -33,7 +35,7 @@ export const linkCreate = (validate?: (url: string) => boolean): Plugin => {
             changes = getChangedRanges(transform);
 
       changes.forEach(({ oldRange, newRange }) => {
-        // Check if Links need to be removed
+        // check if Links need to be removed
         getMarksBetween(oldRange.from, oldRange.to, oldState.doc)
           .filter(item => isLinkMark(item.mark))
           .forEach(oldMark => {
@@ -65,7 +67,7 @@ export const linkCreate = (validate?: (url: string) => boolean): Plugin => {
               ' '/*add a space for each non-text leaf-node found*/
             );
 
-            // do not turn textBlock into link when user just inserted a link and
+            // do not turn TextBlock into Link when user just inserted a Link and
             // adds a space (since this would incorrectly turn the previous
             // Text in the Block into a Link too)
             if(text.endsWith(' ')) return;
@@ -76,21 +78,21 @@ export const linkCreate = (validate?: (url: string) => boolean): Plugin => {
                 if(validate) return validate(link.value);
                 return true/*found by default*/;
               })
-              // calculate link position
+              // calculate Link position
               .map(link => ({
                 ...link,
                 from: textBlock.pos + link.start + 1,
                 to: textBlock.pos + link.end + 1,
               }))
-              // check if link is within the changed range
+              // check if Link is within the changed range
               .filter(link => {
                 const fromIsInRange = newRange.from >= link.from && newRange.from <= link.to;
                 const toIsInRange = newRange.to >= link.from && newRange.to <= link.to;
 
                 return fromIsInRange || toIsInRange;
               })
-              // add link mark
-              .forEach(link => tr.addMark(link.from, link.to, linkMarkType.create({ href: link.href })));
+              // add Link mark
+              .forEach(link => tr.addMark(link.from, link.to, linkMarkType.create({ [AttributeType.Href]: link.href, ...(linkIsInDoc(link.href) ? { [AttributeType.Target]: LinkTarget.SELF } : {/*nothing*/}) })));
           });
       });
 

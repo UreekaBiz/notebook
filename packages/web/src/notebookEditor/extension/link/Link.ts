@@ -1,7 +1,7 @@
 import { markPasteRule, Mark } from '@tiptap/core';
 import { find, registerCustomProtocol } from 'linkifyjs';
 
-import { getMarkOutputSpec, AttributeType, LinkMarkSpec, SetAttributeType, DEFAULT_LINK_HREF, DEFAULT_LINK_TAG, DEFAULT_LINK_TARGET, LINK_PROTOCOLS } from '@ureeka-notebook/web-service';
+import { getMarkOutputSpec, AttributeType, LinkMarkSpec, LinkTarget, SetAttributeType, DEFAULT_LINK_HREF, DEFAULT_LINK_TAG, DEFAULT_LINK_TARGET, LINK_PROTOCOLS } from '@ureeka-notebook/web-service';
 
 import { setAttributeParsingBehavior } from 'notebookEditor/extension/util/attribute';
 import { ExtensionPriority, NoOptions } from 'notebookEditor/model/type';
@@ -10,6 +10,7 @@ import { DialogStorage } from 'notebookEditor/model/DialogStorage';
 import { linkClick } from './plugin/linkClick';
 import { linkCreate } from './plugin/linkCreate';
 import { linkPaste } from './plugin/linkPaste';
+import { linkIsInDoc } from './util';
 
 // ********************************************************************************
 // REF: https://github.com/ueberdosis/tiptap/blob/main/packages/extension-link/src/link.ts
@@ -50,7 +51,7 @@ export const Link = Mark.create<NoOptions, DialogStorage>({
             data: link,
           })),
         type: this.type,
-        getAttributes: (match) => ({ href: match.data?.href }),
+        getAttributes: (match) => ({ [AttributeType.Href]: match.data?.href, ...(linkIsInDoc(match.data?.href) ? { [AttributeType.Target]: LinkTarget.SELF } : {/*nothing*/}) }),
       }),
     ];
   },

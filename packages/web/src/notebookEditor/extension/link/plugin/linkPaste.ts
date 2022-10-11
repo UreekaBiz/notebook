@@ -4,8 +4,10 @@ import { Slice } from 'prosemirror-model';
 import { Plugin, PluginKey } from 'prosemirror-state';
 import { EditorView } from 'prosemirror-view';
 
-import { urlSchema, MarkName, setMarkCommand, AttributeType } from '@ureeka-notebook/web-service';
+import { urlSchema, setMarkCommand, AttributeType, MarkName, LinkTarget } from '@ureeka-notebook/web-service';
+
 import { NoPluginState } from 'notebookEditor/model/type';
+import { linkIsInDoc } from '../util';
 
 // ********************************************************************************
 // REF: https://github.com/ueberdosis/tiptap/blob/main/packages/extension-link/src/helpers/pasteHandler.ts
@@ -36,11 +38,11 @@ export const linkPaste = (editor: Editor): Plugin => {
 
         if(editor.isActive(MarkName.LINK)) return false/*replace text*/;
 
-        return setMarkCommand(MarkName.LINK, { [AttributeType.Href]: href })(view.state, view.dispatch);
+        return setMarkCommand(MarkName.LINK, { [AttributeType.Href]: href, ...(linkIsInDoc(href) ? { [AttributeType.Target]: LinkTarget.SELF } : {/*nothing*/}) })(view.state, view.dispatch);
       },
 
-      // Ensure that pasted links get a space added to them at the end, so that
-      // typing after having pasted a link does not include the link mark
+      // ensure that pasted Links get a space added to them at the end, so that
+      // typing after having pasted a Link does not include the Link Mark
       transformPastedText(text: string) {
         try {
           const isUrl = urlSchema.validateSync(text);
