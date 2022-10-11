@@ -59,7 +59,7 @@ export const ImageSrcToolItem: React.FC<Props> = ({ editor }) => {
   };
 
   const handleKeyDown: KeyboardEventHandler<HTMLInputElement> = (event) => {
-    // save changes when user presses enter
+    // save changes when user presses Enter
     if(event.key !== 'Enter') return/*nothing to do*/;
     if(!formik.isValid) return/*nothing to do*/;
 
