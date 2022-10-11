@@ -13,10 +13,10 @@ import { HorizontalRuleToolbar } from 'notebookEditor/extension/horizontalRule/t
 import { ImageToolbar } from 'notebookEditor/extension/image/toolbar';
 import { LinkToolbar } from 'notebookEditor/extension/link/toolbar';
 import { BulletListToolbar } from 'notebookEditor/extension/list/bulletList/toolbar';
-import { ListItemToolbar } from 'notebookEditor/extension/list/listItem/toolbar';
+import { ListItemToolbar } from 'notebookEditor/extension/list/item/listItem/toolbar';
 import { OrderedListToolbar } from 'notebookEditor/extension/list/orderedList/toolbar';
 import { TaskListToolbar } from 'notebookEditor/extension/list/taskList/toolbar';
-import { TaskListItemToolbar } from 'notebookEditor/extension/list/taskListItem/toolbar';
+import { TaskListItemToolbar } from 'notebookEditor/extension/list/item/taskListItem/toolbar';
 import { EditableInlineNodeWithContentToolbar } from 'notebookEditor/extension/nestedViewNode/editableInlineNodeWithContent/toolbar';
 import { NestedViewBlockNodeToolbar } from 'notebookEditor/extension/nestedViewNode/nestedViewBlockNode/toolbar';
 import { ParagraphToolbar } from 'notebookEditor/extension/paragraph/toolbar';

@@ -7,11 +7,11 @@ import { shortcutCommandWrapper } from 'notebookEditor/command/util';
 import { setAttributeParsingBehavior } from 'notebookEditor/extension/util/attribute';
 import { ExtensionPriority, NoOptions, NoStorage, ParseRulePriority } from 'notebookEditor/model/type';
 
-import { splitListItemCommand } from '../command/splitListItemCommand';
-import { dedentListCommand } from '../keyboardShortcut/dedent';
-import { indentListCommand } from '../keyboardShortcut/indent';
-import { listBackspaceCommand } from '../keyboardShortcut/listBackspace';
-import { getWrappingListInputRule } from '../util';
+import { splitListItemCommand } from '../../command/splitListItemCommand';
+import { dedentListCommand } from '../../keyboardShortcut/dedent';
+import { indentListCommand } from '../../keyboardShortcut/indent';
+import { listBackspaceCommand } from '../../keyboardShortcut/listBackspace';
+import { getWrappingListInputRule } from '../../util';
 import { TaskListItemController } from './nodeView/controller';
 
 // ********************************************************************************

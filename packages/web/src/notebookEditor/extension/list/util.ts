@@ -9,7 +9,7 @@ import { applyDocumentUpdates } from 'notebookEditor/command/update';
 
 import { SetParagraphDocumentUpdate } from '../paragraph/command';
 import { ToggleListDocumentUpdate } from './command/toggleListCommand';
-import { SetListItemContentDocumentUpdate, ALLOW_LIST_ITEM_CONTENT_META } from './listItemContent/update';
+import { SetListItemContentDocumentUpdate, ALLOW_LIST_ITEM_CONTENT_META } from './item/listItemContent/update';
 
 // ********************************************************************************
 // == List ========================================================================

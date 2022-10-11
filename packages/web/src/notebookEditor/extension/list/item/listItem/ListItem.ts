@@ -6,10 +6,10 @@ import { shortcutCommandWrapper } from 'notebookEditor/command/util';
 import { setAttributeParsingBehavior } from 'notebookEditor/extension/util/attribute';
 import { ExtensionPriority, NoOptions, NoStorage } from 'notebookEditor/model/type';
 
-import { splitListItemCommand } from '../command/splitListItemCommand';
-import { indentListCommand } from '../keyboardShortcut/indent';
-import { dedentListCommand } from '../keyboardShortcut/dedent';
-import { listBackspaceCommand } from '../keyboardShortcut/listBackspace';
+import { splitListItemCommand } from '../../command/splitListItemCommand';
+import { indentListCommand } from '../../keyboardShortcut/indent';
+import { dedentListCommand } from '../../keyboardShortcut/dedent';
+import { listBackspaceCommand } from '../../keyboardShortcut/listBackspace';
 import { listItemTaskListItemPlugin } from './plugin';
 
 // ********************************************************************************

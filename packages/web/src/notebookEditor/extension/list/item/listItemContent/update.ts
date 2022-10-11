@@ -6,7 +6,7 @@ import { getBlockNodeRange, getListItemContentNodeType, isListItemContentNode, i
 import { applyDocumentUpdates } from 'notebookEditor/command/update';
 import { SetParagraphDocumentUpdate } from 'notebookEditor/extension/paragraph/command';
 
-import { ListBackSpaceDocumentUpdate } from '../keyboardShortcut/listBackspace';
+import { ListBackSpaceDocumentUpdate } from '../../keyboardShortcut/listBackspace';
 
 // ********************************************************************************
 // === Update =====================================================================

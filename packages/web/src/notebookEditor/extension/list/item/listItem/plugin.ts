@@ -7,7 +7,7 @@ import { createListItemContentNode, createListItemNode, createStrikethroughMark,
 
 import { NoPluginState } from 'notebookEditor/model/type';
 
-import { isListNode, isListWithSingleItemContent, maybeJoinList } from '../util';
+import { isListNode, isListWithSingleItemContent, maybeJoinList } from '../../util';
 
 // ********************************************************************************
 // NOTE: this Plugin is located at the ListItem level for name consistency.
