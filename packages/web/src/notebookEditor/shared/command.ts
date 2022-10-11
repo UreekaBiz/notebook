@@ -2,7 +2,7 @@ import { Editor } from '@tiptap/core';
 import { Node as ProseMirrorNode } from 'prosemirror-model';
 import { EditorState, Transaction } from 'prosemirror-state';
 
-import { isNodeSelection, AbstractDocumentUpdate, AttributeType, Command, NodeName, SetNodeSelectionDocumentUpdate, UpdateAttributesDocumentUpdate, VerticalAlign } from '@ureeka-notebook/web-service';
+import { isBlank, isNodeSelection, AbstractDocumentUpdate, AttributeType, Command, NodeName, SetNodeSelectionDocumentUpdate, UpdateAttributesDocumentUpdate, VerticalAlign } from '@ureeka-notebook/web-service';
 
 import { applyDocumentUpdates } from 'notebookEditor/command/update';
 import { separateUnitFromString, DEFAULT_UNIT, DEFAULT_UNIT_VALUE } from 'notebookEditor/theme/type';
@@ -36,11 +36,10 @@ export class ChangeBlockIndentationDocumentUpdate implements AbstractDocumentUpd
 }
 // NOTE: extracted into utilities to separate from Command logic
 const changeNodeIndentation = (changeType: 'dedent' | 'indent', node: ProseMirrorNode, nodePos: number, tr: Transaction) => {
-  if(!(node.isTextblock
-    // only change the visual indentation of Lists that are direct children of the
-    // Document so that nested Lists do not receive wrong Indentation
-    || (isListNode(node) && tr.doc.resolve(nodePos).depth !== 0/*(SEE: comment above)*/))
-  ) return/*ignore Node*/;
+  if(!(node.isTextblock || isListNode(node))) return/*ignore Node*/;
+
+  // only change the indentation of Nodes that are direct children of the Doc
+  if(tr.doc.resolve(nodePos).depth !== 0/*(SEE: comment above)*/) return/*ignore Node*/;
 
   const currentIndentation = node.attrs[AttributeType.MarginLeft];
   const newIndentation = getNewIndentation(changeType, currentIndentation);
@@ -49,8 +48,8 @@ const changeNodeIndentation = (changeType: 'dedent' | 'indent', node: ProseMirro
   tr.setNodeMarkup(nodePos, undefined/*maintain type*/, { ...node.attrs, [AttributeType.MarginLeft]: newIndentation });
 };
 const getNewIndentation = (changeType: 'dedent' | 'indent', currentIndentation: string | undefined) => {
-  // -- no Indentation ------------------------------------------------------------
-  if(!currentIndentation) {
+
+  if(!(currentIndentation) || isBlank(currentIndentation)) {
     return `${DEFAULT_UNIT_VALUE}${DEFAULT_UNIT}`;
   } /* else -- an indentation has already been defined */
 
