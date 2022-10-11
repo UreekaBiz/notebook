@@ -1,10 +1,11 @@
 import { wrappingInputRule, Node } from '@tiptap/core';
 
-import { getNodeOutputSpec, leaveBlockNodeCommand, selectBlockNodeContentCommand, BlockquoteNodeSpec, NodeName, DATA_NODE_TYPE } from '@ureeka-notebook/web-service';
+import { getNodeOutputSpec, leaveBlockNodeCommand, selectBlockNodeContentCommand, AttributeType, BlockquoteNodeSpec, NodeName, SetAttributeType, DATA_NODE_TYPE } from '@ureeka-notebook/web-service';
 
 import { shortcutCommandWrapper } from 'notebookEditor/command/util';
 import { ExtensionPriority, NoOptions, NoStorage } from 'notebookEditor/model/type';
 
+import { setAttributeParsingBehavior } from '../util/attribute';
 import { blockArrowUpCommand, blockArrowDownCommand, blockBackspaceCommand, blockModBackspaceCommand, toggleBlock } from '../util/node';
 
 // ********************************************************************************
@@ -17,6 +18,9 @@ export const blockquoteRegex = /^\s*>\s$/;
 export const Blockquote = Node.create<NoOptions, NoStorage>({
   ...BlockquoteNodeSpec,
   priority: ExtensionPriority.BLOCKQUOTE,
+
+  // -- Attribute -----------------------------------------------------------------
+  addAttributes() { return { [AttributeType.MarginLeft]: setAttributeParsingBehavior(AttributeType.MarginLeft, SetAttributeType.STYLE) }; },
 
   // -- Keyboard Shortcut ---------------------------------------------------------
   addKeyboardShortcuts() {
