@@ -5,7 +5,13 @@
 export const ACTIONABLE_NODE = 'actionable-node';
 
 // -- Type ------------------------------------------------------------------------
-export enum SetAttributeType { STRING = 'string', BOOLEAN = 'boolean', NUMBER = 'number', ARRAY = 'array' }
+export enum SetAttributeType {
+  STRING = 'string',
+  STYLE = 'style',
+  BOOLEAN = 'boolean',
+  NUMBER = 'number',
+  ARRAY = 'array'
+}
 export type Attributes = Partial<Record<AttributeType, any>>;
 export type AttributeValue = string | number | undefined;
 export type HTMLAttributes = Record<string, AttributeValue>;

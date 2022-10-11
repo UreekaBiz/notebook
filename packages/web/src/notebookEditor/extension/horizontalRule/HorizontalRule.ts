@@ -1,10 +1,11 @@
 import { nodeInputRule, Node } from '@tiptap/core';
 
-import { getNodeOutputSpec, AttributeType, HorizontalRuleNodeSpec, NodeName, DATA_NODE_TYPE, DEFAULT_HORIZONTAL_RULE_BACKGROUND_COLOR, DEFAULT_HORIZONTAL_RULE_HEIGHT } from '@ureeka-notebook/web-service';
+import { getNodeOutputSpec, AttributeType, HorizontalRuleNodeSpec, SetAttributeType, NodeName, DATA_NODE_TYPE, DEFAULT_HORIZONTAL_RULE_BACKGROUND_COLOR, DEFAULT_HORIZONTAL_RULE_HEIGHT } from '@ureeka-notebook/web-service';
 import { shortcutCommandWrapper } from 'notebookEditor/command/util';
 
 import { NoOptions, NoStorage } from 'notebookEditor/model/type';
 
+import { setAttributeParsingBehavior } from '../util/attribute';
 import { blockArrowDownCommand, blockArrowUpCommand } from '../util/node';
 import { insertOrToggleHorizontalRuleCommand } from './command';
 
@@ -21,16 +22,8 @@ export const HorizontalRule = Node.create<NoOptions, NoStorage>({
   // -- Attribute -----------------------------------------------------------------
   addAttributes() {
     return {
-      // NOTE: using custom parseHTML for these since the parsing behavior
-      //       for styles has not been defined yet
-      [AttributeType.BackgroundColor]: {
-        default: DEFAULT_HORIZONTAL_RULE_BACKGROUND_COLOR,
-        parseHTML: (element) => element.style.backgroundColor,
-      },
-      [AttributeType.Height]: {
-        default: DEFAULT_HORIZONTAL_RULE_HEIGHT,
-        parseHTML: (element) => element.style.height,
-      },
+      [AttributeType.BackgroundColor]: setAttributeParsingBehavior(AttributeType.BackgroundColor, SetAttributeType.STYLE, DEFAULT_HORIZONTAL_RULE_BACKGROUND_COLOR),
+      [AttributeType.Height]: setAttributeParsingBehavior(AttributeType.Height, SetAttributeType.STYLE, DEFAULT_HORIZONTAL_RULE_HEIGHT),
     };
   },
 
@@ -48,9 +41,9 @@ export const HorizontalRule = Node.create<NoOptions, NoStorage>({
   },
 
   // -- Input ----------------------------------------------------------------------
-  addInputRules() { return [nodeInputRule({ find: horizontalRuleRegEx, type: this.type })];},
+  addInputRules() { return [nodeInputRule({ find: horizontalRuleRegEx, type: this.type })]; },
 
   // -- View ----------------------------------------------------------------------
-  parseHTML() { return [ { tag: `hr[${DATA_NODE_TYPE}="${NodeName.HORIZONTAL_RULE}"]` } ]; },
+  parseHTML() { return [{ tag: `hr[${DATA_NODE_TYPE}="${NodeName.HORIZONTAL_RULE}"]` }]; },
   renderHTML({ node, HTMLAttributes }) { return getNodeOutputSpec(node, HTMLAttributes, true/*is leaf*/); },
 });
