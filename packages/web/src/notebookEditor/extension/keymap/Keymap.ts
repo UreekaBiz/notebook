@@ -47,13 +47,14 @@ const selectInlineNodeWithContent = (editor: Editor,  arrowDir: 'up' | 'down') =
   const { empty, $from, from } = editor.state.selection;
   if(!empty) return false/*let PM handle the event*/;
 
+  const arrowDirUp = arrowDir === 'up';
   let nodeNearby: ProseMirrorNode | null/*not set*/;
   let nodeNearbyPos: number;
   try {
-    if(arrowDir === 'up') { nodeNearby = $from.nodeBefore; }
+    if(arrowDirUp) { nodeNearby = $from.nodeBefore; }
     else { nodeNearby = $from.nodeAfter; }
 
-    if(arrowDir === 'up') { nodeNearbyPos = Math.max(from-1/*nodeBefore*/, 0/*do not go behind Doc*/); }
+    if(arrowDirUp) { nodeNearbyPos = Math.max(from-1/*nodeBefore*/, 0/*do not go behind Doc*/); }
     else { nodeNearbyPos = Math.min(from/*position can be a TextSelection and a NodeSelection at the same time*/, editor.state.doc.nodeSize/*do not go past Doc*/); }
 
     if(nodeNearby && isInlineNodeWithContent(nodeNearby)) {
