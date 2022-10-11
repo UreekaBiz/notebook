@@ -1,8 +1,9 @@
 import { Editor, Extension } from '@tiptap/core';
 import { Node as ProseMirrorNode } from 'prosemirror-model';
 
-import { isInlineNodeWithContent, setNodeSelectionCommand } from '@ureeka-notebook/web-service';
+import { isInlineNodeWithContent, SetNodeSelectionDocumentUpdate } from '@ureeka-notebook/web-service';
 
+import { applyDocumentUpdates } from 'notebookEditor/command/update';
 import { shortcutCommandWrapper } from 'notebookEditor/command/util';
 import { ExtensionName, ExtensionPriority, NoOptions, NoStorage } from 'notebookEditor/model/type';
 import { changeBlockIndentationCommand } from 'notebookEditor/shared/command';
@@ -58,7 +59,7 @@ const selectInlineNodeWithContent = (editor: Editor,  arrowDir: 'up' | 'down') =
     else { nodeNearbyPos = Math.min(from/*position can be a TextSelection and a NodeSelection at the same time*/, editor.state.doc.nodeSize/*do not go past Doc*/); }
 
     if(nodeNearby && isInlineNodeWithContent(nodeNearby)) {
-      return shortcutCommandWrapper(editor, setNodeSelectionCommand(nodeNearbyPos));
+      return applyDocumentUpdates(editor, [new SetNodeSelectionDocumentUpdate(nodeNearbyPos)]);
     } else {
       return false/*let PM handle the event*/;
     }
