@@ -11,16 +11,10 @@ export const TextStyle = Mark.create<NoOptions, NoStorage>({
 
   // -- Attribute -----------------------------------------------------------------
   addAttributes() {
+    // NOTE: not using setAttributeParsingBehavior since specific RegEx is used
     return {
-      [AttributeType.FontSize]: {
-        default: undefined,
-        parseHTML: element => element.style.fontSize.replace(/['"]+/g, ''),
-      },
-
-      [AttributeType.Color]: {
-        default: undefined,
-        parseHTML: element => element.style.color.replace(/['"]+/g, ''),
-      },
+      [AttributeType.FontSize]: { default: undefined, parseHTML: element => element.style.fontSize.replace(/['"]+/g, '') },
+      [AttributeType.Color]: { default: undefined, parseHTML: element => element.style.color.replace(/['"]+/g, '') },
     };
   },
 
