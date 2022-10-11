@@ -2,6 +2,7 @@ import { MdFindReplace } from 'react-icons/md';
 
 import { generateNodeId, AttributeType, NodeName } from '@ureeka-notebook/web-service';
 
+import { blockquoteToolItem } from 'notebookEditor/extension/blockquote/toolbar';
 import { markBold } from 'notebookEditor/extension/bold/toolbar';
 import { markCode } from 'notebookEditor/extension/code/toolbar';
 import { markItalic } from 'notebookEditor/extension/italic/toolbar';
@@ -75,6 +76,7 @@ export const Demo2AsyncNodeToolbar: Toolbar = {
       demo2AsyncNodeDelaySlider,
     ],
     [
+      blockquoteToolItem,
       markBold,
       markItalic,
       markUnderline,
