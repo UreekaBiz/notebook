@@ -5,33 +5,34 @@ import { isNodeSelection } from '@ureeka-notebook/web-service';
 import { toolItemCommandWrapper } from 'notebookEditor/command/util';
 import { ToolItem } from 'notebookEditor/sidebar/toolbar/type';
 
-import { changeBlockIndentationCommand } from './command';
+import { dedentListCommand } from '../keyboardShortcut/dedent';
+import { indentListCommand } from '../keyboardShortcut/indent';
 
 // ********************************************************************************
 // -- Indentation -----------------------------------------------------------------
-export const dedentBlocksToolItem: ToolItem = {
+export const dedentListToolItem: ToolItem = {
   toolType: 'button',
 
-  name: 'dedentBlocksToolItem',
-  label: 'dedentBlocksToolItem',
+  name: 'dedentListToolItem',
+  label: 'dedentListToolItem',
 
   icon: <MdFormatIndentDecrease size={16} />,
-  tooltip: 'Decrease Indent (⌘ + [)',
+  tooltip: 'Dedent List (⇧ + ↹)',
 
   shouldBeDisabled: (editor) => isNodeSelection(editor.state.selection),
-  onClick: (editor, depth) => toolItemCommandWrapper(editor, depth, changeBlockIndentationCommand('dedent')),
+  onClick: (editor, depth) => toolItemCommandWrapper(editor, depth, dedentListCommand),
 };
 
-export const indentBlocksToolItem: ToolItem = {
+export const indentListToolItem: ToolItem = {
   toolType: 'button',
 
-  name: 'indentBlocksToolItem',
-  label: 'indentBlocksToolItem',
+  name: 'indentListToolItem',
+  label: 'indentListToolItem',
 
   icon: <MdFormatIndentIncrease size={16} />,
-  tooltip: 'Increase Indent (⌘ + ])',
+  tooltip: 'Indent List (↹)',
 
   shouldBeDisabled: (editor) => isNodeSelection(editor.state.selection),
-  onClick: (editor, depth) => toolItemCommandWrapper(editor, depth, changeBlockIndentationCommand('indent')),
+  onClick: (editor, depth) => toolItemCommandWrapper(editor, depth, indentListCommand),
 };
 
