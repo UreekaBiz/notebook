@@ -1,6 +1,8 @@
 import { Extension } from '@tiptap/core';
 
+import { shortcutCommandWrapper } from 'notebookEditor/command/util';
 import { ExtensionName, ExtensionPriority, NoOptions, NoStorage } from 'notebookEditor/model/type';
+import { changeBlockIndentationCommand } from 'notebookEditor/shared/command';
 
 // ********************************************************************************
 // == Extension ===================================================================
@@ -19,6 +21,12 @@ export const Keymap = Extension.create<NoOptions, NoStorage>({
       //       other Nodes at a Document level, return true
       //       (preventing the default behavior)
       'Mod-Enter': () => true/*do not let PM handle the shortcut*/,
+
+      // dedent at Block level
+      'Mod-[': () => shortcutCommandWrapper(this.editor, changeBlockIndentationCommand('dedent')),
+
+      // indent at Block level
+      'Mod-]': () => shortcutCommandWrapper(this.editor, changeBlockIndentationCommand('indent')),
     };
   },
 });

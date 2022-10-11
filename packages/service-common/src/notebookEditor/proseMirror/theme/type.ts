@@ -66,7 +66,7 @@ export const DefaultTheme: Theme = {
 
   nodes: {
     [NodeName.BLOCKQUOTE]: {/*no defined value*/},
-    [NodeName.BULLET_LIST]: {/*no defined value*/},
+    [NodeName.BULLET_LIST]: { [AttributeType.MarginLeft]: '10px' },
     [NodeName.CODEBLOCK]: {
       [AttributeType.PaddingLeft]: '4px',
       [AttributeType.PaddingRight]: '4px',
@@ -125,7 +125,7 @@ export const DefaultTheme: Theme = {
     [NodeName.LIST_ITEM_CONTENT]: {/*no defined value*/},
     [NodeName.MARK_HOLDER]: {/*no defined value*/},
     [NodeName.NESTED_VIEW_BLOCK_NODE]: {/*no defined value*/},
-    [NodeName.ORDERED_LIST]: {/*no defined value*/},
+    [NodeName.ORDERED_LIST]: { [AttributeType.MarginLeft]: '10px' },
     [NodeName.PARAGRAPH]: {
       [AttributeType.Color]: '#000',
       [AttributeType.FontSize]: '16px',
@@ -135,7 +135,7 @@ export const DefaultTheme: Theme = {
       [AttributeType.MarginBottom]: '0.5rem',
     },
     [NodeName.TASK_LIST]: {
-      [AttributeType.MarginLeft]: '1em',
+      [AttributeType.MarginLeft]: '10px',
       [AttributeType.PaddingLeft]: '1em',
     },
     [NodeName.TASK_LIST_ITEM]: {
@@ -201,7 +201,7 @@ export const GoogleDocsTheme: Theme = {
 
   nodes: {
     [NodeName.BLOCKQUOTE]: {/*no defined value*/},
-    [NodeName.BULLET_LIST]: {/*no defined value*/},
+    [NodeName.BULLET_LIST]: { [AttributeType.MarginLeft]: '10px' },
     [NodeName.CODEBLOCK]: {
       [AttributeType.PaddingLeft]: '4px',
       [AttributeType.PaddingRight]: '4px',
@@ -259,7 +259,7 @@ export const GoogleDocsTheme: Theme = {
     [NodeName.LIST_ITEM_CONTENT]: {/*no defined value*/},
     [NodeName.MARK_HOLDER]: {/*no defined value*/},
     [NodeName.NESTED_VIEW_BLOCK_NODE]: {/*no defined value*/},
-    [NodeName.ORDERED_LIST]: {/*no defined value*/},
+    [NodeName.ORDERED_LIST]: { [AttributeType.MarginLeft]: '10px' },
     [NodeName.PARAGRAPH]: {
       [AttributeType.FontSize]: '11pt',
       [AttributeType.Color]: '#353744',
@@ -269,7 +269,7 @@ export const GoogleDocsTheme: Theme = {
       [AttributeType.MarginBottom]: '0.5rem',
     },
     [NodeName.TASK_LIST]:{
-      [AttributeType.MarginLeft]: '1em',
+      [AttributeType.MarginLeft]: '10px',
       [AttributeType.PaddingLeft]: '1em',
     },
     [NodeName.TASK_LIST_ITEM]: {

@@ -1,7 +1,8 @@
 import { Node } from '@tiptap/core';
 
-import { getNodeOutputSpec, NodeName, TaskListNodeSpec, DATA_NODE_TYPE } from '@ureeka-notebook/web-service';
+import { getNodeOutputSpec, NodeName, SetAttributeType, TaskListNodeSpec, AttributeType, DATA_NODE_TYPE } from '@ureeka-notebook/web-service';
 
+import { setAttributeParsingBehavior } from 'notebookEditor/extension/util/attribute';
 import { NoOptions, NoStorage, ParseRulePriority } from 'notebookEditor/model/type';
 
 import { handleListDocumentUpdates } from '../util';
@@ -12,6 +13,9 @@ import { handleListDocumentUpdates } from '../util';
 // == Node ========================================================================
 export const TaskList = Node.create<NoOptions, NoStorage>({
   ...TaskListNodeSpec,
+
+  // -- Attribute -----------------------------------------------------------------
+  addAttributes() { return { [AttributeType.MarginLeft]: setAttributeParsingBehavior(AttributeType.MarginLeft, SetAttributeType.STYLE) }; },
 
   // -- Command -------------------------------------------------------------------
   addKeyboardShortcuts() {

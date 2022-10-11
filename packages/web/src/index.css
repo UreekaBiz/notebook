@@ -156,7 +156,6 @@
 
 /* .. OrderedList .............................................................. */
 ol[data-node-type="orderedList"] {
-  margin-left: 1em;
   padding-left: 1em;
 
   /* NOTE: the start variable is added by the renderer. (SEE: OrderedList.ts) */
@@ -172,13 +171,11 @@ ol[data-node-type="orderedList"] > li[data-node-type="listItem"]::marker {
 
 /* .. BulletList ............................................................... */
 ul[data-node-type="bulletList"] {
-  margin-left: 1em;
   padding-left: 1em;
 }
 
 /* .. TaskList ................................................................. */
 ul[data-node-type="taskList"] {
-  margin-left: 1em;
   padding-left: 1em;
 
   list-style: none;

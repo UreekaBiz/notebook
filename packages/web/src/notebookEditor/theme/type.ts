@@ -65,6 +65,9 @@ export enum Unit {
 }
 export const Units = Object.values(Unit);
 
+export const DEFAULT_UNIT_VALUE = 10;
+export const DEFAULT_UNIT = Unit.Pixel;
+
 // --------------------------------------------------------------------------------
 export const getUnitFromString = (str: string): Unit | undefined => {
   let foundUnit: Unit | undefined = undefined;

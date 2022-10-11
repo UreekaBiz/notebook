@@ -32,15 +32,15 @@ export const ListItem = Node.create<NoOptions, NoStorage>({
     };
   },
 
-  // -- Plugin  ------------------------------------------------------------------
+  // -- Plugin  -------------------------------------------------------------------
   addProseMirrorPlugins() { return [listItemTaskListItemPlugin()]; },
 
-  // -- Keyboard Shortcut  --------------------------------------------------------
+  // -- Keyboard Shortcut ---------------------------------------------------------
   addKeyboardShortcuts() {
     return {
       'Enter': () => shortcutCommandWrapper(this.editor, splitListItemCommand(NodeName.LIST_ITEM)),
-      'Tab': () => shortcutCommandWrapper(this.editor, indentListCommand),
       'Shift-Tab': () => shortcutCommandWrapper(this.editor, dedentListCommand),
+      'Tab': () => shortcutCommandWrapper(this.editor, indentListCommand),
       'Backspace': () => shortcutCommandWrapper(this.editor, listBackspaceCommand),
       'Mod-Backspace': () => shortcutCommandWrapper(this.editor, listBackspaceCommand),
     };
