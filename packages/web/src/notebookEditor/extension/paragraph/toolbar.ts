@@ -44,8 +44,6 @@ export const ParagraphToolbar: Toolbar = {
       markSubScript,
       markCode,
       linkToolItem,
-    ],
-    [
       nestedViewBlockNodeToolItem,
       editableInlineNodeWithContentToolItem,
       demo2AsyncNodeToolItem,

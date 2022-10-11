@@ -13,6 +13,7 @@ import { markSuperScript } from 'notebookEditor/extension/superScript/toolbar';
 import { fontSizeToolItem, spacingToolItem, textColorToolItem } from 'notebookEditor/extension/textStyle/toolbar';
 import { markUnderline } from 'notebookEditor/extension/underline/toolbar';
 import { toggleBlock } from 'notebookEditor/extension/util/node';
+import { dedentBlocksToolItem, indentBlocksToolItem } from 'notebookEditor/shared/toolItem';
 import { Toolbar, ToolItem } from 'notebookEditor/sidebar/toolbar/type';
 
 import { ExecuteButtons } from './ExecuteButtons';
@@ -81,6 +82,8 @@ export const Demo2AsyncNodeToolbar: Toolbar = {
       markSuperScript,
       markSubScript,
       markCode,
+      dedentBlocksToolItem,
+      indentBlocksToolItem,
     ],
     [
       fontSizeToolItem,

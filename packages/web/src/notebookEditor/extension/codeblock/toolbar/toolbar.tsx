@@ -12,6 +12,7 @@ import { markSuperScript } from 'notebookEditor/extension/superScript/toolbar';
 import { spacingToolItem } from 'notebookEditor/extension/textStyle/toolbar';
 import { markUnderline } from 'notebookEditor/extension/underline/toolbar';
 import { toggleBlock } from 'notebookEditor/extension/util/node';
+import { dedentBlocksToolItem, indentBlocksToolItem } from 'notebookEditor/shared/toolItem';
 import { Toolbar, ToolItem } from 'notebookEditor/sidebar/toolbar/type';
 
 import { CodeBlockTypeToolItem } from './CodeBlockTypeToolItem';
@@ -80,6 +81,8 @@ export const CodeBlockToolbar: Toolbar = {
       markSuperScript,
       markSubScript,
       markCode,
+      dedentBlocksToolItem,
+      indentBlocksToolItem,
     ],
     [
       spacingToolItem,

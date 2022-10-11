@@ -28,8 +28,6 @@ export const TaskListItemToolbar: Toolbar = {
       markSubScript,
       markCode,
       linkToolItem,
-    ],
-    [
       demoAsyncNodeToolItem,
       codeBlockReferenceToolItem,
     ],

@@ -12,6 +12,7 @@ import { markSubScript } from 'notebookEditor/extension/subScript/toolbar';
 import { fontSizeToolItem, textColorToolItem } from 'notebookEditor/extension/textStyle/toolbar';
 import { markUnderline } from 'notebookEditor/extension/underline/toolbar';
 import { toggleBlock } from 'notebookEditor/extension/util/node';
+import { dedentBlocksToolItem, indentBlocksToolItem } from 'notebookEditor/shared/toolItem';
 import { Toolbar, ToolItem } from 'notebookEditor/sidebar/toolbar/type';
 
 // ********************************************************************************
@@ -46,6 +47,8 @@ export const BlockquoteToolbar: Toolbar = {
       markSubScript,
       markCode,
       linkToolItem,
+      dedentBlocksToolItem,
+      indentBlocksToolItem,
     ],
     [
       fontSizeToolItem,

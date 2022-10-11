@@ -28,8 +28,6 @@ export const ListItemToolbar: Toolbar = {
       markSubScript,
       markCode,
       linkToolItem,
-    ],
-    [
       demoAsyncNodeToolItem,
       codeBlockReferenceToolItem,
     ],

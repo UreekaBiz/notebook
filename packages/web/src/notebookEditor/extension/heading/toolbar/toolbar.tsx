@@ -3,7 +3,12 @@ import { NodeName } from '@ureeka-notebook/web-service';
 import { blockquoteToolItem } from 'notebookEditor/extension/blockquote/toolbar';
 import { markBold } from 'notebookEditor/extension/bold/toolbar';
 import { markCode } from 'notebookEditor/extension/code/toolbar';
+import { codeBlockToolItem } from 'notebookEditor/extension/codeblock/toolbar';
+import { codeBlockReferenceToolItem } from 'notebookEditor/extension/codeBlockReference/toolbar';
+import { demo2AsyncNodeToolItem } from 'notebookEditor/extension/demo2AsyncNode/toolbar';
+import { demoAsyncNodeToolItem } from 'notebookEditor/extension/demoAsyncNode/toolbar';
 import { horizontalRuleToolItem } from 'notebookEditor/extension/horizontalRule/toolbar/toolbar';
+import { imageToolItem } from 'notebookEditor/extension/image/toolbar';
 import { markItalic } from 'notebookEditor/extension/italic/toolbar';
 import { linkToolItem } from 'notebookEditor/extension/link/toolbar';
 import { bulletListToolItem, orderedListToolItem, taskListToolItem } from 'notebookEditor/extension/list/toolbar';
@@ -49,10 +54,13 @@ export const HeadingToolbar: Toolbar = {
       markSubScript,
       markCode,
       linkToolItem,
-    ],
-    [
-      editableInlineNodeWithContentToolItem,
       nestedViewBlockNodeToolItem,
+      editableInlineNodeWithContentToolItem,
+      demo2AsyncNodeToolItem,
+      demoAsyncNodeToolItem,
+      codeBlockToolItem,
+      codeBlockReferenceToolItem,
+      imageToolItem,
     ],
     [
       fontSizeToolItem,
