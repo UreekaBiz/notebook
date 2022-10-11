@@ -55,6 +55,10 @@ export {
   AsyncNodeAttributes,
   isAsyncNodeAttributes,
 
+  BlockquoteAttributes,
+  DEFAULT_BLOCKQUOTE_BORDER_LEFT_COLOR,
+  DEFAULT_BLOCKQUOTE_BORDER_LEFT_WIDTH,
+
   CodeBlockAttributes,
   isCodeBlockAttributes,
   CodeBlockType,

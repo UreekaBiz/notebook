@@ -20,7 +20,13 @@ export const Blockquote = Node.create<NoOptions, NoStorage>({
   priority: ExtensionPriority.BLOCKQUOTE,
 
   // -- Attribute -----------------------------------------------------------------
-  addAttributes() { return { [AttributeType.MarginLeft]: setAttributeParsingBehavior(AttributeType.MarginLeft, SetAttributeType.STYLE) }; },
+  addAttributes() {
+    return {
+      [AttributeType.BorderLeft]: setAttributeParsingBehavior(AttributeType.BorderLeft, SetAttributeType.STYLE),
+      [AttributeType.BorderColor]: setAttributeParsingBehavior(AttributeType.BorderColor, SetAttributeType.STYLE),
+      [AttributeType.MarginLeft]: setAttributeParsingBehavior(AttributeType.MarginLeft, SetAttributeType.STYLE),
+    };
+  },
 
   // -- Keyboard Shortcut ---------------------------------------------------------
   addKeyboardShortcuts() {

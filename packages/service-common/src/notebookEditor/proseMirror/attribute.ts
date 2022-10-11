@@ -21,6 +21,10 @@ export enum AttributeType {
   BackgroundColor = 'backgroundColor',
 
   BorderColor = 'borderColor',
+  BorderTop = 'borderTop',
+  BorderBottom = 'borderBottom',
+  BorderLeft = 'borderLeft',
+  BorderRight = 'borderRight',
   BorderStyle = 'borderStyle',
   BorderWidth = 'borderWidth',
 
@@ -104,6 +108,10 @@ export type StyleAttributes = {
   [AttributeType.BackgroundColor]: string;
 
   [AttributeType.BorderColor]: string;
+  [AttributeType.BorderTop]: string;
+  [AttributeType.BorderBottom]: string;
+  [AttributeType.BorderLeft]: string;
+  [AttributeType.BorderRight]: string;
   [AttributeType.BorderStyle]: string;
   [AttributeType.BorderWidth]: string;
 
@@ -128,6 +136,10 @@ const styleAttributeSet = new Set([
   AttributeType.BackgroundColor,
 
   AttributeType.BorderColor,
+  AttributeType.BorderTop,
+  AttributeType.BorderBottom,
+  AttributeType.BorderLeft,
+  AttributeType.BorderRight,
   AttributeType.BorderStyle,
   AttributeType.BorderWidth,
 

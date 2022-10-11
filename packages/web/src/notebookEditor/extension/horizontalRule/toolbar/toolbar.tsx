@@ -39,7 +39,6 @@ const horizontalRuleColorToolItem: ToolItem =  {
   component: HorizontalRuleColorToolItem,
 };
 
-
 // == Toolbar =====================================================================
 export const HorizontalRuleToolbar: Toolbar = {
   title: 'Horizontal Rule',

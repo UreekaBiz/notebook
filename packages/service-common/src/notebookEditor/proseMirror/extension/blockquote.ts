@@ -1,6 +1,6 @@
 import { Mark, Node as ProseMirrorNode, NodeSpec } from 'prosemirror-model';
 
-import { AttributesTypeFromNodeSpecAttributes } from '../attribute';
+import { noNodeOrMarkSpecAttributeDefaultValue, AttributeType, AttributesTypeFromNodeSpecAttributes } from '../attribute';
 import { NodeRendererSpec } from '../htmlRenderer/type';
 import { JSONNode, NodeGroup, NodeName, ProseMirrorNodeContent } from '../node';
 import { NotebookSchemaType } from '../schema';
@@ -9,7 +9,11 @@ import { NotebookSchemaType } from '../schema';
 // == Attribute ===================================================================
 // NOTE: must be present on the NodeSpec below
 // NOTE: this value must have matching types -- the ones defined in the Extension
-const BlockquoteAttributeSpec = {/*currently nothing*/};
+const BlockquoteAttributeSpec = {
+  [AttributeType.BorderLeft]: noNodeOrMarkSpecAttributeDefaultValue<string>(),
+  [AttributeType.BorderColor]: noNodeOrMarkSpecAttributeDefaultValue<string>(),
+  [AttributeType.MarginLeft]: noNodeOrMarkSpecAttributeDefaultValue<string>(),
+};
 export type BlockquoteAttributes = AttributesTypeFromNodeSpecAttributes<typeof BlockquoteAttributeSpec>;
 
 // == Spec ========================================================================
@@ -47,3 +51,7 @@ export const createBlockquoteNode = (schema: NotebookSchemaType, attributes?: Pa
 // -- JSON Node Type --------------------------------------------------------------
 export type BlockquoteJSONNodeType = JSONNode<BlockquoteAttributes> & { type: NodeName.BLOCKQUOTE; };
 export const isBlockquoteJSONNode = (node: JSONNode): node is BlockquoteJSONNodeType => node.type === NodeName.BLOCKQUOTE;
+
+// --------------------------------------------------------------------------------
+export const DEFAULT_BLOCKQUOTE_BORDER_LEFT_COLOR = '#CCCCCC'/*gray*/;
+export const DEFAULT_BLOCKQUOTE_BORDER_LEFT_WIDTH = '3px'/*T&E*/;

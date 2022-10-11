@@ -63,8 +63,11 @@
 /* -- Node Styles -------------------------------------------------------------- */
 /* .. Blockquote ............................................................... */
 [data-node-type="blockquote"] {
-  border-left: 3px solid #CCCCCC;
-  margin-left: 1rem;
+  /*
+    ensure customizable border-left property does not override
+    default border-style
+  */
+  border-style: solid !important;
   padding-left: 0.25rem;
 }
 

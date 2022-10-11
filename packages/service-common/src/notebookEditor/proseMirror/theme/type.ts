@@ -65,7 +65,12 @@ export const DefaultTheme: Theme = {
   displayName: 'Default',
 
   nodes: {
-    [NodeName.BLOCKQUOTE]: { [AttributeType.MarginLeft]: '4px' },
+    [NodeName.BLOCKQUOTE]: {
+      // NOTE: order is not arbitrary
+      [AttributeType.BorderLeft]: '3px',
+      [AttributeType.BorderColor]: '#CCCCCC',
+      [AttributeType.MarginLeft]: '4px',
+    },
     [NodeName.BULLET_LIST]: { [AttributeType.MarginLeft]: '10px' },
     [NodeName.CODEBLOCK]: {
       [AttributeType.PaddingLeft]: '4px',
@@ -200,7 +205,12 @@ export const GoogleDocsTheme: Theme = {
   displayName: 'Google Docs',
 
   nodes: {
-    [NodeName.BLOCKQUOTE]: { [AttributeType.MarginLeft]: '4px' },
+    [NodeName.BLOCKQUOTE]: {
+      // NOTE: order is not arbitrary
+      [AttributeType.BorderLeft]: '3px',
+      [AttributeType.BorderColor]: '#CCCCCC',
+      [AttributeType.MarginLeft]: '4px',
+    },
     [NodeName.BULLET_LIST]: { [AttributeType.MarginLeft]: '10px' },
     [NodeName.CODEBLOCK]: {
       [AttributeType.PaddingLeft]: '4px',

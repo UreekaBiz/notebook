@@ -2,7 +2,7 @@ import { BiCodeAlt } from 'react-icons/bi';
 
 import { generateNodeId, getParentNode, getSelectedNode, isCodeBlockNode, AttributeType, NodeName } from '@ureeka-notebook/web-service';
 
-import { blockquoteToolItem } from 'notebookEditor/extension/blockquote/toolbar';
+import { blockquoteToolItem } from 'notebookEditor/extension/blockquote/toolbar/toolbar';
 import { markBold } from 'notebookEditor/extension/bold/toolbar';
 import { markCode } from 'notebookEditor/extension/code/toolbar';
 import { markItalic } from 'notebookEditor/extension/italic/toolbar';

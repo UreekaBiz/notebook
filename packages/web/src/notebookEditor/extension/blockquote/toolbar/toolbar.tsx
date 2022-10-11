@@ -15,6 +15,9 @@ import { toggleBlock } from 'notebookEditor/extension/util/node';
 import { dedentBlocksToolItem, indentBlocksToolItem } from 'notebookEditor/shared/toolItem';
 import { Toolbar, ToolItem } from 'notebookEditor/sidebar/toolbar/type';
 
+import { BlockquoteBorderColorToolItem } from './BlockquoteBorderColorToolItem';
+import { BlockquoteBorderLeftWidthToolItem } from './BlockquoteBorderLeftWidth';
+
 // ********************************************************************************
 // == Tool Items ==================================================================
 export const blockquoteToolItem: ToolItem = {
@@ -31,12 +34,31 @@ export const blockquoteToolItem: ToolItem = {
   onClick: (editor) => toggleBlock(editor, NodeName.BLOCKQUOTE, {/*no attrs*/}),
 };
 
+const blockquoteBorderColorToolItem: ToolItem =  {
+  toolType: 'component',
+  name: 'blockquoteBorderColorToolItem',
+
+  component: BlockquoteBorderColorToolItem,
+};
+
+const blockquoteBorderLeftWidthToolItem: ToolItem =  {
+  toolType: 'component',
+  name: 'blockquoteBorderLeftWidthToolItem',
+
+  component: BlockquoteBorderLeftWidthToolItem,
+};
+
+
 // == Toolbar =====================================================================
 export const BlockquoteToolbar: Toolbar = {
   title: 'Blockquote',
   name: NodeName.BLOCKQUOTE/*Expected and guaranteed to be unique*/,
 
   toolsCollections: [
+    [
+      blockquoteBorderColorToolItem,
+      blockquoteBorderLeftWidthToolItem,
+    ],
     [
       blockquoteToolItem,
       markBold,
