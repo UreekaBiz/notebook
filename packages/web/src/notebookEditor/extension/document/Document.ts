@@ -15,7 +15,7 @@ export const Document = Node.create<NoOptions, NoStorage>({
   ...DocumentNodeSpec,
 
   // -- Update --------------------------------------------------------------------
-  // ensure the URL receives the current journalId plus the Id of the nearest
+  // ensure the URL receives the current notebookId plus the Id of the nearest
   // Heading above the current Selection's anchor if it exists, or gets cleaned
   // up if there are no Headings
   onSelectionUpdate() {
@@ -34,7 +34,8 @@ export const Document = Node.create<NoOptions, NoStorage>({
         const childAtIndex = doc.child(i);
         if(childAtIndex && isHeadingNode(childAtIndex)) {
           const pos = selection.$anchor.posAtIndex(i, 0/*direct child of Doc*/);
-          if((pos > nearestPos/*closest*/) && (pos < selection.anchor/*above current Selection anchor*/) ) {
+          if((pos >= nearestPos/*closest*/) && (pos < selection.anchor/*above current Selection anchor*/) ) {
+            nearestPos = pos;
             nodeId = childAtIndex.attrs[AttributeType.Id];
           } /* else -- not the closest Heading above, ignore */
         } /* else -- not a Heading, ignore */
