@@ -19,6 +19,7 @@ import { markSubScript } from 'notebookEditor/extension/subScript/toolbar';
 import { markSuperScript } from 'notebookEditor/extension/superScript/toolbar';
 import { fontSizeToolItem, spacingToolItem, textColorToolItem } from 'notebookEditor/extension/textStyle/toolbar';
 import { markUnderline } from 'notebookEditor/extension/underline/toolbar';
+import { dedentBlocksToolItem, indentBlocksToolItem } from 'notebookEditor/shared/toolItem';
 import { Toolbar, ToolItem } from 'notebookEditor/sidebar/toolbar/type';
 
 import { HeadingLevelToolItem } from './HeadingLevelToolItem';
@@ -61,6 +62,8 @@ export const HeadingToolbar: Toolbar = {
       codeBlockToolItem,
       codeBlockReferenceToolItem,
       imageToolItem,
+      dedentBlocksToolItem,
+      indentBlocksToolItem,
     ],
     [
       fontSizeToolItem,
