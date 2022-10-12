@@ -221,6 +221,14 @@ export enum JustifyContent {
   //       its inner contents, since there is no flex-justify equivalent
   justify = 'justify',
 }
+export const justifyContentToTextAlign = (justifyContent: JustifyContent) => {
+  switch(justifyContent) {
+    case (JustifyContent.start): { return TextAlign.left; }
+    case (JustifyContent.center): { return TextAlign.center; }
+    case (JustifyContent.end): { return TextAlign.right; }
+    case (JustifyContent.justify): { return TextAlign.justify; }
+  }
+};
 
 // -- Alignment -------------------------------------------------------------------
 export enum TextAlign {

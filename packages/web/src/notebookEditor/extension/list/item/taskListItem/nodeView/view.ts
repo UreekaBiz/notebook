@@ -1,6 +1,6 @@
 import { Editor } from '@tiptap/core';
 
-import { camelToKebabCase, getPosType, isGetPos, AttributeType, JustifyContent, NodeName, TaskListItemNodeType, DATA_NODE_TYPE, TextAlign } from '@ureeka-notebook/web-service';
+import { camelToKebabCase, getPosType, isGetPos, AttributeType, JustifyContent, NodeName, TaskListItemNodeType, DATA_NODE_TYPE, TextAlign, justifyContentToTextAlign } from '@ureeka-notebook/web-service';
 
 import { NoStorage } from 'notebookEditor/model/type';
 import { AbstractNodeView } from 'notebookEditor/model/AbstractNodeView';
@@ -60,14 +60,19 @@ export class TaskListItemView extends AbstractNodeView<TaskListItemNodeType, NoS
     //       property. Otherwise the DOM elements won't reflect the changes
     this.checkBox.checked = this.node.attrs.checked ? true : false;
 
-    this.dom.style.justifyContent = camelToKebabCase(this.node.attrs[AttributeType.JustifyContent] ?? JustifyContent.start/*default*/);
-    if(this.contentDOM && this.node.attrs[AttributeType.JustifyContent] === JustifyContent.justify) {
+    const justifyContent = this.node.attrs[AttributeType.JustifyContent];
+    if(!justifyContent) return/*nothing to do, use defaults*/;
+
+    this.dom.style.justifyContent = camelToKebabCase(justifyContent);
+    if(!this.contentDOM) return/*nothing left to do*/;
+
+    if(justifyContent === JustifyContent.justify) {
       this.dom.style.justifyContent = camelToKebabCase(JustifyContent.start/*default*/);
       this.contentDOM.style.textAlign = TextAlign.justify;
       return/*nothing left to do*/;
-    } /* else -- remove textAlign */
-
-    this.contentDOM?.style.removeProperty('textAlign');
+    } else {
+      this.contentDOM.style.textAlign = justifyContentToTextAlign(justifyContent);
+    }
   }
 
   // -- Destroy -------------------------------------------------------------------

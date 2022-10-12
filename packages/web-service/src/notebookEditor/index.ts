@@ -34,6 +34,7 @@ export {
 
   BorderStyle,
   JustifyContent,
+  justifyContentToTextAlign,
   TextStyleAttributes,
   TextAlign,
   textAlignToJustifyContent,
