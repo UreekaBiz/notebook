@@ -162,7 +162,7 @@
   margin-left: 2.5px;
 }
 [data-node-type="taskListItem"] > div > [data-node-type="listItemContent"] {
-  margin-left: 4px;
+  margin-left: 1em;
   margin-right: 15px/*T&E, ensure same spacing as BulletLists and OrderedLists*/;
   margin-top: 0.25rem;
   margin-bottom: 0.25rem;
@@ -179,6 +179,7 @@ ol[data-node-type="orderedList"] {
 }
 ol[data-node-type="orderedList"] > li[data-node-type="listItem"] {
   counter-increment: list;
+  text-indent: -1.5em/*deal with list-style-position: inside; effects*/;;
 }
 ol[data-node-type="orderedList"] > li[data-node-type="listItem"]::marker {
   /* NOTE: the listStyle variable is added by the renderer. (SEE: listItem.ts) */
@@ -190,8 +191,11 @@ ul[data-node-type="bulletList"] {
   padding-left: 1em;
   list-style-position: inside;
 }
-ul[data-node-type="bulletList"] > li > div {
-  margin-left: -10px/*deal with list-style-position: inside; effects for BulletList*/;
+ul[data-node-type="bulletList"] > li[data-node-type="listItem"] {
+  text-indent: -1em/*deal with list-style-position: inside; effects*/;;
+}
+ul[data-node-type="bulletList"] > li[data-node-type="listItem"] > div {
+  margin-left: -10px/*deal with list-style-position: inside; effects*/;
 }
 
 /* .. TaskList ................................................................. */
