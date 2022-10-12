@@ -152,7 +152,7 @@
 
 /* .. TaskListItem ............................................................. */
 [data-node-type="taskListItem"] {
-  margin-left: -10px/*align to match BulletLists and*/;
+  margin-left: -10px/*align to match BulletLists and OrderedLists*/;
 }
 [data-node-type="taskListItem"] > div > [data-node-type="listItemContent"] {
   margin-left: 4px;
