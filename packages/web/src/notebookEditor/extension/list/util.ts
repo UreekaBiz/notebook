@@ -59,7 +59,16 @@ export const handleListDocumentUpdates = (editor: Editor, listTypeName: NodeName
   const { selection  } = editor.state;
   const { $anchor, anchor } = selection;
   if(isListItemContentNode($anchor.parent) && $anchor.depth === 3/*anchor inside a ListItemContent Node, inside a ListItem, inside a List*/) {
-    return applyDocumentUpdates(editor, [ toggleListUpdate, new SetParagraphDocumentUpdate() ]);
+    const anchorPosIfEmpty = Math.max(anchor-2/*account for unwrapping an empty ListItemContent, (its ListItem and the List)*/, 0/*do not go behind the Doc*/);
+
+    return applyDocumentUpdates(editor, [
+      toggleListUpdate,
+
+      // ensure the Paragraph is set at the right position if the parent ListItemContent is empty
+      ...($anchor.parent.textContent.length < 1 ? [new SetTextSelectionDocumentUpdate({ from: anchorPosIfEmpty, to: anchorPosIfEmpty })] : []),
+
+      new SetParagraphDocumentUpdate(),
+    ]);
   } else {
     // ensure that the List Commands work correctly by first setting the ListItemContent
     // so that it can be wrapped
