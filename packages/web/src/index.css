@@ -151,8 +151,15 @@
 }
 
 /* .. TaskListItem ............................................................. */
-[data-node-type="taskListItem"] {
-  margin-left: -10px/*align to match BulletLists and OrderedLists*/;
+/*
+  T&E, make nested TaskListItems in between BulletLists and
+  OrderedLists match their ListItem spacing
+*/
+[data-node-type="bulletList"] [data-node-type="taskListItem"] {
+  margin-left: 2.5px;
+}
+[data-node-type="orderedList"] [data-node-type="taskListItem"] {
+  margin-left: 2.5px;
 }
 [data-node-type="taskListItem"] > div > [data-node-type="listItemContent"] {
   margin-left: 4px;
@@ -188,11 +195,20 @@ ul[data-node-type="bulletList"] > li > div {
 }
 
 /* .. TaskList ................................................................. */
+/*
+  make nested TaskLists have no padding, but keep the top level ones with the
+  same padding as BulletLists and OrderedLists
+*/
+[data-node-type="bulletList"] [data-node-type="taskList"] {
+  padding: 0;
+}
+[data-node-type="orderedList"] [data-node-type="taskList"] {
+  padding: 0;
+}
 ul[data-node-type="taskList"] {
   padding-left: 1em;
 
   list-style: none;
-  padding: 0;
 }
 ul[data-node-type="taskList"] > li { display: flex; }
 ul[data-node-type="taskList"] > li > label {
