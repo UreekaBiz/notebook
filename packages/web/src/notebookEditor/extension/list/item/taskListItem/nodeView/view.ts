@@ -1,6 +1,6 @@
 import { Editor } from '@tiptap/core';
 
-import { getPosType, isGetPos, NodeName, TaskListItemNodeType, DATA_NODE_TYPE } from '@ureeka-notebook/web-service';
+import { camelToKebabCase, getPosType, isGetPos, AttributeType, JustifyContent, NodeName, TaskListItemNodeType, DATA_NODE_TYPE, TextAlign } from '@ureeka-notebook/web-service';
 
 import { NoStorage } from 'notebookEditor/model/type';
 import { AbstractNodeView } from 'notebookEditor/model/AbstractNodeView';
@@ -59,6 +59,15 @@ export class TaskListItemView extends AbstractNodeView<TaskListItemNodeType, NoS
     //       setting this attribute, which has to be set through the .checked
     //       property. Otherwise the DOM elements won't reflect the changes
     this.checkBox.checked = this.node.attrs.checked ? true : false;
+
+    this.dom.style.justifyContent = camelToKebabCase(this.node.attrs[AttributeType.JustifyContent] ?? JustifyContent.start/*default*/);
+    if(this.contentDOM && this.node.attrs[AttributeType.JustifyContent] === JustifyContent.justify) {
+      this.dom.style.justifyContent = camelToKebabCase(JustifyContent.start/*default*/);
+      this.contentDOM.style.textAlign = TextAlign.justify;
+      return/*nothing left to do*/;
+    } /* else -- remove textAlign */
+
+    this.contentDOM?.style.removeProperty('textAlign');
   }
 
   // -- Destroy -------------------------------------------------------------------

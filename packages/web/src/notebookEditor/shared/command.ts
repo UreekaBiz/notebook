@@ -2,11 +2,11 @@ import { Editor } from '@tiptap/core';
 import { Node as ProseMirrorNode } from 'prosemirror-model';
 import { EditorState, Transaction } from 'prosemirror-state';
 
-import { isBlank, isNodeSelection, AbstractDocumentUpdate, AttributeType, Command, NodeName, SetNodeSelectionDocumentUpdate, UpdateAttributesDocumentUpdate, VerticalAlign } from '@ureeka-notebook/web-service';
+import { isBlank, isHeadingNode, isListItemNode, isListItemContentNode, isNodeSelection, isParagraphNode, isTaskListItemNode, AbstractDocumentUpdate, AttributeType, Command, NodeName, SetNodeSelectionDocumentUpdate, TextAlign, UpdateAttributesDocumentUpdate, VerticalAlign, JustifyContent } from '@ureeka-notebook/web-service';
 
 import { applyDocumentUpdates } from 'notebookEditor/command/update';
-import { separateUnitFromString, DEFAULT_UNIT, DEFAULT_UNIT_VALUE } from 'notebookEditor/theme/type';
 import { isListNode } from 'notebookEditor/extension/list/util';
+import { separateUnitFromString, DEFAULT_UNIT, DEFAULT_UNIT_VALUE } from 'notebookEditor/theme/type';
 
 // ********************************************************************************
 // == Attribute ===================================================================
@@ -68,6 +68,67 @@ const getNewIndentation = (changeType: 'dedent' | 'indent', currentIndentation: 
 
 
 // -- Alignment -------------------------------------------------------------------
+// .. Horizontal Align ............................................................
+/** Change the Horizontal Alignment of the Blocks in the Selection Range */
+export const changeHorizontalAlignmentCommand = (alignment: TextAlign): Command => (state, dispatch) => {
+  const updatedTr =  new ChangeHorizontalAlignmentDocumentUpdate(alignment).update(state, state.tr);
+  if(updatedTr) {
+    dispatch(updatedTr);
+    return true/*Command executed*/;
+  } /* else -- Command cannot be executed */
+
+  return false/*not executed*/;
+};
+export class ChangeHorizontalAlignmentDocumentUpdate implements AbstractDocumentUpdate {
+  public constructor(private readonly alignment:TextAlign) {/*nothing additional*/ }
+
+  /*
+   * Modify the given Transaction such that the Horizontal Alignment of the Blocks
+   * in the current Selection are changed
+   */
+  public update(editorState: EditorState, tr: Transaction) {
+    const { empty, $from, from, to } = tr.selection;
+    if(empty) {
+      if(isListItemContentNode($from.parent)) {
+        const listItemContentParentPos = from - $from.parentOffset - 1/*the ListItemContent itself*/,
+              listItemGrandParentPos = listItemContentParentPos-1/*parent of ListItemContent*/,
+              listItemGrandParent = editorState.doc.nodeAt(listItemGrandParentPos);
+        if(!listItemGrandParent) return false/*invalid position*/;
+
+        changeNodeAlignment(this.alignment, listItemGrandParent, listItemGrandParentPos, tr);
+        } else {
+          // regular Block
+          changeNodeAlignment(this.alignment, $from.parent, from - $from.parentOffset - 1/*the Block Node itself*/, tr);
+      }
+    } else {
+      tr.doc.nodesBetween(from, to, (node, pos) => changeNodeAlignment(this.alignment, node, pos, tr));
+    }
+
+    return tr/*updated*/;
+  }
+}
+// NOTE: this utility only changes Paragraphs, Headings
+//       ListItems or TaskListItems on purpose since they
+//       are the only Block Nodes for which changing the
+//       Horizontal Alignment makes sense
+const changeNodeAlignment = (alignment: TextAlign, node: ProseMirrorNode, nodePos: number, tr: Transaction) => {
+  if(isHeadingNode(node) || isParagraphNode(node) || isListItemNode(node)) {
+    tr.setNodeMarkup(nodePos, undefined/*maintain type*/, { ...node.attrs, [AttributeType.TextAlign]: alignment });
+  } /* else -- check for TaskListItem */
+
+  if(isTaskListItemNode(node)) {
+    let justifyContent = ''/*default*/;
+    switch(alignment) {
+      case TextAlign.left: { justifyContent = JustifyContent.start; break; }
+      case TextAlign.center: { justifyContent = JustifyContent.center; break; }
+      case TextAlign.right: { justifyContent = JustifyContent.end; break; }
+      case TextAlign.justify: { justifyContent = JustifyContent.justify; break; }
+    }
+    tr.setNodeMarkup(nodePos, undefined/*maintain type*/, { ...node.attrs, [AttributeType.JustifyContent]: justifyContent });
+  } /* else -- ignore Node */
+};
+
+// .. Vertical Align ..............................................................
 // NOTE: this is an utility and not a Command since it
 //       makes use of applyDocumentUpdates
 // sets the vertical alignment Attribute for a Node if it is not currently bottom,

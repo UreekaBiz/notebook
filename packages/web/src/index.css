@@ -146,20 +146,26 @@
 */
 /* .. ListItem ................................................................. */
 [data-node-type="listItem"] > [data-node-type="listItemContent"] {
-  margin: 0px;
+  margin-right: 1em/*T&E, ensure right align looks alright*/;;
+  display: inline;
 }
 
 /* .. TaskListItem ............................................................. */
+[data-node-type="taskListItem"] {
+  margin-left: -10px/*align to match BulletLists and*/;
+}
 [data-node-type="taskListItem"] > div > [data-node-type="listItemContent"] {
   margin-left: 4px;
-  margin-right: 4px;
+  margin-right: 15px/*T&E, ensure same spacing as BulletLists and OrderedLists*/;
   margin-top: 0.25rem;
   margin-bottom: 0.25rem;
+  overflow-wrap: anywhere/*do not allow TaskListItem contents to expand beyond the Document*/;
 }
 
 /* .. OrderedList .............................................................. */
 ol[data-node-type="orderedList"] {
   padding-left: 1em;
+  list-style-position: inside;
 
   /* NOTE: the start variable is added by the renderer. (SEE: OrderedList.ts) */
   counter-reset: list var(--start);
@@ -175,6 +181,10 @@ ol[data-node-type="orderedList"] > li[data-node-type="listItem"]::marker {
 /* .. BulletList ............................................................... */
 ul[data-node-type="bulletList"] {
   padding-left: 1em;
+  list-style-position: inside;
+}
+ul[data-node-type="bulletList"] > li > div {
+  margin-left: -10px/*deal with list-style-position: inside; effects for BulletList*/;
 }
 
 /* .. TaskList ................................................................. */

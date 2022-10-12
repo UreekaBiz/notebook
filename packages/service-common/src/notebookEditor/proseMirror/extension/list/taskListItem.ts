@@ -9,6 +9,8 @@ import { NotebookSchemaType } from '../../schema';
 // == Attribute ===================================================================
 // NOTE: This values must have matching types the ones defined in the Extension.
 const TaskListItemAttributeSpec = {
+  [AttributeType.JustifyContent]: noNodeOrMarkSpecAttributeDefaultValue<string>(),
+
   /** whether or not this taskListItem is checked */
   [AttributeType.Checked]: noNodeOrMarkSpecAttributeDefaultValue<boolean>(),
 };

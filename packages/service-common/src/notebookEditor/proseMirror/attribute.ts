@@ -28,6 +28,8 @@ export enum AttributeType {
   BorderStyle = 'borderStyle',
   BorderWidth = 'borderWidth',
 
+  JustifyContent = 'justifyContent',
+
   Width = 'width',
   Height = 'height',
 
@@ -115,6 +117,8 @@ export type StyleAttributes = {
   [AttributeType.BorderStyle]: string;
   [AttributeType.BorderWidth]: string;
 
+  [AttributeType.JustifyContent]: string;
+
   [AttributeType.Width]: string;
   [AttributeType.Height]: string;
 
@@ -142,6 +146,8 @@ const styleAttributeSet = new Set([
   AttributeType.BorderRight,
   AttributeType.BorderStyle,
   AttributeType.BorderWidth,
+
+  AttributeType.JustifyContent,
 
   AttributeType.Width,
   AttributeType.Height,
@@ -204,6 +210,17 @@ export const getOppositeSpacingAttribute = (attribute: SpacingAttribute) => {
     case AttributeType.PaddingRight: return AttributeType.PaddingLeft;
   }
 };
+
+// -- Justify ---------------------------------------------------------------------
+export enum JustifyContent {
+  start = 'flexStart',
+  center = 'center',
+  end = 'flexEnd',
+
+  // NOTE: flag value currently only used by TaskListItem's NodeView to justify
+  //       its inner contents, since there is no flex-justify equivalent
+  justify = 'justify',
+}
 
 // -- Alignment -------------------------------------------------------------------
 export enum TextAlign {

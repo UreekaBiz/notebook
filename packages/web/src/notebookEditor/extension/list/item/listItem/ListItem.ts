@@ -29,6 +29,8 @@ export const ListItem = Node.create<NoOptions, NoStorage>({
       // NOTE: these attributes only have influence on ListItems inside OrderedLists
       [AttributeType.ListStyleType]: setAttributeParsingBehavior(DATA_LIST_ITEM_LIST_STYLE, SetAttributeType.STRING, ListStyle.DECIMAL),
       [AttributeType.Separator]: setAttributeParsingBehavior(DATA_LIST_ITEM_SEPARATOR, SetAttributeType.STRING, LIST_ITEM_DEFAULT_SEPARATOR),
+
+      [AttributeType.TextAlign]: setAttributeParsingBehavior(AttributeType.TextAlign, SetAttributeType.STYLE),
     };
   },
 
