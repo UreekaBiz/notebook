@@ -146,40 +146,27 @@
 */
 /* .. ListItem ................................................................. */
 [data-node-type="listItem"] > [data-node-type="listItemContent"] {
-  margin-right: 1em/*T&E, ensure right align looks alright*/;;
-  display: inline;
+  margin: 0px;
 }
 
 /* .. TaskListItem ............................................................. */
-/*
-  T&E, make nested TaskListItems in between BulletLists and
-  OrderedLists match their ListItem spacing
-*/
-[data-node-type="bulletList"] [data-node-type="taskListItem"] {
-  margin-left: 2.5px;
-}
-[data-node-type="orderedList"] [data-node-type="taskListItem"] {
-  margin-left: 2.5px;
-}
 [data-node-type="taskListItem"] > div > [data-node-type="listItemContent"] {
-  margin-left: 1em;
-  margin-right: 15px/*T&E, ensure same spacing as BulletLists and OrderedLists*/;
+  margin-left: 4px;
+  margin-right: 4px;
   margin-top: 0.25rem;
   margin-bottom: 0.25rem;
-  overflow-wrap: anywhere/*do not allow TaskListItem contents to expand beyond the Document*/;
 }
 
 /* .. OrderedList .............................................................. */
 ol[data-node-type="orderedList"] {
+  margin-left: 1em;
   padding-left: 1em;
-  list-style-position: inside;
 
   /* NOTE: the start variable is added by the renderer. (SEE: OrderedList.ts) */
   counter-reset: list var(--start);
 }
 ol[data-node-type="orderedList"] > li[data-node-type="listItem"] {
   counter-increment: list;
-  text-indent: -1.5em/*deal with list-style-position: inside; effects*/;;
 }
 ol[data-node-type="orderedList"] > li[data-node-type="listItem"]::marker {
   /* NOTE: the listStyle variable is added by the renderer. (SEE: listItem.ts) */
@@ -188,31 +175,17 @@ ol[data-node-type="orderedList"] > li[data-node-type="listItem"]::marker {
 
 /* .. BulletList ............................................................... */
 ul[data-node-type="bulletList"] {
+  margin-left: 1em;
   padding-left: 1em;
-  list-style-position: inside;
-}
-ul[data-node-type="bulletList"] > li[data-node-type="listItem"] {
-  text-indent: -1em/*deal with list-style-position: inside; effects*/;;
-}
-ul[data-node-type="bulletList"] > li[data-node-type="listItem"] > div {
-  margin-left: -10px/*deal with list-style-position: inside; effects*/;
 }
 
 /* .. TaskList ................................................................. */
-/*
-  make nested TaskLists have no padding, but keep the top level ones with the
-  same padding as BulletLists and OrderedLists
-*/
-[data-node-type="bulletList"] [data-node-type="taskList"] {
-  padding: 0;
-}
-[data-node-type="orderedList"] [data-node-type="taskList"] {
-  padding: 0;
-}
 ul[data-node-type="taskList"] {
+  margin-left: 1em;
   padding-left: 1em;
 
   list-style: none;
+  padding: 0;
 }
 ul[data-node-type="taskList"] > li { display: flex; }
 ul[data-node-type="taskList"] > li > label {
