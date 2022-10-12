@@ -2,7 +2,7 @@ import { Editor } from '@tiptap/core';
 import { Node as ProseMirrorNode } from 'prosemirror-model';
 import { EditorState, Transaction } from 'prosemirror-state';
 
-import { isBlank, isHeadingNode, isListItemNode, isListItemContentNode, isNodeSelection, isParagraphNode, isTaskListItemNode, AbstractDocumentUpdate, AttributeType, Command, NodeName, SetNodeSelectionDocumentUpdate, TextAlign, UpdateAttributesDocumentUpdate, VerticalAlign, JustifyContent } from '@ureeka-notebook/web-service';
+import { isBlank, isHeadingNode, isListItemNode, isListItemContentNode, isNodeSelection, isParagraphNode, isTaskListItemNode, textAlignToJustifyContent, AbstractDocumentUpdate, AttributeType, Command, NodeName, SetNodeSelectionDocumentUpdate, TextAlign, UpdateAttributesDocumentUpdate, VerticalAlign } from '@ureeka-notebook/web-service';
 
 import { applyDocumentUpdates } from 'notebookEditor/command/update';
 import { isListNode } from 'notebookEditor/extension/list/util';
@@ -117,14 +117,7 @@ const changeNodeAlignment = (alignment: TextAlign, node: ProseMirrorNode, nodePo
   } /* else -- check for TaskListItem */
 
   if(isTaskListItemNode(node)) {
-    let justifyContent = ''/*default*/;
-    switch(alignment) {
-      case TextAlign.left: { justifyContent = JustifyContent.start; break; }
-      case TextAlign.center: { justifyContent = JustifyContent.center; break; }
-      case TextAlign.right: { justifyContent = JustifyContent.end; break; }
-      case TextAlign.justify: { justifyContent = JustifyContent.justify; break; }
-    }
-    tr.setNodeMarkup(nodePos, undefined/*maintain type*/, { ...node.attrs, [AttributeType.JustifyContent]: justifyContent });
+    tr.setNodeMarkup(nodePos, undefined/*maintain type*/, { ...node.attrs, [AttributeType.JustifyContent]: textAlignToJustifyContent(alignment) });
   } /* else -- ignore Node */
 };
 

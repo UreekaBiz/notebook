@@ -36,6 +36,7 @@ export {
   JustifyContent,
   TextStyleAttributes,
   TextAlign,
+  textAlignToJustifyContent,
   VerticalAlign,
 
   HTMLAttributes,

@@ -2,7 +2,7 @@ import { Editor } from '@tiptap/core';
 import { BiAlignLeft, BiAlignJustify, BiAlignMiddle, BiAlignRight } from 'react-icons/bi';
 import { MdFormatIndentDecrease, MdFormatIndentIncrease } from 'react-icons/md';
 
-import { getParentNode, isNodeSelection, isListItemContentNode, SelectionDepth, TextAlign, isTaskListItemNode, AttributeType, JustifyContent } from '@ureeka-notebook/web-service';
+import { getParentNode, isNodeSelection, isListItemContentNode, textAlignToJustifyContent, SelectionDepth, TextAlign, isTaskListItemNode, AttributeType } from '@ureeka-notebook/web-service';
 
 import { toolItemCommandWrapper } from 'notebookEditor/command/util';
 import { shouldShowToolItemInsideList } from 'notebookEditor/extension/list/util';
@@ -102,23 +102,18 @@ const isHorizontalAlignToolItemActive = (editor: Editor, alignment: TextAlign) =
   const { parent: anchorParent } = $anchor;
   if(isListItemContentNode(anchorParent)) {
     const parentListItem = $anchor.node(-1/*parent*/);
+
     if(isTaskListItemNode(parentListItem)) {
-      switch(alignment) {
-        case (TextAlign.left): {
-          if(!parentListItem.attrs[AttributeType.JustifyContent]) return true/*undefined attribute is equivalent to left align*/;
-          return parentListItem.attrs[AttributeType.JustifyContent] === JustifyContent.start;
-        }
-        case (TextAlign.center): { return parentListItem.attrs[AttributeType.JustifyContent] === JustifyContent.center; }
-        case (TextAlign.right): { return parentListItem.attrs[AttributeType.JustifyContent] === JustifyContent.end; }
-        case (TextAlign.justify): { return parentListItem.attrs[AttributeType.JustifyContent] === JustifyContent.justify; }
-      }
+      const justifyContent = parentListItem.attrs[AttributeType.JustifyContent];
+      if(!justifyContent) return false/*not set*/;
+      return justifyContent === textAlignToJustifyContent(alignment);
     } /* else -- ListItem by contract */
 
-    if(!(parentListItem.attrs[AttributeType.TextAlign]) && alignment === TextAlign.left) return true/*undefined attribute is equivalent to left align*/;
+    if(!(parentListItem.attrs[AttributeType.TextAlign])) return false/*not set*/;
     return parentListItem.attrs[AttributeType.TextAlign] === alignment;
   } /* else -- regular Block */
 
-  if(!($anchor.parent.attrs[AttributeType.TextAlign]) && alignment === TextAlign.left) return true/*undefined attribute is equivalent to left align*/;
+  if(!($anchor.parent.attrs[AttributeType.TextAlign])) return false/*not set*/;
   return $anchor.parent.attrs[AttributeType.TextAlign] === alignment;
 };
 

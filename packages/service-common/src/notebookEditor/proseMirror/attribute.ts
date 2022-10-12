@@ -229,6 +229,14 @@ export enum TextAlign {
   right = 'right',
   justify = 'justify'
 }
+export const textAlignToJustifyContent = (alignment: TextAlign) => {
+  switch(alignment) {
+    case (TextAlign.left): { return JustifyContent.start; }
+    case (TextAlign.center): { return JustifyContent.center; }
+    case (TextAlign.right): { return JustifyContent.end; }
+    case (TextAlign.justify): { return JustifyContent.justify; }
+  }
+};
 
 export enum VerticalAlign {
   top = 'text-top',
