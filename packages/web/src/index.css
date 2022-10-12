@@ -144,19 +144,6 @@
          (SEE: REF in src/common/notebookEditor/extension/listItem)
          (SEE: REF in src/common/notebookEditor/extension/taskListItem)
 */
-/* .. ListItem ................................................................. */
-[data-node-type="listItem"] > [data-node-type="listItemContent"] {
-  margin: 0px;
-}
-
-/* .. TaskListItem ............................................................. */
-[data-node-type="taskListItem"] > div > [data-node-type="listItemContent"] {
-  margin-left: 4px;
-  margin-right: 4px;
-  margin-top: 0.25rem;
-  margin-bottom: 0.25rem;
-}
-
 /* .. OrderedList .............................................................. */
 ol[data-node-type="orderedList"] {
   margin-left: 1em;
@@ -172,11 +159,15 @@ ol[data-node-type="orderedList"] > li[data-node-type="listItem"]::marker {
   /* NOTE: the listStyle variable is added by the renderer. (SEE: listItem.ts) */
   content: counter(list, var(--listStyleType)) attr(data-attribute-separator) ' '/*add separation between content and Marker*/;
 }
-
 /* .. BulletList ............................................................... */
 ul[data-node-type="bulletList"] {
   margin-left: 1em;
   padding-left: 1em;
+}
+
+/* .. ListItem ................................................................. */
+[data-node-type="listItem"] > [data-node-type="listItemContent"] {
+  margin: 0px;
 }
 
 /* .. TaskList ................................................................. */
@@ -193,6 +184,14 @@ ul[data-node-type="taskList"] > li > label {
    margin-top: 0.25em;
 	 margin-right: 0.25rem;
 	 user-select: none;
+}
+
+/* .. TaskListItem ............................................................. */
+[data-node-type="taskListItem"] > div > [data-node-type="listItemContent"] {
+  margin-left: 4px;
+  margin-right: 4px;
+  margin-top: 0.25rem;
+  margin-bottom: 0.25rem;
 }
 
 /* .. MarkHolder ............................................................... */
