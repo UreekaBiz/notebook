@@ -33,6 +33,7 @@ export {
   getOppositeSpacingAttribute,
 
   BorderStyle,
+  JustifyContent,
   TextStyleAttributes,
   TextAlign,
   VerticalAlign,

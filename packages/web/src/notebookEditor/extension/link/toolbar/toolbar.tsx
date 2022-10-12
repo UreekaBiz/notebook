@@ -1,12 +1,12 @@
 import { AiOutlineLink } from 'react-icons/ai';
 
-import { getLinkMarkType, getParentNode, isListItemContentNode, isNodeSelection, MarkName } from '@ureeka-notebook/web-service';
+import { getLinkMarkType, isNodeSelection, MarkName } from '@ureeka-notebook/web-service';
 
 import { toolItemCommandWrapper } from 'notebookEditor/command/util';
-import { shouldShowToolItemInsideList } from 'notebookEditor/extension/list/util';
 import { toggleMarkInMarkHolderCommand } from 'notebookEditor/extension/markHolder/command';
 import { getMarkHolder, inMarkHolder } from 'notebookEditor/extension/markHolder/util';
 import { getDialogStorage } from 'notebookEditor/model/DialogStorage';
+import { shouldShowToolItem } from 'notebookEditor/shared/toolItem';
 import { Toolbar, ToolItem } from 'notebookEditor/sidebar/toolbar/type';
 
 import { LinkColorToolItem } from './component/LinkColorToolItem';
@@ -31,13 +31,7 @@ export const linkToolItem: ToolItem = {
 
     return true;
   },
-  shouldShow: (editor, depth) => {
-    if(isListItemContentNode(getParentNode(editor.state.selection))) {
-      return shouldShowToolItemInsideList(editor.state, depth);
-    } /* else -- not inside ListItemContent */
-
-    return depth === undefined || editor.state.selection.$anchor.depth === depth;/*direct parent*/
-  },
+  shouldShow: (editor, depth) => shouldShowToolItem(editor, depth),
   isActive: (editor) => {
     if(inMarkHolder(editor, MarkName.LINK)) return true/*is active in MarkHolder*/;
 

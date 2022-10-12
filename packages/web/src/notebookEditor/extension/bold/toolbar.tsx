@@ -1,10 +1,10 @@
 import { BiBold } from 'react-icons/bi';
 
-import { getParentNode, isListItemContentNode, isNodeSelection, MarkName } from '@ureeka-notebook/web-service';
+import { isNodeSelection, MarkName } from '@ureeka-notebook/web-service';
 
 import { toolItemCommandWrapper } from 'notebookEditor/command/util';
-import { shouldShowToolItemInsideList } from 'notebookEditor/extension/list/util';
 import { inMarkHolder } from 'notebookEditor/extension/markHolder/util';
+import { shouldShowToolItem } from 'notebookEditor/shared/toolItem';
 import { ToolItem } from 'notebookEditor/sidebar/toolbar/type';
 
 import { toggleBoldCommand } from './command';
@@ -25,13 +25,7 @@ export const markBold: ToolItem = {
 
     return true;
   },
-  shouldShow: (editor, depth) => {
-    if(isListItemContentNode(getParentNode(editor.state.selection))) {
-      return shouldShowToolItemInsideList(editor.state, depth);
-    } /* else -- not inside ListItemContent */
-
-    return depth === undefined || editor.state.selection.$anchor.depth === depth;/*direct parent*/
-  },
+  shouldShow: (editor, depth) => shouldShowToolItem(editor, depth),
   isActive: (editor) => {
     if(inMarkHolder(editor,  MarkName.BOLD)) return true/*is active in MarkHolder*/;
 
