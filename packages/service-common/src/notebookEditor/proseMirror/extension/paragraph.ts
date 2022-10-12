@@ -1,6 +1,6 @@
 import { Mark, Node as ProseMirrorNode, NodeSpec } from 'prosemirror-model';
 
-import { noNodeOrMarkSpecAttributeDefaultValue, AttributeType, AttributesTypeFromNodeSpecAttributes } from '../attribute';
+import { noNodeOrMarkSpecAttributeDefaultValue, AttributeType, AttributesTypeFromNodeSpecAttributes, TextAlign } from '../attribute';
 import { NodeRendererSpec } from '../htmlRenderer/type';
 import { getAllowedMarks, MarkName } from '../mark';
 import { JSONNode, NodeGroup, NodeName, ProseMirrorNodeContent } from '../node';
@@ -23,6 +23,8 @@ const ParagraphAttributesSpec = {
   [AttributeType.MarginBottom]: noNodeOrMarkSpecAttributeDefaultValue<string>(),
   [AttributeType.MarginLeft]: noNodeOrMarkSpecAttributeDefaultValue<string>(),
   [AttributeType.MarginRight]: noNodeOrMarkSpecAttributeDefaultValue<string>(),
+
+  [AttributeType.TextAlign]: noNodeOrMarkSpecAttributeDefaultValue<TextAlign>(),
 };
 export type ParagraphAttributes = AttributesTypeFromNodeSpecAttributes<typeof ParagraphAttributesSpec>
 

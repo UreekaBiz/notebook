@@ -1,6 +1,6 @@
 import { Mark, Node as ProseMirrorNode, NodeSpec } from 'prosemirror-model';
 
-import { noNodeOrMarkSpecAttributeDefaultValue, AttributesTypeFromNodeSpecAttributes, AttributeType } from '../../attribute';
+import { noNodeOrMarkSpecAttributeDefaultValue, AttributesTypeFromNodeSpecAttributes, AttributeType, JustifyContent } from '../../attribute';
 import { createNodeDataAttribute, createNodeDataTypeAttribute, NodeRendererSpec } from '../../htmlRenderer/type';
 import { JSONNode, NodeName, ProseMirrorNodeContent } from '../../node';
 import { NotebookSchemaType } from '../../schema';
@@ -9,7 +9,7 @@ import { NotebookSchemaType } from '../../schema';
 // == Attribute ===================================================================
 // NOTE: This values must have matching types the ones defined in the Extension.
 const TaskListItemAttributeSpec = {
-  [AttributeType.JustifyContent]: noNodeOrMarkSpecAttributeDefaultValue<string>(),
+  [AttributeType.JustifyContent]: noNodeOrMarkSpecAttributeDefaultValue<JustifyContent>(),
 
   /** whether or not this taskListItem is checked */
   [AttributeType.Checked]: noNodeOrMarkSpecAttributeDefaultValue<boolean>(),
