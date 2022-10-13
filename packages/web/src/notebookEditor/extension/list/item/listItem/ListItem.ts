@@ -42,7 +42,8 @@ export const ListItem = Node.create<NoOptions, NoStorage>({
       'Enter': () => shortcutCommandWrapper(this.editor, splitListItemCommand(NodeName.LIST_ITEM)),
       'Shift-Tab': () => {
         if(shortcutCommandWrapper(this.editor, dedentListCommand)) return true/*handled*/;
-        return liftListItemContent(this.editor, 'enter'/*simulate Enter*/);
+        liftListItemContent(this.editor, 'enter'/*simulate Enter*/);
+        return true/*do not let Selection leave Editor*/;
       },
       'Tab': () => shortcutCommandWrapper(this.editor, indentListCommand),
       'Backspace': () => shortcutCommandWrapper(this.editor, listBackspaceCommand),
