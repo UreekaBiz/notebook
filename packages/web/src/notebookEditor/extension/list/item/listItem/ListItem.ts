@@ -7,6 +7,7 @@ import { setAttributeParsingBehavior } from 'notebookEditor/extension/util/attri
 import { ExtensionPriority, NoOptions, NoStorage } from 'notebookEditor/model/type';
 
 import { splitListItemCommand } from '../../command/splitListItemCommand';
+import { liftListItemContent } from '../listItemContent/update';
 import { indentListCommand } from '../../keyboardShortcut/indent';
 import { dedentListCommand } from '../../keyboardShortcut/dedent';
 import { listBackspaceCommand } from '../../keyboardShortcut/listBackspace';
@@ -32,14 +33,17 @@ export const ListItem = Node.create<NoOptions, NoStorage>({
     };
   },
 
-  // -- Plugin  -------------------------------------------------------------------
+  // -- Plugin  ------------------------------------------------------------------
   addProseMirrorPlugins() { return [listItemTaskListItemPlugin()]; },
 
   // -- Keyboard Shortcut ---------------------------------------------------------
   addKeyboardShortcuts() {
     return {
       'Enter': () => shortcutCommandWrapper(this.editor, splitListItemCommand(NodeName.LIST_ITEM)),
-      'Shift-Tab': () => shortcutCommandWrapper(this.editor, dedentListCommand),
+      'Shift-Tab': () => {
+        if(shortcutCommandWrapper(this.editor, dedentListCommand)) return true/*handled*/;
+        return liftListItemContent(this.editor, 'enter'/*simulate Enter*/);
+      },
       'Tab': () => shortcutCommandWrapper(this.editor, indentListCommand),
       'Backspace': () => shortcutCommandWrapper(this.editor, listBackspaceCommand),
       'Mod-Backspace': () => shortcutCommandWrapper(this.editor, listBackspaceCommand),
