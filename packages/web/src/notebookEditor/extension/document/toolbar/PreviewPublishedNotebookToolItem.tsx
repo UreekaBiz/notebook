@@ -95,8 +95,9 @@ export const PreviewPublishedNotebookToolItem: React.FC<Props> = ({ editor }) =>
 };
 
 // == Util ========================================================================
-// iterate recursively through the children of an HTMLElement and scrollIntoView
-// if it has the given content inside its innerText and is of the given type
+// iterate recursively through the children of an HTMLElement and add it to the
+// array of returned Nodes if it has the given content inside its innerText
+// and is of the given type
 const getHTMLNodesWithMatchingContent = (node: HTMLElement, parentTypeName: string, content: string, matchedNodes: HTMLElement[]) => {
   for(let i=0; i <node.childNodes.length; i++) {
     let child = node.childNodes[i];
