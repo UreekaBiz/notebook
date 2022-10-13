@@ -28,8 +28,6 @@ export enum AttributeType {
   BorderStyle = 'borderStyle',
   BorderWidth = 'borderWidth',
 
-  JustifyContent = 'justifyContent',
-
   Width = 'width',
   Height = 'height',
 
@@ -117,8 +115,6 @@ export type StyleAttributes = {
   [AttributeType.BorderStyle]: string;
   [AttributeType.BorderWidth]: string;
 
-  [AttributeType.JustifyContent]: string;
-
   [AttributeType.Width]: string;
   [AttributeType.Height]: string;
 
@@ -146,8 +142,6 @@ const styleAttributeSet = new Set([
   AttributeType.BorderRight,
   AttributeType.BorderStyle,
   AttributeType.BorderWidth,
-
-  AttributeType.JustifyContent,
 
   AttributeType.Width,
   AttributeType.Height,
@@ -211,25 +205,6 @@ export const getOppositeSpacingAttribute = (attribute: SpacingAttribute) => {
   }
 };
 
-// -- Justify ---------------------------------------------------------------------
-export enum JustifyContent {
-  start = 'flexStart',
-  center = 'center',
-  end = 'flexEnd',
-
-  // NOTE: flag value currently only used by TaskListItem's NodeView to justify
-  //       its inner contents, since there is no flex-justify equivalent
-  justify = 'justify',
-}
-export const justifyContentToTextAlign = (justifyContent: JustifyContent) => {
-  switch(justifyContent) {
-    case (JustifyContent.start): { return TextAlign.left; }
-    case (JustifyContent.center): { return TextAlign.center; }
-    case (JustifyContent.end): { return TextAlign.right; }
-    case (JustifyContent.justify): { return TextAlign.justify; }
-  }
-};
-
 // -- Alignment -------------------------------------------------------------------
 export enum TextAlign {
   left = 'left',
@@ -237,14 +212,6 @@ export enum TextAlign {
   right = 'right',
   justify = 'justify'
 }
-export const textAlignToJustifyContent = (alignment: TextAlign) => {
-  switch(alignment) {
-    case (TextAlign.left): { return JustifyContent.start; }
-    case (TextAlign.center): { return JustifyContent.center; }
-    case (TextAlign.right): { return JustifyContent.end; }
-    case (TextAlign.justify): { return JustifyContent.justify; }
-  }
-};
 
 export enum VerticalAlign {
   top = 'text-top',

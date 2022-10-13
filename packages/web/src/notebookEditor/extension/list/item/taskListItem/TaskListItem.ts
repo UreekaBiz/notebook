@@ -29,8 +29,6 @@ export const TaskListItem = Node.create<NoOptions, NoStorage>({
   // -- Attribute -----------------------------------------------------------------
   addAttributes() {
     return {
-      [AttributeType.JustifyContent]: setAttributeParsingBehavior(AttributeType.JustifyContent, SetAttributeType.STYLE),
-
       [AttributeType.PaddingTop]: setAttributeParsingBehavior(AttributeType.PaddingTop, SetAttributeType.STRING),
       [AttributeType.PaddingBottom]: setAttributeParsingBehavior(AttributeType.PaddingBottom, SetAttributeType.STRING),
 

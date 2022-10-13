@@ -2,7 +2,7 @@ import { Editor } from '@tiptap/core';
 import { Node as ProseMirrorNode } from 'prosemirror-model';
 import { EditorState, Transaction } from 'prosemirror-state';
 
-import { isBlank, isHeadingNode, isListItemNode, isListItemContentNode, isNodeSelection, isParagraphNode, isTaskListItemNode, textAlignToJustifyContent, AbstractDocumentUpdate, AttributeType, Command, NodeName, SetNodeSelectionDocumentUpdate, TextAlign, UpdateAttributesDocumentUpdate, VerticalAlign } from '@ureeka-notebook/web-service';
+import { isBlank, isHeadingNode, isNodeSelection, isParagraphNode, AbstractDocumentUpdate, AttributeType, Command, NodeName, SetNodeSelectionDocumentUpdate, TextAlign, UpdateAttributesDocumentUpdate, VerticalAlign } from '@ureeka-notebook/web-service';
 
 import { applyDocumentUpdates } from 'notebookEditor/command/update';
 import { isListNode } from 'notebookEditor/extension/list/util';
@@ -89,17 +89,7 @@ export class ChangeHorizontalAlignmentDocumentUpdate implements AbstractDocument
   public update(editorState: EditorState, tr: Transaction) {
     const { empty, $from, from, to } = tr.selection;
     if(empty) {
-      if(isListItemContentNode($from.parent)) {
-        const listItemContentParentPos = from - $from.parentOffset - 1/*the ListItemContent itself*/,
-              listItemGrandParentPos = listItemContentParentPos-1/*parent of ListItemContent*/,
-              listItemGrandParent = editorState.doc.nodeAt(listItemGrandParentPos);
-        if(!listItemGrandParent) return false/*invalid position*/;
-
-        changeNodeAlignment(this.alignment, listItemGrandParent, listItemGrandParentPos, tr);
-        } else {
-          // regular Block
-          changeNodeAlignment(this.alignment, $from.parent, from - $from.parentOffset - 1/*the Block Node itself*/, tr);
-      }
+        changeNodeAlignment(this.alignment, $from.parent, from - $from.parentOffset - 1/*the Block Node itself*/, tr);
     } else {
       tr.doc.nodesBetween(from, to, (node, pos) => changeNodeAlignment(this.alignment, node, pos, tr));
     }
@@ -107,18 +97,12 @@ export class ChangeHorizontalAlignmentDocumentUpdate implements AbstractDocument
     return tr/*updated*/;
   }
 }
-// NOTE: this utility only changes Paragraphs, Headings
-//       ListItems or TaskListItems on purpose since they
-//       are the only Block Nodes for which changing the
-//       Horizontal Alignment makes sense
+// NOTE: this utility only changes Paragraphs and Headings
+//       on purpose
 const changeNodeAlignment = (alignment: TextAlign, node: ProseMirrorNode, nodePos: number, tr: Transaction) => {
-  if(isHeadingNode(node) || isParagraphNode(node) || isListItemNode(node)) {
+  if(isHeadingNode(node) || isParagraphNode(node)) {
     tr.setNodeMarkup(nodePos, undefined/*maintain type*/, { ...node.attrs, [AttributeType.TextAlign]: alignment });
   } /* else -- check for TaskListItem */
-
-  if(isTaskListItemNode(node)) {
-    tr.setNodeMarkup(nodePos, undefined/*maintain type*/, { ...node.attrs, [AttributeType.JustifyContent]: textAlignToJustifyContent(alignment) });
-  } /* else -- ignore Node */
 };
 
 // .. Vertical Align ..............................................................

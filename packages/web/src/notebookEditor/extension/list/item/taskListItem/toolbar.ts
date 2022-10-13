@@ -10,7 +10,6 @@ import { markStrikethrough } from 'notebookEditor/extension/strikethrough/toolba
 import { markSubScript } from 'notebookEditor/extension/subScript/toolbar';
 import { markSuperScript } from 'notebookEditor/extension/superScript/toolbar';
 import { markUnderline } from 'notebookEditor/extension/underline/toolbar';
-import { horizontalAlignCenterToolItem, horizontalAlignJustifyToolItem, horizontalAlignLeftToolItem, horizontalAlignRightToolItem } from 'notebookEditor/shared/toolItem';
 import { Toolbar } from 'notebookEditor/sidebar/toolbar/type';
 
 import { dedentListToolItem, indentListToolItem } from '../toolItem';
@@ -33,10 +32,6 @@ export const TaskListItemToolbar: Toolbar = {
       linkToolItem,
       demoAsyncNodeToolItem,
       codeBlockReferenceToolItem,
-      horizontalAlignLeftToolItem,
-      horizontalAlignCenterToolItem,
-      horizontalAlignRightToolItem,
-      horizontalAlignJustifyToolItem,
       dedentListToolItem,
       indentListToolItem,
     ],

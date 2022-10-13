@@ -1,6 +1,6 @@
 import { Mark, Node as ProseMirrorNode, NodeSpec, NodeType } from 'prosemirror-model';
 
-import { noNodeOrMarkSpecAttributeDefaultValue, AttributeType, AttributesTypeFromNodeSpecAttributes, TextAlign } from '../../attribute';
+import { noNodeOrMarkSpecAttributeDefaultValue, AttributeType, AttributesTypeFromNodeSpecAttributes } from '../../attribute';
 import { createNodeDataAttribute, NodeRendererSpec } from '../../htmlRenderer/type';
 import { JSONNode, NodeName, ProseMirrorNodeContent } from '../../node';
 import { NotebookSchemaType } from '../../schema';
@@ -16,8 +16,6 @@ const ListItemAttributeSpec = {
   // NOTE: these attributes only have influence on ListItems inside OrderedLists
   [AttributeType.ListStyleType]: noNodeOrMarkSpecAttributeDefaultValue<string>(),
   [AttributeType.Separator]: noNodeOrMarkSpecAttributeDefaultValue<string>(),
-
-  [AttributeType.TextAlign]: noNodeOrMarkSpecAttributeDefaultValue<TextAlign>(),
 };
 export type ListItemAttributes = AttributesTypeFromNodeSpecAttributes<typeof ListItemAttributeSpec>
 

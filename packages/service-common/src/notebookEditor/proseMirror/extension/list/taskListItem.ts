@@ -1,7 +1,6 @@
 import { Mark, Node as ProseMirrorNode, NodeSpec } from 'prosemirror-model';
 
-import { camelToKebabCase } from '../../../../util';
-import { noNodeOrMarkSpecAttributeDefaultValue, AttributesTypeFromNodeSpecAttributes, AttributeType, JustifyContent } from '../../attribute';
+import { noNodeOrMarkSpecAttributeDefaultValue, AttributesTypeFromNodeSpecAttributes, AttributeType } from '../../attribute';
 import { createNodeDataAttribute, createNodeDataTypeAttribute, NodeRendererSpec } from '../../htmlRenderer/type';
 import { JSONNode, NodeName, ProseMirrorNodeContent } from '../../node';
 import { NotebookSchemaType } from '../../schema';
@@ -10,8 +9,6 @@ import { NotebookSchemaType } from '../../schema';
 // == Attribute ===================================================================
 // NOTE: This values must have matching types the ones defined in the Extension.
 const TaskListItemAttributeSpec = {
-  [AttributeType.JustifyContent]: noNodeOrMarkSpecAttributeDefaultValue<JustifyContent>(),
-
   /** whether or not this taskListItem is checked */
   [AttributeType.Checked]: noNodeOrMarkSpecAttributeDefaultValue<boolean>(),
 };
@@ -35,14 +32,10 @@ const renderTaskListItemNodeView = (attributes: TaskListItemAttributes, content:
   // NOTE: createNodeDataTypeAttribute must be used for all nodeRenderSpecs
   //       that define their own renderNodeView
 
-  const justifyContentAttr = attributes[AttributeType.JustifyContent],
-        justifyContentStyle = `justify-content: ${camelToKebabCase(justifyContentAttr ?? JustifyContent.start)}`,
-        justifyAlignStyle = justifyContentAttr === JustifyContent.justify ? 'text-align: justify;' : ''/*none*/;
-
   // ensure that the renderer TaskListItem is read only (i.e. its checkbox
   // state cannot be changed). Must be a regular function to use arguments
   const preventCheckBoxChange = 'onclick="(function(clickEvent){clickEvent.preventDefault(); clickEvent.stopPropagation();})(arguments[0]);"';
-  return `<li ${createNodeDataTypeAttribute(NodeName.TASK_LIST_ITEM)} ${DATA_TASK_LIST_ITEM_CHECKED}="${attributes.checked ? 'true' : 'false'}" style="${justifyContentStyle}"><label contenteditable="false"><input type="checkbox" ${preventCheckBoxChange} ${attributes.checked ? 'checked="true"' : ''/*don't add attr if not checked*/} /></label><div style="${justifyAlignStyle}">${content}</div></li>`;
+  return `<li ${createNodeDataTypeAttribute(NodeName.TASK_LIST_ITEM)} ${DATA_TASK_LIST_ITEM_CHECKED}="${attributes.checked ? 'true' : 'false'}"><label contenteditable="false"><input type="checkbox" ${preventCheckBoxChange} ${attributes.checked ? 'checked="true"' : ''/*don't add attr if not checked*/} /></label><div>${content}</div></li>`;
 };
 
 export const TaskListItemNodeRendererSpec: NodeRendererSpec<TaskListItemAttributes> = {

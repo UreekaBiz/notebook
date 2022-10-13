@@ -2,7 +2,7 @@ import { Editor } from '@tiptap/core';
 import { BiAlignLeft, BiAlignJustify, BiAlignMiddle, BiAlignRight } from 'react-icons/bi';
 import { MdFormatIndentDecrease, MdFormatIndentIncrease } from 'react-icons/md';
 
-import { getParentNode, isNodeSelection, isListItemContentNode, textAlignToJustifyContent, SelectionDepth, TextAlign, isTaskListItemNode, AttributeType } from '@ureeka-notebook/web-service';
+import { getParentNode, isNodeSelection, isListItemContentNode, AttributeType, SelectionDepth, TextAlign } from '@ureeka-notebook/web-service';
 
 import { toolItemCommandWrapper } from 'notebookEditor/command/util';
 import { shouldShowToolItemInsideList } from 'notebookEditor/extension/list/util';
@@ -98,20 +98,6 @@ export const horizontalAlignJustifyToolItem: ToolItem = {
 const isHorizontalAlignToolItemActive = (editor: Editor, alignment: TextAlign) => {
   const { $anchor, empty } = editor.state.selection;
   if(!empty) return false/*cannot determine whether the ToolItem is active when Selection spans multiple Nodes*/;
-
-  const { parent: anchorParent } = $anchor;
-  if(isListItemContentNode(anchorParent)) {
-    const parentListItem = $anchor.node(-1/*parent*/);
-
-    if(isTaskListItemNode(parentListItem)) {
-      const justifyContent = parentListItem.attrs[AttributeType.JustifyContent];
-      if(!justifyContent) return false/*not set*/;
-      return justifyContent === textAlignToJustifyContent(alignment);
-    } /* else -- ListItem by contract */
-
-    if(!(parentListItem.attrs[AttributeType.TextAlign])) return false/*not set*/;
-    return parentListItem.attrs[AttributeType.TextAlign] === alignment;
-  } /* else -- regular Block */
 
   if(!($anchor.parent.attrs[AttributeType.TextAlign])) return false/*not set*/;
   return $anchor.parent.attrs[AttributeType.TextAlign] === alignment;

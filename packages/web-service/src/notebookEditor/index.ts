@@ -33,11 +33,8 @@ export {
   getOppositeSpacingAttribute,
 
   BorderStyle,
-  JustifyContent,
-  justifyContentToTextAlign,
   TextStyleAttributes,
   TextAlign,
-  textAlignToJustifyContent,
   VerticalAlign,
 
   HTMLAttributes,
