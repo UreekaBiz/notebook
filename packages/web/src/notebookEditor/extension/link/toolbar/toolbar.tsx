@@ -25,12 +25,7 @@ export const linkToolItem: ToolItem = {
   icon: <AiOutlineLink size={16} />,
   tooltip: 'Link (⌘ + K)',
 
-  shouldBeDisabled: (editor) => {
-    const { selection } = editor.state;
-    if(!isNodeSelection(selection)) return false;
-
-    return true;
-  },
+  shouldBeDisabled: (editor) => isNodeSelection(editor.state.selection),
   shouldShow: (editor, depth) => shouldShowToolItem(editor, depth),
   isActive: (editor) => {
     if(inMarkHolder(editor, MarkName.LINK)) return true/*is active in MarkHolder*/;

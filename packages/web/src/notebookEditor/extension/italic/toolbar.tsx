@@ -19,12 +19,7 @@ export const markItalic: ToolItem = {
   icon: <AiOutlineItalic size={16} />,
   tooltip: 'Italic (⌘ + I)',
 
-  shouldBeDisabled: (editor) => {
-    const { selection } = editor.state;
-    if(!isNodeSelection(selection)) return false;
-
-    return true;
-  },
+  shouldBeDisabled: (editor) => isNodeSelection(editor.state.selection),
   shouldShow: (editor, depth) => shouldShowToolItem(editor, depth),
   isActive: (editor) => {
     if(inMarkHolder(editor, MarkName.ITALIC)) return true/*is active in MarkHolder*/;

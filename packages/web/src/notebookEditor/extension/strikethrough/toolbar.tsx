@@ -19,12 +19,7 @@ export const markStrikethrough: ToolItem = {
   icon: <BiStrikethrough size={16} />,
   tooltip: 'Strikethrough (⌘ + ⇧ + X)',
 
-  shouldBeDisabled: (editor) => {
-    const { selection } = editor.state;
-    if(!isNodeSelection(selection)) return false;
-
-    return true;
-  },
+  shouldBeDisabled: (editor) => isNodeSelection(editor.state.selection),
   shouldShow: (editor, depth) => shouldShowToolItem(editor, depth),
   isActive: (editor) => {
     if(inMarkHolder(editor,  MarkName.STRIKETHROUGH)) return true/*is active in MarkHolder*/;

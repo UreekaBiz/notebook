@@ -19,12 +19,7 @@ export const markSuperScript: ToolItem = {
   icon: <MdSuperscript size={16} />,
   tooltip: 'Superscript (⌘ + .)',
 
-  shouldBeDisabled: (editor) => {
-    const { selection } = editor.state;
-    if(!isNodeSelection(selection)) return false;
-
-    return true;
-  },
+  shouldBeDisabled: (editor) => isNodeSelection(editor.state.selection),
   shouldShow: (editor, depth) => shouldShowToolItem(editor, depth),
   isActive: (editor) => {
     if(inMarkHolder(editor, MarkName.SUPER_SCRIPT)) return true/*is active in MarkHolder*/;

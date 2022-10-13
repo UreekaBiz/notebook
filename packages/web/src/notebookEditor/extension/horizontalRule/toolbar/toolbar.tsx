@@ -1,6 +1,6 @@
 import { MdHorizontalRule } from 'react-icons/md';
 
-import { NodeName } from '@ureeka-notebook/web-service';
+import { isNodeSelection, NodeName } from '@ureeka-notebook/web-service';
 
 import { Toolbar, ToolItem } from 'notebookEditor/sidebar/toolbar/type';
 import { toolItemCommandWrapper } from 'notebookEditor/command/util';
@@ -19,7 +19,7 @@ export const horizontalRuleToolItem: ToolItem = {
   icon: <MdHorizontalRule size={16} />,
   tooltip: 'Horizontal Rule',
 
-  shouldBeDisabled: (editor) => editor.isActive(NodeName.HORIZONTAL_RULE),
+  shouldBeDisabled: (editor) => isNodeSelection(editor.state.selection),
   shouldShow: (editor, depth) => depth === undefined || editor.state.selection.$anchor.depth === depth/*direct parent*/,
   isActive: (editor) => editor.isActive(NodeName.HORIZONTAL_RULE),
   onClick: (editor, depth) => toolItemCommandWrapper(editor, depth, insertOrToggleHorizontalRuleCommand),

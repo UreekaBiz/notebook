@@ -1,6 +1,6 @@
 import { MdFindReplace } from 'react-icons/md';
 
-import { generateNodeId, AttributeType, NodeName } from '@ureeka-notebook/web-service';
+import { generateNodeId, isNodeSelection, AttributeType, NodeName } from '@ureeka-notebook/web-service';
 
 import { blockquoteToolItem } from 'notebookEditor/extension/blockquote/toolbar';
 import { markBold } from 'notebookEditor/extension/bold/toolbar';
@@ -29,7 +29,7 @@ export const demo2AsyncNodeToolItem: ToolItem = {
   icon: <MdFindReplace size={16} />,
   tooltip: 'Demo 2 Async Node (⌘ + ⇧ + ⌥ + D)',
 
-  shouldBeDisabled: () => false,
+  shouldBeDisabled: (editor) => isNodeSelection(editor.state.selection),
   shouldShow: (editor, depth) => depth === undefined || editor.state.selection.$anchor.depth === depth/*direct parent*/,
   onClick: (editor) => toggleBlock(editor, NodeName.DEMO_2_ASYNC_NODE, { [AttributeType.Id]: generateNodeId() }),
 };

@@ -1,6 +1,6 @@
 import { RiDoubleQuotesL } from 'react-icons/ri';
 
-import { NodeName } from '@ureeka-notebook/web-service';
+import { isNodeSelection, NodeName } from '@ureeka-notebook/web-service';
 
 import { markBold } from 'notebookEditor/extension/bold/toolbar';
 import { markCode } from 'notebookEditor/extension/code/toolbar';
@@ -28,7 +28,7 @@ export const blockquoteToolItem: ToolItem = {
   icon: <RiDoubleQuotesL size={16} />,
   tooltip: 'Blockquote (⌘ + ⇧ + B)',
 
-  shouldBeDisabled: () => false/*do not disable*/,
+  shouldBeDisabled: (editor) => isNodeSelection(editor.state.selection),
   shouldShow: (editor, depth) => depth === undefined || editor.state.selection.$anchor.depth === depth/*direct parent*/,
   isActive: (editor) => editor.isActive(NodeName.BLOCKQUOTE),
   onClick: (editor) => toggleBlock(editor, NodeName.BLOCKQUOTE, {/*no attrs*/}),

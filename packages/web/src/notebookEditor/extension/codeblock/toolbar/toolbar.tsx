@@ -1,6 +1,6 @@
 import { BiCodeAlt } from 'react-icons/bi';
 
-import { generateNodeId, getParentNode, getSelectedNode, isCodeBlockNode, AttributeType, NodeName } from '@ureeka-notebook/web-service';
+import { generateNodeId, getParentNode, getSelectedNode, isCodeBlockNode, isNodeSelection, AttributeType, NodeName } from '@ureeka-notebook/web-service';
 
 import { blockquoteToolItem } from 'notebookEditor/extension/blockquote/toolbar/toolbar';
 import { markBold } from 'notebookEditor/extension/bold/toolbar';
@@ -35,6 +35,8 @@ export const codeBlockToolItem: ToolItem = {
     if(node && isCodeBlockNode(node)) return true/*(SEE: comment above)*/;
 
     if(isCodeBlockNode(editor.state.selection.$anchor.parent)) return true/*(SEE: comment above)*/;
+
+    if(isNodeSelection(editor.state.selection)) return true/*disabled*/;
 
     return false/*enabled*/;
   },
