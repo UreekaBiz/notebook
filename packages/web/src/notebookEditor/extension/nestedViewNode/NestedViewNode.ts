@@ -1,6 +1,5 @@
 import { Extension } from '@tiptap/core';
 
-import { shortcutCommandWrapper } from 'notebookEditor/command/util';
 import { ExtensionName, NoOptions, NoStorage } from 'notebookEditor/model/type';
 
 import { nestedViewNodeBackspaceCommand } from './command';
@@ -17,7 +16,9 @@ export const NestedViewNode = Extension.create<NoOptions, NoStorage>({
   name: ExtensionName.NESTED_VIEW_NODE,
 
   // -- Keyboard Shortcut ---------------------------------------------------------
-  addKeyboardShortcuts() { return { 'Backspace': () => shortcutCommandWrapper(this.editor, nestedViewNodeBackspaceCommand) }; },
+  // NOTE: not using shortcutCommandWrapper since this is meant to prevent the
+  //       deletion of a NestedViewNode, and it also focuses its inner View
+  addKeyboardShortcuts() { return { 'Backspace': () => nestedViewNodeBackspaceCommand(this.editor.state, this.editor.view.dispatch) }; },
 
   // -- Plugin --------------------------------------------------------------------
   addProseMirrorPlugins() {return [nestedViewNodePlugin()];},
