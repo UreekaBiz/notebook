@@ -17,8 +17,7 @@ import '../index.css';
 // ********************************************************************************
 interface Props extends AppProps { Component: WrappedPage; }
 // == Client Side =================================================================
-// FIXME: why is this not an arrow function like every other React component?
-function App({ Component, pageProps }: Props) {
+const App = ({ Component, pageProps }: Props) => {
   const wrappers = Component.wrappers ?? [/*none*/];
 
   return (
