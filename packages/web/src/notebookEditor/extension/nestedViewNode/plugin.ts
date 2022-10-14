@@ -14,10 +14,20 @@ export const nestedViewNodePluginKey = new PluginKey<NestedViewNodePluginState>(
 
 // == Class =======================================================================
 export class NestedViewNodePluginState {
-  constructor(public prevCursorPos: number) {/*nothing additional*/}
+  constructor(
+    // NOTE: this is needed since an inline NestedViewNode may be a valid
+    //       TextSelection and NodeSelection at the same time, yet the NestedView
+    //       will only open when set as a NodeSelection by contract
+    // the position of the Cursor on the previous state to the previous state of the Editor
+    public prevprevCursorPos: number,
+
+    // the position of the Cursor on the previous state of the Editor
+    public prevCursorPos: number
+  ) {/*nothing additional*/}
 
   // produce a new Plugin state
   apply = (tr: Transaction, thisPluginState: NestedViewNodePluginState, oldEditorState: EditorState, newEditorState: EditorState) => {
+    this.prevprevCursorPos = this.prevCursorPos;
     this.prevCursorPos = oldEditorState.selection.from;
     return this/*state updated*/;
   };
@@ -32,7 +42,7 @@ export const nestedViewNodePlugin = () => {
     // -- State -------------------------------------------------------------------
     state: {
       // initialize the plugin state
-      init: (_, state) => new NestedViewNodePluginState(0/*default*/),
+      init: (_, state) => new NestedViewNodePluginState(0/*default*/, 0/*default*/),
 
       // apply changes to the plugin state from a view transaction
       apply: (transaction, thisPluginState, oldState, newState) => thisPluginState.apply(transaction, thisPluginState, oldState, newState),
