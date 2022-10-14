@@ -31,7 +31,9 @@ export class InsertNestedViewNodeDocumentUpdate implements AbstractDocumentUpdat
    * is set and selected and return it
    */
   public update(editorState: EditorState, tr: Transaction) {
-    const { $from } = editorState.selection;
+    const { $from, empty } = editorState.selection;
+    if(!empty) return false/*do not allow*/;
+
     const fromIndex = $from.index();
 
     if(this.nodeName === NodeName.EDITABLE_INLINE_NODE_WITH_CONTENT) {
