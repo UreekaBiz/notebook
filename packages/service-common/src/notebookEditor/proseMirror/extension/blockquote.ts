@@ -26,6 +26,7 @@ export const BlockquoteNodeSpec: NodeSpec = {
 
   content: `${NodeGroup.INLINE}*`,
   group: `${NodeGroup.BLOCK}`,
+  selectable: false/*cannot be set as NodeSelection*/,
   defining: true/*(SEE: https://prosemirror.net/docs/ref/#model.NodeSpec.defining)*/,
   attrs: BlockquoteAttributeSpec,
 };

@@ -22,6 +22,7 @@ export const CodeBlockNodeSpec: NodeSpec = {
   marks: getAllowedMarks([MarkName.BOLD, MarkName.CODE, MarkName.ITALIC, MarkName.STRIKETHROUGH, MarkName.SUB_SCRIPT, MarkName.SUPER_SCRIPT, MarkName.UNDERLINE]),
 
   group: NodeGroup.BLOCK,
+  selectable: false/*cannot be set as NodeSelection*/,
   defining: true/*important parent node during replace operations, parent of content preserved on replace operations*/,
   code: true/*indicate that the block contains code, which causes some commands (e.g. enter) to behave differently*/,
   allowGapCursor: true,
