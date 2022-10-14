@@ -1,8 +1,8 @@
-import { combineTransactionSteps, findChildrenInRange, getChangedRanges, getMarksBetween } from '@tiptap/core';
+import { combineTransactionSteps, findChildrenInRange, getMarksBetween } from '@tiptap/core';
 import { find, test } from 'linkifyjs';
 import { Plugin, PluginKey } from 'prosemirror-state';
 
-import { AttributeType, getLinkMarkType, isLinkMark, isNodeSelection, LinkTarget, PREVENT_LINK_META } from '@ureeka-notebook/web-service';
+import { AttributeType, getChangedRanges, getLinkMarkType, isLinkMark, isNodeSelection, LinkTarget, PREVENT_LINK_META } from '@ureeka-notebook/web-service';
 
 import { NoPluginState } from 'notebookEditor/model/type';
 
