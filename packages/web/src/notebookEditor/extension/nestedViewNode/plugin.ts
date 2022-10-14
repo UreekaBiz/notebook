@@ -1,6 +1,7 @@
 import { EditorState, NodeSelection, Plugin, PluginKey, Transaction } from 'prosemirror-state';
+import { RemoveMarkStep } from 'prosemirror-transform';
 
-import { isNestedViewBlockNode, isTextSelection } from '@ureeka-notebook/web-service';
+import { combineTransactionSteps, getChangedRanges, isNestedViewBlockNode, isNestedViewNode, isTextSelection } from '@ureeka-notebook/web-service';
 
 // ********************************************************************************
 /**
@@ -37,18 +38,32 @@ export const nestedViewNodePlugin = () => {
       apply: (transaction, thisPluginState, oldState, newState) => thisPluginState.apply(transaction, thisPluginState, oldState, newState),
     },
 
-    // ensure that a TextSelection inside a NestedViewBlockNode always
-    // selects that Node, making its inner View render
     appendTransaction(transactions, oldState, newState) {
       const { tr, selection } = newState;
       const { parent } = selection.$anchor;
 
+      // ensure that a TextSelection inside a LatexBlock always
+      // selects that Node, making its inner View render
       if(isTextSelection(selection) && isNestedViewBlockNode(parent)) {
         tr.setSelection(NodeSelection.create(tr.doc, selection.$from.pos - selection.$from.parentOffset - 1/*inside the Node*/));
-        return tr/*modified*/;
-      } /* else -- do nothing */
+      } /* else -- ensure there are no Marks in inline NestedViewNodes */
 
-      return/*do not append Transaction*/;
+      // since some NestedViewNodes may be inline Nodes, and there is no
+      // way to exclude Marks from Nodes themselves, only their content
+      // (SEE: REF above), check the changed ranges
+      const transform = combineTransactionSteps(oldState.doc, [...transactions]),
+            changes = getChangedRanges(transform);
+      changes.forEach(({ newRange }) => {
+        newState.doc.nodesBetween(newRange.from, newRange.to, (node, pos) => {
+          if(isNestedViewNode(node) && node.marks.length > 0) {
+            for(let i=0; i<node.mark.length; i++) {
+              tr.step(new RemoveMarkStep(pos, pos+node.nodeSize, node.marks[i]));
+            }
+          }
+        });
+      });
+
+      return tr/*do not append Transaction*/;
     },
   });
 
