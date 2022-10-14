@@ -133,6 +133,7 @@ export {
   DATA_LIST_ITEM_SEPARATOR,
 
   getNestedViewNodeTextString,
+  isNestedViewNode,
   NESTED_VIEW_NODE_EMPTY_NODE_CLASS,
   NESTED_NODE_VIEW_INNER_VIEW_DISPLAY_CONTAINER_CLASS,
   NESTED_NODE_VIEW_RENDER_DISPLAY_CONTAINER_CLASS,
@@ -494,5 +495,10 @@ export {
   setTextSelectionCommand,
   SetTextSelectionDocumentUpdate,
 
-  // ..............................................................................
+  // .. Range ....................................................................
+  getChangedRanges,
+
+  // .. Step ......................................................................
+  combineTransactionSteps,
+
 } from '@ureeka-notebook/service-common';
