@@ -12,6 +12,9 @@ import { CodeBlockStorage } from './nodeView/storage';
 import { codeBlockOnTransaction } from './transaction';
 
 // ********************************************************************************
+// == Constant ====================================================================
+const codeBlockRegEx = /```([a-z]+)?[\s\n]$/;
+
 // == Node ========================================================================
 export const CodeBlock = Node.create<NoOptions, CodeBlockStorage>({
   ...CodeBlockNodeSpec,
@@ -74,14 +77,7 @@ export const CodeBlock = Node.create<NoOptions, CodeBlockStorage>({
 
   // -- Input ---------------------------------------------------------------------
   // Create a CodeBlock node if the user types ``` and then an enter or space
-  addInputRules() {
-    return [
-      textblockTypeInputRule({
-        find: /```([a-z]+)?[\s\n]$/,
-        type: this.type,
-      }),
-    ];
-  },
+  addInputRules() { return [ textblockTypeInputRule({ find: codeBlockRegEx, type: this.type }) ]; },
 
   // -- View ----------------------------------------------------------------------
   // NOTE: NodeViews are supposed to be unique for each Node (based on the id of
