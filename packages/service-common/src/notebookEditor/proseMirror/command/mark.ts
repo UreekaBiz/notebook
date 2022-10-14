@@ -1,7 +1,8 @@
+import { MarkType } from 'prosemirror-model';
 import { EditorState, TextSelection, Transaction } from 'prosemirror-state';
 
 import { Attributes } from '../attribute';
-import { getMarkAttributes, getMarkRange, isMarkActive, MarkName } from '../mark';
+import { getMarkAttributes, getMarkRange, markApplies, MarkName } from '../mark';
 import { AbstractDocumentUpdate, Command } from './type';
 
 // ********************************************************************************
@@ -105,9 +106,10 @@ export class UnsetMarkDocumentUpdate implements AbstractDocumentUpdate {
 }
 
 // --------------------------------------------------------------------------------
-/** Unset or set the given Mark depending on whether or not it is currently active */
-export const toggleMarkCommand = (markName: MarkName, attributes: Partial<Attributes>): Command => (state, dispatch) => {
-  const updatedTr = new ToggleMarkDocumentUpdate(markName, attributes).update(state, state.tr);
+// REF: https://github.com/ProseMirror/prosemirror-commands/blob/master/src/commands.ts
+/** Toggle the given Mark with the given name */
+export const toggleMarkCommand = (markType: MarkType, attributes: Partial<Attributes>): Command => (state, dispatch) => {
+  const updatedTr = new ToggleMarkDocumentUpdate(markType, attributes).update(state, state.tr);
   if(updatedTr) {
     dispatch(updatedTr);
     return true/*Command executed*/;
@@ -116,18 +118,52 @@ export const toggleMarkCommand = (markName: MarkName, attributes: Partial<Attrib
   return false/*not executed*/;
 };
 export class ToggleMarkDocumentUpdate implements AbstractDocumentUpdate {
-  public constructor(private readonly markName: MarkName, private readonly attributes: Partial<Attributes>) {/*nothing additional*/}
+  public constructor(private readonly markType: MarkType, private readonly attributes: Partial<Attributes>) {/*nothing additional*/}
 
   /**
-   * modify the given Transaction such that the given Mark is set or unset
-   * depending on whether or not it is currently active
+   * modify the given Transaction such that Mark with the given
+   * Name is toggled
    */
   public update(editorState: EditorState, tr: Transaction) {
-    if(isMarkActive(editorState, this.markName, this.attributes)) {
-      return new UnsetMarkDocumentUpdate(this.markName, false/*default not extend Mark Range*/).update(editorState, tr);
-    } /* else -- Mark is not active, set it */
+    const { empty, $cursor, ranges } = editorState.selection as TextSelection;
+    if((empty && !$cursor) || !markApplies(editorState.doc, ranges, this.markType)) return false;
 
-    return new SetMarkDocumentUpdate(this.markName, this.attributes).update(editorState, tr);
+    if($cursor) {
+      if(this.markType.isInSet(editorState.storedMarks || $cursor.marks())) { tr.removeStoredMark(this.markType); }
+      else { tr.addStoredMark(this.markType.create(this.attributes)); }
+    } else {
+      let rangeHasMark = false;
+      for(let i = 0; !rangeHasMark && i < ranges.length; i++) {
+        let { $from, $to } = ranges[i];
+        rangeHasMark = editorState.doc.rangeHasMark($from.pos, $to.pos, this.markType);
+      }
+
+      for(let i = 0; i < ranges.length; i++) {
+        let { $from, $to } = ranges[i];
+        if(rangeHasMark) {
+          tr.removeMark($from.pos, $to.pos, this.markType);
+        } else {
+          const start = $from.nodeAfter,
+                end = $to.nodeBefore;
+          let from = $from.pos,
+              to = $to.pos;
+
+          const spaceStart = start && start.isText ? /^\s*/.exec(start.text!)![0].length : 0/*no space to account for*/;
+          const spaceEnd = end && end.isText ? /\s*$/.exec(end.text!)![0].length : 0/*no space to account for*/;
+
+          if(from + spaceStart < to) {
+            from += spaceStart;
+            to -= spaceEnd;
+          } /* else -- do not modify Range */
+
+          tr.addMark(from, to, this.markType.create(this.attributes));
+        }
+      }
+
+      tr.scrollIntoView();
+    }
+
+    return tr/*updated*/;
   }
 }
 

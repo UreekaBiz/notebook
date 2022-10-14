@@ -285,7 +285,6 @@ export {
   ExtendMarkRangeDocumentUpdate,
   getMarkName,
   getMarkValue,
-  isMarkActive,
   isMarkName,
   markFromJSONMark,
   parseStringifiedMarksArray,
