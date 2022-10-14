@@ -14,7 +14,7 @@ export const nestedViewBlockNodeToolItem: ToolItem = {
   label: NodeName.NESTED_VIEW_BLOCK_NODE,
 
   icon: <MdOutlineViewDay size={16} />,
-  tooltip: 'Nested View Block Node (⌘ + ⌥ + B)',
+  tooltip: 'Nested View Block Node (⌘ + ⌥ + E)',
 
   shouldBeDisabled: (editor) => {
     const { selection } = editor.state;

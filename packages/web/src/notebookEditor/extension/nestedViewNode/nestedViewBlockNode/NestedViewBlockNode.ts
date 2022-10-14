@@ -25,8 +25,8 @@ export const NestedViewBlockNode = Node.create<NoOptions, NestedViewBlockNodeSto
   // -- Keyboard Shortcut ---------------------------------------------------------
   addKeyboardShortcuts() {
     return {
-      'Mod-Alt-b': () => insertAndSelectNestedViewBlockNode(this.editor, this.editor.state.selection.$anchor.depth, 'keyboardShortcut'),
-      'Mod-Alt-B': () => insertAndSelectNestedViewBlockNode(this.editor, this.editor.state.selection.$anchor.depth, 'keyboardShortcut'),
+      'Mod-Alt-e': () => insertAndSelectNestedViewBlockNode(this.editor, this.editor.state.selection.$anchor.depth, 'keyboardShortcut'),
+      'Mod-Alt-E': () => insertAndSelectNestedViewBlockNode(this.editor, this.editor.state.selection.$anchor.depth, 'keyboardShortcut'),
     };
   },
 
