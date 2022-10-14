@@ -2,7 +2,7 @@ import { combineTransactionSteps, findChildrenInRange, getChangedRanges, getMark
 import { find, test } from 'linkifyjs';
 import { Plugin, PluginKey } from 'prosemirror-state';
 
-import { AttributeType, getLinkMarkType, isLinkMark, LinkTarget, PREVENT_LINK_META } from '@ureeka-notebook/web-service';
+import { AttributeType, getLinkMarkType, isLinkMark, isNodeSelection, LinkTarget, PREVENT_LINK_META } from '@ureeka-notebook/web-service';
 
 import { NoPluginState } from 'notebookEditor/model/type';
 
@@ -33,6 +33,8 @@ export const linkCreate = (validate?: (url: string) => boolean): Plugin => {
             transform = combineTransactionSteps(oldState.doc, [...transactions]),
             { mapping } = transform,
             changes = getChangedRanges(transform);
+
+      if(isNodeSelection(tr.selection)) return tr/*not modified*/;
 
       changes.forEach(({ oldRange, newRange }) => {
         // check if Links need to be removed
