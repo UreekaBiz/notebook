@@ -106,8 +106,11 @@ export enum ParseRulePriority {
   // NOTE: since MarkHolders are also rendered as div elements, they need to take
   //       priority over other nodes (such as Paragraphs or Headings)
   //       when being parsed (SEE: MarkHolder.ts)
-  MARK_HOLDER = 52,
+  MARK_HOLDER = 53,
 
   // NOTE: TaskList parsing has preference over regular Lists
-  TASK_LIST = 51,
+  TASK_LIST = 52,
+
+  // NOTE: ListItemContent parsing has preference over other Blocks
+  LIST_ITEM_CONTENT = 51,
 }
