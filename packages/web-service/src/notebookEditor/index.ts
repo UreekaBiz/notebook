@@ -232,6 +232,7 @@ export {
   getImageNodeType,
   isImageNode,
 
+  isListStyle,
   ListStyle,
 
   createListItemNode,

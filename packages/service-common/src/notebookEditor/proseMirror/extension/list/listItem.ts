@@ -59,6 +59,7 @@ export enum ListStyle {
   LOWER_ALPHA = 'lower-alpha',
   LOWER_ROMAN = 'lower-roman'
 }
+export const isListStyle = (style: any): style is ListStyle => Object.values(ListStyle).includes(style);
 
 // -- Node Type -------------------------------------------------------------------
 // NOTE: this is the only way since PM does not provide a way to specify the type
