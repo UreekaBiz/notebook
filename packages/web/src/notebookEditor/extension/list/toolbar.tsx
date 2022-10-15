@@ -29,16 +29,7 @@ export const orderedListToolItem: ToolItem = {
 
   isActive: (editor, depth) => isListToolItemActive(editor, depth, isOrderedListNode),
   shouldShow: (editor, depth) => shouldShowListToolItem(editor, depth),
-  shouldBeDisabled: (editor) => {
-    const { selection } = editor.state;
-    if(isNodeSelection(selection)) return true/*disabled*/;
-
-    const { parent } = selection.$anchor;
-    if(isParagraphNode(parent) || isHeadingNode(parent) || isListItemContentNode(parent)) return false/*enabled*/;
-    /* else -- selection somewhere that does not allow an OrderedList */
-
-    return true/*disabled*/;
-  },
+  shouldBeDisabled: (editor) => shouldDisableListToolItem(editor),
   onClick: (editor, depth) => listItemOnClick(editor, depth, NodeName.ORDERED_LIST),
 };
 
@@ -53,16 +44,7 @@ export const bulletListToolItem: ToolItem = {
 
   isActive: (editor, depth) => isListToolItemActive(editor, depth, isBulletListNode),
   shouldShow: (editor, depth) => shouldShowListToolItem(editor, depth),
-  shouldBeDisabled: (editor) => {
-    const { selection } = editor.state;
-    if(isNodeSelection(selection)) return true/*disabled*/;
-
-    const { parent } = selection.$anchor;
-    if(isParagraphNode(parent) || isHeadingNode(parent) || isListItemContentNode(parent)) return false/*enabled*/;
-    /* else -- selection somewhere that does not allow a BulletList */
-
-    return true/*disabled*/;
-  },
+  shouldBeDisabled: (editor) => shouldDisableListToolItem(editor),
   onClick: (editor, depth) => listItemOnClick(editor, depth, NodeName.BULLET_LIST),
 };
 
@@ -77,16 +59,7 @@ export const taskListToolItem: ToolItem = {
 
   isActive: (editor, depth) => isListToolItemActive(editor, depth, isTaskListNode),
   shouldShow: (editor, depth) => shouldShowListToolItem(editor, depth),
-  shouldBeDisabled: (editor) => {
-    const { selection } = editor.state;
-    if(isNodeSelection(selection)) return true/*disabled*/;
-
-    const { parent } = selection.$anchor;
-    if(isParagraphNode(parent) || isHeadingNode(parent) || isListItemContentNode(parent)) return false/*enabled*/;
-    /* else -- selection somewhere that does not allow a TaskList */
-
-    return true/*disabled*/;
-  },
+  shouldBeDisabled: (editor) => shouldDisableListToolItem(editor),
   onClick: (editor, depth) => listItemOnClick(editor, depth, NodeName.TASK_LIST),
 };
 
@@ -101,7 +74,7 @@ export const startNewListToolItem: ToolItem = {
 
   isActive: (editor, depth) => false/*since this ToolItem is List-Node agnostic, it cannot be 'active'*/,
   shouldShow: (editor, depth) => shouldShowListToolItem(editor, depth),
-  shouldBeDisabled: (editor, depth) => !shouldShowListToolItem(editor, depth)/*same conditions as shouldShow, with adjusted logic*/,
+  shouldBeDisabled: (editor, depth) => !shouldShowListToolItem(editor, depth)/*same conditions as shouldShow, with adjusted logic*/ || !editor.state.selection.empty,
 
   // add a new List at the end of the current one. This is the equivalent of going
   // to the end of the List and pressing Enter and Tab afterwards
@@ -125,6 +98,18 @@ export const startNewListToolItem: ToolItem = {
 };
 
 // -- Util ------------------------------------------------------------------------
+// return whether the ToolItem for the List should be shown at the given Depth
+export const shouldShowListToolItem = (editor: Editor, depth: SelectionDepth) => {
+  const { selection } = editor.state;
+  if(isListItemContentNode(getParentNode(selection))) {
+    return true/*inside ListItemContent*/;
+  } /* else -- not inside ListItemContent */
+
+  return depth === undefined || selection.$anchor.depth === depth;/*direct parent*/
+};
+
+
+// --------------------------------------------------------------------------------
 // return whether the ToolItem for the List is active at the given Depth
 const isListToolItemActive = (editor: Editor, depth: SelectionDepth, isListNodeValidationFunction: (node: ProseMirrorNode) => boolean) => {
   const listNodesAtDepth = getListNodesFromDepth(editor.state, depth);
@@ -136,16 +121,6 @@ const isListToolItemActive = (editor: Editor, depth: SelectionDepth, isListNodeV
   return isListNodeValidationFunction(listAtDepth);
 };
 
-// return whether the ToolItem for the List should be shown at the given Depth
-export const shouldShowListToolItem = (editor: Editor, depth: SelectionDepth) => {
-  const { selection } = editor.state;
-  if(isListItemContentNode(getParentNode(selection)) &&
-    selection.empty/*since ToolItems correspond to a specific depth, do not show if multiple Nodes selected*/) {
-    return true/*inside ListItemContent*/;
-  } /* else -- not inside ListItemContent */
-
-  return depth === undefined || selection.$anchor.depth === depth;/*direct parent*/
-};
 
 const listItemOnClick = (editor: Editor, depth: SelectionDepth, listTypeName: NodeName.BULLET_LIST | NodeName.ORDERED_LIST | NodeName.TASK_LIST) => {
   let startingAnchorPos: number | undefined = undefined/*use normal anchor by default*/;
@@ -155,4 +130,16 @@ const listItemOnClick = (editor: Editor, depth: SelectionDepth, listTypeName: No
   } /* else -- do not change default */
 
   return handleListDocumentUpdates(editor, listTypeName, startingAnchorPos);
+};
+
+const shouldDisableListToolItem = (editor: Editor) => {
+  const { selection } = editor.state;
+  if(!selection.empty) return true/*disabled*/;
+  if(isNodeSelection(selection)) return true/*disabled*/;
+
+  const { parent } = selection.$anchor;
+  if(isParagraphNode(parent) || isHeadingNode(parent) || isListItemContentNode(parent)) return false/*enabled*/;
+  /* else -- selection somewhere that does not allow a TaskList */
+
+  return true/*disabled*/;
 };
