@@ -143,13 +143,27 @@ export class ToggleMarkDocumentUpdate implements AbstractDocumentUpdate {
         if(rangeHasMark) {
           tr.removeMark($from.pos, $to.pos, this.markType);
         } else {
-          const start = $from.nodeAfter,
-                end = $to.nodeBefore;
+          const nodeAfter$FromStart = $from.nodeAfter,
+                nodeBefore$ToEnd = $to.nodeBefore;
           let from = $from.pos,
               to = $to.pos;
 
-          const spaceStart = start && start.isText ? /^\s*/.exec(start.text!)![0].length : 0/*no space to account for*/;
-          const spaceEnd = end && end.isText ? /\s*$/.exec(end.text!)![0].length : 0/*no space to account for*/;
+          let spaceStart = 0/*default no space to account for*/;
+          if(nodeAfter$FromStart && nodeAfter$FromStart.text) {
+            const execArr = /^\s*/.exec(nodeAfter$FromStart.text);
+            if(execArr) {
+              spaceStart = execArr[0/*leading white space*/].length;
+            } /* else -- do not change default */
+          } /* else -- do not change default */
+
+
+          // NOTE: not using /\s*$/ like in the original PM implementation
+          //       since this can cause a 'Polynomial regular
+          //       expression used on uncontrolled data' LGTM warning
+          let spaceEnd = 0/*default no space to account for*/;
+          if(nodeBefore$ToEnd && nodeBefore$ToEnd.text) {
+            spaceEnd = nodeBefore$ToEnd.text.length - nodeBefore$ToEnd.text.trimEnd().length;
+          } /*  else -- do not change default */
 
           if(from + spaceStart < to) {
             from += spaceStart;
