@@ -108,9 +108,16 @@ export enum ParseRulePriority {
   //       when being parsed (SEE: MarkHolder.ts)
   MARK_HOLDER = 53,
 
-  // NOTE: TaskList parsing has preference over regular Lists
-  TASK_LIST = 52,
+  // NOTE: the checks that get done to see whether a TaskListItem is being parsed
+  //       should happen before those that check if a ListItem is being parsed,
+  //       since they will only match when parsing into a ListItemContent inside
+  //       a TaskListItem (SEE: TaskListItem.ts), (SEE: ListItem.ts)
+  TASK_LIST_ITEM = 52,
 
-  // NOTE: ListItemContent parsing has preference over other Blocks
-  LIST_ITEM_CONTENT = 51,
+
+  // NOTE: the checks that get done to see whether a ListItem is being parsed
+  //       should happen after those that check if a TaskListItem is being parsed
+  //       since they are broader than TaskListItem checks
+  //       (SEE: TaskListItem.ts), (SEE: ListItem.ts)
+  LIST_ITEM = 51,
 }

@@ -34,6 +34,6 @@ export const BulletList = Node.create<NoOptions, NoStorage>({
   addInputRules() { return [ getWrappingListInputRule({ find: bulletListRegEx, type: this.type }) ]; /*(SEE: getListInputRule)*/ },
 
   // -- View ----------------------------------------------------------------------
-  parseHTML() { return [ { tag: `ul[${DATA_NODE_TYPE}="${NodeName.BULLET_LIST}"]` } ]; },
+  parseHTML() { return [ { tag: `ul, ul[${DATA_NODE_TYPE}="${NodeName.BULLET_LIST}"]` } ]; },
   renderHTML({ node, HTMLAttributes }) { return getNodeOutputSpec(node, HTMLAttributes, false/*not a leaf node*/); },
 });

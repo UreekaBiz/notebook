@@ -1,10 +1,10 @@
 import { Node } from '@tiptap/core';
 
-import { getNodeOutputSpec, ListItemNodeSpec, NodeName, AttributeType, SetAttributeType, ListStyle, DATA_NODE_TYPE, LIST_ITEM_DEFAULT_SEPARATOR, DATA_LIST_ITEM_LIST_STYLE, DATA_LIST_ITEM_SEPARATOR } from '@ureeka-notebook/web-service';
+import { getNodeOutputSpec, ListItemNodeSpec, NodeName, AttributeType, SetAttributeType, ListStyle, DATA_LIST_ITEM_SEPARATOR, DATA_LIST_ITEM_LIST_STYLE, DATA_NODE_TYPE, LIST_ITEM_DEFAULT_SEPARATOR } from '@ureeka-notebook/web-service';
 
 import { shortcutCommandWrapper } from 'notebookEditor/command/util';
 import { setAttributeParsingBehavior } from 'notebookEditor/extension/util/attribute';
-import { ExtensionPriority, NoOptions, NoStorage } from 'notebookEditor/model/type';
+import { ExtensionPriority, NoOptions, NoStorage, ParseRulePriority } from 'notebookEditor/model/type';
 
 import { splitListItemCommand } from '../../command/splitListItemCommand';
 import { liftListItemContent } from '../listItemContent/update';
@@ -22,7 +22,8 @@ export const ListItem = Node.create<NoOptions, NoStorage>({
   priority: ExtensionPriority.LIST_ITEM,
 
   // -- Attribute -----------------------------------------------------------------
-  addAttributes() { return {
+  addAttributes() {
+    return {
       // NOTE: these attributes have influence on all ListItems
       [AttributeType.PaddingTop]: setAttributeParsingBehavior(AttributeType.PaddingTop, SetAttributeType.STRING),
       [AttributeType.PaddingBottom]: setAttributeParsingBehavior(AttributeType.PaddingBottom, SetAttributeType.STRING),
@@ -52,6 +53,12 @@ export const ListItem = Node.create<NoOptions, NoStorage>({
   },
 
   // -- View ----------------------------------------------------------------------
-  parseHTML() { return [{ tag: `li[${DATA_NODE_TYPE}="${NodeName.LIST_ITEM}"]` }]; },
+  parseHTML() {
+    return [{
+      // match ListItem tags and Block Nodes (which use the div tag)
+      tag: `li, li[${DATA_NODE_TYPE}="${NodeName.LIST_ITEM}"] div`,
+      priority: ParseRulePriority.LIST_ITEM,
+    }];
+  },
   renderHTML({ node, HTMLAttributes }) { return getNodeOutputSpec(node, HTMLAttributes, false/*not a leaf node*/); },
 });
