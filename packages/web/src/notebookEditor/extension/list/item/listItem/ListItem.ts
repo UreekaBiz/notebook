@@ -56,8 +56,12 @@ export const ListItem = Node.create<NoOptions, NoStorage>({
   parseHTML() {
     return [{
       // match ListItem tags and Block Nodes (which use the div tag)
-      tag: `li, li[${DATA_NODE_TYPE}="${NodeName.LIST_ITEM}"] div`,
+      tag: `li, li[${DATA_NODE_TYPE}="${NodeName.LIST_ITEM}"], div`,
       priority: ParseRulePriority.LIST_ITEM,
+
+      // only match when applying parse rule into a
+      // ListItemContent inside a ListItem Node
+      context: `${NodeName.LIST_ITEM}/${NodeName.LIST_ITEM_CONTENT}/`,
     }];
   },
   renderHTML({ node, HTMLAttributes }) { return getNodeOutputSpec(node, HTMLAttributes, false/*not a leaf node*/); },

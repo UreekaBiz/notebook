@@ -106,18 +106,20 @@ export enum ParseRulePriority {
   // NOTE: since MarkHolders are also rendered as div elements, they need to take
   //       priority over other nodes (such as Paragraphs or Headings)
   //       when being parsed (SEE: MarkHolder.ts)
-  MARK_HOLDER = 53,
+  MARK_HOLDER = 54,
 
-  // NOTE: the checks that get done to see whether a TaskListItem is being parsed
-  //       should happen before those that check if a ListItem is being parsed,
-  //       since they will only match when parsing into a ListItemContent inside
-  //       a TaskListItem (SEE: TaskListItem.ts), (SEE: ListItem.ts)
+  // NOTE: TaskList should be parsed before BulletLists or OrderedLists to ensure
+  //       right copy paste behavior inside and outside Lists
+  TASK_LIST = 53,
+
+  // NOTE: TaskListItem should be parsed before ListItem to ensure right copy
+  //       paste behavior inside and outside Lists. Its context property ensures
+  //       that its effects only happen on specific conditions
+  //       (SEE: TaskListItem.ts)
   TASK_LIST_ITEM = 52,
 
-
-  // NOTE: the checks that get done to see whether a ListItem is being parsed
-  //       should happen after those that check if a TaskListItem is being parsed
-  //       since they are broader than TaskListItem checks
-  //       (SEE: TaskListItem.ts), (SEE: ListItem.ts)
+  // NOTE: regular ListItems should be parsed after TaskLists and TaskListItems.
+  //       Its context property ensures the effects are only applied on specific
+  //       conditions (SEE: ListItem.ts)
   LIST_ITEM = 51,
 }

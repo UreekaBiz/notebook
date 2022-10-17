@@ -101,7 +101,7 @@ export const TaskListItem = Node.create<NoOptions, NoStorage>({
   parseHTML() {
     return [{
       // match TaskListItem tags and Block Nodes (which use the div tag)
-      tag: `li, li[${DATA_NODE_TYPE}="${NodeName.TASK_LIST_ITEM}"] div`,
+      tag: `li, li[${DATA_NODE_TYPE}="${NodeName.TASK_LIST_ITEM}"], div`,
       priority: ParseRulePriority.TASK_LIST_ITEM,
 
       // only match when applying parse rule into a
