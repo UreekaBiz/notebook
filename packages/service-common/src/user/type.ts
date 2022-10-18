@@ -70,8 +70,8 @@ export type UserProfile_Generated = Readonly<{
 }>;
 
 // -- Private Profile Elements ----------------------------------------------------
-/** Public Profile fields that the User themselves can update but are *never* visible
- * to other Users */
+/** Profile fields that the User themselves can update but are *never* visible to
+ *  other Users */
 export const UserProfile_Private_Schema = Validate.object({
   // .. API Keys ..................................................................
   apiKeys: Validate.object({
