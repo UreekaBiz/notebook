@@ -22,10 +22,10 @@
   },
 	"devDependencies": {
     "@types/compression": "1.7.2",
-    "@types/node": "18.7.16",
+    "@types/node": "18.11.0",
     "@types/react": "18.0.15",
     "@types/react-dom": "18.0.6",
-		"firebase-tools": "11.10.0",
+		"firebase-tools": "11.15.0",
     "typescript": "4.7.4"
 	},
 	"dependencies": {
@@ -38,11 +38,11 @@
 		"@ureeka-notebook/ssr-service": "file:./lib/ssr-service",
 		"@ureeka-notebook/web-service": "file:./lib/web-service",
 		"compression": "1.7.4",
-		"dotenv": "16.0.2",
+		"dotenv": "16.0.3",
 		"feather-icons": "4.29.0",
-		"firebase": "9.10.0",
-		"firebase-admin": "11.0.1",
-		"firebase-functions": "3.24.0",
+		"firebase": "9.12.1",
+		"firebase-admin": "11.2.0",
+		"firebase-functions": "4.0.1",
     "framer-motion": "6.5.1",
 		"helmet": "5.1.1",
     "linkifyjs": "3.0.5",

@@ -2,7 +2,7 @@ import { Response } from 'express';
 import { DocumentSnapshot } from 'firebase-admin/firestore';
 import * as functions from 'firebase-functions';
 import { logger, RuntimeOptions } from 'firebase-functions';
-import { CallableContext, FunctionsErrorCode, Request } from 'firebase-functions/lib/providers/https';
+import { CallableContext, FunctionsErrorCode, Request } from 'firebase-functions/lib/common/providers/https';
 import { AnySchema, ValidationError } from 'yup';
 
 import { convertNullDeep, isAdminRole as isAdminUserRole, isType, redact, HttpStatusCode, Modify, UserIdentifier, UserRole, VersionResponse, VERSION_REQUEST } from '@ureeka-notebook/service-common';
