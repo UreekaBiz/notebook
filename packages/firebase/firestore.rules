@@ -230,6 +230,14 @@ service cloud.firestore {
       allow update: if false; // server-side only
       allow read:   if isSameSignedInUser(userId);
       allow delete: if false; // only soft-delete
+
+      // NOTE: the document identifier is simply a random id with no intentional meaning
+      match /user-configurations/{configId} {
+        allow create: if false; // server-only created
+        allow update: if false; // read-only
+        allow read: if isSameUser(userId);
+        allow delete: if false; // server-side hard-delete
+      }
     }
     match /user-profile-publics/{userId} {
       allow create: if false; // server-side only
@@ -240,7 +248,7 @@ service cloud.firestore {
     }
 
     // == Version =================================================================
-    // NOTE: the document identifier is simply a random id that has no intentional meaning
+    // NOTE: the document identifier is simply a random id with no intentional meaning
     // NOTE: all documents are created server-side by contract
     match /versions/{id} {
       allow create: if false; // server-side only

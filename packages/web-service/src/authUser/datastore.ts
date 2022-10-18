@@ -1,7 +1,7 @@
 import { ref, DatabaseReference } from 'firebase/database';
-import { collection, doc, CollectionReference, DocumentReference } from 'firebase/firestore';
+import { collection, doc, orderBy, query, where, CollectionReference, DocumentReference } from 'firebase/firestore';
 
-import { userKey, userSessionKey, SessionIdentifier, UserIdentifier, UserProfilePrivate, CLIENT_CONNECTED, USER_PROFILE_PRIVATES, USER_SESSIONS } from '@ureeka-notebook/service-common';
+import { nameof, userKey, userSessionKey, Identifier, SessionIdentifier, UserConfiguration_Storage, UserConfigurationType, UserIdentifier, UserProfilePrivate, CLIENT_CONNECTED, USER_CONFIGURATIONS, USER_PROFILE_PRIVATES, USER_SESSIONS } from '@ureeka-notebook/service-common';
 
 import { database, firestore } from '../util/firebase';
 
@@ -15,6 +15,7 @@ import { database, firestore } from '../util/firebase';
 
 // ** Firestore *******************************************************************
 // == Collection ==================================================================
+// -- User Profile Private --------------------------------------------------------
 export const userProfilePrivateCollection = collection(firestore, USER_PROFILE_PRIVATES) as CollectionReference<UserProfilePrivate>;
 export const userProfilePrivateDocument = (userId: UserIdentifier) => doc(userProfilePrivateCollection, userId);
 export const deconstructProfilePrivateRef = (ref: DocumentReference) => {
@@ -23,6 +24,21 @@ export const deconstructProfilePrivateRef = (ref: DocumentReference) => {
   const userId = privateProfileRef.id/*document id is the userId*/;
   return { userId };
 };
+
+// -- User Configuration ----------------------------------------------------------
+export const userConfigurationCollection = <T>(userId: UserIdentifier) =>
+  collection(userProfilePrivateDocument(userId), USER_CONFIGURATIONS) as CollectionReference<UserConfiguration_Storage<T>>;
+export const userConfigurationDocument = <T>(userId: UserIdentifier, configId: Identifier) =>
+  doc(userConfigurationCollection<T>(userId), configId);
+
+// == Query =======================================================================
+// -- User Configuration ----------------------------------------------------------
+export const userConfigurationsByTypeQuery = <T>(userId: UserIdentifier, type: UserConfigurationType) =>
+  query(userConfigurationCollection<T>(userId),
+    where(nameof<UserConfiguration_Storage<T>>('type'), '==', type),
+    orderBy(nameof<UserConfiguration_Storage<T>>('order'), 'desc'),
+    orderBy(nameof<UserConfiguration_Storage<T>>('lastUpdatedBy'), 'desc')/*break ties by lastUpdatedBy*/,
+  );
 
 // ** RTDB ************************************************************************
 // == Connected ===================================================================

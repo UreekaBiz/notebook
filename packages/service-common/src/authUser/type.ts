@@ -2,7 +2,7 @@ import * as Validate from 'yup';
 
 import { APIKey } from '../integration/type';
 import { UserProfile_Core, UserProfile_Internal } from '../user/type';
-import { Creatable, Updatable } from '../util/datastore';
+import { Creatable, ObjectTuple, Updatable } from '../util/datastore';
 import { RTDBTimestamp } from '../util/rtdb';
 import { stringShortSchema } from '../util/schema';
 import { Identifier, Modify } from '../util/type';
@@ -173,3 +173,37 @@ export type UserProfilePrivate =
       roles: UserRole[];
     }>
   ;
+
+// == (Private) Configuration (Firestore) =========================================
+// NOTE: the Configuration identifier is simply a random Document Id and has no intentional meaning
+
+// --------------------------------------------------------------------------------
+// this type is also used as a key to identify the Schema to validate the payload
+export enum UserConfigurationType {
+  TypeA = 'type-a',
+  TypeB = 'type-b',
+}
+
+// ................................................................................
+// each feature that uses the Configuration Service must define and register its
+// own Schema (located close to that feature rather than here)
+export const userConfigurationSchemaMap: Map<UserConfigurationType, Validate.AnySchema<any>> = new Map(/*default none*/);
+
+// --------------------------------------------------------------------------------
+// private Configuration data that is read and written by the User themselves
+// NOTE: the document id is simply a Firestore-generated random id
+// NOTE: Configurations are *hard* deleted
+// NOTE: since these are *always* per User, there's no need to specify the User
+//       on the structure (e.g. to support collection group queries)
+export type UserConfiguration<T> = Creatable & Updatable & Readonly<{ /*Firestore only*/
+  /** the Configuration type dictates the schema used to structure the payload.
+   *  The type can only be set on creation and cannot be changed. */
+  type: UserConfigurationType;
+  /** an arbitrary user-defined order within a type. Ties are broken on the
+   *  `updateTimestamp` field. */
+  order: number;
+
+  /** the Configuration payload (per {@link #type}) */
+  payload: T;
+}>;
+export type UserConfigurationTuple<T> = ObjectTuple<Identifier, UserConfiguration<T>>;

@@ -1,6 +1,6 @@
 import { httpsCallable } from 'firebase/functions';
 
-import { SessionClear_Rest, SessionUpdate_Rest, UserProfilePrivateUpdate_Rest } from '@ureeka-notebook/service-common';
+import { Identifier, SessionClear_Rest, SessionUpdate_Rest, UserConfigurationCreate_Rest, UserConfigurationDelete_Rest, UserConfigurationUpdate_Rest, UserProfilePrivateUpdate_Rest } from '@ureeka-notebook/service-common';
 
 import { functions } from '../util/firebase';
 import { wrapHttpsCallable } from '../util/function';
@@ -15,3 +15,8 @@ export const authUserSessionHeartbeat = wrapHttpsCallable<SessionUpdate_Rest>(ht
 
 // == User Private Profile ========================================================
 export const updateUserProfilePrivate = wrapHttpsCallable<UserProfilePrivateUpdate_Rest>(httpsCallable(functions, 'authUserUserPrivateProfileUpdate'));
+
+// == User Configuration ==========================================================
+export const createUserConfiguration = wrapHttpsCallable<UserConfigurationCreate_Rest, Identifier>(httpsCallable(functions, 'authUserUserConfigurationCreate'));
+export const updateUserConfiguration = wrapHttpsCallable<UserConfigurationUpdate_Rest>(httpsCallable(functions, 'authUserUserConfigurationUpdate'));
+export const deleteUserConfiguration = wrapHttpsCallable<UserConfigurationDelete_Rest>(httpsCallable(functions, 'authUserUserConfigurationDelete'));

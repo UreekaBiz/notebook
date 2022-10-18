@@ -1,11 +1,13 @@
 import { Observable } from 'rxjs';
 
-import { AuthedUser, UserRole } from '@ureeka-notebook/service-common';
+import { AuthedUser, Identifier, UserConfigurationTuple, UserConfigurationType, UserRole } from '@ureeka-notebook/service-common';
 
 import { getLogger, ServiceLogger } from '../logging';
 import { ApplicationError } from '../util/error';
-import { updateUserProfilePrivate } from './function';
-import { isLoggedIn, AuthedUserState, UserProfilePrivate_Update } from './type';
+import { getUserId } from '../util/user';
+import { createUserConfiguration, deleteUserConfiguration, updateUserConfiguration, updateUserProfilePrivate } from './function';
+import { userConfigurations$ } from './observable';
+import { isLoggedIn, AuthedUserState, UserProfilePrivate_Update, UserConfiguration_Create, UserConfiguration_Update } from './type';
 import { FirebaseAuthService } from './support/FirebaseAuthService';
 
 const log = getLogger(ServiceLogger.AUTH_USER);
@@ -91,6 +93,22 @@ export class AuthUserService {
     return this.firebaseAuthService.onAuthUser$();
   }
 
+  // -- User Configuration --------------------------------------------------------
+  /**
+   * @param type the {@link UserConfigurationType} for while the {@link UserConfiguration}s
+   *        are desired
+   * @returns {@link Observable} over the collection of {@link UserConfiguration}s
+   *          for the calling User and specified {@link UserConfigurationType}
+   *          ordered by the Configuration order with ties broken by the last updated
+   *          timestamp.
+   */
+  public onUserConfigurations$<T>(type: UserConfigurationType): Observable<UserConfigurationTuple<T>[]> {
+    const userId = getUserId();
+    if(!userId) throw new ApplicationError('functions/permission-denied', 'Cannot access User Configurations while logged out.');
+
+    return userConfigurations$(userId, type);
+  }
+
   // == Explicit LogOut ===========================================================
   // NOTE: this method is for internal use only. Service consumers *must* use
   //       firebase/auth: signOut()
@@ -159,7 +177,7 @@ export class AuthUserService {
     return !!authedUserState.userRoles[role]/*from Custom Claims by contract (by specifically only those that are visible)*/;
   }
 
-  // == User ======================================================================
+  // == User Profile ==============================================================
   /**
    * @param update updates the User's {@link UserProfilePrivate} based on the
    *        specified update. The specified update is *merged* with the current data.
@@ -178,6 +196,46 @@ export class AuthUserService {
     const authedUserState = this.firebaseAuthService.getCurrentAuthedUserState();
     if(!isLoggedIn(authedUserState)) throw new ApplicationError('functions/internal', `AuthUser state is not valid. Likely User (${this.firebaseAuthService.getUserId()}) has logged out.`);
     await updateUserProfilePrivate(update);
+  }
+
+  // == User Configuration (CUD) ==================================================
+  /**
+   * @param create the User Configuration that is to be created
+   * @returns the {@link Identifier} for the created {@link UserConfiguration}
+   * @throws a {@link ApplicationError}:
+   * - `permission-denied` if the caller is not logged in
+   * - `invalid-argument` if any of the fields are not specified or are invalid
+   * - `datastore/write` if there was an error creating the {@link UserConfiguration}
+   */
+  public async createUserConfiguration(create: UserConfiguration_Create): Promise<Identifier> {
+    const result = await createUserConfiguration(create);
+    return result.data;
+  }
+
+  /**
+   * @param update the User Configuration that is to be updated. The specified
+   *        update is *merged* with the current data. All fields in the update are
+   *        overwritten with the specified value.
+   * @throws a {@link ApplicationError}:
+   * - `permission-denied` if the caller is not logged in
+   * - `not-found` if the {@link Identifier} does not represent a known {@link UserConfiguration}
+   * - `invalid-argument` if any of the fields are not specified or are invalid
+   * - `datastore/write` if there was an error updating the {@link UserConfiguration}
+   */
+  public async updateUserConfiguration(update: UserConfiguration_Update) {
+    await updateUserConfiguration(update);
+  }
+
+  /**
+   * @param configId the {@link Identifier} of the {@link UserConfiguration} that
+   *        is to be deleted
+   * @throws a {@link ApplicationError}:
+   * - `permission-denied` if the caller is not logged in
+   * - `not-found` if the {@link Identifier} does not represent a known {@link UserConfiguration}
+   * - `datastore/write` if there was an error setting the deleted flag on the {@link UserConfiguration}
+   */
+  public async deleteUserConfiguration(configId: Identifier) {
+    await deleteUserConfiguration({ configId });
   }
 
   // == Stats =====================================================================

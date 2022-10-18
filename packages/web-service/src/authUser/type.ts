@@ -1,4 +1,12 @@
-import { AuthedUser, UserProfilePrivate, UserProfilePrivateUpdate_Rest, UserProfilePrivateUpdate_Rest_Schema, UserRoles } from '@ureeka-notebook/service-common';
+import { AuthedUser, UserConfigurationCreate_Rest, UserConfigurationCreate_Rest_Schema, UserConfigurationDelete_Rest, UserConfigurationDelete_Rest_Schema, UserConfigurationUpdate_Rest, UserConfigurationUpdate_Rest_Schema, UserProfilePrivate, UserProfilePrivateUpdate_Rest, UserProfilePrivateUpdate_Rest_Schema, UserRoles } from '@ureeka-notebook/service-common';
+
+// ** Service-Common **************************************************************
+export {
+  // SEE: @ureeka-notebook/service-common: authUser/type.ts
+  UserConfiguration,
+  UserConfigurationTuple,
+  UserConfigurationType,
+} from '@ureeka-notebook/service-common';
 
 // ********************************************************************************
 // == Convenience Types ===========================================================
@@ -32,3 +40,14 @@ export const isLoggedIn = (state: AuthedUserState): state is LoggedInUserState =
 // == Action Types ================================================================
 export const UserProfilePrivate_Update_Schema = UserProfilePrivateUpdate_Rest_Schema;
 export type UserProfilePrivate_Update = UserProfilePrivateUpdate_Rest;
+
+// == User Configuration ==========================================================
+// -- CUD -------------------------------------------------------------------------
+export const UserConfiguration_Create_Schema = UserConfigurationCreate_Rest_Schema;
+export type UserConfiguration_Create = UserConfigurationCreate_Rest;
+
+export const UserConfiguration_Update_Schema = UserConfigurationUpdate_Rest_Schema;
+export type UserConfiguration_Update = UserConfigurationUpdate_Rest;
+
+export const UserConfiguration_Delete_Schema = UserConfigurationDelete_Rest_Schema;
+export type UserConfiguration_Delete = UserConfigurationDelete_Rest;

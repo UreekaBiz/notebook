@@ -3,7 +3,7 @@ import { nameof } from '../util/object';
 import { DatabaseTimestamp } from '../util/rtdb';
 import { Modify } from '../util/type';
 import { UserIdentifier } from '../util/user';
-import { Session, SessionIdentifier, UserProfilePrivate, UserSession } from './type';
+import { Session, SessionIdentifier, UserConfiguration, UserProfilePrivate, UserSession } from './type';
 
 // ** Constants *******************************************************************
 // == Firestore ===================================================================
@@ -12,6 +12,10 @@ import { Session, SessionIdentifier, UserProfilePrivate, UserSession } from './t
 // SEE: ../user/datastore.ts
 export const USER_PROFILE_PRIVATES = 'user-profile-privates'/*top-level collection*/;
 export const USER_PROFILE_PRIVATE = `${USER_PROFILE_PRIVATES}/{userId}` as const/*document (used by CF triggers)*/;
+
+// -- User Configuration ----------------------------------------------------------
+export const USER_CONFIGURATIONS = 'user-configurations'/*sub-collection*/;
+export const USER_CONFIGURATION = `${USER_PROFILE_PRIVATE}/${USER_CONFIGURATIONS}/{configId}` as const/*document (used by CF triggers)*/;
 
 // -- Trigger Context -------------------------------------------------------------
 export type UserProfilePrivateParams = Readonly<{
@@ -39,6 +43,9 @@ export type UserSessionUsersParams = Readonly<{
 // == Firestore ===================================================================
 // -- User Profile Private --------------------------------------------------------
 export type UserProfilePrivate_Storage = UserProfilePrivate/*nothing additional*/;
+
+// -- User Configuration ----------------------------------------------------------
+export type UserConfiguration_Storage<T> = UserConfiguration<T>/*nothing additional*/;
 
 // == RTDB ========================================================================
 // -- Session ---------------------------------------------------------------------
@@ -69,6 +76,17 @@ export type UserProfilePrivate_Update =
 export type UserProfilePrivate_Delete = Modify<Pick<UserProfilePrivate_Storage, 'deleted' | 'updateTimestamp' | 'lastUpdatedBy'>, Readonly<{
   updateTimestamp: FieldValue/*always-write server-set*/;
 }>>;
+
+// -- User Configuration ----------------------------------------------------------
+export type UserConfiguration_Create = Modify<UserConfiguration_Storage<any>, Readonly<{
+  createTimestamp: FieldValue/*always-write server-set*/;
+  updateTimestamp: FieldValue/*always-write server-set*/;
+}>>;
+export type UserConfiguration_Update = Omit<UserConfiguration_Storage<any>, 'type' | 'createTimestamp'| 'createdBy' | 'updateTimestamp'>
+  & Modify<Pick<UserConfiguration_Storage<any>, 'updateTimestamp' | 'lastUpdatedBy'>, Readonly<{
+      updateTimestamp: FieldValue/*always-write server-set*/;
+    }>>;
+// NOTE: hard-delete so no delete Action Type
 
 // == RTDB ========================================================================
 // -- Session ---------------------------------------------------------------------
