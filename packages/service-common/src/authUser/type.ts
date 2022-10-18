@@ -1,8 +1,10 @@
 import * as Validate from 'yup';
 
-import { UserProfile_Core, UserProfile_Internal, UserProfile_Private } from '../user/type';
+import { APIKey } from '../integration/type';
+import { UserProfile_Core, UserProfile_Internal } from '../user/type';
 import { Creatable, Updatable } from '../util/datastore';
 import { RTDBTimestamp } from '../util/rtdb';
+import { stringShortSchema } from '../util/schema';
 import { Identifier, Modify } from '../util/type';
 import { UserIdentifier } from '../util/user';
 
@@ -137,6 +139,20 @@ export type AuthedUser = Readonly<{
 }>;
 
 // == Private Profile =============================================================
+/** Profile fields that the User themselves can update but are *never* visible to
+ *  other Users */
+export const UserProfile_Private_Schema = Validate.object({
+  // .. API Keys ..................................................................
+  apiKeys: Validate.object({
+    ...Object.values(APIKey).reduce((o, key) => ({ ...o, [key]: stringShortSchema.notRequired() }), {}),
+  }).noUnknown()
+    .notRequired(),
+}).noUnknown();
+export type UserProfile_Private = Readonly<Modify<Validate.InferType<typeof UserProfile_Private_Schema>, {
+  apiKeys?: Partial<Record<APIKey, string>/*explicit*/>;
+}>>;
+
+// --------------------------------------------------------------------------------
 export type UserProfilePrivate =
     Creatable
   & Updatable

@@ -1,6 +1,7 @@
 import * as Validate from 'yup';
 
-import { UserProfile_Core, UserProfile_Core_Schema, UserProfile_Private, UserProfile_Private_Schema } from '../user/type';
+import { UserProfile_Private, UserProfile_Private_Schema } from '../authUser/type';
+import { UserProfile_Core, UserProfile_Core_Schema } from '../user/type';
 import { omitSchema } from '../util/schema';
 import { Identifier_Schema, Modify } from '../util/type';
 import { ActivityState, Session_Schema } from './type';
