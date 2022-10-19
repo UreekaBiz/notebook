@@ -7,7 +7,7 @@ import { ApplicationError } from '../util/error';
 import { scrollableQuery, Scrollable } from '../util/observableScrolledCollection';
 import { notebookPublishedQuery, notebookQuery } from './datastore';
 import { notebookCopy, notebookCreate, notebookDelete, notebookHashtag, notebookPublish, notebookShare } from './function';
-import { notebookTupleById$, notebookOnceById$, notebookPublishedContentTupleById$, notebookPublishedContentOnceById$, notebookPublishedsQuery$, notebooksQuery$ } from './observable';
+import { notebookMap$, notebookOnceById$, notebookPublishedContentOnceById$, notebookPublishedContentTupleById$, notebookPublishedsQuery$, notebooksQuery$, notebookTupleById$ } from './observable';
 import { NotebookFilter, NotebookPublishedFilter, Notebook_Copy, Notebook_Create, Notebook_Hashtag, Notebook_Publish } from './type';
 
 const log = getLogger(ServiceLogger.NOTEBOOK);
@@ -40,6 +40,14 @@ export class NotebookService {
   public onNotebooks(filter: NotebookFilter, scrollSize: number = NotebookService.DEFAULT_SCROLL_SIZE): Scrollable<NotebookTuple> {
     return scrollableQuery(notebookQuery(filter), notebooksQuery$, scrollSize,
                            `Filtered Notebooks (${JSON.stringify(filter)})`);
+  }
+
+  /**
+   * @param filter the fields that are optionally filtered and sorted on
+   * @returns an Observable over a map of {@link NotebookIdentifier} to {@link Notebook}
+   */
+  public onNotebookMap$(filter: NotebookFilter): Observable<Map<NotebookIdentifier, Notebook>> {
+    return notebookMap$(filter);
   }
 
   /**
