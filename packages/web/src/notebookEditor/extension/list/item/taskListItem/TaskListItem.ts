@@ -1,7 +1,7 @@
 import { Node } from '@tiptap/core';
 import { Plugin } from 'prosemirror-state';
 
-import { getNodeOutputSpec, isNodeSelection, isTaskListItemNode, AttributeType, NodeName, SetAttributeType, TaskListItemNodeSpec, DATA_NODE_TYPE, DATA_TASK_LIST_ITEM_CHECKED } from '@ureeka-notebook/web-service';
+import { getNodeOutputSpec, isNodeSelection, isTaskListItemNode, AttributeType, NodeName, SetAttributeType, TaskListItemNodeSpec, DATA_NODE_TYPE } from '@ureeka-notebook/web-service';
 
 import { shortcutCommandWrapper } from 'notebookEditor/command/util';
 import { setAttributeParsingBehavior } from 'notebookEditor/extension/util/attribute';
@@ -35,10 +35,9 @@ export const TaskListItem = Node.create<NoOptions, NoStorage>({
 
       // NOTE: using custom parseHTML since specific checks must be done
       [AttributeType.Checked]: {
-        default: false/*not checked*/,
-        keepOnSplit: false/*new TaskListItems should not get the checked attribute*/,
-        parseHTML: (element) => element.getAttribute(DATA_TASK_LIST_ITEM_CHECKED) === 'true',
-        renderHTML: (attributes) => ({ DATA_TASK_LIST_ITEM_CHECKED: attributes.checked }),
+        ...setAttributeParsingBehavior(AttributeType.Checked, SetAttributeType.BOOLEAN, false/*default*/),
+        keepOnSplit: false/*split TaskListItems should not inherit the Checked attribute*/,
+        renderHTML: (attributes) => ({ [AttributeType.Checked]: attributes.checked }),
       },
     };
   },
@@ -100,14 +99,18 @@ export const TaskListItem = Node.create<NoOptions, NoStorage>({
   },
   parseHTML() {
     return [{
-      // match TaskListItem tags and Block Nodes (which use the div tag)
+      // when parsing into TaskList, turn Blocks (that use the div tag)
+      // into TaskListItems
       tag: `li, li[${DATA_NODE_TYPE}="${NodeName.TASK_LIST_ITEM}"], div`,
       priority: ParseRulePriority.TASK_LIST_ITEM,
-
-      // only match when applying parse rule into a
-      // ListItemContent inside a TaskListItem Node
       context: `${NodeName.TASK_LIST_ITEM}/${NodeName.LIST_ITEM_CONTENT}/`,
-    }];
+    },
+    {
+      // when parsing into the regular Document, only match TaskListItems
+      tag: `li[${DATA_NODE_TYPE}="${NodeName.TASK_LIST_ITEM}"]`,
+      priority: ParseRulePriority.TASK_LIST_ITEM,
+    },
+  ];
   },
   renderHTML({ node, HTMLAttributes }) { return getNodeOutputSpec(node, HTMLAttributes, false/*not a leaf node*/); },
 });

@@ -141,8 +141,6 @@ export {
   OrderedListAttributes,
   ORDERED_LIST_DEFAULT_START,
 
-  DATA_TASK_LIST_ITEM_CHECKED,
-
   // == Nodes =====================================================================
   JSONNode,
   NodeName,

@@ -47,7 +47,7 @@ export const InputTool: React.FC<Props> = ({ value: initialInputValue, placehold
         placeholder={placeholder}
         size='sm'
         autoComplete='off'
-        datatype={TOOL_ITEM_DATA_TYPE/*(SEE: journalEditor/sidebar/toolbar/type )*/}
+        datatype={TOOL_ITEM_DATA_TYPE/*(SEE: notebookEditor/sidebar/toolbar/type )*/}
         onBlur={() => saveChange(false)}
         onChange={handleValueChange}
         onKeyDown={handleKeyDown}
