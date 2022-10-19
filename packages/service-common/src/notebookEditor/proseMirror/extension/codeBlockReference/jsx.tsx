@@ -1,4 +1,5 @@
 import { Text } from '@chakra-ui/react';
+import { MouseEventHandler } from 'react';
 
 import { filterStyleAttributes, HTMLAttributes } from '../../attribute';
 import { NodeName } from '../../node';
@@ -11,7 +12,7 @@ export type CodeBlockReferenceComponentRenderProps = Readonly<{
 
   visualId: string;
 
-  onClick: (event: MouseEvent) => void;
+  onClick: MouseEventHandler<HTMLParagraphElement>;
 }>;
 export const CodeBlockReferenceComponentJSX: React.FC<CodeBlockReferenceComponentRenderProps> = ({ attrs, visualId, onClick }) => {
   const text = computeCodeBlockReferenceText(attrs, visualId);

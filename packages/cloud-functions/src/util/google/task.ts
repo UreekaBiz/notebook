@@ -2,7 +2,7 @@ import { CloudTasksClient } from '@google-cloud/tasks';
 import { google } from '@google-cloud/tasks/build/protos/protos';
 import Bottleneck from 'bottleneck';
 import { logger } from 'firebase-functions';
-import { Request } from 'firebase-functions/lib/providers/https';
+import { Request } from 'firebase-functions/lib/common/providers/https';
 
 import { Identifier } from '@ureeka-notebook/service-common';
 

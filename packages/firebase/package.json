@@ -13,8 +13,8 @@
   },
 
   "devDependencies": {
-    "firebase-functions-test": "2.4.0",
-    "firebase-tools": "11.10.0"
+    "firebase-functions-test": "3.0.0",
+    "firebase-tools": "11.15.0"
   },
   "dependencies": {}
 }

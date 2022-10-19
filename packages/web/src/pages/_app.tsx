@@ -38,7 +38,7 @@ const App = ({ Component, pageProps }: Props) => {
       </ChakraProvider>
     </>
   );
-}
+};
 
 // --------------------------------------------------------------------------------
 // Export without a wrapper since its the root page

@@ -1,10 +1,8 @@
 import * as Validate from 'yup';
 
 import { PresenceState } from '../authUser/type';
-import { APIKey } from '../integration/type';
 import { Creatable, Updatable } from '../util/datastore';
-import { relaxedUrlSchema, stringMedSchema, stringShortSchema, stringVLongSchema, tiktokHandleSchema, twitterHandleSchema } from '../util/schema';
-import { Modify } from '../util/type';
+import { relaxedUrlSchema, stringMedSchema, stringVLongSchema, tiktokHandleSchema, twitterHandleSchema } from '../util/schema';
 
 // ********************************************************************************
 // === User ======================================================================
@@ -68,20 +66,6 @@ export type UserProfile_Generated = Readonly<{
    *  @see #userProfileComparator */
   sortName: string;
 }>;
-
-// -- Private Profile Elements ----------------------------------------------------
-/** Public Profile fields that the User themselves can update but are *never* visible
- * to other Users */
-export const UserProfile_Private_Schema = Validate.object({
-  // .. API Keys ..................................................................
-  apiKeys: Validate.object({
-    ...Object.values(APIKey).reduce((o, key) => ({ ...o, [key]: stringShortSchema.notRequired() }), {}),
-  }).noUnknown()
-    .notRequired(),
-}).noUnknown();
-export type UserProfile_Private = Readonly<Modify<Validate.InferType<typeof UserProfile_Private_Schema>, {
-  apiKeys?: Partial<Record<APIKey, string>/*explicit*/>;
-}>>;
 
 // --------------------------------------------------------------------------------
 // NOTE: caution must be used as this is seen by *all* Users so private data cannot

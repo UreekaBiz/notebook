@@ -1,6 +1,6 @@
 import { Logging } from '@google-cloud/logging';
 import { LogEntry, LogSeverity } from '@google-cloud/logging/build/src/entry';
-import { CallableContext } from 'firebase-functions/lib/providers/https';
+import { CallableContext } from 'firebase-functions/lib/common/providers/https';
 
 import { camelToKebabCase, generateUuid, LogLevel, LogView } from '@ureeka-notebook/service-common';
 

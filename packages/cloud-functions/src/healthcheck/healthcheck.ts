@@ -41,6 +41,9 @@ const endpointNames = [
   'assetDelete',
   'assetUpdate',
 
+  'authUserUserConfigurationCreate',
+  'authUserUserConfigurationDelete',
+  'authUserUserConfigurationUpdate',
   'authUserSessionClear',
   'authUserSessionHeartbeat',
   'authUserSessionUpdate',

@@ -85,7 +85,7 @@ export const updateLabel = async (
     });
   } catch(error) {
     if(error instanceof ApplicationError) throw error;
-    throw new ApplicationError('datastore/write', `Error deleting Label (${labelId}) for User (${userId}). Reason: `, error);
+    throw new ApplicationError('datastore/write', `Error updating Label (${labelId}) for User (${userId}). Reason: `, error);
   }
 
   // NOTE: on-write trigger clones the Published Label

@@ -1,6 +1,7 @@
 import * as Validate from 'yup';
 
-import { UserProfile_Core, UserProfile_Core_Schema, UserProfile_Private, UserProfile_Private_Schema } from '../user/type';
+import { UserConfigurationType, UserProfile_Private, UserProfile_Private_Schema } from '../authUser/type';
+import { UserProfile_Core, UserProfile_Core_Schema } from '../user/type';
 import { omitSchema } from '../util/schema';
 import { Identifier_Schema, Modify } from '../util/type';
 import { ActivityState, Session_Schema } from './type';
@@ -36,3 +37,38 @@ export type UserProfilePrivateUpdate_Rest =
     UserProfile_Core
   & UserProfile_Private
   ;
+
+// == User Configuration ==========================================================
+// -- CUD -------------------------------------------------------------------------
+// .. Create ......................................................................
+export const UserConfigurationCreate_Rest_Schema = Validate.object({
+  type: Validate.string()
+      .oneOf(Object.values(UserConfigurationType))
+      .required(),
+  order: Validate.number()
+      .required(),
+
+  /** the payload must exist but its schema is dictated by the type and is validated
+   *  separately */
+  payload: Validate.object()
+      .required(),
+}).noUnknown();
+export type UserConfigurationCreate_Rest = Modify<Validate.InferType<typeof UserConfigurationCreate_Rest_Schema>, Readonly<{
+  type: UserConfigurationType/*explicit*/;
+}>>;
+
+// .. Update ......................................................................
+// the payload is written in full -- there is no way to incrementally update it.
+// The type cannot be changed.
+export const UserConfigurationUpdate_Rest_Schema = Validate.object({
+  configId: Identifier_Schema
+      .required(),
+}).concat(omitSchema(UserConfigurationCreate_Rest_Schema, 'type')).noUnknown();
+export type UserConfigurationUpdate_Rest = Validate.InferType<typeof UserConfigurationUpdate_Rest_Schema>;
+
+// .. Delete ......................................................................
+export const UserConfigurationDelete_Rest_Schema = Validate.object({
+  configId: Identifier_Schema
+      .required(),
+}).noUnknown();
+export type UserConfigurationDelete_Rest = Readonly<Validate.InferType<typeof UserConfigurationDelete_Rest_Schema>>;
