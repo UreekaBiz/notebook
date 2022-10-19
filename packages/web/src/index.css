@@ -193,10 +193,6 @@ ul[data-node-type="taskList"] > li > label {
   margin-top: 0.25rem;
   margin-bottom: 0.25rem;
 }
-[data-node-type="taskListItem"][checked="true"] > div > [data-node-type="listItemContent"] {
-  color: #434343;
-  text-decoration: line-through;
-}
 
 /* .. MarkHolder ............................................................... */
 [data-node-type="markHolder"] {

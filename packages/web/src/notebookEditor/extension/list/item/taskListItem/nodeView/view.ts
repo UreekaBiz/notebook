@@ -1,11 +1,12 @@
 import { Editor } from '@tiptap/core';
 
-import { getPosType, isGetPos, updateSingleNodeAttributesCommand, AttributeType, NodeName, TaskListItemNodeType, DATA_NODE_TYPE } from '@ureeka-notebook/web-service';
+import { getPosType, isGetPos, NodeName, TaskListItemNodeType, DATA_NODE_TYPE } from '@ureeka-notebook/web-service';
 
 import { NoStorage } from 'notebookEditor/model/type';
 import { AbstractNodeView } from 'notebookEditor/model/AbstractNodeView';
 
 import { TaskListItemModel } from './model';
+import { crossTaskListItemCommand } from '../command';
 
 // ********************************************************************************
 // NOTE: this NodeView does not use React since TaskListItems do not have a
@@ -58,7 +59,6 @@ export class TaskListItemView extends AbstractNodeView<TaskListItemNodeType, NoS
     //       setting this attribute, which has to be set through the .checked
     //       property. Otherwise the DOM elements won't reflect the changes
     this.checkBox.checked = this.node.attrs.checked ? true : false;
-    this.dom.setAttribute(AttributeType.Checked, this.node.attrs.checked ? 'true' : 'false');
   }
 
   // -- Destroy -------------------------------------------------------------------
@@ -78,7 +78,7 @@ export class TaskListItemView extends AbstractNodeView<TaskListItemNodeType, NoS
     const { checked } = event.target;
     const thisNodePos = this.getPos();
 
-    updateSingleNodeAttributesCommand(NodeName.TASK_LIST_ITEM, thisNodePos, { [AttributeType.Checked]: checked })(this.editor.state, this.editor.view.dispatch);
+    crossTaskListItemCommand(thisNodePos, checked)(this.editor.state, this.editor.view.dispatch);
   }
 }
 
