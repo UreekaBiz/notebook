@@ -17,7 +17,7 @@ import { nestedViewBlockNodeToolItem } from 'notebookEditor/extension/nestedView
 import { markStrikethrough } from 'notebookEditor/extension/strikethrough/toolbar';
 import { markSubScript } from 'notebookEditor/extension/subScript/toolbar';
 import { markSuperScript } from 'notebookEditor/extension/superScript/toolbar';
-import { fontSizeToolItem, spacingToolItem, textColorToolItem } from 'notebookEditor/extension/textStyle/toolbar';
+import { backgroundColorToolItem, fontSizeToolItem, spacingToolItem, textColorToolItem } from 'notebookEditor/extension/textStyle/toolbar';
 import { markUnderline } from 'notebookEditor/extension/underline/toolbar';
 import { dedentBlocksToolItem, horizontalAlignCenterToolItem, horizontalAlignJustifyToolItem, horizontalAlignLeftToolItem, horizontalAlignRightToolItem, indentBlocksToolItem } from 'notebookEditor/shared/toolItem';
 import { Toolbar, ToolItem } from 'notebookEditor/sidebar/toolbar/type';
@@ -72,6 +72,7 @@ export const HeadingToolbar: Toolbar = {
     [
       fontSizeToolItem,
       textColorToolItem,
+      backgroundColorToolItem,
     ],
     [
       spacingToolItem,

@@ -34,6 +34,19 @@ export const textColorToolItem: ToolItem = {
     />,
 };
 
+export const backgroundColorToolItem: ToolItem = {
+  toolType: 'component',
+  name: 'backgroundColorToolItem',
+
+  component: (props) =>
+    <ColorPickerMarkToolItem
+      {...props}
+      name='Background Color'
+      markName={MarkName.TEXT_STYLE}
+      attributeType={AttributeType.BackgroundColor}
+    />,
+};
+
 export const spacingToolItem: ToolItem = {
   toolType: 'component',
   name: 'spacingToolItem',

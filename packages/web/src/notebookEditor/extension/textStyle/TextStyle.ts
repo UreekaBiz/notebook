@@ -6,6 +6,10 @@ import { isValidHTMLElement, safeParseTag } from 'notebookEditor/extension/util/
 import { NoOptions, NoStorage } from 'notebookEditor/model/type';
 
 // ********************************************************************************
+// == Constant ====================================================================
+const replaceQuotesRegEx = /['"]+/g;
+
+// == Mark ====================================================================
 export const TextStyle = Mark.create<NoOptions, NoStorage>({
   ...TextStyleMarkSpec,
 
@@ -13,8 +17,9 @@ export const TextStyle = Mark.create<NoOptions, NoStorage>({
   addAttributes() {
     // NOTE: not using setAttributeParsingBehavior since specific RegEx is used
     return {
-      [AttributeType.FontSize]: { default: undefined, parseHTML: element => element.style.fontSize.replace(/['"]+/g, '') },
-      [AttributeType.Color]: { default: undefined, parseHTML: element => element.style.color.replace(/['"]+/g, '') },
+      [AttributeType.FontSize]: { default: undefined/*none*/, parseHTML: (element) => element.style.fontSize.replace(replaceQuotesRegEx, '') },
+      [AttributeType.Color]: { default: undefined/*none*/, parseHTML: (element) => element.style.color.replace(replaceQuotesRegEx, '') },
+      [AttributeType.BackgroundColor]: { default: undefined/*none*/, parseHTML: (element) => element.style.backgroundColor.replace(replaceQuotesRegEx, '') },
     };
   },
 
