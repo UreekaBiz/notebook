@@ -3,7 +3,7 @@ import { getMarkAttributes } from '@tiptap/core';
 import { getThemeValue, isLinkMarkAttributes, AttributeType, MarkName, ExtendMarkRangeDocumentUpdate, SetTextSelectionDocumentUpdate } from '@ureeka-notebook/web-service';
 
 import { applyDocumentUpdates } from 'notebookEditor/command/update';
-import { ColorPickerTool } from 'notebookEditor/extension/shared/component/ColorPickerToolItem/ColorPickerTool';
+import { GoogleDocsColorPickerTool } from 'notebookEditor/extension/shared/component/GoogleDocsColorPickerToolItem/GoogleDocsColorPickerTool';
 import { EditorToolComponentProps } from 'notebookEditor/sidebar/toolbar/type';
 
 import { SetLinkDocumentUpdate } from '../../command';
@@ -35,7 +35,5 @@ export const LinkColorToolItem: React.FC<Props> = ({ editor, depth }) => {
   };
 
   // == UI ========================================================================
-  return (
-    <ColorPickerTool name='Color' value={inputValue} onChange={handleChange} />
-  );
+  return (<GoogleDocsColorPickerTool name='Color' value={inputValue} onChange={handleChange} />);
 };

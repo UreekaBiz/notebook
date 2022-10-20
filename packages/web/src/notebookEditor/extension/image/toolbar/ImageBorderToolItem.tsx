@@ -4,8 +4,8 @@ import { isImageNode, isNodeSelection, AttributeType, BorderStyle, NodeName, Set
 
 import { applyDocumentUpdates } from 'notebookEditor/command/update';
 import { EditorToolComponentProps } from 'notebookEditor/sidebar/toolbar/type';
-import { textColors } from 'notebookEditor/theme/type';
-import { ColorPickerTool } from 'notebookEditor/extension/shared/component/ColorPickerToolItem/ColorPickerTool';
+import { googleDocsColors } from 'notebookEditor/theme/type';
+import { GoogleDocsColorPickerTool } from 'notebookEditor/extension/shared/component/GoogleDocsColorPickerToolItem/GoogleDocsColorPickerTool';
 import { InputWithUnitNodeToolItem } from 'notebookEditor/extension/shared/component/InputWithUnitToolItem';
 import { DropdownToolItem } from 'notebookEditor/extension/shared/component/DropdownToolItem';
 
@@ -33,11 +33,11 @@ export const ImageBorderToolItem: React.FC<Props> = ({ editor, depth }) => {
 
   return (
     <Box>
-      <ColorPickerTool
+      <GoogleDocsColorPickerTool
         name='Border Color'
         value={colorValue ?? DEFAULT_IMAGE_BORDER_COLOR}
         onChange={handleBorderColorChange}
-        colors={textColors}
+        colors={googleDocsColors}
       />
       <InputWithUnitNodeToolItem
         name='Border Weight'

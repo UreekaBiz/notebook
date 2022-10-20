@@ -1,9 +1,9 @@
 import { AttributeType, MarkName } from '@ureeka-notebook/service-common';
 
 import { InputWithUnitMarkToolItem } from 'notebookEditor/extension/shared/component/InputWithUnitToolItem';
-import { ColorPickerMarkToolItem } from 'notebookEditor/extension/shared/component/ColorPickerToolItem';
 import { SpacingToolItem } from 'notebookEditor/extension/shared/component/SpacingToolItem';
 import { ToolItem } from 'notebookEditor/sidebar/toolbar/type';
+import { GoogleDocsColorPickerMarkToolItem } from '../shared/component/GoogleDocsColorPickerToolItem';
 
 // ********************************************************************************
 // == Tool Items ==================================================================
@@ -26,7 +26,7 @@ export const textColorToolItem: ToolItem = {
   name: 'textColorToolItem',
 
   component: (props) =>
-    <ColorPickerMarkToolItem
+    <GoogleDocsColorPickerMarkToolItem
       {...props}
       name='Text Color'
       markName={MarkName.TEXT_STYLE}
@@ -39,7 +39,7 @@ export const backgroundColorToolItem: ToolItem = {
   name: 'backgroundColorToolItem',
 
   component: (props) =>
-    <ColorPickerMarkToolItem
+    <GoogleDocsColorPickerMarkToolItem
       {...props}
       name='Background Color'
       markName={MarkName.TEXT_STYLE}
