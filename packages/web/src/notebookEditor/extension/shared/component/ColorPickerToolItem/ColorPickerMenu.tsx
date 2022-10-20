@@ -15,6 +15,7 @@ const selectColorButtonProps: Partial<FlexProps> = {
   _focus: { boxShadow: 'none' },
 };
 
+// == Interface ===================================================================
 interface Props {
   colors: Color[][];
   value: string;
@@ -23,12 +24,14 @@ interface Props {
 
   onChange: (color: Color) => void;
 }
+
+// == Component ===================================================================
 export const ColorPickerMenu: React.FC<Props> = ({ colors, closeOnSelect = true, onChange, value }) => {
-  // == State =====================================================================
+  // -- State ---------------------------------------------------------------------
   const [isOpen, setIsOpen] = useState(false/*by contract*/);
   const [selectedColor, setSelectedColor] = useState(''/*initial value*/);
 
-  // == Effect ====================================================================
+  // -- Effect --------------------------------------------------------------------
   // Close the menu when the user clicks outside the box. The event is cancelled by
   // handlePopoverMouseDown when the user clicks on the portal so it only gets
   // here when it's outside the portal.
@@ -64,7 +67,7 @@ export const ColorPickerMenu: React.FC<Props> = ({ colors, closeOnSelect = true,
     return () => { window.removeEventListener('keydown', selectColorWithKey); };
   }, [isOpen, closeOnSelect, colors, onChange]);
 
-  // == Handler ===================================================================
+  // -- Handler -------------------------------------------------------------------
   const toggleIsOpen = useCallback(() => setIsOpen(prevValue => !prevValue), []);
 
   const handlePopoverMouseDown: React.MouseEventHandler<HTMLDivElement> = (event) => {
@@ -78,7 +81,7 @@ export const ColorPickerMenu: React.FC<Props> = ({ colors, closeOnSelect = true,
     onChange(color);
   };
 
-  // == UI ========================================================================
+  // -- UI ------------------------------------------------------------------------
   return (
     <Popover placement='bottom' isOpen={isOpen}>
       <PopoverTrigger>
@@ -93,7 +96,15 @@ export const ColorPickerMenu: React.FC<Props> = ({ colors, closeOnSelect = true,
           {colors.map((row, index) =>
             <Flex key={index} gap={1} justifyContent='space-between'>
               {row.map(((color, index) =>
-                <Flex id={`${color.hexCode}-${index}`} key={index} margin={1} backgroundColor={color.hexCode} border={color.hexCode === selectedColor ? `2px solid ${FOCUS_COLOR}` : 'none'} _hover={{ cursor: 'pointer', backgroundColor: color.hexCode }} onClick={() => handleColorSelection(color)} {...selectColorButtonProps}>
+                <Flex
+                  id={`${color.hexCode}-${index}`}
+                  key={index}
+                  margin={1}
+                  backgroundColor={color.hexCode} border={color.hexCode === selectedColor ? `2px solid ${FOCUS_COLOR}` : 'none'}
+                  _hover={{ cursor: 'pointer', backgroundColor: color.hexCode }}
+                  onClick={() => handleColorSelection(color)}
+                  {...selectColorButtonProps}
+                >
                   <Text id={color.key} padding={1} color='white' fontSize={12}>
                     {color.key}
                   </Text>

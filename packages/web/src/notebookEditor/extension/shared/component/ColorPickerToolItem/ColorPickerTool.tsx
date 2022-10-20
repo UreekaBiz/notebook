@@ -8,6 +8,7 @@ import { ColorPickerMenu } from './ColorPickerMenu';
 import { InputToolItemContainer } from '../InputToolItemContainer';
 
 // ********************************************************************************
+// == Interface ===================================================================
 interface Props {
   name: string;
 
@@ -16,11 +17,13 @@ interface Props {
 
   colors?: Color[][];
 }
+
+// == Component ===================================================================
 export const ColorPickerTool: React.FC<Props> = ({ colors = textColors, name, onChange, value }) => {
-  // == State ====================================================================
+  // -- State ---------------------------------------------------------------------
   const { commitChange, localValue, resetLocalValue, updateLocalValue } = useLocalValue(value, onChange);
 
-  // == Handler ===================================================================
+  // -- Handler ---------------------------------------------------------------------
   const handleColorPickerChange = (color: Color) => {
     const value = color.hexCode;
     updateLocalValue(value);
@@ -49,7 +52,7 @@ export const ColorPickerTool: React.FC<Props> = ({ colors = textColors, name, on
     } /* else -- ignore */
   };
 
-  // == UI ========================================================================
+  // -- UI ------------------------------------------------------------------------
   return (
     <InputToolItemContainer
       name={name}

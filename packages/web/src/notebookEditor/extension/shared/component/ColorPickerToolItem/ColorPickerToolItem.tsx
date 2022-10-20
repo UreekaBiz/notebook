@@ -8,6 +8,7 @@ import { ColorPickerTool } from './ColorPickerTool';
 
 // ********************************************************************************
 // == Node ========================================================================
+// -- Interface -------------------------------------------------------------------
 interface ColorPickerNodeToolItemProps extends EditorToolComponentProps {
   nodeName: NodeName;
 
@@ -17,6 +18,8 @@ interface ColorPickerNodeToolItemProps extends EditorToolComponentProps {
   /** the name of the ToolItem */
   name: string;
 }
+
+// -- Component -------------------------------------------------------------------
 export const ColorPickerNodeToolItem: React.FC<ColorPickerNodeToolItemProps> = ({ editor, attributeType, depth, name, nodeName }) => {
   const { state } = editor;
   const { selection } = state;
@@ -26,7 +29,7 @@ export const ColorPickerNodeToolItem: React.FC<ColorPickerNodeToolItemProps> = (
 
   const value = node.attrs[attributeType] ?? '' /*default*/;
 
-  // -- Handler -------------------------------------------------------------------
+  // .. Handler ...................................................................
   const handleChange = (value: string, focus?: boolean) => {
     const nodeSelection = isNodeSelection(selection);
     const updatePos = nodeSelection
@@ -42,7 +45,7 @@ export const ColorPickerNodeToolItem: React.FC<ColorPickerNodeToolItemProps> = (
     if(focus) editor.view.focus();
   };
 
-  // -- UI ------------------------------------------------------------------------
+  // .. UI ...................................................................
   // NOTE: Not using InputToolItemContainer at this level since ColorPickerTool
   //       requires to have access to the UnitPicker which will be the right side
   //       content of the InputToolItemContainer.
@@ -50,6 +53,7 @@ export const ColorPickerNodeToolItem: React.FC<ColorPickerNodeToolItemProps> = (
 };
 
 // == Mark ========================================================================
+// -- Interface -------------------------------------------------------------------
 interface ColorPickerMarkToolItemProps extends EditorToolComponentProps {
   markName: MarkName;
 
@@ -59,12 +63,14 @@ interface ColorPickerMarkToolItemProps extends EditorToolComponentProps {
   /** the name of the ToolItem */
   name: string;
 }
+
+// -- Component -------------------------------------------------------------------
 export const ColorPickerMarkToolItem: React.FC<ColorPickerMarkToolItemProps> = ({ editor, attributeType, markName, name }) => {
   const domRenderValue = getTextDOMRenderedValue(editor, attributeType, markName);
   // get a valid render value for the input
   const inputValue = String((domRenderValue === InvalidMergedAttributeValue ? '' : domRenderValue) ?? '');
 
-  // -- Handler -------------------------------------------------------------------
+  // .. Handler ...................................................................
   const handleChange = (value: string, focus?: boolean) => {
     setMarkCommand(markName, { [attributeType]: value })(editor.state, editor.view.dispatch);
 
@@ -73,7 +79,7 @@ export const ColorPickerMarkToolItem: React.FC<ColorPickerMarkToolItemProps> = (
     if(focus) editor.view.focus();
   };
 
-  // -- UI ------------------------------------------------------------------------
+  // .. UI ...................................................................
   // NOTE: Not using InputToolItemContainer at this level since ColorPickerTool
   //       requires to have access to the ColorPickerMenu which will be the right
   //       side content of the InputToolItemContainer.
