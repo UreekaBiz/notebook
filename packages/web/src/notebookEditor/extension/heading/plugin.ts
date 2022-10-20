@@ -1,7 +1,7 @@
 import { Plugin } from 'prosemirror-state';
 import { EditorView } from 'prosemirror-view';
 
-import { getParagraphNodeType, getSelectedNode, generateNodeId, isHeadingNode, AttributeType, HeadingAttributes } from '@ureeka-notebook/web-service';
+import { createMarkHolderNode, generateNodeId, getParagraphNodeType, getSelectedNode, isHeadingNode, isTextNode, stringifyMarksArray, AttributeType, HeadingAttributes } from '@ureeka-notebook/web-service';
 
 // ********************************************************************************
 export const headingPlugin = () => new Plugin({
@@ -25,20 +25,34 @@ export const headingPlugin = () => new Plugin({
         // check whether the selection is at the end of the content, if so a
         // paragraph node must be created and the marks must be deleted.
         const parentPos = selection.anchor - selection.$anchor.parentOffset;
+
+        const isAtStart = selection.anchor === parentPos/*inside the parent*/,
+              startPos = selection.anchor/*before modifications*/;
+
         const isAtEnd = selection.anchor === parentPos + node.nodeSize - 2/*end of parent + end of node*/;
 
         // Split the node from the current selection and append the attributes.
         tr.deleteRange(selection.from, selection.to)/*delete the content if is a range selection*/;
 
-        if(isAtEnd) {
+        if(isAtEnd){
           tr.removeMark(selection.from, selection.to, null/*all marks*/)/*remove marks*/
             .split(selection.from, 1, [{ type: getParagraphNodeType(state.schema) }])/*split and insert paragraph node*/;
-        } else {
-          const newAttrs: HeadingAttributes = { ...node.attrs, [AttributeType.Id]: generateNodeId() };
-          tr.split(selection.from, 1, [{ type: node.type, attrs: newAttrs }])/*split node and insert new heading*/;
-        }
-        dispatch(tr);
+          dispatch(tr);
+          return true/*event handled*/;
+        } /* else -- create Heading below */
 
+        const newAttrs: HeadingAttributes = { ...node.attrs, [AttributeType.Id]: generateNodeId() };
+        tr.split(selection.from, 1/*single depth*/, [{ type: node.type, attrs: newAttrs }])/*split node and insert new heading*/;
+
+        // if at start and split Heading firstChild is a TextNode that had Marks, add MarkHolder with those Marks
+        if(isAtStart){
+          const { firstChild } = node;
+          if(firstChild && isTextNode(firstChild) && firstChild.marks.length > 0) {
+            tr.insert(startPos, createMarkHolderNode(view.state.schema, { storedMarks: stringifyMarksArray(firstChild.marks) }));
+          } /* else -- firstChild is not a Text Node with Marks, do not add MarkHolder */
+        } /* else -- no need to add MarkHolder */
+
+        dispatch(tr);
         return true/*event handled*/;
       } /* else -- key is not handled */
 
