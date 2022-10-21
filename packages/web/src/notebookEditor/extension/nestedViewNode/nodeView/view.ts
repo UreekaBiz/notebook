@@ -1,7 +1,7 @@
 import { Editor } from '@tiptap/core';
 import { EditorView } from 'prosemirror-view';
 
-import { getNestedViewNodeTextString, getPosType, isEditableInlineNodeWithContentNode, NestedViewNodeType, DATA_NODE_TYPE, NESTED_VIEW_NODE_EMPTY_NODE_CLASS, NESTED_NODE_VIEW_INNER_VIEW_DISPLAY_CONTAINER_CLASS, NESTED_NODE_VIEW_RENDER_DISPLAY_CONTAINER_CLASS } from '@ureeka-notebook/web-service';
+import { getNestedViewNodeTextString, getPosType, NestedViewNodeType, DATA_NODE_TYPE, NESTED_VIEW_NODE_EMPTY_NODE_CLASS, NESTED_NODE_VIEW_INNER_VIEW_DISPLAY_CONTAINER_CLASS, NESTED_NODE_VIEW_RENDER_DISPLAY_CONTAINER_CLASS } from '@ureeka-notebook/web-service';
 
 import { AbstractNodeView } from 'notebookEditor/model/AbstractNodeView';
 
@@ -46,7 +46,7 @@ export abstract class AbstractNestedViewNodeView<NodeType extends NestedViewNode
   // -- Creation ------------------------------------------------------------------
   // create the DOM element that will hold this Node
   protected createDomElement() {
-    const dom = isEditableInlineNodeWithContentNode(this.node)
+    const dom = this.node.isInline
       ? document.createElement('span')
       : document.createElement('div');
 
