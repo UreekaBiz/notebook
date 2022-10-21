@@ -1,10 +1,10 @@
 import { MdCheckBoxOutlineBlank } from 'react-icons/md';
 
-import {  isNodeSelection, NodeName } from '@ureeka-notebook/web-service';
+import { generateNodeId, getEditableInlineNodeWithContentNodeType, isNodeSelection, AttributeType, NodeName } from '@ureeka-notebook/web-service';
 
 import { Toolbar, ToolItem } from 'notebookEditor/sidebar/toolbar/type';
 
-import { insertAndSelectEditableInlineNodeWithContent } from './util';
+import { insertAndSelectNestedViewNode } from '../util';
 
 //*********************************************************************************
 // == Tool Items ==================================================================
@@ -24,7 +24,7 @@ export const editableInlineNodeWithContentToolItem: ToolItem = {
   },
   shouldShow: (editor, depth) => depth === undefined || editor.state.selection.$anchor.depth === depth/*direct parent*/,
 
-  onClick: (editor, depth) => insertAndSelectEditableInlineNodeWithContent(editor, depth, 'toolItem'),
+  onClick: (editor, depth) => insertAndSelectNestedViewNode(editor, depth, getEditableInlineNodeWithContentNodeType(editor.schema), { [AttributeType.Id]: generateNodeId }, 'toolItem'),
   isActive: (editor) => editor.isActive(NodeName.EDITABLE_INLINE_NODE_WITH_CONTENT),
 };
 

@@ -1,13 +1,13 @@
 import { Node } from '@tiptap/core';
 
-import { getNodeOutputSpec, isNestedViewBlockNode, AttributeType, NestedViewBlockNodeSpec, NodeName, DATA_NODE_TYPE } from '@ureeka-notebook/web-service';
+import { generateNodeId, getNodeOutputSpec, isNestedViewBlockNode, AttributeType, NestedViewBlockNodeSpec, NodeName, DATA_NODE_TYPE } from '@ureeka-notebook/web-service';
 
 import { NodeViewStorage } from 'notebookEditor/model/NodeViewStorage';
 import { NoOptions } from 'notebookEditor/model/type';
 
 import { uniqueIdParsingBehavior } from '../../util/attribute';
+import { insertAndSelectNestedViewNode } from '../util';
 import { NestedViewBlockNodeController, NestedViewBlockNodeStorageType } from './nodeView/controller';
-import { insertAndSelectNestedViewBlockNode } from './util';
 
 // ********************************************************************************
 // == Node ========================================================================
@@ -25,8 +25,8 @@ export const NestedViewBlockNode = Node.create<NoOptions, NestedViewBlockNodeSto
   // -- Keyboard Shortcut ---------------------------------------------------------
   addKeyboardShortcuts() {
     return {
-      'Mod-Alt-e': () => insertAndSelectNestedViewBlockNode(this.editor, this.editor.state.selection.$anchor.depth, 'keyboardShortcut'),
-      'Mod-Alt-E': () => insertAndSelectNestedViewBlockNode(this.editor, this.editor.state.selection.$anchor.depth, 'keyboardShortcut'),
+      'Mod-Alt-e': () => insertAndSelectNestedViewNode(this.editor, this.editor.state.selection.$anchor.depth, this.type, { [AttributeType.Id]: generateNodeId() }, 'keyboardShortcut'),
+      'Mod-Alt-E': () => insertAndSelectNestedViewNode(this.editor, this.editor.state.selection.$anchor.depth, this.type, { [AttributeType.Id]: generateNodeId() }, 'keyboardShortcut'),
     };
   },
 
