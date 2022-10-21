@@ -85,6 +85,7 @@ export {
   DEFAULT_DEMO_ASYNC_NODE_TEXT,
 
   createEditableInlineNodeWithContent,
+  getEditableInlineNodeWithContentNodeType,
   EditableInlineNodeWithContentAttributes,
 
   HeadingLevel,
@@ -255,6 +256,7 @@ export {
 
   NestedViewBlockNodeType,
   NestedViewBlockNodeSpec,
+  getNestedViewBlockNodeType,
   isNestedViewBlockNode,
 
   getOrderedListNodeType,
@@ -409,6 +411,7 @@ export {
   contentToNode,
   contentToJSONNode,
   nodeToContent,
+  ProseMirrorNodeContent,
 
   // == Theme =====================================================================
   Theme,

@@ -155,19 +155,19 @@ export abstract class AbstractNestedNodeViewNodeController<NodeType extends Nest
           {
             'ArrowUp': () => {
               if(!this.nodeView.innerView) return false/*no inner View*/;
-              return nestedViewNodeBehaviorCommand(this.nodeView.outerView, this.node.type.name, 'before'/*place cursor before the Node*/, this.nodeView.innerView.endOfTextblock('up'))(this.nodeView.innerView.state, this.nodeView.innerView.dispatch);
+              return nestedViewNodeBehaviorCommand(this.nodeView.outerView, this.node.type, 'before'/*place cursor before the Node*/, this.nodeView.innerView.endOfTextblock('up'))(this.nodeView.innerView.state, this.nodeView.innerView.dispatch);
             },
             'ArrowRight': () => {
               if(!this.nodeView.innerView) return false/*no inner View*/;
-              return nestedViewNodeBehaviorCommand(this.nodeView.outerView, this.node.type.name, 'after'/*place cursor after the Node*/, this.nodeView.innerView.endOfTextblock('right'))(this.nodeView.innerView.state, this.nodeView.innerView.dispatch);
+              return nestedViewNodeBehaviorCommand(this.nodeView.outerView, this.node.type, 'after'/*place cursor after the Node*/, this.nodeView.innerView.endOfTextblock('right'))(this.nodeView.innerView.state, this.nodeView.innerView.dispatch);
             },
             'ArrowDown': () => {
               if(!this.nodeView.innerView) return false/*no inner View*/;
-              return nestedViewNodeBehaviorCommand(this.nodeView.outerView, this.node.type.name, 'after'/*place cursor before the Node*/, this.nodeView.innerView.endOfTextblock('down'))(this.nodeView.innerView.state, this.nodeView.innerView.dispatch);
+              return nestedViewNodeBehaviorCommand(this.nodeView.outerView, this.node.type, 'after'/*place cursor before the Node*/, this.nodeView.innerView.endOfTextblock('down'))(this.nodeView.innerView.state, this.nodeView.innerView.dispatch);
             },
             'ArrowLeft': () => {
               if(!this.nodeView.innerView) return false/*no inner View*/;
-              return nestedViewNodeBehaviorCommand(this.nodeView.outerView, this.node.type.name, 'before'/*place cursor before the Node*/, this.nodeView.innerView.endOfTextblock('left'))(this.nodeView.innerView.state, this.nodeView.innerView.dispatch);
+              return nestedViewNodeBehaviorCommand(this.nodeView.outerView, this.node.type, 'before'/*place cursor before the Node*/, this.nodeView.innerView.endOfTextblock('left'))(this.nodeView.innerView.state, this.nodeView.innerView.dispatch);
             },
             'Backspace': (state: EditorState, dispatch: ((tr: Transaction) => void) | undefined) => {
               if(!dispatch) return false/*nothing to do*/;
@@ -194,8 +194,8 @@ export abstract class AbstractNestedNodeViewNodeController<NodeType extends Nest
               return true/*handled*/;
             },
 
-            'Shift-Enter': nestedViewNodeBehaviorCommand(this.nodeView.outerView, this.node.type.name, 'after'/*place cursor after the Node*/, true/*meant to leave the inner View*/),
-            'Enter': chainCommands(newlineInCode, nestedViewNodeBehaviorCommand(this.nodeView.outerView, this.node.type.name, 'after'/*place cursor after the Node*/, true/*meant to leave the inner View*/)),
+            'Shift-Enter': nestedViewNodeBehaviorCommand(this.nodeView.outerView, this.node.type, 'after'/*place cursor after the Node*/, true/*meant to leave the inner View*/),
+            'Enter': chainCommands(newlineInCode, nestedViewNodeBehaviorCommand(this.nodeView.outerView, this.node.type, 'after'/*place cursor after the Node*/, true/*meant to leave the inner View*/)),
 
             // bind undo and redo to the outer View, since Transactions in the inner View
             // ensure that the outer one reflects them appropriately
@@ -289,6 +289,7 @@ const selectAllInsideNestedView = (state: EditorState, dispatch: ((tr: Transacti
 
   const { tr } = state;
   const { parentStart, parentEnd } = computeInnerViewSelection(state);
+
   if(tr.selection.from === parentStart && tr.selection.to === parentEnd) return false/*already selected all inside this NestedViewNode*/;
 
   tr.setSelection(TextSelection.create(tr.doc, parentStart, parentEnd));

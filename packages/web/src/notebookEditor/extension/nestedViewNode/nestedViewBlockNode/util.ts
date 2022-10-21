@@ -1,6 +1,6 @@
 import { Editor } from '@tiptap/core';
 
-import { generateNodeId, AttributeType, NodeName, SelectionDepth } from '@ureeka-notebook/web-service';
+import { getNestedViewBlockNodeType, generateNodeId, AttributeType, NodeName, SelectionDepth } from '@ureeka-notebook/web-service';
 
 import { shortcutCommandWrapper, toolItemCommandWrapper } from 'notebookEditor/command/util';
 import { getNodeViewStorage } from 'notebookEditor/model/NodeViewStorage';
@@ -18,9 +18,9 @@ export const insertAndSelectNestedViewBlockNode = (editor: Editor, depth: Select
   const id = generateNodeId();
 
   if(from === 'keyboardShortcut') {
-    result = shortcutCommandWrapper(editor, insertNestedViewNodeCommand(NodeName.NESTED_VIEW_BLOCK_NODE, { [AttributeType.Id]: id }));
+    result = shortcutCommandWrapper(editor, insertNestedViewNodeCommand(getNestedViewBlockNodeType(editor.schema), { [AttributeType.Id]: id }));
   } else {
-    result = toolItemCommandWrapper(editor, depth, insertNestedViewNodeCommand(NodeName.NESTED_VIEW_BLOCK_NODE, { [AttributeType.Id]: id }));
+    result = toolItemCommandWrapper(editor, depth, insertNestedViewNodeCommand(getNestedViewBlockNodeType(editor.schema), { [AttributeType.Id]: id }));
   }
 
   // using a timeout so that the View gets focused until its already been created
