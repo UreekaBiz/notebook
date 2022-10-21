@@ -101,7 +101,7 @@ export abstract class AbstractNestedNodeViewNodeController<NodeType extends Nest
     // do the default behavior
     super.updateProps(getPos);
 
-    // ensure the contents of the reused EINwC are rendered correctly
+    // ensure the contents of the reused NVN are rendered correctly
     this.nodeView.setupView();
     this.nodeView.renderNodeContent();
   }
@@ -109,7 +109,7 @@ export abstract class AbstractNestedNodeViewNodeController<NodeType extends Nest
   // .. Destroy ...................................................................
   // called when the NodeView is destroyed. The conditions that trigger this are
   // determined by ProseMirror (e.g. splitting a Paragraph that contains an
-  // EINwC will trigger the destroy). The View must account for this possibility
+  // NVN will trigger the destroy). The View must account for this possibility
   // (SEE: #setupView, #renderNodeContent)
   public destroy() {
     // do the default behavior
