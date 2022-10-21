@@ -29,7 +29,6 @@ import { Link } from 'notebookEditor/extension/link/Link';
 import { MarkHolder } from 'notebookEditor/extension/markHolder/MarkHolder';
 import { NestedViewBlockNode } from 'notebookEditor/extension/nestedViewNode/nestedViewBlockNode/NestedViewBlockNode';
 import { NestedViewNode } from 'notebookEditor/extension/nestedViewNode/NestedViewNode';
-import { NodeViewRemoval } from 'notebookEditor/extension/nodeViewRemoval/NodeViewRemoval';
 import { OrderedList } from 'notebookEditor/extension/list/orderedList/OrderedList';
 import { Paragraph } from 'notebookEditor/extension/paragraph/Paragraph';
 import { ReplacedTextMark } from 'notebookEditor/extension/replacedTextMark/ReplacedTextMark';
@@ -81,7 +80,6 @@ export const editorDefinition = {
     MarkHolder,
     NestedViewBlockNode,
     NestedViewNode,
-    NodeViewRemoval,
     OrderedList,
     Paragraph,
     ReplacedTextMark,
@@ -108,61 +106,57 @@ export const editorDefinition = {
  * (SEE: notebookEditor/model/type/ExtensionPriority)
  * appendedTransaction
  * 1. Keymap
- * 2. NodeViewRemoval
- * 3. Paragraph
- * 4. Link
- * 5. AsyncNode
- * 6. EmojiSuggestion
- * 7. ListItemContent
- * 8. ListItem
- * 9. TaskListItem
- * 10. InputRule
- * 11. Blockquote
- * 12. Text
- * 13. all other extensions (in registration order, (SEE: Extension array above))
+ * 2. Paragraph
+ * 3. Link
+ * 4. AsyncNode
+ * 5. EmojiSuggestion
+ * 6. ListItemContent
+ * 7. ListItem
+ * 8. TaskListItem
+ * 9. InputRule
+ * 10. Blockquote
+ * 11. Text
+ * 12. all other extensions (in registration order, (SEE: Extension array above))
  *
  * onTransaction
  * 1. Keymap
- * 2. NodeViewRemoval
- * 3. Paragraph
- * 4. Link
- * 5. AsyncNode
- * 6. EmojiSuggestion
- * 7. ListItemContent
- * 8. ListItem
- * 9. TaskListItem
- * 10. InputRule
- * 11. Blockquote
- * 12. Text
- * 13. all other extensions (in registration order, (SEE: Extension array above))
+ * 2. Paragraph
+ * 3. Link
+ * 4. AsyncNode
+ * 5. EmojiSuggestion
+ * 6. ListItemContent
+ * 7. ListItem
+ * 8. TaskListItem
+ * 9. InputRule
+ * 10. Blockquote
+ * 11. Text
+ * 12. all other extensions (in registration order, (SEE: Extension array above))
  *
  * onSelectionUpdate
  * 1. Keymap
- * 2. NodeViewRemoval
- * 3. Paragraph
- * 4. Link
- * 5. AsyncNode
- * 6. EmojiSuggestion
- * 7. ListItemContent
- * 8. ListItem
- * 9. TaskListItem
- * 10. InputRule
- * 11. Blockquote
- * 12. Text
- * 13. all other extensions (in registration order, (SEE: Extension array above))
+ * 2. Paragraph
+ * 3. Link
+ * 4. AsyncNode
+ * 5. EmojiSuggestion
+ * 6. ListItemContent
+ * 7. ListItem
+ * 8. TaskListItem
+ * 9. InputRule
+ * 10. Blockquote
+ * 11. Text
+ * 12. all other extensions (in registration order, (SEE: Extension array above))
  *
  * onUpdate
  * 1. Keymap
- * 2. NodeViewRemoval
- * 3. Paragraph
- * 4. Link
- * 5. AsyncNode
- * 6. EmojiSuggestion
- * 7. ListItemContent
- * 8. ListItem
- * 9. TaskListItem
- * 10. InputRule
- * 11. Blockquote
- * 12. Text
- * 13. all other extensions (in registration order, (SEE: Extension array above))
+ * 2. Paragraph
+ * 3. Link
+ * 4. AsyncNode
+ * 5. EmojiSuggestion
+ * 6. ListItemContent
+ * 7. ListItem
+ * 8. TaskListItem
+ * 9. InputRule
+ * 10. Blockquote
+ * 11. Text
+ * 12. all other extensions (in registration order, (SEE: Extension array above))
  */

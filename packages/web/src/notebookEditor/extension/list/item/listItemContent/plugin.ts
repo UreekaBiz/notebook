@@ -34,7 +34,6 @@ export const listItemContentPlugin = () => {
       //       early since, its main concern to check whether a ListItemContent Node
       //       has the Document as its parent, where the replacement of Nodes that
       //       can lead to the situation happens across several stepMapIndexes
-      //       (SEE: NodeViewRemoval.ts for more details)
       for(let i=0; i<transactions.length; i++) {
         const { maps } = transactions[i].mapping;
 
