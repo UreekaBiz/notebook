@@ -39,8 +39,10 @@ export const linkClick = (): Plugin => {
 
         // CHECK: Do we want the user to specify the target? This is only used for
         //        the editor itself, maybe the target should always be _blank?
-        // open te link in the target specified by the link.
-        window.open(sanitizeLinkInput(attrs[AttributeType.Href]), attrs[AttributeType.Target]);
+        // open the Link in the target specified by the Link.
+        try { window.open(sanitizeLinkInput(attrs[AttributeType.Href]), attrs[AttributeType.Target]); }
+        catch(error) { console.warn(`Could not open link: ${error}`); }
+
         return true;
       },
 
