@@ -1,7 +1,7 @@
 import { Editor } from '@tiptap/core';
 import { EditorView } from 'prosemirror-view';
 
-import { getNestedViewNodeTextString, getPosType, isEditableInlineNodeWithContentNode, NestedViewNodeType, DATA_NODE_TYPE, NESTED_VIEW_NODE_EMPTY_NODE_CLASS, NESTED_NODE_VIEW_INNER_VIEW_DISPLAY_CONTAINER_CLASS, NESTED_NODE_VIEW_RENDER_DISPLAY_CONTAINER_CLASS } from '@ureeka-notebook/web-service';
+import { getPosType, isEditableInlineNodeWithContentNode, NestedViewNodeType, DATA_NODE_TYPE, NESTED_NODE_VIEW_INNER_VIEW_DISPLAY_CONTAINER_CLASS, NESTED_NODE_VIEW_RENDER_DISPLAY_CONTAINER_CLASS } from '@ureeka-notebook/web-service';
 
 import { AbstractNodeView } from 'notebookEditor/model/AbstractNodeView';
 
@@ -102,27 +102,5 @@ export abstract class AbstractNestedViewNodeView<NodeType extends NestedViewNode
   // showing the inner View. This can vary per implementation
   // and its meant to provide another representation of the Node's content when
   // the inner View is not active
-	public renderNodeContent() {
-		if(!this.renderDisplayContainer) return/*not set yet, nothing to do*/;
-
-		// get text string to render
-    const textString = getNestedViewNodeTextString(this.node);
-		if(textString.length < 1) {
-			this.dom.classList.add(NESTED_VIEW_NODE_EMPTY_NODE_CLASS);
-
-			// clear rendered DOM Nodes, since this Node is in an invalid state
-			while(this.renderDisplayContainer.firstChild){
-        this.renderDisplayContainer.firstChild.remove();
-      }
-      return/*nothing left to do*/;
-		} /* else -- not empty */
-
-    this.dom.classList.remove(NESTED_VIEW_NODE_EMPTY_NODE_CLASS);
-
-    // show the default representation of the content of this Node
-    this.renderDisplayContainer.firstChild?.remove();
-    const newRenderDisplayChild = document.createElement('span');
-          newRenderDisplayChild.innerHTML = `Length: ${textString.length}`;
-    this.renderDisplayContainer.appendChild(newRenderDisplayChild);
-  }
+	public abstract renderNodeContent(): void;
 }
