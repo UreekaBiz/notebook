@@ -45,7 +45,9 @@ export const PreviewPublishedNotebookToolItem: React.FC<Props> = ({ editor }) =>
 
       const { $from, from } = selection;
       const parentTextContent = doc.textBetween(from - $from.parentOffset, from);
+
       const matchedNodes = getHTMLNodesWithMatchingContent(notebookViewer, $from.parent.type.name, parentTextContent, [/*initially empty*/]);
+      if(!(matchedNodes.length > 0)) return/*no matched nodes, nothing to do*/;
 
       // focus the matched Node that is closest to the currentPos in the View's
       // DOM, so that if several Nodes have the same Text, the
