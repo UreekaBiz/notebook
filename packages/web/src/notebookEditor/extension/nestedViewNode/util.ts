@@ -7,7 +7,7 @@ import { shortcutCommandWrapper, toolItemCommandWrapper } from 'notebookEditor/c
 import { getNodeViewStorage } from 'notebookEditor/model/NodeViewStorage';
 
 import { insertNestedViewNodeCommand } from './command';
-import { NestedViewBlockNodeStorageType } from './nestedViewBlockNode/nodeView/controller';
+import { AbstractNestedNodeViewNodeStorageType } from './nodeView/controller';
 
 // ********************************************************************************
 // inserts a NestedViewNode.
@@ -25,7 +25,7 @@ export const insertAndSelectNestedViewNode = (editor: Editor, depth: SelectionDe
 
   // using a timeout so that the View gets focused until its already been created
   setTimeout(() => {
-    const storage = getNodeViewStorage<NestedViewBlockNodeStorageType>(editor, type.name as NodeName/*by definition*/);
+    const storage = getNodeViewStorage<AbstractNestedNodeViewNodeStorageType>(editor, type.name as NodeName/*by definition*/);
     storage.getNodeView(id)?.nodeView.ensureFocus();
   }/*after rendering*/);
 
