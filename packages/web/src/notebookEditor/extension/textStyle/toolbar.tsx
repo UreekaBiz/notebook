@@ -2,6 +2,7 @@ import { AttributeType, MarkName } from '@ureeka-notebook/service-common';
 
 import { InputWithUnitMarkToolItem } from 'notebookEditor/extension/shared/component/InputWithUnitToolItem';
 import { SpacingToolItem } from 'notebookEditor/extension/shared/component/SpacingToolItem';
+import { shouldShowToolItem } from 'notebookEditor/shared/toolItem';
 import { ToolItem } from 'notebookEditor/sidebar/toolbar/type';
 import { GoogleDocsColorPickerMarkToolItem } from '../shared/component/GoogleDocsColorPickerToolItem';
 
@@ -32,6 +33,8 @@ export const textColorToolItem: ToolItem = {
       markName={MarkName.TEXT_STYLE}
       attributeType={AttributeType.Color}
     />,
+
+  shouldShow: (editor, depth) => shouldShowToolItem(editor, depth),
 };
 
 export const backgroundColorToolItem: ToolItem = {
@@ -45,6 +48,8 @@ export const backgroundColorToolItem: ToolItem = {
       markName={MarkName.TEXT_STYLE}
       attributeType={AttributeType.BackgroundColor}
     />,
+
+  shouldShow: (editor, depth) => shouldShowToolItem(editor, depth),
 };
 
 export const spacingToolItem: ToolItem = {
