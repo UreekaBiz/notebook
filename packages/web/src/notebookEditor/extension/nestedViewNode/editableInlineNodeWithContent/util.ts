@@ -9,7 +9,7 @@ import { insertNestedViewNodeCommand } from '../command';
 import { EditableInlineNodeWithContentStorageType } from './nodeView/controller';
 
 // ********************************************************************************
-// inserts an EIwC and sets the TextSelection inside of it. This is separated
+// inserts an EditableInlineNodeWithContent.
 // into an utility function since it has to reuse the logic for both
 // Keyboard Shortcuts and ToolItems, while being consistent with their behavior
 export const insertAndSelectEditableInlineNodeWithContent = (editor: Editor, depth: SelectionDepth, from: 'keyboardShortcut' | 'toolItem') => {

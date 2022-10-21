@@ -9,7 +9,7 @@ import { insertNestedViewNodeCommand } from '../command';
 import { NestedViewBlockNodeStorageType } from './nodeView/controller';
 
 // ********************************************************************************
-// inserts a NestedViewBlockNode and sets the TextSelection inside of it.
+// inserts a NestedViewBlockNode.
 // This is separated into an utility function since it has to reuse the logic
 // for both Keyboard Shortcuts and ToolItems, while being consistent
 // with their behavior
