@@ -9,8 +9,8 @@ import { Color } from 'notebookEditor/theme/type';
 const selectColorButtonProps: Partial<FlexProps> = {
   alignItems: 'flex-end',
   flexDirection: 'row-reverse',
-  width: 8,
-  height: 8,
+  width: 6,
+  height: 6,
   borderRadius: 100,
   border: '1px solid #CCC',
   _focus: { boxShadow: 'none' },
@@ -61,10 +61,16 @@ export const GoogleDocsColorPickerMenu: React.FC<Props> = ({ colors, closeOnSele
 
   // -- UI ------------------------------------------------------------------------
   return (
-    <Popover placement='bottom' isOpen={isOpen}>
+    <Popover placement='bottom-start' isOpen={isOpen}>
       <PopoverTrigger>
         <Box onClick={toggleIsOpen} onMouseDown={handlePopoverMouseDown}>
-          <Box backgroundColor={value} _hover={{ cursor: 'pointer', backgroundColor: value }} {...selectColorButtonProps} />
+          <Box
+            backgroundColor={value}
+            _hover={{ cursor: 'pointer', backgroundColor: value }}
+            {...selectColorButtonProps}
+            width={8}
+            height={8}
+          />
         </Box>
       </PopoverTrigger>
 
@@ -72,17 +78,17 @@ export const GoogleDocsColorPickerMenu: React.FC<Props> = ({ colors, closeOnSele
         <PopoverContent onMouseDown={handlePopoverMouseDown} _focus={{ boxShadow: 'none' }} width='fit-content'>
           <PopoverArrow />
           {colors.map((row, index) =>
-            <Flex key={index} gap={1} justifyContent='space-between'>
+            <Flex key={index}>
               {row.map(((color, index) =>
                 <Box
                   id={`${color.hexCode}-${index}`}
                   key={index}
-                  margin={1}
+                  margin={0.5}
                   backgroundColor={color.hexCode}
                   _hover={{ cursor: 'pointer', backgroundColor: color.hexCode }}
                   onClick={() => handleColorSelection(color)}
                   {...selectColorButtonProps}
-                  border={color.hexCode === selectedColor ? `2px solid ${FOCUS_COLOR}` : '1px solid #CCC'/*default*/}
+                  border={color.hexCode === selectedColor ? `2px solid ${FOCUS_COLOR}` : color.showBorder ? '1px solid #CCC'/*default*/ : ''/*none*/}
                 />
               ))}
             </Flex>

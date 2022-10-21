@@ -1,6 +1,15 @@
 // ********************************************************************************
 // == Color =======================================================================
-export type Color = { name: string; hexCode: string; hslCode: string; key?: string; };
+export type Color = {
+  name: string;
+  hexCode: string;
+  hslCode: string;
+  key?: string;
+
+  // indicate that, since this color is close to white, a border should be shown
+  // around it so that it is distinguishable
+  showBorder?: true;
+};
 export const colorToHexColor = (color: string): string => '#'.concat(color);
 export const removeColorAddon = (color: string): string => color.replace(/^#/, '');
 
@@ -15,10 +24,10 @@ export const googleDocsColors: Color[][] = [
     { name: 'dark grey 2', hexCode: '#999999', hslCode: '0, 0%, 60%', key: '' },
     { name: 'dark grey 1', hexCode: '#B7B7B7', hslCode: '0, 0%, 72%', key: '' },
     { name: 'grey', hexCode: '#CCCCCC', hslCode: '0, 0%, 80%', key: '' },
-    { name: 'light grey', hexCode: '#D9D9D9', hslCode: '0, 0%, 85%', key: '' },
-    { name: 'light grey 2', hexCode: '#EFEFEF', hslCode: '0, 0%, 94%', key: '' },
-    { name: 'light grey 3', hexCode: '#F3F3F3', hslCode: '0, 0%, 95%', key: '' },
-    { name: 'white', hexCode: '#FFFFFF', hslCode: '0, 0%, 100%', key: '' },
+    { name: 'light grey 1', hexCode: '#D9D9D9', hslCode: '0, 0%, 85%', key: '', showBorder: true },
+    { name: 'light grey 2', hexCode: '#EFEFEF', hslCode: '0, 0%, 94%', key: '', showBorder: true },
+    { name: 'light grey 3', hexCode: '#F3F3F3', hslCode: '0, 0%, 95%', key: '', showBorder: true },
+    { name: 'white', hexCode: '#FFFFFF', hslCode: '0, 0%, 100%', key: '', showBorder: true },
   ],
   [
     { name: 'red berry', hexCode: '#980000', hslCode: '0, 100%, 30%', key: '' },
@@ -35,14 +44,14 @@ export const googleDocsColors: Color[][] = [
   [
     { name: 'light red berry 3', hexCode: '#E6B8AF', hslCode: '10, 52%, 79%', key: '' },
     { name: 'light red 3', hexCode: '#F4CCCC', hslCode: '0, 65%, 88%', key: '' },
-    { name: 'light orange 3', hexCode: '#FCE5CD', hslCode: '31, 89%, 90%', key: '' },
-    { name: 'light yellow 3', hexCode: '#FFF2CC', hslCode: '45, 100%, 90%', key: '' },
-    { name: 'light green 3', hexCode: '#D9EAD3', hslCode: '104, 35%, 87%', key: '' },
-    { name: 'light cyan 3', hexCode: '#D0E0E3', hslCode: '189, 25%, 85%', key: '' },
-    { name: 'light cornflower blue 3', hexCode: '#C9DAF8', hslCode: '218, 77%, 88%', key: '' },
-    { name: 'light blue 3', hexCode: '#CFE2F3', hslCode: '208, 60%, 88%', key: '' },
-    { name: 'light purple 3', hexCode: '#D9D2E9', hslCode: '268, 34%, 87%', key: '' },
-    { name: 'light magenta 3', hexCode: '#EAD1DC', hslCode: '334, 37%, 87%', key: '' },
+    { name: 'light orange 3', hexCode: '#FCE5CD', hslCode: '31, 89%, 90%', key: '', showBorder: true },
+    { name: 'light yellow 3', hexCode: '#FFF2CC', hslCode: '45, 100%, 90%', key: '', showBorder: true },
+    { name: 'light green 3', hexCode: '#D9EAD3', hslCode: '104, 35%, 87%', key: '', showBorder: true },
+    { name: 'light cyan 3', hexCode: '#D0E0E3', hslCode: '189, 25%, 85%', key: '', showBorder: true },
+    { name: 'light cornflower blue 3', hexCode: '#C9DAF8', hslCode: '218, 77%, 88%', key: '', showBorder: true },
+    { name: 'light blue 3', hexCode: '#CFE2F3', hslCode: '208, 60%, 88%', key: '', showBorder: true },
+    { name: 'light purple 3', hexCode: '#D9D2E9', hslCode: '268, 34%, 87%', key: '', showBorder: true },
+    { name: 'light magenta 3', hexCode: '#EAD1DC', hslCode: '334, 37%, 87%', key: '', showBorder: true },
   ],
   [
     { name: 'light red berry 2', hexCode: '#DD7E6B', hslCode: '10, 63%, 64%', key: '' },
