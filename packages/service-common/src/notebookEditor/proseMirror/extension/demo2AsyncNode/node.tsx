@@ -24,13 +24,8 @@ export const Demo2AsyncNodeSpec: NodeSpec = {
   selectable: false/*cannot be set as NodeSelection*/,
 
   defining: true/*important parent node during replace operations, parent of content preserved on replace operations*/,
+  whitespace: 'pre'/*preserve newlines*/,
   allowGapCursor: true,
-
-  // NOTE: even though codeBlockAsyncNodes aren't meant to contain 'code',
-  //       this property in the spec makes PM handle enters as adding newlines
-  //       instead of splitting the node without the need to add a
-  //       custom plugin that handles the event or anything similar
-  code: true,
 
   attrs: Demo2AsyncNodeAttributeSpec,
 };

@@ -1,6 +1,6 @@
 import { textblockTypeInputRule, Node } from '@tiptap/core';
 
-import { generateNodeId, getNodeOutputSpec, isCodeBlockNode, selectBlockNodeContentCommand, AttributeType, CodeBlockNodeSpec, CodeBlockType, LeaveBlockNodeDocumentUpdate, NodeName, SetAttributeType, DATA_NODE_TYPE } from '@ureeka-notebook/web-service';
+import { generateNodeId, getNodeOutputSpec, isCodeBlockNode, insertNewlineCommand, selectBlockNodeContentCommand, AttributeType, CodeBlockNodeSpec, CodeBlockType, LeaveBlockNodeDocumentUpdate, NodeName, SetAttributeType, DATA_NODE_TYPE } from '@ureeka-notebook/web-service';
 
 import { applyDocumentUpdates } from 'notebookEditor/command/update';
 import { shortcutCommandWrapper } from 'notebookEditor/command/util';
@@ -19,6 +19,13 @@ const codeBlockRegEx = /```([a-z]+)?[\s\n]$/;
 // == Node ========================================================================
 export const CodeBlock = Node.create<NoOptions, CodeBlockStorage>({
   ...CodeBlockNodeSpec,
+
+  // REF: https://github.com/ueberdosis/tiptap/blob/8c6751f0c638effb22110b62b40a1632ea6867c9/packages/core/src/helpers/getSchemaByResolvedExtensions.ts
+  // NOTE: since TipTap is not adding the whitespace prop to the default
+  //       NodeSpec created by the editor (SEE: REF above), this call
+  //       has to be performed instead, so that all the attributes specified
+  //       in the CodeBlockNodeSpec get added correctly
+  extendNodeSchema: (extension) => ({ ...CodeBlockNodeSpec }),
 
   // -- Attribute -----------------------------------------------------------------
   addAttributes() {
@@ -57,6 +64,9 @@ export const CodeBlock = Node.create<NoOptions, CodeBlockStorage>({
       // set GapCursor if necessary
       'ArrowUp': () => shortcutCommandWrapper(this.editor, blockArrowUpCommand(NodeName.CODEBLOCK)),
       'ArrowDown': () => shortcutCommandWrapper(this.editor, blockArrowDownCommand(NodeName.CODEBLOCK)),
+
+      // insert a newline on Enter
+      'Enter': () => shortcutCommandWrapper(this.editor, insertNewlineCommand(NodeName.CODEBLOCK)),
 
       // exit Node on Shift-Enter
       'Shift-Enter': () => applyDocumentUpdates(this.editor, [new LeaveBlockNodeDocumentUpdate(NodeName.CODEBLOCK)]),

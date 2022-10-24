@@ -453,6 +453,8 @@ export {
   getNodesAffectedByTransaction,
   getNodesAffectedByStepMap,
   getNodesRemovedByTransaction,
+  insertNewlineCommand,
+  InsertNewlineDocumentUpdate,
   leaveBlockNodeCommand,
   LeaveBlockNodeDocumentUpdate,
   liftEmptyBlockNodeCommand,

@@ -23,8 +23,9 @@ export const CodeBlockNodeSpec: NodeSpec = {
 
   group: NodeGroup.BLOCK,
   selectable: false/*cannot be set as NodeSelection*/,
+
   defining: true/*important parent node during replace operations, parent of content preserved on replace operations*/,
-  code: true/*indicate that the block contains code, which causes some commands (e.g. enter) to behave differently*/,
+  whitespace: 'pre'/*preserve newlines*/,
   allowGapCursor: true,
 
   attrs: CodeBlockAttributesSpec,
@@ -37,9 +38,8 @@ const renderCodeBlockNodeView = (attributes: CodeBlockAttributes, content: strin
   const children = getReactNodeFromJSX(content);
   const renderAttributes = getRenderAttributes(NodeName.CODEBLOCK, { ...attributes, wrap: undefined/*FIXME: Types!*/ }, CodeBlockNodeRendererSpec, CodeBlockNodeSpec);
 
-  // parses the JSX into a static string that can be rendered.
-  return ReactDOMServer.renderToStaticMarkup(
-    <CodeBlockComponentJSX attrs={attributes} renderAttributes={renderAttributes} visualId={visualId}>{children}</CodeBlockComponentJSX>);
+  // parses the JSX into a static string that can be rendered
+  return ReactDOMServer.renderToStaticMarkup(<CodeBlockComponentJSX attrs={attributes} renderAttributes={renderAttributes} visualId={visualId}>{children}</CodeBlockComponentJSX>);
  };
 
 export const CodeBlockNodeRendererSpec: NodeRendererSpec<CodeBlockAttributes> = {

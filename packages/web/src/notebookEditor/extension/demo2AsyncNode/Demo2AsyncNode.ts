@@ -1,6 +1,6 @@
 import { Node } from '@tiptap/core';
 
-import { generateNodeId, getNodeOutputSpec, isDemo2AsyncNode, selectBlockNodeContentCommand, AttributeType, Demo2AsyncNodeSpec, LeaveBlockNodeDocumentUpdate, NodeName, SetAttributeType, DATA_NODE_TYPE, DEFAULT_DEMO_2_ASYNC_NODE_DELAY, DEFAULT_DEMO_2_ASYNC_NODE_STATUS } from '@ureeka-notebook/web-service';
+import { generateNodeId, getNodeOutputSpec, isDemo2AsyncNode, insertNewlineCommand, selectBlockNodeContentCommand, AttributeType, Demo2AsyncNodeSpec, LeaveBlockNodeDocumentUpdate, NodeName, SetAttributeType, DATA_NODE_TYPE, DEFAULT_DEMO_2_ASYNC_NODE_DELAY, DEFAULT_DEMO_2_ASYNC_NODE_STATUS } from '@ureeka-notebook/web-service';
 
 import { applyDocumentUpdates } from 'notebookEditor/command/update';
 import { shortcutCommandWrapper } from 'notebookEditor/command/util';
@@ -15,6 +15,13 @@ import { Demo2AsyncNodeController, Demo2AsyncNodeStorageType } from './nodeView/
 // == Node ========================================================================
 export const Demo2AsyncNode = Node.create<NoOptions, Demo2AsyncNodeStorageType>({
   ...Demo2AsyncNodeSpec,
+
+  // REF: https://github.com/ueberdosis/tiptap/blob/8c6751f0c638effb22110b62b40a1632ea6867c9/packages/core/src/helpers/getSchemaByResolvedExtensions.ts
+  // NOTE: since TipTap is not adding the whitespace prop to the default
+  //       NodeSpec created by the editor (SEE: REF above), this call
+  //       has to be performed instead, so that all the attributes specified
+  //       in the CodeBlockNodeSpec get added correctly
+  extendNodeSchema: (extension) => ({ ...Demo2AsyncNodeSpec }),
 
   // -- Attribute -----------------------------------------------------------------
   addAttributes() {
@@ -58,6 +65,9 @@ export const Demo2AsyncNode = Node.create<NoOptions, Demo2AsyncNodeStorageType>(
       // set GapCursor if necessary
       'ArrowUp': () => shortcutCommandWrapper(this.editor, blockArrowUpCommand(NodeName.DEMO_2_ASYNC_NODE)),
       'ArrowDown': () => shortcutCommandWrapper(this.editor, blockArrowDownCommand(NodeName.DEMO_2_ASYNC_NODE)),
+
+      // insert a newline on Enter
+      'Enter': () => shortcutCommandWrapper(this.editor, insertNewlineCommand(NodeName.DEMO_2_ASYNC_NODE)),
 
       // exit Node on Shift-Enter
       'Shift-Enter': () => applyDocumentUpdates(this.editor, [new LeaveBlockNodeDocumentUpdate(NodeName.DEMO_2_ASYNC_NODE)]),
