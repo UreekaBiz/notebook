@@ -26,8 +26,23 @@ export class CodeBlockController extends AbstractNodeController<CodeBlockNodeTyp
    * @see NodeView#ignoreMutation()
    * @see #updateVisualID()
    */
-  public ignoreMutation(mutation: MutationRecord | { type: 'selection'; target: Element; }) {
-    // ignore if modifying the ChildList, Attributes of the Nodes within this View
-    return (mutation.type === 'childList') || (mutation.type === 'attributes');
+   public ignoreMutation(mutation: MutationRecord | { type: 'selection'; target: Element; }) {
+    if((mutation.type === 'childList') || (mutation.type === 'attributes')) {
+      return true/*ignore mutation*/;
+    } /* else -- check mutation target*/
+
+    // REF: https://discuss.prosemirror.net/t/what-can-cause-a-nodeview-to-be-rebuilt/4959
+    // NOTE: this specifically addresses the CodeBlocks disappearing after destroy()
+    //       gets called when the DOM mutation happens inside the DOM when adding
+    //       or removing Headings, which change the VisualId of the CodeBlock and
+    //       hence trigger the mutation. This is needed after the NodeViewRemoval logic
+    //       has been delegated to ProseMirror (SEE: AbstractNodeController#destroy).
+    //       Currently this logic is exclusive to CodeBlocks since their VisualId gets
+    //       updated dynamically
+    if(this.nodeView.dom?.contains(mutation.target)) {
+      return true/*ignore mutation*/;
+    } /* else -- return default */
+
+    return false/*do not ignore */;
   }
 }
