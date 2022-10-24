@@ -1,6 +1,6 @@
 import { Editor } from '@tiptap/core';
 
-import { getPosType, CodeBlockNodeType } from '@ureeka-notebook/web-service';
+import { getPosType, AttributeType, CodeBlockNodeType } from '@ureeka-notebook/web-service';
 
 import { AbstractNodeController } from 'notebookEditor/model/AbstractNodeController';
 
@@ -40,8 +40,14 @@ export class CodeBlockController extends AbstractNodeController<CodeBlockNodeTyp
     //       Currently this logic is exclusive to CodeBlocks since their VisualId gets
     //       updated dynamically
     if(this.nodeView.dom?.contains(mutation.target)) {
-      return true/*ignore mutation*/;
-    } /* else -- return default */
+      const id = this.node.attrs[AttributeType.Id];
+      if(!id) return false/*do not ignore mutation*/;
+
+      const visualId = this.nodeView.storage.getVisualId(this.node.attrs.id ?? '');
+      if(visualId === mutation.target.textContent?.trim()) {
+        return true/*ignore mutation*/;
+      } /* else -- do not ignore mutation */
+    } /* else -- do not ignore mutation */
 
     return false/*do not ignore */;
   }
