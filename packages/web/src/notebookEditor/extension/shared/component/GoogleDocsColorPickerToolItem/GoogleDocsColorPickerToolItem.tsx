@@ -42,7 +42,7 @@ export const GoogleDocsColorPickerNodeToolItem: React.FC<GoogleDocsColorPickerNo
     ]);
 
     // focus the Editor again
-    if(focus) editor.view.focus();
+    editor.view.focus();
   };
 
   // .. UI ........................................................................
@@ -74,9 +74,8 @@ export const GoogleDocsColorPickerMarkToolItem: React.FC<GoogleDocsColorPickerMa
   const handleChange = (value: string, focus?: boolean) => {
     setMarkCommand(markName, { [attributeType]: value })(editor.state, editor.view.dispatch);
 
-    // NOTE: No need to manually focus the position again since it's a Mark update
-    // Focus the editor again
-    if(focus) editor.view.focus();
+    // focus the Editor again
+    editor.view.focus();
   };
 
   // .. UI ........................................................................

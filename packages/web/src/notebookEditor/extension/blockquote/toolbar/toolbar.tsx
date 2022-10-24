@@ -9,7 +9,7 @@ import { linkToolItem } from 'notebookEditor/extension/link/toolbar';
 import { markStrikethrough } from 'notebookEditor/extension/strikethrough/toolbar';
 import { markSuperScript } from 'notebookEditor/extension/superScript/toolbar';
 import { markSubScript } from 'notebookEditor/extension/subScript/toolbar';
-import { backgroundColorToolItem, fontSizeToolItem, textColorToolItem } from 'notebookEditor/extension/textStyle/toolbar';
+import { backgroundColorMarkToolItem, fontSizeToolItem, textColorToolItem } from 'notebookEditor/extension/textStyle/toolbar';
 import { markUnderline } from 'notebookEditor/extension/underline/toolbar';
 import { toggleBlock } from 'notebookEditor/extension/util/node';
 import { dedentBlocksToolItem, indentBlocksToolItem } from 'notebookEditor/shared/toolItem';
@@ -75,7 +75,7 @@ export const BlockquoteToolbar: Toolbar = {
     [
       fontSizeToolItem,
       textColorToolItem,
-      backgroundColorToolItem,
+      backgroundColorMarkToolItem,
     ],
   ],
 };

@@ -11,7 +11,7 @@ import { InputToolItem } from 'notebookEditor/extension/shared/component/InputTo
 import { markStrikethrough } from 'notebookEditor/extension/strikethrough/toolbar';
 import { markSubScript } from 'notebookEditor/extension/subScript/toolbar';
 import { markSuperScript } from 'notebookEditor/extension/superScript/toolbar';
-import { backgroundColorToolItem, fontSizeToolItem, spacingToolItem, textColorToolItem } from 'notebookEditor/extension/textStyle/toolbar';
+import { backgroundColorMarkToolItem, fontSizeToolItem, spacingToolItem, textColorToolItem } from 'notebookEditor/extension/textStyle/toolbar';
 import { markUnderline } from 'notebookEditor/extension/underline/toolbar';
 import { toggleBlock } from 'notebookEditor/extension/util/node';
 import { dedentBlocksToolItem, indentBlocksToolItem } from 'notebookEditor/shared/toolItem';
@@ -90,7 +90,7 @@ export const Demo2AsyncNodeToolbar: Toolbar = {
     [
       fontSizeToolItem,
       textColorToolItem,
-      backgroundColorToolItem,
+      backgroundColorMarkToolItem,
     ],
     [
       spacingToolItem,

@@ -14,8 +14,9 @@ const HeadingAttributesSpec = {
 
   [AttributeType.Level]: noNodeOrMarkSpecAttributeDefaultValue<HeadingLevel>(),
 
-  [AttributeType.FontSize]: noNodeOrMarkSpecAttributeDefaultValue<string>(),
+  [AttributeType.BackgroundColor]: noNodeOrMarkSpecAttributeDefaultValue<string>(),
   [AttributeType.Color]: noNodeOrMarkSpecAttributeDefaultValue<string>(),
+  [AttributeType.FontSize]: noNodeOrMarkSpecAttributeDefaultValue<string>(),
 
   [AttributeType.PaddingTop]: noNodeOrMarkSpecAttributeDefaultValue<string>(),
   [AttributeType.PaddingBottom]: noNodeOrMarkSpecAttributeDefaultValue<string>(),

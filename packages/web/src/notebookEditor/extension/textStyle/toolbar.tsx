@@ -37,14 +37,14 @@ export const textColorToolItem: ToolItem = {
   shouldShow: (editor, depth) => shouldShowToolItem(editor, depth),
 };
 
-export const backgroundColorToolItem: ToolItem = {
+export const backgroundColorMarkToolItem: ToolItem = {
   toolType: 'component',
   name: 'backgroundColorToolItem',
 
   component: (props) =>
     <GoogleDocsColorPickerMarkToolItem
       {...props}
-      name='Background Color'
+      name='Inline Background Color'
       markName={MarkName.TEXT_STYLE}
       attributeType={AttributeType.BackgroundColor}
     />,
