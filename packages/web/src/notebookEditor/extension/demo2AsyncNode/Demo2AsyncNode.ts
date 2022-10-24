@@ -20,7 +20,7 @@ export const Demo2AsyncNode = Node.create<NoOptions, Demo2AsyncNodeStorageType>(
   // NOTE: since TipTap is not adding the whitespace prop to the default
   //       NodeSpec created by the editor (SEE: REF above), this call
   //       has to be performed instead, so that all the attributes specified
-  //       in the CodeBlockNodeSpec get added correctly
+  //       in the Demo2AsyncNodeSpec get added correctly
   extendNodeSchema: (extension) => ({ ...Demo2AsyncNodeSpec }),
 
   // -- Attribute -----------------------------------------------------------------
