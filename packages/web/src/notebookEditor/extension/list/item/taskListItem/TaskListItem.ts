@@ -3,7 +3,7 @@ import { Plugin } from 'prosemirror-state';
 
 import { getNodeOutputSpec, isNodeSelection, isTaskListItemNode, AttributeType, NodeName, SetAttributeType, TaskListItemNodeSpec, DATA_NODE_TYPE } from '@ureeka-notebook/web-service';
 
-import { shortcutCommandWrapper } from 'notebookEditor/command/util';
+import { applyFirstValidCommand, shortcutCommandWrapper } from 'notebookEditor/command/util';
 import { setAttributeParsingBehavior } from 'notebookEditor/extension/util/attribute';
 import { ExtensionPriority, NoOptions, NoStorage, ParseRulePriority } from 'notebookEditor/model/type';
 
@@ -45,7 +45,10 @@ export const TaskListItem = Node.create<NoOptions, NoStorage>({
   // -- Keyboard Shortcut ---------------------------------------------------------
   addKeyboardShortcuts() {
     return {
-      'Enter': () => shortcutCommandWrapper(this.editor, splitListItemCommand(NodeName.TASK_LIST_ITEM)),
+      'Enter': () => {
+        if(applyFirstValidCommand(this.editor, [splitListItemCommand(NodeName.TASK_LIST_ITEM), dedentListCommand])) return true/*handled*/;
+        return liftListItemContent(this.editor, 'enter'/*coming from Enter*/);
+      },
       'Shift-Tab': () => {
         if(shortcutCommandWrapper(this.editor, dedentListCommand)) return true/*handled*/;
         liftListItemContent(this.editor, 'enter'/*simulate Enter*/);
