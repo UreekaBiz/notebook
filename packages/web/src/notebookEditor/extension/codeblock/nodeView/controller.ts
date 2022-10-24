@@ -35,7 +35,7 @@ export class CodeBlockController extends AbstractNodeController<CodeBlockNodeTyp
     // NOTE: this specifically addresses the CodeBlocks disappearing after destroy()
     //       gets called when the DOM mutation happens inside the DOM when adding
     //       or removing Headings, which change the VisualId of the CodeBlock and
-    //       hence trigger the mutation. This is needed after the NodeViewRemoval logic
+    //       hence trigger the mutation. This is needed since the NodeViewRemoval logic
     //       has been delegated to ProseMirror (SEE: AbstractNodeController#destroy).
     //       Currently this logic is exclusive to CodeBlocks since their VisualId gets
     //       updated dynamically
@@ -46,8 +46,8 @@ export class CodeBlockController extends AbstractNodeController<CodeBlockNodeTyp
       const visualId = this.nodeView.storage.getVisualId(this.node.attrs.id ?? '');
       if(visualId === mutation.target.textContent?.trim()) {
         return true/*ignore mutation*/;
-      } /* else -- do not ignore mutation */
-    } /* else -- do not ignore mutation */
+      } /* else -- the mutation target has no textContent or it does not equal the visualId */
+    } /* else -- the nodeView has no DOM or the mutation did not happen inside of it */
 
     return false/*do not ignore */;
   }
