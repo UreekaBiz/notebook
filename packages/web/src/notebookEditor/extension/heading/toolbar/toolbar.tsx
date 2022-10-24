@@ -1,4 +1,4 @@
-import { NodeName } from '@ureeka-notebook/web-service';
+import { AttributeType, NodeName } from '@ureeka-notebook/web-service';
 
 import { blockquoteToolItem } from 'notebookEditor/extension/blockquote/toolbar';
 import { markBold } from 'notebookEditor/extension/bold/toolbar';
@@ -14,10 +14,11 @@ import { linkToolItem } from 'notebookEditor/extension/link/toolbar';
 import { bulletListToolItem, orderedListToolItem, taskListToolItem } from 'notebookEditor/extension/list/toolbar';
 import { editableInlineNodeWithContentToolItem } from 'notebookEditor/extension/nestedViewNode/editableInlineNodeWithContent/toolbar';
 import { nestedViewBlockNodeToolItem } from 'notebookEditor/extension/nestedViewNode/nestedViewBlockNode/toolbar';
+import { GoogleDocsColorPickerNodeToolItem } from 'notebookEditor/extension/shared/component/GoogleDocsColorPickerToolItem';
 import { markStrikethrough } from 'notebookEditor/extension/strikethrough/toolbar';
 import { markSubScript } from 'notebookEditor/extension/subScript/toolbar';
 import { markSuperScript } from 'notebookEditor/extension/superScript/toolbar';
-import { backgroundColorToolItem, fontSizeToolItem, spacingToolItem, textColorToolItem } from 'notebookEditor/extension/textStyle/toolbar';
+import { backgroundColorMarkToolItem, fontSizeToolItem, spacingToolItem, textColorToolItem } from 'notebookEditor/extension/textStyle/toolbar';
 import { markUnderline } from 'notebookEditor/extension/underline/toolbar';
 import { dedentBlocksToolItem, horizontalAlignCenterToolItem, horizontalAlignJustifyToolItem, horizontalAlignLeftToolItem, horizontalAlignRightToolItem, indentBlocksToolItem } from 'notebookEditor/shared/toolItem';
 import { Toolbar, ToolItem } from 'notebookEditor/sidebar/toolbar/type';
@@ -32,6 +33,20 @@ export const headingLevelToolItem: ToolItem = {
 
   shouldShow: (editor, depth) => depth === 1/*only show on the direct parent node of a TextNode*/,
   component: (props) => <HeadingLevelToolItem {...props}/>,
+};
+
+export const headingBackgroundColorToolItem: ToolItem = {
+  toolType: 'component',
+  name: 'headingBackgroundColorToolItem',
+
+  component: ({ editor, depth }) =>
+    <GoogleDocsColorPickerNodeToolItem
+      editor={editor}
+      depth={depth}
+      nodeName={NodeName.HEADING}
+      attributeType={AttributeType.BackgroundColor}
+      name={'Heading Background Color'}
+    />,
 };
 
 // == Toolbar =====================================================================
@@ -70,9 +85,10 @@ export const HeadingToolbar: Toolbar = {
       indentBlocksToolItem,
     ],
     [
+      headingBackgroundColorToolItem,
       fontSizeToolItem,
       textColorToolItem,
-      backgroundColorToolItem,
+      backgroundColorMarkToolItem,
     ],
     [
       spacingToolItem,
