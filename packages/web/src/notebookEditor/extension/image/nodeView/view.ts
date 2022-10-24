@@ -1,6 +1,6 @@
 import { Editor } from '@tiptap/core';
 
-import { getPosType, isBlank, AttributeType, NodeName, ImageNodeType, DEFAULT_IMAGE_BORDER_COLOR, DATA_NODE_TYPE, DEFAULT_IMAGE_BORDER_STYLE, DEFAULT_IMAGE_BORDER_WIDTH, DEFAULT_IMAGE_ERROR_SRC, DEFAULT_IMAGE_SRC, DEFAULT_IMAGE_WIDTH, DEFAULT_IMAGE_HEIGHT, IMAGE_ERROR_CLASS } from '@ureeka-notebook/web-service';
+import { getPosType, isBlank, AttributeType, ImageNodeType, NodeName, VerticalAlign, DEFAULT_IMAGE_BORDER_COLOR, DATA_NODE_TYPE, DEFAULT_IMAGE_BORDER_STYLE, DEFAULT_IMAGE_BORDER_WIDTH, DEFAULT_IMAGE_ERROR_SRC, DEFAULT_IMAGE_SRC, DEFAULT_IMAGE_WIDTH, DEFAULT_IMAGE_HEIGHT, IMAGE_ERROR_CLASS } from '@ureeka-notebook/web-service';
 
 import { createInlineNodeContainer } from 'notebookEditor/extension/inlineNodeWithContent/util';
 import { AbstractNodeView } from 'notebookEditor/model/AbstractNodeView';
@@ -52,7 +52,7 @@ export class ImageView extends AbstractNodeView<ImageNodeType, ImageStorage, Ima
 
   // ensure the Image DOM element has the latest attributes
   private syncView() {
-    const { src, borderStyle, borderWidth, borderColor, width, height } = this.node.attrs;
+    const { src, borderStyle, borderWidth, borderColor, width, height, verticalAlign } = this.node.attrs;
 
     // if invalid src, show defaults
     if(!src || src === DEFAULT_IMAGE_SRC || src === DEFAULT_IMAGE_ERROR_SRC) {
@@ -79,5 +79,6 @@ export class ImageView extends AbstractNodeView<ImageNodeType, ImageStorage, Ima
     borderColor ? this.dom.style.borderColor = borderColor : this.dom.style.borderColor = DEFAULT_IMAGE_BORDER_COLOR;
     borderStyle ? this.dom.style.borderStyle = borderStyle : this.dom.style.borderStyle = DEFAULT_IMAGE_BORDER_STYLE;
     borderWidth ? this.dom.style.borderWidth = borderWidth : this.dom.style.borderWidth = DEFAULT_IMAGE_BORDER_WIDTH;
+    verticalAlign ? this.dom.style.verticalAlign = verticalAlign : this.dom.style.verticalAlign = VerticalAlign.bottom/*default*/;
   }
 }
