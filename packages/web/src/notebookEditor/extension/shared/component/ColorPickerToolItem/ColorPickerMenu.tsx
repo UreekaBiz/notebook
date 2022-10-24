@@ -29,7 +29,7 @@ interface Props {
 export const ColorPickerMenu: React.FC<Props> = ({ colors, closeOnSelect = true, onChange, value }) => {
   // -- State ---------------------------------------------------------------------
   const [isOpen, setIsOpen] = useState(false/*by contract*/);
-  const [selectedColor, setSelectedColor] = useState(''/*initial value*/);
+  const [selectedColor, setSelectedColor] = useState(value);
 
   // -- Effect --------------------------------------------------------------------
   // Close the menu when the user clicks outside the box. The event is cancelled by
