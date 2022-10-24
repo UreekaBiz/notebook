@@ -19,7 +19,7 @@ export const CodeBlockNodeSpec: NodeSpec = {
   name: NodeName.CODEBLOCK,
 
   content: `${NodeName.TEXT}*`,
-  marks: getAllowedMarks([MarkName.BOLD, MarkName.CODE, MarkName.ITALIC, MarkName.STRIKETHROUGH, MarkName.SUB_SCRIPT, MarkName.SUPER_SCRIPT, MarkName.UNDERLINE]),
+  marks: getAllowedMarks([MarkName.BOLD, MarkName.CODE, MarkName.ITALIC, MarkName.STRIKETHROUGH, MarkName.SUB_SCRIPT, MarkName.SUPER_SCRIPT, MarkName.TEXT_STYLE, MarkName.UNDERLINE]),
 
   group: NodeGroup.BLOCK,
   selectable: false/*cannot be set as NodeSelection*/,
