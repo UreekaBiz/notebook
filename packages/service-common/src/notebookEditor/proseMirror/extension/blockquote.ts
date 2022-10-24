@@ -21,13 +21,14 @@ export type BlockquoteAttributes = AttributesTypeFromNodeSpecAttributes<typeof B
 export const BlockquoteNodeSpec: NodeSpec = {
   name: NodeName.BLOCKQUOTE,
 
-  // make Blockquotes behave like CodeBlock Nodes, (e.g. 'Enter' inserts a newline)
-  code: true,
-
   content: `${NodeGroup.INLINE}*`,
+
   group: `${NodeGroup.BLOCK}`,
   selectable: false/*cannot be set as NodeSelection*/,
+
   defining: true/*(SEE: https://prosemirror.net/docs/ref/#model.NodeSpec.defining)*/,
+  whitespace: 'pre'/*preserve newlines*/,
+
   attrs: BlockquoteAttributeSpec,
 };
 

@@ -1,6 +1,6 @@
 import { wrappingInputRule, Node } from '@tiptap/core';
 
-import { getNodeOutputSpec, leaveBlockNodeCommand, selectBlockNodeContentCommand, AttributeType, BlockquoteNodeSpec, NodeName, SetAttributeType, DATA_NODE_TYPE } from '@ureeka-notebook/web-service';
+import { getNodeOutputSpec, insertNewlineCommand, leaveBlockNodeCommand, selectBlockNodeContentCommand, AttributeType, BlockquoteNodeSpec, NodeName, SetAttributeType, DATA_NODE_TYPE } from '@ureeka-notebook/web-service';
 
 import { shortcutCommandWrapper } from 'notebookEditor/command/util';
 import { ExtensionPriority, NoOptions, NoStorage } from 'notebookEditor/model/type';
@@ -18,6 +18,13 @@ export const blockquoteRegex = /^\s*>\s$/;
 export const Blockquote = Node.create<NoOptions, NoStorage>({
   ...BlockquoteNodeSpec,
   priority: ExtensionPriority.BLOCKQUOTE,
+
+  // REF: https://github.com/ueberdosis/tiptap/blob/8c6751f0c638effb22110b62b40a1632ea6867c9/packages/core/src/helpers/getSchemaByResolvedExtensions.ts
+  // NOTE: since TipTap is not adding the whitespace prop to the default
+  //       NodeSpec created by the editor (SEE: REF above), this call
+  //       has to be performed instead, so that all the attributes specified
+  //       in the BlockquoteNodeSpec get added correctly
+  extendNodeSchema: (extension) => ({ ...BlockquoteNodeSpec }),
 
   // -- Attribute -----------------------------------------------------------------
   addAttributes() {
@@ -44,6 +51,9 @@ export const Blockquote = Node.create<NoOptions, NoStorage>({
       // set GapCursor if necessary
       'ArrowUp': () => shortcutCommandWrapper(this.editor, blockArrowUpCommand(NodeName.BLOCKQUOTE)),
       'ArrowDown': () => shortcutCommandWrapper(this.editor, blockArrowDownCommand(NodeName.BLOCKQUOTE)),
+
+      // insert a newline on Enter
+      'Enter': () => shortcutCommandWrapper(this.editor, insertNewlineCommand(NodeName.BLOCKQUOTE)),
 
       // exit Node on Shift-Enter
       'Shift-Enter': () => shortcutCommandWrapper(this.editor, leaveBlockNodeCommand(NodeName.BLOCKQUOTE)),
