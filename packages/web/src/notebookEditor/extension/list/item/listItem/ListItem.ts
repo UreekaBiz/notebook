@@ -2,7 +2,7 @@ import { Node } from '@tiptap/core';
 
 import { getNodeOutputSpec, ListItemNodeSpec, NodeName, AttributeType, SetAttributeType, ListStyle, DATA_LIST_ITEM_SEPARATOR, DATA_LIST_ITEM_LIST_STYLE, DATA_NODE_TYPE, LIST_ITEM_DEFAULT_SEPARATOR } from '@ureeka-notebook/web-service';
 
-import { applyFirstValidCommand, shortcutCommandWrapper } from 'notebookEditor/command/util';
+import { shortcutCommandWrapper } from 'notebookEditor/command/util';
 import { setAttributeParsingBehavior } from 'notebookEditor/extension/util/attribute';
 import { ExtensionPriority, NoOptions, NoStorage, ParseRulePriority } from 'notebookEditor/model/type';
 
@@ -40,10 +40,7 @@ export const ListItem = Node.create<NoOptions, NoStorage>({
   // -- Keyboard Shortcut ---------------------------------------------------------
   addKeyboardShortcuts() {
     return {
-      'Enter': () => {
-        if(applyFirstValidCommand(this.editor, [splitListItemCommand(NodeName.LIST_ITEM), dedentListCommand])) return true/*handled*/;
-        return liftListItemContent(this.editor, 'enter'/*coming from Enter*/);
-      },
+      'Enter': () => shortcutCommandWrapper(this.editor, splitListItemCommand(NodeName.LIST_ITEM)),
       'Shift-Tab': () => {
         if(shortcutCommandWrapper(this.editor, dedentListCommand)) return true/*handled*/;
         liftListItemContent(this.editor, 'enter'/*simulate Enter*/);
