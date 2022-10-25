@@ -44,7 +44,7 @@ export const backgroundColorMarkToolItem: ToolItem = {
   component: (props) =>
     <ColorPickerMarkToolItem
       {...props}
-      name='Inline Background Color'
+      name='Inline Highlight Color'
       markName={MarkName.TEXT_STYLE}
       attributeType={AttributeType.BackgroundColor}
     />,

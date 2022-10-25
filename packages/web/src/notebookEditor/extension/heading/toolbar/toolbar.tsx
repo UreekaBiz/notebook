@@ -35,9 +35,9 @@ export const headingLevelToolItem: ToolItem = {
   component: (props) => <HeadingLevelToolItem {...props}/>,
 };
 
-export const headingBackgroundColorToolItem: ToolItem = {
+const headingHighlightColorToolItem: ToolItem = {
   toolType: 'component',
-  name: 'headingBackgroundColorToolItem',
+  name: 'headingHighlightColorToolItem',
 
   component: ({ editor, depth }) =>
     <ColorPickerNodeToolItem
@@ -45,7 +45,7 @@ export const headingBackgroundColorToolItem: ToolItem = {
       depth={depth}
       nodeName={NodeName.HEADING}
       attributeType={AttributeType.BackgroundColor}
-      name={'Heading Background Color'}
+      name={'Heading Highlight Color'}
     />,
 };
 
@@ -85,7 +85,7 @@ export const HeadingToolbar: Toolbar = {
       indentBlocksToolItem,
     ],
     [
-      headingBackgroundColorToolItem,
+      headingHighlightColorToolItem,
       fontSizeToolItem,
       textColorToolItem,
       backgroundColorMarkToolItem,
