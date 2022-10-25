@@ -69,7 +69,7 @@ interface KeyboardShortcutColorPickerMarkToolItemProps extends EditorToolCompone
 // -- Component -------------------------------------------------------------------
 export const KeyboardShortcutColorPickerMarkToolItem: React.FC<KeyboardShortcutColorPickerMarkToolItemProps> = ({ editor, attributeType, markName, name }) => {
   // get a valid render value for the input
-  const domRenderValue = getTextDOMRenderedValue(editor, attributeType);
+  const domRenderValue = getTextDOMRenderedValue(editor, attributeType, markName);
   const value = String((domRenderValue === InvalidMergedAttributeValue ? ''/*invalid*/ : domRenderValue) ?? ''/*not specified in theme*/);
 
   // .. Handler ...................................................................
