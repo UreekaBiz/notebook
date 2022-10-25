@@ -30,8 +30,8 @@ export const CodeBlockReferenceDelimiterToolItem: React.FC<Props> = ({ editor })
 
   const leftDelimiter = getTextDOMRenderedValue(editor, AttributeType.LeftDelimiter) ?? ''/*default*/,
         rightDelimiter = getTextDOMRenderedValue(editor, AttributeType.RightDelimiter) ?? ''/*default*/;
-  const leftDelimiterValue = String(leftDelimiter === InvalidMergedAttributeValue ? '' : leftDelimiter),
-        rightDelimiterValue = String(rightDelimiter === InvalidMergedAttributeValue ? '' : rightDelimiter);
+  const leftDelimiterValue = String(leftDelimiter === InvalidMergedAttributeValue ? ''/*invalid*/ : leftDelimiter),
+        rightDelimiterValue = String(rightDelimiter === InvalidMergedAttributeValue ? ''/*invalid*/ : rightDelimiter);
 
   // == Handler ===================================================================
   // NOTE: Handler above State to prevent 'before declaration' error

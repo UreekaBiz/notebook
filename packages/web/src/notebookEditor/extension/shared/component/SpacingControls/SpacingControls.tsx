@@ -105,7 +105,7 @@ export const SpacingControls: React.FC<Props> = ({ margin, padding, name, onChan
 
   const getValue = (type: SpacingType, attribute: SpacingAttribute) => {
     const mergedValue = type === 'margin' ? margin[attribute as MarginAttribute] : padding[attribute as PaddingAttribute];
-    const editorValue = mergedValue === InvalidMergedAttributeValue ? undefined : mergedValue;
+    const editorValue = mergedValue === InvalidMergedAttributeValue ? undefined/*invalid*/ : mergedValue;
     return String(localState[attribute] ?? editorValue ?? '');
   };
 

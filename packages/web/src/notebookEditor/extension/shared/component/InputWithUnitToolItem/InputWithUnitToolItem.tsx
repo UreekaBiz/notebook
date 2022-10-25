@@ -27,7 +27,9 @@ export const InputWithUnitNodeToolItem: React.FC<InputWithUnitNodeToolItemProps>
   const node = getSelectedNode(state, depth);
   if(!node || !isNodeType(node, nodeName)) return null/*nothing to render - invalid node render*/;
 
-  const value = node.attrs[attributeType] ?? '' /*default*/;
+  // get a valid render value for the input
+  const domRenderValue = getTextDOMRenderedValue(editor, attributeType);
+  const value = String((domRenderValue === InvalidMergedAttributeValue ? ''/*invalid*/ : domRenderValue) ?? ''/*not specified in theme*/);
 
   // -- Handler -------------------------------------------------------------------
   const handleChange = (value: string, focus?: boolean) => {
@@ -66,9 +68,9 @@ interface InputWithUnitMarkToolItemProps extends EditorToolComponentProps {
   maxValue?: number;
 }
 export const InputWithUnitMarkToolItem: React.FC<InputWithUnitMarkToolItemProps> = ({ editor, attributeType, markName, name, minValue, maxValue }) => {
-  const domRenderValue = getTextDOMRenderedValue(editor, attributeType, markName);
   // get a valid render value for the input
-  const inputValue = String((domRenderValue === InvalidMergedAttributeValue ? '' : domRenderValue) ?? '');
+  const domRenderValue = getTextDOMRenderedValue(editor, attributeType, markName);
+  const value = String((domRenderValue === InvalidMergedAttributeValue ? ''/*invalid*/ : domRenderValue) ?? ''/*not specified in theme*/);
 
   // -- Handler -------------------------------------------------------------------
   const handleChange = (value: string, focus?: boolean) => {
@@ -83,5 +85,5 @@ export const InputWithUnitMarkToolItem: React.FC<InputWithUnitMarkToolItemProps>
   // NOTE: Not using InputToolItemContainer at this level since InputWithUnitTool
   //       requires to have access to the UnitPicker which will be the right side
   //       content of the InputToolItemContainer.
-  return <InputWithUnitTool name={name} value={inputValue} minValue={minValue} maxValue={maxValue} onChange={handleChange}/>;
+  return <InputWithUnitTool name={name} value={value} minValue={minValue} maxValue={maxValue} onChange={handleChange}/>;
 };

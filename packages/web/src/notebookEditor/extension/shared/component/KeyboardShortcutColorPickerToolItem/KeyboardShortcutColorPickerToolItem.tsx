@@ -29,7 +29,7 @@ export const KeyboardShortcutColorPickerNodeToolItem: React.FC<KeyboardShortcutC
 
   // get a valid render value for the input
   const domRenderValue = getTextDOMRenderedValue(editor, attributeType);
-  const value = String((domRenderValue === InvalidMergedAttributeValue ? '' : domRenderValue) ?? '');
+  const value = String((domRenderValue === InvalidMergedAttributeValue ? ''/*invalid*/ : domRenderValue) ?? ''/*not specified in theme*/);
 
   // .. Handler ...................................................................
   const handleChange = (value: string, focus?: boolean) => {
@@ -70,7 +70,7 @@ interface KeyboardShortcutColorPickerMarkToolItemProps extends EditorToolCompone
 export const KeyboardShortcutColorPickerMarkToolItem: React.FC<KeyboardShortcutColorPickerMarkToolItemProps> = ({ editor, attributeType, markName, name }) => {
   // get a valid render value for the input
   const domRenderValue = getTextDOMRenderedValue(editor, attributeType);
-  const value = String((domRenderValue === InvalidMergedAttributeValue ? '' : domRenderValue) ?? '');
+  const value = String((domRenderValue === InvalidMergedAttributeValue ? ''/*invalid*/ : domRenderValue) ?? ''/*not specified in theme*/);
 
   // .. Handler ...................................................................
   const handleChange = (value: string, focus?: boolean) => {
