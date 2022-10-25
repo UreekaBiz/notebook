@@ -27,7 +27,7 @@ interface Props {
 }
 
 // == Component ===================================================================
-export const GoogleDocsColorPickerMenu: React.FC<Props> = ({ colors, closeOnSelect = true, onChange, value }) => {
+export const ColorPickerMenu: React.FC<Props> = ({ colors, closeOnSelect = true, onChange, value }) => {
   // -- State ---------------------------------------------------------------------
   const [isOpen, setIsOpen] = useState(false/*by contract*/);
   const [selectedColor, setSelectedColor] = useState(value);

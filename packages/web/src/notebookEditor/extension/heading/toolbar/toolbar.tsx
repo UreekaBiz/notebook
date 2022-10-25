@@ -14,7 +14,7 @@ import { linkToolItem } from 'notebookEditor/extension/link/toolbar';
 import { bulletListToolItem, orderedListToolItem, taskListToolItem } from 'notebookEditor/extension/list/toolbar';
 import { editableInlineNodeWithContentToolItem } from 'notebookEditor/extension/nestedViewNode/editableInlineNodeWithContent/toolbar';
 import { nestedViewBlockNodeToolItem } from 'notebookEditor/extension/nestedViewNode/nestedViewBlockNode/toolbar';
-import { GoogleDocsColorPickerNodeToolItem } from 'notebookEditor/extension/shared/component/GoogleDocsColorPickerToolItem';
+import { ColorPickerNodeToolItem } from 'notebookEditor/extension/shared/component/ColorPickerToolItem';
 import { markStrikethrough } from 'notebookEditor/extension/strikethrough/toolbar';
 import { markSubScript } from 'notebookEditor/extension/subScript/toolbar';
 import { markSuperScript } from 'notebookEditor/extension/superScript/toolbar';
@@ -40,7 +40,7 @@ export const headingBackgroundColorToolItem: ToolItem = {
   name: 'headingBackgroundColorToolItem',
 
   component: ({ editor, depth }) =>
-    <GoogleDocsColorPickerNodeToolItem
+    <ColorPickerNodeToolItem
       editor={editor}
       depth={depth}
       nodeName={NodeName.HEADING}

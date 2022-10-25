@@ -2,7 +2,7 @@ import { Box } from '@chakra-ui/react';
 
 import { isHorizontalRuleNode, isNodeSelection, updateSingleNodeAttributesCommand, AttributeType, NodeName, DEFAULT_HORIZONTAL_RULE_BACKGROUND_COLOR } from '@ureeka-notebook/web-service';
 
-import { GoogleDocsColorPickerTool } from 'notebookEditor/extension/shared/component/GoogleDocsColorPickerToolItem/GoogleDocsColorPickerTool';
+import { ColorPickerTool } from 'notebookEditor/extension/shared/component/ColorPickerToolItem/ColorPickerTool';
 import { EditorToolComponentProps } from 'notebookEditor/sidebar/toolbar/type';
 import { textColors } from 'notebookEditor/theme/type';
 
@@ -24,7 +24,7 @@ export const HorizontalRuleColorToolItem: React.FC<Props> = ({ editor }) => {
   const backgroundColorValue = selection.node.attrs[AttributeType.BackgroundColor];
   return (
     <Box>
-      <GoogleDocsColorPickerTool
+      <ColorPickerTool
         name='Color'
         value={backgroundColorValue ?? DEFAULT_HORIZONTAL_RULE_BACKGROUND_COLOR}
         onChange={handleBorderColorChange}

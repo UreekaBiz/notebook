@@ -4,7 +4,7 @@ import { ChangeEventHandler, KeyboardEventHandler } from 'react';
 import { colorToHexColor, removeColorAddon, textColors, Color } from 'notebookEditor/theme/type';
 import { useLocalValue } from 'notebookEditor/shared/hook/useLocalValue';
 
-import { GoogleDocsColorPickerMenu } from './GoogleDocsColorPickerMenu';
+import { ColorPickerMenu } from './ColorPickerMenu';
 import { InputToolItemContainer } from '../InputToolItemContainer';
 
 // ********************************************************************************
@@ -19,7 +19,7 @@ interface Props {
 }
 
 // == Component ===================================================================
-export const GoogleDocsColorPickerTool: React.FC<Props> = ({ colors = textColors, name, onChange, value }) => {
+export const ColorPickerTool: React.FC<Props> = ({ colors = textColors, name, onChange, value }) => {
   // -- State ---------------------------------------------------------------------
   const { commitChange, localValue, resetLocalValue, updateLocalValue } = useLocalValue(value, onChange);
 
@@ -56,7 +56,7 @@ export const GoogleDocsColorPickerTool: React.FC<Props> = ({ colors = textColors
   return (
     <InputToolItemContainer
       name={name}
-      rightContent={<GoogleDocsColorPickerMenu value={localValue} colors={colors} onChange={handleColorPickerChange} />
+      rightContent={<ColorPickerMenu value={localValue} colors={colors} onChange={handleColorPickerChange} />
 }
     >
       <Input

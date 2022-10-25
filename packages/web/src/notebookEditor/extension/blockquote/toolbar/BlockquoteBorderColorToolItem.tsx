@@ -2,7 +2,7 @@ import { Box } from '@chakra-ui/react';
 
 import { isBlockquoteNode, updateSingleNodeAttributesCommand, AttributeType, NodeName, DEFAULT_BLOCKQUOTE_BORDER_LEFT_COLOR } from '@ureeka-notebook/web-service';
 
-import { GoogleDocsColorPickerTool } from 'notebookEditor/extension/shared/component/GoogleDocsColorPickerToolItem/GoogleDocsColorPickerTool';
+import { ColorPickerTool } from 'notebookEditor/extension/shared/component/ColorPickerToolItem/ColorPickerTool';
 import { EditorToolComponentProps } from 'notebookEditor/sidebar/toolbar/type';
 import { textColors } from 'notebookEditor/theme/type';
 
@@ -24,7 +24,7 @@ export const BlockquoteBorderColorToolItem: React.FC<Props> = ({ editor }) => {
   const borderColorValue = $anchor.parent.attrs[AttributeType.BorderColor];
   return (
     <Box>
-      <GoogleDocsColorPickerTool
+      <ColorPickerTool
         name='Color'
         value={borderColorValue ?? DEFAULT_BLOCKQUOTE_BORDER_LEFT_COLOR}
         onChange={handleBorderColorChange}

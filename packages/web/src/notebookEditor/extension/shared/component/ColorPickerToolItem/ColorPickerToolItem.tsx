@@ -4,12 +4,12 @@ import { applyDocumentUpdates } from 'notebookEditor/command/update';
 import { getTextDOMRenderedValue  } from 'notebookEditor/extension/util/attribute';
 import { EditorToolComponentProps } from 'notebookEditor/sidebar/toolbar/type';
 
-import { GoogleDocsColorPickerTool } from './GoogleDocsColorPickerTool';
+import { ColorPickerTool } from './ColorPickerTool';
 
 // ********************************************************************************
 // == Node ========================================================================
 // -- Interface -------------------------------------------------------------------
-interface GoogleDocsColorPickerNodeToolItemProps extends EditorToolComponentProps {
+interface ColorPickerNodeToolItemProps extends EditorToolComponentProps {
   nodeName: NodeName;
 
   /** the attribute that this ToolItems corresponds to */
@@ -20,7 +20,7 @@ interface GoogleDocsColorPickerNodeToolItemProps extends EditorToolComponentProp
 }
 
 // -- Component -------------------------------------------------------------------
-export const GoogleDocsColorPickerNodeToolItem: React.FC<GoogleDocsColorPickerNodeToolItemProps> = ({ editor, attributeType, depth, name, nodeName }) => {
+export const ColorPickerNodeToolItem: React.FC<ColorPickerNodeToolItemProps> = ({ editor, attributeType, depth, name, nodeName }) => {
   const { state } = editor;
   const { selection } = state;
   const { $anchor, anchor } = selection;
@@ -49,12 +49,12 @@ export const GoogleDocsColorPickerNodeToolItem: React.FC<GoogleDocsColorPickerNo
   // NOTE: Not using InputToolItemContainer at this level since GoogleDocsColorPickerTool
   //       requires to have access to the UnitPicker which will be the right side
   //       content of the InputToolItemContainer.
-  return <GoogleDocsColorPickerTool name={name} value={value} onChange={handleChange}/>;
+  return <ColorPickerTool name={name} value={value} onChange={handleChange}/>;
 };
 
 // == Mark ========================================================================
 // -- Interface -------------------------------------------------------------------
-interface GoogleDocsColorPickerMarkToolItemProps extends EditorToolComponentProps {
+interface ColorPickerMarkToolItemProps extends EditorToolComponentProps {
   markName: MarkName;
 
   /** the attribute that this ToolItems corresponds to */
@@ -65,7 +65,7 @@ interface GoogleDocsColorPickerMarkToolItemProps extends EditorToolComponentProp
 }
 
 // -- Component -------------------------------------------------------------------
-export const GoogleDocsColorPickerMarkToolItem: React.FC<GoogleDocsColorPickerMarkToolItemProps> = ({ editor, attributeType, markName, name }) => {
+export const ColorPickerMarkToolItem: React.FC<ColorPickerMarkToolItemProps> = ({ editor, attributeType, markName, name }) => {
   const domRenderValue = getTextDOMRenderedValue(editor, attributeType, markName);
   // get a valid render value for the input
   const inputValue = String((domRenderValue === InvalidMergedAttributeValue ? '' : domRenderValue) ?? '');
@@ -82,6 +82,6 @@ export const GoogleDocsColorPickerMarkToolItem: React.FC<GoogleDocsColorPickerMa
   // NOTE: Not using InputToolItemContainer at this level since GoogleDocsColorPickerTool
   //       requires to have access to the ColorPickerMenu which will be the right
   //       side content of the InputToolItemContainer.
-  return <GoogleDocsColorPickerTool name={name} value={inputValue} onChange={handleChange}/>;
+  return <ColorPickerTool name={name} value={inputValue} onChange={handleChange}/>;
 };
 

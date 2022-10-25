@@ -4,7 +4,7 @@ import { InputWithUnitMarkToolItem } from 'notebookEditor/extension/shared/compo
 import { SpacingToolItem } from 'notebookEditor/extension/shared/component/SpacingToolItem';
 import { shouldShowToolItem } from 'notebookEditor/shared/toolItem';
 import { ToolItem } from 'notebookEditor/sidebar/toolbar/type';
-import { GoogleDocsColorPickerMarkToolItem } from '../shared/component/GoogleDocsColorPickerToolItem';
+import { ColorPickerMarkToolItem } from '../shared/component/ColorPickerToolItem';
 
 // ********************************************************************************
 // == Tool Items ==================================================================
@@ -27,7 +27,7 @@ export const textColorToolItem: ToolItem = {
   name: 'textColorToolItem',
 
   component: (props) =>
-    <GoogleDocsColorPickerMarkToolItem
+    <ColorPickerMarkToolItem
       {...props}
       name='Text Color'
       markName={MarkName.TEXT_STYLE}
@@ -42,7 +42,7 @@ export const backgroundColorMarkToolItem: ToolItem = {
   name: 'backgroundColorToolItem',
 
   component: (props) =>
-    <GoogleDocsColorPickerMarkToolItem
+    <ColorPickerMarkToolItem
       {...props}
       name='Inline Background Color'
       markName={MarkName.TEXT_STYLE}
