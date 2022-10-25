@@ -18,7 +18,7 @@ import { ColorPickerNodeToolItem } from 'notebookEditor/extension/shared/compone
 import { markStrikethrough } from 'notebookEditor/extension/strikethrough/toolbar';
 import { markSubScript } from 'notebookEditor/extension/subScript/toolbar';
 import { markSuperScript } from 'notebookEditor/extension/superScript/toolbar';
-import { backgroundColorMarkToolItem, fontSizeToolItem, spacingToolItem, textColorToolItem } from 'notebookEditor/extension/textStyle/toolbar';
+import { highlightColorMarkToolItem, fontSizeToolItem, spacingToolItem, textColorToolItem } from 'notebookEditor/extension/textStyle/toolbar';
 import { markUnderline } from 'notebookEditor/extension/underline/toolbar';
 import { dedentBlocksToolItem, horizontalAlignCenterToolItem, horizontalAlignJustifyToolItem, horizontalAlignLeftToolItem, horizontalAlignRightToolItem, indentBlocksToolItem } from 'notebookEditor/shared/toolItem';
 import { Toolbar, ToolItem } from 'notebookEditor/sidebar/toolbar/type';
@@ -35,9 +35,9 @@ export const headingLevelToolItem: ToolItem = {
   component: (props) => <HeadingLevelToolItem {...props}/>,
 };
 
-const headingHighlightColorToolItem: ToolItem = {
+const headingBackgroundColorToolItem: ToolItem = {
   toolType: 'component',
-  name: 'headingHighlightColorToolItem',
+  name: 'headingBackgroundColorToolItem',
 
   component: ({ editor, depth }) =>
     <ColorPickerNodeToolItem
@@ -45,7 +45,7 @@ const headingHighlightColorToolItem: ToolItem = {
       depth={depth}
       nodeName={NodeName.HEADING}
       attributeType={AttributeType.BackgroundColor}
-      name={'Heading Highlight Color'}
+      name={'Background Color'}
     />,
 };
 
@@ -85,10 +85,10 @@ export const HeadingToolbar: Toolbar = {
       indentBlocksToolItem,
     ],
     [
-      headingHighlightColorToolItem,
+      headingBackgroundColorToolItem,
       fontSizeToolItem,
       textColorToolItem,
-      backgroundColorMarkToolItem,
+      highlightColorMarkToolItem,
     ],
     [
       spacingToolItem,

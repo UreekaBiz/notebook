@@ -37,14 +37,14 @@ export const textColorToolItem: ToolItem = {
   shouldShow: (editor, depth) => shouldShowToolItem(editor, depth),
 };
 
-export const backgroundColorMarkToolItem: ToolItem = {
+export const highlightColorMarkToolItem: ToolItem = {
   toolType: 'component',
-  name: 'backgroundColorToolItem',
+  name: 'highlightColorMarkToolItem',
 
   component: (props) =>
     <ColorPickerMarkToolItem
       {...props}
-      name='Inline Highlight Color'
+      name='Highlight Color'
       markName={MarkName.TEXT_STYLE}
       attributeType={AttributeType.BackgroundColor}
     />,
