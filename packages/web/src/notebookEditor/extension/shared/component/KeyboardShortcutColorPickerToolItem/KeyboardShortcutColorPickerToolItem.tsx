@@ -4,12 +4,12 @@ import { applyDocumentUpdates } from 'notebookEditor/command/update';
 import { getTextDOMRenderedValue  } from 'notebookEditor/extension/util/attribute';
 import { EditorToolComponentProps } from 'notebookEditor/sidebar/toolbar/type';
 
-import { ColorPickerTool } from './ColorPickerTool';
+import { KeyboardShortcutColorPickerTool } from './KeyboardShortcutColorPickerTool';
 
 // ********************************************************************************
 // == Node ========================================================================
 // -- Interface -------------------------------------------------------------------
-interface ColorPickerNodeToolItemProps extends EditorToolComponentProps {
+interface KeyboardShortcutColorPickerNodeToolItemProps extends EditorToolComponentProps {
   nodeName: NodeName;
 
   /** the attribute that this ToolItems corresponds to */
@@ -20,7 +20,7 @@ interface ColorPickerNodeToolItemProps extends EditorToolComponentProps {
 }
 
 // -- Component -------------------------------------------------------------------
-export const ColorPickerNodeToolItem: React.FC<ColorPickerNodeToolItemProps> = ({ editor, attributeType, depth, name, nodeName }) => {
+export const KeyboardShortcutColorPickerNodeToolItem: React.FC<KeyboardShortcutColorPickerNodeToolItemProps> = ({ editor, attributeType, depth, name, nodeName }) => {
   const { state } = editor;
   const { selection } = state;
   const { $anchor, anchor } = selection;
@@ -49,12 +49,12 @@ export const ColorPickerNodeToolItem: React.FC<ColorPickerNodeToolItemProps> = (
   // NOTE: Not using InputToolItemContainer at this level since ColorPickerTool
   //       requires to have access to the UnitPicker which will be the right side
   //       content of the InputToolItemContainer.
-  return <ColorPickerTool name={name} value={value} onChange={handleChange}/>;
+  return <KeyboardShortcutColorPickerTool name={name} value={value} onChange={handleChange}/>;
 };
 
 // == Mark ========================================================================
 // -- Interface -------------------------------------------------------------------
-interface ColorPickerMarkToolItemProps extends EditorToolComponentProps {
+interface KeyboardShortcutColorPickerMarkToolItemProps extends EditorToolComponentProps {
   markName: MarkName;
 
   /** the attribute that this ToolItems corresponds to */
@@ -65,7 +65,7 @@ interface ColorPickerMarkToolItemProps extends EditorToolComponentProps {
 }
 
 // -- Component -------------------------------------------------------------------
-export const ColorPickerMarkToolItem: React.FC<ColorPickerMarkToolItemProps> = ({ editor, attributeType, markName, name }) => {
+export const KeyboardShortcutColorPickerMarkToolItem: React.FC<KeyboardShortcutColorPickerMarkToolItemProps> = ({ editor, attributeType, markName, name }) => {
   const domRenderValue = getTextDOMRenderedValue(editor, attributeType, markName);
   // get a valid render value for the input
   const inputValue = String((domRenderValue === InvalidMergedAttributeValue ? '' : domRenderValue) ?? '');
@@ -82,6 +82,6 @@ export const ColorPickerMarkToolItem: React.FC<ColorPickerMarkToolItemProps> = (
   // NOTE: Not using InputToolItemContainer at this level since ColorPickerTool
   //       requires to have access to the ColorPickerMenu which will be the right
   //       side content of the InputToolItemContainer.
-  return <ColorPickerTool name={name} value={inputValue} onChange={handleChange}/>;
+  return <KeyboardShortcutColorPickerTool name={name} value={inputValue} onChange={handleChange}/>;
 };
 

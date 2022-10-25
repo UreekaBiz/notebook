@@ -4,7 +4,7 @@ import { ChangeEventHandler, KeyboardEventHandler } from 'react';
 import { colorToHexColor, removeColorAddon, keyboardShortcutTextColors, Color } from 'notebookEditor/theme/type';
 import { useLocalValue } from 'notebookEditor/shared/hook/useLocalValue';
 
-import { ColorPickerMenu } from './ColorPickerMenu';
+import { KeyboardShortcutColorPickerMenu } from './KeyboardShortcutColorPickerMenu';
 import { InputToolItemContainer } from '../InputToolItemContainer';
 
 // ********************************************************************************
@@ -19,7 +19,7 @@ interface Props {
 }
 
 // == Component ===================================================================
-export const ColorPickerTool: React.FC<Props> = ({ colors = keyboardShortcutTextColors, name, onChange, value }) => {
+export const KeyboardShortcutColorPickerTool: React.FC<Props> = ({ colors = keyboardShortcutTextColors, name, onChange, value }) => {
   // -- State ---------------------------------------------------------------------
   const { commitChange, localValue, resetLocalValue, updateLocalValue } = useLocalValue(value, onChange);
 
@@ -57,7 +57,7 @@ export const ColorPickerTool: React.FC<Props> = ({ colors = keyboardShortcutText
     <InputToolItemContainer
       name={name}
       rightContent={
-        <ColorPickerMenu value={localValue} colors={colors} onChange={handleColorPickerChange} />
+        <KeyboardShortcutColorPickerMenu value={localValue} colors={colors} onChange={handleColorPickerChange} />
       }
     >
       <Input

@@ -26,7 +26,7 @@ interface Props {
 }
 
 // == Component ===================================================================
-export const ColorPickerMenu: React.FC<Props> = ({ colors, closeOnSelect = true, onChange, value }) => {
+export const KeyboardShortcutColorPickerMenu: React.FC<Props> = ({ colors, closeOnSelect = true, onChange, value }) => {
   // -- State ---------------------------------------------------------------------
   const [isOpen, setIsOpen] = useState(false/*by contract*/);
   const [selectedColor, setSelectedColor] = useState(value);
