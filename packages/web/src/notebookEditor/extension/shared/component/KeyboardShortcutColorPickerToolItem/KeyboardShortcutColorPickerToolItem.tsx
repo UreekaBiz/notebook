@@ -27,7 +27,9 @@ export const KeyboardShortcutColorPickerNodeToolItem: React.FC<KeyboardShortcutC
   const node = getSelectedNode(state, depth);
   if(!node || !isNodeType(node, nodeName)) return null/*nothing to render - invalid node render*/;
 
-  const value = node.attrs[attributeType] ?? '' /*default*/;
+  // get a valid render value for the input
+  const domRenderValue = getTextDOMRenderedValue(editor, attributeType);
+  const value = String((domRenderValue === InvalidMergedAttributeValue ? '' : domRenderValue) ?? '');
 
   // .. Handler ...................................................................
   const handleChange = (value: string, focus?: boolean) => {
@@ -66,9 +68,9 @@ interface KeyboardShortcutColorPickerMarkToolItemProps extends EditorToolCompone
 
 // -- Component -------------------------------------------------------------------
 export const KeyboardShortcutColorPickerMarkToolItem: React.FC<KeyboardShortcutColorPickerMarkToolItemProps> = ({ editor, attributeType, markName, name }) => {
-  const domRenderValue = getTextDOMRenderedValue(editor, attributeType, markName);
   // get a valid render value for the input
-  const inputValue = String((domRenderValue === InvalidMergedAttributeValue ? '' : domRenderValue) ?? '');
+  const domRenderValue = getTextDOMRenderedValue(editor, attributeType);
+  const value = String((domRenderValue === InvalidMergedAttributeValue ? '' : domRenderValue) ?? '');
 
   // .. Handler ...................................................................
   const handleChange = (value: string, focus?: boolean) => {
@@ -82,6 +84,6 @@ export const KeyboardShortcutColorPickerMarkToolItem: React.FC<KeyboardShortcutC
   // NOTE: Not using InputToolItemContainer at this level since ColorPickerTool
   //       requires to have access to the ColorPickerMenu which will be the right
   //       side content of the InputToolItemContainer.
-  return <KeyboardShortcutColorPickerTool name={name} value={inputValue} onChange={handleChange}/>;
+  return <KeyboardShortcutColorPickerTool name={name} value={value} onChange={handleChange}/>;
 };
 
