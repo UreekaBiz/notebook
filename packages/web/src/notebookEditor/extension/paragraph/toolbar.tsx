@@ -1,4 +1,4 @@
-import { NodeName } from '@ureeka-notebook/web-service';
+import { AttributeType, NodeName } from '@ureeka-notebook/web-service';
 
 import { blockquoteToolItem } from 'notebookEditor/extension/blockquote/toolbar';
 import { markBold } from 'notebookEditor/extension/bold/toolbar';
@@ -15,15 +15,31 @@ import { linkToolItem } from 'notebookEditor/extension/link/toolbar';
 import { editableInlineNodeWithContentToolItem } from 'notebookEditor/extension/nestedViewNode/editableInlineNodeWithContent/toolbar';
 import { nestedViewBlockNodeToolItem } from 'notebookEditor/extension/nestedViewNode/nestedViewBlockNode/toolbar';
 import { bulletListToolItem, orderedListToolItem, taskListToolItem } from 'notebookEditor/extension/list/toolbar';
+import { ColorPickerNodeToolItem } from 'notebookEditor/extension/shared/component/ColorPickerToolItem';
 import { markStrikethrough } from 'notebookEditor/extension/strikethrough/toolbar';
 import { markSuperScript } from 'notebookEditor/extension/superScript/toolbar';
 import { markSubScript } from 'notebookEditor/extension/subScript/toolbar';
 import { highlightColorMarkToolItem, fontSizeToolItem, spacingToolItem, textColorToolItem } from 'notebookEditor/extension/textStyle/toolbar';
 import { markUnderline } from 'notebookEditor/extension/underline/toolbar';
 import { dedentBlocksToolItem, horizontalAlignCenterToolItem, horizontalAlignJustifyToolItem, horizontalAlignLeftToolItem, horizontalAlignRightToolItem, indentBlocksToolItem } from 'notebookEditor/shared/toolItem';
-import { Toolbar } from 'notebookEditor/sidebar/toolbar/type';
+import { Toolbar, ToolItem } from 'notebookEditor/sidebar/toolbar/type';
 
 //*********************************************************************************
+// == ToolItem ====================================================================
+const paragraphBackgroundColorToolItem: ToolItem = {
+  toolType: 'component',
+  name: 'paragraphBackgroundColorToolItem',
+
+  component: ({ editor, depth }) =>
+    <ColorPickerNodeToolItem
+      editor={editor}
+      depth={depth}
+      nodeName={NodeName.PARAGRAPH}
+      attributeType={AttributeType.BackgroundColor}
+      name={'Background Color'}
+    />,
+};
+
 // == Toolbar =====================================================================
 export const ParagraphToolbar: Toolbar = {
   title: 'Paragraph',
@@ -60,6 +76,7 @@ export const ParagraphToolbar: Toolbar = {
       indentBlocksToolItem,
     ],
     [
+      paragraphBackgroundColorToolItem,
       fontSizeToolItem,
       textColorToolItem,
       highlightColorMarkToolItem,
