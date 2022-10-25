@@ -20,6 +20,7 @@ export const fontSizeToolItem: ToolItem = {
       attributeType={AttributeType.FontSize}
       minValue={1}
     />,
+  shouldShow: (editor, depth) => shouldShowToolItem(editor, depth),
 };
 
 export const textColorToolItem: ToolItem = {

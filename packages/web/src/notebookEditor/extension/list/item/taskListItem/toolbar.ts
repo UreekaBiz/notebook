@@ -9,10 +9,11 @@ import { linkToolItem } from 'notebookEditor/extension/link/toolbar';
 import { markStrikethrough } from 'notebookEditor/extension/strikethrough/toolbar';
 import { markSubScript } from 'notebookEditor/extension/subScript/toolbar';
 import { markSuperScript } from 'notebookEditor/extension/superScript/toolbar';
-import { textColorToolItem, highlightColorMarkToolItem } from 'notebookEditor/extension/textStyle/toolbar';
+import { textColorToolItem, highlightColorMarkToolItem, fontSizeToolItem } from 'notebookEditor/extension/textStyle/toolbar';
 import { markUnderline } from 'notebookEditor/extension/underline/toolbar';
 import { Toolbar } from 'notebookEditor/sidebar/toolbar/type';
 
+import { listItemContentBackgroundColorToolItem } from '../listItemContent/toolbar';
 import { dedentListToolItem, indentListToolItem } from '../toolItem';
 
 //*********************************************************************************
@@ -23,6 +24,8 @@ export const TaskListItemToolbar: Toolbar = {
 
   toolsCollections: [
     [
+      listItemContentBackgroundColorToolItem,
+      fontSizeToolItem,
       textColorToolItem,
       highlightColorMarkToolItem,
       markBold,

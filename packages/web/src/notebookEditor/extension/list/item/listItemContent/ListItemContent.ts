@@ -1,7 +1,8 @@
 import { Node } from '@tiptap/core';
 
-import { getNodeOutputSpec, ListItemContentNodeSpec, NodeName, DATA_NODE_TYPE } from '@ureeka-notebook/web-service';
+import { getNodeOutputSpec, AttributeType, ListItemContentNodeSpec, NodeName, SetAttributeType, DATA_NODE_TYPE } from '@ureeka-notebook/web-service';
 
+import { setAttributeParsingBehavior } from 'notebookEditor/extension/util/attribute';
 import { ExtensionPriority, NoOptions, NoStorage } from 'notebookEditor/model/type';
 
 import { listItemContentPlugin } from './plugin';
@@ -12,6 +13,15 @@ import { liftListItemContent } from './update';
 export const ListItemContent = Node.create<NoOptions, NoStorage>({
   ...ListItemContentNodeSpec,
   priority: ExtensionPriority.LIST_ITEM_CONTENT,
+
+  // -- Attribute -----------------------------------------------------------------
+  addAttributes() {
+    return {
+      [AttributeType.BackgroundColor]: setAttributeParsingBehavior(AttributeType.BackgroundColor, SetAttributeType.STYLE),
+      [AttributeType.Color]: setAttributeParsingBehavior(AttributeType.Color, SetAttributeType.STYLE),
+      [AttributeType.FontSize]: setAttributeParsingBehavior(AttributeType.FontSize, SetAttributeType.STYLE),
+    };
+  },
 
   // -- Keyboard Shortcut ---------------------------------------------------------
   // maintain expected Enter and Backspace behavior
