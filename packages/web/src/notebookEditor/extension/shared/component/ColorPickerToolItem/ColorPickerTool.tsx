@@ -1,7 +1,7 @@
 import { Input } from '@chakra-ui/react';
 import { ChangeEventHandler, KeyboardEventHandler } from 'react';
 
-import { colorToHexColor, removeColorAddon, textColors, Color } from 'notebookEditor/theme/type';
+import { colorToHexColor, removeColorAddon, keyboardShortcutTextColors, Color } from 'notebookEditor/theme/type';
 import { useLocalValue } from 'notebookEditor/shared/hook/useLocalValue';
 
 import { ColorPickerMenu } from './ColorPickerMenu';
@@ -19,7 +19,7 @@ interface Props {
 }
 
 // == Component ===================================================================
-export const ColorPickerTool: React.FC<Props> = ({ colors = textColors, name, onChange, value }) => {
+export const ColorPickerTool: React.FC<Props> = ({ colors = keyboardShortcutTextColors, name, onChange, value }) => {
   // -- State ---------------------------------------------------------------------
   const { commitChange, localValue, resetLocalValue, updateLocalValue } = useLocalValue(value, onChange);
 

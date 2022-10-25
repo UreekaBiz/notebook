@@ -13,10 +13,10 @@ export type Color = {
 export const colorToHexColor = (color: string): string => '#'.concat(color);
 export const removeColorAddon = (color: string): string => color.replace(/^#/, '');
 
-// 10x8 Color list (matches Google Docs)
+// 10x8 Color list
 // NOTE: these colors have no key since they are not meant to be set through
-//       any Keyboard Shortcut interaction
-export const googleDocsColors: Color[][] = [
+//       any Keyboard Shortcut interaction, but through a click
+export const textColors: Color[][] = [
   [
     { name: 'black', hexCode: '#000000', hslCode: '0% 0% 0%', key: '' },
     { name: 'dark grey 4', hexCode: '#434343', hslCode: '0, 0%, 50%', key: '' },
@@ -115,8 +115,8 @@ export const googleDocsColors: Color[][] = [
   ],
 ];
 
-// 5x3 Color List that includes keys. Matches Excalidraw
-export const textColors: Color[][] = [
+// 5x3 Color List that includes keys
+export const keyboardShortcutTextColors: Color[][] = [
   [
     { name: 'black', hexCode: '#000000', hslCode: '0% 0% 0%', key: '1' },
     { name: 'blackGrey1', hexCode: '#343A40', hslCode: '210, 10%, 23%', key: '2' },
@@ -141,7 +141,7 @@ export const textColors: Color[][] = [
 ];
 
 // 5x3 Color List that includes keys and the transparent Color
-export const fillColors: Color[][] = [
+export const keyboardShortcutFillColors: Color[][] = [
   [
     { name: 'transparent', hexCode: 'transparent', hslCode: '0% 0% 0%', key: '1' },
     { name: 'grey1', hexCode: '#CED4DA', hslCode: '210, 14%, 83%', key: '2' },

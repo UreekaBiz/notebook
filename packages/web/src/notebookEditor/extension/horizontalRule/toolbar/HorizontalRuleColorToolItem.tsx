@@ -4,7 +4,7 @@ import { isHorizontalRuleNode, isNodeSelection, updateSingleNodeAttributesComman
 
 import { GoogleDocsColorPickerTool } from 'notebookEditor/extension/shared/component/GoogleDocsColorPickerToolItem/GoogleDocsColorPickerTool';
 import { EditorToolComponentProps } from 'notebookEditor/sidebar/toolbar/type';
-import { googleDocsColors } from 'notebookEditor/theme/type';
+import { textColors } from 'notebookEditor/theme/type';
 
 // ********************************************************************************
 // == Component ===================================================================
@@ -28,7 +28,7 @@ export const HorizontalRuleColorToolItem: React.FC<Props> = ({ editor }) => {
         name='Color'
         value={backgroundColorValue ?? DEFAULT_HORIZONTAL_RULE_BACKGROUND_COLOR}
         onChange={handleBorderColorChange}
-        colors={googleDocsColors}
+        colors={textColors}
       />
     </Box>
   );

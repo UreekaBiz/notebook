@@ -4,7 +4,7 @@ import { isBlockquoteNode, updateSingleNodeAttributesCommand, AttributeType, Nod
 
 import { GoogleDocsColorPickerTool } from 'notebookEditor/extension/shared/component/GoogleDocsColorPickerToolItem/GoogleDocsColorPickerTool';
 import { EditorToolComponentProps } from 'notebookEditor/sidebar/toolbar/type';
-import { googleDocsColors } from 'notebookEditor/theme/type';
+import { textColors } from 'notebookEditor/theme/type';
 
 // ********************************************************************************
 // == Component ===================================================================
@@ -28,7 +28,7 @@ export const BlockquoteBorderColorToolItem: React.FC<Props> = ({ editor }) => {
         name='Color'
         value={borderColorValue ?? DEFAULT_BLOCKQUOTE_BORDER_LEFT_COLOR}
         onChange={handleBorderColorChange}
-        colors={googleDocsColors}
+        colors={textColors}
       />
     </Box>
   );
