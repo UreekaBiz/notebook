@@ -27,7 +27,7 @@ export const OrderedList = Node.create<NoOptions, NoStorage>({
     };
   },
 
-  // -- Command -------------------------------------------------------------------
+  // -- Keyboard Shortcut ---------------------------------------------------------
   addKeyboardShortcuts() {
     return {
       'Mod-Shift-7': () => handleListDocumentUpdates(this.editor, NodeName.ORDERED_LIST),
