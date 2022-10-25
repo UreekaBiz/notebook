@@ -1,11 +1,12 @@
 import { RiDoubleQuotesL } from 'react-icons/ri';
 
-import { isNodeSelection, NodeName } from '@ureeka-notebook/web-service';
+import { isNodeSelection, AttributeType, NodeName } from '@ureeka-notebook/web-service';
 
 import { markBold } from 'notebookEditor/extension/bold/toolbar';
 import { markCode } from 'notebookEditor/extension/code/toolbar';
 import { markItalic } from 'notebookEditor/extension/italic/toolbar';
 import { linkToolItem } from 'notebookEditor/extension/link/toolbar';
+import { ColorPickerNodeToolItem } from 'notebookEditor/extension/shared/component/ColorPickerToolItem';
 import { markStrikethrough } from 'notebookEditor/extension/strikethrough/toolbar';
 import { markSuperScript } from 'notebookEditor/extension/superScript/toolbar';
 import { markSubScript } from 'notebookEditor/extension/subScript/toolbar';
@@ -48,6 +49,20 @@ const blockquoteBorderLeftWidthToolItem: ToolItem =  {
   component: BlockquoteBorderLeftWidthToolItem,
 };
 
+const blockquoteBackgroundColorToolItem: ToolItem = {
+  toolType: 'component',
+  name: 'blockquoteBackgroundColorToolItem',
+
+  component: ({ editor, depth }) =>
+    <ColorPickerNodeToolItem
+      editor={editor}
+      depth={depth}
+      nodeName={NodeName.BLOCKQUOTE}
+      attributeType={AttributeType.BackgroundColor}
+      name={'Background Color'}
+    />,
+};
+
 
 // == Toolbar =====================================================================
 export const BlockquoteToolbar: Toolbar = {
@@ -73,6 +88,7 @@ export const BlockquoteToolbar: Toolbar = {
       indentBlocksToolItem,
     ],
     [
+      blockquoteBackgroundColorToolItem,
       fontSizeToolItem,
       textColorToolItem,
       highlightColorMarkToolItem,

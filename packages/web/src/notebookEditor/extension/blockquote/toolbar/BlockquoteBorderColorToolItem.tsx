@@ -25,7 +25,7 @@ export const BlockquoteBorderColorToolItem: React.FC<Props> = ({ editor }) => {
   return (
     <Box>
       <ColorPickerTool
-        name='Color'
+        name='Border Color'
         value={borderColorValue ?? DEFAULT_BLOCKQUOTE_BORDER_LEFT_COLOR}
         onChange={handleBorderColorChange}
         colors={textColors}

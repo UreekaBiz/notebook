@@ -11,8 +11,11 @@ import { NotebookSchemaType } from '../schema';
 // NOTE: must be present on the NodeSpec below
 // NOTE: this value must have matching types -- the ones defined in the Extension
 const BlockquoteAttributeSpec = {
+  [AttributeType.BackgroundColor]: noNodeOrMarkSpecAttributeDefaultValue<string>(),
   [AttributeType.BorderLeft]: noNodeOrMarkSpecAttributeDefaultValue<string>(),
   [AttributeType.BorderColor]: noNodeOrMarkSpecAttributeDefaultValue<string>(),
+  [AttributeType.Color]: noNodeOrMarkSpecAttributeDefaultValue<string>(),
+  [AttributeType.FontSize]: noNodeOrMarkSpecAttributeDefaultValue<string>(),
   [AttributeType.MarginLeft]: noNodeOrMarkSpecAttributeDefaultValue<string>(),
 };
 export type BlockquoteAttributes = AttributesTypeFromNodeSpecAttributes<typeof BlockquoteAttributeSpec>;

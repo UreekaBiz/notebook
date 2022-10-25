@@ -66,6 +66,10 @@ export const DefaultTheme: Theme = {
 
   nodes: {
     [NodeName.BLOCKQUOTE]: {
+      [AttributeType.BackgroundColor]: '#FFFFFF',
+      [AttributeType.Color]: '#000000',
+      [AttributeType.FontSize]: '16px',
+
       // NOTE: order is not arbitrary
       [AttributeType.BorderLeft]: '3px',
       [AttributeType.BorderColor]: '#CCCCCC',
@@ -208,7 +212,11 @@ export const GoogleDocsTheme: Theme = {
 
   nodes: {
     [NodeName.BLOCKQUOTE]: {
-      // NOTE: order is not arbitrary
+      [AttributeType.BackgroundColor]: '#FFFFFF',
+      [AttributeType.Color]: '#000000',
+      [AttributeType.FontSize]: '11pt',
+
+      // NOTE: order of borders is not arbitrary
       [AttributeType.BorderLeft]: '3px',
       [AttributeType.BorderColor]: '#CCCCCC',
       [AttributeType.MarginLeft]: '4px',

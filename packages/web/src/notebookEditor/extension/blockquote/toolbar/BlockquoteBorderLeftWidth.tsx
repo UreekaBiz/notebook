@@ -17,7 +17,7 @@ export const BlockquoteBorderLeftWidthToolItem: React.FC<Props> = ({ editor, dep
   return (
     <Box>
       <InputWithUnitNodeToolItem
-        name='Width'
+        name='Border Width'
         nodeName={NodeName.BLOCKQUOTE}
         attributeType={AttributeType.BorderLeft}
         editor={editor}
