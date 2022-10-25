@@ -133,7 +133,8 @@ export const DefaultTheme: Theme = {
     [NodeName.NESTED_VIEW_BLOCK_NODE]: {/*no defined value*/},
     [NodeName.ORDERED_LIST]: { [AttributeType.MarginLeft]: '10px' },
     [NodeName.PARAGRAPH]: {
-      [AttributeType.Color]: '#000',
+      [AttributeType.BackgroundColor]: '#FFFFFF',
+      [AttributeType.Color]: '#000000',
       [AttributeType.FontSize]: '16px',
       [AttributeType.MarginLeft]: '4px',
       [AttributeType.MarginRight]: '4px',
@@ -273,6 +274,7 @@ export const GoogleDocsTheme: Theme = {
     [NodeName.NESTED_VIEW_BLOCK_NODE]: {/*no defined value*/},
     [NodeName.ORDERED_LIST]: { [AttributeType.MarginLeft]: '10px' },
     [NodeName.PARAGRAPH]: {
+      [AttributeType.BackgroundColor]: '#FFFFFF',
       [AttributeType.FontSize]: '11pt',
       [AttributeType.Color]: '#353744',
       [AttributeType.MarginLeft]: '4px',
