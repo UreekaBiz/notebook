@@ -46,7 +46,7 @@ export const ColorPickerNodeToolItem: React.FC<ColorPickerNodeToolItemProps> = (
   };
 
   // .. UI ........................................................................
-  // NOTE: Not using InputToolItemContainer at this level since GoogleDocsColorPickerTool
+  // NOTE: Not using InputToolItemContainer at this level since ColorPickerTool
   //       requires to have access to the UnitPicker which will be the right side
   //       content of the InputToolItemContainer.
   return <ColorPickerTool name={name} value={value} onChange={handleChange}/>;
@@ -79,7 +79,7 @@ export const ColorPickerMarkToolItem: React.FC<ColorPickerMarkToolItemProps> = (
   };
 
   // .. UI ........................................................................
-  // NOTE: Not using InputToolItemContainer at this level since GoogleDocsColorPickerTool
+  // NOTE: Not using InputToolItemContainer at this level since ColorPickerTool
   //       requires to have access to the ColorPickerMenu which will be the right
   //       side content of the InputToolItemContainer.
   return <ColorPickerTool name={name} value={inputValue} onChange={handleChange}/>;
