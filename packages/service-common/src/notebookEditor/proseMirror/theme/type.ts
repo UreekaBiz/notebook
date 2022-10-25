@@ -108,7 +108,7 @@ export const DefaultTheme: Theme = {
     [NodeName.DEMO_ASYNC_NODE]: {/*no defined value*/},
     [NodeName.EDITABLE_INLINE_NODE_WITH_CONTENT]: {/*no defined value*/},
     [NodeName.HEADING]: {
-      [AttributeType.BackgroundColor]: '#F4F4F4',
+      [AttributeType.BackgroundColor]: '#F3F3F3',
       [AttributeType.MarginLeft]: '4px',
       [AttributeType.MarginRight]: '4px',
       [AttributeType.MarginBottom]: '0.25rem',
@@ -249,7 +249,7 @@ export const GoogleDocsTheme: Theme = {
     [NodeName.DEMO_ASYNC_NODE]: {/*no defined value*/},
     [NodeName.EDITABLE_INLINE_NODE_WITH_CONTENT]: {/*no defined value*/},
     [NodeName.HEADING]: {
-      [AttributeType.BackgroundColor]: 'white',
+      [AttributeType.BackgroundColor]: '#FFFFFF',
       [AttributeType.MarginLeft]: '4px',
       [AttributeType.MarginBottom]: '0.25rem',
     },
