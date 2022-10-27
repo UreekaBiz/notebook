@@ -137,7 +137,7 @@ export class UpdateAttributesInRangeDocumentUpdate implements AbstractDocumentUp
  * Transaction will not be added to the History. This is ideal for asynchronous
  * update attributes, whose effects should (usually) not be undo-able
  */
- export const updateSingleNodeAttributesCommand = <T extends Attributes>(nodeName: NodeName, nodePosition: number, attributes: Partial<T>, addToHistory = true): Command => (state, dispatch) => {
+ export const updateSingleNodeAttributesCommand = <T extends Attributes>(nodeName: NodeName, nodePosition: number, attributes: Partial<T>, addToHistory: boolean = true): Command => (state, dispatch) => {
   const updatedTr = new UpdateSingleNodeAttributesDocumentUpdate(nodeName, nodePosition, attributes, addToHistory).update(state, state.tr);
   if(updatedTr) {
     dispatch(updatedTr);
@@ -147,7 +147,7 @@ export class UpdateAttributesInRangeDocumentUpdate implements AbstractDocumentUp
   return false/*not executed*/;
 };
 export class UpdateSingleNodeAttributesDocumentUpdate implements AbstractDocumentUpdate {
-  public constructor(private readonly nodeName: NodeName, private readonly nodePosition: number, private readonly attributes: Partial<Attributes>, private readonly addToHistory: boolean) {/*nothing additional*/}
+  public constructor(private readonly nodeName: NodeName, private readonly nodePosition: number, private readonly attributes: Partial<Attributes>, private readonly addToHistory: boolean = true/*default*/) {/*nothing additional*/}
 
   /*
    * Modify the Transaction such that the Attributes of the Node at the given

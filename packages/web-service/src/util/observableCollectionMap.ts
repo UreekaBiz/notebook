@@ -2,6 +2,8 @@ import { DocumentChange, Query, QueryDocumentSnapshot } from 'firebase/firestore
 import { Observable } from 'rxjs';
 import { scan } from 'rxjs/operators';
 
+import { Identifier } from '@ureeka-notebook/service-common';
+
 import { getLogger, ServiceLogger } from '../logging';
 import { queryCollectionChanges } from './observableCollection';
 
@@ -11,6 +13,7 @@ const log = getLogger(ServiceLogger.UTIL);
 // ********************************************************************************
 // a projection (as in relational algebra) operations
 export type ProjectOperation<I, F, T> = (snapshot: QueryDocumentSnapshot<F>) => [I, T];
+export const defaultProject = <T>(snapshot: QueryDocumentSnapshot<T>): [Identifier, T] => [snapshot.id, snapshot.data()];
 
 // ================================================================================
 export const queryMap = <I, F, T>(query: Query<F>, project: ProjectOperation<I, F, T>): Observable<Map<I, T>> =>

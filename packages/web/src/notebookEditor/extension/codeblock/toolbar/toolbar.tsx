@@ -1,7 +1,8 @@
 import { BiCodeAlt } from 'react-icons/bi';
 
-import { generateNodeId, getParentNode, getSelectedNode, isCodeBlockNode, AttributeType, NodeName } from '@ureeka-notebook/web-service';
+import { generateNodeId, getParentNode, getSelectedNode, isCodeBlockNode, isNodeSelection, AttributeType, NodeName } from '@ureeka-notebook/web-service';
 
+import { blockquoteToolItem } from 'notebookEditor/extension/blockquote/toolbar/toolbar';
 import { markBold } from 'notebookEditor/extension/bold/toolbar';
 import { markCode } from 'notebookEditor/extension/code/toolbar';
 import { markItalic } from 'notebookEditor/extension/italic/toolbar';
@@ -12,6 +13,7 @@ import { markSuperScript } from 'notebookEditor/extension/superScript/toolbar';
 import { spacingToolItem } from 'notebookEditor/extension/textStyle/toolbar';
 import { markUnderline } from 'notebookEditor/extension/underline/toolbar';
 import { toggleBlock } from 'notebookEditor/extension/util/node';
+import { dedentBlocksToolItem, indentBlocksToolItem } from 'notebookEditor/shared/toolItem';
 import { Toolbar, ToolItem } from 'notebookEditor/sidebar/toolbar/type';
 
 import { CodeBlockTypeToolItem } from './CodeBlockTypeToolItem';
@@ -33,6 +35,8 @@ export const codeBlockToolItem: ToolItem = {
     if(node && isCodeBlockNode(node)) return true/*(SEE: comment above)*/;
 
     if(isCodeBlockNode(editor.state.selection.$anchor.parent)) return true/*(SEE: comment above)*/;
+
+    if(isNodeSelection(editor.state.selection)) return true/*disabled*/;
 
     return false/*enabled*/;
   },
@@ -73,6 +77,7 @@ export const CodeBlockToolbar: Toolbar = {
       codeBlockWrapToolItem,
     ],
     [
+      blockquoteToolItem,
       markBold,
       markItalic,
       markUnderline,
@@ -80,6 +85,8 @@ export const CodeBlockToolbar: Toolbar = {
       markSuperScript,
       markSubScript,
       markCode,
+      dedentBlocksToolItem,
+      indentBlocksToolItem,
     ],
     [
       spacingToolItem,

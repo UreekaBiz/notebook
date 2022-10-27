@@ -1,13 +1,13 @@
 import { Node } from '@tiptap/core';
 
-import { getNodeOutputSpec, isEditableInlineNodeWithContentNode, AttributeType, EditableInlineNodeWithContentNodeSpec, NodeName, DATA_NODE_TYPE } from '@ureeka-notebook/web-service';
+import { generateNodeId, getNodeOutputSpec, isEditableInlineNodeWithContentNode, AttributeType, EditableInlineNodeWithContentNodeSpec, NodeName, DATA_NODE_TYPE } from '@ureeka-notebook/web-service';
 
 import { NodeViewStorage } from 'notebookEditor/model/NodeViewStorage';
 import { NoOptions } from 'notebookEditor/model/type';
 
 import { uniqueIdParsingBehavior } from '../../util/attribute';
+import { insertAndSelectNestedViewNode } from '../util';
 import { EditableInlineNodeWithContentController, EditableInlineNodeWithContentStorageType } from './nodeView/controller';
-import { insertAndSelectEditableInlineNodeWithContent } from './util';
 
 // ********************************************************************************
 // == Node ========================================================================
@@ -25,8 +25,8 @@ export const EditableInlineNodeWithContent = Node.create<NoOptions, EditableInli
   // -- Keyboard Shortcut ---------------------------------------------------------
   addKeyboardShortcuts() {
     return {
-      'Mod-e': () => insertAndSelectEditableInlineNodeWithContent(this.editor, this.editor.state.selection.$anchor.depth, 'keyboardShortcut'),
-      'Mod-E': () => insertAndSelectEditableInlineNodeWithContent(this.editor, this.editor.state.selection.$anchor.depth, 'keyboardShortcut'),
+      'Mod-e': () => insertAndSelectNestedViewNode(this.editor, this.editor.state.selection.$anchor.depth, this.type, { [AttributeType.Id]: generateNodeId() }, 'keyboardShortcut'),
+      'Mod-E': () => insertAndSelectNestedViewNode(this.editor, this.editor.state.selection.$anchor.depth, this.type, { [AttributeType.Id]: generateNodeId() }, 'keyboardShortcut'),
     };
   },
 
@@ -59,3 +59,4 @@ export const EditableInlineNodeWithContent = Node.create<NoOptions, EditableInli
   parseHTML() { return [{ tag: `span[${DATA_NODE_TYPE}="${NodeName.EDITABLE_INLINE_NODE_WITH_CONTENT}"]` }]; },
   renderHTML({ node, HTMLAttributes }) { return getNodeOutputSpec(node, HTMLAttributes); },
 });
+

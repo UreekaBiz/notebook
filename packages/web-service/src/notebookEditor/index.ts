@@ -55,6 +55,10 @@ export {
   AsyncNodeAttributes,
   isAsyncNodeAttributes,
 
+  BlockquoteAttributes,
+  DEFAULT_BLOCKQUOTE_BORDER_LEFT_COLOR,
+  DEFAULT_BLOCKQUOTE_BORDER_LEFT_WIDTH,
+
   CodeBlockAttributes,
   isCodeBlockAttributes,
   CodeBlockType,
@@ -81,12 +85,16 @@ export {
   DEFAULT_DEMO_ASYNC_NODE_TEXT,
 
   createEditableInlineNodeWithContent,
+  getEditableInlineNodeWithContentNodeType,
   EditableInlineNodeWithContentAttributes,
 
   HeadingLevel,
   getHeadingLevelFromTag,
   isHeadingLevel,
   HeadingAttributes,
+
+  DEFAULT_HORIZONTAL_RULE_BACKGROUND_COLOR,
+  DEFAULT_HORIZONTAL_RULE_HEIGHT,
 
   ParagraphAttributes,
 
@@ -126,14 +134,13 @@ export {
   DATA_LIST_ITEM_SEPARATOR,
 
   getNestedViewNodeTextString,
+  isNestedViewNode,
   NESTED_VIEW_NODE_EMPTY_NODE_CLASS,
   NESTED_NODE_VIEW_INNER_VIEW_DISPLAY_CONTAINER_CLASS,
   NESTED_NODE_VIEW_RENDER_DISPLAY_CONTAINER_CLASS,
 
   OrderedListAttributes,
   ORDERED_LIST_DEFAULT_START,
-
-  DATA_TASK_LIST_ITEM_CHECKED,
 
   // == Nodes =====================================================================
   JSONNode,
@@ -157,6 +164,7 @@ export {
   Demo2AsyncNodeSpec,
   DocumentNodeSpec,
   HeadingNodeSpec,
+  HorizontalRuleNodeSpec,
   ImageNodeSpec,
   MarkHolderNodeSpec,
   OrderedListNodeSpec,
@@ -213,11 +221,17 @@ export {
   getHeadingNodeType,
   isHeadingNode,
 
+  createHorizontalRuleNode,
+  HorizontalRuleNodeType,
+  getHorizontalRuleNodeType,
+  isHorizontalRuleNode,
+
   ImageNodeType,
   createImageNode,
   getImageNodeType,
   isImageNode,
 
+  isListStyle,
   ListStyle,
 
   createListItemNode,
@@ -242,6 +256,7 @@ export {
 
   NestedViewBlockNodeType,
   NestedViewBlockNodeSpec,
+  getNestedViewBlockNodeType,
   isNestedViewBlockNode,
 
   getOrderedListNodeType,
@@ -272,7 +287,6 @@ export {
   ExtendMarkRangeDocumentUpdate,
   getMarkName,
   getMarkValue,
-  isMarkActive,
   isMarkName,
   markFromJSONMark,
   parseStringifiedMarksArray,
@@ -388,7 +402,6 @@ export {
 
   // == Command ===================================================================
   Command,
-  CommandFunctionType,
 
   // == Update ====================================================================
   AbstractDocumentUpdate,
@@ -398,6 +411,7 @@ export {
   contentToNode,
   contentToJSONNode,
   nodeToContent,
+  ProseMirrorNodeContent,
 
   // == Theme =====================================================================
   Theme,
@@ -439,6 +453,8 @@ export {
   getNodesAffectedByTransaction,
   getNodesAffectedByStepMap,
   getNodesRemovedByTransaction,
+  insertNewlineCommand,
+  InsertNewlineDocumentUpdate,
   leaveBlockNodeCommand,
   LeaveBlockNodeDocumentUpdate,
   liftEmptyBlockNodeCommand,
@@ -478,8 +494,15 @@ export {
   SelectNodeBackwardDocumentUpdate,
   setNodeSelectionCommand,
   SetNodeSelectionDocumentUpdate,
+  setSelectionCommand,
+  SetSelectionDocumentUpdate,
   setTextSelectionCommand,
   SetTextSelectionDocumentUpdate,
 
-  // ..............................................................................
+  // .. Range ....................................................................
+  getChangedRanges,
+
+  // .. Step ......................................................................
+  combineTransactionSteps,
+
 } from '@ureeka-notebook/service-common';

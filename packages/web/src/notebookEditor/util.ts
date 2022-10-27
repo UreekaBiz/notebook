@@ -9,6 +9,9 @@ import { CHIP_TOOL_INPUT } from './extension/shared/component/chipTool/ChipTool'
 // convenience functions pertaining to the Editor or Toolbar
 // ********************************************************************************
 // == Focus =======================================================================
+// NOTE: this function makes use of editor.commands since for some reason regular
+//       Commands and DocumentUpdates do not seem to have an effect on the scroll
+//       behavior of the updated Transactions
 export const focusEditor = (editor: Editor, nodeId: NodeIdentifier | undefined/*none*/) => {
   // if there is no Editor (specifically the container that contains it) or the
   // caller doesn't want to focus a specific Element then simply set the focus to

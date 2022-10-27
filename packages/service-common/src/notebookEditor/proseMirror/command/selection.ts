@@ -13,6 +13,27 @@ import { findCutBefore } from './util';
 export type SelectionRange = { from: number; to: number; }
 
 // == Selection ===================================================================
+/** set a Selection regardless of its type */
+export const setSelectionCommand = (selection: Selection): Command => (state, dispatch) => {
+  const updatedTr =  new SetSelectionDocumentUpdate(selection).update(state, state.tr);
+  if(updatedTr) {
+    dispatch(updatedTr);
+    return true/*Command executed*/;
+  } /* else -- Command cannot be executed */
+
+  return false/*not executed*/;
+};
+export class SetSelectionDocumentUpdate implements AbstractDocumentUpdate {
+  public constructor(private readonly selection: Selection) {/*nothing additional*/}
+  /*
+   * modify the given Transaction such that the Selection is set and return it
+   */
+  public update(editorState: EditorState, tr: Transaction) {
+    tr.setSelection(this.selection);
+    return tr/*updated*/;
+  }
+}
+
 /** set a TextSelection given the Range */
 export const setTextSelectionCommand = (selectionRange: SelectionRange): Command => (state, dispatch) => {
   const updatedTr =  new SetTextSelectionDocumentUpdate(selectionRange).update(state, state.tr);

@@ -1,5 +1,6 @@
-import { getSelectedNode, isNodeSelection, isNodeType, AttributeType, InvalidMergedAttributeValue, MarkName, NodeName } from '@ureeka-notebook/web-service';
+import { getSelectedNode, isNodeSelection, isNodeType, setMarkCommand, AttributeType, InvalidMergedAttributeValue, MarkName, NodeName, SetNodeSelectionDocumentUpdate, SetTextSelectionDocumentUpdate, UpdateSingleNodeAttributesDocumentUpdate  } from '@ureeka-notebook/web-service';
 
+import { applyDocumentUpdates } from 'notebookEditor/command/update';
 import { getTextDOMRenderedValue } from 'notebookEditor/extension/util/attribute';
 import { EditorToolComponentProps } from 'notebookEditor/sidebar/toolbar/type';
 
@@ -22,22 +23,28 @@ interface InputWithUnitNodeToolItemProps extends EditorToolComponentProps {
 export const InputWithUnitNodeToolItem: React.FC<InputWithUnitNodeToolItemProps> = ({ editor, attributeType, depth, name, nodeName, minValue, maxValue }) => {
   const { state } = editor;
   const { selection } = state;
+  const { $anchor, anchor } = selection;
   const node = getSelectedNode(state, depth);
   if(!node || !isNodeType(node, nodeName)) return null/*nothing to render - invalid node render*/;
 
-  const value = node.attrs[attributeType] ?? '' /*default*/;
+  // get a valid render value for the input
+  const domRenderValue = getTextDOMRenderedValue(editor, attributeType);
+  const value = String((domRenderValue === InvalidMergedAttributeValue ? ''/*invalid*/ : domRenderValue) ?? ''/*not specified in theme*/);
 
   // -- Handler -------------------------------------------------------------------
   const handleChange = (value: string, focus?: boolean) => {
-    editor.commands.updateAttributes(nodeName, { [attributeType]: value });
+    const nodeSelection = isNodeSelection(selection);
+    const updatePos = nodeSelection
+      ? anchor
+      : anchor - $anchor.parentOffset - 1/*select the Node itself*/;
 
-    const position = state.selection.anchor;
-    // set the selection in the same position in case that the node was replaced
-    if(isNodeSelection(selection)) editor.commands.setNodeSelection(position);
-    else editor.commands.setTextSelection(position);
+    applyDocumentUpdates(editor, [
+      new UpdateSingleNodeAttributesDocumentUpdate(nodeName as NodeName/*by definition*/, updatePos, { [attributeType]: value }),
+      ...(nodeSelection ? [new SetNodeSelectionDocumentUpdate(anchor)] : [new SetTextSelectionDocumentUpdate({ from: anchor, to: anchor })]),
+    ]);
 
-    // Focus the editor again
-    if(focus) editor.commands.focus();
+    // focus the Editor again
+    if(focus) editor.view.focus();
   };
 
   // -- UI ------------------------------------------------------------------------
@@ -61,22 +68,22 @@ interface InputWithUnitMarkToolItemProps extends EditorToolComponentProps {
   maxValue?: number;
 }
 export const InputWithUnitMarkToolItem: React.FC<InputWithUnitMarkToolItemProps> = ({ editor, attributeType, markName, name, minValue, maxValue }) => {
-  const domRenderValue = getTextDOMRenderedValue(editor, attributeType, markName);
   // get a valid render value for the input
-  const inputValue = String((domRenderValue === InvalidMergedAttributeValue ? '' : domRenderValue) ?? '');
+  const domRenderValue = getTextDOMRenderedValue(editor, attributeType, markName);
+  const value = String((domRenderValue === InvalidMergedAttributeValue ? ''/*invalid*/ : domRenderValue) ?? ''/*not specified in theme*/);
 
   // -- Handler -------------------------------------------------------------------
   const handleChange = (value: string, focus?: boolean) => {
-    editor.commands.setMark(markName, { [attributeType]: value });
+    setMarkCommand(markName, { [attributeType]: value })(editor.state, editor.view.dispatch);
 
     // NOTE: No need to manually focus the position again since it's a mark update
-    // Focus the editor again
-    if(focus) editor.commands.focus();
+    // focus the Editor again
+    if(focus) editor.view.focus();
   };
 
   // -- UI ------------------------------------------------------------------------
   // NOTE: Not using InputToolItemContainer at this level since InputWithUnitTool
   //       requires to have access to the UnitPicker which will be the right side
   //       content of the InputToolItemContainer.
-  return <InputWithUnitTool name={name} value={inputValue} minValue={minValue} maxValue={maxValue} onChange={handleChange}/>;
+  return <InputWithUnitTool name={name} value={value} minValue={minValue} maxValue={maxValue} onChange={handleChange}/>;
 };

@@ -101,7 +101,7 @@ export abstract class AbstractNestedNodeViewNodeController<NodeType extends Nest
     // do the default behavior
     super.updateProps(getPos);
 
-    // ensure the contents of the reused EINwC are rendered correctly
+    // ensure the contents of the reused NVN are rendered correctly
     this.nodeView.setupView();
     this.nodeView.renderNodeContent();
   }
@@ -109,7 +109,7 @@ export abstract class AbstractNestedNodeViewNodeController<NodeType extends Nest
   // .. Destroy ...................................................................
   // called when the NodeView is destroyed. The conditions that trigger this are
   // determined by ProseMirror (e.g. splitting a Paragraph that contains an
-  // EINwC will trigger the destroy). The View must account for this possibility
+  // NVN will trigger the destroy). The View must account for this possibility
   // (SEE: #setupView, #renderNodeContent)
   public destroy() {
     // do the default behavior
@@ -155,19 +155,19 @@ export abstract class AbstractNestedNodeViewNodeController<NodeType extends Nest
           {
             'ArrowUp': () => {
               if(!this.nodeView.innerView) return false/*no inner View*/;
-              return nestedViewNodeBehaviorCommand(this.nodeView.outerView, this.node.type.name, 'before'/*place cursor before the Node*/, this.nodeView.innerView.endOfTextblock('up'))(this.nodeView.innerView.state, this.nodeView.innerView.dispatch);
+              return nestedViewNodeBehaviorCommand(this.nodeView.outerView, this.node.type, 'before'/*place cursor before the Node*/, this.nodeView.innerView.endOfTextblock('up'))(this.nodeView.innerView.state, this.nodeView.innerView.dispatch);
             },
             'ArrowRight': () => {
               if(!this.nodeView.innerView) return false/*no inner View*/;
-              return nestedViewNodeBehaviorCommand(this.nodeView.outerView, this.node.type.name, 'after'/*place cursor after the Node*/, this.nodeView.innerView.endOfTextblock('right'))(this.nodeView.innerView.state, this.nodeView.innerView.dispatch);
+              return nestedViewNodeBehaviorCommand(this.nodeView.outerView, this.node.type, 'after'/*place cursor after the Node*/, this.nodeView.innerView.endOfTextblock('right'))(this.nodeView.innerView.state, this.nodeView.innerView.dispatch);
             },
             'ArrowDown': () => {
               if(!this.nodeView.innerView) return false/*no inner View*/;
-              return nestedViewNodeBehaviorCommand(this.nodeView.outerView, this.node.type.name, 'after'/*place cursor before the Node*/, this.nodeView.innerView.endOfTextblock('down'))(this.nodeView.innerView.state, this.nodeView.innerView.dispatch);
+              return nestedViewNodeBehaviorCommand(this.nodeView.outerView, this.node.type, 'after'/*place cursor before the Node*/, this.nodeView.innerView.endOfTextblock('down'))(this.nodeView.innerView.state, this.nodeView.innerView.dispatch);
             },
             'ArrowLeft': () => {
               if(!this.nodeView.innerView) return false/*no inner View*/;
-              return nestedViewNodeBehaviorCommand(this.nodeView.outerView, this.node.type.name, 'before'/*place cursor before the Node*/, this.nodeView.innerView.endOfTextblock('left'))(this.nodeView.innerView.state, this.nodeView.innerView.dispatch);
+              return nestedViewNodeBehaviorCommand(this.nodeView.outerView, this.node.type, 'before'/*place cursor before the Node*/, this.nodeView.innerView.endOfTextblock('left'))(this.nodeView.innerView.state, this.nodeView.innerView.dispatch);
             },
             'Backspace': (state: EditorState, dispatch: ((tr: Transaction) => void) | undefined) => {
               if(!dispatch) return false/*nothing to do*/;
@@ -194,8 +194,8 @@ export abstract class AbstractNestedNodeViewNodeController<NodeType extends Nest
               return true/*handled*/;
             },
 
-            'Shift-Enter': nestedViewNodeBehaviorCommand(this.nodeView.outerView, this.node.type.name, 'after'/*place cursor after the Node*/, true/*meant to leave the inner View*/),
-            'Enter': chainCommands(newlineInCode, nestedViewNodeBehaviorCommand(this.nodeView.outerView, this.node.type.name, 'after'/*place cursor after the Node*/, true/*meant to leave the inner View*/)),
+            'Shift-Enter': nestedViewNodeBehaviorCommand(this.nodeView.outerView, this.node.type, 'after'/*place cursor after the Node*/, true/*meant to leave the inner View*/),
+            'Enter': chainCommands(newlineInCode, nestedViewNodeBehaviorCommand(this.nodeView.outerView, this.node.type, 'after'/*place cursor after the Node*/, true/*meant to leave the inner View*/)),
 
             // bind undo and redo to the outer View, since Transactions in the inner View
             // ensure that the outer one reflects them appropriately
@@ -218,14 +218,14 @@ export abstract class AbstractNestedNodeViewNodeController<NodeType extends Nest
     });
 
     // request outer cursor position before Node was selected
-    const maybePrevCursorPos = nestedViewNodePluginKey.getState(this.nodeView.outerView.state)?.prevCursorPos;
-    if(maybePrevCursorPos === undefined/*explicit check since it can be 0*/) console.warn('unable to get NestedViewNode plugin state from key');
+    const maybePrevPrevCursorPos = nestedViewNodePluginKey.getState(this.nodeView.outerView.state)?.prevprevCursorPos;
+    if(maybePrevPrevCursorPos === undefined/*explicit check since it can be 0*/) console.warn('unable to get NestedViewNode plugin state from key');
 
     // compute the position that the cursor should appear in the expanded Node
-    const prevCursorPos: number = maybePrevCursorPos ?? 0/*set at the start of the Node by default*/;
+    const prevprevCursorPor: number = maybePrevPrevCursorPos ?? 0/*set at the start of the Node by default*/;
 
     let innerViewPos = this.node.nodeSize - 2/*set the selection at the end of the Node by default*/;
-    if(prevCursorPos <= this.getPos()) {
+    if(prevprevCursorPor <= this.getPos()) {
       innerViewPos = 0;
     } /* else -- no need to modify the innerView position */
 
@@ -289,6 +289,7 @@ const selectAllInsideNestedView = (state: EditorState, dispatch: ((tr: Transacti
 
   const { tr } = state;
   const { parentStart, parentEnd } = computeInnerViewSelection(state);
+
   if(tr.selection.from === parentStart && tr.selection.to === parentEnd) return false/*already selected all inside this NestedViewNode*/;
 
   tr.setSelection(TextSelection.create(tr.doc, parentStart, parentEnd));

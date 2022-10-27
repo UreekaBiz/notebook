@@ -1,7 +1,7 @@
 import { Editor } from '@tiptap/core';
 import { EditorView } from 'prosemirror-view';
 
-import { getNestedViewNodeTextString, getPosType, isEditableInlineNodeWithContentNode, NestedViewNodeType, DATA_NODE_TYPE, NESTED_VIEW_NODE_EMPTY_NODE_CLASS, NESTED_NODE_VIEW_INNER_VIEW_DISPLAY_CONTAINER_CLASS, NESTED_NODE_VIEW_RENDER_DISPLAY_CONTAINER_CLASS } from '@ureeka-notebook/web-service';
+import { getNestedViewNodeTextString, getPosType, NestedViewNodeType, DATA_NODE_TYPE, NESTED_VIEW_NODE_EMPTY_NODE_CLASS, NESTED_NODE_VIEW_INNER_VIEW_DISPLAY_CONTAINER_CLASS, NESTED_NODE_VIEW_RENDER_DISPLAY_CONTAINER_CLASS } from '@ureeka-notebook/web-service';
 
 import { AbstractNodeView } from 'notebookEditor/model/AbstractNodeView';
 
@@ -46,7 +46,7 @@ export abstract class AbstractNestedViewNodeView<NodeType extends NestedViewNode
   // -- Creation ------------------------------------------------------------------
   // create the DOM element that will hold this Node
   protected createDomElement() {
-    const dom = isEditableInlineNodeWithContentNode(this.node)
+    const dom = this.node.isInline
       ? document.createElement('span')
       : document.createElement('div');
 
@@ -103,7 +103,7 @@ export abstract class AbstractNestedViewNodeView<NodeType extends NestedViewNode
   // and its meant to provide another representation of the Node's content when
   // the inner View is not active
 	public renderNodeContent() {
-		if(!this.renderDisplayContainer) return/*not set yet, nothing to do*/;
+    if(!this.renderDisplayContainer) return/*not set yet, nothing to do*/;
 
 		// get text string to render
     const textString = getNestedViewNodeTextString(this.node);
@@ -119,10 +119,26 @@ export abstract class AbstractNestedViewNodeView<NodeType extends NestedViewNode
 
     this.dom.classList.remove(NESTED_VIEW_NODE_EMPTY_NODE_CLASS);
 
-    // show the default representation of the content of this Node
+    // show the representation of the content of this Node
     this.renderDisplayContainer.firstChild?.remove();
     const newRenderDisplayChild = document.createElement('span');
-          newRenderDisplayChild.innerHTML = `Length: ${textString.length}`;
+          newRenderDisplayChild.innerHTML = this.getRenderString(textString);
     this.renderDisplayContainer.appendChild(newRenderDisplayChild);
+  }
+
+  /**
+   * function used to define how the NestedViewNode's content will be shown
+   * (as an HTML string) when the cursor is not inside the NestedViewNode.
+   *
+   * Should be re-implemented for all NestedViewNodes that require a specific
+   * render behavior for their content.
+   *
+   * @param textString the string that is currently inside
+   * the NestedViewNode (its Text Content)
+   *
+   * @returns the content that will be set as the innerHTML of the renderDisplayContainer
+   */
+  public getRenderString(textString: string): string {
+    return `Length: ${textString.length}`;
   }
 }

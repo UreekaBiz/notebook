@@ -23,7 +23,7 @@ export class ToggleCodeDocumentUpdate implements AbstractDocumentUpdate {
    * is toggled and return it
    */
   public update(editorState: EditorState, tr: Transaction) {
-    const updatedTr = new ToggleOrSetMarkDocumentUpdate(MarkName.CODE, editorState.schema.marks[MarkName.CODE]).update(editorState, tr);
+    const updatedTr = new ToggleOrSetMarkDocumentUpdate(editorState.schema.marks[MarkName.CODE]).update(editorState, tr);
     return updatedTr/*updated*/;
   }
 }

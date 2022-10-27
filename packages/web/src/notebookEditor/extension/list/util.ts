@@ -3,13 +3,13 @@ import { Node as ProseMirrorNode, NodeType, ResolvedPos } from 'prosemirror-mode
 import { EditorState, Selection, Transaction } from 'prosemirror-state';
 import { canJoin, findWrapping } from 'prosemirror-transform';
 
-import { getAllAscendantsFromSelection, isBulletListNode, isDocumentNode, isOrderedListNode, isTaskListNode, isTaskListItemNode, isListItemNode, isListItemContentNode, AttributeType, BulletListNodeType, NodeName, SelectionDepth, SetTextSelectionDocumentUpdate, TaskListNodeType, OrderedListNodeType } from '@ureeka-notebook/web-service';
+import { getAllAscendantsFromSelection, isBulletListNode, isDocumentNode, isOrderedListNode, isTaskListNode, isTaskListItemNode, isListItemNode, isListItemContentNode, AttributeType, NodeName, SelectionDepth, SetTextSelectionDocumentUpdate } from '@ureeka-notebook/web-service';
 
 import { applyDocumentUpdates } from 'notebookEditor/command/update';
 
 import { SetParagraphDocumentUpdate } from '../paragraph/command';
 import { ToggleListDocumentUpdate } from './command/toggleListCommand';
-import { SetListItemContentDocumentUpdate, ALLOW_LIST_ITEM_CONTENT_META } from './listItemContent/update';
+import { SetListItemContentDocumentUpdate, ALLOW_LIST_ITEM_CONTENT_META } from './item/listItemContent/update';
 
 // ********************************************************************************
 // == List ========================================================================
@@ -27,10 +27,12 @@ export const isListBlockNode = (node: ProseMirrorNode) => isListNode(node) || is
  * Checks whether a List Node contains only a single
  * ListItemContent Node inside it
  */
-export const isListWithSingleItemContent = (listNode: OrderedListNodeType | BulletListNodeType | TaskListNodeType) => {
+export const isListWithSingleItemContent = (node: ProseMirrorNode) => {
+  if(!isListNode(node)) return false/*by definition*/;
+
   let count = 0/*default*/;
 
-  listNode.descendants((node, pos, parent) => {
+  node.descendants((node, pos, parent) => {
     if(isListItemContentNode(node)) {
       count += 1;
     } /* else -- do not add */
@@ -57,7 +59,16 @@ export const handleListDocumentUpdates = (editor: Editor, listTypeName: NodeName
   const { selection  } = editor.state;
   const { $anchor, anchor } = selection;
   if(isListItemContentNode($anchor.parent) && $anchor.depth === 3/*anchor inside a ListItemContent Node, inside a ListItem, inside a List*/) {
-    return applyDocumentUpdates(editor, [ toggleListUpdate, new SetParagraphDocumentUpdate() ]);
+    const anchorPosIfEmpty = Math.max(anchor-2/*account for unwrapping an empty ListItemContent, (its ListItem and the List)*/, 0/*do not go behind the Doc*/);
+
+    return applyDocumentUpdates(editor, [
+      toggleListUpdate,
+
+      // ensure the Paragraph is set at the right position if the parent ListItemContent is empty
+      ...($anchor.parent.textContent.length < 1 ? [new SetTextSelectionDocumentUpdate({ from: anchorPosIfEmpty, to: anchorPosIfEmpty })] : []),
+
+      new SetParagraphDocumentUpdate(),
+    ]);
   } else {
     // ensure that the List Commands work correctly by first setting the ListItemContent
     // so that it can be wrapped

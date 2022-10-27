@@ -131,6 +131,37 @@ export class ClearNodesDocumentUpdate implements AbstractDocumentUpdate {
   }
 }
 
+// -- Insert ----------------------------------------------------------------------
+// replace the Selection with a newline character. Must be set for Block Nodes
+// whose behavior should match the one provided by specifying 'code' in the
+// NodeSpec, without the need of declaring it, thus getting rid of the ProseMirror
+// induced constraints that come with it (e.g. not being able to paste Marks)
+export const insertNewlineCommand = (nodeName: NodeName): Command => (state, dispatch) => {
+  const updatedTr =  new InsertNewlineDocumentUpdate(nodeName).update(state, state.tr);
+  if(updatedTr) {
+    dispatch(updatedTr);
+    return true/*Command executed*/;
+  } /* else -- Command cannot be executed */
+
+  return false/*not executed*/;
+};
+export class InsertNewlineDocumentUpdate implements AbstractDocumentUpdate {
+  public constructor(private readonly nodeName: NodeName) {/*nothing additional*/}
+
+  /*
+   * modify the given Transaction such that the Selection is replaced with a
+   * newline character
+   */
+  public update(editorState: EditorState, tr: Transaction) {
+    let { $head, $anchor } = editorState.selection;
+    if(!$head.sameParent($anchor)) return false/*do not allow on multiple Node Selection*/;
+    if($head.parent.type.name !== this.nodeName) return false/*should not be handled by this Node*/;
+
+    tr.insertText('\n').scrollIntoView();
+    return tr;
+  }
+}
+
 // -- Leave -----------------------------------------------------------------------
 // REF: https://github.com/ProseMirror/prosemirror-commands/blob/master/src/commands.ts
 // create a default Block Node after the one at the current Selection and

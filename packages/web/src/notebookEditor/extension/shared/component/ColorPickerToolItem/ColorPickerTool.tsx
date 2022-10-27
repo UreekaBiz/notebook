@@ -8,6 +8,7 @@ import { ColorPickerMenu } from './ColorPickerMenu';
 import { InputToolItemContainer } from '../InputToolItemContainer';
 
 // ********************************************************************************
+// == Interface ===================================================================
 interface Props {
   name: string;
 
@@ -16,11 +17,13 @@ interface Props {
 
   colors?: Color[][];
 }
+
+// == Component ===================================================================
 export const ColorPickerTool: React.FC<Props> = ({ colors = textColors, name, onChange, value }) => {
-  // == State ====================================================================
+  // -- State ---------------------------------------------------------------------
   const { commitChange, localValue, resetLocalValue, updateLocalValue } = useLocalValue(value, onChange);
 
-  // == Handler ===================================================================
+  // -- Handler -------------------------------------------------------------------
   const handleColorPickerChange = (color: Color) => {
     const value = color.hexCode;
     updateLocalValue(value);
@@ -38,17 +41,23 @@ export const ColorPickerTool: React.FC<Props> = ({ colors = textColors, name, on
   };
 
   const handleKeyDown: KeyboardEventHandler<HTMLInputElement> = (event) => {
-    // Save changes when user presses enter
-    if(event.key === 'Enter') saveChange();
+    // save changes when user presses Enter
+    if(event.key === 'Enter') {
+      // prevent defaults so that PM does not handle the event
+      event.preventDefault();
+      event.stopPropagation();
+
+      // save change
+      saveChange();
+    } /* else -- ignore */
   };
 
-  // == UI ========================================================================
+  // -- UI -------------------------------------------------------------------------
   return (
     <InputToolItemContainer
       name={name}
-      rightContent={
-        <ColorPickerMenu value={localValue} colors={colors} onChange={handleColorPickerChange} />
-      }
+      rightContent={<ColorPickerMenu value={localValue} colors={colors} onChange={handleColorPickerChange} />
+}
     >
       <Input
         type='text'

@@ -4,13 +4,14 @@ import { useFormik, Field, FormikProvider } from 'formik';
 import { KeyboardEventHandler } from 'react';
 import * as Validate from 'yup';
 
-import { isLinkMarkAttributes, urlSchema, AttributeType, ExtendMarkRangeDocumentUpdate, MarkName, SetTextSelectionDocumentUpdate } from '@ureeka-notebook/web-service';
+import { isLinkMarkAttributes, urlSchema, AttributeType, LinkTarget, ExtendMarkRangeDocumentUpdate, MarkName, SetTextSelectionDocumentUpdate } from '@ureeka-notebook/web-service';
 
 import { applyDocumentUpdates } from 'notebookEditor/command/update';
 import { InputToolItemContainer } from 'notebookEditor/extension/shared/component/InputToolItemContainer';
 import { EditorToolComponentProps, TOOL_ITEM_DATA_TYPE } from 'notebookEditor/sidebar/toolbar/type';
 
 import { SetLinkDocumentUpdate } from '../../command';
+import { linkIsInDoc } from '../../util';
 
 // ********************************************************************************
 // == Schema ======================================================================
@@ -52,7 +53,7 @@ export const LinkURLToolItem: React.FC<Props> = ({ editor }) => {
 
     applyDocumentUpdates(editor, [
       new ExtendMarkRangeDocumentUpdate(MarkName.LINK, {/*no attributes*/}),
-      new SetLinkDocumentUpdate({ ...attrs, href }),
+      new SetLinkDocumentUpdate({ ...attrs, [AttributeType.Href]: href, ...(linkIsInDoc(href) ? { [AttributeType.Target]: LinkTarget.SELF } : {/*nothing*/}) }),
       new SetTextSelectionDocumentUpdate({ from: prevPos, to: prevPos }),
     ]);
 
@@ -61,10 +62,11 @@ export const LinkURLToolItem: React.FC<Props> = ({ editor }) => {
   };
 
   const handleKeyDown: KeyboardEventHandler<HTMLInputElement> = (event) => {
+    // save changes when user presses Enter
     if(event.key !== 'Enter') return/*nothing to do*/;
     if(!formik.isValid) return/*nothing to do*/;
 
-    // save changes when user presses enter
+    // prevent defaults so that PM does not handle the event
     event.preventDefault();
     event.stopPropagation();
     handleSubmit(formik.values, true/*focus editor*/);

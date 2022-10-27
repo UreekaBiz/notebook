@@ -1,7 +1,7 @@
 import { Fragment, Node as ProseMirrorNode, NodeRange, ResolvedPos, Slice } from 'prosemirror-model';
 import { EditorState, TextSelection, Transaction } from 'prosemirror-state';
 
-import { isListItemNode, AbstractDocumentUpdate, AttributeType, Command } from '@ureeka-notebook/web-service';
+import { isListItemNode, AbstractDocumentUpdate, AttributeType, Command, ORDERED_LIST_DEFAULT_START } from '@ureeka-notebook/web-service';
 
 import { isListNode } from '../util';
 import { getListItemRange } from './util';
@@ -56,8 +56,13 @@ export class IndentListDocumentUpdate implements AbstractDocumentUpdate {
 
       selectedSlice.content.descendants((descendant) => {
         if(isListItemNode(descendant)) {
-          descendant.attrs = { ...descendant.attrs, [AttributeType.ListStyleType]: firstUnselectedItem?.attrs[AttributeType.ListStyleType] };
-        } /* else -- do not modify attributes */
+          descendant.attrs = {
+            ...descendant.attrs,
+            // ensure default styles for new ListItems
+            [AttributeType.StartValue]: ORDERED_LIST_DEFAULT_START,
+            [AttributeType.ListStyleType]: firstUnselectedItem?.attrs[AttributeType.ListStyleType],
+          };
+        } /* else -- ignore */
       });
     } else {
       // no unselectedSlice from which to take the styles, take them from the nearest ListItem above
@@ -69,13 +74,19 @@ export class IndentListDocumentUpdate implements AbstractDocumentUpdate {
       });
       selectedSlice.content.descendants((descendant) => {
         if(isListItemNode(descendant)) {
-          descendant.attrs = { ...descendant.attrs, [AttributeType.ListStyleType]: nearestListItemAbove?.attrs[AttributeType.ListStyleType] };
+          descendant.attrs = {
+            ...descendant.attrs,
+            // ensure default styles for new ListItems
+            [AttributeType.StartValue]: ORDERED_LIST_DEFAULT_START,
+            [AttributeType.ListStyleType]: nearestListItemAbove?.attrs[AttributeType.ListStyleType],
+          };
         } /* else -- ignore */
       });
     }
 
+    const newCreatedList = selectedList.type.create(undefined/*do not inherit attrs*/, selectedSlice.content);
     const newPreviousListItemContent: Fragment = previousListItem.content
-      .append(Fragment.fromArray([selectedList.copy(selectedSlice.content)]))
+      .append(Fragment.fromArray([newCreatedList]))
       .append(unselectedSlice ? unselectedSlice.content : Fragment.empty);
 
     tr.deleteRange(range.start, range.end);

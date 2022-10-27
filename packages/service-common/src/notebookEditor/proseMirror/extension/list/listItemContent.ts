@@ -1,6 +1,6 @@
 import { Mark, Node as ProseMirrorNode, NodeSpec } from 'prosemirror-model';
 
-import { AttributesTypeFromNodeSpecAttributes } from '../../attribute';
+import { noNodeOrMarkSpecAttributeDefaultValue, AttributeType, AttributesTypeFromNodeSpecAttributes } from '../../attribute';
 import { NodeRendererSpec } from '../../htmlRenderer/type';
 import { JSONNode, NodeGroup, NodeName, ProseMirrorNodeContent } from '../../node';
 import { NotebookSchemaType } from '../../schema';
@@ -9,7 +9,11 @@ import { NotebookSchemaType } from '../../schema';
 // == Attribute ===================================================================
 // NOTE: must be present on the MarkSpec below
 // NOTE: this value must have matching types -- the ones defined in the Extension
-const ListItemContentAttributeSpec = {/*currently no attrs*/};
+const ListItemContentAttributeSpec = {
+  [AttributeType.BackgroundColor]: noNodeOrMarkSpecAttributeDefaultValue<string>(),
+  [AttributeType.FontSize]: noNodeOrMarkSpecAttributeDefaultValue<string>(),
+  [AttributeType.Color]: noNodeOrMarkSpecAttributeDefaultValue<string>(),
+};
 export type ListItemContentAttributes = AttributesTypeFromNodeSpecAttributes<typeof ListItemContentAttributeSpec>
 
 // == Spec ========================================================================

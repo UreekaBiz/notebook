@@ -1,18 +1,26 @@
-import { NodeName } from '@ureeka-notebook/web-service';
+import { AttributeType, NodeName } from '@ureeka-notebook/web-service';
 
 import { blockquoteToolItem } from 'notebookEditor/extension/blockquote/toolbar';
 import { markBold } from 'notebookEditor/extension/bold/toolbar';
 import { markCode } from 'notebookEditor/extension/code/toolbar';
+import { codeBlockToolItem } from 'notebookEditor/extension/codeblock/toolbar';
+import { codeBlockReferenceToolItem } from 'notebookEditor/extension/codeBlockReference/toolbar';
+import { demo2AsyncNodeToolItem } from 'notebookEditor/extension/demo2AsyncNode/toolbar';
+import { demoAsyncNodeToolItem } from 'notebookEditor/extension/demoAsyncNode/toolbar';
+import { horizontalRuleToolItem } from 'notebookEditor/extension/horizontalRule/toolbar/toolbar';
+import { imageToolItem } from 'notebookEditor/extension/image/toolbar';
 import { markItalic } from 'notebookEditor/extension/italic/toolbar';
 import { linkToolItem } from 'notebookEditor/extension/link/toolbar';
 import { bulletListToolItem, orderedListToolItem, taskListToolItem } from 'notebookEditor/extension/list/toolbar';
 import { editableInlineNodeWithContentToolItem } from 'notebookEditor/extension/nestedViewNode/editableInlineNodeWithContent/toolbar';
 import { nestedViewBlockNodeToolItem } from 'notebookEditor/extension/nestedViewNode/nestedViewBlockNode/toolbar';
+import { ColorPickerNodeToolItem } from 'notebookEditor/extension/shared/component/ColorPickerToolItem';
 import { markStrikethrough } from 'notebookEditor/extension/strikethrough/toolbar';
 import { markSubScript } from 'notebookEditor/extension/subScript/toolbar';
 import { markSuperScript } from 'notebookEditor/extension/superScript/toolbar';
-import { fontSizeToolItem, spacingToolItem, textColorToolItem } from 'notebookEditor/extension/textStyle/toolbar';
+import { highlightColorMarkToolItem, fontSizeToolItem, spacingToolItem, textColorToolItem } from 'notebookEditor/extension/textStyle/toolbar';
 import { markUnderline } from 'notebookEditor/extension/underline/toolbar';
+import { dedentBlocksToolItem, horizontalAlignCenterToolItem, horizontalAlignJustifyToolItem, horizontalAlignLeftToolItem, horizontalAlignRightToolItem, indentBlocksToolItem } from 'notebookEditor/shared/toolItem';
 import { Toolbar, ToolItem } from 'notebookEditor/sidebar/toolbar/type';
 
 import { HeadingLevelToolItem } from './HeadingLevelToolItem';
@@ -27,6 +35,20 @@ export const headingLevelToolItem: ToolItem = {
   component: (props) => <HeadingLevelToolItem {...props}/>,
 };
 
+const headingBackgroundColorToolItem: ToolItem = {
+  toolType: 'component',
+  name: 'headingBackgroundColorToolItem',
+
+  component: ({ editor, depth }) =>
+    <ColorPickerNodeToolItem
+      editor={editor}
+      depth={depth}
+      nodeName={NodeName.HEADING}
+      attributeType={AttributeType.BackgroundColor}
+      name={'Background Color'}
+    />,
+};
+
 // == Toolbar =====================================================================
 export const HeadingToolbar: Toolbar = {
   title: 'Heading',
@@ -39,6 +61,7 @@ export const HeadingToolbar: Toolbar = {
       bulletListToolItem,
       taskListToolItem,
       blockquoteToolItem,
+      horizontalRuleToolItem,
       markBold,
       markItalic,
       markUnderline,
@@ -47,14 +70,25 @@ export const HeadingToolbar: Toolbar = {
       markSubScript,
       markCode,
       linkToolItem,
-    ],
-    [
-      editableInlineNodeWithContentToolItem,
       nestedViewBlockNodeToolItem,
+      editableInlineNodeWithContentToolItem,
+      demo2AsyncNodeToolItem,
+      demoAsyncNodeToolItem,
+      codeBlockToolItem,
+      codeBlockReferenceToolItem,
+      imageToolItem,
+      horizontalAlignLeftToolItem,
+      horizontalAlignCenterToolItem,
+      horizontalAlignRightToolItem,
+      horizontalAlignJustifyToolItem,
+      dedentBlocksToolItem,
+      indentBlocksToolItem,
     ],
     [
+      headingBackgroundColorToolItem,
       fontSizeToolItem,
       textColorToolItem,
+      highlightColorMarkToolItem,
     ],
     [
       spacingToolItem,

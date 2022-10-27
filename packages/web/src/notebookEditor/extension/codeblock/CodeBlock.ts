@@ -1,7 +1,8 @@
 import { textblockTypeInputRule, Node } from '@tiptap/core';
 
-import { generateNodeId, getNodeOutputSpec, isCodeBlockNode, leaveBlockNodeCommand, selectBlockNodeContentCommand, AttributeType, CodeBlockNodeSpec, CodeBlockType, NodeName, SetAttributeType, DATA_NODE_TYPE } from '@ureeka-notebook/web-service';
+import { generateNodeId, getNodeOutputSpec, isCodeBlockNode, insertNewlineCommand, selectBlockNodeContentCommand, AttributeType, CodeBlockNodeSpec, CodeBlockType, LeaveBlockNodeDocumentUpdate, NodeName, SetAttributeType, DATA_NODE_TYPE } from '@ureeka-notebook/web-service';
 
+import { applyDocumentUpdates } from 'notebookEditor/command/update';
 import { shortcutCommandWrapper } from 'notebookEditor/command/util';
 import { setAttributeParsingBehavior, uniqueIdParsingBehavior } from 'notebookEditor/extension/util/attribute';
 import { NoOptions } from 'notebookEditor/model/type';
@@ -12,28 +13,38 @@ import { CodeBlockStorage } from './nodeView/storage';
 import { codeBlockOnTransaction } from './transaction';
 
 // ********************************************************************************
+// == Constant ====================================================================
+const codeBlockRegEx = /```([a-z]+)?[\s\n]$/;
+
 // == Node ========================================================================
 export const CodeBlock = Node.create<NoOptions, CodeBlockStorage>({
   ...CodeBlockNodeSpec,
 
+  // REF: https://github.com/ueberdosis/tiptap/blob/8c6751f0c638effb22110b62b40a1632ea6867c9/packages/core/src/helpers/getSchemaByResolvedExtensions.ts
+  // NOTE: since TipTap is not adding the whitespace prop to the default
+  //       NodeSpec created by the editor (SEE: REF above), this call
+  //       has to be performed instead, so that all the attributes specified
+  //       in the CodeBlockNodeSpec get added correctly
+  extendNodeSchema: (extension) => ({ ...CodeBlockNodeSpec }),
+
   // -- Attribute -----------------------------------------------------------------
   addAttributes() {
     return {
-      // Creates a new id for the node when it is created.
+      // creates a new Id for the Node when it is created
       [AttributeType.Id]: uniqueIdParsingBehavior(this.storage),
 
       [AttributeType.Type]: setAttributeParsingBehavior(AttributeType.Type, SetAttributeType.STRING, CodeBlockType.Code),
       [AttributeType.Wrap]: setAttributeParsingBehavior(AttributeType.Wrap, SetAttributeType.BOOLEAN, false/*default wrap for Code type is false*/),
 
-      [AttributeType.PaddingTop]: setAttributeParsingBehavior(AttributeType.PaddingTop, SetAttributeType.STRING),
-      [AttributeType.PaddingBottom]: setAttributeParsingBehavior(AttributeType.PaddingBottom, SetAttributeType.STRING),
-      [AttributeType.PaddingLeft]: setAttributeParsingBehavior(AttributeType.PaddingLeft, SetAttributeType.STRING),
-      [AttributeType.PaddingRight]: setAttributeParsingBehavior(AttributeType.PaddingRight, SetAttributeType.STRING),
+      [AttributeType.PaddingTop]: setAttributeParsingBehavior(AttributeType.PaddingTop, SetAttributeType.STYLE),
+      [AttributeType.PaddingBottom]: setAttributeParsingBehavior(AttributeType.PaddingBottom, SetAttributeType.STYLE),
+      [AttributeType.PaddingLeft]: setAttributeParsingBehavior(AttributeType.PaddingLeft, SetAttributeType.STYLE),
+      [AttributeType.PaddingRight]: setAttributeParsingBehavior(AttributeType.PaddingRight, SetAttributeType.STYLE),
 
-      [AttributeType.MarginTop]: setAttributeParsingBehavior(AttributeType.MarginTop, SetAttributeType.STRING),
-      [AttributeType.MarginLeft]: setAttributeParsingBehavior(AttributeType.MarginLeft, SetAttributeType.STRING),
-      [AttributeType.MarginBottom]: setAttributeParsingBehavior(AttributeType.MarginBottom, SetAttributeType.STRING),
-      [AttributeType.MarginRight]: setAttributeParsingBehavior(AttributeType.MarginRight, SetAttributeType.STRING),
+      [AttributeType.MarginTop]: setAttributeParsingBehavior(AttributeType.MarginTop, SetAttributeType.STYLE),
+      [AttributeType.MarginLeft]: setAttributeParsingBehavior(AttributeType.MarginLeft, SetAttributeType.STYLE),
+      [AttributeType.MarginBottom]: setAttributeParsingBehavior(AttributeType.MarginBottom, SetAttributeType.STYLE),
+      [AttributeType.MarginRight]: setAttributeParsingBehavior(AttributeType.MarginRight, SetAttributeType.STYLE),
     };
   },
 
@@ -44,7 +55,7 @@ export const CodeBlock = Node.create<NoOptions, CodeBlockStorage>({
       'Shift-Mod-c': () => toggleBlock(this.editor, NodeName.CODEBLOCK, { [AttributeType.Id]: generateNodeId() }),
       'Shift-Mod-C': () => toggleBlock(this.editor, NodeName.CODEBLOCK, { [AttributeType.Id]: generateNodeId() }),
 
-      // remove CodeBlock when at start of document or CodeBlock is empty
+      // remove CodeBlock when Selection is at start of Document or CodeBlock is empty
       'Backspace': () => shortcutCommandWrapper(this.editor, blockBackspaceCommand(NodeName.CODEBLOCK)),
 
       // maintain expected Mod-Backspace behavior
@@ -54,8 +65,11 @@ export const CodeBlock = Node.create<NoOptions, CodeBlockStorage>({
       'ArrowUp': () => shortcutCommandWrapper(this.editor, blockArrowUpCommand(NodeName.CODEBLOCK)),
       'ArrowDown': () => shortcutCommandWrapper(this.editor, blockArrowDownCommand(NodeName.CODEBLOCK)),
 
+      // insert a newline on Enter
+      'Enter': () => shortcutCommandWrapper(this.editor, insertNewlineCommand(NodeName.CODEBLOCK)),
+
       // exit Node on Shift-Enter
-      'Shift-Enter': () => shortcutCommandWrapper(this.editor, leaveBlockNodeCommand(NodeName.CODEBLOCK)),
+      'Shift-Enter': () => applyDocumentUpdates(this.editor, [new LeaveBlockNodeDocumentUpdate(NodeName.CODEBLOCK)]),
 
       // select all the content of the CodeBlock
       'Cmd-a':  () => shortcutCommandWrapper(this.editor, selectBlockNodeContentCommand(NodeName.CODEBLOCK)),
@@ -67,21 +81,14 @@ export const CodeBlock = Node.create<NoOptions, CodeBlockStorage>({
   addStorage() { return new CodeBlockStorage(); },
 
   // -- Transaction ---------------------------------------------------------------
-  // Check to see if a transaction adds or removes a Heading or a CodeBlock, or if
+  // check to see if a Transaction adds or removes a Heading or a CodeBlock, or if
   // it changes the level of a Heading. Recompute the necessary CodeBlock visual IDs
   // if this is the case
   onTransaction({ transaction }) { return codeBlockOnTransaction(transaction, this.editor, this.storage); },
 
   // -- Input ---------------------------------------------------------------------
-  // Create a CodeBlock node if the user types ``` and then an enter or space
-  addInputRules() {
-    return [
-      textblockTypeInputRule({
-        find: /```([a-z]+)?[\s\n]$/,
-        type: this.type,
-      }),
-    ];
-  },
+  // create a CodeBlock Node if the user types ``` and then an enter or space
+  addInputRules() { return [textblockTypeInputRule({ find: codeBlockRegEx, type: this.type })]; },
 
   // -- View ----------------------------------------------------------------------
   // NOTE: NodeViews are supposed to be unique for each Node (based on the id of
@@ -100,14 +107,11 @@ export const CodeBlock = Node.create<NoOptions, CodeBlockStorage>({
         return controller;
       } /* else -- controller don't exists */
 
-      // Create a new controller and NodeView instead.
+      // create a new Controller and NodeView instead
       return new CodeBlockController(editor, node, this.storage, getPos);
     };
   },
 
   parseHTML() { return [{ tag: `div[${DATA_NODE_TYPE}="${NodeName.CODEBLOCK}"]`, preserveWhitespace: 'full'/*preserve new lines when parsing the content of the codeBlock*/ }]; },
-
-  // NOTE: renderHTML -must- be included in Nodes regardless of whether or not
-  //       they use a nodeView. (SEE: FeatureDoc, NodeView section)
   renderHTML({ node, HTMLAttributes }) { return getNodeOutputSpec(node, HTMLAttributes); },
 });

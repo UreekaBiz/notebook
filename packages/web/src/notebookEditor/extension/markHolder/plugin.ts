@@ -1,5 +1,5 @@
 import { Slice } from 'prosemirror-model';
-import { NodeSelection, Plugin, TextSelection } from 'prosemirror-state';
+import { NodeSelection, Plugin, Selection, TextSelection } from 'prosemirror-state';
 import { EditorView } from 'prosemirror-view';
 
 import { createMarkHolderNode, createParagraphNode, getNodesAffectedByStepMap, isMarkHolderNode, markFromJSONMark, parseStringifiedMarksArray, stringifyMarksArray, AttributeType, NodeName } from '@ureeka-notebook/web-service';
@@ -147,10 +147,9 @@ export const markHolderPlugin = () => new Plugin({
       // if Backspace is pressed and a MarkHolder is present, delete it, set the
       // Selection accordingly and let PM handle the rest of the event
       if(event.key === 'Backspace') {
-        tr.setSelection(new TextSelection(tr.doc.resolve(parentPos), tr.doc.resolve(parentPos + view.state.selection.$anchor.parent.nodeSize)))
-          .deleteSelection();
-        tr.setSelection(new TextSelection(tr.doc.resolve(tr.selection.anchor)));
-
+        tr.setSelection(TextSelection.create(tr.doc, parentPos, parentPos + view.state.selection.$anchor.parent.nodeSize))
+          .deleteSelection()
+          .setSelection(Selection.near(tr.doc.resolve(tr.selection.anchor)));
         dispatch(tr);
         return true/*event handled*/;
       } /* else -- not handling Backspace */

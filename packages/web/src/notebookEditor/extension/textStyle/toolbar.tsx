@@ -1,9 +1,10 @@
 import { AttributeType, MarkName } from '@ureeka-notebook/service-common';
 
 import { InputWithUnitMarkToolItem } from 'notebookEditor/extension/shared/component/InputWithUnitToolItem';
-import { ColorPickerMarkToolItem } from 'notebookEditor/extension/shared/component/ColorPickerToolItem';
 import { SpacingToolItem } from 'notebookEditor/extension/shared/component/SpacingToolItem';
+import { shouldShowToolItem } from 'notebookEditor/shared/toolItem';
 import { ToolItem } from 'notebookEditor/sidebar/toolbar/type';
+import { ColorPickerMarkToolItem } from '../shared/component/ColorPickerToolItem';
 
 // ********************************************************************************
 // == Tool Items ==================================================================
@@ -19,6 +20,7 @@ export const fontSizeToolItem: ToolItem = {
       attributeType={AttributeType.FontSize}
       minValue={1}
     />,
+  shouldShow: (editor, depth) => shouldShowToolItem(editor, depth),
 };
 
 export const textColorToolItem: ToolItem = {
@@ -32,6 +34,23 @@ export const textColorToolItem: ToolItem = {
       markName={MarkName.TEXT_STYLE}
       attributeType={AttributeType.Color}
     />,
+
+  shouldShow: (editor, depth) => shouldShowToolItem(editor, depth),
+};
+
+export const highlightColorMarkToolItem: ToolItem = {
+  toolType: 'component',
+  name: 'highlightColorMarkToolItem',
+
+  component: (props) =>
+    <ColorPickerMarkToolItem
+      {...props}
+      name='Highlight Color'
+      markName={MarkName.TEXT_STYLE}
+      attributeType={AttributeType.BackgroundColor}
+    />,
+
+  shouldShow: (editor, depth) => shouldShowToolItem(editor, depth),
 };
 
 export const spacingToolItem: ToolItem = {

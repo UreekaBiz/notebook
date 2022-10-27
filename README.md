@@ -53,6 +53,7 @@ rm -f packages/service-common/package-lock.json
 rm -f packages/ssr-service/package-lock.json
 rm -f packages/web-service/package-lock.json
 rm -f packages/web/package-lock.json
+rm -f packages/firebase/package-lock.json
 rm -f packages/cloud-functions/package-lock.json
 ```
 
@@ -71,10 +72,10 @@ npx env-cmd -f .env.local.<username> npm run build-web
 npx env-cmd -f .env.local.<username> npm run deploy-web
 ```
 
-## Production Environment
+## Development Environment
 
-1. Common libs:     `npx env-cmd -f .env.prod npm run build-service`
-2. Cloud Functions: `npx env-cmd -f .env.prod npm run build-functions`
+1. Common libs:     `npx env-cmd -f .env.local.XXX npm run build-service`
+2. Cloud Functions: `npx env-cmd -f .env.local.XXX npm run build-functions`
 
 [ FINISH ]
 

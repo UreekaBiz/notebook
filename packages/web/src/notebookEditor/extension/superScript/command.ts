@@ -23,7 +23,7 @@ export class ToggleSuperScriptDocumentUpdate implements AbstractDocumentUpdate {
    * is toggled and return it
    */
   public update(editorState: EditorState, tr: Transaction) {
-    const updatedTr = new ToggleOrSetMarkDocumentUpdate(MarkName.SUPER_SCRIPT, editorState.schema.marks[MarkName.SUPER_SCRIPT]).update(editorState, tr);
+    const updatedTr = new ToggleOrSetMarkDocumentUpdate(editorState.schema.marks[MarkName.SUPER_SCRIPT]).update(editorState, tr);
     return updatedTr/*updated*/;
   }
 }

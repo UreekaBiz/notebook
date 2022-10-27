@@ -3,8 +3,9 @@ import { useFormik, Field, FormikProvider } from 'formik';
 import { KeyboardEventHandler } from 'react';
 import * as Validate from 'yup';
 
-import { isImageNode, isNodeSelection, urlSchema, AttributeType, NodeName, DEFAULT_IMAGE_SRC, DEFAULT_IMAGE_ERROR_SRC } from '@ureeka-notebook/web-service';
+import { isImageNode, isNodeSelection, urlSchema, AttributeType, NodeName, SetNodeSelectionDocumentUpdate, UpdateSingleNodeAttributesDocumentUpdate, DEFAULT_IMAGE_SRC, DEFAULT_IMAGE_ERROR_SRC } from '@ureeka-notebook/web-service';
 
+import { applyDocumentUpdates } from 'notebookEditor/command/update';
 import { InputToolItemContainer } from 'notebookEditor/extension/shared/component/InputToolItemContainer';
 import { EditorToolComponentProps, TOOL_ITEM_DATA_TYPE } from 'notebookEditor/sidebar/toolbar/type';
 
@@ -22,7 +23,7 @@ type ImageDialog_Create = Validate.InferType<typeof ImageDialog_Create_Schema>;
 interface Props extends EditorToolComponentProps {/*no additional*/}
 export const ImageSrcToolItem: React.FC<Props> = ({ editor }) => {
   const { selection } = editor.state;
-  const { pos: prevPos } = selection.$anchor;
+  const { pos: updatePos } = selection.$anchor;
   if(!isNodeSelection(selection) || !isImageNode(selection.node)) throw new Error(`Invalid ImageSrcToolItem render: ${JSON.stringify(selection)}`);
 
   let initialValue = selection.node.attrs[AttributeType.Src];
@@ -48,20 +49,21 @@ export const ImageSrcToolItem: React.FC<Props> = ({ editor }) => {
   // -- Form ----------------------------------------------------------------------
   // update the Attributes and select the previous position
   const handleSubmit = ({ src: value }: ImageDialog_Create, focusEditor: boolean) => {
-    editor.chain()
-          .updateAttributes(NodeName.IMAGE, { src: value })
-          .setNodeSelection(prevPos)
-          .run();
+    applyDocumentUpdates(editor, [
+      new UpdateSingleNodeAttributesDocumentUpdate(NodeName.IMAGE, updatePos, { [AttributeType.Src]: value }),
+      new SetNodeSelectionDocumentUpdate(updatePos),
+    ]);
 
     // focus the editor again
-    if(focusEditor) editor.commands.focus();
+    if(focusEditor) editor.view.focus();
   };
 
   const handleKeyDown: KeyboardEventHandler<HTMLInputElement> = (event) => {
+    // save changes when user presses Enter
     if(event.key !== 'Enter') return/*nothing to do*/;
     if(!formik.isValid) return/*nothing to do*/;
 
-    // save changes when user presses enter
+    // prevent defaults so that PM does not handle the event
     event.preventDefault();
     event.stopPropagation();
     handleSubmit(formik.values, true/*focus editor*/);

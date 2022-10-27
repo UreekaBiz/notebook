@@ -32,6 +32,11 @@ export const InputTool: React.FC<Props> = ({ name, initialInputValue, inputPlace
   const handleKeyDown: KeyboardEventHandler<HTMLInputElement> = (event) => {
     // save changes when user presses Enter
     if(event.key === 'Enter') {
+      // prevent defaults so that PM does not handle the event
+      event.preventDefault();
+      event.stopPropagation();
+
+      // save change
       saveChange();
     } /* else -- ignore */
   };

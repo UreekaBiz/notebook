@@ -1,8 +1,9 @@
 import { GapCursor } from 'prosemirror-gapcursor';
+import { Fragment, NodeType } from 'prosemirror-model';
 import { EditorState, NodeSelection, TextSelection, Transaction } from 'prosemirror-state';
 import { EditorView } from 'prosemirror-view';
 
-import { createEditableInlineNodeWithContent, isEditableInlineNodeWithContentNode, isNestedViewBlockNode, isNodeSelection, isTextSelection, AbstractDocumentUpdate, CreateBlockNodeDocumentUpdate, NodeName, EditableInlineNodeWithContentAttributes } from '@ureeka-notebook/web-service';
+import { isNodeSelection, isNestedViewNode, isTextSelection, Attributes, AbstractDocumentUpdate, CreateBlockNodeDocumentUpdate, NodeName, ProseMirrorNodeContent } from '@ureeka-notebook/web-service';
 
 // ********************************************************************************
 // == Type ========================================================================
@@ -14,8 +15,8 @@ type NestedViewCommand = (state: EditorState, dispatch: ((tr: Transaction) => vo
 
 // == Insertion ===================================================================
 /** set a NestedViewNode  */
-export const insertNestedViewNodeCommand = (nodeName: NodeName.NESTED_VIEW_BLOCK_NODE | NodeName.EDITABLE_INLINE_NODE_WITH_CONTENT, attributes: Partial<EditableInlineNodeWithContentAttributes>): NestedViewCommand => (state, dispatch) => {
-  const updatedTr = new InsertNestedViewNodeDocumentUpdate(nodeName, attributes).update(state, state.tr);
+export const insertNestedViewNodeCommand = (nodeType: NodeType, attributes: Partial<Attributes>): NestedViewCommand => (state, dispatch) => {
+  const updatedTr = new InsertNestedViewNodeDocumentUpdate(nodeType, attributes).update(state, state.tr);
   if(dispatch && updatedTr) {
     dispatch(updatedTr);
     return true/*Command executed*/;
@@ -24,36 +25,46 @@ export const insertNestedViewNodeCommand = (nodeName: NodeName.NESTED_VIEW_BLOCK
   return false/*not executed*/;
 };
 export class InsertNestedViewNodeDocumentUpdate implements AbstractDocumentUpdate {
-  public constructor(private readonly nodeName: NodeName.NESTED_VIEW_BLOCK_NODE | NodeName.EDITABLE_INLINE_NODE_WITH_CONTENT, private readonly attributes: Partial<EditableInlineNodeWithContentAttributes>) {/*nothing additional*/}
+  public constructor(private readonly nodeType: NodeType, private readonly attributes: Partial<Attributes>) {/*nothing additional*/}
 
   /**
    * modify the given Transaction such that a NestedViewNode
    * is set and selected and return it
    */
   public update(editorState: EditorState, tr: Transaction) {
-    const { $from } = editorState.selection;
-    const fromIndex = $from.index();
+    const { $from, from, to, empty } = editorState.selection;
+    if(!empty && this.nodeType.isBlock) return false/*do not allow*/;
 
-    if(this.nodeName === NodeName.EDITABLE_INLINE_NODE_WITH_CONTENT) {
-      const newNode = createEditableInlineNodeWithContent(editorState.schema, this.attributes);
+    const fromIndex = $from.index();
+    if(this.nodeType.isInline) {
+      const text = editorState.doc.textBetween(from, to);
+      let textContent: ProseMirrorNodeContent = Fragment.empty/*default*/;
+      if(text.length > 0/*not empty, since empty Text Nodes cannot be created*/) {
+        textContent = editorState.schema.text(text);
+      } /* else -- Node will be created with no Text inside it*/
+
+      const newNode = this.nodeType.create(this.attributes, textContent);
       if(!$from.parent.canReplaceWith(fromIndex, fromIndex, newNode.type)) return false/*cannot replace at index with Node of this type*/;
 
-      tr.replaceSelectionWith(newNode)
-        .setSelection(NodeSelection.create(tr.doc, $from.pos));
-      return tr;
-    } /* else -- setting nestedViewBlockNode */
+      tr.replaceSelectionWith(newNode);
+      if(empty) {
+        tr.setSelection(NodeSelection.create(tr.doc, $from.pos));
+      } /* else -- do not set the Selection inside the Node, since the NodeView has not been registered in the outer View state, and an immediate Outer View undo would trigger an error */
 
-    const updatedTr = new CreateBlockNodeDocumentUpdate(NodeName.NESTED_VIEW_BLOCK_NODE, this.attributes).update(editorState, tr)/*updated*/;
+      return tr;
+    } /* else -- setting Block */
+
+    const updatedTr = new CreateBlockNodeDocumentUpdate(this.nodeType.name as NodeName/*by definition*/, this.attributes).update(editorState, tr)/*updated*/;
     if(!updatedTr) return false/*default*/;
 
-    // set the right Selection for the new NVBN. Since they are not regular
+    // set the right Selection for the new Block. Since they are not regular
     // TextBlocks, the resulting Selection from CreateBlockNodeDocumentUpdate
     // is not enough and must be set manually so that the inner View opens
     try {
       if(isNodeSelection(updatedTr.selection)) {
         updatedTr.setSelection(NodeSelection.create(updatedTr.doc, updatedTr.selection.from));
         return updatedTr;
-      } /* else -- NVBN was inserted in a TextBlock that already had content */
+      } /* else -- Block was inserted in a TextBlock that already had content */
 
       if(isTextSelection(updatedTr.selection)) {
         // since the resulting TextSelection of a CreateBlockNodeDocumentUpdate
@@ -81,14 +92,9 @@ export class InsertNestedViewNodeDocumentUpdate implements AbstractDocumentUpdat
  * would be left after changing the Cursor given the key that was pressed
  *
  */
-export const nestedViewNodeBehaviorCommand = (
-  outerView: EditorView,
-  nodeName: string,
-  closeNodeCursorPos: 'before' | 'after',
-  wouldLeaveInnerView: boolean
-): NestedViewCommand => (state, dispatch) => {
+export const nestedViewNodeBehaviorCommand = (outerView: EditorView, nodeType: NodeType, closeNodeCursorPos: 'before' | 'after', wouldLeaveInnerView: boolean): NestedViewCommand => (state, dispatch) => {
   // (SEE: NOTE below)
-  const updatedTransactions = new NestedViewNodeBehaviorDocumentUpdate(outerView, nodeName, closeNodeCursorPos, wouldLeaveInnerView).update(state, state.tr);
+  const updatedTransactions = new NestedViewNodeBehaviorDocumentUpdate(outerView, nodeType, closeNodeCursorPos, wouldLeaveInnerView).update(state, state.tr);
   if(dispatch && updatedTransactions) {
     const { innerViewTr, outerViewTr } = updatedTransactions;
 
@@ -109,7 +115,7 @@ export const nestedViewNodeBehaviorCommand = (
 export class NestedViewNodeBehaviorDocumentUpdate {
   public constructor(
     private readonly outerView: EditorView,
-    private readonly nodeName: string,
+    private readonly nodeType: NodeType,
     private readonly closeNodeCursorPos: 'before' | 'after',
     private readonly wouldLeaveInnerSelection: boolean
   ) {/*nothing additional*/}
@@ -143,27 +149,27 @@ export class NestedViewNodeBehaviorDocumentUpdate {
     const { tr: outerViewTr } = outerState;
     outerViewTr.setSelection(TextSelection.create(outerState.doc, targetPos))/*default*/;
 
-    if(this.nodeName === NodeName.EDITABLE_INLINE_NODE_WITH_CONTENT) {
+    if(this.nodeType.isInline) {
       return { innerViewTr: tr, outerViewTr };
     } /* else -- need to perform special checks */
 
     if(this.closeNodeCursorPos === 'before') {
       const nodeBefore = outerViewTr.selection.$anchor.nodeBefore;
-      if(!nodeBefore || isNestedViewBlockNode(nodeBefore)) {
+      if(!nodeBefore || nodeBefore.isBlock) {
         outerViewTr.setSelection(new GapCursor(outerState.tr.doc.resolve(targetPos)));
-      } /* else -- nodeBefore exists or it is not a nestedViewBlockNode */
+      } /* else -- nodeBefore exists or it is not a LatexBlock */
 
-      if(nodeBefore && !isNestedViewBlockNode(nodeBefore)) {
+      if(nodeBefore && !nodeBefore.isBlock) {
         outerViewTr.setSelection(TextSelection.create(outerState.doc, Math.max(0/*do not go behind the Doc*/, targetPos-1/*inside the nodeBefore*/)));
       } /* else -- GapCursor will work as expected */
 
     } else {
       const nodeAfter = outerViewTr.selection.$anchor.nodeAfter;
-      if(!nodeAfter || isNestedViewBlockNode(nodeAfter)) {
+      if(!nodeAfter || nodeAfter.isBlock) {
         outerViewTr.setSelection(new GapCursor(outerState.tr.doc.resolve(targetPos)));
-      } /* else -- nodeAfter exists or it is not a nestedViewBlockNode */
+      } /* else -- nodeAfter exists or it is not a LatexBlock */
 
-      if(nodeAfter && !isNestedViewBlockNode(nodeAfter)) {
+      if(nodeAfter && !nodeAfter.isBlock) {
         outerViewTr.setSelection(TextSelection.create(outerState.doc, Math.min(targetPos+1/*inside the nodeAfter*/, outerState.doc.nodeSize-2/*account for start and end of Doc*/)));
       } /* else -- GapCursor will work as expected */
     }
@@ -195,7 +201,7 @@ export class nestedViewNodeBackspaceDocumentUpdate implements AbstractDocumentUp
     const nodeBefore = $from.nodeBefore;
     if(!nodeBefore) return false/*no Node before, nothing to do*/;
 
-    if(isEditableInlineNodeWithContentNode(nodeBefore) || isNestedViewBlockNode(nodeBefore)){
+    if(isNestedViewNode(nodeBefore)){
       const index = $from.index($from.depth);
       const $beforePos = editorState.doc.resolve($from.posAtIndex(index-1/*previous Node*/));
       tr.setSelection(new NodeSelection($beforePos));

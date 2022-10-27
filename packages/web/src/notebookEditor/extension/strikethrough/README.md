@@ -7,4 +7,4 @@ mark applied to it, as well as any text with a style that includes 'line-through
 Text typed between two '~' symbols will be get the Strikethrough mark
 applied to it.
 
-The 'Cmd + Shift + X' keyboard shortcut can be used to apply the mark.
+The 'Cmd + ⇧ + X' keyboard shortcut can be used to apply the mark.

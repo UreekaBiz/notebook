@@ -11,6 +11,7 @@ const log = getLogger(ServiceLogger.UTIL);
 // ********************************************************************************
 // a projection (as in relational algebra) operations
 export type ProjectOperation<T, R> = (snapshot: QueryDocumentSnapshot<T>) => R;
+export const defaultProject = <T>(snapshot: QueryDocumentSnapshot<T>): T => snapshot.data();
 
 // ================================================================================
 export const querySet = <T, R>(query: Query<T>, project: ProjectOperation<T, R>): Observable<Set<R>> =>

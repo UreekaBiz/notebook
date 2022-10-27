@@ -41,6 +41,9 @@ const endpointNames = [
   'assetDelete',
   'assetUpdate',
 
+  'authUserUserConfigurationCreate',
+  'authUserUserConfigurationDelete',
+  'authUserUserConfigurationUpdate',
   'authUserSessionClear',
   'authUserSessionHeartbeat',
   'authUserSessionUpdate',
@@ -105,20 +108,21 @@ const healthcheckCallable = async (name: string): Promise<HealthcheckStatus> => 
   const endTime = Date.now();
   const elapsedTime = endTime - startTime;
 
-  if(response.status !== 200/*OK*/) {
+  // CHECK: some versions of Axios were returning a string instead of a number!
+  if(Number(response.status) === 200/*OK*/) {
     try {
-      validateData(response.data, VersionResponse_Schema);
+      validateData(response.data.result, VersionResponse_Schema);
       return {
         name,
         elapsedTime,
         ...response.data,
       };
     } catch(error) {
-      logger.error(`Invalid response body from HTTPS Cloud Function '${name}'. Reason: `, error);
+      logger.error(`Invalid response body from HTTPS Cloud Function '${name}': '${JSON.stringify(response.data)}'. Reason: `, error);
       return { name, result: false/*failed*/ };
     }
   } else { /*POST failed*/
-    logger.error(`Unsuccessful / invalid response from HTTPS Cloud Function '${name}'. Reason: ${response.statusText}`);
+    logger.error(`Unsuccessful / invalid response (${response.status}) from HTTPS Cloud Function '${name}'. Reason: ${response.statusText}`);
     return { name, result: false/*failed*/ };
   }
 };

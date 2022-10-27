@@ -1,15 +1,15 @@
 import { AiOutlineVerticalAlignBottom, AiOutlineVerticalAlignMiddle, AiOutlineVerticalAlignTop } from 'react-icons/ai';
 import { FiImage } from 'react-icons/fi';
 
-import { AttributeType, NodeName, VerticalAlign, DEFAULT_IMAGE_MAX_HEIGHT, DEFAULT_IMAGE_MIN_HEIGHT, DEFAULT_IMAGE_MAX_WIDTH, DEFAULT_IMAGE_MIN_WIDTH } from '@ureeka-notebook/web-service';
+import { isNodeSelection, AttributeType, NodeName, VerticalAlign, DEFAULT_IMAGE_MAX_HEIGHT, DEFAULT_IMAGE_MIN_HEIGHT, DEFAULT_IMAGE_MAX_WIDTH, DEFAULT_IMAGE_MIN_WIDTH } from '@ureeka-notebook/web-service';
 
 import { getTextDOMRenderedValue } from 'notebookEditor/extension/util/attribute';
 import { getDialogStorage } from 'notebookEditor/model/DialogStorage';
+import { setVerticalAlign } from 'notebookEditor/shared/command';
 import { InputWithUnitNodeToolItem } from 'notebookEditor/extension/shared/component/InputWithUnitToolItem';
 import { InputToolItem } from 'notebookEditor/extension/shared/component/InputToolItem';
 import { Toolbar, ToolItem } from 'notebookEditor/sidebar/toolbar/type';
 
-import { setVerticalAlign } from '../command';
 import { ImageSrcToolItem } from './ImageSrcToolItem';
 import { ImageBorderToolItem } from './ImageBorderToolItem';
 
@@ -25,13 +25,13 @@ export const imageToolItem: ToolItem = {
   icon: <FiImage size={16} />,
   tooltip: 'Add an Image (⌘ + ⌥ + I)',
 
-  shouldBeDisabled: (editor) => editor.isActive(NodeName.IMAGE),
+  shouldBeDisabled: (editor) => isNodeSelection(editor.state.selection),
   onClick: (editor) => {
     const imageStorage = getDialogStorage(editor, NodeName.IMAGE);
     if(!imageStorage) return/*nothing to do*/;
 
     imageStorage.setShouldInsertNodeOrMark(true);
-    editor.commands.focus()/*trigger editor update by focusing it*/;
+    editor.view.focus()/*trigger editor update by focusing it*/;
   },
 };
 

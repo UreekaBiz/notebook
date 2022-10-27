@@ -19,9 +19,15 @@ export const OrderedList = Node.create<NoOptions, NoStorage>({
   ...OrderedListNodeSpec,
 
   // -- Attribute -----------------------------------------------------------------
-  addAttributes() { return { [AttributeType.StartValue]: setAttributeParsingBehavior(AttributeType.StartValue, SetAttributeType.NUMBER, ORDERED_LIST_DEFAULT_START) }; },
+  addAttributes() {
+    return {
+      [AttributeType.StartValue]: setAttributeParsingBehavior(AttributeType.StartValue, SetAttributeType.NUMBER, ORDERED_LIST_DEFAULT_START),
 
-  // -- Command -------------------------------------------------------------------
+      [AttributeType.MarginLeft]: setAttributeParsingBehavior(AttributeType.MarginLeft, SetAttributeType.STYLE),
+    };
+  },
+
+  // -- Keyboard Shortcut ---------------------------------------------------------
   addKeyboardShortcuts() {
     return {
       'Mod-Shift-7': () => handleListDocumentUpdates(this.editor, NodeName.ORDERED_LIST),
@@ -45,6 +51,6 @@ export const OrderedList = Node.create<NoOptions, NoStorage>({
   },
 
   // -- View ----------------------------------------------------------------------
-  parseHTML() { return [ { tag: `ol[${DATA_NODE_TYPE}="${NodeName.ORDERED_LIST}"]` } ]; },
+  parseHTML() { return [{ tag: `ol, ol[${DATA_NODE_TYPE}="${NodeName.ORDERED_LIST}"]` }]; },
   renderHTML({ node, HTMLAttributes }) { return getNodeOutputSpec(node, HTMLAttributes, false/*not a leaf node*/); },
 });

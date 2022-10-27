@@ -28,15 +28,13 @@ export const Image = Node.create<NoOptions, ImageStorage>({
       [AttributeType.Alt]: setAttributeParsingBehavior(AttributeType.Alt, SetAttributeType.STRING),
       [AttributeType.Title]: setAttributeParsingBehavior(AttributeType.Title, SetAttributeType.STRING),
 
-      // NOTE: using custom parseHTML for these since the parsing behavior
-      //       for styles has not been defined yet
-      [AttributeType.BorderColor]: { default: DEFAULT_IMAGE_BORDER_COLOR, parseHTML: (element) => element.style.borderColor },
-      [AttributeType.BorderStyle]: { default: DEFAULT_IMAGE_BORDER_STYLE, parseHTML: (element) => element.style.borderStyle },
-      [AttributeType.BorderWidth]: { default: DEFAULT_IMAGE_BORDER_WIDTH, parseHTML: (element) => element.style.borderWidth },
-      [AttributeType.Width]: { default: DEFAULT_IMAGE_WIDTH, parseHTML: (element) => element.style.width },
-      [AttributeType.Height]: { default: DEFAULT_IMAGE_HEIGHT, parseHTML: (element) => element.style.height },
-      [AttributeType.TextAlign]: { default: undefined/*none*/, parseHTML: (element) => element.style.textAlign },
-      [AttributeType.VerticalAlign]: { default: undefined/*none*/, parseHTML: (element) => element.style.verticalAlign },
+      [AttributeType.BorderColor]: setAttributeParsingBehavior(AttributeType.BorderColor, SetAttributeType.STYLE, DEFAULT_IMAGE_BORDER_COLOR),
+      [AttributeType.BorderStyle]: setAttributeParsingBehavior(AttributeType.BorderStyle, SetAttributeType.STYLE, DEFAULT_IMAGE_BORDER_STYLE),
+      [AttributeType.BorderWidth]: setAttributeParsingBehavior(AttributeType.BorderWidth, SetAttributeType.STYLE, DEFAULT_IMAGE_BORDER_WIDTH),
+      [AttributeType.Width]: setAttributeParsingBehavior(AttributeType.Width, SetAttributeType.STYLE, DEFAULT_IMAGE_WIDTH),
+      [AttributeType.Height]: setAttributeParsingBehavior(AttributeType.Height, SetAttributeType.STYLE, DEFAULT_IMAGE_HEIGHT),
+      [AttributeType.TextAlign]: setAttributeParsingBehavior(AttributeType.TextAlign, SetAttributeType.STYLE),
+      [AttributeType.VerticalAlign]: setAttributeParsingBehavior(AttributeType.VerticalAlign, SetAttributeType.STYLE),
     };
   },
 

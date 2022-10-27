@@ -31,7 +31,7 @@ This is the list of keyboard shortcuts that is built into the Notebook Editor.
 | <kbd>cmd</kbd><kbd>B</kbd>                                  | Toggle the **bold** Mark                                       |
 | <kbd>cmd</kbd><kbd>I</kbd>                                  | Toggle the <em>italic<em> Mark                                 |
 | <kbd>cmd</kbd><kbd>U</kbd>                                  | Toggle the <u>underline<u> Mark                                |
-| <kbd>cmd</kbd><kbd>Shift</kbd><kbd>X</kbd>                  | Toggle the ~~strikethrough~~ Mark                              |
+| <kbd>cmd</kbd><kbd>⇧</kbd><kbd>X</kbd>                      | Toggle the ~~strikethrough~~ Mark                              |
 | <kbd>cmd</kbd><kbd>E</kbd>                                  | Toggle the `code` Mark                                         |
 | <kbd>cmd</kbd><kbd>.</kbd>                                  | Toggle the <sup>superscript<sup> Mark                          |
 | <kbd>cmd</kbd><kbd>,</kbd>                                  | Toggle the <sub>subscript<sub> Mark                            |
@@ -39,9 +39,9 @@ This is the list of keyboard shortcuts that is built into the Notebook Editor.
 | <kbd>cmd</kbd><kbd>A</kbd>                                  | Select all the text in the editor (when focused)               |
 | <kbd>cmd</kbd><kbd>C</kbd>                                  | Copy the selected text or nodes to the clipboard               |
 | <kbd>cmd</kbd><kbd>V</kbd>                                  | Paste the selected text or nodes to the editor                 |
-| <kbd>cmd</kbd><kbd>Shift</kbd><kbd>V</kbd>                  | Paste the selected text or nodes to the editor as plain text   |
+| <kbd>cmd</kbd><kbd>⇧</kbd><kbd>V</kbd>                      | Paste the selected text or nodes to the editor as plain text   |
 | <kbd>cmd</kbd><kbd>X</kbd>                                  | Cut the selected text or nodes from the editor                 |
-| <kbd>cmd</kbd><kbd>Shift</kbd><kbd>Arrow Keys</kbd>         | Select the corresponding text or nodes with the arrow keys     |
+| <kbd>cmd</kbd><kbd>⇧</kbd><kbd>Arrow Keys</kbd>             | Select the corresponding text or nodes with the arrow keys     |
 | <kbd>cmd</kbd><kbd>option</kbd><kbd>0</kbd>                 | Toggle a Paragraph Node                                        |
 | <kbd>cmd</kbd><kbd>option</kbd><kbd>1</kbd>                 | Toggle a Heading 1 Node                                        |
 | <kbd>cmd</kbd><kbd>option</kbd><kbd>2</kbd>                 | Toggle a Heading 2 Node                                        |
@@ -49,14 +49,14 @@ This is the list of keyboard shortcuts that is built into the Notebook Editor.
 | <kbd>cmd</kbd><kbd>option</kbd><kbd>4</kbd>                 | Toggle a Heading 4 Node                                        |
 | <kbd>cmd</kbd><kbd>option</kbd><kbd>5</kbd>                 | Toggle a Heading 5 Node                                        |
 | <kbd>cmd</kbd><kbd>option</kbd><kbd>6</kbd>                 | Toggle a Heading 6 Node                                        |
-| <kbd>cmd</kbd><kbd>shift</kbd><kbd>B</kbd>                  | Insert a Nested View Block Node                                |
-| <kbd>cmd</kbd><kbd>shift</kbd><kbd>Option</kbd><kbd>I</kbd> | Insert an Image Node                                           |
-| <kbd>cmd</kbd><kbd>shift</kbd><kbd>C</kbd>                  | Toggle a CodeBlock Node                                        |
-| <kbd>cmd</kbd><kbd>shift</kbd><kbd>Option</kbd><kbd>C</kbd> | Insert a CodeBlockReference Node                               |
-| <kbd>cmd</kbd><kbd>shift</kbd><kbd>D</kbd>                  | Insert and select a DemoAsyncNode                              |
-| <kbd>cmd</kbd><kbd>shift</kbd><kbd>Option</kbd><kbd>D</kbd> | Insert a Demo2AsyncNode and place cursor inside                |
-| <kbd>cmd</kbd><kbd>shift</kbd><kbd>E</kbd>                  | Insert an Editable Inline Node with Content                    |
-| <kbd>shift</kbd><kbd>enter</kbd>                            | (When inside a CodeBlock Node), insert a Paragraph Node below  |
+| <kbd>cmd</kbd><kbd>⇧</kbd><kbd>B</kbd>                      | Insert a Nested View Block Node                                |
+| <kbd>cmd</kbd><kbd>⇧</kbd><kbd>Option</kbd><kbd>I</kbd>     | Insert an Image Node                                           |
+| <kbd>cmd</kbd><kbd>⇧</kbd><kbd>C</kbd>                      | Toggle a CodeBlock Node                                        |
+| <kbd>cmd</kbd><kbd>⇧</kbd><kbd>Option</kbd><kbd>C</kbd>     | Insert a CodeBlockReference Node                               |
+| <kbd>cmd</kbd><kbd>⇧</kbd><kbd>D</kbd>                      | Insert and select a DemoAsyncNode                              |
+| <kbd>cmd</kbd><kbd>⇧</kbd><kbd>Option</kbd><kbd>D</kbd>     | Insert a Demo2AsyncNode and place cursor inside                |
+| <kbd>cmd</kbd><kbd>⇧</kbd><kbd>E</kbd>                      | Insert an Editable Inline Node with Content                    |
+| <kbd>⇧</kbd><kbd>enter</kbd>                                | (When inside a CodeBlock Node), insert a Paragraph Node below  |
 | <kbd>ctrl</kbd><kbd>option</kbd><kbd>,</kbd>                | Preview Published Notebook                                     |
 | <kbd>ctrl</kbd><kbd>option</kbd><kbd>,</kbd>                | Toggle Development Mode                                        |
 | <kbd>cmd</kbd><kbd>option</kbd><kbd>,</kbd>                 | Focus the Notebook Editor                                      |

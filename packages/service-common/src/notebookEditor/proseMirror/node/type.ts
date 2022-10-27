@@ -20,6 +20,7 @@ export enum NodeName {
   DOC = 'document',
   EDITABLE_INLINE_NODE_WITH_CONTENT = 'editableInlineNodeWithContent',
   HEADING = 'heading',
+  HORIZONTAL_RULE = 'horizontalRule',
   IMAGE = 'image',
   LIST_ITEM = 'listItem',
   LIST_ITEM_CONTENT = 'listItemContent',

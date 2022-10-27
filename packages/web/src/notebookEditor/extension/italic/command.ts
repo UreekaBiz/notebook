@@ -23,7 +23,7 @@ export class ToggleItalicDocumentUpdate implements AbstractDocumentUpdate {
    * is toggled and return it
    */
   public update(editorState: EditorState, tr: Transaction) {
-    const updatedTr = new ToggleOrSetMarkDocumentUpdate(MarkName.ITALIC, editorState.schema.marks[MarkName.ITALIC]).update(editorState, tr);
+    const updatedTr = new ToggleOrSetMarkDocumentUpdate(editorState.schema.marks[MarkName.ITALIC]).update(editorState, tr);
     return updatedTr/*updated*/;
   }
 }

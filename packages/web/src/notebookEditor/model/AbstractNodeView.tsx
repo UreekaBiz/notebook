@@ -58,7 +58,7 @@ export abstract class AbstractNodeView<NodeType extends ProseMirrorNode, Storage
     this.ReactRoot = ReactDOM.createRoot(this.dom);
   }
 
-  // Sync getPos and node when prosemirror updates it
+  // sync getPos and Node when ProseMirror updates it
   public updateProps(getPos: getPosType) {
     this.getPos = getPos;
   }
@@ -67,7 +67,7 @@ export abstract class AbstractNodeView<NodeType extends ProseMirrorNode, Storage
   // meant to be used to perform view-specific functionality on Node removal (e.g.
   // removing EventListeners). The destruction of the View elements themselves is
   // handled by default by ProseMirror
-  public destroy() {/*currently nothing*/}
+  public destroy() {/*currently nothing*/ }
 
   // == View ======================================================================
   // creates the outer DOM node that represents the Document Node
@@ -101,6 +101,6 @@ export abstract class AbstractNodeView<NodeType extends ProseMirrorNode, Storage
       //       function.
       const ReactNodeViewComponent = this.reactNodeView;
       this.ReactRoot.render(<ReactNodeViewComponent {...props} />);
-    }
+    } /* else -- no ReactNodeView to update */
   }
 }

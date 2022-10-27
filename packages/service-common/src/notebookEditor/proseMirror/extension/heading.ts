@@ -1,6 +1,6 @@
 import { Mark, Node as ProseMirrorNode, NodeSpec } from 'prosemirror-model';
 
-import { noNodeOrMarkSpecAttributeDefaultValue, AttributeType, AttributesTypeFromNodeSpecAttributes } from '../attribute';
+import { noNodeOrMarkSpecAttributeDefaultValue, AttributeType, AttributesTypeFromNodeSpecAttributes, TextAlign } from '../attribute';
 import { NodeRendererSpec } from '../htmlRenderer/type';
 import { getAllowedMarks, MarkName } from '../mark';
 import { JSONNode, NodeGroup, NodeIdentifier, NodeName, ProseMirrorNodeContent } from '../node';
@@ -14,8 +14,9 @@ const HeadingAttributesSpec = {
 
   [AttributeType.Level]: noNodeOrMarkSpecAttributeDefaultValue<HeadingLevel>(),
 
-  [AttributeType.FontSize]: noNodeOrMarkSpecAttributeDefaultValue<string>(),
+  [AttributeType.BackgroundColor]: noNodeOrMarkSpecAttributeDefaultValue<string>(),
   [AttributeType.Color]: noNodeOrMarkSpecAttributeDefaultValue<string>(),
+  [AttributeType.FontSize]: noNodeOrMarkSpecAttributeDefaultValue<string>(),
 
   [AttributeType.PaddingTop]: noNodeOrMarkSpecAttributeDefaultValue<string>(),
   [AttributeType.PaddingBottom]: noNodeOrMarkSpecAttributeDefaultValue<string>(),
@@ -26,6 +27,8 @@ const HeadingAttributesSpec = {
   [AttributeType.MarginBottom]: noNodeOrMarkSpecAttributeDefaultValue<string>(),
   [AttributeType.MarginLeft]: noNodeOrMarkSpecAttributeDefaultValue<string>(),
   [AttributeType.MarginRight]: noNodeOrMarkSpecAttributeDefaultValue<string>(),
+
+  [AttributeType.TextAlign]: noNodeOrMarkSpecAttributeDefaultValue<TextAlign>(),
 };
 export type HeadingAttributes = AttributesTypeFromNodeSpecAttributes<typeof HeadingAttributesSpec>;
 
@@ -38,6 +41,7 @@ export const HeadingNodeSpec: NodeSpec = {
   marks: getAllowedMarks([MarkName.BOLD, MarkName.CODE, MarkName.ITALIC, MarkName.LINK, MarkName.STRIKETHROUGH, MarkName.SUB_SCRIPT, MarkName.SUPER_SCRIPT, MarkName.TEXT_STYLE, MarkName.UNDERLINE]),
 
   group: NodeGroup.BLOCK,
+  selectable: false/*cannot be set as NodeSelection*/,
   defining: true,
 
   attrs: HeadingAttributesSpec,

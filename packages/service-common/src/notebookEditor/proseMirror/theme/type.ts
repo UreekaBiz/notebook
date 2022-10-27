@@ -65,8 +65,17 @@ export const DefaultTheme: Theme = {
   displayName: 'Default',
 
   nodes: {
-    [NodeName.BLOCKQUOTE]: {/*no defined value*/},
-    [NodeName.BULLET_LIST]: {/*no defined value*/},
+    [NodeName.BLOCKQUOTE]: {
+      [AttributeType.BackgroundColor]: '#FFFFFF',
+      [AttributeType.Color]: '#000000',
+      [AttributeType.FontSize]: '16px',
+
+      // NOTE: order is not arbitrary
+      [AttributeType.BorderLeft]: '3px',
+      [AttributeType.BorderColor]: '#CCCCCC',
+      [AttributeType.MarginLeft]: '4px',
+    },
+    [NodeName.BULLET_LIST]: { [AttributeType.MarginLeft]: '10px' },
     [NodeName.CODEBLOCK]: {
       [AttributeType.PaddingLeft]: '4px',
       [AttributeType.PaddingRight]: '4px',
@@ -103,9 +112,14 @@ export const DefaultTheme: Theme = {
     [NodeName.DEMO_ASYNC_NODE]: {/*no defined value*/},
     [NodeName.EDITABLE_INLINE_NODE_WITH_CONTENT]: {/*no defined value*/},
     [NodeName.HEADING]: {
+      [AttributeType.BackgroundColor]: '#F3F3F3',
       [AttributeType.MarginLeft]: '4px',
       [AttributeType.MarginRight]: '4px',
       [AttributeType.MarginBottom]: '0.25rem',
+    },
+    [NodeName.HORIZONTAL_RULE]: {
+      [AttributeType.BackgroundColor]: '#CCCCCC',
+      [AttributeType.Height]: '2px',
     },
     [NodeName.IMAGE]: {
       [AttributeType.Color]: '#000',
@@ -118,12 +132,17 @@ export const DefaultTheme: Theme = {
       [AttributeType.PaddingTop]: '4px',
       [AttributeType.PaddingBottom]: '4px',
     },
-    [NodeName.LIST_ITEM_CONTENT]: {/*no defined value*/},
+    [NodeName.LIST_ITEM_CONTENT]: {
+      [AttributeType.BackgroundColor]: '#FFFFFF',
+      [AttributeType.Color]: '#000000',
+      [AttributeType.FontSize]: '16px',
+    },
     [NodeName.MARK_HOLDER]: {/*no defined value*/},
     [NodeName.NESTED_VIEW_BLOCK_NODE]: {/*no defined value*/},
-    [NodeName.ORDERED_LIST]: {/*no defined value*/},
+    [NodeName.ORDERED_LIST]: { [AttributeType.MarginLeft]: '10px' },
     [NodeName.PARAGRAPH]: {
-      [AttributeType.Color]: '#000',
+      [AttributeType.BackgroundColor]: '#FFFFFF',
+      [AttributeType.Color]: '#000000',
       [AttributeType.FontSize]: '16px',
       [AttributeType.MarginLeft]: '4px',
       [AttributeType.MarginRight]: '4px',
@@ -131,7 +150,7 @@ export const DefaultTheme: Theme = {
       [AttributeType.MarginBottom]: '0.5rem',
     },
     [NodeName.TASK_LIST]: {
-      [AttributeType.MarginLeft]: '1em',
+      [AttributeType.MarginLeft]: '10px',
       [AttributeType.PaddingLeft]: '1em',
     },
     [NodeName.TASK_LIST_ITEM]: {
@@ -196,8 +215,17 @@ export const GoogleDocsTheme: Theme = {
   displayName: 'Google Docs',
 
   nodes: {
-    [NodeName.BLOCKQUOTE]: {/*no defined value*/},
-    [NodeName.BULLET_LIST]: {/*no defined value*/},
+    [NodeName.BLOCKQUOTE]: {
+      [AttributeType.BackgroundColor]: '#FFFFFF',
+      [AttributeType.Color]: '#000000',
+      [AttributeType.FontSize]: '11pt',
+
+      // NOTE: order of borders is not arbitrary
+      [AttributeType.BorderLeft]: '3px',
+      [AttributeType.BorderColor]: '#CCCCCC',
+      [AttributeType.MarginLeft]: '4px',
+    },
+    [NodeName.BULLET_LIST]: { [AttributeType.MarginLeft]: '10px' },
     [NodeName.CODEBLOCK]: {
       [AttributeType.PaddingLeft]: '4px',
       [AttributeType.PaddingRight]: '4px',
@@ -234,8 +262,13 @@ export const GoogleDocsTheme: Theme = {
     [NodeName.DEMO_ASYNC_NODE]: {/*no defined value*/},
     [NodeName.EDITABLE_INLINE_NODE_WITH_CONTENT]: {/*no defined value*/},
     [NodeName.HEADING]: {
+      [AttributeType.BackgroundColor]: '#FFFFFF',
       [AttributeType.MarginLeft]: '4px',
       [AttributeType.MarginBottom]: '0.25rem',
+    },
+    [NodeName.HORIZONTAL_RULE]: {
+      [AttributeType.BackgroundColor]: '#000',
+      [AttributeType.Height]: '2px',
     },
     [NodeName.IMAGE]: {
       [AttributeType.Color]: '#353744',
@@ -248,11 +281,16 @@ export const GoogleDocsTheme: Theme = {
       [AttributeType.PaddingTop]: '10px',
       [AttributeType.PaddingBottom]: '10px',
     },
-    [NodeName.LIST_ITEM_CONTENT]: {/*no defined value*/},
+    [NodeName.LIST_ITEM_CONTENT]: {
+      [AttributeType.BackgroundColor]: '#FFFFFF',
+      [AttributeType.FontSize]: '11pt',
+      [AttributeType.Color]: '#353744',
+    },
     [NodeName.MARK_HOLDER]: {/*no defined value*/},
     [NodeName.NESTED_VIEW_BLOCK_NODE]: {/*no defined value*/},
-    [NodeName.ORDERED_LIST]: {/*no defined value*/},
+    [NodeName.ORDERED_LIST]: { [AttributeType.MarginLeft]: '10px' },
     [NodeName.PARAGRAPH]: {
+      [AttributeType.BackgroundColor]: '#FFFFFF',
       [AttributeType.FontSize]: '11pt',
       [AttributeType.Color]: '#353744',
       [AttributeType.MarginLeft]: '4px',
@@ -261,7 +299,7 @@ export const GoogleDocsTheme: Theme = {
       [AttributeType.MarginBottom]: '0.5rem',
     },
     [NodeName.TASK_LIST]:{
-      [AttributeType.MarginLeft]: '1em',
+      [AttributeType.MarginLeft]: '10px',
       [AttributeType.PaddingLeft]: '1em',
     },
     [NodeName.TASK_LIST_ITEM]: {

@@ -1,7 +1,8 @@
 import { Mark, Node as ProseMirrorNode, NodeSpec } from 'prosemirror-model';
 
-import { AttributesTypeFromNodeSpecAttributes } from '../attribute';
+import { noNodeOrMarkSpecAttributeDefaultValue, AttributeType, AttributesTypeFromNodeSpecAttributes } from '../attribute';
 import { NodeRendererSpec } from '../htmlRenderer/type';
+import { getAllowedMarks, MarkName } from '../mark';
 import { JSONNode, NodeGroup, NodeName, ProseMirrorNodeContent } from '../node';
 import { NotebookSchemaType } from '../schema';
 
@@ -9,7 +10,14 @@ import { NotebookSchemaType } from '../schema';
 // == Attribute ===================================================================
 // NOTE: must be present on the NodeSpec below
 // NOTE: this value must have matching types -- the ones defined in the Extension
-const BlockquoteAttributeSpec = {/*currently nothing*/};
+const BlockquoteAttributeSpec = {
+  [AttributeType.BackgroundColor]: noNodeOrMarkSpecAttributeDefaultValue<string>(),
+  [AttributeType.BorderLeft]: noNodeOrMarkSpecAttributeDefaultValue<string>(),
+  [AttributeType.BorderColor]: noNodeOrMarkSpecAttributeDefaultValue<string>(),
+  [AttributeType.Color]: noNodeOrMarkSpecAttributeDefaultValue<string>(),
+  [AttributeType.FontSize]: noNodeOrMarkSpecAttributeDefaultValue<string>(),
+  [AttributeType.MarginLeft]: noNodeOrMarkSpecAttributeDefaultValue<string>(),
+};
 export type BlockquoteAttributes = AttributesTypeFromNodeSpecAttributes<typeof BlockquoteAttributeSpec>;
 
 // == Spec ========================================================================
@@ -17,12 +25,15 @@ export type BlockquoteAttributes = AttributesTypeFromNodeSpecAttributes<typeof B
 export const BlockquoteNodeSpec: NodeSpec = {
   name: NodeName.BLOCKQUOTE,
 
-  // make Blockquotes behave like CodeBlock Nodes, (e.g. 'Enter' inserts a newline)
-  code: true,
-
   content: `${NodeGroup.INLINE}*`,
+  marks: getAllowedMarks([MarkName.BOLD, MarkName.CODE, MarkName.ITALIC, MarkName.STRIKETHROUGH, MarkName.SUB_SCRIPT, MarkName.SUPER_SCRIPT, MarkName.TEXT_STYLE, MarkName.UNDERLINE]),
+
   group: `${NodeGroup.BLOCK}`,
+  selectable: false/*cannot be set as NodeSelection*/,
+
   defining: true/*(SEE: https://prosemirror.net/docs/ref/#model.NodeSpec.defining)*/,
+  whitespace: 'pre'/*preserve newlines*/,
+
   attrs: BlockquoteAttributeSpec,
 };
 
@@ -47,3 +58,7 @@ export const createBlockquoteNode = (schema: NotebookSchemaType, attributes?: Pa
 // -- JSON Node Type --------------------------------------------------------------
 export type BlockquoteJSONNodeType = JSONNode<BlockquoteAttributes> & { type: NodeName.BLOCKQUOTE; };
 export const isBlockquoteJSONNode = (node: JSONNode): node is BlockquoteJSONNodeType => node.type === NodeName.BLOCKQUOTE;
+
+// --------------------------------------------------------------------------------
+export const DEFAULT_BLOCKQUOTE_BORDER_LEFT_COLOR = '#CCCCCC'/*gray*/;
+export const DEFAULT_BLOCKQUOTE_BORDER_LEFT_WIDTH = '3px'/*T&E*/;

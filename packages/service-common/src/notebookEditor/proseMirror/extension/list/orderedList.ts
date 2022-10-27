@@ -11,6 +11,8 @@ import { NotebookSchemaType } from '../../schema';
 const OrderedListAttributeSpec = {
   // NOTE: Must be named 'start' since thats the name of the 'ol' HTML tag attribute
   [AttributeType.StartValue]: noNodeOrMarkSpecAttributeDefaultValue<number>(),
+
+  [AttributeType.MarginLeft]: noNodeOrMarkSpecAttributeDefaultValue<string>(),
 };
 export type OrderedListAttributes = AttributesTypeFromNodeSpecAttributes<typeof OrderedListAttributeSpec>
 

@@ -1,6 +1,6 @@
 import { useEffect, useState } from 'react';
 
-import { isNodeSelection, MarkName, NodeName } from '@ureeka-notebook/web-service';
+import { isNodeSelection, setNodeSelectionCommand, MarkName, NodeName } from '@ureeka-notebook/web-service';
 
 import { getDialogStorage } from 'notebookEditor/model/DialogStorage';
 import { useValidatedEditor } from 'notebookEditor/hook/useValidatedEditor';
@@ -114,8 +114,12 @@ export const EditorUserInteractions = () => {
         event.preventDefault();
 
         // focus the last focused item. If none select the Editor
-        if(isNodeSelection(editor.state.selection)) editor.chain().focus().setNodeSelection(editor.state.selection.anchor);
-        else editor.commands.focus();
+        if(isNodeSelection(editor.state.selection)) {
+          setNodeSelectionCommand(editor.state.selection.anchor)(editor.state, editor.view.dispatch);
+          editor.view.focus();
+        } else {
+          editor.view.focus();
+        }
       } /* else -- not selecting Editor */
     };
     window.addEventListener('keydown', handler);
@@ -134,7 +138,7 @@ export const EditorUserInteractions = () => {
     // NOTE: if Editor is destroyed before the timeout runs, it wont be focused
     //       (i.e. no major side effects besides that)
     // focus Editor after the react re-render
-    setTimeout(() => editor.commands.focus(), 150/*T&E*/);
+    setTimeout(() => editor.view.focus(), 150/*T&E*/);
   };
 
   // -- Link ----------------------------------------------------------------------
@@ -147,7 +151,7 @@ export const EditorUserInteractions = () => {
     // NOTE: if Editor is destroyed before the timeout runs, it wont be focused
     //       (i.e. no major side effects besides that)
     // focus Editor after the react re-render
-    setTimeout(() => editor.commands.focus(), 150/*T&E*/);
+    setTimeout(() => editor.view.focus(), 150/*T&E*/);
   };
 
   // == UI ========================================================================

@@ -1,4 +1,4 @@
-import { Input, InputProps } from '@chakra-ui/react';
+import { Input, InputProps, Tooltip } from '@chakra-ui/react';
 import { ChangeEventHandler, KeyboardEventHandler } from 'react';
 
 import { useLocalValue } from 'notebookEditor/shared/hook/useLocalValue';
@@ -10,9 +10,11 @@ type Props = Omit<InputProps, 'onChange'> & {
 
   placeholder: string;
 
+  tooltipLabel?: string;
+
   onChange: (value: string) => void;
 }
-export const InputTool: React.FC<Props> = ({ value: initialInputValue, placeholder, onChange, ...props }) => {
+export const InputTool: React.FC<Props> = ({ value: initialInputValue, placeholder, tooltipLabel, onChange, ...props }) => {
   const { commitChange, localValue, updateLocalValue } = useLocalValue<string>(initialInputValue, onChange);
 
   // == Handler ===================================================================
@@ -28,22 +30,29 @@ export const InputTool: React.FC<Props> = ({ value: initialInputValue, placehold
   const handleKeyDown: KeyboardEventHandler<HTMLInputElement> = (event) => {
     // save changes when user presses Enter
     if(event.key === 'Enter') {
+      // prevent defaults so that PM does not handle the event
+      event.preventDefault();
+      event.stopPropagation();
+
+      // save change
       saveChange();
     } /* else -- ignore */
   };
 
   // == UI ========================================================================
   return (
-    <Input
-      value={localValue}
-      placeholder={placeholder}
-      size='sm'
-      autoComplete='off'
-      datatype={TOOL_ITEM_DATA_TYPE/*(SEE: notebookEditor/toolbar/type )*/}
-      onBlur={() => saveChange(false)}
-      onChange={handleValueChange}
-      onKeyDown={handleKeyDown}
-      {...props}
-    />
+    <Tooltip label={tooltipLabel} hasArrow>
+      <Input
+        value={localValue}
+        placeholder={placeholder}
+        size='sm'
+        autoComplete='off'
+        datatype={TOOL_ITEM_DATA_TYPE/*(SEE: notebookEditor/sidebar/toolbar/type )*/}
+        onBlur={() => saveChange(false)}
+        onChange={handleValueChange}
+        onKeyDown={handleKeyDown}
+        {...props}
+      />
+    </Tooltip>
   );
 };

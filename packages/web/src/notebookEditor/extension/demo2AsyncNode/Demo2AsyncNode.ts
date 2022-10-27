@@ -1,7 +1,8 @@
 import { Node } from '@tiptap/core';
 
-import { generateNodeId, getNodeOutputSpec, isDemo2AsyncNode, leaveBlockNodeCommand, selectBlockNodeContentCommand, AttributeType, Demo2AsyncNodeSpec, NodeName, SetAttributeType, DATA_NODE_TYPE, DEFAULT_DEMO_2_ASYNC_NODE_DELAY, DEFAULT_DEMO_2_ASYNC_NODE_STATUS } from '@ureeka-notebook/web-service';
+import { generateNodeId, getNodeOutputSpec, isDemo2AsyncNode, insertNewlineCommand, selectBlockNodeContentCommand, AttributeType, Demo2AsyncNodeSpec, LeaveBlockNodeDocumentUpdate, NodeName, SetAttributeType, DATA_NODE_TYPE, DEFAULT_DEMO_2_ASYNC_NODE_DELAY, DEFAULT_DEMO_2_ASYNC_NODE_STATUS } from '@ureeka-notebook/web-service';
 
+import { applyDocumentUpdates } from 'notebookEditor/command/update';
 import { shortcutCommandWrapper } from 'notebookEditor/command/util';
 import { setAttributeParsingBehavior, uniqueIdParsingBehavior } from 'notebookEditor/extension/util/attribute';
 import { NodeViewStorage } from 'notebookEditor/model/NodeViewStorage';
@@ -15,6 +16,13 @@ import { Demo2AsyncNodeController, Demo2AsyncNodeStorageType } from './nodeView/
 export const Demo2AsyncNode = Node.create<NoOptions, Demo2AsyncNodeStorageType>({
   ...Demo2AsyncNodeSpec,
 
+  // REF: https://github.com/ueberdosis/tiptap/blob/8c6751f0c638effb22110b62b40a1632ea6867c9/packages/core/src/helpers/getSchemaByResolvedExtensions.ts
+  // NOTE: since TipTap is not adding the whitespace prop to the default
+  //       NodeSpec created by the editor (SEE: REF above), this call
+  //       has to be performed instead, so that all the attributes specified
+  //       in the Demo2AsyncNodeSpec get added correctly
+  extendNodeSchema: (extension) => ({ ...Demo2AsyncNodeSpec }),
+
   // -- Attribute -----------------------------------------------------------------
   addAttributes() {
     return {
@@ -26,18 +34,18 @@ export const Demo2AsyncNode = Node.create<NoOptions, Demo2AsyncNodeStorageType>(
 
       [AttributeType.TextToReplace]: setAttributeParsingBehavior(AttributeType.TextToReplace, SetAttributeType.STRING),
 
-      [AttributeType.FontSize]: setAttributeParsingBehavior(AttributeType.FontSize, SetAttributeType.STRING),
-      [AttributeType.Color]: setAttributeParsingBehavior(AttributeType.Color, SetAttributeType.STRING),
+      [AttributeType.FontSize]: setAttributeParsingBehavior(AttributeType.FontSize, SetAttributeType.STYLE),
+      [AttributeType.Color]: setAttributeParsingBehavior(AttributeType.Color, SetAttributeType.STYLE),
 
-      [AttributeType.PaddingTop]: setAttributeParsingBehavior(AttributeType.PaddingTop, SetAttributeType.STRING),
-      [AttributeType.PaddingBottom]: setAttributeParsingBehavior(AttributeType.PaddingBottom, SetAttributeType.STRING),
-      [AttributeType.PaddingLeft]: setAttributeParsingBehavior(AttributeType.PaddingLeft, SetAttributeType.STRING),
-      [AttributeType.PaddingRight]: setAttributeParsingBehavior(AttributeType.PaddingRight, SetAttributeType.STRING),
+      [AttributeType.PaddingTop]: setAttributeParsingBehavior(AttributeType.PaddingTop, SetAttributeType.STYLE),
+      [AttributeType.PaddingBottom]: setAttributeParsingBehavior(AttributeType.PaddingBottom, SetAttributeType.STYLE),
+      [AttributeType.PaddingLeft]: setAttributeParsingBehavior(AttributeType.PaddingLeft, SetAttributeType.STYLE),
+      [AttributeType.PaddingRight]: setAttributeParsingBehavior(AttributeType.PaddingRight, SetAttributeType.STYLE),
 
-      [AttributeType.MarginTop]: setAttributeParsingBehavior(AttributeType.MarginTop, SetAttributeType.STRING),
-      [AttributeType.MarginLeft]: setAttributeParsingBehavior(AttributeType.MarginLeft, SetAttributeType.STRING),
-      [AttributeType.MarginBottom]: setAttributeParsingBehavior(AttributeType.MarginBottom, SetAttributeType.STRING),
-      [AttributeType.MarginRight]: setAttributeParsingBehavior(AttributeType.MarginRight, SetAttributeType.STRING),
+      [AttributeType.MarginTop]: setAttributeParsingBehavior(AttributeType.MarginTop, SetAttributeType.STYLE),
+      [AttributeType.MarginLeft]: setAttributeParsingBehavior(AttributeType.MarginLeft, SetAttributeType.STYLE),
+      [AttributeType.MarginBottom]: setAttributeParsingBehavior(AttributeType.MarginBottom, SetAttributeType.STYLE),
+      [AttributeType.MarginRight]: setAttributeParsingBehavior(AttributeType.MarginRight, SetAttributeType.STYLE),
     };
   },
 
@@ -58,8 +66,11 @@ export const Demo2AsyncNode = Node.create<NoOptions, Demo2AsyncNodeStorageType>(
       'ArrowUp': () => shortcutCommandWrapper(this.editor, blockArrowUpCommand(NodeName.DEMO_2_ASYNC_NODE)),
       'ArrowDown': () => shortcutCommandWrapper(this.editor, blockArrowDownCommand(NodeName.DEMO_2_ASYNC_NODE)),
 
+      // insert a newline on Enter
+      'Enter': () => shortcutCommandWrapper(this.editor, insertNewlineCommand(NodeName.DEMO_2_ASYNC_NODE)),
+
       // exit Node on Shift-Enter
-      'Shift-Enter': () => shortcutCommandWrapper(this.editor, leaveBlockNodeCommand(NodeName.DEMO_2_ASYNC_NODE)),
+      'Shift-Enter': () => applyDocumentUpdates(this.editor, [new LeaveBlockNodeDocumentUpdate(NodeName.DEMO_2_ASYNC_NODE)]),
 
       // select all the content of the Demo2AsyncNode
       'Cmd-a':  () => shortcutCommandWrapper(this.editor, selectBlockNodeContentCommand(NodeName.DEMO_2_ASYNC_NODE)),

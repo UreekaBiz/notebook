@@ -1,7 +1,8 @@
+import { Editor } from '@tiptap/core';
 import { Menu, MenuButton, MenuItem, MenuList, Text, ComponentWithAs, As } from '@chakra-ui/react';
 import { Node as ProseMirrorNode } from 'prosemirror-model';
 
-import { getParentNode, NodeName } from '@ureeka-notebook/web-service';
+import { getParentNode, NodeName, SelectionDepth } from '@ureeka-notebook/web-service';
 
 import { ICON_BUTTON_CLASS } from 'notebookEditor/theme/theme';
 import { EditorToolComponentProps } from 'notebookEditor/sidebar/toolbar/type';
@@ -22,6 +23,12 @@ interface DropdownButtonToolItemProps extends EditorToolComponentProps {
   /** the available options to choose from */
   options: { value: string | number | boolean; commandLabel: string; displayLabel: string;  }[];
 
+    /** the function that evaluates whether the Button should be currently active */
+    isButtonActive: (editor: Editor, depth: SelectionDepth) => boolean;
+
+    /** the function that evaluates whether the Button should be disabled */
+    shouldBeDisabled: (editor: Editor, depth: SelectionDepth) => boolean;
+
   /** the function that evaluates whether the current ToolItem option is selected  */
   selectedOptionCheck: (parent: ProseMirrorNode, optionValue: string | number | boolean, optionIndex: number) => boolean;
 
@@ -33,10 +40,8 @@ interface DropdownButtonToolItemProps extends EditorToolComponentProps {
 }
 
 // == Component ===================================================================
-export const DropdownButtonToolItem: React.FC<DropdownButtonToolItemProps> = ({ editor, depth, nodeName, asMenuButton, options, selectedOptionCheck, handleClick, handleKeydown }) => {
+export const DropdownButtonToolItem: React.FC<DropdownButtonToolItemProps> = ({ editor, depth, nodeName, asMenuButton, options, selectedOptionCheck, isButtonActive, shouldBeDisabled, handleClick, handleKeydown }) => {
   const parent = getParentNode(editor.state.selection);
-  const isButtonActive = parent.type.name === nodeName;
-  const shouldBeDisabled = depth !== 1/*only show on the direct parent*/;
 
   // == UI ========================================================================
   return (
@@ -46,8 +51,8 @@ export const DropdownButtonToolItem: React.FC<DropdownButtonToolItemProps> = ({ 
           <MenuButton
             as={asMenuButton}
             className={ICON_BUTTON_CLASS/*NOTE: must be at this level so that Chakra does not overwrite it*/}
-            isButtonActive={isButtonActive}
-            shouldBeDisabled={shouldBeDisabled}
+            isButtonActive={isButtonActive(editor, depth)}
+            shouldBeDisabled={shouldBeDisabled(editor, depth)}
           />
           <MenuList onKeyDown={(event) => handleKeydown(event, isOpen, onClose)}>
             {options.map((option, optionIndex) =>

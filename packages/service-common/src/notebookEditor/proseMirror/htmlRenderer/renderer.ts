@@ -11,6 +11,7 @@ import { Demo2AsyncNodeRendererSpec } from '../extension/demo2AsyncNode';
 import { DemoAsyncNodeRendererSpec } from '../extension/demoAsyncNode';
 import { DocumentNodeRendererSpec } from '../extension/document';
 import { HeadingNodeRendererSpec } from '../extension/heading';
+import { HorizontalRuleNodeRendererSpec } from '../extension/horizontalRule';
 import { ImageNodeRendererSpec } from '../extension/image';
 import { ItalicMarkRendererSpec } from '../extension/italic';
 import { LinkMarkRendererSpec } from '../extension/link';
@@ -44,6 +45,7 @@ export const NodeRendererSpecs: Record<NodeName, NodeRendererSpec> = {
   [NodeName.DOC]: DocumentNodeRendererSpec,
   [NodeName.EDITABLE_INLINE_NODE_WITH_CONTENT]: EditableInlineNodeWithContentNodeRendererSpec as any /*FIXME!!!*/,
   [NodeName.HEADING]: HeadingNodeRendererSpec as any/*FIXME!!!*/,
+  [NodeName.HORIZONTAL_RULE]: HorizontalRuleNodeRendererSpec as any/*FIXME!!!*/,
   [NodeName.LIST_ITEM]: ListItemNodeRendererSpec as any/*FIXME!!!*/,
   [NodeName.LIST_ITEM_CONTENT]: ListItemContentNodeRendererSpec as any/*FIXME!!!*/,
   [NodeName.IMAGE]: ImageNodeRendererSpec as any/*FIXME!!!*/,

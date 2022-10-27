@@ -1,10 +1,10 @@
 import { MdSubscript } from 'react-icons/md';
 
-import { getParentNode, isListItemContentNode, isNodeSelection, MarkName } from '@ureeka-notebook/web-service';
+import { isNodeSelection, MarkName } from '@ureeka-notebook/web-service';
 
 import { toolItemCommandWrapper } from 'notebookEditor/command/util';
-import { shouldShowToolItemInsideList } from 'notebookEditor/extension/list/util';
 import { inMarkHolder } from 'notebookEditor/extension/markHolder/util';
+import { shouldShowToolItem } from 'notebookEditor/shared/toolItem';
 import { ToolItem } from 'notebookEditor/sidebar/toolbar/type';
 
 import { toggleSubScriptCommand } from './command';
@@ -19,19 +19,8 @@ export const markSubScript: ToolItem = {
   icon: <MdSubscript size={16} />,
   tooltip: 'Subscript (⌘ + ,)',
 
-  shouldBeDisabled: (editor) => {
-    const { selection } = editor.state;
-    if(!isNodeSelection(selection)) return false;
-
-    return true;
-  },
-  shouldShow: (editor, depth) => {
-    if(isListItemContentNode(getParentNode(editor.state.selection))) {
-      return shouldShowToolItemInsideList(editor.state, depth);
-    } /* else -- not inside ListItemContent */
-
-    return depth === undefined || editor.state.selection.$anchor.depth === depth;/*direct parent*/
-  },
+  shouldBeDisabled: (editor) => isNodeSelection(editor.state.selection),
+  shouldShow: (editor, depth) => shouldShowToolItem(editor, depth),
   isActive: (editor) => {
     if(inMarkHolder(editor, MarkName.SUB_SCRIPT)) return true/*is active in MarkHolder*/;
 

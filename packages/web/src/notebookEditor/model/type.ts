@@ -28,7 +28,6 @@ export enum ExtensionName {
   // NOTE: not simply called 'keymap' since it's already used internally by Tiptap.
   KEYMAP = 'notebookKeymap',
   NESTED_VIEW_NODE = 'nestedViewNode',
-  NODEVIEW_REMOVAL = 'nodeViewRemoval',
   SET_DEFAULT_MARKS = 'setDefaultMarks',
 }
 
@@ -106,8 +105,20 @@ export enum ParseRulePriority {
   // NOTE: since MarkHolders are also rendered as div elements, they need to take
   //       priority over other nodes (such as Paragraphs or Headings)
   //       when being parsed (SEE: MarkHolder.ts)
-  MARK_HOLDER = 52,
+  MARK_HOLDER = 54,
 
-  // NOTE: TaskList parsing has preference over regular Lists
-  TASK_LIST = 51,
+  // NOTE: TaskList should be parsed before BulletLists or OrderedLists to ensure
+  //       right copy paste behavior inside and outside Lists
+  TASK_LIST = 53,
+
+  // NOTE: TaskListItem should be parsed before ListItem to ensure right copy
+  //       paste behavior inside and outside Lists. Its context property ensures
+  //       that its effects only happen on specific conditions
+  //       (SEE: TaskListItem.ts)
+  TASK_LIST_ITEM = 52,
+
+  // NOTE: regular ListItems should be parsed after TaskLists and TaskListItems.
+  //       Its context property ensures the effects are only applied on specific
+  //       conditions (SEE: ListItem.ts)
+  LIST_ITEM = 51,
 }

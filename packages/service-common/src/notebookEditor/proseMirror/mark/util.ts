@@ -1,11 +1,10 @@
 import { Mark as ProseMirrorMark, MarkType, Node as ProseMirrorNode, ResolvedPos, Schema } from 'prosemirror-model';
 
-import { EditorState } from 'prosemirror-state';
+import { EditorState, SelectionRange } from 'prosemirror-state';
 
 import { objectIncludes } from '../../../util';
 import { Attributes, AttributeType, AttributeValue } from '../attribute';
-import { isTextNode } from '../extension/text';
-import { MarkName, MarkRange } from './type';
+import { MarkName } from './type';
 
 // ********************************************************************************
 // == Getter ======================================================================
@@ -100,80 +99,33 @@ if(!mark) {
 return { ...mark.attrs };
 };
 
-/**
- * Check to see if the Mark that corresponds to the given {@link MarkName}
- * is present in the current Selection
- */
- export const isMarkActive = (state: EditorState, markName: MarkName, attributes: Record<AttributeType | string, any> = {/*default no attributes*/}): boolean => {
-  const { schema, selection } = state;
-  const { empty, ranges } = selection;
-  const markType = schema.marks[markName];
+// == Validation ==================================================================
+// check if the given MarkType can be applied through the given Ranges
+export const markApplies = (documentNode: ProseMirrorNode, ranges: readonly SelectionRange[], type: MarkType) => {
+  for(let i=0; i<ranges.length; i++) {
+    const { $from, $to } = ranges[i];
+    let canApplyMark = $from.depth == 0
+      ? documentNode.inlineContent && documentNode.type.allowsMarkType(type)
+      : false;
 
-  if(empty) {
-    return !!(state.storedMarks || state.selection.$from.marks()).filter(mark => {
-        if(!markType) {
-          return true/*continue*/;
-        } /* else -- check if types are the same */
+    documentNode.nodesBetween($from.pos, $to.pos, (node) => {
+      if(canApplyMark) {
+        return false/*stop descending*/;
+      } /* else -- check if Mark can be applied */
 
-        return markType === mark.type;
-      })
-      .find(mark => objectIncludes(mark.attrs, attributes));
-  } /* else -- check the Selection range */
-
-  let selectionRange = 0/*default*/;
-  const markRanges: MarkRange[] = [];
-  ranges.forEach(({ $from, $to }) => {
-    const from = $from.pos,
-          to = $to.pos;
-
-    state.doc.nodesBetween(from, to, (node, pos) => {
-      if(!isTextNode(node) && !node.marks.length) {
-        return/*nothing to do*/;
-      } /* else -- node is Text and there are Marks present */
-
-      const relativeFrom = Math.max(from, pos),
-            relativeTo = Math.min(to, pos + node.nodeSize);
-
-      const range = relativeTo - relativeFrom;
-      selectionRange += range;
-      markRanges.push(...node.marks.map(mark => ({ mark, from: relativeFrom, to: relativeTo })));
+      canApplyMark = node.inlineContent && node.type.allowsMarkType(type);
+      return true/*keep descending*/;
     });
-  });
 
-  if(selectionRange === 0) {
-    return false/*nothing to do*/;
-  } /* else -- compute the Range of the matched Mark */
+    if(canApplyMark) {
+      return true/*can apply Mark for Nodes in Range*/;
+    } /* else -- return false */
+  }
 
-  const matchedRange = markRanges.filter(markRange => {
-      if(!markType) {
-        return true/*continue*/;
-      } /* else -- check for equality */
-
-      return markType === markRange.mark.type;
-    })
-    .filter(markRange => objectIncludes(markRange.mark.attrs, attributes))
-    .reduce((sum, markRange) => sum + markRange.to - markRange.from, 0/*default*/);
-
-  // compute the range of Marks that exclude the looked-for Mark
-  // (e.g. for Marks that exclude other Marks)
-  const excludedRange = markRanges.filter(markRange => {
-      if(!markType) {
-        return true/* continue */;
-      } /* else -- check for exclusion*/
-
-      return markType !== markRange.mark.type/*not the same type of Mark*/ &&
-            markRange.mark.type.excludes(markType)/*Mark should be excluded*/;
-    })
-    .reduce((sum, markRange) => sum + markRange.to - markRange.from, 0/*default*/);
-
-  // only include the result of the excludeRange if there are matches
-  const range = matchedRange > 0/*there are matches*/
-    ? matchedRange + excludedRange
-    : matchedRange;
-
-  return range >= selectionRange;
+  return false/*cannot apply Mark for Nodes in Range*/;
 };
 
+// == Search ======================================================================
 /**
  * Check if any Marks in the given {@link ProseMirrorMark} array have the same
  * {@link MarkType} as the given one, as well as the same set of attributes, and

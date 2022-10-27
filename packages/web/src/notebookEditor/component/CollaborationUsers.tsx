@@ -1,7 +1,7 @@
 import { Box, Flex } from '@chakra-ui/react';
 import { useEffect, useState } from 'react';
 
-import { getLogger, Logger, NotebookUsers, NotebookUserSession, UserIdentifier } from '@ureeka-notebook/web-service';
+import { getLogger, Logger, NotebookUsers, NotebookUserSession, SetTextSelectionDocumentUpdate, UserIdentifier } from '@ureeka-notebook/web-service';
 
 import { useValidatedAuthedUser } from 'authUser/hook/useValidatedAuthedUser';
 import { useNotebookEditor } from 'notebookEditor/hook/useNotebookEditor';
@@ -57,13 +57,12 @@ export const CollaborationUsers: React.FC<Props> = () => {
     if(!mostRecent) return/*invalid session -- nothing to do*/;
 
     const { cursorPosition } = mostRecent;
-    // update the focus
-    // TODO: Use DocumentUpdates
-    editor.chain()
-          .setTextSelection(cursorPosition)
-          .focus(cursorPosition)
-          .run();
+    const updatedTr = new SetTextSelectionDocumentUpdate({ from: cursorPosition, to: cursorPosition }).update(editor.state, editor.state.tr);
+          updatedTr.scrollIntoView();
+    editor.view.dispatch(updatedTr);
+    editor.view.focus();
   };
+
   // == UI ========================================================================
   if(!collaboratingUsers) return null/*nothing to render*/;
 

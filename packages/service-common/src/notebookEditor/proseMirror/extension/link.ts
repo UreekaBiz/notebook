@@ -90,6 +90,6 @@ export const DEFAULT_LINK_ATTRIBUTES: Partial<LinkAttributes> = {
 };
 
 // NOTE: This property has to be taken into account when inserting links
-//       Otherwise, ranges that should not necessarily receive a link might do so
+//       Otherwise, ranges that should not necessarily receive a Link might do so
 //       (SEE: Link.ts #commands, linkCreate.ts)
 export const PREVENT_LINK_META = 'preventAutoLink';

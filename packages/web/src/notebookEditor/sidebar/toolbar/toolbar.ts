@@ -9,13 +9,14 @@ import { Demo2AsyncNodeToolbar } from 'notebookEditor/extension/demo2AsyncNode/t
 import { DemoAsyncNodeToolbar } from 'notebookEditor/extension/demoAsyncNode/toolbar';
 import { DocumentToolbar } from 'notebookEditor/extension/document/toolbar';
 import { HeadingToolbar } from 'notebookEditor/extension/heading/toolbar';
+import { HorizontalRuleToolbar } from 'notebookEditor/extension/horizontalRule/toolbar/toolbar';
 import { ImageToolbar } from 'notebookEditor/extension/image/toolbar';
 import { LinkToolbar } from 'notebookEditor/extension/link/toolbar';
 import { BulletListToolbar } from 'notebookEditor/extension/list/bulletList/toolbar';
-import { ListItemToolbar } from 'notebookEditor/extension/list/listItem/toolbar';
+import { ListItemToolbar } from 'notebookEditor/extension/list/item/listItem/toolbar';
 import { OrderedListToolbar } from 'notebookEditor/extension/list/orderedList/toolbar';
 import { TaskListToolbar } from 'notebookEditor/extension/list/taskList/toolbar';
-import { TaskListItemToolbar } from 'notebookEditor/extension/list/taskListItem/toolbar';
+import { TaskListItemToolbar } from 'notebookEditor/extension/list/item/taskListItem/toolbar';
 import { EditableInlineNodeWithContentToolbar } from 'notebookEditor/extension/nestedViewNode/editableInlineNodeWithContent/toolbar';
 import { NestedViewBlockNodeToolbar } from 'notebookEditor/extension/nestedViewNode/nestedViewBlockNode/toolbar';
 import { ParagraphToolbar } from 'notebookEditor/extension/paragraph/toolbar';
@@ -36,6 +37,7 @@ const TOOLBAR_MAP: Record<NodeName | MarkName, Toolbar | null> = {
   [NodeName.EDITABLE_INLINE_NODE_WITH_CONTENT]: EditableInlineNodeWithContentToolbar,
   [NodeName.TEXT]: null/*none*/,
   [NodeName.HEADING]: HeadingToolbar,
+  [NodeName.HORIZONTAL_RULE]: HorizontalRuleToolbar,
   [NodeName.IMAGE]: ImageToolbar,
   [NodeName.LIST_ITEM]: ListItemToolbar,
   [NodeName.LIST_ITEM_CONTENT]: null/*none since User interacts with ListItem*/,

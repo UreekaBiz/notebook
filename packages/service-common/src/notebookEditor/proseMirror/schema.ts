@@ -10,6 +10,7 @@ import { Demo2AsyncNodeSpec } from './extension/demo2AsyncNode';
 import { DemoAsyncNodeSpec } from './extension/demoAsyncNode';
 import { DocumentNodeSpec } from './extension/document';
 import { HeadingNodeSpec } from './extension/heading';
+import { HorizontalRuleNodeSpec } from './extension/horizontalRule';
 import { ImageNodeSpec } from './extension/image';
 import { ItalicMarkSpec } from './extension/italic';
 import { LinkMarkSpec } from './extension/link';
@@ -49,6 +50,7 @@ export const NodeSpecs: Record<NodeName, NodeSpec> = {
   [NodeName.DEMO_ASYNC_NODE]: DemoAsyncNodeSpec,
   [NodeName.EDITABLE_INLINE_NODE_WITH_CONTENT]: EditableInlineNodeWithContentNodeSpec,
   [NodeName.HEADING]: HeadingNodeSpec,
+  [NodeName.HORIZONTAL_RULE]: HorizontalRuleNodeSpec,
   [NodeName.IMAGE]: ImageNodeSpec,
   [NodeName.MARK_HOLDER]: MarkHolderNodeSpec,
   [NodeName.NESTED_VIEW_BLOCK_NODE]: NestedViewBlockNodeSpec,

@@ -5,14 +5,26 @@
 export const ACTIONABLE_NODE = 'actionable-node';
 
 // -- Type ------------------------------------------------------------------------
-export enum SetAttributeType { STRING = 'string', BOOLEAN = 'boolean', NUMBER = 'number', ARRAY = 'array' }
+export enum SetAttributeType {
+  STRING = 'string',
+  STYLE = 'style',
+  BOOLEAN = 'boolean',
+  NUMBER = 'number',
+  ARRAY = 'array'
+}
 export type Attributes = Partial<Record<AttributeType, any>>;
 export type AttributeValue = string | number | undefined;
 export type HTMLAttributes = Record<string, AttributeValue>;
 
 export enum AttributeType {
   // -- CSS Styles ----------------------------------------------------------------
+  BackgroundColor = 'backgroundColor',
+
   BorderColor = 'borderColor',
+  BorderTop = 'borderTop',
+  BorderBottom = 'borderBottom',
+  BorderLeft = 'borderLeft',
+  BorderRight = 'borderRight',
   BorderStyle = 'borderStyle',
   BorderWidth = 'borderWidth',
 
@@ -28,8 +40,6 @@ export enum AttributeType {
   PaddingBottom = 'paddingBottom',
   PaddingLeft = 'paddingLeft',
   PaddingRight = 'paddingRight',
-
-  BackgroundColor = 'backgroundColor',
 
   // -- Text Style ----------------------------------------------------------------
   Color = 'color',
@@ -95,7 +105,13 @@ export enum AttributeType {
 }
 
 export type StyleAttributes = {
+  [AttributeType.BackgroundColor]: string;
+
   [AttributeType.BorderColor]: string;
+  [AttributeType.BorderTop]: string;
+  [AttributeType.BorderBottom]: string;
+  [AttributeType.BorderLeft]: string;
+  [AttributeType.BorderRight]: string;
   [AttributeType.BorderStyle]: string;
   [AttributeType.BorderWidth]: string;
 
@@ -117,7 +133,13 @@ export type StyleAttributes = {
   [AttributeType.PaddingRight]: string;
 };
 const styleAttributeSet = new Set([
+  AttributeType.BackgroundColor,
+
   AttributeType.BorderColor,
+  AttributeType.BorderTop,
+  AttributeType.BorderBottom,
+  AttributeType.BorderLeft,
+  AttributeType.BorderRight,
   AttributeType.BorderStyle,
   AttributeType.BorderWidth,
 

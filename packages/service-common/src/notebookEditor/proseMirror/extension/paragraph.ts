@@ -1,6 +1,6 @@
 import { Mark, Node as ProseMirrorNode, NodeSpec } from 'prosemirror-model';
 
-import { noNodeOrMarkSpecAttributeDefaultValue, AttributeType, AttributesTypeFromNodeSpecAttributes } from '../attribute';
+import { noNodeOrMarkSpecAttributeDefaultValue, AttributeType, AttributesTypeFromNodeSpecAttributes, TextAlign } from '../attribute';
 import { NodeRendererSpec } from '../htmlRenderer/type';
 import { getAllowedMarks, MarkName } from '../mark';
 import { JSONNode, NodeGroup, NodeName, ProseMirrorNodeContent } from '../node';
@@ -11,6 +11,7 @@ import { NotebookSchemaType } from '../schema';
 // NOTE: must be present on the MarkSpec below
 // NOTE: this value must have matching types -- the ones defined in the Extension
 const ParagraphAttributesSpec = {
+  [AttributeType.BackgroundColor]: noNodeOrMarkSpecAttributeDefaultValue<string>(),
   [AttributeType.FontSize]: noNodeOrMarkSpecAttributeDefaultValue<string>(),
   [AttributeType.Color]: noNodeOrMarkSpecAttributeDefaultValue<string>(),
 
@@ -23,6 +24,8 @@ const ParagraphAttributesSpec = {
   [AttributeType.MarginBottom]: noNodeOrMarkSpecAttributeDefaultValue<string>(),
   [AttributeType.MarginLeft]: noNodeOrMarkSpecAttributeDefaultValue<string>(),
   [AttributeType.MarginRight]: noNodeOrMarkSpecAttributeDefaultValue<string>(),
+
+  [AttributeType.TextAlign]: noNodeOrMarkSpecAttributeDefaultValue<TextAlign>(),
 };
 export type ParagraphAttributes = AttributesTypeFromNodeSpecAttributes<typeof ParagraphAttributesSpec>
 
@@ -35,6 +38,7 @@ export const ParagraphNodeSpec: Readonly<NodeSpec> = {
   marks: getAllowedMarks([MarkName.BOLD, MarkName.CODE, MarkName.ITALIC, MarkName.LINK, MarkName.STRIKETHROUGH, MarkName.SUB_SCRIPT, MarkName.SUPER_SCRIPT, MarkName.TEXT_STYLE, MarkName.UNDERLINE]),
 
   group: NodeGroup.BLOCK,
+  selectable: false/*cannot be set as NodeSelection*/,
 
   attrs: ParagraphAttributesSpec,
 };

@@ -35,7 +35,5 @@ export const LinkColorToolItem: React.FC<Props> = ({ editor, depth }) => {
   };
 
   // == UI ========================================================================
-  return (
-    <ColorPickerTool name='Color' value={inputValue} onChange={handleChange} />
-  );
+  return (<ColorPickerTool name='Color' value={inputValue} onChange={handleChange} />);
 };

@@ -1,7 +1,7 @@
 import { Mark, MarkType } from 'prosemirror-model';
 import { EditorState, TextSelection, Transaction } from 'prosemirror-state';
 
-import { getMarkName, isMarkActive, stringifyMarksArray, AbstractDocumentUpdate, AttributeType, Command, MarkName, MarkHolderNodeType, SetMarkDocumentUpdate, UnsetMarkDocumentUpdate } from '@ureeka-notebook/web-service';
+import { getMarkName, stringifyMarksArray, AbstractDocumentUpdate, AttributeType, Command, MarkHolderNodeType, ToggleMarkDocumentUpdate } from '@ureeka-notebook/web-service';
 
 import { getMarkHolder, parseStoredMarks } from './util';
 
@@ -9,8 +9,8 @@ import { getMarkHolder, parseStoredMarks } from './util';
 /**
  * Checks whether the given Mark is active in a MarkHolder, and toggling or set it
  */
-export const toggleOrSetMarkCommand = (markName: MarkName, markType: MarkType): Command => (state, dispatch) => {
-  const updatedTr = new ToggleOrSetMarkDocumentUpdate(markName, markType).update(state, state.tr);
+export const toggleOrSetMarkCommand = (markType: MarkType): Command => (state, dispatch) => {
+  const updatedTr = new ToggleOrSetMarkDocumentUpdate(markType).update(state, state.tr);
   if(updatedTr) {
     dispatch(updatedTr);
     return true/*Command executed*/;
@@ -19,7 +19,7 @@ export const toggleOrSetMarkCommand = (markName: MarkName, markType: MarkType): 
   return false/*not executed*/;
 };
 export class ToggleOrSetMarkDocumentUpdate implements AbstractDocumentUpdate {
-  public constructor(private readonly markName: MarkName, private readonly markType: MarkType) {/*nothing additional*/}
+  public constructor(private readonly markType: MarkType) {/*nothing additional*/}
 
   /*
    * modify the given Transaction such that it is toggled or set depending on
@@ -29,14 +29,10 @@ export class ToggleOrSetMarkDocumentUpdate implements AbstractDocumentUpdate {
     // if MarkHolder is defined toggle the Mark inside it
     const markHolder = getMarkHolder(editorState);
     if(markHolder) {
-      return new ToggleMarkInMarkHolderDocumentUpdate(markHolder, this.markType).update(editorState, editorState.tr);
+      return new ToggleMarkInMarkHolderDocumentUpdate(markHolder, this.markType).update(editorState, tr);
     } /* else -- MarkHolder is not present */
 
-    if(isMarkActive(editorState, this.markName, {/*no attributes*/ })) {
-      return new UnsetMarkDocumentUpdate(this.markName, false/*do not extend empty Mark Range*/).update(editorState, editorState.tr);
-    } /* else -- not toggling Bold, set it */
-
-    return new SetMarkDocumentUpdate(this.markName, {/*no attributes*/}).update(editorState, editorState.tr);
+    return new ToggleMarkDocumentUpdate(this.markType, {/*no attributes*/}).update(editorState, tr);
   }
 }
 

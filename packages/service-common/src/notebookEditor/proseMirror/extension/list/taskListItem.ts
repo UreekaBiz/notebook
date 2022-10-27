@@ -1,7 +1,7 @@
 import { Mark, Node as ProseMirrorNode, NodeSpec } from 'prosemirror-model';
 
 import { noNodeOrMarkSpecAttributeDefaultValue, AttributesTypeFromNodeSpecAttributes, AttributeType } from '../../attribute';
-import { createNodeDataAttribute, createNodeDataTypeAttribute, NodeRendererSpec } from '../../htmlRenderer/type';
+import { createNodeDataTypeAttribute, NodeRendererSpec } from '../../htmlRenderer/type';
 import { JSONNode, NodeName, ProseMirrorNodeContent } from '../../node';
 import { NotebookSchemaType } from '../../schema';
 
@@ -35,7 +35,7 @@ const renderTaskListItemNodeView = (attributes: TaskListItemAttributes, content:
   // ensure that the renderer TaskListItem is read only (i.e. its checkbox
   // state cannot be changed). Must be a regular function to use arguments
   const preventCheckBoxChange = 'onclick="(function(clickEvent){clickEvent.preventDefault(); clickEvent.stopPropagation();})(arguments[0]);"';
-  return `<li ${createNodeDataTypeAttribute(NodeName.TASK_LIST_ITEM)} ${DATA_TASK_LIST_ITEM_CHECKED}="${attributes.checked ? 'true' : 'false'}"><label contenteditable="false"><input type="checkbox" ${preventCheckBoxChange} ${attributes.checked ? 'checked="true"' : ''/*don't add attr if not checked*/} /></label><div>${content}</div></li>`;
+  return `<li ${createNodeDataTypeAttribute(NodeName.TASK_LIST_ITEM)} ${attributes[AttributeType.Checked]}="${attributes.checked ? 'true' : 'false'}"><label contenteditable="false"><input type="checkbox" ${preventCheckBoxChange} ${attributes.checked ? 'checked="true"' : ''/*don't add attr if not checked*/} /></label><div>${content}</div></li>`;
 };
 
 export const TaskListItemNodeRendererSpec: NodeRendererSpec<TaskListItemAttributes> = {
@@ -62,6 +62,3 @@ export const createTaskListItemNode = (schema: NotebookSchemaType, attributes?: 
 // -- JSON Node Type --------------------------------------------------------------
 export type TaskListItemJSONNodeType = JSONNode<TaskListItemAttributes> & { type: NodeName.TASK_LIST_ITEM; };
 export const isTaskListItemJSONNode = (node: JSONNode): node is TaskListItemJSONNodeType => node.type === NodeName.TASK_LIST_ITEM;
-
-// == Constant ====================================================================
-export const DATA_TASK_LIST_ITEM_CHECKED = createNodeDataAttribute(AttributeType.Checked);

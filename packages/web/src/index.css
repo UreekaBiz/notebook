@@ -63,8 +63,11 @@
 /* -- Node Styles -------------------------------------------------------------- */
 /* .. Blockquote ............................................................... */
 [data-node-type="blockquote"] {
-  border-left: 3px solid #CCCCCC;
-  margin-left: 1rem;
+  /*
+    ensure customizable border-left property does not override
+    default border-style
+  */
+  border-style: solid !important;
   padding-left: 0.25rem;
 }
 
@@ -108,6 +111,15 @@
 .selected_text:not([data-node-view]) {
   background-color: rgba(0,0,0,0.1);
 }
+
+/* .. HorizontalRule ........................................................... */
+[data-node-type="horizontalRule"] {
+  margin: 0.5rem;
+}
+[data-node-type="horizontalRule"].ProseMirror-selectednode {
+  outline: 1px solid #666;
+}
+
 /* .. Image .................................................................... */
 [data-node-type="image"] {
   position: relative;
@@ -132,19 +144,6 @@
          (SEE: REF in src/common/notebookEditor/extension/listItem)
          (SEE: REF in src/common/notebookEditor/extension/taskListItem)
 */
-/* .. ListItem ................................................................. */
-[data-node-type="listItem"] > [data-node-type="listItemContent"] {
-  margin: 0px;
-}
-
-/* .. TaskListItem ............................................................. */
-[data-node-type="taskListItem"] > div > [data-node-type="listItemContent"] {
-  margin-left: 4px;
-  margin-right: 4px;
-  margin-top: 0.25rem;
-  margin-bottom: 0.25rem;
-}
-
 /* .. OrderedList .............................................................. */
 ol[data-node-type="orderedList"] {
   margin-left: 1em;
@@ -160,11 +159,15 @@ ol[data-node-type="orderedList"] > li[data-node-type="listItem"]::marker {
   /* NOTE: the listStyle variable is added by the renderer. (SEE: listItem.ts) */
   content: counter(list, var(--listStyleType)) attr(data-attribute-separator) ' '/*add separation between content and Marker*/;
 }
-
 /* .. BulletList ............................................................... */
 ul[data-node-type="bulletList"] {
   margin-left: 1em;
   padding-left: 1em;
+}
+
+/* .. ListItem ................................................................. */
+[data-node-type="listItem"] > [data-node-type="listItemContent"] {
+  margin: 0px;
 }
 
 /* .. TaskList ................................................................. */
@@ -181,6 +184,18 @@ ul[data-node-type="taskList"] > li > label {
    margin-top: 0.25em;
 	 margin-right: 0.25rem;
 	 user-select: none;
+}
+
+/* .. TaskListItem ............................................................. */
+[data-node-type="taskListItem"] > div > [data-node-type="listItemContent"] {
+  margin-left: 4px;
+  margin-right: 4px;
+  margin-top: 0.25rem;
+  margin-bottom: 0.25rem;
+}
+[data-node-type="taskListItem"][checked="true"] > div > [data-node-type="listItemContent"] {
+  color: #434343;
+  text-decoration: line-through;
 }
 
 /* .. MarkHolder ............................................................... */

@@ -20,7 +20,7 @@ export const DropdownTool: React.FC<Props> = ({ value, options, placeholder, onC
   };
 
   return (
-    <Select size='sm' value={value} marginY={1} datatype={TOOL_ITEM_DATA_TYPE/*(SEE: journalEditor/sidebar/toolbar/type )*/} onChange={handleChange}>
+    <Select size='sm' value={value} marginY={1} datatype={TOOL_ITEM_DATA_TYPE/*(SEE: notebookEditor/sidebar/toolbar/type )*/} onChange={handleChange}>
       <option value='' disabled>{placeholder}</option>
       {options.map((option, optionIndex) => <option value={option.value} key={optionIndex}>{option.label}</option>)}
     </Select>

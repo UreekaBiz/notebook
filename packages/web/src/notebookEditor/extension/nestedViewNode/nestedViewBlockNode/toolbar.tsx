@@ -1,10 +1,10 @@
 import { MdOutlineViewDay } from 'react-icons/md';
 
-import { isNodeSelection, NodeName } from '@ureeka-notebook/web-service';
+import { generateNodeId, getNestedViewBlockNodeType, isNodeSelection, AttributeType, NodeName } from '@ureeka-notebook/web-service';
 
-import { ToolItem, Toolbar } from 'notebookEditor/sidebar/toolbar/type';
+import { Toolbar, ToolItem } from 'notebookEditor/sidebar/toolbar/type';
 
-import { insertAndSelectNestedViewBlockNode } from './util';
+import { insertAndSelectNestedViewNode } from '../util';
 
 //*********************************************************************************
 // == Tool Items ==================================================================
@@ -14,7 +14,7 @@ export const nestedViewBlockNodeToolItem: ToolItem = {
   label: NodeName.NESTED_VIEW_BLOCK_NODE,
 
   icon: <MdOutlineViewDay size={16} />,
-  tooltip: 'Nested View Block Node (⌘ + ⌥ + B)',
+  tooltip: 'Nested View Block Node (⌘ + ⌥ + E)',
 
   shouldBeDisabled: (editor) => {
     const { selection } = editor.state;
@@ -24,7 +24,7 @@ export const nestedViewBlockNodeToolItem: ToolItem = {
   },
   shouldShow: (editor, depth) => depth === undefined || editor.state.selection.$anchor.depth === depth/*direct parent*/,
 
-  onClick: (editor, depth) => insertAndSelectNestedViewBlockNode(editor, depth, 'toolItem'),
+  onClick: (editor, depth) => insertAndSelectNestedViewNode(editor, depth, getNestedViewBlockNodeType(editor.schema), { [AttributeType.Id]: generateNodeId() }, 'toolItem'),
   isActive: (editor) => editor.isActive(NodeName.NESTED_VIEW_BLOCK_NODE),
 };
 

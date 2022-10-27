@@ -5,6 +5,7 @@ import { isDefined, isTupleNotNull, NotebookIdentifier, NotebookTuple, Notebook_
 import { defaultDocumentConverter, defaultDocumentTupleConverter, defaultTupleConverter } from '../util/firestore';
 import { joinDetail$, ArrayObservable } from '../util/observable';
 import { QueryObservable } from '../util/observableCollection';
+import { defaultProject, queryMap } from '../util/observableCollectionMap';
 import { documentOnce } from '../util/observableDocument';
 import { queryTuples } from '../util/observableTupleCollection';
 import { documentTuple } from '../util/observableTupleDocument';
@@ -20,6 +21,10 @@ export const notebookTupleOnceById$ = (notebookId: NotebookIdentifier) =>
   documentTuple(notebookDocument(notebookId), defaultDocumentTupleConverter);
 export const notebookTupleById$ = (notebookId: NotebookIdentifier) =>
   documentTuple(notebookDocument(notebookId), defaultDocumentTupleConverter);
+
+// .. Map .........................................................................
+export const notebookMap$ = (filter: NotebookFilter) =>
+  queryMap(notebookQuery(filter), defaultProject);
 
 // .. Id's => Notebooks ...........................................................
 // detail-joins Notebook (filtering out any missing Notebooks)
