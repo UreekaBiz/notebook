@@ -52,7 +52,7 @@ export const findCutAfter = ($pos: ResolvedPos): ResolvedPos | null => {
     }
   } /* else -- parent of the $pos has isolating property, nothing to do */
 
-  return null;
+  return null/*default*/;
 };
 
 
