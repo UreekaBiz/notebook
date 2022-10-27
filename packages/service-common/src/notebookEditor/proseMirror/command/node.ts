@@ -1,6 +1,7 @@
 import { Slice } from 'prosemirror-model';
 import { EditorState, NodeSelection, Selection, TextSelection, Transaction } from 'prosemirror-state';
 import { canSplit, liftTarget, replaceStep, ReplaceStep } from 'prosemirror-transform';
+import { EditorView } from 'prosemirror-view';
 
 import { isBlank } from '../../../util';
 import { Attributes } from '../attribute';
@@ -251,8 +252,8 @@ export class LiftEmptyBlockNodeDocumentUpdate implements AbstractDocumentUpdate 
 // before it that can be joined, by joining them. Otherwise try to move the
 // selected Block closer to the next one in the Document structure by lifting
 // it out of its parent or moving it into a parent of the previous Block
-export const joinBackwardCommand: Command = (state, dispatch) => {
-  const updatedTr = new JoinBackwardDocumentUpdate().update(state, state.tr);
+export const joinBackwardCommand: Command = (state, dispatch, view) => {
+  const updatedTr = new JoinBackwardDocumentUpdate().update(state, state.tr, view);
   if(updatedTr) {
     dispatch(updatedTr);
     return true/*Command executed*/;
@@ -267,9 +268,15 @@ export class JoinBackwardDocumentUpdate implements AbstractDocumentUpdate {
    * modify the given Transaction such that the conditions described by the
    * joinBackward Command (SEE: joinBackwardCommand above) hold
    */
-  public update(editorState: EditorState, tr: Transaction) {
+   public update(editorState: EditorState, tr: Transaction, view: EditorView | undefined/*not given by the caller*/) {
     const { $cursor } = editorState.selection as TextSelection/*specifically looking for $cursor*/;
     if(!$cursor) return false/*selection is not an empty Text selection*/;
+    if(view) {
+      const wouldLeaveBlockIfBackward = view.endOfTextblock('backward', editorState);
+      if(!wouldLeaveBlockIfBackward || $cursor.parentOffset > 0/*not at the start of the TextBlock*/) {
+        return false;
+      } /* else -- would leave the parent Text Block if Cursor goes back, or the Cursor is at the start of the parent TextBlock*/
+    } /* else -- View not given */
 
     // if there is no Node before this one, try lifting
     const $cut = findCutBefore($cursor);
