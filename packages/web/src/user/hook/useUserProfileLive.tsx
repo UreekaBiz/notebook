@@ -17,7 +17,7 @@ export type UseUserProfile = {
 
 // ================================================================================
 // live User Profile Public for the specified User Identifier
-export const useLiveUserProfile = ( userId: UserIdentifier): UseUserProfile => {
+export const useUserProfileLive = ( userId: UserIdentifier): UseUserProfile => {
   // == State =====================================================================
   const [userProfile, setUserProfile] = useState<UserProfilePublic | null/*not loaded*/>(null/*by contract*/);
   const [status, setStatus] = useAsyncStatus();
