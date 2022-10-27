@@ -210,7 +210,7 @@ export class LeaveBlockNodeDocumentUpdate implements AbstractDocumentUpdate {
 // -- Lift ------------------------------------------------------------------------
 // REF: https://github.com/ProseMirror/prosemirror-commands/blob/master/src/commands.ts
 // If the cursor is in an empty Text Block that can be lifted, lift it.
-export const liftEmptyBlockNodeCommand = (): Command => (state, dispatch) => {
+export const liftEmptyBlockNodeCommand: Command = (state, dispatch) => {
   const updatedTr =  new LiftEmptyBlockNodeDocumentUpdate().update(state, state.tr);
   if(updatedTr) {
     dispatch(updatedTr);
