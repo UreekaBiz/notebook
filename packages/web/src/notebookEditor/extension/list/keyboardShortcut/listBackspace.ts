@@ -1,4 +1,5 @@
 import { EditorState, TextSelection, Transaction } from 'prosemirror-state';
+import { EditorView } from 'prosemirror-view';
 
 import { isListItemNode, AbstractDocumentUpdate, Command, JoinBackwardDocumentUpdate } from '@ureeka-notebook/web-service';
 
@@ -8,8 +9,8 @@ import { wrapSelectedItems } from './util';
 
 // ********************************************************************************
 /** handle Backspace behavior when the Selection is inside a ListItemContent Node */
-export const listBackspaceCommand: Command = (state, dispatch) => {
-  const updatedTr = new ListBackSpaceDocumentUpdate().update(state, state.tr);
+export const listBackspaceCommand: Command = (state, dispatch, view) => {
+  const updatedTr = new ListBackSpaceDocumentUpdate().update(state, state.tr, view);
   if(updatedTr) {
     dispatch(updatedTr);
     return true/*Command executed*/;
@@ -25,7 +26,7 @@ export class ListBackSpaceDocumentUpdate implements AbstractDocumentUpdate {
    * handled correctly when the Selection is inside a
    * ListItemContent Node and return it
    */
-  public update(editorState: EditorState, tr: Transaction) {
+  public update(editorState: EditorState, tr: Transaction, view: EditorView | undefined/*not given by caller*/) {
     const $cursor = (editorState.selection as TextSelection/*specifically looking for $cursor*/).$cursor;
     if(!$cursor || $cursor.parentOffset > 0/*ListItemContent has content*/) return false/*nothing special to do*/;
 
@@ -50,7 +51,7 @@ export class ListBackSpaceDocumentUpdate implements AbstractDocumentUpdate {
       return new LiftListItemDocumentUpdate(range.parent.type).update(editorState, tr)/*updated*/;
     } /* else -- join backward */
 
-    const joinBackwardUpdatedTr = new JoinBackwardDocumentUpdate().update(editorState, tr);
+    const joinBackwardUpdatedTr = new JoinBackwardDocumentUpdate().update(editorState, tr, view);
     return joinBackwardUpdatedTr/*updated*/;
   }
 }
