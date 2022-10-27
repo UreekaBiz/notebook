@@ -26,7 +26,7 @@ export const defaultBlockAt = (match: ContentMatch) => {
 };
 
 // ................................................................................
-// find the ResolvedPos where a Join operation can be attempted
+// find the ResolvedPos where a JoinBackward operation can be attempted
 export const findCutBefore = ($pos: ResolvedPos): ResolvedPos | null => {
   if(!$pos.parent.type.spec.isolating) {
     for(let i=$pos.depth-1/*start with parent of $pos*/; i >= 0; i--) {
@@ -40,6 +40,21 @@ export const findCutBefore = ($pos: ResolvedPos): ResolvedPos | null => {
 
   return null/*default*/;
 };
+
+// find the ResolvedPos where a JoinForward operation can be attempted
+export const findCutAfter = ($pos: ResolvedPos): ResolvedPos | null => {
+  if(!$pos.parent.type.spec.isolating) {
+    for(let i = $pos.depth - 1/*start with parent of $pos*/; i >= 0; i--) {
+      const parent = $pos.node(i);
+      if($pos.index(i) + 1 < parent.childCount) return $pos.doc.resolve($pos.after(i + 1));
+
+      if(parent.type.spec.isolating) break/*do not cross boundary, since parent has isolating property*/;
+    }
+  } /* else -- parent of the $pos has isolating property, nothing to do */
+
+  return null;
+};
+
 
 // ................................................................................
 // try to Join or Delete the Nodes backwards given the $cut ResolvedPos.

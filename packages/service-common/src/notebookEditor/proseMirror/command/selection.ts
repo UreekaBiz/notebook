@@ -6,7 +6,7 @@ import { minFromMax } from '../../../util/number';
 import { NodeName } from '../node';
 import { getBlockNodeRange } from '../selection';
 import { AbstractDocumentUpdate, Command } from './type';
-import { findCutBefore } from './util';
+import { findCutAfter, findCutBefore } from './util';
 
 // ********************************************************************************
 // == Type ========================================================================
@@ -177,7 +177,13 @@ export class SelectNodeBackwardDocumentUpdate implements AbstractDocumentUpdate 
     if(!empty) return false;
 
     if($head.parent.isTextblock) {
-      if(view ? !view.endOfTextblock('backward', editorState) : $head.parentOffset > 0) return false;
+      if(view) {
+        const wouldLeaveBlockIfBackward = view.endOfTextblock('backward', editorState);
+        if(!wouldLeaveBlockIfBackward || $head.parentOffset > 0/*inside the parent*/) {
+          return false;
+        } /* else -- would leave the parent Text Block if Cursor goes backward, or the Cursor is at the start of the parent TextBlock*/
+      } /* else -- View was not given */
+
       $cutPos = findCutBefore($head);
     } /* else -- parent of $head is not a Text Block*/
 
@@ -185,6 +191,51 @@ export class SelectNodeBackwardDocumentUpdate implements AbstractDocumentUpdate 
     if(!node || !NodeSelection.isSelectable(node) || !$cutPos) return false;
 
     tr.setSelection(NodeSelection.create(editorState.doc, $cutPos.pos - node.nodeSize)).scrollIntoView();
+    return tr/*updated*/;
+  }
+}
+
+/**
+ * When the Selection is empty and at the end of a TextBlock, select
+ * the Node coming after that TextBlock, if possible
+ */
+export const selectNodeForwardCommand: Command = (state, dispatch, view) => {
+  const updatedTr =  new SelectNodeForwardDocumentUpdate().update(state, state.tr, view);
+  if(updatedTr) {
+    dispatch(updatedTr);
+    return true/*Command executed*/;
+  } /* else -- Command cannot be executed */
+
+  return false/*not executed*/;
+};
+export class SelectNodeForwardDocumentUpdate implements AbstractDocumentUpdate {
+  public constructor() {/*nothing additional*/ }
+
+  /*
+   * modify the given Transaction such that when the Selection is at
+   * the end of a Text Block, the Node after it is selected
+   */
+  public update(editorState: EditorState, tr: Transaction, view?: EditorView) {
+    const { $head, empty } = editorState.selection;
+    if(!empty) return false/*do not allow*/;
+
+    let $cut: ResolvedPos | null = $head/*default*/;
+
+    if($head.parent.isTextblock) {
+      if(view) {
+        const wouldLeaveBlockIfForward = view.endOfTextblock('forward', editorState);
+        if(!wouldLeaveBlockIfForward || $head.parentOffset < $head.parent.content.size) {
+          return false;
+        } /* else -- would leave the parent Text Block if Cursor goes forward, or the Cursor is past the end of the parent TextBlock*/
+      } /* else -- View not given */
+
+      $cut = findCutAfter($head);
+    } /* else -- $head's parent is not a TextBlock */
+
+    const node = $cut && $cut.nodeAfter;
+    if(!node || !NodeSelection.isSelectable(node)) return false;
+
+    tr.setSelection(NodeSelection.create(editorState.doc, $cut!.pos)).scrollIntoView();
     return tr/*updated*/;
   }
 }
