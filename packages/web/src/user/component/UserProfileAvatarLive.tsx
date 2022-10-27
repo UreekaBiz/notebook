@@ -1,4 +1,4 @@
-import { useUserProfile } from 'user/hook/useUserProfile';
+import { useUserProfileLive } from 'user/hook/useUserProfileLive';
 
 import { UserProfileAvatar, UserProfileAvatarProps } from './UserProfileAvatar';
 
@@ -6,7 +6,7 @@ import { UserProfileAvatar, UserProfileAvatarProps } from './UserProfileAvatar';
 // ********************************************************************************
 type Props = Omit<UserProfileAvatarProps, 'userProfilePrivate' | 'userPublicProfile'> & {/*nothing else*/};
 export const UserProfileAvatarLive: React.FC<Props> = ({ userId, ...props }) => {
-  const { userProfile } = useUserProfile(userId);
+  const { userProfile } = useUserProfileLive(userId);
   if(!userProfile) return null/*no User so nothing to show*/;
 
   return <UserProfileAvatar userId={userId} userPublicProfile={userProfile} {...props} />;
