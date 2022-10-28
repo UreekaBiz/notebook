@@ -144,10 +144,10 @@ export const markHolderPlugin = () => new Plugin({
         return false/*PM handles default selection*/;
       } /* else -- not handling ArrowLeft */
 
-      // if Backspace is pressed and a MarkHolder is present, delete it, set the
-      // Selection accordingly and let PM handle the rest of the event
+      // if Backspace is pressed and a MarkHolder is present, delete it, and
+      // set the Selection accordingly
       if(event.key === 'Backspace') {
-        tr.setSelection(TextSelection.create(tr.doc, parentPos, parentPos + view.state.selection.$anchor.parent.nodeSize))
+        tr.setSelection(NodeSelection.create(tr.doc, parentPos))
           .deleteSelection()
           .setSelection(Selection.near(tr.doc.resolve(tr.selection.anchor)));
         dispatch(tr);
