@@ -10,6 +10,7 @@ import { updateUserPrivateProfile } from './userProfilePrivate';
 // ********************************************************************************
 // NOTE: called on *every* change (even if not the latest) -- be cognizant of
 //       operations that require order between calls
+//       (This includes cases where the Session was cleaned up by the scheduled task)
 export const changedUserSession = async (userId: UserIdentifier, before: UserSession | null/*new*/, after: UserSession) => {
   // NOTE: there are only three types of changes at this level:
   //       1. New Session Id: Session came online
@@ -24,8 +25,8 @@ export const changedUserSession = async (userId: UserIdentifier, before: UserSes
   await Promise.all(sessionIdsRemoved.map(async sessionId => {
     logger.debug(`Session (${sessionId}) for User (${userId}) logged out / went offline.`);
 
-    // TODO: put any dependencies here that depend on cleaning up when the User
-    //       logs off or goes offline
+    // !!! any and all per-Session cleanup items go here !!!
+
   }));
 };
 
@@ -112,6 +113,7 @@ const computeOldestSessionTimestamp = (userSession: UserSession) => {
 // checks all Sessions associated with the specified User-Session. Any that have
 // timed out are removed (en masse).
 // NOTE: presence state is *not* computed here -- #onWriteUserSessionUser() handles
+// NOTE: dependent changes are *not* handled here -- #onWriteUserSessionUser() handles
 // NOTE: this must *NOT* be called be called from an on-write trigger as it writes
 //       the timestamp (which would cause a cycle)
 export const deleteExpiredSessions = async (userId: UserIdentifier, userSession: UserSession, maxAge: number/*millis since epoch*/) => {
