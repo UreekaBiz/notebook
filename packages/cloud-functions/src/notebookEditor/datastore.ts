@@ -8,6 +8,7 @@ import { notebookDocument } from '../notebook/datastore';
 // .. Storage Types ...............................................................
 // SEE: @ureeka-notebook/service-common: notebookEditor/datastore.ts
 
+// ** Firestore *******************************************************************
 // == Collection ==================================================================
 // -- Version ---------------------------------------------------------------------
 export const versionCollection = (notebookId: NotebookIdentifier) =>
