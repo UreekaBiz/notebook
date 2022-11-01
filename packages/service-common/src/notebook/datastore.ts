@@ -127,6 +127,9 @@ export type NotebookPublishedContent_Update = Modify<Omit<NotebookPublishedConte
 
 // == RTDB ========================================================================
 // -- Notebook --------------------------------------------------------------------
+// NOTE: although this is technically a Notebook-centric action, it is commonly used
+//       at the Editor level (e.g. to know when and where Users are within the Editor).
+//       It remains here for consistency.
 export type NotebookUserSession_Write = Modify<Partial<NotebookUserSession_Storage>, Readonly<{
   timestamp: DatabaseTimestamp/*server-set*/;
 }>>;
