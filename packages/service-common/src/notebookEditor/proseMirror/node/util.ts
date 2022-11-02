@@ -7,6 +7,7 @@ import { isSelection, LookInsideOf, NodePredicate, ParentNodePosition } from '..
 import { isEditorState } from '../../state';
 import { mapOldStartAndOldEndThroughHistory } from '../step';
 import { getNodeName, NodeIdentifier, NodeName } from './type';
+import { SelectionRange } from '../command/selection';
 
 // ********************************************************************************
 // == Manipulation ================================================================
@@ -60,6 +61,22 @@ export const findNodeById = (document: DocumentNodeType, nodeId: NodeIdentifier)
 
   return/*Parent not found, return undefined*/;
 }
+
+/**
+ * return an array of {@link ProseMirrorNode}s that match the given predicate
+ * and are present in the given {@link SelectionRange}
+ */
+export const findChildrenInRange = (node: ProseMirrorNode, range: SelectionRange, predicate: (node: ProseMirrorNode) => boolean): NodePosition[] => {
+  const nodesWithPos: NodePosition[] = [/*default empty*/];
+
+  node.nodesBetween(range.from, range.to, (child, position) => {
+    if(predicate(child)) {
+      nodesWithPos.push({ node: child, position });
+    } /* else -- predicate does not match, do not include */
+  });
+
+  return nodesWithPos;
+};
 
 // ................................................................................
 /**
