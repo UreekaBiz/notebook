@@ -4,7 +4,7 @@ import { EditorState, SelectionRange } from 'prosemirror-state';
 
 import { objectIncludes } from '../../../util';
 import { Attributes, AttributeType, AttributeValue } from '../attribute';
-import { MarkName } from './type';
+import { MarkName, MarkRange } from './type';
 
 // ********************************************************************************
 // == Getter ======================================================================
@@ -126,6 +126,30 @@ export const markApplies = (documentNode: ProseMirrorNode, ranges: readonly Sele
 };
 
 // == Search ======================================================================
+/**
+ * get the Marks that exist in the given range of the given
+ * Document {@link ProseMirrorNode}
+ */
+export const getMarksBetween = (from: number, to: number, doc: ProseMirrorNode): MarkRange[] => {
+  const marksBetween: MarkRange[] = [];
+
+  // get all inclusive marks on empty selection
+  if(from === to) {
+    doc.resolve(from).marks().forEach(mark => {
+      const $pos = doc.resolve(from - 1);
+      const range = getMarkRange($pos, mark.type);
+
+      if(!range) return/*Mark does not span any range*/;
+
+      marksBetween.push({ mark, ...range });
+    });
+  } else {
+    doc.nodesBetween(from, to, (node, pos) => { marksBetween.push(...node.marks.map(mark => ({ from: pos, to: pos + node.nodeSize, mark }))); });
+  }
+
+  return marksBetween;
+};
+
 /**
  * Check if any Marks in the given {@link ProseMirrorMark} array have the same
  * {@link MarkType} as the given one, as well as the same set of attributes, and
