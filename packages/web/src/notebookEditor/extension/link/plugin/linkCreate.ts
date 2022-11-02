@@ -1,8 +1,7 @@
-import { combineTransactionSteps, findChildrenInRange, getMarksBetween } from '@tiptap/core';
 import { find, test } from 'linkifyjs';
 import { Plugin, PluginKey } from 'prosemirror-state';
 
-import { AttributeType, getChangedRanges, getLinkMarkType, isLinkMark, isNodeSelection, LinkTarget, PREVENT_LINK_META } from '@ureeka-notebook/web-service';
+import { combineTransactionSteps, findChildrenInRange, getChangedRanges, getLinkMarkType, getMarksBetween, isLinkMark, isNodeSelection, AttributeType, LinkTarget, PREVENT_LINK_META } from '@ureeka-notebook/web-service';
 
 import { NoPluginState } from 'notebookEditor/model/type';
 
@@ -63,8 +62,8 @@ export const linkCreate = (validate?: (url: string) => boolean): Plugin => {
             // a placeholder for Leaf Nodes must be defined
             // so that the Link position can be correctly calculated
             const text = newState.doc.textBetween(
-              textBlock.pos,
-              textBlock.pos + textBlock.node.nodeSize,
+              textBlock.position,
+              textBlock.position + textBlock.node.nodeSize,
               undefined/*no Block separator*/,
               ' '/*add a space for each non-text leaf-node found*/
             );
@@ -83,8 +82,8 @@ export const linkCreate = (validate?: (url: string) => boolean): Plugin => {
               // calculate Link position
               .map(link => ({
                 ...link,
-                from: textBlock.pos + link.start + 1,
-                to: textBlock.pos + link.end + 1,
+                from: textBlock.position + link.start + 1,
+                to: textBlock.position + link.end + 1,
               }))
               // check if Link is within the changed range
               .filter(link => {
