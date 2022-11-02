@@ -326,7 +326,7 @@ export const AddToCollectionDialog: React.FC<Props> = ({ notebookId, component, 
           leftIcon={<BsGrid size={16} />}
           onClick={handleOpen}
         >
-          Add to collection {currentLabels ? `(${currentLabels?.size})` : ''}
+          Add to Collection {currentLabels ? `(${currentLabels?.size})` : ''}
         </Button>
       )}
 
@@ -339,7 +339,7 @@ export const AddToCollectionDialog: React.FC<Props> = ({ notebookId, component, 
             <ModalHeader>
               <Flex alignItems='center'>
                 <BsGrid size={18} />
-                <Text marginLeft={2}>Add to collection</Text>
+                <Text marginLeft={2}>Add to Collection</Text>
               </Flex>
             </ModalHeader>
 

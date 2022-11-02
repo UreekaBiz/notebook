@@ -112,7 +112,7 @@ export const NotebookListItemMenu: React.FC<Props> = ({ notebookTuple }) => {
               <MenuDivider />
               <AddToCollectionDialog notebook={obj} notebookId={id} component={onClick => (
                 <MenuItem disabled icon={<BsGrid />} onClick={onClick}>
-                  Add to collection
+                  Add to Collection
                 </MenuItem>
                 )}
               />
