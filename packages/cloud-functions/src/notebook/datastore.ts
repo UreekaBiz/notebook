@@ -32,6 +32,8 @@ export const notebookUserSessionsRef = (notebookId: NotebookIdentifier, userId: 
 // retrieves all Notebook User-Sessions for a given User and Session
 // CHECK: there's no limit since it's a human-scale problem (i.e. that human would
 //        have needed to open all of those Notebooks)
+// NOTE: there is no way to index this query:
+//       https://stackoverflow.com/questions/40656589/firebase-query-if-child-of-child-contains-a-value
 export const notebookUserSessionQuery = (userId: UserIdentifier, sessionId: SessionIdentifier) =>
   notebooksRef.orderByChild(`${userId}/${sessionId}/${nameof<NotebookUserSession_Storage>('timestamp')}`)
              .startAt(0/*timestamps are numeric so anything before this is null (meaning it doesn't exist)*/);
