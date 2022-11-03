@@ -1,6 +1,6 @@
 import { CollectionReference } from 'firebase-admin/firestore';
 
-import { nameof, userKey, Identifier, UserConfiguration_Storage, UserIdentifier, UserProfilePrivate_Storage, UserSession_Storage, USER_CONFIGURATIONS, USER_PROFILE_PRIVATES, USER_SESSIONS } from '@ureeka-notebook/service-common';
+import { nameof, userKey, userSessionKey, Identifier, UserConfiguration_Storage, UserIdentifier, UserProfilePrivate_Storage, UserSession_Storage, USER_CONFIGURATIONS, USER_PROFILE_PRIVATES, USER_SESSIONS } from '@ureeka-notebook/service-common';
 
 import { database, firestore } from '../firebase';
 
@@ -24,8 +24,10 @@ export const userConfigurationDocument = <T>(userId: UserIdentifier, configId: I
   userConfigurationCollection<T>(userId).doc(configId);
 
 // ** RTDB ************************************************************************
+// TODO: these need to be renamed since they're up a level from what one would expect
 export const userSessionsRef = database.ref(`/${USER_SESSIONS}`);
 export const userSessionRef = (userId: UserIdentifier) => database.ref(userKey(userId));
+export const userSessionSessionRef = (userId: UserIdentifier, sessionId: Identifier) => database.ref(userSessionKey(userId, sessionId));
 
 // == Query =======================================================================
 // limits the results to only those Users whose oldest Session timestamp is older

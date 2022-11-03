@@ -1,7 +1,8 @@
 import { logger } from 'firebase-functions';
 
-import { UserSessions } from '@ureeka-notebook/service-common';
+import { SessionIdentifier, UserIdentifier, UserSessions } from '@ureeka-notebook/service-common';
 
+import { deleteExpiredNotebookUserSessions } from '../notebook/userSession';
 import { expiredUserSessionsQuery } from './datastore';
 import { deleteExpiredSessions } from './userSession';
 
@@ -35,6 +36,21 @@ export const deleteExpiredUserSessions = async (serverTimestamp: string, timeout
   // CHECK: parallelize with Promise.all()?
   for(const userId in userSessions) {
     const userSession = userSessions[userId];
-    await deleteExpiredSessions(userId, userSession, maxAge)/*logs on error*/;
+    const deleted = await deleteExpiredSessions(userId, userSession, maxAge)/*logs on error*/;
+    if(deleted) handleDependentExpiredUserSessions(userId, deleted)/*logs on error*/;
+  }
+};
+
+// ................................................................................
+// all operations that are dependent on a deleted User-Session are located here
+// NOTE: these operations must not:
+//       a) change the User-Session
+//       b) depend on each other
+// NOTE: see #changedUserSession() for handling *all* removed User-Sessions
+const handleDependentExpiredUserSessions = async (userId: UserIdentifier, deletedSessionIds: Set<SessionIdentifier>) => {
+  for(const sessionId of deletedSessionIds) {
+    // !!! any and all per-Session expired cleanup items go here !!!
+
+    await deleteExpiredNotebookUserSessions(userId, sessionId)/*logs on error*/;
   }
 };

@@ -216,6 +216,8 @@ export class CollaborationListener {
     this.firestoreUnsubscribes.splice(0/*clear by contract*/);
 
     // RTDB -- cancel onDisconnect handler
+    // NOTE: this isn't fool-proof so when the User's Session is cleaned up, it also
+    //       ensures that this is cleaned up (SEE: #deleteExpiredUserSessions() in @cloud-functions: /authUser/userSession)
     try {
       const ref = notebookUserSessionsRef(this.notebookId, this.user.userId, this.user.sessionId);
       await onDisconnect(ref).cancel();

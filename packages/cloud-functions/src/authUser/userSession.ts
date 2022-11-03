@@ -1,6 +1,6 @@
 import { logger } from 'firebase-functions';
 
-import { difference, sessionKey, ActivityState, DeleteRecord, PresenceState, UserIdentifier, UserSession, UserSession_Write } from '@ureeka-notebook/service-common';
+import { difference, sessionKey, ActivityState, DeleteRecord, PresenceState, SessionIdentifier, UserIdentifier, UserSession, UserSession_Write } from '@ureeka-notebook/service-common';
 
 import { DatabaseTimestamp } from '../util/rtdb';
 import { userSessionRef } from './datastore';
@@ -26,7 +26,7 @@ export const changedUserSession = async (userId: UserIdentifier, before: UserSes
     logger.debug(`Session (${sessionId}) for User (${userId}) logged out / went offline.`);
 
     // !!! any and all per-Session cleanup items go here !!!
-
+    // NOTE: see #handleDependentExpiredUserSessions() for handling only expired Sessions
   }));
 };
 
@@ -116,24 +116,26 @@ const computeOldestSessionTimestamp = (userSession: UserSession) => {
 // NOTE: dependent changes are *not* handled here -- #onWriteUserSessionUser() handles
 // NOTE: this must *NOT* be called be called from an on-write trigger as it writes
 //       the timestamp (which would cause a cycle)
-export const deleteExpiredSessions = async (userId: UserIdentifier, userSession: UserSession, maxAge: number/*millis since epoch*/) => {
+export const deleteExpiredSessions = async (userId: UserIdentifier, userSession: UserSession, maxAge: number/*millis since epoch*/): Promise<Set<SessionIdentifier>> => {
   const sessions = userSession.sessions/*for convenience*/;
-  if(!sessions) { logger.warn(`User (${userId}) supposedly had expired Sessions but had so Sessions!.`); return/*no Sessions so nothing to do*/; }
+  if(!sessions) { logger.warn(`No expired Sessions found for User (${userId}).`); return new Set<SessionIdentifier>()/*no Sessions so nothing to do*/; }
 
   // check each Session's timestamp to see if it's older than the timeout. If so,
   // accumulate in the records to be removed
   let foundExpired = false/*default none found*/;
-  const deletedSessions: Record<string/*sessionKey*/, typeof DeleteRecord> = {};
+  const deletedSessions: Record<string/*sessionKey*/, typeof DeleteRecord> = {},
+        deletedSessionIds: Set<SessionIdentifier> = new Set();
   for(const sessionId in sessions) {
     const session = sessions[sessionId];
 //logger.debug(`Checking Session (${userId}:${sessionId}) for expiration: ${session.timestamp} < ${maxAge}`);
     if(session.timestamp < maxAge) { /*expired since older (smaller)*/
 //logger.debug(`Deleting expired Session (${userId}:${sessionId}).`);
       deletedSessions[sessionKey(sessionId)] = DeleteRecord/*clear Session-level record*/;
+      deletedSessionIds.add(sessionId);
       foundExpired = true/*by definition*/;
     } /* else -- younger than the max age (so not expired) */
   }
-  if(!foundExpired) { logger.warn(`User (${userId}) supposedly had expired Sessions but none were actually expired!`); return/*nothing to do*/; }
+  if(!foundExpired) { logger.warn(`No expired Sessions found User (${userId}).`); return new Set<SessionIdentifier>()/*nothing to do*/; }
 
   try {
     const record: UserSession_Write = {
@@ -144,9 +146,12 @@ export const deleteExpiredSessions = async (userId: UserIdentifier, userSession:
 
       timestamp: DatabaseTimestamp/*write-always server-set*/,
     };
-//logger.debug(`Writing updated User-Session for deleted / expired Session (${userId}): ${JSON.stringify(userSession)} as ${JSON.stringify(record)}`);
     await userSessionRef(userId).update(record);
+    logger.info(`Deleted ${Object.keys(deleteExpiredSessions).length} expired Session(s) for User (${userId}).`);
   } catch(error) {
-    logger.error(`Error writing User-Session for User (${userId}). Reason: `, error);
+    logger.error(`Error deleting ${Object.keys(deleteExpiredSessions).length} expired Session(s) for User (${userId}). Reason: `, error);
+    return new Set<SessionIdentifier>()/*failure so none are returned*/;
   }
+
+  return deletedSessionIds/*success (Session(s) deleted)*/;
 };
