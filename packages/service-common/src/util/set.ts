@@ -23,6 +23,13 @@ export const differenceSet = <T>(previous: Set<T>, final: Set<T>): Set<T> => {
   return result;
 };
 
+/** @returns the set of all values from both sets */
+export const unionSet = <T>(a: Set<T>, b: Set<T>): Set<T> => {
+  const result = new Set(a);
+    b.forEach(e => result.add(e));
+  return result;
+};
+
 /** @returns the set of values that exist within both sets */
 export const intersectionSet = <T>(a: Set<T>, b: Set<T>): Set<T> => {
   const result = new Set<T>();
