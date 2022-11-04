@@ -1,4 +1,4 @@
-import { DocumentSnapshot, Query } from 'firebase-admin/firestore';
+import { Query, QueryDocumentSnapshot } from 'firebase-admin/firestore';
 import { logger } from 'firebase-functions';
 
 import { QueryDocumentIterator } from '../util/QueryDocumentIterator';
@@ -9,7 +9,7 @@ import { MigrationFunction, MigrationKey } from './type';
 export const migrateTask = async <T extends string>(key: MigrationKey, query: Query<T>, migrate: MigrationFunction<T>) => {
   let successCount = 0,
       errorCount = 0;
-  const migrator = async (snapshot: DocumentSnapshot<T>) => {
+  const migrator = async (snapshot: QueryDocumentSnapshot<T>) => {
     try {
       const result = await migrate(snapshot);
       if(result === true) successCount++;

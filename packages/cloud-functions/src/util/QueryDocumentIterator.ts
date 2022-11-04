@@ -1,4 +1,4 @@
-import { DocumentSnapshot, Query } from 'firebase-admin/firestore';
+import { DocumentSnapshot, Query, QueryDocumentSnapshot } from 'firebase-admin/firestore';
 import { logger } from 'firebase-functions';
 
 import { isType } from '@ureeka-notebook/service-common';
@@ -16,7 +16,7 @@ const asyncIteratorResult = <T>(value: T) => isType<IteratorYieldResult<T>>({ do
  *
  * @typeparam T the document type
  */
-export class QueryDocumentIterator<T> implements AsyncIterator<DocumentSnapshot<T>> {
+export class QueryDocumentIterator<T> implements AsyncIterator<QueryDocumentSnapshot<T>> {
   // has the query been exhausted?
   private isExhausted: boolean = false/*by definition*/;
 
@@ -25,7 +25,7 @@ export class QueryDocumentIterator<T> implements AsyncIterator<DocumentSnapshot<
 
   // the last batch of document snapshots retrieved and the snapshot of the last
   // document (then from which the next batch starts-after)
-  private documents: DocumentSnapshot<T>[] = []/*initially empty*/;
+  private documents: QueryDocumentSnapshot<T>[] = []/*initially empty*/;
   private lastDocumentSnapshot: DocumentSnapshot<T> | null = null/*initially no documents*/;
 
   // the index of the next document snapshot to return from #documents
