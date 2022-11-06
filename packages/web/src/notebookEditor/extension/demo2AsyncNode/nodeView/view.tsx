@@ -56,5 +56,4 @@ export class Demo2AsyncNodeView extends AbstractAsyncNodeView<string, Demo2Async
     // call super method to update the ReactNodeView
     super.updateView();
   }
-
 }

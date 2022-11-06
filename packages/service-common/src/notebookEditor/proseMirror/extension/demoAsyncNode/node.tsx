@@ -37,9 +37,7 @@ const renderDemoAsyncNodeView = (attributes: DemoAsyncNodeAttributes) => {
                                               DemoAsyncNodeSpec);
 
   // parses the JSX into a static string that can be rendered.
-  return ReactDOMServer.renderToStaticMarkup(
-    <DemoAsyncNodeComponentJSX attrs={attributes} renderAttributes={renderAttributes}/>
-  );
+  return ReactDOMServer.renderToStaticMarkup(<DemoAsyncNodeComponentJSX attrs={attributes} renderAttributes={renderAttributes}/>);
 };
 
 export const DemoAsyncNodeRendererSpec: NodeRendererSpec<DemoAsyncNodeAttributes> = {
