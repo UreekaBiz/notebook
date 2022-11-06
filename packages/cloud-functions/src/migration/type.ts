@@ -1,4 +1,4 @@
-import { DocumentSnapshot, Query } from 'firebase-admin/firestore';
+import { Query, QueryDocumentSnapshot } from 'firebase-admin/firestore';
 
 // ********************************************************************************
 export enum MigrationKey {
@@ -8,7 +8,7 @@ export enum MigrationKey {
 }
 
 // --------------------------------------------------------------------------------
-export type MigrationFunction<T> = (snapshot: DocumentSnapshot<T>) => Promise<boolean>;
+export type MigrationFunction<T> = (snapshot: QueryDocumentSnapshot<T>) => Promise<boolean>;
 
 /** migration Task identified by {@link MigrationKey} */
 export type MigrationTask<T> = Readonly<{

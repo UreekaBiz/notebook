@@ -14,8 +14,8 @@ export const exampleNotebookAddFieldMigration: MigrationTask<Notebook_Storage> =
   migrate: async (snapshot) => {
     // simply append a dummy field to the Notebook
     // NOTE: the timestamps must *not* change since this is just a data migration
-    const domainReportDoc = snapshot.ref as DocumentReference<Partial<Notebook_Storage> & { dummyField: string; }>;
-    await domainReportDoc.update({
+    const notebookDoc = snapshot.ref as DocumentReference<Partial<Notebook_Storage> & { dummyField: string; }>;
+    await notebookDoc.update({
       dummyField: 'dummyValue',
     })/*throws on error*/;
 
@@ -28,8 +28,8 @@ export const exampleNotebookRemoveFieldMigration: MigrationTask<Notebook_Storage
   migrate: async (snapshot) => {
     // simply remove the appended dummy field from the Notebook
     // NOTE: the timestamps must *not* change since this is just a data migration
-    const domainReportDoc = snapshot.ref as DocumentReference<Partial<Notebook_Storage> & { dummyField: FieldValue; }>;
-    await domainReportDoc.update({
+    const notebookDoc = snapshot.ref as DocumentReference<Partial<Notebook_Storage> & { dummyField: FieldValue; }>;
+    await notebookDoc.update({
       dummyField: DeleteField/*remove*/,
     })/*throws on error*/;
 

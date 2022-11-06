@@ -1,10 +1,10 @@
 import { SessionIdentifier } from 'authUser';
 import { FieldValue } from '../util/firestore';
 import { nameof } from '../util/object';
-import { DatabaseTimestamp } from '../util/rtdb';
+import { DatabaseTimestamp, DeleteRecord } from '../util/rtdb';
 import { Modify } from '../util/type';
 import { UserIdentifier } from '../util/user';
-import { Notebook, NotebookIdentifier, NotebookLabelUser, NotebookPublished, NotebookPublishedContent, NotebookUserSession } from './type';
+import { Notebook, NotebookCollaboration, NotebookIdentifier, NotebookLabelUser, NotebookPublished, NotebookPublishedContent, NotebookUserSession, NotebookUserSessions } from './type';
 
 // ** Constants *******************************************************************
 // == Firestore ===================================================================
@@ -59,13 +59,22 @@ export type NotebookPublishedContent_Storage = NotebookPublishedContent/*nothing
 // == RTDB ========================================================================
 // -- Notebook --------------------------------------------------------------------
 // NOTE: Firebase recommended approach for updating RTDB fields (i.e. update by key)
-export const notebookKey = (notebookId: NotebookIdentifier) => `/${NOTEBOOKS_RTDB}/${notebookId}`;
-export const notebookUserKey = (notebookId: NotebookIdentifier, userId: UserIdentifier) => `${notebookKey(notebookId)}/${userId}`;
-export const notebookUserSessionKey = (notebookId: NotebookIdentifier, userId: UserIdentifier, sessionId: SessionIdentifier) => `${notebookUserKey(notebookId, userId)}/${sessionId}`;
-export const cursorPositionKey = (notebookId: NotebookIdentifier, userId: UserIdentifier, sessionId: SessionIdentifier) => `${notebookUserSessionKey(notebookId, userId, sessionId)}/${nameof<NotebookUserSession>('cursorPosition')}`;
-export const timestampKey = (notebookId: NotebookIdentifier, userId: UserIdentifier, sessionId: SessionIdentifier) => `${notebookUserSessionKey(notebookId, userId, sessionId)}/${nameof<NotebookUserSession>('timestamp')}`;
+export const notebooksKey = `/${NOTEBOOKS_RTDB}` as const;
+export const relativeNotebookKey = (notebookId: NotebookIdentifier) => `/${notebookId}` as const;
+export const notebooksNotebookKey = (notebookId: NotebookIdentifier) => `${notebooksKey}${relativeNotebookKey(notebookId)}` as const;
+export const relativeUserKey = (userId: UserIdentifier) => `/${userId}` as const;
+export const relativeNotebookUserKey = (notebookId: NotebookIdentifier, userId: UserIdentifier) => `${relativeNotebookKey(notebookId)}${relativeUserKey(userId)}` as const;
+export const notebooksNotebookUserKey = (notebookId: NotebookIdentifier, userId: UserIdentifier) => `${notebooksKey}${relativeNotebookUserKey(notebookId, userId)}` as const;
+export const relativeSessionKey = (sessionId: SessionIdentifier) => `/${sessionId}` as const;
+export const relativeUserSessionKey = (userId: UserIdentifier, sessionId: SessionIdentifier) => `${relativeUserKey(userId)}${relativeSessionKey(sessionId)}` as const;
+export const relativeNotebookUserSessionKey = (notebookId: NotebookIdentifier, userId: UserIdentifier, sessionId: SessionIdentifier) => `${relativeNotebookKey(notebookId)}${relativeUserSessionKey(userId, sessionId)}` as const;
+export const notebooksNotebookUserSessionKey = (notebookId: NotebookIdentifier, userId: UserIdentifier, sessionId: SessionIdentifier) => `${notebooksKey}${relativeNotebookUserSessionKey(notebookId, userId, sessionId)}` as const;
+export const relativeCursorPositionKey = (notebookId: NotebookIdentifier, userId: UserIdentifier, sessionId: SessionIdentifier) => `${relativeNotebookUserSessionKey(notebookId, userId, sessionId)}/${nameof<NotebookUserSession>('cursorPosition')}` as const;
+export const relativeTimestampKey = (notebookId: NotebookIdentifier, userId: UserIdentifier, sessionId: SessionIdentifier) => `${relativeNotebookUserSessionKey(notebookId, userId, sessionId)}/${nameof<NotebookUserSession>('timestamp')}` as const;
 
 // ................................................................................
+export type NotebookCollaboration_Storage = NotebookCollaboration/*nothing additional*/;
+export type NotebookUserSessions_Storage = NotebookUserSessions/*nothing additional*/;
 export type NotebookUserSession_Storage = NotebookUserSession/*nothing additional*/;
 
 // ** Action Types ****************************************************************
@@ -127,6 +136,14 @@ export type NotebookPublishedContent_Update = Modify<Omit<NotebookPublishedConte
 
 // == RTDB ========================================================================
 // -- Notebook --------------------------------------------------------------------
+// NOTE: although this is technically a Notebook-centric action, it is commonly used
+//       at the Editor level (e.g. to know when and where Users are within the Editor).
+//       It remains here for consistency.
 export type NotebookUserSession_Write = Modify<Partial<NotebookUserSession_Storage>, Readonly<{
   timestamp: DatabaseTimestamp/*server-set*/;
+}>>;
+
+// CHECK: what the naming of this should be isn't obvious (structure vs. field)
+export type NotebookUserSessions_Delete = Modify<NotebookUserSessions_Storage, Readonly<{
+  [sessionId: string/*SessionIdentifier*/]: NotebookUserSession | typeof DeleteRecord/*delete*/;
 }>>;
