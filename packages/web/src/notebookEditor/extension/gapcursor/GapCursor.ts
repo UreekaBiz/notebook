@@ -4,7 +4,7 @@ import { gapCursor } from 'prosemirror-gapcursor';
 import { ExtensionName, NoOptions, NoStorage } from 'notebookEditor/model/type';
 
 // ********************************************************************************
-// REF: https://github.com/ueberdosis/tiptap/blob/main/packages/extension-gapcursor/src/gapcursor.ts
+// NOTE: this is inspired by https://github.com/ueberdosis/tiptap/blob/main/packages/extension-gapcursor/src/gapcursor.ts
 
 // == Extension ===================================================================
 export const GapCursor: Extension<NoOptions, NoStorage> = Extension.create<NoOptions, NoStorage>({

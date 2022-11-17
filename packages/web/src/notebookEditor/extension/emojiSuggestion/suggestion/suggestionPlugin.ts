@@ -8,7 +8,7 @@ import { findSuggestionMatch } from '../util';
 import { SuggestionOptions, SuggestionProps } from './type';
 
 // ********************************************************************************
-// REF: https://github.com/ueberdosis/tiptap/blob/main/packages/suggestion/src/suggestion.ts
+// NOTE: this is inspired by https://github.com/ueberdosis/tiptap/blob/main/packages/suggestion/src/suggestion.ts
 
 // == Constant ====================================================================
 const DATA_SUGGESTION_ID = 'data-suggestion-id';

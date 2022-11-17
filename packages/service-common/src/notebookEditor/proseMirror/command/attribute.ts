@@ -9,6 +9,7 @@ import { getSelectedNode, SelectionDepth } from '../selection';
 import { AbstractDocumentUpdate, Command, HISTORY_META } from './type';
 
 // ********************************************************************************
+// NOTE: this is inspired by https://github.com/ueberdosis/tiptap/blob/8c6751f0c638effb22110b62b40a1632ea6867c9/packages/core/src/commands/updateAttributes.ts
 /**
  *  update the attributes for the Nodes or Marks in the Selection whose name
  *  equals the given {@link NodeName} or {@link MarkName}. Differs from

@@ -10,7 +10,7 @@ import { linkIsInDoc } from '../util';
 // ********************************************************************************
 // Plugin that automatically creates a link when the user writes a text that is a
 // valid link.
-// REF: https://github.com/ueberdosis/tiptap/blob/main/packages/extension-link/src/helpers/autolink.ts
+// NOTE: this is inspired by https://github.com/ueberdosis/tiptap/blob/main/packages/extension-link/src/helpers/autolink.ts
 
 // == Plugin ======================================================================
 const linkCreateKey = new PluginKey<NoPluginState>('linkCreateKey');

@@ -20,14 +20,14 @@ export const ImageBorderToolItem: React.FC<Props> = ({ editor, depth }) => {
     { pos: prevPos } = selection.$anchor;
   if(!isNodeSelection(selection) || !isImageNode(selection.node)) throw new Error(`Invalid ImageBorderToolItem render: ${JSON.stringify(selection)}`);
 
-  // == Handler ===================================================================
+  // -- Handler -------------------------------------------------------------------
   // update the Attributes and select the previous position
   const handleBorderColorChange = (value: string) => applyDocumentUpdates(editor, [
     new UpdateAttributesDocumentUpdate(NodeName.IMAGE, { [AttributeType.BorderColor]: value }),
     new SetNodeSelectionDocumentUpdate(prevPos),
   ]);
 
-  // == UI ========================================================================
+  // -- UI ------------------------------------------------------------------------
   const { node } = selection;
   let colorValue = node.attrs[AttributeType.BorderColor];
 

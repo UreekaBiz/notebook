@@ -10,7 +10,7 @@ import { blockArrowDownCommand, blockArrowUpCommand } from '../util/node';
 import { insertOrToggleHorizontalRuleCommand } from './command';
 
 // ********************************************************************************
-// REF: https://github.com/ueberdosis/tiptap/blob/main/packages/extension-horizontal-rule/src/horizontal-rule.ts
+// NOTE: this is inspired by https://github.com/ueberdosis/tiptap/blob/main/packages/extension-horizontal-rule/src/horizontal-rule.ts
 
 // == RegEx =======================================================================
 const horizontalRuleRegEx = /^(?:---|—-|___\s|\*\*\*\s)$/;

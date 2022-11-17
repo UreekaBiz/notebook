@@ -7,7 +7,7 @@ import { CodeBlockReferenceDelimiterToolItemProps } from './CodeBlockReferenceDe
 
 // ********************************************************************************
 export const DelimiterToolItem: React.FC<CodeBlockReferenceDelimiterToolItemProps> = ({ localValue, inputPlaceholder, commitChange, resetLocalValue, updateLocalValue }) => {
-// == Handler ===================================================================
+  // -- Handler -------------------------------------------------------------------
   const saveLocalValueChange = (focus: boolean = true) => {
     if(localValue) commitChange(undefined/*use stored value*/, focus);
     else resetLocalValue();
@@ -30,7 +30,7 @@ export const DelimiterToolItem: React.FC<CodeBlockReferenceDelimiterToolItemProp
     } /* else -- ignore */
   };
 
-  // == UI ========================================================================
+  // -- UI ------------------------------------------------------------------------
   return (
     <Input
       value={localValue}

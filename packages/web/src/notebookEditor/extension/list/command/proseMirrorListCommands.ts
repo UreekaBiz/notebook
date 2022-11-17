@@ -5,7 +5,7 @@ import { canSplit, findWrapping, liftTarget, ReplaceAroundStep } from 'prosemirr
 import { isListItemNode, isListItemNodeType, AbstractDocumentUpdate, Attributes, AttributeType, Command } from '@ureeka-notebook/web-service';
 
 // ********************************************************************************
-// REF: https://github.com/ProseMirror/prosemirror-schema-list/blob/master/src/schema-list.ts
+// NOTE: these Commands are inspired by https://github.com/ProseMirror/prosemirror-schema-list/blob/master/src/schema-list.ts
 
 // -- Wrap ------------------------------------------------------------------------
 /** wrap the Selection in a List with the given Type and Attributes */

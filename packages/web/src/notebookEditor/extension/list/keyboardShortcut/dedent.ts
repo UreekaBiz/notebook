@@ -8,6 +8,8 @@ import { isListNode, maybeJoinList } from '../util';
 import { getListItemRange, wrapSelectedItems } from './util';
 
 // ********************************************************************************
+// NOTE: these inspired by https://github.com/remirror/remirror/blob/f274e22d8e89821d33f1166bf35b1b776986ae4f/packages/remirror__extension-list/src/list-commands.ts
+
 /** decrease the indentation of the List at the current Selection */
 export const dedentListCommand: Command = (state, dispatch) => {
   const updatedTr = new DedentListDocumentUpdate().update(state, state.tr);

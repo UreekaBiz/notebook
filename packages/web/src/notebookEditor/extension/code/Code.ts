@@ -11,7 +11,7 @@ import { setAttributeParsingBehavior } from '../util/attribute';
 import { toggleCodeCommand } from './command';
 
 // ********************************************************************************
-// REF: https://github.com/ueberdosis/tiptap/blob/main/packages/extension-code/src/code.ts
+// NOTE: this is inspired by https://github.com/ueberdosis/tiptap/blob/main/packages/extension-code/src/code.ts
 
 // == RegEx =======================================================================
 export const backtickInputRegex = /(?:^|\s)((?:`)((?:[^`]+))(?:`))$/;

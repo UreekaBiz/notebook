@@ -9,18 +9,21 @@ import { ChipToolItem } from 'notebookEditor/extension/shared/component/chipTool
 import { EditorToolComponentProps } from 'notebookEditor/sidebar/toolbar/type';
 
 // ********************************************************************************
+// == Interface ===================================================================
 // NOTE: This component is meant to be used with Nodes that requires multiple
 //       references to be selected.
 interface Props extends EditorToolComponentProps {
   nodeName: NodeName;
 }
+
+// == Component ===================================================================
 export const CodeBlockReferencesChipSelector: React.FC<Props> = ({ editor, depth, nodeName, ...props }) => {
   const { state } = editor,
         { selection } = state,
         { $anchor, anchor } = selection;
   const node = getSelectedNode(state, depth);
 
-  // == Effect ====================================================================
+  // -- Effect --------------------------------------------------------------------
   /** doing CMD + Click on a VisualId toggles it from the CodeBlockReferences */
   useEffect(() => {
     if(!node) return/*nothing to do*/;
@@ -65,11 +68,11 @@ export const CodeBlockReferencesChipSelector: React.FC<Props> = ({ editor, depth
     return () => window.removeEventListener('mousedown', handler);
   }, [$anchor.parentOffset, anchor, editor, node, nodeName, selection]);
 
-  // == Handler ===================================================================
+  // -- Handler -------------------------------------------------------------------
   // SEE: CodeBlockReferenceChipSelector.tsx
   const handleChipClick = (chip: ChipValue) => focusCodeBlock(editor, chip.label/*visual id*/);
 
-  // == UI ========================================================================
+  // -- UI ------------------------------------------------------------------------
   return (
     <ChipToolItem
       editor={editor}

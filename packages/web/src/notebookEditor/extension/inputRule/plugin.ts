@@ -2,7 +2,7 @@ import { EditorState, Plugin, TextSelection, Transaction } from 'prosemirror-sta
 import { EditorView } from 'prosemirror-view';
 
 // ********************************************************************************
-// REF: https://github.com/ProseMirror/prosemirror-inputrules/blob/d60b7920d040e9b18ee893bad4213180fedc47f5/src/inputrules.ts
+// NOTE: this is inspired by https://github.com/ProseMirror/prosemirror-inputrules/blob/d60b7920d040e9b18ee893bad4213180fedc47f5/src/inputrules.ts
 
 // == Type ========================================================================
 type InputRulePluginState = { transform: Transaction; from: number; to: number; text: string; } | null;

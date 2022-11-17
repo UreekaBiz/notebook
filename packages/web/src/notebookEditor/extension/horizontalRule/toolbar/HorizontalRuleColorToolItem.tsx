@@ -7,20 +7,22 @@ import { EditorToolComponentProps } from 'notebookEditor/sidebar/toolbar/type';
 import { textColors } from 'notebookEditor/theme/type';
 
 // ********************************************************************************
-// == Component ===================================================================
+// == Interface ===================================================================
 interface Props extends EditorToolComponentProps {/*no additional*/}
+
+// == Component ===================================================================
 export const HorizontalRuleColorToolItem: React.FC<Props> = ({ editor }) => {
   const { selection } = editor.state;
   const { anchor } = selection;
   if(!isNodeSelection(selection) || !isHorizontalRuleNode(selection.node)) throw new Error(`Invalid HorizontalRuleColorToolItem render: ${JSON.stringify(selection)}`);
 
-  // == Handler ===================================================================
+  // -- Handler -------------------------------------------------------------------
   const handleBorderColorChange = (value: string) => {
     updateSingleNodeAttributesCommand(NodeName.HORIZONTAL_RULE, anchor, { [AttributeType.BackgroundColor]: value })(editor.state, editor.view.dispatch);
     editor.view.focus();
   };
 
-  // == UI ========================================================================
+  // -- UI ------------------------------------------------------------------------
   const backgroundColorValue = selection.node.attrs[AttributeType.BackgroundColor];
   return (
     <Box>

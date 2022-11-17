@@ -9,7 +9,7 @@ import { ExtensionPriority, NoOptions, NoStorage } from 'notebookEditor/model/ty
 import { setParagraphCommand } from './command';
 
 // ********************************************************************************
-// REF: https://github.com/ueberdosis/tiptap/blob/main/packages/extension-paragraph/src/paragraph.ts
+// NOTE: this is inspired by https://github.com/ueberdosis/tiptap/blob/main/packages/extension-paragraph/src/paragraph.ts
 
 // == Node ========================================================================
 export const Paragraph = Node.create<NoOptions, NoStorage>({

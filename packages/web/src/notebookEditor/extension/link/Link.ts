@@ -13,7 +13,7 @@ import { linkPaste } from './plugin/linkPaste';
 import { linkIsInDoc } from './util';
 
 // ********************************************************************************
-// REF: https://github.com/ueberdosis/tiptap/blob/main/packages/extension-link/src/link.ts
+// NOTE: this is inspired by https://github.com/ueberdosis/tiptap/blob/main/packages/extension-link/src/link.ts
 
 // == Mark ========================================================================
 export const Link = Mark.create<NoOptions, DialogStorage>({

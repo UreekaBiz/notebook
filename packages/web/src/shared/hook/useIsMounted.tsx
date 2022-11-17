@@ -2,7 +2,7 @@ import { useCallback, useEffect, useRef } from 'react';
 
 // ********************************************************************************
 // hook that tracks the mount / unmount life cycle of a component
-// REF: https://usehooks-ts.com/react-hook/use-is-mounted
+// NOTE: this is inspired by https://usehooks-ts.com/react-hook/use-is-mounted
 export const useIsMounted = () => {
   const isMounted = useRef(false/*not mounted by default*/);
 

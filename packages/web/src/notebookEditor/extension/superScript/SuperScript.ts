@@ -9,7 +9,7 @@ import { safeParseTag, wrapGetStyleAttrs } from '../util/parse';
 import { toggleSuperScriptCommand } from './command';
 
 // ********************************************************************************
-// REF: https://github.com/ueberdosis/tiptap/blob/main/packages/extension-superscript/src/superscript.ts
+// NOTE: this is inspired by https://github.com/ueberdosis/tiptap/blob/main/packages/extension-superscript/src/superscript.ts
 
 // == Mark ========================================================================
 export const SuperScript = Mark.create<NoOptions, NoStorage>({

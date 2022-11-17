@@ -3,6 +3,8 @@ import { EditorState, Selection } from 'prosemirror-state';
 import { canJoin, liftTarget, ReplaceAroundStep } from 'prosemirror-transform';
 
 // ********************************************************************************
+// NOTE: these functions are inspired by those at https://github.com/ProseMirror/prosemirror-commands/blob/master/src/commands.ts
+
 // check whether the first or last child of the given Node is a Text Block, if only
 // is given, then said first or last child must only have a single child
 export const textblockAt = (node: ProseMirrorNode, side: 'start' | 'end', onlyOneChild = false) => {

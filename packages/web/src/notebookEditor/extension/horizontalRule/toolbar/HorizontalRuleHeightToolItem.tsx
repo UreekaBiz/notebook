@@ -5,13 +5,15 @@ import { InputWithUnitNodeToolItem } from 'notebookEditor/extension/shared/compo
 import { EditorToolComponentProps } from 'notebookEditor/sidebar/toolbar/type';
 
 // ********************************************************************************
-// == Component ===================================================================
+// == Interface ===================================================================
 interface Props extends EditorToolComponentProps {/*no additional*/}
+
+// == Component ===================================================================
 export const HorizontalRuleHeightToolItem: React.FC<Props> = ({ editor, depth }) => {
   const { selection } = editor.state;
   if(!isNodeSelection(selection) || !isHorizontalRuleNode(selection.node)) throw new Error(`Invalid HorizontalRuleHeightToolItem render: ${JSON.stringify(selection)}`);
 
-  // == UI ========================================================================
+  // -- UI ------------------------------------------------------------------------
   return (
     <Box>
       <InputWithUnitNodeToolItem

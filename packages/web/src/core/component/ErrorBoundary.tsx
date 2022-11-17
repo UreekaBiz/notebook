@@ -8,7 +8,8 @@ import { coreRoutes } from 'shared/routes';
 
 const log = getLogger(Logger.DEFAULT);
 
-// REF: https://react-typescript-cheatsheet.netlify.app/docs/basic/getting-started/error_boundaries/
+// NOTE: this is inspired by https://react-typescript-cheatsheet.netlify.app/docs/basic/getting-started/error_boundaries/
+
 // ******************************************************************************************
 /** catch any error on the React child component tree */
 // NOTE: This is different to the RuntimeErrorLogger since this only catches errors caused

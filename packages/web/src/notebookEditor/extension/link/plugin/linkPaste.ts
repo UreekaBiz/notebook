@@ -10,7 +10,7 @@ import { NoPluginState } from 'notebookEditor/model/type';
 import { linkIsInDoc } from '../util';
 
 // ********************************************************************************
-// REF: https://github.com/ueberdosis/tiptap/blob/main/packages/extension-link/src/helpers/pasteHandler.ts
+// NOTE: this is inspired by https://github.com/ueberdosis/tiptap/blob/main/packages/extension-link/src/helpers/pasteHandler.ts
 
 // == Plugin ======================================================================
 const linkPasteKey = new PluginKey<NoPluginState>('linkPasteKey');

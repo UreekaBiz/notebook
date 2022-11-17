@@ -33,7 +33,7 @@ export const CodeBlockReferenceDelimiterToolItem: React.FC<Props> = ({ editor })
   const leftDelimiterValue = String(leftDelimiter === InvalidMergedAttributeValue ? ''/*invalid*/ : leftDelimiter),
         rightDelimiterValue = String(rightDelimiter === InvalidMergedAttributeValue ? ''/*invalid*/ : rightDelimiter);
 
-  // == Handler ===================================================================
+  // -- Handler -------------------------------------------------------------------
   // NOTE: Handler above State to prevent 'before declaration' error
   const handleDelimiterChange = (delimiter: 'left' | 'right', value: string, focusEditor?: boolean) => {
     const newDelimiterAttributeObj = delimiter === 'left'
@@ -49,7 +49,7 @@ export const CodeBlockReferenceDelimiterToolItem: React.FC<Props> = ({ editor })
     if(focusEditor) editor.view.focus();
   };
 
-  // == State =====================================================================
+  // -- State ---------------------------------------------------------------------
   const { commitChange: commitLeftDelimiterChange, localValue: localLeftDelimiterValue, resetLocalValue: resetLocalLeftDelimiterValue, updateLocalValue: updateLocalLeftDelimiterValue } =
     useLocalValue<string>(leftDelimiterValue, (newValue, focus) => handleDelimiterChange('left', newValue, focus));
   let [separatedLeftValue] = separateUnitFromString(localLeftDelimiterValue);
@@ -58,7 +58,7 @@ export const CodeBlockReferenceDelimiterToolItem: React.FC<Props> = ({ editor })
     useLocalValue<string>(rightDelimiterValue, (newValue, focus) => handleDelimiterChange('right', newValue, focus));
   let [separatedRightValue] = separateUnitFromString(localRightDelimiterValue);
 
-  // == UI ========================================================================
+  // -- UI ------------------------------------------------------------------------
   return (
     <Box>
       Delimiters

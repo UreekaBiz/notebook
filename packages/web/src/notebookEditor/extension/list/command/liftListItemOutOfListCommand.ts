@@ -7,6 +7,7 @@ import { AbstractDocumentUpdate, Command, NodeName } from '@ureeka-notebook/web-
 import { getListItemRange } from '../util';
 
 // ********************************************************************************
+// NOTE: these Commands are inspired by https://github.com/remirror/remirror/blob/f274e22d8e89821d33f1166bf35b1b776986ae4f/packages/remirror__extension-list/src/list-commands.ts
 /**
  * lift the content inside a ListItem or a TaskListItem around the Selection
  * out of the List

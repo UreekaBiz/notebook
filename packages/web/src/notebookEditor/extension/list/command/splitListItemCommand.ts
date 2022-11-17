@@ -5,6 +5,8 @@ import { canSplit } from 'prosemirror-transform';
 import { isNodeSelection, AbstractDocumentUpdate, AttributeType, Command, NodeName } from '@ureeka-notebook/web-service';
 
 // ********************************************************************************
+// NOTE: this is inspired by https://github.com/remirror/remirror/blob/f274e22d8e89821d33f1166bf35b1b776986ae4f/packages/remirror__extension-list/src/list-commands.ts
+
 // == Type ========================================================================
 // the types of the Nodes that will be set after the split point
 type TypeAfter = { type: NodeType; attrs: any; } | null;

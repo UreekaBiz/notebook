@@ -7,6 +7,8 @@ import { AbstractDocumentUpdate, Command, JSONNode, SelectionRange } from '@uree
 import { createNodeFromContent, isFragment } from 'notebookEditor/extension/util/node';
 
 // ********************************************************************************
+// NOTE: this is inspired by https://github.com/ueberdosis/tiptap/blob/8c6751f0c638effb22110b62b40a1632ea6867c9/packages/core/src/commands/insertContentAt.ts
+
 // -- Insertion -------------------------------------------------------------------
 type InsertContentAtOptions = {
   parseOptions?: ParseOptions;
@@ -84,7 +86,7 @@ export class InsertContentAtDocumentUpdate implements AbstractDocumentUpdate  {
 }
 
 // --------------------------------------------------------------------------------
-// REF: https://github.com/ProseMirror/prosemirror-state/blob/4faf6a1dcf45747e6d7cefd7e934759f3fa5b0d0/src/selection.ts
+// NOTE: this is inspired by https://github.com/ProseMirror/prosemirror-state/blob/4faf6a1dcf45747e6d7cefd7e934759f3fa5b0d0/src/selection.ts#L454
 /**
  * Set the Selection of a Transaction to the end of its
  * inserted Content, if it inserted Content

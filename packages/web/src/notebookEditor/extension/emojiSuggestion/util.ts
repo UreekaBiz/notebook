@@ -4,7 +4,7 @@ import { ResolvedPos } from 'prosemirror-model';
 import { SuggestionMatch, SuggestionOptions } from './suggestion/type';
 
 // ********************************************************************************
-// REF: https://github.com/ueberdosis/tiptap/blob/main/packages/suggestion/src/findSuggestionMatch.ts
+// NOTE: this is inspired by https://github.com/ueberdosis/tiptap/blob/main/packages/suggestion/src/findSuggestionMatch.ts
 
 // == Type ========================================================================
 type TriggerConfig = {

@@ -10,11 +10,11 @@ import { isValidHTMLElement } from 'notebookEditor/extension/util/parse';
 import { sanitizeLinkInput } from '../util';
 
 // ********************************************************************************
+// NOTE: this is inspired by https://github.com/ueberdosis/tiptap/blob/main/packages/extension-link/src/helpers/clickHandler.ts
+
 // Plugin that handles the clicks on links. When a User clicks on a link while also
 // pressing the CMD or CTRL key, the link will be opened the specified target. The
 // pointer style is set through a class by React (SEE: Editor.tsx, index.css)
-// REF: https://github.com/ProseMirror/prosemirror-tables/blob/master/src/columnresizing.js
-// REF: https://github.com/ueberdosis/tiptap/blob/main/packages/extension-link/src/helpers/clickHandler.ts
 
 // == Plugin ======================================================================
 const linkClickKey = new PluginKey<NoPluginState>('linkClickKey');

@@ -8,6 +8,8 @@ import { isListNode } from '../util';
 import { wrapSelectedItems } from './util';
 
 // ********************************************************************************
+// NOTE: these inspired by https://github.com/remirror/remirror/blob/f274e22d8e89821d33f1166bf35b1b776986ae4f/packages/remirror__extension-list/src/list-commands.ts
+
 /** handle Backspace behavior when the Selection is inside a ListItemContent Node */
 export const listBackspaceCommand: Command = (state, dispatch, view) => {
   const updatedTr = new ListBackSpaceDocumentUpdate().update(state, state.tr, view);

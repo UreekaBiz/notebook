@@ -7,7 +7,7 @@ import { Fragment, Node as ProseMirrorNode } from 'prosemirror-model';
 import { visualIdFromCodeBlockReference } from '../codeblock/util';
 
 // ********************************************************************************
-// REF: https://github.com/ProseMirror/prosemirror-model/blob/eef20c8c6dbf841b1d70859df5d59c21b5108a4f/src/fragment.js#L46
+// NOTE: this is inspired by https://github.com/ProseMirror/prosemirror-model/blob/eef20c8c6dbf841b1d70859df5d59c21b5108a4f/src/fragment.js#L46
 
 // == Constant ====================================================================
 // a Map defining specific Text serialization functions (i.e. how the Node) gets

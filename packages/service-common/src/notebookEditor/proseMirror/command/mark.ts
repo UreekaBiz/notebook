@@ -7,6 +7,7 @@ import { AbstractDocumentUpdate, Command } from './type';
 
 // ********************************************************************************
 // == Setter ======================================================================
+// NOTE: this is inspired by https://github.com/ueberdosis/tiptap/blob/17a41da5a7a14879cf490c81914084791c4c494c/packages/core/src/commands/setMark.ts
 /** set a Mark across the current Selection */
 export const setMarkCommand = (markName: MarkName, attributes: Partial<Attributes>): Command => (state, dispatch) => {
   const updatedTr = new SetMarkDocumentUpdate(markName, attributes).update(state, state.tr);
@@ -59,6 +60,7 @@ export class SetMarkDocumentUpdate implements AbstractDocumentUpdate {
 }
 
 // --------------------------------------------------------------------------------
+// NOTE: this is inspired by https://github.com/ueberdosis/tiptap/blob/8c6751f0c638effb22110b62b40a1632ea6867c9/packages/core/src/commands/unsetMark.ts
 /**
  * Remove all Marks across the current Selection. If extendEmptyMarkRange,
  * is true, they will be removed even across (i.e. past) it
@@ -106,7 +108,7 @@ export class UnsetMarkDocumentUpdate implements AbstractDocumentUpdate {
 }
 
 // --------------------------------------------------------------------------------
-// REF: https://github.com/ProseMirror/prosemirror-commands/blob/master/src/commands.ts
+// NOTE: this is inspired by https://github.com/ProseMirror/prosemirror-commands/blob/master/src/commands.ts#L514
 /** Toggle the given Mark with the given name */
 export const toggleMarkCommand = (markType: MarkType, attributes: Partial<Attributes>): Command => (state, dispatch) => {
   const updatedTr = new ToggleMarkDocumentUpdate(markType, attributes).update(state, state.tr);
@@ -182,6 +184,7 @@ export class ToggleMarkDocumentUpdate implements AbstractDocumentUpdate {
 }
 
 // --------------------------------------------------------------------------------
+// NOTE: this is inspired by https://github.com/ueberdosis/tiptap/blob/8c6751f0c638effb22110b62b40a1632ea6867c9/packages/core/src/commands/extendMarkRange.ts
 /**
  * Checks to see whether the Selection currently contains a Range with a Mark
  * of the given name in it, and if it does, modifies it so that the Range covers

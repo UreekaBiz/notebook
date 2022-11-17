@@ -9,7 +9,7 @@ import { ImageController } from './nodeView/controller';
 import { ImageStorage } from './nodeView/storage';
 
 // ********************************************************************************
-// REF: https://github.com/ueberdosis/tiptap/blob/main/packages/extension-image/src/image.ts
+// NOTE: this is inspired by https://github.com/ueberdosis/tiptap/blob/main/packages/extension-image/src/image.ts
 
 // == Node ========================================================================
 export const Image = Node.create<NoOptions, ImageStorage>({

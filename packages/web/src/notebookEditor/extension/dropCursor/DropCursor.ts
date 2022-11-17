@@ -13,5 +13,5 @@ export const DropCursor = Extension.create<DropCursorOptions>({
   addOptions() { return { color: 'black', width: 1, class: ''/*none*/ }; },
 
   // -- Plugin --------------------------------------------------------------------
-  addProseMirrorPlugins() { return [ dropCursor(this.options) ]; },
+  addProseMirrorPlugins() { return [dropCursor(this.options)]; },
 });

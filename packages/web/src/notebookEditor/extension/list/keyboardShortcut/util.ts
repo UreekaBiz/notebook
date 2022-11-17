@@ -4,6 +4,8 @@ import { Selection, Transaction, TextSelection } from 'prosemirror-state';
 import { isListNode } from '../util';
 
 // ********************************************************************************
+// NOTE: these inspired by https://github.com/remirror/remirror/blob/f274e22d8e89821d33f1166bf35b1b776986ae4f/packages/remirror__extension-list/src/list-commands.ts
+
 // -- Wrap ------------------------------------------------------------------------
 /**
  * wrap the existing ListItems into a List of a new type, which only
