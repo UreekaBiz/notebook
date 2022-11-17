@@ -8,8 +8,6 @@ import { ExtensionPriority, NoOptions, NoStorage } from 'notebookEditor/model/ty
 import { insertTabCommand } from './command';
 
 // ********************************************************************************
-// NOTE: this is inspired by https://raw.githubusercontent.com/ueberdosis/tiptap/main/packages/extension-text/src/text.ts
-
 // == Node ========================================================================
 export const Text = Node.create<NoOptions, NoStorage>({
   ...TextNodeSpec,

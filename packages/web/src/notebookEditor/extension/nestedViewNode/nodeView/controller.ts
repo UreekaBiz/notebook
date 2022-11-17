@@ -56,7 +56,6 @@ export abstract class AbstractNestedNodeViewNodeController<NodeType extends Nest
   }
 
   // .. Update ....................................................................
-  // NOTE: this is inspired by https://prosemirror.net/examples/footnote/
   // to handle updates from outside (i.e. through collaborative editing) or when
   // the user undoes something, which is handled by the outer View, find the
   // difference between the current Node content and the content of the new Node.
@@ -70,6 +69,7 @@ export abstract class AbstractNestedNodeViewNodeController<NodeType extends Nest
     if(this.nodeView.innerView) {
       const innerViewState = this.nodeView.innerView.state;
 
+      // NOTE: this is inspired by https://prosemirror.net/examples/footnote/ #update
       const start = node.content.findDiffStart(innerViewState.doc.content);
       // explicitly check since start can be 0
       if(start !== null && start !== undefined) {

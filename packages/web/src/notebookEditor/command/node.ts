@@ -7,7 +7,6 @@ import { AbstractDocumentUpdate, Command, JSONNode, SelectionRange } from '@uree
 import { createNodeFromContent, isFragment } from 'notebookEditor/extension/util/node';
 
 // ********************************************************************************
-// NOTE: this is inspired by https://github.com/ueberdosis/tiptap/blob/8c6751f0c638effb22110b62b40a1632ea6867c9/packages/core/src/commands/insertContentAt.ts
 
 // -- Insertion -------------------------------------------------------------------
 type InsertContentAtOptions = {
@@ -29,6 +28,7 @@ export const insertContentAtCommand = (selectionRange: SelectionRange, value: st
 export class InsertContentAtDocumentUpdate implements AbstractDocumentUpdate  {
   public constructor(private readonly selectionRange: SelectionRange, private readonly value: string | JSONNode | JSONNode[], private readonly options?: InsertContentAtOptions) {/*nothing additional*/}
 
+  // NOTE: this is inspired by https://github.com/ueberdosis/tiptap/blob/8c6751f0c638effb22110b62b40a1632ea6867c9/packages/core/src/commands/insertContentAt.ts
   /**
    * modify the given Transaction such that the given content is inserted at
    * the specified SelectionRange and return it
@@ -37,16 +37,16 @@ export class InsertContentAtDocumentUpdate implements AbstractDocumentUpdate  {
     const options = { parseOptions: {/*default none*/}, updateSelection: true, ...this.options };
     const content = createNodeFromContent(editorState.schema, this.value, { parseOptions: { preserveWhitespace: 'full', ...options.parseOptions } });
 
-    // don’t dispatch an empty Fragment, prevent errors
+    // do not dispatch an empty Fragment
     if(content.toString() === '<>') {
       return false/*invalid Fragment*/;
     } /* else -- valid Fragment */
 
     let isOnlyTextContent = false/*default*/;
     let isOnlyBlockContent = false/*default*/;
-    const nodes = isFragment(content) ? content : [content];
-    nodes.forEach(node => {
-      node.check()/*check content is valid*/;
+    const nodesInContent = isFragment(content) ? content : [content];
+    nodesInContent.forEach(node => {
+      node.check()/*check that content is valid*/;
 
       if(node.isText && node.marks.length === 0) {
         isOnlyTextContent = true;
@@ -68,18 +68,18 @@ export class InsertContentAtDocumentUpdate implements AbstractDocumentUpdate  {
       if(isEmptyTextBlock) {
         from -= 1;
         to += 1;
-      }
+      } /* else -- not an empty textBlock */
     }
 
     if(isOnlyTextContent && typeof this.value === 'string'/*for sanity*/) {
-      // NOTE: insertText ensures marks are kept
+      // NOTE: insertText ensures Marks are kept
       tr.insertText(this.value, from, to);
     } else {
       tr.replaceWith(from, to, content);
     }
 
     if(options.updateSelection) {
-      setTransactionSelectionToInsertionEnd(tr, tr.steps.length - 1, -1);
+      setTransactionSelectionToInsertionEnd(tr, tr.steps.length - 1/*start from last step*/, -1/*bias to the left*/);
     } /* else -- do not update Selection */
     return tr/*updated*/;
   }
@@ -98,14 +98,12 @@ const setTransactionSelectionToInsertionEnd = (tr: Transaction, startingStepLeng
   } /* else -- valid index */
 
   const lastStep = tr.steps[lastStepIndex];
-  if(!(lastStep instanceof ReplaceStep || lastStep instanceof ReplaceAroundStep)) {
-    return/*nothing tod o*/;
-  } /* else -- last Step inserted or replaced Content*/
+  if(!(lastStep instanceof ReplaceStep || lastStep instanceof ReplaceAroundStep)) return/*last Step did not insert or replace contnet*/;
 
   // set end to the immediate newTo of the last Mapping
   const lastMap = tr.mapping.maps[lastStepIndex];
-  let end = 0/*default*/;
-  lastMap.forEach((from, to, newFrom, newTo) => end = newTo);
+  let selectionEnd = 0/*default*/;
+  lastMap.forEach((from, to, newFrom, newTo) => selectionEnd = newTo);
 
-  tr.setSelection(Selection.near(tr.doc.resolve(end), bias));
+  tr.setSelection(Selection.near(tr.doc.resolve(selectionEnd), bias));
 };

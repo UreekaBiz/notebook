@@ -14,8 +14,6 @@ import { listBackspaceCommand } from '../../keyboardShortcut/listBackspace';
 import { listItemTaskListItemPlugin } from './plugin';
 
 // ********************************************************************************
-// NOTE: this is inspired by https://github.com/ueberdosis/tiptap/blob/main/packages/extension-list-item/src/list-item.ts
-
 // == Node ========================================================================
 export const ListItem = Node.create<NoOptions, NoStorage>({
   ...ListItemNodeSpec,

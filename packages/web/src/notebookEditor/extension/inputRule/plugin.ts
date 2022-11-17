@@ -2,8 +2,6 @@ import { EditorState, Plugin, TextSelection, Transaction } from 'prosemirror-sta
 import { EditorView } from 'prosemirror-view';
 
 // ********************************************************************************
-// NOTE: this is inspired by https://github.com/ProseMirror/prosemirror-inputrules/blob/d60b7920d040e9b18ee893bad4213180fedc47f5/src/inputrules.ts
-
 // == Type ========================================================================
 type InputRulePluginState = { transform: Transaction; from: number; to: number; text: string; } | null;
 type InputRuleHandler =  (state: EditorState, match: RegExpMatchArray, start: number, end: number) => Transaction | null;
@@ -37,6 +35,7 @@ export class InputRule {
   }
 }
 
+// NOTE: this is inspired by https://github.com/ProseMirror/prosemirror-inputrules/blob/d60b7920d040e9b18ee893bad4213180fedc47f5/src/inputrules.ts
 // Create an input rules plugin. When enabled, it will cause text
 // input that matches any of the given rules to trigger the rule's
 // action.
@@ -68,7 +67,7 @@ export const inputRulePlugin = ({ rules }: { rules: readonly InputRule[]; }) => 
         compositionend: (view: EditorView) => {
           let executed = false/*default*/;
           setTimeout(() => {
-            let { $cursor } = view.state.selection as TextSelection;
+            let { $cursor } = view.state.selection as TextSelection/*specifically looking for $cursor*/;
             if($cursor) {
               executeInputRule(view, $cursor.pos, $cursor.pos, '', rules, plugin);
               executed = true/*executed*/;
@@ -99,9 +98,9 @@ export const stringHandler = (replaceWithString: string) =>
       insertedText += match[0/*text to replace*/].slice(offset + match[1].length);
       start += offset;
 
-      let cutOff = start - end;
-      if(cutOff > 0) {
-        insertedText = match[0/*text to replace*/].slice(offset - cutOff, offset) + insertedText;
+      let cutOffLength = start - end;
+      if(cutOffLength > 0) {
+        insertedText = match[0/*text to replace*/].slice(offset - cutOffLength, offset) + insertedText;
         start = end;
       } /* else -- do not perform cut */
     } /* else -- no need to modify insertedText */
@@ -127,7 +126,7 @@ const executeInputRule = (view: EditorView, from: number, to: number, text: stri
     if(!tr) continue/*this Rule does not specify a handler function or it did not match*/;
 
     view.dispatch(tr.setMeta(plugin, { transform: tr, from, to, text }));
-    return true/*one inputRule was scheduled*/;
+    return true/*inputRule was scheduled*/;
   }
 
   return false/*no inputRules were scheduled*/;

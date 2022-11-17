@@ -5,7 +5,7 @@ import { canSplit, findWrapping, liftTarget, ReplaceAroundStep } from 'prosemirr
 import { isListItemNode, isListItemNodeType, AbstractDocumentUpdate, Attributes, AttributeType, Command } from '@ureeka-notebook/web-service';
 
 // ********************************************************************************
-// NOTE: these Commands are inspired by https://github.com/ProseMirror/prosemirror-schema-list/blob/master/src/schema-list.ts
+// NOTE: these Commands are inspired by https://github.com/remirror/remirror/blob/f274e22d8e89821d33f1166bf35b1b776986ae4f/packages/remirror__extension-list/src/list-commands.ts
 
 // -- Wrap ------------------------------------------------------------------------
 /** wrap the Selection in a List with the given Type and Attributes */
@@ -153,40 +153,39 @@ const liftToOuterList = (tr: Transaction, itemType: NodeType, range: NodeRange) 
   } /* else -- FIXME */
 
   const target = liftTarget(range);
-  if(target == null) return false/*no target Depth to which the Content in Range can be lifted found*/;
+  if(target === null) return false/*no target Depth to which the Content in Range can be lifted found*/;
 
   tr.lift(range, target).scrollIntoView();
-
   return tr/*updated*/;
 };
 const liftOutOfList = (tr: Transaction, range: NodeRange) => {
   const list = range.parent;
 
   // merge the ListItem into a single big ListItem
-  for(let pos=range.end, i=range.endIndex - 1, e=range.startIndex; i>e; i--) {
-    pos -= list.child(i).nodeSize;
-    tr.delete(pos - 1, pos + 1);
+  for(let position=range.end, i=range.endIndex - 1, e=range.startIndex; i>e; i--) {
+    position -= list.child(i).nodeSize;
+    tr.delete(position - 1, position + 1);
   }
 
   const $start = tr.doc.resolve(range.start);
-  const listItem = $start.nodeAfter!;
+  const listItem = $start.nodeAfter;
+  if(!listItem) return false/*no nodeAfter exists*/;
+
   if(tr.mapping.map(range.end) != range.start + $start.nodeAfter!.nodeSize) return false/*invalid resulting state*/;
 
   const atStart = range.startIndex == 0, atEnd = range.endIndex == list.childCount;
-  const parent = $start.node(-1/*parent of $start*/);
-  const indexBefore = $start.index(-1/*index of parent of $start*/);
-  if(!parent.canReplace(indexBefore + (atStart ? 0 : 1), indexBefore + 1, listItem.content.append(atEnd ? Fragment.empty : Fragment.from(list)))) return false/*invalid replacement*/;
+  const grandParent = $start.node(-1/*grandParent of $start*/);
+  const indexBefore = $start.index(-1/*index of grandParent of $start*/);
+  if(!grandParent.canReplace(indexBefore + (atStart ? 0/*nothing to account for*/ : 1/*account for offset*/), indexBefore + 1/*after indexBefore*/, listItem.content.append(atEnd ? Fragment.empty : Fragment.from(list)))) return false/*invalid replacement*/;
 
   const start = $start.pos,
         end = start + listItem.nodeSize;
 
-  // strip off the surrounding List. At the sides where not at
-  // the end of the List, the existing List is closed. At sides where
-  // this is the end, it is overwritten to its end.
-  tr.step(new ReplaceAroundStep(start - (atStart ? 1 : 0), end + (atEnd ? 1 : 0), start + 1, end - 1,
+  // strip off the surrounding List
+  tr.step(new ReplaceAroundStep(start - (atStart ? 1/*account for start*/ : 0), end + (atEnd ? 1/*account for end*/ : 0), start + 1/*gapFrom*/, end - 1/*gapTo*/,
                                 new Slice((atStart ? Fragment.empty : Fragment.from(list.copy(Fragment.empty)))
                                           .append(atEnd ? Fragment.empty : Fragment.from(list.copy(Fragment.empty))),
-                                          atStart ? 0 : 1, atEnd ? 0 : 1), atStart ? 0 : 1))
+                                          atStart ? 0 : 1/*openStart of 1*/, atEnd ? 0 : 1/*openEnd of 1*/), atStart ? 0/*insert at start*/ : 1/*insert at pos 1*/))
     .scrollIntoView();
 
   return tr/*updated*/;

@@ -5,8 +5,6 @@ import { keymap } from 'prosemirror-keymap';
 import { ExtensionName } from 'notebookEditor/model/type';
 
 // ********************************************************************************
-// NOTE: default configuration inspired by https://github.com/ProseMirror/prosemirror-history/blob/master/src/history.ts
-
 // == Extension ===================================================================
 export const History = Extension.create({
   name: ExtensionName.HISTORY/*Expected and guaranteed to be unique*/,

@@ -10,14 +10,15 @@ import { NoPluginState } from 'notebookEditor/model/type';
 import { linkIsInDoc } from '../util';
 
 // ********************************************************************************
-// NOTE: this is inspired by https://github.com/ueberdosis/tiptap/blob/main/packages/extension-link/src/helpers/pasteHandler.ts
-
 // == Plugin ======================================================================
 const linkPasteKey = new PluginKey<NoPluginState>('linkPasteKey');
 export const linkPaste = (editor: Editor): Plugin => {
   return new Plugin({
     key: linkPasteKey,
+
+    // -- Props -------------------------------------------------------------------
     props: {
+      // NOTE: this is inspired by https://github.com/ueberdosis/tiptap/blob/main/packages/extension-link/src/helpers/pasteHandler.ts
       // ensure that when a Link is pasted over a Text that does not already
       // have a Link Mark, and the Selection is not empty, the selected portion
       // of Text receives the Link Mark with the pasted Link as its href attribute

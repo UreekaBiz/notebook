@@ -164,7 +164,6 @@ export class InsertNewlineDocumentUpdate implements AbstractDocumentUpdate {
 }
 
 // -- Leave -----------------------------------------------------------------------
-// NOTE: this is inspired by https://github.com/ProseMirror/prosemirror-commands/blob/master/src/commands.ts#L246
 // create a default Block Node after the one at the current Selection and
 // move the cursor there
 export const leaveBlockNodeCommand = (nodeName: NodeName): Command => (state, dispatch) => {
@@ -179,6 +178,7 @@ export const leaveBlockNodeCommand = (nodeName: NodeName): Command => (state, di
 export class LeaveBlockNodeDocumentUpdate implements AbstractDocumentUpdate {
   public constructor(private readonly nodeName: NodeName) {/*nothing additional*/ }
 
+  // NOTE: this is inspired by https://github.com/ProseMirror/prosemirror-commands/blob/master/src/commands.ts#L246
   /*
    * modify the given Transaction such that a default Block Node is created
    * after the one at the current Selection and the cursor is moved there
@@ -189,13 +189,13 @@ export class LeaveBlockNodeDocumentUpdate implements AbstractDocumentUpdate {
     if(!($head.parent.type.name === this.nodeName)) return false/*this Node should not handle the call*/;
 
     const parentOfHead = $head.node(-1),
-      indexAfterHeadParent = $head.indexAfter(-1);
-    const type = defaultBlockAt(parentOfHead.contentMatchAt(indexAfterHeadParent));
+          indexAfterHeadParent = $head.indexAfter(-1);
 
-    if(!type) return false/*no valid type was found*/;
-    if(!parentOfHead.canReplaceWith(indexAfterHeadParent, indexAfterHeadParent, type)) return false/*invalid replacement*/;
+    const defaultBlockType = defaultBlockAt(parentOfHead.contentMatchAt(indexAfterHeadParent));
+    if(!defaultBlockType) return false/*no valid type was found*/;
+    if(!parentOfHead.canReplaceWith(indexAfterHeadParent, indexAfterHeadParent, defaultBlockType)) return false/*invalid replacement*/;
 
-    const newBlockNode = type.createAndFill();
+    const newBlockNode = defaultBlockType.createAndFill();
     if(!newBlockNode) return false/*no valid wrapping was found*/;
 
     const posAfterReplacement = $head.after();
@@ -208,7 +208,6 @@ export class LeaveBlockNodeDocumentUpdate implements AbstractDocumentUpdate {
 }
 
 // -- Lift ------------------------------------------------------------------------
-// NOTE: this is inspired by https://github.com/ProseMirror/prosemirror-commands/blob/master/src/commands.ts#L277
 // If the cursor is in an empty Text Block that can be lifted, lift it.
 export const liftEmptyBlockNodeCommand: Command = (state, dispatch) => {
   const updatedTr = new LiftEmptyBlockNodeDocumentUpdate().update(state, state.tr);
@@ -222,6 +221,7 @@ export const liftEmptyBlockNodeCommand: Command = (state, dispatch) => {
 export class LiftEmptyBlockNodeDocumentUpdate implements AbstractDocumentUpdate {
   public constructor() {/*nothing additional*/}
 
+  // NOTE: this is inspired by https://github.com/ProseMirror/prosemirror-commands/blob/master/src/commands.ts#L277
   /*
    * modify the given Transaction such that an empty Block Node is lifted
    * if it exists, and return it
@@ -237,16 +237,15 @@ export class LiftEmptyBlockNodeDocumentUpdate implements AbstractDocumentUpdate 
       } /* else -- cant split, do nothing */
     } /* else -- could not split */
 
-    const range = $cursor.blockRange();
-    const targetDepth = range && liftTarget(range);
-    if(!range || targetDepth == null) return false/*no targetDepth Depth to which the Content in Range can be lifted found*/;
+    const cursorBlockRange = $cursor.blockRange();
+    const targetDepth = cursorBlockRange && liftTarget(cursorBlockRange);
+    if(!cursorBlockRange || targetDepth == null) return false/*no targetDepth Depth to which the Content in Range can be lifted found*/;
 
-    return editorState.tr.lift(range, targetDepth).scrollIntoView()/*updated*/;
+    return tr.lift(cursorBlockRange, targetDepth).scrollIntoView()/*updated*/;
   }
 }
 
 // -- Join ------------------------------------------------------------------------
-// NOTE: this is inspired by https://github.com/ProseMirror/prosemirror-commands/blob/master/src/commands.ts#L21
 // if the Selection is empty and at the start of a Text Block, try to reduce the
 // distance between that Block and the one before it if there's a Block directly
 // before it that can be joined, by joining them. Otherwise try to move the
@@ -264,6 +263,7 @@ export const joinBackwardCommand: Command = (state, dispatch, view) => {
 export class JoinBackwardDocumentUpdate implements AbstractDocumentUpdate {
   public constructor() {/*nothing additional*/}
 
+  // NOTE: this is inspired by https://github.com/ProseMirror/prosemirror-commands/blob/master/src/commands.ts#L21
   /**
    * modify the given Transaction such that the conditions described by the
    * joinBackward Command (SEE: joinBackwardCommand above) hold
@@ -271,6 +271,7 @@ export class JoinBackwardDocumentUpdate implements AbstractDocumentUpdate {
   public update(editorState: EditorState, tr: Transaction, view: EditorView | undefined/*not given by the caller*/) {
     const { $cursor } = editorState.selection as TextSelection/*specifically looking for $cursor*/;
     if(!$cursor) return false/*selection is not an empty Text selection*/;
+
     if(view) {
       const wouldLeaveBlockIfBackward = view.endOfTextblock('backward', editorState);
       if(!wouldLeaveBlockIfBackward || $cursor.parentOffset > 0/*not at the start of the TextBlock*/) {
@@ -281,44 +282,45 @@ export class JoinBackwardDocumentUpdate implements AbstractDocumentUpdate {
     // if there is no Node before this one, try lifting
     const $cut = findCutBefore($cursor);
     if(!$cut) {
-      const range = $cursor.blockRange();
-      const target = range && liftTarget(range);
+      const cursorBlockRange = $cursor.blockRange();
+      const target = cursorBlockRange && liftTarget(cursorBlockRange);
       if(target == null) return false/*no target Depth to which the Content in Range can be lifted found*/;
 
-      return editorState.tr.lift(range!, target).scrollIntoView();
+      return editorState.tr.lift(cursorBlockRange!, target).scrollIntoView();
     } /* else -- a valid $cut position was found */
 
-    const nodeBefore = $cut.nodeBefore!;
+    const nodeBeforeCut = $cut.nodeBefore!;
 
     // try to join
     const deleteBarrierUpdatedTr = deleteBarrier(editorState, $cut);
-    if(!nodeBefore.type.spec.isolating && deleteBarrierUpdatedTr) {
+    if(!nodeBeforeCut.type.spec.isolating && deleteBarrierUpdatedTr) {
       return deleteBarrierUpdatedTr;
     } /* else -- isolating nodeBefore or could not join or replace */
 
     // if the Node below has no content and the node above is
     // selectable, delete the node below and select the one above.
-    if($cursor.parent.content.size == 0/*empty*/ && (textblockAt(nodeBefore, 'end') || NodeSelection.isSelectable(nodeBefore))) {
+    if($cursor.parent.content.size == 0/*empty*/
+      && (textblockAt(nodeBeforeCut, 'end') || NodeSelection.isSelectable(nodeBeforeCut)
+    )) {
       const deleteStep = replaceStep(editorState.doc, $cursor.before(), $cursor.after(), Slice.empty);
       if(deleteStep && (deleteStep as ReplaceStep/*by definition*/).slice.size < (deleteStep as ReplaceStep/*by definition*/).to - (deleteStep as ReplaceStep).from) {
         const tr = editorState.tr.step(deleteStep);
 
-        tr.setSelection(textblockAt(nodeBefore, 'end') ? Selection.findFrom(tr.doc.resolve(tr.mapping.map($cut.pos, -1/*move backward*/)), -1/*look backward*/)/*guaranteed by textBlockAt call*/! : NodeSelection.create(tr.doc, $cut.pos - nodeBefore.nodeSize));
+        tr.setSelection(textblockAt(nodeBeforeCut, 'end') ? Selection.findFrom(tr.doc.resolve(tr.mapping.map($cut.pos, -1/*move backward*/)), -1/*look backward*/)/*guaranteed by textBlockAt call*/! : NodeSelection.create(tr.doc, $cut.pos - nodeBeforeCut.nodeSize));
         tr.scrollIntoView();
         return tr/*updated*/;
       }
     }
 
     // if nodeBefore is an Atom, delete it
-    if(nodeBefore.isAtom && $cut.depth == $cursor.depth - 1) {
-      return editorState.tr.delete($cut.pos - nodeBefore.nodeSize, $cut.pos).scrollIntoView();
+    if(nodeBeforeCut.isAtom && $cut.depth === $cursor.depth - 1) {
+      return tr.delete($cut.pos - nodeBeforeCut.nodeSize, $cut.pos).scrollIntoView();
     } /* else -- nodeBefore is not an Atom */
 
     return false/*could not joinBackward*/;
   }
 }
 
-// NOTE: this is inspired by https://github.com/ProseMirror/prosemirror-commands/blob/master/src/commands.ts#L109
 // When the Selection is empty and at the end of a TextBlock, select
 // the node coming after that textblock, if possible
 export const joinForwardCommand: Command = (state, dispatch, view) => {
@@ -333,6 +335,7 @@ export const joinForwardCommand: Command = (state, dispatch, view) => {
 export class JoinForwardDocumentUpdate implements AbstractDocumentUpdate {
   public constructor() {/*nothing additional*/ }
 
+  // NOTE: this is inspired by https://github.com/ProseMirror/proseirror-commands/blob/master/src/commands.ts#L109
   /**
    * modify the given Transaction such that the conditions described by the
    * joinForward Command (SEE: joinForward above) hold
@@ -351,7 +354,7 @@ export class JoinForwardDocumentUpdate implements AbstractDocumentUpdate {
     const $cut = findCutAfter($cursor);
     if(!$cut || !$cut.nodeAfter) return false/*no Node after this, nothing to do*/;
 
-    const nodeAfter = $cut.nodeAfter;
+    const nodeAfterCut = $cut.nodeAfter;
 
     // try to join
     const deleteBarrierUpdatedTr = deleteBarrier(editorState, $cut);
@@ -362,24 +365,25 @@ export class JoinForwardDocumentUpdate implements AbstractDocumentUpdate {
     // if the Node above has no content and the Node below is selectable,
     // delete the Node above and select the one below
     if($cursor.parent.content.size === 0/*empty*/
-      && (textblockAt(nodeAfter, 'start')
-      || NodeSelection.isSelectable(nodeAfter))
-    ) {
+      && (textblockAt(nodeAfterCut, 'start') || NodeSelection.isSelectable(nodeAfterCut)
+      )) {
 
       const deleteStep = replaceStep(editorState.doc, $cursor.before(), $cursor.after(), Slice.empty);
       if(deleteStep && (deleteStep as ReplaceStep).slice.size < (deleteStep as ReplaceStep).to - (deleteStep as ReplaceStep).from) {
           tr.step(deleteStep)
-            .setSelection(textblockAt(nodeAfter, 'start') ? Selection.findFrom(tr.doc.resolve(tr.mapping.map($cut.pos)), 1/*look forward*/)/*guaranteed by textBlockAt*/! : NodeSelection.create(tr.doc, tr.mapping.map($cut.pos)))
+            .setSelection(textblockAt(nodeAfterCut, 'start') ? Selection.findFrom(tr.doc.resolve(tr.mapping.map($cut.pos)), 1/*look forward*/)/*guaranteed by textBlockAt*/! : NodeSelection.create(tr.doc, tr.mapping.map($cut.pos)))
             .scrollIntoView();
-        return tr;
+
+        return tr/*updated*/;
       }
     } /* else -- the Node above has content or the Node below is not selectable */
 
     // if the next Node is an Atom, delete it
-    if(nodeAfter.isAtom && $cut.depth === $cursor.depth - 1/*parent*/) {
-      tr.delete($cut.pos, $cut.pos + nodeAfter.nodeSize)
+    if(nodeAfterCut.isAtom && $cut.depth === $cursor.depth - 1/*parent*/) {
+      tr.delete($cut.pos, $cut.pos + nodeAfterCut.nodeSize)
         .scrollIntoView();
-      return tr;
+
+      return tr/*updated*/;
     } /* else -- next Node is not an Atom or the $cut depth is not the same as the parent of $cut */
 
     return false/*could not joinForward*/;

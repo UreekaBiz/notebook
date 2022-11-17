@@ -8,10 +8,9 @@ import { NoOptions, NoStorage } from 'notebookEditor/model/type';
 import { getWrappingListInputRule, handleListDocumentUpdates } from '../util';
 
 // ********************************************************************************
-// NOTE: this is inspired by https://github.com/ueberdosis/tiptap/blob/main/packages/extension-bullet-list/src/bullet-list.ts
-
 // == RegEx =======================================================================
 // (SEE: addInputRules below)
+// NOTE: this is inspired by https://github.com/ueberdosis/tiptap/blob/main/packages/extension-bullet-list/src/bullet-list.ts
 const bulletListRegEx = /^\s*([-+*])\s$/;
 
 // == Node ========================================================================

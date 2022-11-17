@@ -42,9 +42,9 @@ const liftOutOfList = (tr: Transaction, range: NodeRange) => {
 
   // -- Merge ---------------------------------------------------------------------
   // merge the ListItems into a single big ListItem
-  for(let pos = range.end, i = range.endIndex - 1, e = range.startIndex; i > e; i--) {
-    pos -= list.child(i).nodeSize;
-    tr.delete(pos - 1, pos + 1);
+  for(let position = range.end, i = range.endIndex - 1, e = range.startIndex; i > e; i--) {
+    position -= list.child(i).nodeSize;
+    tr.delete(position - 1, position + 1);
   }
 
   // -- Checks --------------------------------------------------------------------
@@ -73,18 +73,16 @@ const liftOutOfList = (tr: Transaction, range: NodeRange) => {
   // this is the end, it is overwritten to its end
   tr.step(
     new ReplaceAroundStep(
-      listItemStart - (isAtStart ? 1 : 0),
-      listItemEnd + (isAtEnd ? 1 : 0),
-      listItemStart + 1,
-      listItemEnd - 1,
+      listItemStart - (isAtStart ? 1/*account for start*/ : 0/*do not account*/),
+      listItemEnd + (isAtEnd ? 1/*account for end*/ : 0/*do not account*/),
+      listItemStart + 1/*gapFrom*/,
+      listItemEnd - 1/*gapTo*/,
       new Slice(
-        (isAtStart ? Fragment.empty : Fragment.from(list.copy(Fragment.empty))).append(
-          isAtEnd ? Fragment.empty : Fragment.from(list.copy(Fragment.empty))
-        ),
-        isAtStart ? 0 : 1,
-        isAtEnd ? 0 : 1
+        (isAtStart ? Fragment.empty : Fragment.from(list.copy(Fragment.empty))).append(isAtEnd ? Fragment.empty : Fragment.from(list.copy(Fragment.empty))),
+        isAtStart ? 0/*no openStart*/ : 1/*openStart at 1*/,
+        isAtEnd ? 0/*no openEnd*/ : 1/*openEnd at 1*/
       ),
-      isAtStart ? 0 : 1
+      isAtStart ? 0/*insert at start*/ : 1/*insert with offset 1*/
     )
   );
 

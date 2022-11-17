@@ -106,13 +106,14 @@ export class ToggleListDocumentUpdate implements AbstractDocumentUpdate {
  */
  export const deepChangeListType = (tr: Transaction, foundList: ParentNodePosition, listNodeType: NodeType, listItemNodeType: NodeType) => {
   // -- Setup ---------------------------------------------------------------------
-  const oldList = foundList.node;
-  const nodeStart = tr.doc.resolve(foundList.nodeStart);
-  const listParent = nodeStart.node(-1/*top level*/);
-  const indexBefore = nodeStart.index(-1/*top level*/);
+  const oldList = foundList.node,
+        oldListStart = tr.doc.resolve(foundList.nodeStart),
+        oldListParent = oldListStart.node(-1/*grandParent depth*/);
 
-  if(!listParent) return false/*Parent does not exist*/;
-  if(!listParent.canReplace(indexBefore, indexBefore + 1, Fragment.from(listNodeType.create()))) return false/*invalid state after replacement*/;
+  const indexBeforeOldList = oldListStart.index(-1/*grandParent depth*/);
+
+  if(!oldListParent) return false/*Parent does not exist*/;
+  if(!oldListParent.canReplace(indexBeforeOldList, indexBeforeOldList + 1, Fragment.from(listNodeType.create()))) return false/*invalid state after replacement*/;
 
   // -- New List Creation ---------------------------------------------------------
   const newListItems: ProseMirrorNode[] = [];

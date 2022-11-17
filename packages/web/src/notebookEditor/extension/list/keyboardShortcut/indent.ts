@@ -163,25 +163,25 @@ const findPreviousListItem = (selectedList: ProseMirrorNode, $from: ResolvedPos,
  * separate the selected ListItem into two Slices, selected and unselected.
  * If unselected Slice exists, do not change its indentation
  */
-function sliceSelectedItems(doc: ProseMirrorNode, $to: ResolvedPos, range: NodeRange) {
+const sliceSelectedItems = (doc: ProseMirrorNode, $to: ResolvedPos, range: NodeRange) => {
   let selectedSlice: Slice;
   let unselectedSlice: Slice | null;
-  const start = range.start;
+  const rangeStart = range.start;
 
   // `range.depth` is the depth of the List,
   // add 2 to it to get the depth of its ListItem children (e.g. ListItemContent)
-  const mid = $to.depth >= range.depth + 2
+  const middle = $to.depth >= range.depth + 2
               ? $to.end(range.depth + 2)
               : range.end - 1;
-  const end = range.end;
+  const rangeEnd = range.end;
 
-  if(mid + 1 >= end) {
-    selectedSlice = doc.slice(start, end);
+  if(middle + 1 >= rangeEnd) {
+    selectedSlice = doc.slice(rangeStart, rangeEnd);
     unselectedSlice = null/*unselected Slice does not exist*/;
   } else {
-    selectedSlice = doc.slice(start, mid);
-    unselectedSlice = doc.slice(mid + 1, end - 1);
+    selectedSlice = doc.slice(rangeStart, middle);
+    unselectedSlice = doc.slice(middle + 1, rangeEnd - 1);
   }
 
   return { selectedSlice, unselectedSlice };
-}
+};

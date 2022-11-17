@@ -34,7 +34,6 @@ export class SetSelectionDocumentUpdate implements AbstractDocumentUpdate {
   }
 }
 
-// NOTE: this is inspired by https://github.com/ueberdosis/tiptap/blob/8c6751f0c638effb22110b62b40a1632ea6867c9/packages/core/src/commands/setTextSelection.ts
 /** set a TextSelection given the Range */
 export const setTextSelectionCommand = (selectionRange: SelectionRange): Command => (state, dispatch) => {
   const updatedTr =  new SetTextSelectionDocumentUpdate(selectionRange).update(state, state.tr);
@@ -47,6 +46,8 @@ export const setTextSelectionCommand = (selectionRange: SelectionRange): Command
 };
 export class SetTextSelectionDocumentUpdate implements AbstractDocumentUpdate {
   public constructor(private readonly selectionRange: SelectionRange) {/*nothing additional*/}
+
+  // NOTE: this is inspired by https://github.com/ueberdosis/tiptap/blob/8c6751f0c638effb22110b62b40a1632ea6867c9/packages/core/src/commands/setTextSelection.ts
   /*
    * modify the given Transaction such that a TextSelection
    * is set across the given Range
@@ -68,7 +69,6 @@ export class SetTextSelectionDocumentUpdate implements AbstractDocumentUpdate {
   }
 }
 
-// NOTE: this is inspired by https://github.com/ueberdosis/tiptap/blob/313b8b8d0af7059c420ffc96c9362f0f4acc2138/packages/core/src/commands/setNodeSelection.ts
 /** set a NodeSelection at the given position */
 export const setNodeSelectionCommand = (nodePos: number): Command => (state, dispatch) => {
   const updatedTr =  new SetNodeSelectionDocumentUpdate(nodePos).update(state, state.tr);
@@ -81,6 +81,8 @@ export const setNodeSelectionCommand = (nodePos: number): Command => (state, dis
 };
 export class SetNodeSelectionDocumentUpdate implements AbstractDocumentUpdate {
   public constructor(private readonly nodePos: number) {/*nothing additional*/}
+
+  // NOTE: this is inspired by https://github.com/ueberdosis/tiptap/blob/313b8b8d0af7059c420ffc96c9362f0f4acc2138/packages/core/src/commands/setNodeSelection.ts
   /*
    * modify the given Transaction such that a NodeSelection
    * is set at the given position
@@ -146,14 +148,14 @@ export class DeleteSelectionDocumentUpdate implements AbstractDocumentUpdate {
    * is deleted if it is not empty and return it
    */
   public update(editorState: EditorState, tr: Transaction) {
-    if(editorState.selection.empty) return false;
+    if(editorState.selection.empty) return false/*nothing to do*/;
+
     tr.deleteSelection().scrollIntoView();
-    return tr;
+    return tr/*updated*/;
   }
 }
 
 // ................................................................................
-// NOTE: this is inspired by https://github.com/ProseMirror/prosemirror-commands/blob/master/src/commands.ts#L81
 /**
  * When the Selection is empty and at the start of a Text Block, select
  * the Node before that Text Block if possible
@@ -170,6 +172,7 @@ export const selectNodeBackwardCommand: Command = (state, dispatch, view) => {
 export class SelectNodeBackwardDocumentUpdate implements AbstractDocumentUpdate {
   public constructor() {/*nothing additional*/ }
 
+  // NOTE: this is inspired by https://github.com/ProseMirror/prosemirror-commands/blob/master/src/commands.ts#L81
   /*
    * modify the given Transaction such that when the Selection is at
    * the start of a Text Block, the Node before it is selected
@@ -177,28 +180,27 @@ export class SelectNodeBackwardDocumentUpdate implements AbstractDocumentUpdate 
   public update(editorState: EditorState, tr: Transaction, view?: EditorView) {
     const { $head, empty } = editorState.selection;
     let $cutPos: ResolvedPos | null = $head/*default*/;
-    if(!empty) return false;
+    if(!empty) return false/*do not allow*/;
 
     if($head.parent.isTextblock) {
       if(view) {
         const wouldLeaveBlockIfBackward = view.endOfTextblock('backward', editorState);
         if(!wouldLeaveBlockIfBackward || $head.parentOffset > 0/*inside the parent*/) {
-          return false;
+          return false/*incorrect conditions*/;
         } /* else -- would leave the parent Text Block if Cursor goes backward, or the Cursor is at the start of the parent TextBlock*/
       } /* else -- View was not given */
 
       $cutPos = findCutBefore($head);
     } /* else -- parent of $head is not a Text Block*/
 
-    const node = $cutPos && $cutPos.nodeBefore;
-    if(!node || !NodeSelection.isSelectable(node) || !$cutPos) return false;
+    const nodeBeforeCut = $cutPos && $cutPos.nodeBefore;
+    if(!nodeBeforeCut || !NodeSelection.isSelectable(nodeBeforeCut) || !$cutPos) return false/*no nodeBefore exists*/;
 
-    tr.setSelection(NodeSelection.create(editorState.doc, $cutPos.pos - node.nodeSize)).scrollIntoView();
+    tr.setSelection(NodeSelection.create(editorState.doc, $cutPos.pos - nodeBeforeCut.nodeSize)).scrollIntoView();
     return tr/*updated*/;
   }
 }
 
-// NOTE: this is inspired by https://github.com/ProseMirror/prosemirror-commands/blob/master/src/commands.ts#L155
 /**
  * When the Selection is empty and at the end of a TextBlock, select
  * the Node coming after that TextBlock, if possible
@@ -215,6 +217,7 @@ export const selectNodeForwardCommand: Command = (state, dispatch, view) => {
 export class SelectNodeForwardDocumentUpdate implements AbstractDocumentUpdate {
   public constructor() {/*nothing additional*/ }
 
+  // NOTE: this is inspired by https://github.com/ProseMirror/prosemirror-commands/blob/master/src/commands.ts#L155
   /*
    * modify the given Transaction such that when the Selection is at
    * the end of a Text Block, the Node after it is selected
@@ -229,15 +232,15 @@ export class SelectNodeForwardDocumentUpdate implements AbstractDocumentUpdate {
       if(view) {
         const wouldLeaveBlockIfForward = view.endOfTextblock('forward', editorState);
         if(!wouldLeaveBlockIfForward || $head.parentOffset < $head.parent.content.size) {
-          return false;
+          return false/*invalid conditions*/;
         } /* else -- would leave the parent Text Block if Cursor goes forward, or the Cursor is past the end of the parent TextBlock*/
       } /* else -- View not given */
 
       $cut = findCutAfter($head);
     } /* else -- $head's parent is not a TextBlock */
 
-    const node = $cut && $cut.nodeAfter;
-    if(!node || !NodeSelection.isSelectable(node)) return false;
+    const nodeAfterCut = $cut && $cut.nodeAfter;
+    if(!nodeAfterCut || !NodeSelection.isSelectable(nodeAfterCut)) return false/*no nodeAfter exists*/;
 
     tr.setSelection(NodeSelection.create(editorState.doc, $cut!.pos)).scrollIntoView();
     return tr/*updated*/;

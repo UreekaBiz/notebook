@@ -9,8 +9,6 @@ import { safeParseTag, wrapGetStyleAttrs } from '../util/parse';
 import { toggleSubScriptCommand } from './command';
 
 // ********************************************************************************
-// NOTE: this is inspired by https://github.com/ueberdosis/tiptap/blob/main/packages/extension-subscript/src/subscript.ts
-
 // == Mark ========================================================================
 export const SubScript = Mark.create<NoOptions, NoStorage>({
   ...SubScriptMarkSpec,

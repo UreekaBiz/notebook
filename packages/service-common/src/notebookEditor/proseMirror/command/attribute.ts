@@ -9,7 +9,6 @@ import { getSelectedNode, SelectionDepth } from '../selection';
 import { AbstractDocumentUpdate, Command, HISTORY_META } from './type';
 
 // ********************************************************************************
-// NOTE: this is inspired by https://github.com/ueberdosis/tiptap/blob/8c6751f0c638effb22110b62b40a1632ea6867c9/packages/core/src/commands/updateAttributes.ts
 /**
  *  update the attributes for the Nodes or Marks in the Selection whose name
  *  equals the given {@link NodeName} or {@link MarkName}. Differs from
@@ -27,6 +26,8 @@ export const updateAttributesCommand = (nodeOrMarkName: NodeName | MarkName, att
 };
 export class UpdateAttributesDocumentUpdate implements AbstractDocumentUpdate {
   public constructor(private readonly nodeOrMarkName: NodeName | MarkName, private readonly attributes: Partial<Attributes>) {/*nothing additional*/}
+
+  // NOTE: this is inspired by https://github.com/ueberdosis/tiptap/blob/8c6751f0c638effb22110b62b40a1632ea6867c9/packages/core/src/commands/updateAttributes.ts
   /*
    * modify the given Transaction such that the Nodes in the current Selection
    * get the specified attribute updated to the specified value
@@ -45,8 +46,8 @@ export class UpdateAttributesDocumentUpdate implements AbstractDocumentUpdate {
     }
 
     tr.selection.ranges.forEach(range => {
-      const from = range.$from.pos;
-      const to = range.$to.pos;
+      const from = range.$from.pos,
+            to = range.$to.pos;
 
       editorState.doc.nodesBetween(from, to, (node, pos) => {
         if(nodeType && nodeType === node.type) {
@@ -116,7 +117,9 @@ export class UpdateAttributesInRangeDocumentUpdate implements AbstractDocumentUp
       // NOTE: there is a case when the Node size is 1. Any attempt to select the Node
       //       based on its depth from the selection will select either the Node before
       //       or after that. This is a hack until a better one is found.
-      if(node.nodeSize == 1) pos++;
+      if(node.nodeSize == 1) {
+        pos++;
+      } /* else -- not the specific case */
 
       tr.setNodeMarkup(pos, undefined/*preserve type*/, nodeAttrs);
     }

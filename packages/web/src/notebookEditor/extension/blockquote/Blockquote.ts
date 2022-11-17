@@ -9,9 +9,8 @@ import { setAttributeParsingBehavior } from '../util/attribute';
 import { blockArrowUpCommand, blockArrowDownCommand, blockBackspaceCommand, blockModBackspaceCommand, toggleBlock } from '../util/node';
 
 // ********************************************************************************
-// NOTE: this is inspired by https://github.com/ueberdosis/tiptap/blob/8c6751f0c638effb22110b62b40a1632ea6867c9/packages/extension-blockquote/src/blockquote.ts
-
 // == RegEx =======================================================================
+// NOTE: this is inspired by https://github.com/ueberdosis/tiptap/blob/8c6751f0c638effb22110b62b40a1632ea6867c9/packages/extension-blockquote/src/blockquote.ts
 export const blockquoteRegex = /^\s*>\s$/;
 
 // == Node ========================================================================

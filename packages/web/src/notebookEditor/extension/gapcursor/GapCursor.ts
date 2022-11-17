@@ -4,8 +4,6 @@ import { gapCursor } from 'prosemirror-gapcursor';
 import { ExtensionName, NoOptions, NoStorage } from 'notebookEditor/model/type';
 
 // ********************************************************************************
-// NOTE: this is inspired by https://github.com/ueberdosis/tiptap/blob/main/packages/extension-gapcursor/src/gapcursor.ts
-
 // == Extension ===================================================================
 export const GapCursor: Extension<NoOptions, NoStorage> = Extension.create<NoOptions, NoStorage>({
   name: ExtensionName.GAP_CURSOR/*Expected and guaranteed to be unique*/,
@@ -14,6 +12,7 @@ export const GapCursor: Extension<NoOptions, NoStorage> = Extension.create<NoOpt
   addProseMirrorPlugins() { return [gapCursor()]; },
 
   // -- Schema --------------------------------------------------------------------
+  // NOTE: this is inspired by https://github.com/ueberdosis/tiptap/blob/main/packages/extension-gapcursor/src/gapcursor.ts
   extendNodeSchema(extension) {
     const context = {
       name: this.name,

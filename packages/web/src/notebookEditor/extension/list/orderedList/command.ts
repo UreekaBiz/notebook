@@ -3,8 +3,6 @@ import { EditorState, Transaction } from 'prosemirror-state';
 import { getListItemNodeType, getOrderedListNodeType, isListItemNode, AbstractDocumentUpdate, Command, ListItemAttributes, OrderedListNodeType, OrderedListAttributes } from '@ureeka-notebook/web-service';
 
 // ********************************************************************************
-// NOTE: these inspired by https://github.com/remirror/remirror/blob/f274e22d8e89821d33f1166bf35b1b776986ae4f/packages/remirror__extension-list/src/list-commands.ts
-
 // modify the attributes of the OrderedList at the given position
 export const updateOrderedListCommand = (orderedListPosition: number, attributes: Partial<OrderedListAttributes>): Command => (state, dispatch) => {
   const updatedTr = new UpdateOrderedListDocumentUpdate(orderedListPosition, attributes).update(state, state.tr);
@@ -54,7 +52,7 @@ export class UpdateListItemsInOrderedListDocumentUpdate implements AbstractDocum
       // NOTE: since nodesBetween returns all parent Nodes for Nodes
       //       in between the given Range, check that the pos is
       //       in the Range for ListItems that are to be updated
-      if( isListItemNode(node)
+      if(isListItemNode(node)
        && (pos >= from && pos <= to/*(SEE: NOTE above)*/)
        && parent === this.parentOrderedList/*ensure only the immediate ListNodes are updated*/
       ) {

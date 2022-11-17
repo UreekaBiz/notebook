@@ -35,17 +35,15 @@ export class DedentListDocumentUpdate implements AbstractDocumentUpdate {
     if(!findParentListItemResult) return false/*no parent ListItem found*/;
     const { parentListItem, grandParentList } = findParentListItemResult;
 
-    // update Transaction with new ListItems and Nodes,
-    // update Range accordingly, check if lifting can be done after
-    // the Range has been updated
+    // update Transaction with new ListItems and Nodes
     range = indentSiblingsOfListItems(tr, range);
     range = indentSiblingsOfList(tr, range);
     range = changeListItemsType(tr, range, grandParentList, parentListItem);
 
+    // check if lift can be performed
     const target = liftTarget(range);
     if(typeof target !== 'number'/*explicit check since depth can be 0*/) return false/*no target Depth to which the Content in Range can be lifted found*/;
 
-    // lift and update Range accordingly, check if List needs to be joined
     tr.lift(range, target);
     range = getListItemRange(tr.selection);
     if(range) {
@@ -59,6 +57,7 @@ export class DedentListDocumentUpdate implements AbstractDocumentUpdate {
         } /* else -- ignore */
       });
 
+      // check if List needs to be joined
       maybeJoinList(tr, tr.doc.resolve(range.end - 2));
     } /* else -- new Range not found, just return the updated Transaction thus far  */
 
@@ -85,28 +84,24 @@ const findParentListItem = ($from: ResolvedPos, range: NodeRange) => {
  * a new Range that accounts for these changes
  */
 const indentSiblingsOfListItems = (tr: Transaction, range: NodeRange): NodeRange => {
-  const selectedList = range.parent;
-  const lastSelectedItem = range.parent.child(range.endIndex - 1);
+  const selectedList = range.parent,
+        lastSelectedItem = range.parent.child(range.endIndex - 1/*the item*/);
 
-  const endOfRange = range.end;
-  const endOfSelectedList = range.$to.end(range.depth);
+  const endOfRange = range.end,
+        endOfSelectedList = range.$to.end(range.depth);
 
   if(endOfRange < endOfSelectedList) {
     // there are sibling ListItems after the selected ListItems, which must become
     // children of the last ListItem
     tr.step(
       new ReplaceAroundStep(
-        endOfRange - 1,
+        endOfRange - 1/*inside the Range*/,
         endOfSelectedList,
         endOfRange,
         endOfSelectedList,
-        new Slice(Fragment.from(lastSelectedItem.type.create(null, selectedList.copy())), 1, 0), 1, true/*maintain structure*/)
+        new Slice(Fragment.from(lastSelectedItem.type.create(null, selectedList.copy())), 1/*openStart*/, 0/*openEnd*/), 1/*insert at pos 1*/, true/*maintain structure*/)
     );
-    return new NodeRange(
-      tr.doc.resolve(range.$from.pos),
-      tr.doc.resolve(endOfSelectedList),
-      range.depth
-    );
+    return new NodeRange(tr.doc.resolve(range.$from.pos), tr.doc.resolve(endOfSelectedList), range.depth);
   }
 
   return range/*modified*/;
@@ -118,22 +113,22 @@ const indentSiblingsOfListItems = (tr: Transaction, range: NodeRange): NodeRange
  * a new Range that accounts for these changes
  */
 const indentSiblingsOfList = (tr: Transaction, range: NodeRange): NodeRange => {
-  const selectedList = range.parent;
-  const lastSelectedItem = range.parent.child(range.endIndex - 1);
+  const selectedList = range.parent,
+        lastSelectedItem = range.parent.child(range.endIndex - 1/*the item*/);
 
-  const endOfSelectedList = range.end;
-  const endOfParentListItem = range.$to.end(range.depth - 1);
+  const endOfSelectedList = range.end,
+        endOfParentListItem = range.$to.end(range.depth - 1);
 
   if(endOfSelectedList + 1 < endOfParentListItem) {
     // there are sibling nodes after the selected List, which must become
     // children of the last ListItem
     tr.step(
       new ReplaceAroundStep(
-        endOfSelectedList - 1,
+        endOfSelectedList - 1/*inside the Range*/,
         endOfParentListItem,
-        endOfSelectedList + 1,
-        endOfParentListItem,
-        new Slice(Fragment.from(selectedList.type.create(null, lastSelectedItem.type.create(null))), 2, 0), 0, true/*maintain structure*/)
+        endOfSelectedList + 1/*gapFrom*/,
+        endOfParentListItem/*gapTo*/,
+        new Slice(Fragment.from(selectedList.type.create(null, lastSelectedItem.type.create(null))), 2/*openStart*/, 0/*use full Slice at end*/), 0/*insert at pos 0*/, true/*maintain structure*/)
     );
     return new NodeRange(tr.selection.$from, tr.selection.$to, range.depth);
   }

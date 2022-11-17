@@ -8,8 +8,6 @@ import { NoOptions, NoStorage } from 'notebookEditor/model/type';
 import { documentPlugin } from './plugin';
 
 // ********************************************************************************
-// NOTE: this is inspired by https://github.com/ueberdosis/tiptap/blob/main/packages/extension-document/src/document.ts
-
 // == Node ========================================================================
 export const Document = Node.create<NoOptions, NoStorage>({
   ...DocumentNodeSpec,

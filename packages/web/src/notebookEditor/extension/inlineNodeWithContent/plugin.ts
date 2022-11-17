@@ -10,8 +10,6 @@ import { isInlineNodeWithContent } from '@ureeka-notebook/web-service';
 // (SEE: REF above) by adding two empty span tags in between them through Node
 //  Decorations, and also managing the behavior of typing in between them
 
-// NOTE: this is inspired by https://github.com/Saul-Mirone/milkdown/blob/main/packages/preset-commonmark/src/plugin/inline-nodes-cursor.ts
-
 // == Class =======================================================================
 class InlineNodeWithContent {
   constructor(public inBetweenInlineNodes: boolean) {/*nothing additional*/}
@@ -52,6 +50,7 @@ export const inlineNodeWithContentPlugin = () => {
     },
 
     // -- Props -------------------------------------------------------------------
+    // NOTE: this is inspired by https://github.com/Saul-Mirone/milkdown/blob/main/packages/preset-commonmark/src/plugin/inline-nodes-cursor.ts
     props: {
       handleDOMEvents: {
         // REF: https://developer.mozilla.org/en-US/docs/Web/API/Element/compositionstart_event

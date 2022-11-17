@@ -9,8 +9,6 @@ import { NoOptions, NoStorage } from 'notebookEditor/model/type';
 import { toggleUnderlineCommand } from './command';
 
 // ********************************************************************************
-// NOTE: this is inspired by https://github.com/ueberdosis/tiptap/blob/main/packages/extension-underline/src/underline.ts
-
 // == Mark ========================================================================
 export const Underline = Mark.create<NoOptions, NoStorage>({
   ...UnderlineMarkSpec,

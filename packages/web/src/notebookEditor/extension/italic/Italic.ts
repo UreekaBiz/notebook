@@ -10,9 +10,8 @@ import { NoOptions, NoStorage } from 'notebookEditor/model/type';
 import { toggleItalicCommand } from './command';
 
 // ********************************************************************************
-// NOTE: this is inspired by https://github.com/ueberdosis/tiptap/blob/main/packages/extension-italic/src/italic.ts
-
 // == RegEx =======================================================================
+// NOTE: these are inspired by https://github.com/ueberdosis/tiptap/blob/main/packages/extension-italic/src/italic.ts
 const starInputRegex = /(?:^|\s)((?:\*)((?:[^*]+))(?:\*))$/;
 const starPasteRegex = /(?:^|\s)((?:\*)((?:[^*]+))(?:\*))/g;
 const underscoreInputRegex = /(?:^|\s)((?:_)((?:[^_]+))(?:_))$/;
@@ -32,8 +31,8 @@ export const Italic = Mark.create<NoOptions, NoStorage>({
 
   // -- Input ---------------------------------------------------------------------
   // apply the Italic Mark to typed or pasted text that is surrounded by '*' or '_'
-  addInputRules() { return [ markInputRule(starInputRegex, this.type), markInputRule(underscoreInputRegex, this.type) ]; },
-  addPasteRules() { return [ markPasteRule(starPasteRegex, this.type), markPasteRule(underscorePasteRegex, this.type) ]; },
+  addInputRules() { return [markInputRule(starInputRegex, this.type), markInputRule(underscoreInputRegex, this.type)]; },
+  addPasteRules() { return [markPasteRule(starPasteRegex, this.type), markPasteRule(underscorePasteRegex, this.type)]; },
 
   // -- View ----------------------------------------------------------------------
   parseHTML() {

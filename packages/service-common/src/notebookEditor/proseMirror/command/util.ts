@@ -16,6 +16,7 @@ export const textblockAt = (node: ProseMirrorNode, side: 'start' | 'end', onlyOn
 };
 
 // ................................................................................
+/** find the defaultBlock given a {@link ContentMatch} */
 export const defaultBlockAt = (match: ContentMatch) => {
   for(let i=0; i<match.edgeCount; i++) {
     const { type } = match.edge(i);
@@ -65,8 +66,6 @@ export const findCutAfter = ($pos: ResolvedPos): ResolvedPos | null => {
 export const deleteBarrier = (state: EditorState, $cut: ResolvedPos) => {
   const nodeBefore = $cut.nodeBefore!;
   const nodeAfter = $cut.nodeAfter!;
-  let conn;
-  let match;
   if(nodeBefore.type.spec.isolating || nodeAfter.type.spec.isolating) return false/*do not check*/;
 
   const joinMaybeClearUpdatedTr = joinMaybeClear(state, $cut);
@@ -74,54 +73,58 @@ export const deleteBarrier = (state: EditorState, $cut: ResolvedPos) => {
     return joinMaybeClearUpdatedTr/*updated*/;
   } /* else -- did not join or cleared */
 
-  const canDelAfter = $cut.parent.canReplace($cut.index(), $cut.index() + 1);
-  if(canDelAfter && (conn = (match = nodeBefore.contentMatchAt(nodeBefore.childCount)).findWrapping(nodeAfter.type)) && match.matchType(conn[0] || nodeAfter.type)!.validEnd) {
+  let connectorNodeTypes;
+  let contentMatch;
+  const canDeleteAfter = $cut.parent.canReplace($cut.index(), $cut.index() + 1);
+  if(canDeleteAfter && (connectorNodeTypes = (contentMatch = nodeBefore.contentMatchAt(nodeBefore.childCount)).findWrapping(nodeAfter.type)) && contentMatch.matchType(connectorNodeTypes[0] || nodeAfter.type)!.validEnd) {
     let end = $cut.pos + nodeAfter.nodeSize,
-        wrap = Fragment.empty;
-    for(let i = conn.length - 1; i >= 0; i--) {
-      wrap = Fragment.from(conn[i].create(null, wrap));
+        wrapping = Fragment.empty;
+    for(let i = connectorNodeTypes.length - 1; i >= 0; i--) {
+      wrapping = Fragment.from(connectorNodeTypes[i].create(null, wrapping));
     }
-    wrap = Fragment.from(nodeBefore.copy(wrap));
+    wrapping = Fragment.from(nodeBefore.copy(wrapping));
 
-    const tr = state.tr.step(new ReplaceAroundStep($cut.pos - 1, end, $cut.pos, end, new Slice(wrap, 1, 0), conn.length, true));
-    let joinAt = end + 2 * conn.length;
+    const tr = state.tr.step(new ReplaceAroundStep($cut.pos - 1, end, $cut.pos, end, new Slice(wrapping, 1, 0), connectorNodeTypes.length, true));
+    let joinAtPos = end + 2 * connectorNodeTypes.length;
 
-    if(canJoin(tr.doc, joinAt)) {
-      tr.join(joinAt);
+    if(canJoin(tr.doc, joinAtPos)) {
+      tr.join(joinAtPos);
     } /* else -- cannot join, only scrollIntoView*/
-    tr.scrollIntoView();
 
+    tr.scrollIntoView();
     return tr/*updated*/;
   } /* else -- cannot join */
 
-  const selAfter = Selection.findFrom($cut, 1);
-  const range = selAfter && selAfter.$from.blockRange(selAfter.$to), target = range && liftTarget(range);
+  const selectionAfterCut = Selection.findFrom($cut, 1);
+  const blockRange = selectionAfterCut && selectionAfterCut.$from.blockRange(selectionAfterCut.$to), target = blockRange && liftTarget(blockRange);
   if(target != null && target >= $cut.depth) {
-    return state.tr.lift(range!, target).scrollIntoView();
+    return state.tr.lift(blockRange!, target).scrollIntoView();
   } /* else -- cannot lift */
 
-  if(canDelAfter && textblockAt(nodeAfter, 'start', true) && textblockAt(nodeBefore, 'end')) {
-    let at = nodeBefore;
+  if(canDeleteAfter && textblockAt(nodeAfter, 'start', true) && textblockAt(nodeBefore, 'end')) {
+    let joinAtNode = nodeBefore;
     const wrap = [];
     for(;;) {
-      wrap.push(at);
-      if(at.isTextblock) break;
-      at = at.lastChild!;
+      wrap.push(joinAtNode);
+      if(joinAtNode.isTextblock) break/*stop wrapping*/;
+      joinAtNode = joinAtNode.lastChild!;
     }
 
-    let afterText = nodeAfter,
+    let nodeAfterText = nodeAfter,
         afterDepth = 1;
-    for(; !afterText.isTextblock; afterText = afterText.firstChild!) {
+    for(; !nodeAfterText.isTextblock; nodeAfterText = nodeAfterText.firstChild!) {
       afterDepth++;
     }
-    if(at.canReplace(at.childCount, at.childCount, afterText.content)) {
-      let end = Fragment.empty;
+
+    if(joinAtNode.canReplace(joinAtNode.childCount, joinAtNode.childCount, nodeAfterText.content)) {
+      let wrapEnd = Fragment.empty;
       for(let i = wrap.length - 1; i >= 0; i--) {
-        end = Fragment.from(wrap[i].copy(end));
+        wrapEnd = Fragment.from(wrap[i].copy(wrapEnd));
       }
-      let tr = state.tr.step(new ReplaceAroundStep($cut.pos - wrap.length, $cut.pos + nodeAfter.nodeSize,
+
+      const tr = state.tr.step(new ReplaceAroundStep($cut.pos - wrap.length, $cut.pos + nodeAfter.nodeSize,
                                                     $cut.pos + afterDepth, $cut.pos + nodeAfter.nodeSize - afterDepth,
-                                                    new Slice(end, wrap.length, 0), 0, true));
+                                                    new Slice(wrapEnd, wrap.length, 0/*use full Slice at End*/), 0/*move content to slice Start*/, true/*enforce right structure*/));
           tr.scrollIntoView();
       return tr/*updated*/;
     }
@@ -134,20 +137,17 @@ export const deleteBarrier = (state: EditorState, $cut: ResolvedPos) => {
 // modify the Transaction of the given EditorState such that Nodes are Joined
 // Deleted depending on whether a valid replacement can be performed
 const joinMaybeClear = (state: EditorState, $pos: ResolvedPos) => {
-  const nodeBefore = $pos.nodeBefore;
-  const nodeAfter = $pos.nodeAfter;
-  const index = $pos.index();
+  const nodeBefore = $pos.nodeBefore,
+        nodeAfter = $pos.nodeAfter;
+  const posIndex = $pos.index();
 
-  // @ts-ignore even though compatibleContent is not defined on the type of the
-  //            Node, the property does exist. This may be due to a mismatch in
-  //            the versions of prosemirror-model
   if(!nodeBefore || !nodeAfter || !nodeBefore.type.compatibleContent(nodeAfter.type)) return false/*no valid Content*/;
 
-  if(!nodeBefore.content.size && $pos.parent.canReplace(index - 1, index)) {
+  if(!nodeBefore.content.size && $pos.parent.canReplace(posIndex - 1, posIndex)) {
     return state.tr.delete($pos.pos - nodeBefore.nodeSize, $pos.pos).scrollIntoView();
   } /* else -- nodeBefore has Content, Content from index-1 to index can be replaced */
 
-  if(!$pos.parent.canReplace(index, index + 1) || !(nodeAfter.isTextblock || canJoin(state.doc, $pos.pos))) {
+  if(!$pos.parent.canReplace(posIndex, posIndex + 1) || !(nodeAfter.isTextblock || canJoin(state.doc, $pos.pos))) {
     return false/* replacement cannot be performed, nodeAfter is not a Text Block or content can be joined*/;
   } /* else -- clear incompatible and join */
 

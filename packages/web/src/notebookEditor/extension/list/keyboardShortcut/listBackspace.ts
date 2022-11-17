@@ -8,7 +8,7 @@ import { isListNode } from '../util';
 import { wrapSelectedItems } from './util';
 
 // ********************************************************************************
-// NOTE: these inspired by https://github.com/remirror/remirror/blob/f274e22d8e89821d33f1166bf35b1b776986ae4f/packages/remirror__extension-list/src/list-commands.ts
+// NOTE: these are inspired by https://github.com/remirror/remirror/blob/f274e22d8e89821d33f1166bf35b1b776986ae4f/packages/remirror__extension-list/src/list-commands.ts
 
 /** handle Backspace behavior when the Selection is inside a ListItemContent Node */
 export const listBackspaceCommand: Command = (state, dispatch, view) => {
@@ -40,16 +40,13 @@ export class ListBackSpaceDocumentUpdate implements AbstractDocumentUpdate {
       return wrapListBackwardUpdatedTr/*updated, types of Lists swapped*/;
     } /* else -- command cannot be executed */
 
-    // specific case: backspace in three-levels List
-    // * A
-    //   * <cursor>B
-    //     * C
-    const listItemIndex = $cursor.index(range.depth/*n-th Node in ListItem*/);
-    const listIndex = $cursor.index(range.depth - 1/*n-th ListItem in List*/);
-    const rootIndex = $cursor.index(range.depth - 2/*n-th List in its parent*/);
+    // backspace in three-levels List
+    const listItemIndex = $cursor.index(range.depth/*n-th Node in ListItem*/),
+          listIndex = $cursor.index(range.depth - 1/*n-th ListItem in List*/),
+          listRootIndex = $cursor.index(range.depth - 2/*n-th List in its parent*/);
     const isNestedList = range.depth - 2 >= 1/*not top level*/ && isListItemNode($cursor.node(range.depth - 2/*List wraps ListItem, which wraps ListItemContent*/));
 
-    if(listItemIndex === 0 && listIndex === 0 && rootIndex <= 1 && isNestedList) {
+    if(listItemIndex === 0/*firstChild*/ && listIndex === 0/*firstChild*/ && listRootIndex <= 1/*first or second child*/ && isNestedList) {
       return new LiftListItemDocumentUpdate(range.parent.type).update(editorState, tr)/*updated*/;
     } /* else -- join backward */
 
@@ -65,17 +62,19 @@ export class ListBackSpaceDocumentUpdate implements AbstractDocumentUpdate {
  */
 const wrapListBackward = (tr: Transaction) => {
   const $cursor = tr.selection.$from;
-  const range = $cursor.blockRange();
-  if(!range || !isListItemNode(range.parent) || range.startIndex !== 0) return false/*nothing special to do*/;
+  const blockRange = $cursor.blockRange();
+  if(!blockRange || !isListItemNode(blockRange.parent) || blockRange.startIndex !== 0) return false/*nothing special to do*/;
 
-  const root = $cursor.node(range.depth - 2/*the Node containing the List*/);
-  const rootIndex = $cursor.index(range.depth - 2/*n-th List in root*/);
-  const listItemIndex = $cursor.index(range.depth/*n-th Node in ListItem*/);
-  const listIndex = $cursor.index(range.depth - 1/*n-th ListItem in List*/);
+  const root = $cursor.node(blockRange.depth - 2/*the Node containing the List*/),
+        rootIndex = $cursor.index(blockRange.depth - 2/*n-th List in root*/);
+
+  const listItemIndex = $cursor.index(blockRange.depth/*n-th Node in ListItem*/),
+        listIndex = $cursor.index(blockRange.depth - 1/*n-th ListItem in List*/);
 
   // get the previous List and its last ListItem
-  const previousList = root.maybeChild(rootIndex - 1);
-  const previousListItem = previousList?.lastChild;
+  const previousList = root.maybeChild(rootIndex - 1),
+        previousListItem = previousList?.lastChild;
+
   if( listItemIndex !== 0/*current Node is not the first Node in its parent ListItem*/
    || listIndex !== 0/*current ListItem is not the first ListItem in its parent List*/
   ) return false/*do not wrap*/;
@@ -89,8 +88,8 @@ const wrapListBackward = (tr: Transaction) => {
   } /* else -- one of the conditions above does not hold, check if root is ListItem */
 
   if(isListItemNode(root)) {
-    const parentListItem = root;
-    const parentOfList = $cursor.node(range.depth - 3/*parent of the Node containing the List*/);
+    const parentListItem = root,
+          parentOfList = $cursor.node(blockRange.depth - 3/*parent of the Node containing the List*/);
 
     if(isListNode(parentOfList)) {
       return wrapSelectedItems(parentOfList.type, parentListItem.type, tr);

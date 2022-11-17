@@ -8,9 +8,9 @@ import { NoOptions, NoStorage } from 'notebookEditor/model/type';
 import { getWrappingListInputRule, handleListDocumentUpdates } from '../util';
 
 // ********************************************************************************
-// REF: https://github.com/ueberdosis/tiptap/blob/main/packages/extension-ordered-list/src/ordered-list.ts
 
 // == RegEx =======================================================================
+// NOTE: this is inspired by https://github.com/ueberdosis/tiptap/blob/main/packages/extension-ordered-list/src/ordered-list.ts
 // (SEE: addInputRules below)
 const orderedListRegex = /^(\d+)\.\s$/;
 
