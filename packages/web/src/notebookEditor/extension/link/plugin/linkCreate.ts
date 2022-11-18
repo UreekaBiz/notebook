@@ -1,7 +1,7 @@
 import { find, test } from 'linkifyjs';
 import { Plugin, PluginKey } from 'prosemirror-state';
 
-import { combineTransactionSteps, findChildrenInRange, getChangedRanges, getLinkMarkType, getMarksBetween, isLinkMark, isNodeSelection, AttributeType, LinkTarget, PREVENT_LINK_META } from '@ureeka-notebook/web-service';
+import { combineTransactionSteps, findChildrenInRange, getTransformChangedRanges, getLinkMarkType, getMarksBetween, isLinkMark, isNodeSelection, AttributeType, LinkTarget, PREVENT_LINK_META } from '@ureeka-notebook/web-service';
 
 import { NoPluginState } from 'notebookEditor/model/type';
 
@@ -31,7 +31,7 @@ export const linkCreate = (validate?: (url: string) => boolean): Plugin => {
       const { tr } = newState,
             transform = combineTransactionSteps(oldState.doc, [...transactions]),
             { mapping } = transform,
-            changes = getChangedRanges(transform);
+            changes = getTransformChangedRanges(transform);
 
       if(isNodeSelection(tr.selection)) return tr/*not modified*/;
 

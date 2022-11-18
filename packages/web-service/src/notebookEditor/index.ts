@@ -502,7 +502,7 @@ export {
   SetTextSelectionDocumentUpdate,
 
   // .. Range ....................................................................
-  getChangedRanges,
+  getTransformChangedRanges,
 
   // .. Step ......................................................................
   combineTransactionSteps,

@@ -1,7 +1,7 @@
 import { EditorState, NodeSelection, Plugin, PluginKey, Transaction } from 'prosemirror-state';
 import { RemoveMarkStep } from 'prosemirror-transform';
 
-import { combineTransactionSteps, getChangedRanges, isNestedViewBlockNode, isNestedViewNode, isTextSelection } from '@ureeka-notebook/web-service';
+import { combineTransactionSteps, getTransformChangedRanges, isNestedViewBlockNode, isNestedViewNode, isTextSelection } from '@ureeka-notebook/web-service';
 
 // ********************************************************************************
 /**
@@ -62,7 +62,7 @@ export const nestedViewNodePlugin = () => {
       // way to exclude Marks from Nodes themselves, only their content
       // (SEE: REF above), check the changed ranges
       const transform = combineTransactionSteps(oldState.doc, [...transactions]),
-            changes = getChangedRanges(transform);
+            changes = getTransformChangedRanges(transform);
       changes.forEach(({ newRange }) => {
         newState.doc.nodesBetween(newRange.from, newRange.to, (node, pos) => {
           if(isNestedViewNode(node) && node.marks.length > 0) {

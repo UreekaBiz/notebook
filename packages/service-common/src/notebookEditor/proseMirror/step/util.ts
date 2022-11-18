@@ -1,4 +1,4 @@
-import { Node as ProseMirrorNode} from 'prosemirror-model';
+import { Node as ProseMirrorNode } from 'prosemirror-model';
 import { Transaction } from 'prosemirror-state';
 import { Transform } from 'prosemirror-transform';
 
@@ -16,18 +16,19 @@ export const combineTransactionSteps = (oldDoc: ProseMirrorNode, transactions: T
 
 // -- Change ----------------------------------------------------------------------
 // .. Type ........................................................................
-export type ChangedRange = { oldRange: SelectionRange; newRange: SelectionRange; }
+export type ChangedRangeType = { oldRange: SelectionRange; newRange: SelectionRange; }
 
 // .. Util ........................................................................
+// NOTE: this is inspired by https://github.com/ueberdosis/tiptap/blob/8c6751f0c638effb22110b62b40a1632ea6867c9/packages/core/src/helpers/getChangedRanges.ts
 /** remove duplicated ranges and ranges that are fully captured by other ranges */
-export const simplifyChangedRanges = (changes: ChangedRange[]): ChangedRange[] => {
-  const uniqueChanges = deduplicate(changes);
+export const simplifyChangedRanges = (changedRanges: ChangedRangeType[]): ChangedRangeType[] => {
+  const uniqueChangedRanges = deduplicate(changedRanges);
 
-  if(uniqueChanges.length === 1) {
-    return uniqueChanges;
+  if(uniqueChangedRanges.length === 1) {
+    return uniqueChangedRanges;
   } else {
-    const filteredUniqueChanges = uniqueChanges.filter((change, changeIndex) => {
-        const remainingChanges = uniqueChanges.filter((remainingChanges, remainingChangeIndex) => remainingChangeIndex !== changeIndex);
+    const filteredUniqueChanges = uniqueChangedRanges.filter((change, changeIndex) => {
+        const remainingChanges = uniqueChangedRanges.filter((remainingChanges, remainingChangeIndex) => remainingChangeIndex !== changeIndex);
         return !remainingChanges.some(otherChange =>
                 change.oldRange.from >= otherChange.oldRange.from
                 && change.oldRange.to <= otherChange.oldRange.to
